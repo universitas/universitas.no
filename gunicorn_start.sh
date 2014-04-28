@@ -1,14 +1,11 @@
 #!/bin/bash
 
-# source /usr/local/bin/virtualenvwrapper.sh
-
 NAME="universitas.no"                                   # Name of the application
-VIRTUALENV="universitas"
 VIRTUALENVDIR=/srv/virtual_enviroments/universitas
 SOCKFILE=/srv/universitas_project/run/gunicorn.sock  	# we will communicte using this unix socket
 DJANGODIR=/srv/universitas_project/universitas_no
-USER=django_user                                        # the user to run as
-GROUP="www-data"                                     		# the group to run as
+# USER=django_user                                        # the user to run as
+# GROUP="www-data"                                     		# the group to run as
 NUM_WORKERS=3                                     		# how many worker processes should Gunicorn spawn
 DJANGO_SETTINGS_MODULE=universitas_no.settings          # which settings file should Django use
 DJANGO_WSGI_MODULE=universitas_no.wsgi                  # WSGI module name
@@ -30,6 +27,6 @@ test -d $RUNDIR || mkdir -p $RUNDIR
 exec ./bin/gunicorn ${DJANGO_WSGI_MODULE}:application \
   --name $NAME \
   --workers $NUM_WORKERS \
-  # --user=$USER --group=$GROUP \
   --log-level=debug \
   --bind=unix:$SOCKFILE
+# --user=$USER --group=$GROUP \
