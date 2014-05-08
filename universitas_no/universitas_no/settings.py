@@ -17,7 +17,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'bcys$_6$r@%=#bn0en(jre6mf@##^&d3x2b15ed*@otds!q$o3'
+
+# These values are set in the virtualenv postactivate bash file
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
+DJANGO_DB_PASSWORD = os.environ["DJANGO_DB_PASSWORD"]
+DJANGO_DB_NAME = os.environ["DJANGO_DB_NAME"]
+DJANGO_DB_USER = os.environ["DJANGO_DB_USER"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -58,9 +63,9 @@ WSGI_APPLICATION = 'universitas_no.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'universitas_no',
-        'USER': 'tassen',
-        'PASSWORD': 'CB4529DA1',
+        'NAME': DJANGO_DB_NAME,
+        'USER': DJANGO_DB_USER,
+        'PASSWORD': DJANGO_DB_PASSWORD,
         'HOST': 'localhost',
         'PORT': '',                      # Set to empty string for default.
     }
@@ -78,7 +83,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
