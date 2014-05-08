@@ -60,7 +60,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'universitas_no',
         'USER': 'tassen',
-        'PASSWORD': 'CB4529DA1',
+        'PASSWORD': 'CB4529DAk1',
         'HOST': 'localhost',
         'PORT': '',                      # Set to empty string for default.
     }
@@ -78,7 +78,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
