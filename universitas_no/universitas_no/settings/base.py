@@ -21,16 +21,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # These values are set in the virtualenv postactivate bash file
 SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 DJANGO_DB_PASSWORD = os.environ["DJANGO_DB_PASSWORD"]
-DJANGO_DB_NAME = os.environ["DJANGO_DB_NAME"]
-DJANGO_DB_USER = os.environ["DJANGO_DB_USER"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -41,6 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'articles',
+    'django_extensions',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -63,8 +62,8 @@ WSGI_APPLICATION = 'universitas_no.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': DJANGO_DB_NAME,
-        'USER': DJANGO_DB_USER,
+        'NAME': 'tassen',
+        'USER': 'tassen',
         'PASSWORD': DJANGO_DB_PASSWORD,
         'HOST': 'localhost',
         'PORT': '',                      # Set to empty string for default.
