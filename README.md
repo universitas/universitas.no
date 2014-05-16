@@ -5,6 +5,7 @@ Testversjon av nettsiden. Setter opp Git og Virtualenv og python3 og sånn.
 
 Dette er mest for å lære hvordan greiene funker. Satser på at det blir bra greier etterhvert.
 
+```
 /srv/universitas_project
 ├── config                              #config folder
 │   ├── linode_universitas_nginx.config #linked nginx config
@@ -37,3 +38,4 @@ Dette er mest for å lære hvordan greiene funker. Satser på at det blir bra gr
         │   └── local.py
         ├── urls.py
         └── wsgi.py
+```
