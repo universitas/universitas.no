@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Django settings for universitas_no project.
 
@@ -8,25 +9,29 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+# Build paths inside the project like this: path.join(SITE_ROOT, ...)
+from os import environ
+from os.path import abspath, dirname, join, normpath
 
+# PATH CONFIGURATION
+# Absolute filesystem path to the Django project directory:
+DJANGO_ROOT = dirname(dirname(dirname(abspath(__file__))))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
+# Absolute filesystem path to the top-level project folder:
+SITE_ROOT = dirname(DJANGO_ROOT)
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# Site name:
+SITE_NAME = "universitas.no"
+
+# END PATH CONFIGURATION
 
 # These values are set in the virtualenv postactivate bash file
-SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
-DJANGO_DB_PASSWORD = os.environ["DJANGO_DB_PASSWORD"]
+SECRET_KEY = environ["DJANGO_SECRET_KEY"]
+DJANGO_DB_PASSWORD = environ["DJANGO_DB_PASSWORD"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
 TEMPLATE_DEBUG = DEBUG
-
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -38,7 +43,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'articles',
+    'stories',
+    'south',
     'django_extensions',
 )
 
@@ -66,24 +72,45 @@ DATABASES = {
         'USER': 'tassen',
         'PASSWORD': DJANGO_DB_PASSWORD,
         'HOST': 'localhost',
-        'PORT': '',                      # Set to empty string for default.
+        'PORT': '',       # Set to empty string for default.
     }
 }
 
-# Internationalization
+# INTERNATIONALIZATION
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'Europe/Oslo'
+USE_I18N = True  # Internationalisation (string translation)
+USE_L10N = True  # Localisation (numbers and stuff)
+USE_TZ = True  # Use timezone
 
-TIME_ZONE = 'UTC'
+# MEDIA CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#media-root
+MEDIA_ROOT = normpath(join(SITE_ROOT, 'media'))
 
-USE_I18N = True
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#media-url
+MEDIA_URL = '/media/'
+# END MEDIA CONFIGURATION
 
-USE_L10N = True
 
-USE_TZ = True
+# STATIC FILE CONFIGURATION
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
+STATIC_ROOT = normpath(join(SITE_ROOT, 'static'))
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
-
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
+
+# See:
+# https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
+STATICFILES_DIRS = (
+    normpath(join(DJANGO_ROOT, 'assets')),
+)
+
+# See:
+# https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+# END STATIC FILE CONFIGURATION
