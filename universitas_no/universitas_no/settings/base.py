@@ -27,7 +27,9 @@ SITE_NAME = "universitas.no"
 
 # These values are set in the virtualenv postactivate bash file
 SECRET_KEY = environ["DJANGO_SECRET_KEY"]
-DJANGO_DB_PASSWORD = environ["DJANGO_DB_PASSWORD"]
+DB_PASSWORD = environ["DJANGO_DB_PASSWORD"]
+DB_NAME = environ["DJANGO_DB_NAME"]
+DB_USER = environ["DJANGO_DB_USER"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -68,9 +70,9 @@ WSGI_APPLICATION = 'universitas_no.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'tassen',
-        'USER': 'tassen',
-        'PASSWORD': DJANGO_DB_PASSWORD,
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
         'HOST': 'localhost',
         'PORT': '',       # Set to empty string for default.
     }
@@ -98,7 +100,7 @@ MEDIA_URL = '/media/'
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
 STATIC_ROOT = normpath(join(SITE_ROOT, 'static'))
 
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
+# http://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
 
 # See:

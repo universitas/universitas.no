@@ -1,0 +1,32 @@
+[01;34m.[00m
+[drwxr-xr-x haakenli haakenli 4.0K May 10 21:58]  [01;34mdebug_toolbar[00m/
+[drwxr-xr-x haakenli haakenli 4.0K May 10 21:30]  [01;34mdjango[00m/
+[drwxr-xr-x haakenli haakenli 4.0K May 10 21:30]  [01;34mDjango-1.6.4-py3.3.egg-info[00m/
+[drwxr-xr-x haakenli haakenli 4.0K May 10 21:58]  [01;34mdjango_debug_toolbar-1.2-py3.3.egg-info[00m/
+[drwxr-xr-x haakenli haakenli 4.0K May 10 22:11]  [01;34mdjango_extensions[00m/
+[drwxr-xr-x haakenli haakenli 4.0K May 10 22:11]  [01;34mdjango_extensions-1.3.6-py3.3.egg-info[00m/
+[drwxrwxr-x haakenli www-data 4.0K Apr 24 18:21]  [01;34mgunicorn[00m/
+[drwxrwxr-x haakenli www-data 4.0K Apr 24 18:21]  [01;34mgunicorn-18.0-py3.3.egg-info[00m/
+[drwxr-xr-x haakenli haakenli 4.0K May 10 21:49]  [01;34mIPython[00m/
+[drwxr-xr-x haakenli haakenli 4.0K May 10 21:49]  [01;34mipython-2.0.0-py3.3.egg-info[00m/
+[drwxrwxr-x haakenli www-data 4.0K Apr 24 16:38]  [01;34m_markerlib[00m/
+[drwxrwxr-x haakenli www-data 4.0K Apr 24 16:38]  [01;34mpip[00m/
+[drwxrwxr-x haakenli www-data 4.0K Apr 24 16:38]  [01;34mpip-1.4.1-py3.3.egg-info[00m/
+[drwxrwxr-x haakenli www-data 4.0K Apr 24 17:38]  [01;34mpsycopg2[00m/
+[drwxrwxr-x haakenli www-data 4.0K Apr 24 17:38]  [01;34mpsycopg2-2.5.2-py3.3.egg-info[00m/
+[drwxrwxr-x haakenli www-data 4.0K May 10 22:11]  [01;34m__pycache__[00m/
+[drwxr-xr-x haakenli www-data 4.0K Apr 24 20:18]  [01;34msetproctitle-1.1.8-py3.3.egg-info[00m/
+[drwxrwxr-x haakenli www-data 4.0K Apr 24 16:38]  [01;34msetuptools[00m/
+[drwxrwxr-x haakenli www-data 4.0K Apr 24 16:38]  [01;34msetuptools-0.9.8-py3.3.egg-info[00m/
+[drwxr-xr-x haakenli haakenli 4.0K May 10 22:11]  [01;34msix-1.6.1-py3.3.egg-info[00m/
+[drwxr-xr-x haakenli haakenli 4.0K May 10 21:51]  [01;34msouth[00m/
+[drwxr-xr-x haakenli haakenli 4.0K May 10 21:51]  [01;34mSouth-0.8.4-py3.3.egg-info[00m/
+[drwxr-xr-x haakenli haakenli 4.0K May 10 21:59]  [01;34msqlparse[00m/
+[drwxr-xr-x haakenli haakenli 4.0K May 10 21:59]  [01;34msqlparse-0.1.11-py3.3.egg-info[00m/
+[-rw-rw-r-- haakenli www-data  126 Jul 15  2013]  easy_install.py
+[-rw-rw-r-- haakenli www-data  99K Jul 15  2013]  pkg_resources.py
+[-rwxr-xr-x haakenli www-data  54K Apr 24 20:18]  [01;32msetproctitle.cpython-33m.so[00m*
+[-rw-r--r-- haakenli haakenli  23K May 10 22:11]  six.py
+[-rw-rw-r-- haakenli www-data  226 May  5 19:26]  _virtualenv_path_extensions.pth
+
+24 directories, 5 files
