@@ -30,6 +30,9 @@ SECRET_KEY = environ["DJANGO_SECRET_KEY"]
 DB_PASSWORD = environ["DJANGO_DB_PASSWORD"]
 DB_NAME = environ["DJANGO_DB_NAME"]
 DB_USER = environ["DJANGO_DB_USER"]
+PRODSYS_USER = environ["DJANGO_PRODSYS_USER"]
+PRODSYS_PASSWORD = environ["DJANGO_PRODSYS_PASSWORD"]
+PRODSYS_URL = environ["DJANGO_PRODSYS_URL"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False

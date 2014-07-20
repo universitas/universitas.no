@@ -3,12 +3,14 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-
+from django.template.defaultfilters import slugify
+# from .prodsys import Prodsys, wrapInHTML
 
 class Story(models.Model):
+
     """ An article or story in the newspaper. """
 
-    # TODO
+    # TODO make this importable?
     STATUS_DRAFT = 0
     STATUS_UNPUBLISHED = 5
     STATUS_PUBLISHED = 10
@@ -28,11 +30,15 @@ class Story(models.Model):
         blank=True,
         help_text=_('Summary of the story.')
     )
-    prodys_json = models.TextField(
+    prodsys_json = models.TextField(
         help_text=_('Json imported from prodsys'),
         blank=True,
     )
-    text_content = models.TextField(
+    bodytext_markup = models.TextField(
+        blank=True,
+        help_text=_('The content of the story. Marked up.'),)
+    bodytext_html = models.TextField(
+        default='<p>Placeholder</p>',
         help_text=_('The content of the story. Formatted in simple HTML'),
         blank=True,
     )
@@ -61,11 +67,14 @@ class Story(models.Model):
         help_text=_('Publication status.')
     )
     theme_word = models.CharField(
+        # TODO: Make into model?
         max_length=50,
         help_text=_('Theme')
     )
     slug = models.SlugField(
-        help_text=_('Human readable url.')
+        default='slug-here',
+        help_text=_('Human readable url.'),
+        editable=False
     )
     issue = models.ForeignKey(
         "PrintIssue", blank=True, null=True,
@@ -83,6 +92,7 @@ class Story(models.Model):
         'self',
         help_text=_('Stories with related content.')
     )
+    # TODO: Implement Extras and Revisions.
     # Extras
     #     related model
     # Revisions
@@ -90,49 +100,60 @@ class Story(models.Model):
 
     class Meta:
         verbose_name = _('Story')
-        verbose_name_plural = _('Storys')
+        verbose_name_plural = _('Stories')
 
-    def __unicode__(self):
-        pass
+    def __str__(self):
+        return self.title
 
-    def save(self):
-        pass
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)[:50]
+        if self.pk is not None:
+            orig = Story.objects.get(pk=self.pk)
+            if orig.bodytext_markup != self.bodytext_markup:
+                self.createHtml()
+        else:
+            self.createHtml()
+        super(Story, self).save(*args, **kwargs)
+
+    def createHtml(self):
+        # TODO: this is a hack.
+        html = self.bodytext_html or 'not implemented'
+        self.bodytext_html = html
 
     @models.permalink
     def get_absolute_url(self):
-        return ('')
+        return "http://change_this_method/%s/%s/" % (self.pk, self.slug)
 
     # Define custom methods here
 
 
 class StoryType(models.Model):
+
     """ A type of story in the publication. """
 
     name = models.CharField(unique=True, max_length=50)
     section = models.ForeignKey('Section')
     template = models.ForeignKey('Story', blank=True, null=True)
+    prodsys_mappe = models.CharField(max_length=100)
 
     class Meta:
         verbose_name = _('StoryType')
         verbose_name_plural = _('StoryTypes')
 
-    def __unicode__(self):
-        pass
-
-    def save(self):
-        pass
+    def __str__(self):
+        return self.name
 
     @models.permalink
     def get_absolute_url(self):
         return ('')
 
-    # Define custom methods here
-
 
 class Section(models.Model):
+
     """
     A Section in the publication that collects one type of content.
     """
+
     title = models.CharField(
         help_text=_('Section title'),
         unique=True, max_length=50)
@@ -141,21 +162,18 @@ class Section(models.Model):
         verbose_name = _('Section')
         verbose_name_plural = _('Sections')
 
-    def __unicode__(self):
-        pass
-
-    def save(self):
-        pass
+    def __str__(self):
+        return self.title
 
     @models.permalink
     def get_absolute_url(self):
         return ('')
 
-    # TODO: Defne custom methods here
-
 
 class StoryChild(models.Model):
+
     """ Asides and other content related to an Story. """
+
     # Define fields here
     story = models.ForeignKey(Story)
     content = models.TextField()
@@ -169,7 +187,7 @@ class StoryChild(models.Model):
         unique_together = ('story', 'ordering', 'position')
     # TODO: sjekk om dette funker riktig
 
-    def __unicode__(self):
+    def __str__(self):
         pass
 
     # def save(self):
@@ -184,6 +202,7 @@ class StoryChild(models.Model):
 
 
 class Byline(models.Model):
+
     """ The person who created content for an story. """
 
     CREDIT_CHOICES = [
@@ -200,8 +219,8 @@ class Byline(models.Model):
         verbose_name = _('Byline')
         verbose_name_plural = _('Bylines')
 
-    def __unicode__(self):
-        pass
+    def __str__(self):
+        return '%s: %s' % (self.credit, self.contributor)
 
     # TODO: Define custom methods here
 
@@ -219,7 +238,7 @@ class Byline(models.Model):
     #     verbose_name = _('Temaord')
     #     verbose_name_plural = _('Temaords')
 
-    # def __unicode__(self):
+    # def __str__(self):
     #     pass
 
     # def save(self):
@@ -233,6 +252,7 @@ class Byline(models.Model):
 
 
 class Contributor(models.Model):
+
     """ Someone who contributes content to the newspaper or other staff. """
 
     # TODO: Move to different app
@@ -245,7 +265,7 @@ class Contributor(models.Model):
         verbose_name = _('Contributor')
         verbose_name_plural = _('Contributors')
 
-    def __unicode__(self):
+    def __str__(self):
         pass
 
     def save(self):
@@ -259,9 +279,11 @@ class Contributor(models.Model):
 
 
 class ContactInfo(models.Model):
+
     """
     Contact information for contributors and others.
     """
+
     PERSON = _('Person')
     INSTITUTION = _('Institution')
     POSITION = _('Position')
@@ -284,7 +306,7 @@ class ContactInfo(models.Model):
         verbose_name = _('ContactInfo')
         verbose_name_plural = _('ContactInfos')
 
-    def __unicode__(self):
+    def __str__(self):
         pass
 
     def save(self):
@@ -298,7 +320,9 @@ class ContactInfo(models.Model):
 
 
 class Position(models.Model):
+
     """ A postion og job in the publication. """
+
     title = models.CharField(
         help_text=_('Job title at the publication.'),
         unique=True, max_length=50)
@@ -307,7 +331,7 @@ class Position(models.Model):
         verbose_name = _('Position')
         verbose_name_plural = _('Positions')
 
-    def __unicode__(self):
+    def __str__(self):
         pass
 
     def save(self):
@@ -321,8 +345,8 @@ class Position(models.Model):
 
 
 class PrintIssue(models.Model):
+
     """ An printed issue of the publication. """
-    # TODO: egen PDF-app
 
     issue_number = models.CharField(max_length=5)
     pages = models.IntegerField(help_text='Number of pages')
@@ -338,7 +362,7 @@ class PrintIssue(models.Model):
         verbose_name = _('Issue')
         verbose_name_plural = _('Issues')
 
-    def __unicode__(self):
+    def __str__(self):
         pass
 
     def save(self):
@@ -349,3 +373,40 @@ class PrintIssue(models.Model):
         return ('')
 
     # Define custom methods here
+
+
+class ProdsysTag(models.Model):
+
+    """ Tag from prodsys """
+
+    xtag = models.CharField(default='@tagname:', unique=True, max_length=50)
+    html_tag = models.CharField(default='p', max_length=50)
+    html_class = models.CharField(blank=True, null=True, max_length=50)
+
+    class Meta:
+        verbose_name = _('prodsys_tag')
+        verbose_name_plural = _('prodsys_tags')
+
+    def __str__(self):
+        """ unicode  """
+        return self.xtag
+
+    def save(self, *args, **kwargs):
+        if not self.pk and not self.html_class:
+            self.html_class = self.xtag
+        super(ProdsysTag, self).save(*args, **kwargs)
+
+    def wrap(self, content):
+        """ Wrap string in html for this tag """
+        if self.html_class is None:
+            html = '<%s>%s</%s>' % (self.html_tag, content, self.html_tag)
+        else:
+            html = '<%s class="%s">%s</%s>' % (self.html_tag, self.html_class, content, self.html_tag)
+        return html
+
+    @classmethod
+    def wrap_text(cls, xtag, content):
+        """ Wrap text in html tags even if tag does not exist yet. """
+        # TODO: Dette bør gjøres i en utilityfunksjon som ikke misbruker databasen så mye.
+        tag = ProdsysTag.objects.get_or_create(xtag=xtag)[0]
+        return tag.wrap(content)

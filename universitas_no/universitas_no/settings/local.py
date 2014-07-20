@@ -1,7 +1,5 @@
 """Development settings and globals."""
 
-from __future__ import absolute_import
-
 from .base import *
 
 
@@ -14,6 +12,7 @@ TEMPLATE_DEBUG = DEBUG
 ########## EMAIL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'localemail@localhost'
 ########## END EMAIL CONFIGURATION
 
 ########## CACHE CONFIGURATION

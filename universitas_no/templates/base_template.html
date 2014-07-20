@@ -1,0 +1,33 @@
+{% load sekizai_tags %} {% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <title>{% block title %}universitas.no{% endblock %}</title>
+  <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
+  <link rel="icon" type="image/png" href="{% static 'images/favicon_128.png' %}" />
+  <link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon.png' %}" />{% render_block "css" postprocessor "compressor.contrib.sekizai.compress" %} {% addtoblock "css" %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/universitas.no' %}">{% endaddtoblock %}
+
+</head>
+
+<body>
+  <header>
+    {% block header %}
+    <h1>Universitas.no</h1>
+    {% endblock header %}
+  </header>
+  <main>
+    {% block content %}
+    <p>Main Content here</p>
+    {% endblock content %}
+  </main>
+  <footer>
+    {% block footer %} {% endblock footer %}
+  </footer>
+  {% addtoblock "js" %} {% endaddtoblock %} {% render_block "js" postprocessor "compressor.contrib.sekizai.compress" %}
+
+</body>
+
+</html>
