@@ -6,6 +6,9 @@ from universitas_no.settings.base import *
 # TEST_DISCOVER_ROOT = SITE_ROOT
 # TEST_DISCOVER_PATTERN = "test_*.py"
 ########## IN-MEMORY TEST DATABASE
+
+STAGING='testing'
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",

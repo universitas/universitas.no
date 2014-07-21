@@ -6,6 +6,7 @@ from .base import *
 ########## DEBUG CONFIGURATION
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+STAGING = 'local'
 ########## END DEBUG CONFIGURATION
 
 

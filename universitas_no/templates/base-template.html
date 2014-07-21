@@ -1,0 +1,50 @@
+{% load sekizai_tags %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html class="no-js" lang="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}universitas.no{% endblock %}</title>
+  <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
+  <link rel="icon" type="image/png" href="{% static 'images/favicon_128.png' %}" />
+  <link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon.png' %}" />
+  {% addtoblock "css" %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/foundation.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/universitas.css' %}">
+  {% endaddtoblock %}
+  {% render_block "css" postprocessor "compressor.contrib.sekizai.compress" %}
+  <script src="{% static 'js/vendor/modernizr.js' %}"></script>
+</head>
+
+<body>
+  <header>
+    {% block header %}
+    <div class="row">
+      <div class="large-12 columns"><h1>Universitas.no</h1></div>
+    </div>
+    {% endblock header %}
+  </header>
+  <main>
+    {% block content %}
+    <p>Main Content here</p>
+    {% endblock content %}
+  </main>
+  {% block footer %}
+  <footer>
+    <div class="row">
+      <div class="large-12 columns" id="footer">Footer here</div>
+    </div>
+  </footer>
+  {% endblock footer %}
+  {% addtoblock "js" %}
+  <script src="{% static 'js/vendor/jquery.js' %}"></script>
+  <script src="{% static 'js/foundation.min.js' %}"></script>
+  {% endaddtoblock %}
+  {% render_block "js" postprocessor "compressor.contrib.sekizai.compress" %}
+  <script> $(document).foundation(); </script>
+
+</body>
+
+</html>

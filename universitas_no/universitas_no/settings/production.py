@@ -6,9 +6,9 @@ from .base import *
 
 
 ########## DEBUG CONFIGURATION
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-STAGING = 'staging'
+STAGING = 'production'
 ########## END DEBUG CONFIGURATION
 
 

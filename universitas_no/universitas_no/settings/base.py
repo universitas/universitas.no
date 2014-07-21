@@ -12,13 +12,14 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: path.join(SITE_ROOT, ...)
 from os import environ
 from os.path import abspath, dirname, join, normpath
+import django.conf.global_settings as DEFAULT_SETTINGS
 
 # PATH CONFIGURATION
 # Absolute filesystem path to the Django project directory:
-DJANGO_ROOT = dirname(dirname(dirname(abspath(__file__))))
+BASE_DIR = dirname(dirname(dirname(abspath(__file__))))
 
 # Absolute filesystem path to the top-level project folder:
-SITE_ROOT = dirname(DJANGO_ROOT)
+SITE_ROOT = dirname(BASE_DIR)
 
 # Site name:
 SITE_NAME = "universitas.no"
@@ -37,10 +38,10 @@ PRODSYS_URL = environ["DJANGO_PRODSYS_URL"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*.universitas.no']
+STAGING = 'base'
 
-# Application definition
-
+# CORE APPS
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,10 +49,21 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'stories',
-    'south',
+    )
+
+# THIRD PARTY APPS
+INSTALLED_APPS += (
     'django_extensions',
-)
+    'compressor',
+    'sekizai',
+    )
+
+# CUSTOM APPS
+INSTALLED_APPS += (
+    'stories',
+    'core',
+    )
+
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -63,7 +75,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'universitas_no.urls'
-
 WSGI_APPLICATION = 'universitas_no.wsgi.application'
 
 
@@ -82,40 +93,38 @@ DATABASES = {
 }
 
 # INTERNATIONALIZATION
-# https://docs.djangoproject.com/en/1.6/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'no'
 TIME_ZONE = 'Europe/Oslo'
 USE_I18N = True  # Internationalisation (string translation)
 USE_L10N = True  # Localisation (numbers and stuff)
 USE_TZ = True  # Use timezone
 
 # MEDIA CONFIGURATION
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#media-root
 MEDIA_ROOT = normpath(join(SITE_ROOT, 'media'))
-
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = '/media/'
 # END MEDIA CONFIGURATION
 
-
 # STATIC FILE CONFIGURATION
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
 STATIC_ROOT = normpath(join(SITE_ROOT, 'static'))
-
-# http://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
-
-# See:
-# https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = (
-    normpath(join(DJANGO_ROOT, 'assets')),
+    normpath(join(BASE_DIR, 'assets')),
 )
-
-# See:
-# https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
 )
 # END STATIC FILE CONFIGURATION
+
+# TEMPLATES AND FIXTURES CONFIGURATION
+FIXTURE_DIRS = (
+    normpath(join(BASE_DIR, 'fixtures')),
+)
+TEMPLATE_DIRS = (
+    normpath(join(BASE_DIR, 'templates')),
+)
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    'sekizai.context_processors.sekizai',
+)
+# END TEMPLATES AND FIXTURES CONFIGURATION
