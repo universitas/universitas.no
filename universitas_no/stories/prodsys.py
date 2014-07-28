@@ -65,7 +65,6 @@ class Prodsys(object):
 
     def createArticleText(self, prodsak_id):
         """ Save imported article in db. """
-        # ipdb.set_trace()
         reply = self.importArticleJson(prodsak_id)
         if reply.status_code != 200:
             return False
