@@ -2,9 +2,12 @@
 """ Content in the publication. """
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+import re
 # from .prodsys import Prodsys, wrapInHTML
+
 
 class Story(models.Model):
 
@@ -67,7 +70,7 @@ class Story(models.Model):
         help_text=_('Publication status.')
     )
     theme_word = models.CharField(
-        # TODO: Make into model?
+        # TODO: Make Theme word into model.
         max_length=50,
         help_text=_('Theme')
     )
@@ -116,7 +119,7 @@ class Story(models.Model):
         super(Story, self).save(*args, **kwargs)
 
     def createHtml(self):
-        # TODO: this is a hack.
+        # TODO: creatHTML model method in story is a hack.
         html = self.bodytext_html or 'not implemented'
         self.bodytext_html = html
 
@@ -185,7 +188,7 @@ class StoryChild(models.Model):
         verbose_name = _('StoryChild')
         verbose_name_plural = _('StoryChildren')
         unique_together = ('story', 'ordering', 'position')
-    # TODO: sjekk om dette funker riktig
+        # TODO: sjekk at unique_together i StoryChild funker riktig
 
     def __str__(self):
         pass
@@ -213,7 +216,8 @@ class Byline(models.Model):
     ]
     story = models.ForeignKey('Story')
     contributor = models.ForeignKey('Contributor')
-    credit = models.CharField(choices=CREDIT_CHOICES, max_length=20)
+    credit = models.CharField(choices=CREDIT_CHOICES, default=CREDIT_CHOICES[0], max_length=20)
+    title = models.CharField(blank=True, max_length=200)
 
     class Meta:
         verbose_name = _('Byline')
@@ -222,7 +226,38 @@ class Byline(models.Model):
     def __str__(self):
         return '%s: %s' % (self.credit, self.contributor)
 
-    # TODO: Define custom methods here
+    @classmethod
+    def create(cls, full_byline, story, initials=''):
+        """
+        Creates new user or tries to find existing name in db
+        args:
+            full_byline: string of byline and creditline
+            article: Article object (must be saved)
+            initials: string
+        returns:
+            Byline object
+        """
+
+        byline_pattern = re.compile(
+            r'^((?P<credit>[^:,]+):)?\s*(?P<full_name>[^,]+)\s*(,\s*(?P<title>.+))?$'
+        )
+        d = byline_pattern.match(full_byline).groupdict()
+        full_name = d['full_name']
+        title = d['title']
+        credit = d['credit']
+        if not credit in (choice for choice, label in cls.CREDIT_CHOICES):
+            credit = None
+
+        contributor = Contributor.get_or_create(full_name, initials)
+
+        new_byline = cls(
+            story=story,
+            credit=credit,
+            title=title,
+            contributor=contributor,
+        )
+
+        return new_byline
 
 
 # class Temaord(models.Model):
@@ -256,26 +291,93 @@ class Contributor(models.Model):
     """ Someone who contributes content to the newspaper or other staff. """
 
     # TODO: Move to different app
-    user = models.ForeignKey(User, blank=True, null=True)
-    displayName = models.CharField(blank=True, null=True, max_length=50)
-    position = models.ForeignKey('Position')
-    contact_info = models.ForeignKey('ContactInfo')
+    # TODO: Implement foreignkeys to positions, user and contact_info
+    # user = models.ForeignKey(User, blank=True, null=True)
+    # position = models.ForeignKey('Position')
+    # contact_info = models.ForeignKey('ContactInfo')
+    displayName = models.CharField(blank=True, max_length=50)
+    aliases = models.TextField(blank=True)
+    initials = models.CharField(blank=True, null=True, max_length=5)
 
     class Meta:
         verbose_name = _('Contributor')
         verbose_name_plural = _('Contributors')
 
     def __str__(self):
-        pass
+        return self.displayName or self.initials or 'N. N.'
 
-    def save(self):
-        pass
+    @classmethod
+    def get_or_create(cls, full_name, initials=''):
+        """
+        Fancy lookup for low quality legacy imports.
+        Tries to avoid creation of multiple contributor instances
+        for a single real contributor.
+        """
+        names = full_name.split()
+        last_name = names[-1]
+        first_name = names[:-1][0]
+        # middle_name = ' '.join(names[1:-1])
 
-    @models.permalink
-    def get_absolute_url(self):
-        return ('')
+        base_query = cls.objects
 
-    # Define custom methods here
+        def find_single_item_or_none(func):
+            """ Decorator to return one item or none """
+
+            def inner_func(*args, **kwargs):
+                try:
+                    return func(*args, **kwargs)
+                except ObjectDoesNotExist:
+                    # lets' try something else.
+                    return None
+                except MultipleObjectsReturned:
+                    # We pass this error on for now.
+                    # TODO: Make sure two people can have the same name.
+                    raise
+            return inner_func
+
+        @find_single_item_or_none
+        def search_for_full_name():
+            return base_query.get(displayName=full_name)
+
+        @find_single_item_or_none
+        def search_for_first_plus_last_name():
+            if not first_name:
+                return None
+            return base_query.get(
+                displayName__istartswith=first_name,
+                displayName__iendswith=last_name)
+
+        @find_single_item_or_none
+        def search_for_alias():
+            if first_name:
+                return None
+            return base_query.get(alias__icontains=last_name)
+
+        @find_single_item_or_none
+        def search_for_initials():
+            if first_name or not initials:
+                return None
+            contributor = base_query.get(initials__iexact=initials)
+            contributor.aliases += full_name
+            contributor.save()
+            return contributor
+
+        # Variuous queries to look for contributor in the database.
+        contributor = (
+            search_for_full_name() or
+            search_for_alias() or
+            search_for_initials() or
+            None
+        )
+
+        # Was not found with any of the methods.
+        if not contributor:
+            contributor = cls(
+                displayName=full_name,
+                initials=initials,
+            )
+            contributor.save()
+        return contributor
 
 
 class ContactInfo(models.Model):
@@ -307,16 +409,7 @@ class ContactInfo(models.Model):
         verbose_name_plural = _('ContactInfos')
 
     def __str__(self):
-        pass
-
-    def save(self):
-        pass
-
-    @models.permalink
-    def get_absolute_url(self):
-        return ('')
-
-    # TODO: Defne custom methods here
+        return self.name
 
 
 class Position(models.Model):
@@ -349,8 +442,8 @@ class PrintIssue(models.Model):
     """ An printed issue of the publication. """
 
     issue_number = models.CharField(max_length=5)
+    publication_date = models.DateField()
     pages = models.IntegerField(help_text='Number of pages')
-    # TODO: Function? or Filepathfield
     pdf = models.FilePathField(
         help_text=_('Pdf file for this issue.'),
         blank=True, null=True,)
@@ -363,16 +456,12 @@ class PrintIssue(models.Model):
         verbose_name_plural = _('Issues')
 
     def __str__(self):
-        pass
+        return self.issue_number
 
-    def save(self):
-        pass
-
+    # TODO: File path and image should be refactored to be a function.
     @models.permalink
     def get_absolute_url(self):
         return ('')
-
-    # Define custom methods here
 
 
 class ProdsysTag(models.Model):
@@ -410,3 +499,34 @@ class ProdsysTag(models.Model):
         # TODO: Dette bør gjøres i en utilityfunksjon som ikke misbruker databasen så mye.
         tag = ProdsysTag.objects.get_or_create(xtag=xtag)[0]
         return tag.wrap(content)
+
+
+def import_from_prodsys(items, overwrite=False):
+    """
+    Imports one or more articles from prodsys.
+    args:
+        item: int or list of ints of prodsys_id
+        overwrite: boolean overwrite if item already exists.
+
+    returns:
+        Artice or list of Articles
+    """
+    from .prodsys import Prodsys
+
+    prodsys = Prodsys()
+
+    def import_single_article(item):
+        """ Imports single item """
+        pass
+
+    def import_single_image(dict):
+        """ Imports single image """
+        pass
+
+    if isinstance(items, list):
+        for item in items:
+            import_single_article(item)
+    else:
+        assert isinstance(items, int)
+        item = items
+        import_single_article(item)

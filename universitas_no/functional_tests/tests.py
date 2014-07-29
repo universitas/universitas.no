@@ -14,7 +14,7 @@ WEBDRIVER = 'PhantomJS'
 class FrontPageVisitTest(StaticLiveServerCase):
 
     def setUp(self):
-        # TODO: load fixtures.
+        # TODO: load mocks∕fixtures of frontpage articles.
         if WEBDRIVER == 'PhantomJS':
             self.browser = webdriver.PhantomJS(
                 executable_path='/home/haakenlid/node_modules/phantomjs/lib/phantom/bin/phantomjs')
@@ -24,12 +24,6 @@ class FrontPageVisitTest(StaticLiveServerCase):
     def tearDown(self):
         self.browser.quit()
 
-    def test_webserver_is_running(self):
-        # Besøker nettsiden og sjekker at den funker.
-        self.browser.get(self.live_server_url)
-
-        self.assertIn('universitas.no', self.browser.title)
-
     def test_visitor_frontpage(self):
         # Ole-Petter har hørt at Universitas har fått en ny nettside.
         # Han skriver inn “http://universitas.no” i nettleseren for å se.
@@ -37,11 +31,17 @@ class FrontPageVisitTest(StaticLiveServerCase):
 
         # På siden kan han se at avisa heter “Universitas” og er Norges største studentavis.
         self.assertIn('universitas', self.browser.title)
-        self.assertIn('Norges største studentavis', self.browser.page_source)
-        self.assertInHTML('Norges største studentavis', self.browser.page_source)
+        self.assertIn('studentavis', self.browser.page_source)
 
         # Det finnes en rekke saker på forsiden
         articles = self.browser.find_elements_by_css_selector('article')
+        minimum_antall_forsideartikler = 5
+        self.assertGreater(
+            len(articles),
+            minimum_antall_forsideartikler,
+            msg='Ikke nok artikler vises på forsiden.',
+            )
+
         for article in articles:
             # , som alle har en tittel
             headline = article.find_elements_by_css_selector('.headline')
@@ -57,7 +57,7 @@ class FrontPageVisitTest(StaticLiveServerCase):
         # forsiden i en layoutgrid, og kan ha stikktittel, bilde og ingress.
 
 
-    def test_visitor_articlepage(self):
+    def not_test_visitor_articlepage(self):
         # Ole-Petter besøker universitas.no og trykker på en av sakene på forsiden.
         self.browser.get(self.live_server_url)
 

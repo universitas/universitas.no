@@ -6,7 +6,7 @@ from django.conf import settings
 import requests
 from datetime import datetime
 import re
-from stories.models import Story, StoryType, ProdsysTag
+from stories.models import Story, Byline, StoryType, ProdsysTag
 
 import ipdb
 
@@ -39,7 +39,7 @@ def wrapInHTML(paragraphs):  # TODO: Should maybe be in models?
 
 
 class Prodsys(object):
-    # TODO: Is there any reason this is a class?
+    # TODO: Should only contain CRUD operations.
 
     """Leser fra prodsys over web-api."""
 
@@ -63,6 +63,16 @@ class Prodsys(object):
         reply = requests.get(url, auth=self.auth)
         return reply
 
+    def cleanUpText(self, text):
+        """ Fixes some characters and stuff in old prodsys implementation.
+            string -> string
+        """
+        text = text.replace('\x95', '•')  # bullet character
+        text = text.replace('--', '–')  # en-dash
+        text = text.replace('\r\n\r\n', '\n')  # line-endings
+        text = re.compile(r'^# ', re.MULTILINE).sub('@li:', text)  # hash symbol to li
+        return text
+
     def createArticleText(self, prodsak_id):
         """ Save imported article in db. """
         reply = self.importArticleJson(prodsak_id)
@@ -71,15 +81,11 @@ class Prodsys(object):
         json = reply.json()
         text = json['tekst']
         prodsys_id = json['prodsak_id']
-        # TODO: change replacement to exitst in db.
-        text = text.replace('\x95', '•')  # bullet character
-        text = text.replace('--', '–')  # en-dash
-        text = text.replace('\r\n\r\n', '\n')  # line-endings
-        text = re.compile(r'^# ', re.MULTILINE).sub('@li:', text)  # hash symbol to li
+        text = self.cleanUpText(text)
         paragraphs = createParagraphList(text)
 
         def pop_tags(tags=None):
-            """ Seperates certain xtags from the content. """
+            """ Separates certain xtags from the content. """
             res = []
             if tags:
                 for p in paragraphs[:]:
@@ -93,8 +99,8 @@ class Prodsys(object):
         title = pop_tags('tit')
         lede = pop_tags('ing')
         prodsys_json = reply.text
-        bylines = pop_tags('bl')  # TODO: create objects
-        story_type = json['mappe']  # TODO: model method
+        bylines = pop_tags('bl')  # TODO: create byline objects
+        story_type = json['mappe']  # TODO: story type should be determined with a function.
 
         # images = json['bilete'] Ikkje alle sakar har bilete
 
@@ -103,7 +109,7 @@ class Prodsys(object):
         dateline_place = ''
         publication_date = dateline_date
         # status (default)
-        # TODO: Bør status alltid være det samme?
+        # TODO: Status should be determined somehow from prodsys status or something like that.
         theme_word = pop_tags('temaord')
         bodytext_markup = ''.join(['@%s:%s\n' % (p['tag'], p['text']) for p in paragraphs])
         # bodytext_markup = "\n".join(paragraphs)
@@ -123,11 +129,13 @@ class Prodsys(object):
             prodsys_id=prodsys_id,
             prodsys_json=prodsys_json,
             bodytext_markup=bodytext_markup,
-            bodytext_html=bodytext_html,
+            # bodytext_html=bodytext_html,
             # bylines=?
+            # TODO: Import bylines.
             story_type=story_type,
             dateline_date=dateline_date,
             dateline_place=dateline_place,
+            # TODO: Import publication date.
             # publication_date=?,
             status=Story.STATUS_UNPUBLISHED,
             theme_word=theme_word,
@@ -135,12 +143,12 @@ class Prodsys(object):
             # page=?,
             # pdf_url=?,
         )
-        # import ipdb; ipdb.set_trace()
         new_story.save()
         return True
 
 
 def main():
+    # TODO: Make prodsys/tests.py instead!
     prodsys = Prodsys()
     with open('published.csv') as f:
         published = set(int(i.strip()) for i in f)

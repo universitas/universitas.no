@@ -62,6 +62,7 @@ INSTALLED_APPS += (
 INSTALLED_APPS += (
     'stories',
     'core',
+    'frontpage',
     )
 
 
