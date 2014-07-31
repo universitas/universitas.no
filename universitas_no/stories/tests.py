@@ -3,7 +3,7 @@
 Tests.
 """
 from django.test import TestCase
-from .models import Story, Byline, import_from_prodsys
+from .models import Image, Aside, Pullquote, Byline, import_from_prodsys
 
 
 class StoryTest(TestCase):
@@ -15,4 +15,7 @@ class StoryTest(TestCase):
         story = import_from_prodsys(prodsak_id)
         self.assertEqual(prodsak_id, int(story.prodsys_id))
         self.assertTrue(Byline.objects.all())
+        self.assertTrue(Pullquote.objects.all())
+        self.assertTrue(Aside.objects.all())
+        self.assertTrue(Image.objects.all())
 
