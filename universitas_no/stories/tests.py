@@ -3,7 +3,7 @@
 Tests.
 """
 from django.test import TestCase
-from .models import Story, import_from_prodsys
+from .models import Story, Byline, import_from_prodsys
 
 
 class StoryTest(TestCase):
@@ -11,7 +11,8 @@ class StoryTest(TestCase):
 
     def test_create_story(self):
         """ Creates story instance in database """
-        prodsak_id = 18658
+        prodsak_id = 18797
         story = import_from_prodsys(prodsak_id)
         self.assertEqual(prodsak_id, int(story.prodsys_id))
+        self.assertTrue(Byline.objects.all())
 
