@@ -25,6 +25,12 @@ SITE_ROOT = dirname(BASE_DIR)
 SITE_NAME = "universitas.no"
 
 # END PATH CONFIGURATION
+INSTALLED_APPS = (
+    'stories',
+    'core',
+    'frontpage',
+    'prodsys_import',
+    )
 
 # These values are set in the virtualenv postactivate bash file
 SECRET_KEY = environ["DJANGO_SECRET_KEY"]
@@ -40,6 +46,8 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 ALLOWED_HOSTS = ['*.universitas.no']
 STAGING = 'base'
+# CUSTOM APPS
+
 
 # CORE APPS
 INSTALLED_APPS = (
@@ -49,20 +57,13 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    )
+    ) + INSTALLED_APPS
 
 # THIRD PARTY APPS
 INSTALLED_APPS += (
     'django_extensions',
     'compressor',
     'sekizai',
-    )
-
-# CUSTOM APPS
-INSTALLED_APPS += (
-    'stories',
-    'core',
-    'frontpage',
     )
 
 

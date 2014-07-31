@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 import re
-# from .prodsys import Prodsys, wrapInHTML
+from prodsys_import.prodsys import Prodsys
 
 
 class Story(models.Model):
@@ -27,23 +27,37 @@ class Story(models.Model):
     )
     title = models.CharField(
         max_length=1000,
-        help_text=_('The title of the story.')
+        help_text=_('Headline')
+    )
+    kicker = models.CharField(
+        blank=True,
+        max_length=1000,
+        help_text=_('Secondary headline')
     )
     lede = models.TextField(
         blank=True,
-        help_text=_('Summary of the story.')
+        help_text=_('Introduction or summary of the story')
+    )
+    theme_word = models.CharField(
+        blank=True,
+        max_length=100,
+        help_text=_('Theme')
     )
     prodsys_json = models.TextField(
-        help_text=_('Json imported from prodsys'),
         blank=True,
+        help_text=_('Json imported from prodsys'),
+        editable=False,
     )
     bodytext_markup = models.TextField(
         blank=True,
-        help_text=_('The content of the story. Marked up.'),)
+        default=_('Write your story here.'),
+        help_text=_('The content of the story. Marked up.'),
+    )
     bodytext_html = models.TextField(
+        blank=True,
+        editable=False,
         default='<p>Placeholder</p>',
         help_text=_('The content of the story. Formatted in simple HTML'),
-        blank=True,
     )
     bylines = models.ManyToManyField(
         'Contributor', through='Byline',
@@ -67,25 +81,21 @@ class Story(models.Model):
     )
     status = models.IntegerField(
         default=0, choices=STATUS_CHOICES,
-        help_text=_('Publication status.')
-    )
-    theme_word = models.CharField(
-        # TODO: Make Theme word into model.
-        max_length=50,
-        help_text=_('Theme')
+        help_text=_('Publication status.'),
     )
     slug = models.SlugField(
         default='slug-here',
         help_text=_('Human readable url.'),
-        editable=False
+        editable=False,
     )
     issue = models.ForeignKey(
-        "PrintIssue", blank=True, null=True,
-        help_text=_('Which issue this story was printed in.')
+        "PrintIssue",
+        blank=True, null=True,
+        help_text=_('Which issue this story was printed in.'),
     )
     page = models.IntegerField(
         blank=True, null=True,
-        help_text=_('Which page the story was printed on.')
+        help_text=_('Which page the story was printed on.'),
     )
     pdf_url = models.URLField(
         blank=True, null=True,
@@ -127,7 +137,101 @@ class Story(models.Model):
     def get_absolute_url(self):
         return "http://change_this_method/%s/%s/" % (self.pk, self.slug)
 
-    # Define custom methods here
+    def clean_markup(self):
+        """ Cleans up markup and populates model fields based on current xtags. """
+
+        def check_tag(tag, paragraph_text, bucket):
+            if tag == "headline":
+                buckets["headlines"].append(paragraph_text)
+                return bucket
+
+            elif tag == "ing":
+                buckets["ledes"].append(paragraph_text)
+                return bucket
+
+            elif tag == "stikktit":
+                buckets["kickers"].append(paragraph_text)
+                return bucket
+
+            elif tag == "bl":
+                bylines = re.sub(r'[;•]', r'\n', paragraph_text).splitlines()
+                buckets["bylines"] += bylines
+                return bucket
+
+            elif tag == "sitat":
+                bucket = []
+                buckets["pullquotes"].append(bucket)
+
+            elif tag == "sitatbyline":
+                bucket.append(tag + paragraph_text)
+                bucket = buckets["body"]
+
+            elif tag == "fakta":
+                bucket = []
+                buckets["asides"].append(bucket)
+
+            bucket.append("@%s:%s" % (tag, paragraph_text))
+            return bucket
+
+        buckets = {
+            "headlines": [],
+            "kickers": [],
+            "ledes": [],
+            "bylines": [],
+            "body": [],
+            "pullquotes": [],
+            "asides": [],
+        }
+        active_bucket = buckets["body"]
+        current_tag = "txt"
+        xtag_regexp = re.compile(r'^@([^ :]+): ?(.*)$')
+        input_markup = self.bodytext_markup.splitlines()
+
+        for paragraph in input_markup:
+            starts_with_tag = xtag_regexp.match(paragraph)
+            if starts_with_tag:
+                current_tag = starts_with_tag.group(1)
+                paragraph_text = starts_with_tag.group(2)
+            else:
+                paragraph_text = paragraph
+            active_bucket = check_tag(current_tag, paragraph_text, active_bucket)
+
+        self.title = '\n'.join(buckets["headlines"]) or self.title
+        self.kicker = '\n'.join(buckets["kickers"]) or self.kicker
+        self.lede = '\n'.join(buckets["ledes"]) or self.lede
+        self.bodytext_markup = '\n'.join(buckets["body"])
+        self.bodytext_html = self.wrapInHTML()
+        self.save()
+        for byline in buckets["bylines"]:
+            Byline.create(
+                story=self,
+                full_byline=byline,
+                initials='',
+                )
+
+        for pullquote in buckets["pullquotes"]:
+            # Pullquote.create()
+            # raise NotImplementedError
+            # TODO: implement pullquote and aside creation.
+            pass
+
+        for asides in buckets["asides"]:
+            # Aside.create()
+            # raise NotImplementedError
+            pass
+
+
+    def wrapInHTML(self):
+        """ Return HTML representation of body text """
+        html = []
+        xtag_regexp = re.compile(r'^@([^ :]+): ?(.*)$') # TODO: Put tag-related constants in Prodsystag class.
+
+        for paragraph in self.bodytext_markup.splitlines():
+            tag, text = xtag_regexp.match(paragraph).groups()
+            html.append(
+                ProdsysTag.wrap_text(tag, text)
+            )
+        return '\n'.join(html)
 
 
 class StoryType(models.Model):
@@ -496,7 +600,8 @@ class ProdsysTag(models.Model):
     @classmethod
     def wrap_text(cls, xtag, content):
         """ Wrap text in html tags even if tag does not exist yet. """
-        # TODO: Dette bør gjøres i en utilityfunksjon som ikke misbruker databasen så mye.
+        # TODO: Prodsystag.wrap_text() bør gjøres i en utilityfunksjon som ikke misbruker databasen så mye.
+
         tag = ProdsysTag.objects.get_or_create(xtag=xtag)[0]
         return tag.wrap(content)
 
@@ -511,13 +616,21 @@ def import_from_prodsys(items, overwrite=False):
     returns:
         Artice or list of Articles
     """
-    from .prodsys import Prodsys
-
     prodsys = Prodsys()
 
     def import_single_article(item):
         """ Imports single item """
-        pass
+
+        new_item = prodsys.fetch_article_from_prodsyst(item)
+
+        story_type = StoryType.objects.filter(
+            prodsys_mappe=new_item["mappe"],)
+        if not story_type:
+            story_type = StoryType.objects.last()
+        else:
+            # Use first one if several story_types maps to the same.
+            story_type = story_type[0]
+
 
     def import_single_image(dict):
         """ Imports single image """
