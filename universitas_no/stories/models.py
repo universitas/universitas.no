@@ -80,7 +80,7 @@ class Story(models.Model):
         help_text=_('When this story will be published on the web.')
     )
     status = models.IntegerField(
-        default=0, choices=STATUS_CHOICES,
+        default=STATUS_DRAFT, choices=STATUS_CHOICES,
         help_text=_('Publication status.'),
     )
     slug = models.SlugField(
@@ -207,7 +207,7 @@ class Story(models.Model):
                 story=self,
                 full_byline=byline,
                 initials='',
-                )
+            )
 
         for pullquote in buckets["pullquotes"]:
             # Pullquote.create()
@@ -220,11 +220,10 @@ class Story(models.Model):
             # raise NotImplementedError
             pass
 
-
     def wrapInHTML(self):
         """ Return HTML representation of body text """
         html = []
-        xtag_regexp = re.compile(r'^@([^ :]+): ?(.*)$') # TODO: Put tag-related constants in Prodsystag class.
+        xtag_regexp = re.compile(r'^@([^ :]+): ?(.*)$')  # TODO: Put tag-related constants in Prodsystag class.
 
         for paragraph in self.bodytext_markup.splitlines():
             tag, text = xtag_regexp.match(paragraph).groups()
@@ -241,7 +240,9 @@ class StoryType(models.Model):
     name = models.CharField(unique=True, max_length=50)
     section = models.ForeignKey('Section')
     template = models.ForeignKey('Story', blank=True, null=True)
-    prodsys_mappe = models.CharField(max_length=100)
+    prodsys_mappe = models.CharField(
+        blank=True, null=True,
+        max_length=20)
 
     class Meta:
         verbose_name = _('StoryType')
@@ -621,16 +622,33 @@ def import_from_prodsys(items, overwrite=False):
     def import_single_article(item):
         """ Imports single item """
 
-        new_item = prodsys.fetch_article_from_prodsyst(item)
+        story_kwargs = prodsys.fetch_article_from_prodsys(item)
+        prodsys_images = story_kwargs.pop('images')
+        prodsys_mappe = story_kwargs.pop('mappe')
+        date = story_kwargs.pop('date')
+        published = story_kwargs.pop('published')
+        try:
+            story_type = StoryType.objects.get(prodsys_mappe=prodsys_mappe)
+        except ObjectDoesNotExist:
+            story_type = StoryType.objects.create(
+                prodsys_mappe=prodsys_mappe,
+                name="New Story Type - " + prodsys_mappe,
+                section=Section.objects.first(),
+            )
+        except MultipleObjectsReturned:
+            # TODO: Det bør egentlig bare være en sakstype
+            story_type = StoryType.objects.filter(prodsys_mappe=prodsys_mappe).first()
 
-        story_type = StoryType.objects.filter(
-            prodsys_mappe=new_item["mappe"],)
-        if not story_type:
-            story_type = StoryType.objects.last()
-        else:
-            # Use first one if several story_types maps to the same.
-            story_type = story_type[0]
+        story_kwargs["dateline_date"] = date
+        if published:
+            story_kwargs["publication_date"] = date
+            story_kwargs["status"] = Story.STATUS_UNPUBLISHED
 
+        story_kwargs["story_type"] = story_type
+
+        new_story = Story(**story_kwargs)
+        new_story.save()
+        return new_story
 
     def import_single_image(dict):
         """ Imports single image """
@@ -642,4 +660,4 @@ def import_from_prodsys(items, overwrite=False):
     else:
         assert isinstance(items, int)
         item = items
-        import_single_article(item)
+        return import_single_article(item)

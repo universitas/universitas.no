@@ -3,28 +3,15 @@
 Tests.
 """
 from django.test import TestCase
-from .prodsys import Prodsys
-from .models import Story
-
-# Create your tests here.
+from .models import Story, import_from_prodsys
 
 
-class ImportTest(TestCase):
-
-    """ Tests imports from prodsys """
-
-    def test_import_article(self):
-        """ Imports an article from the prodsys """
-        prodsys = Prodsys()
-        prod_id = 18658
-        reply = prodsys.importArticleJson(prod_id)
-        self.assertEqual('http://universitas.no/admin/api/indesign/%d/json/' % prod_id, reply.url)
-        self.assertEqual(200, reply.status_code)
-        self.assertIn('prodsak_id', reply.text)
+class StoryTest(TestCase):
+    fixtures = ['stories_testfixtures.json',]
 
     def test_create_story(self):
         """ Creates story instance in database """
-
-        prodsys = Prodsys()
-        prod_id = 18658
+        prodsak_id = 18658
+        story = import_from_prodsys(prodsak_id)
+        self.assertEqual(prodsak_id, int(story.prodsys_id))
 
