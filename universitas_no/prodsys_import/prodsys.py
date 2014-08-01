@@ -4,7 +4,7 @@ Kontakte prodsys.
 """
 from django.conf import settings
 import requests
-from datetime import datetime
+from django.utils import timezone
 import re
 
 
@@ -62,7 +62,8 @@ class Prodsys(object):
             return None
         json = reply.json()
         text = self.clean_up_text(json['tekst'])
-        date = datetime.strptime(json['dato'], self.DATEFORMAT)
+        naive_date = timezone.datetime.strptime(json['dato'], self.DATEFORMAT)
+        date = timezone.make_aware(naive_date, timezone.get_default_timezone())
         published = int(json['produsert']) >= self.PUBLISHED_MINIMUM_STATUS_CODE
         images = json.get('bilete', [])
 

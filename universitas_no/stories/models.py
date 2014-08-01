@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 """ Content in the publication. """
+import re
+from collections import defaultdict
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-# from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-import re
+from django.core.validators import MaxValueValidator, MinValueValidator
 from prodsys_import.prodsys import Prodsys
-from collections import defaultdict
+from contributors.models import Contributor
 
 
-class StoryContent(models.Model):
+class TextContent(models.Model):
 
     XTAG_FORMAT = '@%s:%s'
     XTAG_REGEXP = re.compile(r'^@([^ :]+): ?(.*)$')
@@ -36,7 +37,7 @@ class StoryContent(models.Model):
     def save(self, *args, **kwargs):
 
         if self.pk is None:
-            super(StoryContent, self).save(*args, **kwargs)
+            super(TextContent, self).save(*args, **kwargs)
             self.clean_markup()
 
         else:
@@ -44,7 +45,7 @@ class StoryContent(models.Model):
             if orig.bodytext_markup != self.bodytext_markup:
                 self.clean_markup()
 
-        super(StoryContent, self).save(*args, **kwargs)
+        super(TextContent, self).save(*args, **kwargs)
 
     def sort_paragraphs_by_tag(self, tag, paragraph_text):
         """ Magical sorting hat that puts each paragraph into the relevant bucket before saving or generating html. """
@@ -121,7 +122,7 @@ class StoryContent(models.Model):
         return html_bodytext
 
 
-class Story(StoryContent):
+class Story(TextContent):
 
     """ An article or story in the newspaper. """
 
@@ -161,7 +162,7 @@ class Story(StoryContent):
         editable=False,
     )
     bylines = models.ManyToManyField(
-        'Contributor', through='Byline',
+        Contributor, through='Byline',
         help_text=_('The people who created this content.')
     )
     story_type = models.ForeignKey(
@@ -239,26 +240,73 @@ class Story(StoryContent):
         asides = self.buckets.get("fakta", "").split(self.SPLIT_HERE)
 
         for byline in bylines:
-            if not byline:
-                continue
-            Byline.create(
-                story=self,
-                full_byline=byline,
-                initials='',
-            )
+            if byline:
+                Byline.create(
+                    story=self,
+                    full_byline=byline,
+                    initials='',  # TODO: send over initials?
+                )
 
         for pullquote in pullquotes:
-            # print(pullquote)
-            # Pullquote.create()
-            # raise NotImplementedError
-            # TODO: implement pullquote and aside creation.
-            pass
+            if pullquote:
+                needle = re.sub('@\S+:|«|»', '', pullquote.splitlines()[0].lower())[:30].strip()
+                paragraphs = self.bodytext_markup.splitlines()
+                bottom = len(paragraphs) or 1
+                for depth, haystack in enumerate(paragraphs):
+                    if needle in haystack.lower():
+                        # print(needle + '\n'+ haystack)
+                        break
+                else:
+                    depth = 0
+                position = int(StoryElementMixin.MAXPOSITION * depth / bottom)
+                # print('%s/%s (%s)\n%s\n%s' % (depth, bottom, position, needle, pullquote))
+
+                new_pullquote = Pullquote(
+                    parent_story=self,
+                    bodytext_markup=pullquote,
+                    position=position,
+                )
+                new_pullquote.save()
 
         for aside in asides:
-            # print(aside)
-            # Aside.create()
-            # raise NotImplementedError
-            pass
+            if aside:
+                new_aside = Aside(
+                    parent_story=self,
+                    bodytext_markup=aside,
+                    position=0,
+                )
+                new_aside.save()
+
+
+class StoryElementMixin(models.Model):
+
+    """ Models that are placed somewhere inside an article """
+    MAXPOSITION = 10000
+    parent_story = models.ForeignKey('Story')
+    published = models.BooleanField(
+        help_text=_('Choose whether this element is published'),
+        default=True)
+    position = models.PositiveSmallIntegerField(
+        default=0, validators=[
+            MaxValueValidator(MAXPOSITION), MinValueValidator(0)], help_text=_(
+            'Where in the story does this belong? %d = At the very beginning, %d = At the end.' %
+            (0, MAXPOSITION)))
+
+
+class Pullquote(TextContent, StoryElementMixin):
+
+    """ A quote that is that is pulled out of the content. """
+    class Meta:
+        verbose_name = _('Pullquote')
+        verbose_name_plural = _('Pullquotes')
+
+
+class Aside(TextContent, StoryElementMixin):
+
+    """ Fact box or other information typically placed in side bar """
+    class Meta:
+        verbose_name = _('Aside')
+        verbose_name_plural = _('Asides')
 
 
 class StoryType(models.Model):
@@ -299,42 +347,11 @@ class Section(models.Model):
         verbose_name_plural = _('Sections')
 
     def __str__(self):
-        return self.title
+        return self.title + '!'
 
     @models.permalink
     def get_absolute_url(self):
         return ('')
-
-
-class StoryChild(models.Model):
-
-    """ Asides and other content related to an Story. """
-
-    # Define fields here
-    story = models.ForeignKey(Story)
-    content = models.TextField()
-    ordering = models.PositiveSmallIntegerField(default=1)
-    position = models.PositiveSmallIntegerField(default=1)
-    published = models.NullBooleanField(default=True)
-
-    class Meta:
-        verbose_name = _('StoryChild')
-        verbose_name_plural = _('StoryChildren')
-        unique_together = ('story', 'ordering', 'position')
-        # TODO: sjekk at unique_together i StoryChild funker riktig
-
-    def __str__(self):
-        pass
-
-    # def save(self):
-    #     pass
-    # TODO: sørge for at unique blir håndhevet
-
-    @models.permalink
-    def get_absolute_url(self):
-        return ('')
-
-    # Define custom methods here
 
 
 class Byline(models.Model):
@@ -347,10 +364,10 @@ class Byline(models.Model):
         ('i', _('Illustration')),
         ('g', _('Graphics')),
     ]
-    DEFAULT_CREDIT = CREDIT_CHOICES[0]
-    story = models.ForeignKey('Story')
-    contributor = models.ForeignKey('Contributor')
-    credit = models.CharField(choices=CREDIT_CHOICES, default=CREDIT_CHOICES[0], max_length=20)
+    DEFAULT_CREDIT = CREDIT_CHOICES[0][0]
+    story = models.ForeignKey(Story)
+    contributor = models.ForeignKey(Contributor)
+    credit = models.CharField(choices=CREDIT_CHOICES, default=DEFAULT_CREDIT, max_length=20)
     title = models.CharField(blank=True, null=True, max_length=200)
 
     class Meta:
@@ -380,14 +397,13 @@ class Byline(models.Model):
         d = match.groupdict()
         full_name = d['full_name']
         title = d['title']
-        credit_first_letter = d['credit'][0] or cls.DEFAULT_CREDIT
+        credit_first_letter = (d['credit'] or cls.DEFAULT_CREDIT[0])[0]
         for choice in cls.CREDIT_CHOICES:
             if credit_first_letter in choice:
                 credit = choice
                 break
         else:
             credit = cls.DEFAULT_CREDIT
-
 
         contributor = Contributor.get_or_create(full_name, initials)
 
@@ -401,159 +417,6 @@ class Byline(models.Model):
         new_byline.save()
 
         return new_byline
-
-
-
-
-class Contributor(models.Model):
-
-    """ Someone who contributes content to the newspaper or other staff. """
-
-    # TODO: Move to different app
-    # TODO: Implement foreignkeys to positions, user and contact_info
-    # user = models.ForeignKey(User, blank=True, null=True)
-    # position = models.ForeignKey('Position')
-    # contact_info = models.ForeignKey('ContactInfo')
-    displayName = models.CharField(blank=True, max_length=50)
-    aliases = models.TextField(blank=True)
-    initials = models.CharField(blank=True, null=True, max_length=5)
-
-    class Meta:
-        verbose_name = _('Contributor')
-        verbose_name_plural = _('Contributors')
-
-    def __str__(self):
-        return self.displayName or self.initials or 'N. N.'
-
-    @classmethod
-    def get_or_create(cls, full_name, initials=''):
-        """
-        Fancy lookup for low quality legacy imports.
-        Tries to avoid creation of multiple contributor instances
-        for a single real contributor.
-        """
-        names = full_name.split()
-        last_name = names[-1]
-        first_name = names[:-1][0]
-        # middle_name = ' '.join(names[1:-1])
-
-        base_query = cls.objects
-
-        def find_single_item_or_none(func):
-            """ Decorator to return one item or none """
-
-            def inner_func(*args, **kwargs):
-                try:
-                    return func(*args, **kwargs)
-                except ObjectDoesNotExist:
-                    # lets' try something else.
-                    return None
-                except MultipleObjectsReturned:
-                    # We pass this error on for now.
-                    # TODO: Make sure two people can have the same name.
-                    raise
-            return inner_func
-
-        @find_single_item_or_none
-        def search_for_full_name():
-            return base_query.get(displayName=full_name)
-
-        @find_single_item_or_none
-        def search_for_first_plus_last_name():
-            if not first_name:
-                return None
-            return base_query.get(
-                displayName__istartswith=first_name,
-                displayName__iendswith=last_name)
-
-        @find_single_item_or_none
-        def search_for_alias():
-            if first_name:
-                return None
-            return base_query.get(alias__icontains=last_name)
-
-        @find_single_item_or_none
-        def search_for_initials():
-            if first_name or not initials:
-                return None
-            contributor = base_query.get(initials__iexact=initials)
-            contributor.aliases += full_name
-            contributor.save()
-            return contributor
-
-        # Variuous queries to look for contributor in the database.
-        contributor = (
-            search_for_full_name() or
-            search_for_alias() or
-            search_for_initials() or
-            None
-        )
-
-        # Was not found with any of the methods.
-        if not contributor:
-            contributor = cls(
-                displayName=full_name,
-                initials=initials,
-            )
-            contributor.save()
-        return contributor
-
-
-class ContactInfo(models.Model):
-
-    """
-    Contact information for contributors and others.
-    """
-
-    PERSON = _('Person')
-    INSTITUTION = _('Institution')
-    POSITION = _('Position')
-    CONTACT_TYPES = (
-        ("Person", PERSON),
-        ("Institution", INSTITUTION),
-        ("Position", POSITION),
-    )
-
-    name = models.CharField(blank=True, null=True, max_length=200)
-    title = models.CharField(blank=True, null=True, max_length=200)
-    phone = models.CharField(blank=True, null=True, max_length=20)
-    email = models.EmailField(blank=True, null=True)
-    postal_address = models.CharField(blank=True, null=True, max_length=200)
-    street_address = models.CharField(blank=True, null=True, max_length=200)
-    webpage = models.URLField()
-    contact_type = models.CharField(choices=CONTACT_TYPES, max_length=50)
-
-    class Meta:
-        verbose_name = _('ContactInfo')
-        verbose_name_plural = _('ContactInfos')
-
-    def __str__(self):
-        return self.name
-
-
-class Position(models.Model):
-
-    """ A postion og job in the publication. """
-
-    title = models.CharField(
-        help_text=_('Job title at the publication.'),
-        unique=True, max_length=50)
-
-    class Meta:
-        verbose_name = _('Position')
-        verbose_name_plural = _('Positions')
-
-    def __str__(self):
-        pass
-
-    def save(self):
-        pass
-
-    @models.permalink
-    def get_absolute_url(self):
-        return ('')
-
-    # TODO: Defne custom methods here
 
 
 class PrintIssue(models.Model):
@@ -662,7 +525,8 @@ def import_from_prodsys(items, overwrite=False):
 
         new_story = Story(**story_kwargs)
         new_story.save()
-        print(prodsys_images)
+        print(story_kwargs['prodsys_id'], new_story.title)
+        print('images: %d'% len(prodsys_images))
         return new_story
 
     def import_single_image(dict):

@@ -30,6 +30,7 @@ INSTALLED_APPS = (
     'core',
     'frontpage',
     'prodsys_import',
+    'contributors',
     )
 
 # These values are set in the virtualenv postactivate bash file

@@ -12,7 +12,8 @@ class ImportTest(TestCase):
     prodsys = Prodsys()
     with open(pub_prod) as f:
         # set av faktiske saker i prodsys
-        published = [int(i.strip()) for i in f]
+        s = f.read().split(',')
+        published = [int(i.strip()) for i in s]
         published.reverse()
 
     def test_import_article(self):
@@ -31,11 +32,13 @@ class ImportTest(TestCase):
         for prodsak_id in saker:
             self.assertIs(type(prodsak_id), int, msg='expects a list of prodsak_id that are in production.')
 
-    def test_import_saker_fra_prodsys(self):
-        # TODO: Make prodsys/tests.py instead!
+    def test_import_saker_fra_prodsys(self, save=False):
         for prodsak_id in self.published[:10]:
             cleaned_output = self.prodsys.fetch_article_from_prodsys(prodsak_id)
             for key, value in cleaned_output.items():
                 print('%s:   %s\n' % (key, value))
             print('–'*40)
-            # self.assertTrue(False)
+
+    def import_n_saker(self, n):
+        from stories.models import import_from_prodsys
+        import_from_prodsys(self.published[:n])
