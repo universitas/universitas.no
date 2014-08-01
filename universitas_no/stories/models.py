@@ -2,6 +2,7 @@
 """ Content in the publication. """
 import re
 from collections import defaultdict
+from model_utils.models import TimeStampedModel
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
@@ -11,7 +12,7 @@ from prodsys_import.prodsys import Prodsys
 from contributors.models import Contributor
 
 
-class TextContent(models.Model):
+class TextContent(TimeStampedModel):
 
     XTAG_FORMAT = '@%s:%s'
     XTAG_REGEXP = re.compile(r'^@([^ :]+): ?(.*)$')
@@ -77,6 +78,10 @@ class TextContent(models.Model):
         elif tag in ('sitatbyline', 'kilde',):
             # finishes aside or pullquote
             self.bucket = self.buckets[self.DEFAULT_TAG]
+
+        elif tag in ('txt', 'mt'):
+            # just to be sure that these always are in the default bucket, if someone does't close a pullquote properly.
+            bucket = self.bucket = self.buckets[self.DEFAULT_TAG]
 
         if tag:
             # add tag back.
@@ -530,7 +535,8 @@ def import_from_prodsys(items, overwrite=False):
         new_story = Story(**story_kwargs)
         new_story.save()
         print(story_kwargs['prodsys_id'], new_story.title)
-        print('images: %d'% len(prodsys_images))
+        for image in prodsys_images:
+            print(image)
         return new_story
 
     def import_single_image(dict):
