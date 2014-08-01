@@ -28,6 +28,7 @@ SITE_NAME = "universitas.no"
 INSTALLED_APPS = (
     'stories',
     'core',
+    'photo',
     'frontpage',
     'prodsys_import',
     'contributors',

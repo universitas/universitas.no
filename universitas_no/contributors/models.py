@@ -91,7 +91,7 @@ class Contributor(models.Model):
         # Was not found with any of the methods.
         if not contributor:
             contributor = cls(
-                displayName=full_name,
+                displayName=full_name[:50],
                 initials=initials,
             )
             contributor.save()

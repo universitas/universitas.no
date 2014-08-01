@@ -62,7 +62,7 @@ class TextContent(models.Model):
             bucket = self.buckets[tag]
             if tag == 'bl':
                 # split individual bylines with linebreak.
-                paragraph_text = re.sub(r'[\r\n;•]', self.SPLIT_HERE, paragraph_text)
+                paragraph_text = re.sub(r'[\r\n;•]| og ', self.SPLIT_HERE, paragraph_text)
 
             if tag in ('sitat', 'fakta',):
                 # start new aside or pullquote and collect next paragraphs in the same bucket
@@ -294,6 +294,7 @@ class StoryElementMixin(models.Model):
 
 
 class Pullquote(TextContent, StoryElementMixin):
+    DEFAULT_TAG = 'sitat'
 
     """ A quote that is that is pulled out of the content. """
     class Meta:
@@ -302,6 +303,7 @@ class Pullquote(TextContent, StoryElementMixin):
 
 
 class Aside(TextContent, StoryElementMixin):
+    DEFAULT_TAG = 'fakta'
 
     """ Fact box or other information typically placed in side bar """
     class Meta:
@@ -399,8 +401,8 @@ class Byline(models.Model):
         title = d['title']
         credit_first_letter = (d['credit'] or cls.DEFAULT_CREDIT[0])[0]
         for choice in cls.CREDIT_CHOICES:
-            if credit_first_letter in choice:
-                credit = choice
+            if credit_first_letter in choice[0]:
+                credit = choice[0]
                 break
         else:
             credit = cls.DEFAULT_CREDIT
@@ -413,8 +415,10 @@ class Byline(models.Model):
             title=title,
             contributor=contributor,
         )
-
-        new_byline.save()
+        try:
+            new_byline.save()
+        except:
+            print (credit)
 
         return new_byline
 

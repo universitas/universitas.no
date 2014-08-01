@@ -19,7 +19,7 @@ class StoryTest(TestCase):
         self.assertTrue(Aside.objects.all())
         # self.assertTrue(Image.objects.all())
 
-    def test_create_stories(self, antall=100, slutt=1):
+    def test_create_stories(self, antall=10, slutt=1):
         til = -1 * slutt
         fra = -1 * ( 1 + antall - slutt )
         testsaker = SAKER[fra:til]
