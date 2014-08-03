@@ -20,21 +20,23 @@
 
 <body>
   <header>
-    {% block header %}
     <div class="row">
-      <div class="large-12 columns"><h1>Universitas.no</h1></div>
+      <div class="large-12 columns me">
+        {% block header %}
+        <h1>Universitas.no</h1>
+        {% endblock header %}
+      </div>
     </div>
-    {% endblock header %}
   </header>
   <main>
     {% block content %}
-    <p>Main Content here</p>
+    <p>Some other content?</p>
     {% endblock content %}
   </main>
   {% block footer %}
   <footer>
     <div class="row">
-      <div class="large-12 columns" id="footer">Footer here</div>
+      <div class="col medium-9 small-12 large-4">Footer here</div>
     </div>
   </footer>
   {% endblock footer %}

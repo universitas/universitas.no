@@ -25,14 +25,7 @@ SITE_ROOT = dirname(BASE_DIR)
 SITE_NAME = "universitas.no"
 
 # END PATH CONFIGURATION
-INSTALLED_APPS = (
-    'stories',
-    'core',
-    'photo',
-    'frontpage',
-    'prodsys_import',
-    'contributors',
-    )
+
 
 # These values are set in the virtualenv postactivate bash file
 SECRET_KEY = environ["DJANGO_SECRET_KEY"]
@@ -48,8 +41,24 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 ALLOWED_HOSTS = ['*.universitas.no']
 STAGING = 'base'
-# CUSTOM APPS
 
+# CUSTOM APPS
+INSTALLED_APPS = (
+    'stories',
+    'core',
+    'photo',
+    'frontpage',
+    'prodsys_import',
+    'prodsys_db',
+    'contributors',
+    )
+
+# THIRD PARTY APPS
+INSTALLED_APPS = (
+    'django_extensions',
+    'compressor',
+    'sekizai',
+    ) + INSTALLED_APPS
 
 # CORE APPS
 INSTALLED_APPS = (
@@ -60,13 +69,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     ) + INSTALLED_APPS
-
-# THIRD PARTY APPS
-INSTALLED_APPS += (
-    'django_extensions',
-    'compressor',
-    'sekizai',
-    )
 
 
 MIDDLEWARE_CLASSES = (
@@ -93,8 +95,17 @@ DATABASES = {
         'PASSWORD': DB_PASSWORD,
         'HOST': 'localhost',
         'PORT': '',       # Set to empty string for default.
+    },
+    'prodsys': {
+        'ENGINE': 'mysql.connector.django',
+        'NAME': 'universitas',
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': 'localhost',
+        'PORT': '',       # Set to empty string for default.
     }
 }
+DATABASE_ROUTERS = ['prodsys_db.router.ProdsysRouter']
 
 # INTERNATIONALIZATION
 LANGUAGE_CODE = 'no'

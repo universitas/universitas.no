@@ -4,10 +4,11 @@ Tests.
 """
 from django.test import TestCase
 from .models import Aside, Pullquote, Byline, import_from_prodsys
-from prodsys_import.id_liste import SAKER
+from prodsys_import import id_liste
+
 
 class StoryTest(TestCase):
-    fixtures = ['stories_testfixtures.json',]
+    fixtures = ['stories_testfixtures.json', ]
 
     def test_create_story(self):
         """ Creates story instance in database """
@@ -21,6 +22,6 @@ class StoryTest(TestCase):
 
     def test_create_stories(self, antall=10, slutt=1):
         til = -1 * slutt
-        fra = -1 * ( 1 + antall - slutt )
-        testsaker = SAKER[fra:til]
+        fra = -1 * (1 + antall - slutt)
+        testsaker = id_liste.SAKER[fra:til]
         import_from_prodsys(testsaker)

@@ -33,7 +33,9 @@ class ImportTest(TestCase):
             self.assertIs(type(prodsak_id), int, msg='expects a list of prodsak_id that are in production.')
 
     def test_import_saker_fra_prodsys(self, save=False):
-        for prodsak_id in self.published[:10]:
+        importlist = self.published[:10]
+        importlist = [18797]
+        for prodsak_id in importlist:
             cleaned_output = self.prodsys.fetch_article_from_prodsys(prodsak_id)
             for key, value in cleaned_output.items():
                 print('%s:   %s\n' % (key, value))

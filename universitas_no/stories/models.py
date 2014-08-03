@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """ Content in the publication. """
 import re
+import html
 from collections import defaultdict
 from model_utils.models import TimeStampedModel
 from django.db import models
@@ -8,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils.safestring import mark_safe
 from prodsys_import.prodsys import Prodsys
 from contributors.models import Contributor
 
@@ -31,6 +33,9 @@ class TextContent(TimeStampedModel):
         default='<p>Placeholder</p>',
         help_text=_('HTML tagged content'),
     )
+
+    def get_html(self):
+        return mark_safe(self.bodytext_html)
 
     class Meta:
         abstract = True,
@@ -423,7 +428,7 @@ class Byline(models.Model):
         try:
             new_byline.save()
         except:
-            print (credit)
+            print(credit)
 
         return new_byline
 
@@ -478,11 +483,12 @@ class ProdsysTag(models.Model):
 
     def wrap(self, content):
         """ Wrap string in html for this tag """
+        content = html.escape(content)
         if self.html_class is None:
-            html = '<%s>%s</%s>' % (self.html_tag, content, self.html_tag)
+            block = '<%s>%s</%s>' % (self.html_tag, content, self.html_tag)
         else:
-            html = '<%s class="%s">%s</%s>' % (self.html_tag, self.html_class, content, self.html_tag)
-        return html
+            block = '<%s class="%s">%s</%s>' % (self.html_tag, self.html_class, content, self.html_tag)
+        return block
 
     @classmethod
     def wrap_text(cls, xtag, content):
@@ -534,9 +540,11 @@ def import_from_prodsys(items, overwrite=False):
 
         new_story = Story(**story_kwargs)
         new_story.save()
-        print(story_kwargs['prodsys_id'], new_story.title)
+        # print(story_kwargs['prodsys_id'], new_story.title)
         for image in prodsys_images:
             print(image)
+
+        print(new_story.get_html())
         return new_story
 
     def import_single_image(dict):

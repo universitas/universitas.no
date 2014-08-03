@@ -41,16 +41,20 @@ class Prodsys(object):
         """ Fixes some characters and stuff in old prodsys implementation.
             string -> string
         """
-        text = text.replace('@tit:', '@headline:', 1)  # main headline
-        text = re.compile(r'^# ', re.MULTILINE).sub('@li:', text)  # hash symbol to li
-        text = text.replace('--', '–')  # also dash
         text = text.replace('\x92', '\'')  # some fixes for win 1252
         text = text.replace('\x95', '•')  # bullet
         text = text.replace('\x96', '–')  # n-dash
+        text = text.replace('--', '–')  # also dash
         text = re.sub('[\r\n]+', '\n', text)
-        # text = re.sub('[«»]', '"', text)
         text = re.sub(r'(\S)["“”]', r'\1»', text)
         text = re.sub(r'["“”]', r'«', text)
+        text = text.replace('@tit:', '@headline:', 1)  # main headline
+        text = re.compile(r'^# ', re.MULTILINE).sub('@li:', text)  # hash symbol to li
+        text = re.sub(r'^\s*([^@])', r'@txt:\1', text, flags=re.M)
+        text = re.sub(r'^@txt:TINGO', '@tingo:', text, flags=re.M)
+        text = re.sub(r'^@txt:(\W*)< *i *>(.*)<\\?/ *i *>', r'@spm:\1\2', text, flags=re.I + re.M)
+        text = re.sub(r'<\W*(i|em) *>', '_', text, flags=re.I)
+        text = re.sub(r'<\W*(b|strong) *>', '*', text, flags=re.I)
         return text
 
     def fetch_article_from_prodsys(self, prodsak_id):
