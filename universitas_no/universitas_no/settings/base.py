@@ -49,7 +49,7 @@ INSTALLED_APPS = (
     'photo',
     'frontpage',
     'prodsys_import',
-    'prodsys_db',
+    'legacy_db',
     'contributors',
     )
 
@@ -105,7 +105,7 @@ DATABASES = {
         'PORT': '',       # Set to empty string for default.
     }
 }
-DATABASE_ROUTERS = ['prodsys_db.router.ProdsysRouter']
+DATABASE_ROUTERS = ['legacy_db.router.ProdsysRouter']
 
 # INTERNATIONALIZATION
 LANGUAGE_CODE = 'no'

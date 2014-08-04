@@ -7,7 +7,7 @@ class ProdsysRouter(object):
         """
         Attempts to read auth models go to auth_db.
         """
-        if model._meta.app_label == 'prodsys_db':
+        if model._meta.app_label == 'legacy_db':
             return 'prodsys'
         return None
 
@@ -15,7 +15,7 @@ class ProdsysRouter(object):
         """
         Attempts to write auth models go to auth_db.
         """
-        if model._meta.app_label == 'prodsys_db':
+        if model._meta.app_label == 'legacy_db':
             return 'prodsys'
         return None
 
@@ -25,7 +25,7 @@ class ProdsysRouter(object):
         database.
         """
         if db == 'prodsys':
-            return model._meta.app_label == 'prodsys_db'
-        elif model._meta.app_label == 'prodsys_db':
+            return model._meta.app_label == 'legacy_db'
+        elif model._meta.app_label == 'legacy_db':
             return False
         return None
