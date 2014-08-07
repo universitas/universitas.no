@@ -1,6 +1,6 @@
 from django.test import TestCase
 from .prodsys import Prodsys
-from stories.models import Story
+from apps.stories.models import Story
 from os import path
 pub_prod = path.join(path.dirname(__file__), 'published-prodsaker.csv')
 # Create your tests here.

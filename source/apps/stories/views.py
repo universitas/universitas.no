@@ -4,6 +4,6 @@ Views for articles
 """
 from django.shortcuts import render
 
-def article(request):
+def articleView(request):
     pass
 # Create your views here.
