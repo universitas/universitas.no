@@ -44,13 +44,13 @@ STAGING = 'base'
 
 # CUSTOM APPS
 INSTALLED_APPS = (
-    'stories',
-    'core',
-    'photo',
-    'frontpage',
-    'prodsys_import',
-    'legacy_db',
-    'contributors',
+    'apps.stories',
+    'apps.core',
+    'apps.photo',
+    'apps.frontpage',
+    'apps.prodsys_api_access',
+    'apps.legacy_db',
+    'apps.contributors',
     )
 
 # THIRD PARTY APPS

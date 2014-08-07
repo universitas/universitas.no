@@ -1,17 +1,25 @@
 # -*- coding: utf-8 -*-
 """ Content in the publication. """
+
+# Python standard library
 import re
 import html
 from collections import defaultdict
-from model_utils.models import TimeStampedModel
-from django.db import models
+
+# Django core
 from django.utils.translation import ugettext_lazy as _
+from django.db import models
 from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.safestring import mark_safe
-from prodsys_import.prodsys import Prodsys
-from contributors.models import Contributor
+
+# Installed apps
+from model_utils.models import TimeStampedModel
+
+# Project apps
+from apps.prodsys_api_access.prodsys import Prodsys
+from apps.contributors.models import Contributor
 
 
 class TextContent(TimeStampedModel):

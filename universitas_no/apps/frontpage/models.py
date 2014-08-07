@@ -1,10 +1,11 @@
+# Django core
 from django.db import models
 from model_utils.models import TimeStampedModel
 from django.utils.translation import ugettext_lazy as _
-from stories.models import Story
-from photo.models import Image
 
-# Create your models here.
+# Project apps
+from apps.stories.models import Story
+from apps.photo.models import Image
 
 
 class Frontpage(TimeStampedModel):

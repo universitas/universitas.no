@@ -2,10 +2,15 @@
 """
 Kontakte prodsys.
 """
-from django.conf import settings
-import requests
-from django.utils import timezone
+# Python standard library
 import re
+
+# Installed packages
+import requests
+
+# Django core
+from django.conf import settings
+from django.utils import timezone
 
 
 class Prodsys(object):

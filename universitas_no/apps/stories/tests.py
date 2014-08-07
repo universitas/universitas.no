@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-Tests.
+Tests of stories app.
 """
 from django.test import TestCase
+
+from apps.prodsys_import import id_liste
+
 from .models import Aside, Pullquote, Byline, import_from_prodsys
-from prodsys_import import id_liste
 
 
-class StoryTest(TestCase):
+class StoryModelTest(TestCase):
     fixtures = ['stories_testfixtures.json', ]
 
     def test_create_story(self):

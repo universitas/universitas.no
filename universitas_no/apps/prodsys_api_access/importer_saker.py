@@ -1,5 +1,5 @@
-from prodsys_import.id_liste import SAKER
-from stories.models import import_from_prodsys
+from apps.prodsys_import.id_liste import SAKER
+from apps.stories.models import import_from_prodsys
 
 
 def main(antall=100, slutt=1):
