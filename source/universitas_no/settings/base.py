@@ -49,8 +49,9 @@ INSTALLED_APPS = (
     'apps.photo',
     'apps.frontpage',
     'apps.prodsys_api_access',
-    'apps.legacy_db',
+    # 'apps.legacy_db',
     'apps.contributors',
+    'functional_tests',
     )
 
 # THIRD PARTY APPS
@@ -96,16 +97,16 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '',       # Set to empty string for default.
     },
-    'prodsys': {
-        'ENGINE': 'mysql.connector.django',
-        'NAME': 'universitas',
-        'USER': DB_USER,
-        'PASSWORD': DB_PASSWORD,
-        'HOST': 'localhost',
-        'PORT': '',       # Set to empty string for default.
-    }
+    # 'prodsys': {
+    #     'ENGINE': 'mysql.connector.django',
+    #     'NAME': 'universitas',
+    #     'USER': DB_USER,
+    #     'PASSWORD': DB_PASSWORD,
+    #     'HOST': 'localhost',
+    #     'PORT': '',       # Set to empty string for default.
+    # }
 }
-DATABASE_ROUTERS = ['legacy_db.router.ProdsysRouter']
+# DATABASE_ROUTERS = ['legacy_db.router.ProdsysRouter']
 
 # INTERNATIONALIZATION
 LANGUAGE_CODE = 'no'

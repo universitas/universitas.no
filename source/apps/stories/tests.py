@@ -4,7 +4,7 @@ Tests of stories app.
 """
 from django.test import TestCase
 
-from apps.prodsys_import import id_liste
+from apps.prodsys_api_access import id_liste
 
 from .models import Aside, Pullquote, Byline, import_from_prodsys
 

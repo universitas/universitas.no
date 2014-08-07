@@ -3,9 +3,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from django.contrib.staticfiles.testing import StaticLiveServerCase
 
-# do not edit! added by PythonBreakpoints
-from ipdb import set_trace as _breakpoint
-
 
 ARTICLE_URL_REGEX=r'\S+/[a-z]+/\d+/[a-z\-]+/$',
 WEBDRIVER = 'PhantomJS'

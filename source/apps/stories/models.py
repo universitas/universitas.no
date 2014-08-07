@@ -221,10 +221,10 @@ class Story(TextContent):
         blank=True, null=True,
         help_text=_('URL to the story in pdf.')
     )  # TODO create function
-    related_stories = models.ManyToManyField(
-        'self',
-        help_text=_('Stories with related content.')
-    )
+    # related_stories = models.ManyToManyField(
+    #     'self',
+    #     help_text=_('Stories with related content.')
+    # )
     # TODO: Revisions.
 
     class Meta:

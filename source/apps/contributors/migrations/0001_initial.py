@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ContactInfo',
             fields=[
-                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
                 ('name', models.CharField(null=True, max_length=200, blank=True)),
                 ('title', models.CharField(null=True, max_length=200, blank=True)),
                 ('phone', models.CharField(null=True, max_length=20, blank=True)),
@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Contributor',
             fields=[
-                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
                 ('displayName', models.CharField(max_length=50, blank=True)),
                 ('aliases', models.TextField(blank=True)),
                 ('initials', models.CharField(null=True, max_length=5, blank=True)),
@@ -46,8 +46,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Position',
             fields=[
-                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
-                ('title', models.CharField(help_text='Job title at the publication.', unique=True, max_length=50)),
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('title', models.CharField(help_text='Job title at the publication.', max_length=50, unique=True)),
             ],
             options={
                 'verbose_name_plural': 'Positions',
