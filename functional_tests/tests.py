@@ -1,12 +1,16 @@
+# -*- coding: utf-8 -*-
 """ Functional tests universitas.no """
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from django.contrib.staticfiles.testing import StaticLiveServerCase
+from django.conf import settings
 
+PHANTOMJS_EXECUTABLE_PATH='/home/haakenlid/node_modules/phantomjs/lib/phantom/bin/phantomjs'
 
-ARTICLE_URL_REGEX=r'\S+/[a-z]+/\d+/[a-z\-]+/$',
+ARTICLE_URL_REGEX = r'\S+/[a-z]+/\d+/[a-z\-]+/$',
 WEBDRIVER = 'PhantomJS'
 # WEBDRIVER = 'Firefox'
+
 
 class FrontPageVisitTest(StaticLiveServerCase):
 
@@ -14,7 +18,9 @@ class FrontPageVisitTest(StaticLiveServerCase):
         # TODO: load mocks∕fixtures of frontpage articles.
         if WEBDRIVER == 'PhantomJS':
             self.browser = webdriver.PhantomJS(
-                executable_path='/home/haakenlid/node_modules/phantomjs/lib/phantom/bin/phantomjs')
+                service_log_path=settings.LOG_FOLDER,
+                executable_path=PHANTOMJS_EXECUTABLE_PATH,
+            )
         else:
             self.browser = webdriver.Firefox()
 
@@ -37,7 +43,7 @@ class FrontPageVisitTest(StaticLiveServerCase):
             len(articles),
             minimum_antall_forsideartikler,
             msg='Ikke nok artikler vises på forsiden.',
-            )
+        )
 
         for article in articles:
             # , som alle har en tittel
@@ -48,11 +54,10 @@ class FrontPageVisitTest(StaticLiveServerCase):
             self.assertRegex(
                 text=link.get_attribute('href'),
                 expected_regex=ARTICLE_URL_REGEX,
-                )
+            )
 
         # I tillegg til tittelen har hver forsidesak sin egen plassering på
         # forsiden i en layoutgrid, og kan ha stikktittel, bilde og ingress.
-
 
     def not_test_visitor_articlepage(self):
         # Ole-Petter besøker universitas.no og trykker på en av sakene på forsiden.
@@ -77,20 +82,12 @@ class FrontPageVisitTest(StaticLiveServerCase):
         # og hvilken seksjon artikkelen tilhører.
         byline = self.find_element_by_css_selector('article header .byline')
 
-
         # Det er knapper for å dele saken på facebook og Twitter, eller gå til diskusjonsfeltet.
-
         # Selve teksten starter med en ingress og inneholder avsnitt med brødtekst og mellomtitler.
-
         # Noen steder er det uthevede sitater eller fotografier.
-
         # Under fotografiene er det en billedtekst og navn på fotografen.
-
         # Under uthevede sitater er det navn på personen eller verk som siteres.
-
         # Under saken finnes det lenker til tre eller flere saker som er “relatert” til saken Ole-Petter leser.
-
         # Det er også et debattfelt.
-
         print(title, main_image, byline, artikkel_url)  # ubrukte variabler
         self.assertFalse(True)
