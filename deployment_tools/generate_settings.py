@@ -8,8 +8,12 @@ PREFIX = 'DJANGO_'  # Environment variable prefix
 DJANGO_APP_NAME = 'universitas_no'  # Name of app folder in project
 WEBSERVER_ROOT = '/srv'  # Location of each django project
 OVERRIDES = {
-    'universitas.no': {
-        'settings module': 'production',
+    'www.universitas.no': {
+        'settings module': 'universitas_no.production',
+        'allowed hosts': '*.universitas.no',
+    },
+    'staging.universitas.no': {
+        'settings module': 'universitas_no.production',
         'allowed hosts': '*.universitas.no',
     },
 }
