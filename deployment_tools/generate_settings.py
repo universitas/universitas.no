@@ -5,15 +5,15 @@ from os import environ, path
 
 
 PREFIX = 'DJANGO_'  # Environment variable prefix
-DJANGO_APP_NAME = 'universitas_no'  # Name of app folder in project
+SETTINGS_PATH = 'universitas_no.settings'  # Name of app folder in project
 WEBSERVER_ROOT = '/srv'  # Location of each django project
 OVERRIDES = {
     'www.universitas.no': {
-        'settings module': 'universitas_no.production',
+        'settings module': '%s.production' % (SETTINGS_PATH,) ,
         'allowed hosts': '*.universitas.no',
     },
     'staging.universitas.no': {
-        'settings module': 'universitas_no.production',
+        'settings module': '%s.production' % (SETTINGS_PATH,) ,
         'allowed hosts': '*.universitas.no',
     },
 }
@@ -50,8 +50,8 @@ def make_postactivate_text(site_url):
     settings.update({
         'source folder': '%s/%s/source' % (WEBSERVER_ROOT, site_url, ),
         'site name': site_url,
-        'settings module': '%s.settings.%s' % (
-            DJANGO_APP_NAME,
+        'settings module': '%s.%s' % (
+            SETTINGS_PATH,
             site_url.split('.')[0],
         ),
         'allowed hosts': re.sub(r'^[^.]*?\.', '*.', site_url),
