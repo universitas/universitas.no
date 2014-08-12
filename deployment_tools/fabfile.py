@@ -10,15 +10,6 @@ PYVENV = 'pyvenv-3.4'
 LINUXGROUP = 'universitas'
 
 
-# def create_database():
-#     """Creates role and database"""
-# db_user = get_user() # define these
-#     db_pass = get_pass()
-#     db_table = get_table()
-#     sudo('psql -c "CREATE USER %s WITH NOCREATEDB NOCREATEUSER " \
-#          "ENCRYPTED PASSWORD E\'%s\'"' % (db_user, db_pass), user='postgres')
-#     sudo('psql -c "CREATE DATABASE %s WITH OWNER %s"' % (
-#         db_table, db_user), user='postgres')
 def deploy():
     # Folders are named something like www.example.com
     # or www.staging.example.com for production or staging
@@ -42,7 +33,6 @@ def deploy():
     env_settings = _make_postactivate(site_name, folders['venv'], folders['bin'])
     _create_postgres_db(env_settings)
     _create_linux_user(env_settings['user'], site_name, LINUXGROUP)
-    # _update_settings(source_folder, site_name)
     _update_static_files(folders['venv'])
     _update_database(folders['venv'])
 
@@ -53,7 +43,6 @@ def _make_postactivate(site_name, venv_folder, bin_folder):
     append(activate_path, 'source %s' % (postactivate_path,))
     local_path, env_settings = make_postactivate_file(site_name, )
     put(local_path, postactivate_path)
-    # local('rm %' %(local_postactivate,))
     return env_settings
 
 
@@ -93,12 +82,12 @@ def _create_postgres_db(env_settings):
     username = env_settings['user']
     password = env_settings['db password']
     db_name = env_settings['db name']
-    databasetable = run(r"psql -l").splitlines()[3:-1]
-    allusers = [line.split()[0] for line in databasetable]
-    if username not in allusers:
-        run('psql -c "CREATE ROLE %s WITH PASSWORD \'%s\' NOSUPERUSER CREATEDB NOCREATEROLE LOGIN;"' %
-            (username, password, ))
+    databases = run(r"psql -l | grep --color=never -o '^ \w\+'").split()
+    if db_name not in databases:
+        print(db_name, databases)
+        run('psql -c "CREATE ROLE %s NOSUPERUSER CREATEDB NOCREATEROLE LOGIN;"' % (username, ))
         run('psql -c "CREATE DATABASE %s WITH OWNER=%s  ENCODING=\'utf-8\';"' % (username, db_name, ))
+    run('psql -c "ALTER ROLE %s WITH PASSWORD \'%s\';"' % (username, password, ))
 
 
 def _update_virtualenv(source_folder, venv_folder, global_venv_folder):

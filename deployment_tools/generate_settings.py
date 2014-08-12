@@ -52,8 +52,9 @@ def make_postactivate_text(site_url):
         ),
         'allowed hosts': re.sub(r'^[^.]*?\.', '*.', site_url),
         'secret key': _make_random_sequence(50),
-        'db password': _make_random_sequence(20),
+        'db password': _make_random_sequence(50),
         'db user': site_url.replace('.', '_'),
+        'db name': site_url.replace('.', '_'),
         'user': site_url.replace('.', '_'),
         # "wsgi module": "%s.wsgi" % (DJANGO_APP_NAME,),
     })
