@@ -2,11 +2,11 @@
 # Bash script that starts gunicorn worker processes.
 # Put in project bin/ folder and keep running with supervisor.
 
-name="SITEURL"
-virtualenvfolder="/srv/SITEURL/venv/SITEURL"
-socket="/tmp/SITEURL.socket"
-user="USERNAME"
-group="USERGROUP"
+name="staging.universitas.no"
+virtualenvfolder="/srv/staging.universitas.no/venv/staging.universitas.no"
+socket="/tmp/staging.universitas.no.socket"
+user="staging_universitas_no"
+group="universitas"
 num_workers="3"
 max_requests="0"
 

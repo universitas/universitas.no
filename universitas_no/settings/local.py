@@ -6,7 +6,6 @@ from .base import *
 ########## DEBUG CONFIGURATION
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-STAGING = 'local'
 ########## END DEBUG CONFIGURATION
 
 
@@ -25,17 +24,31 @@ CACHES = {
 }
 ########## END CACHE CONFIGURATION
 
-########## TOOLBAR CONFIGURATION
+
+DATABASES.update( {
+    'prodsys': {
+        'ENGINE': 'mysql.connector.django',
+        'NAME': environ["DJANGO_PRODSYS_DB_NAME"],
+        'USER': environ["DJANGO_PRODSYS_DB_USER"],
+        'PASSWORD': environ["DJANGO_PRODSYS_DB_PASSWORD"],
+        'HOST': environ["DJANGO_PRODSYS_DB_HOST"],
+        'PORT': '',       # Set to empty string for default.
+    }
+})
+DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
+
+######### TOOLBAR CONFIGURATION
 # See: http://django-debug-toolbar.readthedocs.org/en/latest/installation.html#explicit-setup
-# INSTALLED_APPS += (
-#     'debug_toolbar',
-# )
+INSTALLED_APPS += (
+    'debug_toolbar',
+    'apps.legacy_db',
+)
 
-# MIDDLEWARE_CLASSES += (
-#     'debug_toolbar.middleware.DebugToolbarMiddleware',
-# )
+MIDDLEWARE_CLASSES += (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+)
 
-# DEBUG_TOOLBAR_PATCH_SETTINGS = False
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 # http://django-debug-toolbar.readthedocs.org/en/latest/installation.html
 INTERNAL_IPS = ('127.0.0.1',)

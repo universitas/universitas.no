@@ -10,11 +10,10 @@ WEBSERVER_ROOT = '/srv'  # Location of each django project
 OVERRIDES = {
     'www.universitas.no': {
         'settings module': '%s.production' % (SETTINGS_PATH,) ,
-        'allowed hosts': '*.universitas.no',
+        'allowed hosts': 'universitas.no',
     },
     'staging.universitas.no': {
         'settings module': '%s.production' % (SETTINGS_PATH,) ,
-        'allowed hosts': '*.universitas.no',
     },
 }
 
@@ -49,12 +48,11 @@ def make_postactivate_text(site_url):
 
     settings.update({
         'source folder': '%s/%s/source' % (WEBSERVER_ROOT, site_url, ),
-        'site name': site_url,
+        'site url': site_url,
         'settings module': '%s.%s' % (
             SETTINGS_PATH,
             site_url.split('.')[0],
         ),
-        'allowed hosts': re.sub(r'^[^.]*?\.', '*.', site_url),
         'secret key': _make_random_sequence(50),
         'db password': _make_random_sequence(50),
         'db user': site_url.replace('.', '_'),

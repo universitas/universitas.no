@@ -24,7 +24,7 @@ PROJECT_ROOT_FOLDER = dirname(BASE_DIR)
 # These values are set in the virtualenv postactivate bash file
 
 SECRET_KEY = environ["DJANGO_SECRET_KEY"]
-SITE_NAME = environ["DJANGO_SITE_NAME"]
+SITE_URL = environ["DJANGO_SITE_URL"]
 
 # Prodsys for universitas.
 PRODSYS_USER = environ["DJANGO_PRODSYS_USER"]
@@ -34,7 +34,6 @@ PRODSYS_URL = environ["DJANGO_PRODSYS_URL"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-ALLOWED_HOSTS = environ["DJANGO_ALLOWED_HOSTS"].split()
 
 # CUSTOM APPS
 INSTALLED_APPS = (
@@ -43,7 +42,6 @@ INSTALLED_APPS = (
     'apps.photo',
     'apps.frontpage',
     'apps.prodsys_api_access',
-    # 'apps.legacy_db',
     'apps.contributors',
     'functional_tests',
     )
@@ -57,6 +55,7 @@ INSTALLED_APPS = (
 
 # CORE APPS
 INSTALLED_APPS = (
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -118,8 +117,8 @@ STATICFILES_DIRS = (
 MEDIA_ROOT = normpath(join(STATIC_ROOT, 'uploads'))
 MEDIA_URL = '/media/'
 STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
     'compressor.finders.CompressorFinder',
 )
 # END STATIC FILE CONFIGURATION
@@ -133,6 +132,7 @@ TEMPLATE_DIRS = (
 )
 TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
     'sekizai.context_processors.sekizai',
+    'django.core.context_processors.request',
 )
 # END TEMPLATES AND FIXTURES CONFIGURATION
 

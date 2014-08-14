@@ -17,26 +17,26 @@ def deploy():
     """ create database, make folders, install django, create linux user, make virtualenv. """
     # Folders are named something like www.example.com
     # or www.staging.example.com for production or staging
-    site_name = env.host
-    folders = _get_folders(site_name)
+    site_url = env.host
+    folders = _get_folders(site_url)
 
-    postactivate_file, project_settings = make_postactivate_file(site_name, )
+    postactivate_file, project_settings = make_postactivate_file(site_url, )
 
     _create_postgres_db(project_settings)
-    _create_linux_user(project_settings['user'], site_name, LINUXGROUP)
+    _create_linux_user(project_settings['user'], site_url, LINUXGROUP)
 
     _create_directory_structure_if_necessary(folders)
     _create_virtualenv(folders['venv'], folders['venvs'])
     _upload_postactivate(postactivate_file, folders['venv'], folders['bin'])
-    _deploy_configs(site_name)
+    _deploy_configs(site_url)
     update()
-    _enable_site(site_name)
+    _enable_site(site_url)
 
 
 def update():
     """ update repo from github, install pip reqirements, collect staticfiles and run database migrations. """
-    site_name = env.host
-    folders = _get_folders(site_name)
+    site_url = env.host
+    folders = _get_folders(site_url)
 
     _get_latest_source(folders['source'])
     _update_virtualenv(folders['source'], folders['venv'],)
@@ -45,28 +45,28 @@ def update():
 
 
 def start():
-    site_name = env.host
-    _enable_site(site_name)
+    site_url = env.host
+    _enable_site(site_url)
 
 
 def stop():
-    site_name = env.host
-    _enable_site(site_name, start=False)
+    site_url = env.host
+    _enable_site(site_url, start=False)
 
 
 def reboot():
-    site_name = env.host
-    _enable_site(site_name, start=False)
+    site_url = env.host
+    _enable_site(site_url, start=False)
     sudo('service nginx restart; service supervisorctl restart')
-    _enable_site(site_name)
+    _enable_site(site_url)
 
 def make_config():
-    site_name = 'local.universitas.no'
-    _deploy_configs(site_name, upload=False)
+    site_url = 'local.universitas.no'
+    _deploy_configs(site_url, upload=False)
 
-def _get_configs(site_name, user_name=None, bin_folder=None, config_folder=None,):
-    user_name = user_name or site_name.replace('.', '_')
-    bin_folder = bin_folder or '%s/%s/bin' % (WEBSERVER_ROOT, site_name)
+def _get_configs(site_url, user_name=None, bin_folder=None, config_folder=None,):
+    user_name = user_name or site_url.replace('.', '_')
+    bin_folder = bin_folder or '%s/%s/bin' % (WEBSERVER_ROOT, site_url)
     config_folder = config_folder or dirname(__file__)
 
     configs = {
@@ -83,50 +83,50 @@ def _get_configs(site_name, user_name=None, bin_folder=None, config_folder=None,
             'filename': '%s.conf' % (user_name,),
             'target folder': '/etc/supervisor/conf.d',
             'install': 'sudo supervisorctl reread && sudo supervisorctl update',
-            'start': 'sudo supervisorctl start %s' % (site_name,),
-            'stop': 'sudo supervisorctl stop %s' % (site_name,),
+            'start': 'sudo supervisorctl start %s' % (site_url,),
+            'stop': 'sudo supervisorctl stop %s' % (site_url,),
         },
         'nginx': {
             'template': '%s/nginx/template' % (config_folder,),
-            'filename': '%s' % (site_name,),
+            'filename': '%s' % (site_url,),
             'target folder': '/etc/nginx/sites-available',
             'install': 'sudo nginx -s reload',
             'start': 'sudo ln -sf /etc/nginx/sites-available/%s /etc/nginx/sites-enabled/%s && sudo nginx -s reload' %
-            (site_name, site_name,),
-            'stop': 'sudo rm /etc/nginx/sites-enabled/%s && sudo nginx -s reload' % (site_name,),
+            (site_url, site_url,),
+            'stop': 'sudo rm /etc/nginx/sites-enabled/%s && sudo nginx -s reload' % (site_url,),
         },
     }
     return configs
 
 
-def _deploy_configs(site_name, user_name=None, user_group=None, upload=True):
-    user_name = user_name or site_name.replace('.', '_')
+def _deploy_configs(site_url, user_name=None, user_group=None, upload=True):
+    user_name = user_name or site_url.replace('.', '_')
     user_group = user_group or LINUXGROUP
-    configs = _get_configs(site_name)
+    configs = _get_configs(site_url)
     for service in configs:
         config = configs[service]
         template = config["template"]
         target = join(dirname(template), config["filename"])
         destination = join(config["target folder"], config["filename"])
         if not os.path.exists(target) or os.path.getctime(target) < os.path.getctime(template):
-            local('cat %s | sed "s/SITENAME/%s/g" | sed "s/USERNAME/%s/g" | sed "s/USERGROUP/%s/g" > "%s"' %
-                  (template, site_name, user_name, user_group, target, ))
+            local('cat %s | sed "s/SITEURL/%s/g" | sed "s/USERNAME/%s/g" | sed "s/USERGROUP/%s/g" > "%s"' %
+                  (template, site_url, user_name, user_group, target, ))
     if upload:
         put(target, destination, use_sudo=True)
         with shell_env(FILENAME=destination):
             run(config['install'])
 
 
-def _enable_site(site_name, start=True):
+def _enable_site(site_url, start=True):
     command = 'start' if start else 'stop'
-    configs = _get_configs(site_name)
+    configs = _get_configs(site_url)
     for service in configs.values():
         run(service[command])
 
 
-def _get_folders(site_name):
-    venv_name = site_name
-    site_folder = '%s/%s' % (WEBSERVER_ROOT, site_name,)
+def _get_folders(site_url):
+    venv_name = site_url
+    site_folder = '%s/%s' % (WEBSERVER_ROOT, site_url,)
     folders = {
         'site': site_folder,
         'source': '%s/source' % (site_folder,),
@@ -159,11 +159,11 @@ def _create_directory_structure_if_necessary(folders):
         run('mkdir -p %s' % (folder,))
 
 
-def _create_linux_user(username, site_name, group):
+def _create_linux_user(username, site_url, group):
     # with settings(warn_only=True):
     user_exists = run('id %s; echo $?' % username).split()[-1] == "0"
     if not user_exists:
-        sudo('useradd --shell /bin/bash -g %s -M -c "runs gunicorn for %s" %s' % (group, site_name, username))
+        sudo('useradd --shell /bin/bash -g %s -M -c "runs gunicorn for %s" %s' % (group, site_url, username))
 
 
 def _create_postgres_db(project_settings):
