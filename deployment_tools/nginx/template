@@ -1,4 +1,8 @@
-upstream gunicornserver {
+# Place nginx config files in /etc/nginx/sites-available, and make a symbolic link
+# to /etc/nginx/sites-enabled to activate the site.
+
+
+upstream USERNAME {
   # fail_timeout=0 means we always retry an upstream even if it failed
   # to return a good HTTP response (in case the Unicorn master nukes a
   # single worker for timing out).
@@ -12,7 +16,7 @@ server {
     client_max_body_size 4G;
 
     access_log /srv/SITENAME/logs/access-nginx.log;
-    error_log /srv/SITENAME/logs/error-nginx.log;
+    error_log /srv/SITENAME/logs/error-nginx.log info;
 
     location /static/ {
         alias   /srv/SITENAME/static/;
@@ -23,10 +27,8 @@ server {
     }
 
     location / {
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $host;
-        proxy_pass http://gunicornserver;
-        }
+        proxy_pass http://USERNAME;
     }
 
     # Error pages

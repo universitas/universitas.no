@@ -86,4 +86,4 @@ def make_postactivate_text(site_url):
 
 
 if __name__ == '__main__':
-    make_postactivate_file('dev.universitas.no', './postactivate')
+    make_postactivate_file('local.universitas.no', './postactivate')

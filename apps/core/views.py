@@ -20,7 +20,8 @@ class HumansTxtView(TextTemplateView):
 
 class RobotsTxtView(TextTemplateView):
     """ robots.txt contains instructions for webcrawler bots. """
-    if settings.STAGING == 'production':
-        template_name = 'robots-production.txt'
-    else:
-        template_name = 'robots-staging.txt'
+    # if self.request.get_host() == 'production':
+    #     template_name = 'robots-production.txt'
+    # else:
+    #     template_name = 'robots-staging.txt'
+    template_name = 'robots-staging.txt'
