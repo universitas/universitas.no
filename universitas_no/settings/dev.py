@@ -1,15 +1,7 @@
 """Development settings and globals."""
 
-from __future__ import absolute_import
-
-from .base import *
+from .local import *
 from os import environ
-
-
-# DEBUG CONFIGURATION
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-# END DEBUG CONFIGURATION
 
 
 # EMAIL CONFIGURATION
@@ -22,12 +14,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 # END EMAIL CONFIGURATION
-
-# CACHE CONFIGURATION
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#caches
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    }
-}
-# END CACHE CONFIGURATION

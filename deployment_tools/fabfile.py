@@ -30,7 +30,6 @@ def deploy():
     _upload_postactivate(postactivate_file, folders['venv'], folders['bin'])
     _deploy_configs(site_url)
     update()
-    _enable_site(site_url)
 
 
 def update():
@@ -42,6 +41,8 @@ def update():
     _update_virtualenv(folders['source'], folders['venv'],)
     _update_static_files(folders['venv'])
     _update_database(folders['venv'])
+    stop()
+    start()
 
 
 def start():
@@ -111,10 +112,10 @@ def _deploy_configs(site_url, user_name=None, user_group=None, upload=True):
         if not os.path.exists(target) or os.path.getctime(target) < os.path.getctime(template):
             local('cat %s | sed "s/SITEURL/%s/g" | sed "s/USERNAME/%s/g" | sed "s/USERGROUP/%s/g" > "%s"' %
                   (template, site_url, user_name, user_group, target, ))
-    if upload:
-        put(target, destination, use_sudo=True)
-        with shell_env(FILENAME=destination):
-            run(config['install'])
+        if upload:
+            put(target, destination, use_sudo=True)
+            with shell_env(FILENAME=destination):
+                run(config['install'])
 
 
 def _enable_site(site_url, start=True):
@@ -145,7 +146,7 @@ def _upload_postactivate(postactivate_file, venv_folder, bin_folder):
     activate_path = '%s/bin/activate' % (venv_folder,)
     append(activate_path, 'source %s' % (postactivate_path,))
     put(postactivate_file, postactivate_path)
-    local('rm %s' % (postactivate_file,))
+    # local('rm %s' % (postactivate_file,))
 
 
 def _create_directory_structure_if_necessary(folders):
