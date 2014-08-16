@@ -10,30 +10,30 @@ upstream USERNAME {
 }
 
 server {
-    listen   80;
-    server_name SITEURL
+    listen               80;
+    server_name          SITEURL;
 
     client_max_body_size 4G;
 
-    access_log /srv/SITEURL/logs/access-nginx.log;
-    error_log /srv/SITEURL/logs/error-nginx.log info;
+    access_log           /srv/SITEURL/logs/access-nginx.log;
+    error_log            /srv/SITEURL/logs/error-nginx.log info;
 
     location /static/ {
-        alias   /srv/SITEURL/static/;
+        alias            /srv/SITEURL/static/;
     }
 
     location /upload/ {
-        alias   /srv/SITEURL/static/uploaded_files/;
+        alias            /srv/SITEURL/static/uploaded_files/;
     }
 
     location / {
         proxy_set_header Host $host;
-        proxy_pass http://USERNAME;
+        proxy_pass       http://USERNAME;
     }
 
     # Error pages
     # error_page 500 502 503 504 /500.html;
     # location = /500.html {
-    #    root /srv/SITEURL/static/error_pages/;
+    #    root            /srv/SITEURL/static/error_pages/;
     # }
 }

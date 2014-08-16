@@ -1,7 +1,7 @@
 """ Deployment of Django website using pyvenv-3.4 and git """
-from fabric.contrib.files import append, exists, sed, put
+from fabric.contrib.files import append, exists, put
 from fabric.context_managers import shell_env
-from fabric.api import env, local, run, sudo
+from fabric.api import env, local, run, sudo, settings
 from generate_settings import make_postactivate_file
 from os.path import join, dirname
 import os
@@ -52,7 +52,8 @@ def start():
 
 def stop():
     site_url = env.host
-    _enable_site(site_url, start=False)
+    with settings(warn_only=True):
+        _enable_site(site_url, start=False)
 
 
 def reboot():
@@ -61,9 +62,18 @@ def reboot():
     sudo('service nginx restart; service supervisorctl restart')
     _enable_site(site_url)
 
-def make_config():
+
+def make_local_config():
     site_url = 'local.universitas.no'
     _deploy_configs(site_url, upload=False)
+
+
+def update_config():
+    site_url = env.host
+    stop()
+    _deploy_configs(site_url)
+    start()
+
 
 def _get_configs(site_url, user_name=None, bin_folder=None, config_folder=None,):
     user_name = user_name or site_url.replace('.', '_')
@@ -161,7 +171,6 @@ def _create_directory_structure_if_necessary(folders):
 
 
 def _create_linux_user(username, site_url, group):
-    # with settings(warn_only=True):
     user_exists = run('id %s; echo $?' % username).split()[-1] == "0"
     if not user_exists:
         sudo('useradd --shell /bin/bash -g %s -M -c "runs gunicorn for %s" %s' % (group, site_url, username))
@@ -198,9 +207,9 @@ def _create_virtualenv(venv_folder, global_venv_folder):
 
 
 def _update_virtualenv(source_folder, venv_folder):
-    run('%s/bin/pip install -r %s/requirements.txt' % (
-        venv_folder, source_folder,
-    ))
+    run('%s/bin/pip install -r %s/requirements.txt' %
+        (venv_folder, source_folder, )
+        )
 
 
 def _update_static_files(venv_folder):

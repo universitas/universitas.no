@@ -1,0 +1,34 @@
+server {
+    # Permanent redirect www.universitas.no -> universitas.no
+    listen 80;
+    server_name www.universitas.no; 
+    return 301 http://universitas.no$request_uri;
+}
+
+server {
+    # Hoveddomene universitas.no
+    listen 80;
+    server_name universitas.no;
+   
+    access_log /srv/logs/access_proxy.log;
+    error_log /srv/logs/error_proxy.log;
+
+    location / {
+        proxy_set_header Host $proxy_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://oldwww.universitas.no;
+    }
+}
+
+server {
+    # Underdomener
+    listen 80;
+    server_name ~^(dev|lastopp|m|static)\.universitas\.no;
+    access_log /srv/access_proxy.log;
+    error_log /srv/error_proxy.log;
+    location / {
+        proxy_set_header Host $proxy_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://oldwww.universitas.no/$1$request_uri;
+    }
+}
