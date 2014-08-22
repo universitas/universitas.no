@@ -12,6 +12,7 @@ from django.conf import settings
 from apps.legacy_db.models import Bilde, Prodbilde, Sak, Prodsak
 from apps.stories.models import Story, StoryType, Section
 from apps.photo.models import ImageFile
+from apps.issues.models import PrintIssue
 
 BILDEMAPPE = os.path.join(settings.MEDIA_ROOT, '')
 
@@ -77,6 +78,13 @@ def importer_utgaver_fra_gammel_webside():
         if created.isoweekday() != 3:
             created = created + datetime.timedelta(days=3 - created.isoweekday())
         print(created.strftime('%c'))
+        new_issue = PrintIssue(
+            pdf = fullpath,
+            pages = 0,
+            publication_date = created,
+            issue_name = issue,
+            )
+        new_issue.save()
 
 
 def importer_saker_fra_gammel_webside():
@@ -96,14 +104,16 @@ def importer_saker_fra_gammel_webside():
 
         xtags = clean_up_html(xtags)
         xtags = clean_up_xtags(xtags)
-        print(xtags)
-        print('\n\n')
+        # print(xtags)
+        # print('\n\n')
+        year, month, day = websak.dato.year, websak.dato.month, websak.dato.day
+        publication_date = datetime.datetime(year, month, day, tzinfo=TIMEZONE)
         story_type = get_story_type(websak.mappe)
 
         new_story = Story(
             id=websak.id_sak,
-            publication_date=websak.dato,
-            dateline_date=websak.dato,
+            publication_date=publication_date,
+            # dateline_date=websak.dato,
             status=Story.STATUS_PUBLISHED,
             story_type=story_type,
             bodytext_markup=xtags,
@@ -221,7 +231,7 @@ def clean_up_xtags(xtags):
 
     return xtags.strip()
 
-# importer_utgaver_fra_gammel_webside()
-importer_saker_fra_gammel_webside()
+importer_utgaver_fra_gammel_webside()
+# importer_saker_fra_gammel_webside()
 # importer_bilder_fra_gammel_webside()
 # get_prodsaker()

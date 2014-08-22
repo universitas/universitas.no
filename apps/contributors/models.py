@@ -124,7 +124,7 @@ class ContactInfo(models.Model):
 
     class Meta:
         verbose_name = _('ContactInfo')
-        verbose_name_plural = _('ContactInfos')
+        verbose_name_plural = _('ContactInfo')
 
     def __str__(self):
         return self.name

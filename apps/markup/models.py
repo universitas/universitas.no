@@ -23,8 +23,8 @@ class ProdsysTag(models.Model):
     html_class = models.CharField(blank=True, null=True, max_length=50)
 
     class Meta:
-        verbose_name = _('prodsys_tag')
-        verbose_name_plural = _('prodsys_tags')
+        verbose_name = _('prodsys tag')
+        verbose_name_plural = _('prodsys tags')
         app_label = 'stories'
 
     def __str__(self):

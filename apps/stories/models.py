@@ -82,7 +82,7 @@ class TextContent(TimeStampedModel):
             bucket = self.buckets[tag]
             if tag == 'bl':
                 # split individual bylines with linebreak.
-                paragraph_text = re.sub(r'[\r\n;•]| og ', self.SPLIT_HERE, paragraph_text)
+                paragraph_text = re.sub(r'[\r\n;•]| og | and ', self.SPLIT_HERE, paragraph_text, re.M)
 
             if tag in ('sitat', 'fakta',):
                 # start new aside or pullquote and collect next paragraphs in the same bucket
@@ -448,9 +448,13 @@ class Byline(models.Model):
             r'^((?P<credit>[^:,]+):)?\s*(?P<full_name>[^,]+)\s*(,\s*(?P<title>.+))?$'
         )
         full_byline = full_byline.replace('\t', ':')
+        full_byline = re.sub(r'^(.*?) *\(([^)]*)\) *$', r'\2: \1', full_byline, re.M)
+        full_byline = re.sub(r'^\S*?(ph|f)oto\S*?:', 'foto:', full_byline, re.M)
+
         match = byline_pattern.match(full_byline)
         d = match.groupdict()
         full_name = d['full_name']
+        full_name = re.sub(r'^(by|av) ', '', full_name, re.M+re.I)
         title = d['title']
         credit_first_letter = (d['credit'] or cls.DEFAULT_CREDIT[0])[0]
         for choice in cls.CREDIT_CHOICES:
@@ -470,8 +474,9 @@ class Byline(models.Model):
         )
         try:
             new_byline.save()
+            print('\nsaved %s as\n%s\n%s\n%s' % (full_byline, credit, full_name, title or ''))
         except:
-            print(credit)
+            print('failed to save %s as %s  %s  %s' % (full_byline, credit, full_name, title))
 
         return new_byline
 

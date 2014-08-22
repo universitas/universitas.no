@@ -17,7 +17,8 @@ class PrintIssue(models.Model):
 
     """ An printed issue of the publication. """
 
-    issue_number = models.CharField(max_length=5)
+    # issue_number = models.CharField(max_length=50)
+    issue_name = models.CharField(max_length=50)
     publication_date = models.DateField()
     pages = models.IntegerField(help_text='Number of pages')
     pdf = models.FilePathField(
@@ -33,7 +34,7 @@ class PrintIssue(models.Model):
         app_label = 'issues'
 
     def __str__(self):
-        return self.issue_number
+        return self.issue_name
 
     # @models.permalink
     # def get_absolute_url(self):

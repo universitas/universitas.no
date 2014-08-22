@@ -38,8 +38,8 @@ class Frontpage(TimeStampedModel):
 
 class FrontpageStory(TimeStampedModel):
     class Meta:
-        verbose_name = _('FrontpageStory')
-        verbose_name_plural = _('FrontpageStorys')
+        verbose_name = _('Frontpage Story')
+        verbose_name_plural = _('Frontpage Stories')
 
     story = models.ForeignKey(Story)
 
