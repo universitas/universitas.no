@@ -3,7 +3,7 @@
 
 # Python standard library
 import re
-import html
+# import html
 from collections import defaultdict
 
 # Django core
@@ -18,9 +18,12 @@ from django.utils.safestring import mark_safe
 from model_utils.models import TimeStampedModel
 
 # Project apps
-from apps.prodsys_api_access.prodsys import Prodsys
+# from apps.prodsys_api_access.prodsys import Prodsys
 from apps.contributors.models import Contributor
 from apps.issues.models import PrintIssue
+from apps.markup.models import ProdsysTag
+from apps.photo.models import ImageFile
+
 
 
 class TextContent(TimeStampedModel):
@@ -29,6 +32,10 @@ class TextContent(TimeStampedModel):
     XTAG_REGEXP = re.compile(r'^@([^ :]+): ?(.*)$')
     DEFAULT_TAG = 'txt'
     SPLIT_HERE = '\n*** SPLIT HERE ***\n'
+
+    class Meta:
+        abstract = True
+        app_label = 'stories'
 
     bodytext_markup = models.TextField(
         blank=True,
@@ -46,9 +53,6 @@ class TextContent(TimeStampedModel):
     def get_html(self):
         return mark_safe(self.bodytext_html)
 
-    class Meta:
-        abstract = True
-        app_label = 'stories'
 
     def save(self, *args, **kwargs):
 
@@ -146,6 +150,10 @@ class Story(TextContent):
 
     """ An article or story in the newspaper. """
 
+    class Meta:
+        verbose_name = _('Story')
+        verbose_name_plural = _('Stories')
+        app_label = 'stories'
     # TODO make this importable?
     STATUS_DRAFT = 0
     STATUS_UNPUBLISHED = 5
@@ -158,6 +166,7 @@ class Story(TextContent):
     prodsak_id = models.PositiveIntegerField(
         help_text=_('Id in the prodsys database.'),
         blank=True, null=True,
+        editable=False,
     )
     title = models.CharField(
         max_length=1000,
@@ -225,10 +234,7 @@ class Story(TextContent):
     # )
     # TODO: Revisions.
 
-    class Meta:
-        verbose_name = _('Story')
-        verbose_name_plural = _('Stories')
-        app_label = 'stories'
+
 
     def __str__(self):
         return self.title
@@ -275,7 +281,7 @@ class Story(TextContent):
                         break
                 else:
                     depth = 0
-                position = int(StoryElementMixin.MAXPOSITION * depth / bottom)
+                position = int(StoryElement.MAXPOSITION * depth / bottom)
                 # print('%s/%s (%s)\n%s\n%s' % (depth, bottom, position, needle, pullquote))
 
                 new_pullquote = Pullquote(
@@ -295,7 +301,7 @@ class Story(TextContent):
                 new_aside.save()
 
 
-class StoryElementMixin(models.Model):
+class StoryElement(models.Model):
 
     """ Models that are placed somewhere inside an article """
     MAXPOSITION = 10000
@@ -309,10 +315,11 @@ class StoryElementMixin(models.Model):
             'Where in the story does this belong? %d = At the very beginning, %d = At the end.' %
             (0, MAXPOSITION)))
     class Meta:
-        app_label = 'stories'
+        # app_label = 'stories'
+        abstract = True
 
 
-class Pullquote(TextContent, StoryElementMixin):
+class Pullquote(TextContent, StoryElement):
     DEFAULT_TAG = 'sitat'
 
     """ A quote that is that is pulled out of the content. """
@@ -322,7 +329,7 @@ class Pullquote(TextContent, StoryElementMixin):
         app_label = 'stories'
 
 
-class Aside(TextContent, StoryElementMixin):
+class Aside(TextContent, StoryElement):
     DEFAULT_TAG = 'fakta'
 
     """ Fact box or other information typically placed in side bar """
@@ -331,6 +338,28 @@ class Aside(TextContent, StoryElementMixin):
         verbose_name_plural = _('Asides')
         app_label = 'stories'
 
+class StoryImage(StoryElement):
+    DEFAULT_TAG = 'fakta'
+
+    """ Photo or illustration connected to a story """
+
+    caption = models.CharField(
+        help_text=_('Text explaining the image'),
+        blank=True,
+        max_length=1000)
+
+    creditline = models.CharField(
+        help_text=_('Extra information about image copyrights. Not needed if image is created by a regular contributor.'),
+        blank=True,
+        max_length=100)
+
+    imagefile = models.ForeignKey(ImageFile)
+
+
+    class Meta:
+        verbose_name = _('Image')
+        verbose_name_plural = _('Images')
+        app_label = 'stories'
 
 class StoryType(models.Model):
 
@@ -446,44 +475,6 @@ class Byline(models.Model):
 
         return new_byline
 
-class ProdsysTag(models.Model):
-
-    """ Tag from prodsys """
-
-    xtag = models.CharField(default='@tagname:', unique=True, max_length=50)
-    html_tag = models.CharField(default='p', max_length=50)
-    html_class = models.CharField(blank=True, null=True, max_length=50)
-
-    class Meta:
-        verbose_name = _('prodsys_tag')
-        verbose_name_plural = _('prodsys_tags')
-        app_label = 'stories'
-
-    def __str__(self):
-        """ unicode  """
-        return self.xtag
-
-    def save(self, *args, **kwargs):
-        if not self.pk and not self.html_class:
-            self.html_class = self.xtag
-        super(ProdsysTag, self).save(*args, **kwargs)
-
-    def wrap(self, content):
-        """ Wrap string in html for this tag """
-        content = html.escape(content)
-        if self.html_class is None:
-            block = '<%s>%s</%s>' % (self.html_tag, content, self.html_tag)
-        else:
-            block = '<%s class="%s">%s</%s>' % (self.html_tag, self.html_class, content, self.html_tag)
-        return block
-
-    @classmethod
-    def wrap_text(cls, xtag, content):
-        """ Wrap text in html tags even if tag does not exist yet. """
-        # TODO: Prodsystag.wrap_text() bør gjøres i en utilityfunksjon som ikke misbruker databasen så mye.
-
-        tag = ProdsysTag.objects.get_or_create(xtag=xtag)[0]
-        return tag.wrap(content)
 
 
 # def import_from_prodsys(items, overwrite=False):

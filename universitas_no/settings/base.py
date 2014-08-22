@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'apps.prodsys_api_access',
     'apps.contributors',
     'apps.issues',
+    'apps.markup',
     'functional_tests',
     )
 
