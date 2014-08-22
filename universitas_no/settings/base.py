@@ -20,7 +20,6 @@ BASE_DIR = dirname(dirname(dirname(abspath(__file__))))
 
 # Absolute filesystem path to the top-level project folder:
 PROJECT_ROOT_FOLDER = dirname(BASE_DIR)
-
 # These values are set in the virtualenv postactivate bash file
 
 SECRET_KEY = environ["DJANGO_SECRET_KEY"]
@@ -43,11 +42,13 @@ INSTALLED_APPS = (
     'apps.frontpage',
     'apps.prodsys_api_access',
     'apps.contributors',
+    'apps.issues',
     'functional_tests',
     )
 
 # THIRD PARTY APPS
 INSTALLED_APPS = (
+    # 'django_nose',
     'django_extensions',
     'compressor',
     'sekizai',
@@ -55,7 +56,8 @@ INSTALLED_APPS = (
 
 # CORE APPS
 INSTALLED_APPS = (
-    'grappelli',
+    # 'django_admin_bootstrapped.bootstrap3',
+    # 'django_admin_bootstrapped',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -90,16 +92,17 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '',       # Set to empty string for default.
     },
-#     'prodsys': {
-#         'ENGINE': 'mysql.connector.django',
-#         'NAME': environ["DJANGO_DB_NAME_PRODSYS"],
-#         'USER': environ["DJANGO_DB_USER_PRODSYS"],
-#         'PASSWORD': environ["DJANGO_DB_PASSWORD_PRODSYS"],
-#         'HOST': environ["DJANGO_DB_HOST_PRODSYS"],
-#         'PORT': '',       # Set to empty string for default.
-#     }
+    'prodsys': {
+        'ENGINE': 'mysql.connector.django',
+        'NAME': environ["DJANGO_PRODSYS_DB_NAME"],
+        'USER': environ["DJANGO_PRODSYS_DB_USER"],
+        'PASSWORD': environ["DJANGO_PRODSYS_DB_PASSWORD"],
+        # 'HOST': environ["DJANGO_PRODSYS_DB_HOST"],
+        'HOST': 'localhost', # TODO: Endre dette tilbake det er bare et eksperiment.
+        'PORT': '',       # Set to empty string for default.
+    }
 }
-# DATABASE_ROUTERS = ['legacy_db.router.ProdsysRouter']
+DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
 
 # INTERNATIONALIZATION
 LANGUAGE_CODE = 'no'
@@ -114,8 +117,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     normpath(join(BASE_DIR, 'assets')),
 )
-MEDIA_ROOT = normpath(join(STATIC_ROOT, 'uploads'))
-MEDIA_URL = '/media/'
+
+# MEDIA_ROOT = normpath(join(PHOTO_ARCHIVE, 'upload'))
+MEDIA_ROOT = '/srv/fotoarkiv_universitas'
+MEDIA_URL = '/foto/'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',

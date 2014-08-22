@@ -83,24 +83,6 @@ class Sak(models.Model):
 #         managed = False
 #         db_table = 'articles'
 
-
-class Bilder(models.Model):
-    id_bilde = models.IntegerField(primary_key=True)
-    path = models.CharField(max_length=255)
-    sak = models.ForeignKey(Sak, db_column='id_sak', blank=True, null=True)
-    bildetekst = models.ForeignKey('Bildetekst', db_column='id_bildetekst', blank=True, null=True)
-    size = models.IntegerField(db_column='str', blank=True, null=True)
-    crop = models.IntegerField()
-
-    def __str__(self):
-        return self.path
-
-    class Meta:
-        managed = False
-        db_table = 'bilder'
-        verbose_name = _('bilde')
-        verbose_name_plural = _('bilder')
-
 class Bildetekst(models.Model):
     id_bildetekst = models.IntegerField(primary_key=True)
     tekst = models.TextField()
@@ -115,6 +97,25 @@ class Bildetekst(models.Model):
 
     def __str__(self):
         return self.tekst
+
+
+class Bilde(models.Model):
+    id_bilde = models.IntegerField(primary_key=True)
+    path = models.CharField(max_length=255)
+    sak = models.ForeignKey(Sak, db_column='id_sak', blank=True, null=True)
+    bildetekst = models.ForeignKey(Bildetekst, db_column='id_bildetekst', blank=True, null=True)
+    size = models.IntegerField(db_column='str', blank=True, null=True)
+    crop = models.IntegerField()
+
+    def __str__(self):
+        return self.path
+
+    class Meta:
+        managed = False
+        db_table = 'bilder'
+        verbose_name = _('bilde')
+        verbose_name_plural = _('bilder')
+
 
 
 class InnleggAbstract(models.Model):
@@ -188,7 +189,7 @@ class Fakta(models.Model):
 
 
 class Prodsak(models.Model):
-    prodsak_id = models.IntegerField(primary_key=True)
+    prodsak_id = models.IntegerField()
     arbeidstittel = models.CharField(max_length=200, blank=True)
     journalist = models.CharField(max_length=50, blank=True)
     tekst = models.TextField(blank=True)
@@ -210,8 +211,8 @@ class Prodsak(models.Model):
 
 class Prodbilde(models.Model):
     prodbilde_id = models.IntegerField(primary_key=True)
-    # prodsak_id = models.IntegerField(blank=True, null=True)
-    prodsak_id = models.ForeignKey(Prodsak, db_column='prodsak_id' ,blank=True, null=True)
+    prodsak_id = models.IntegerField(blank=True, null=True)
+    # prodsak_id = models.ForeignKey(Prodsak, db_column='prodsak_id' ,blank=True, null=True)
     bildefil = models.TextField(blank=True)
     bildetekst = models.TextField(blank=True)
     kommentar = models.TextField(blank=True)

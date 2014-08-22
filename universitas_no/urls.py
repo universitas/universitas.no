@@ -9,7 +9,6 @@ from django.contrib import admin
 from apps.core.views import RobotsTxtView, HumansTxtView
 from apps.frontpage.views import frontpageView
 from apps.stories.views import articleView
-from grappelli import urls as grappelli_urls
 
 admin.autodiscover()
 
@@ -22,7 +21,6 @@ urlpatterns = patterns(
 
 urlpatterns += patterns(
     '',
-    url(r'^grappelli/', include(grappelli_urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^foundation/$', TemplateView.as_view(template_name='foundation.html'), name='foundation_demo',),
     url(r'^robots.txt$', RobotsTxtView.as_view(), name='robots.txt'),

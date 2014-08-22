@@ -20,6 +20,7 @@ from model_utils.models import TimeStampedModel
 # Project apps
 from apps.prodsys_api_access.prodsys import Prodsys
 from apps.contributors.models import Contributor
+from apps.issues.models import PrintIssue
 
 
 class TextContent(TimeStampedModel):
@@ -46,18 +47,19 @@ class TextContent(TimeStampedModel):
         return mark_safe(self.bodytext_html)
 
     class Meta:
-        abstract = True,
+        abstract = True
+        app_label = 'stories'
 
     def save(self, *args, **kwargs):
 
-        if self.pk is None:
+        try:
+            original = Story.objects.get(pk=self.pk)
+            if original.bodytext_markup != self.bodytext_markup:
+                self.clean_markup()
+        except ObjectDoesNotExist:
+            # new story
             super(TextContent, self).save(*args, **kwargs)
             self.clean_markup()
-
-        else:
-            orig = Story.objects.get(pk=self.pk)
-            if orig.bodytext_markup != self.bodytext_markup:
-                self.clean_markup()
 
         super(TextContent, self).save(*args, **kwargs)
 
@@ -153,8 +155,9 @@ class Story(TextContent):
         (STATUS_UNPUBLISHED, _("Unpublished")),
         (STATUS_PUBLISHED, _("Published")),
     ]
-    prodsys_id = models.PositiveIntegerField(
-        help_text=_('Id in the prodsys database.')
+    prodsak_id = models.PositiveIntegerField(
+        help_text=_('Id in the prodsys database.'),
+        blank=True, null=True,
     )
     title = models.CharField(
         max_length=1000,
@@ -174,11 +177,6 @@ class Story(TextContent):
         max_length=100,
         help_text=_('Theme')
     )
-    prodsys_json = models.TextField(
-        blank=True,
-        help_text=_('Json imported from prodsys'),
-        editable=False,
-    )
     bylines = models.ManyToManyField(
         Contributor, through='Byline',
         help_text=_('The people who created this content.')
@@ -186,14 +184,6 @@ class Story(TextContent):
     story_type = models.ForeignKey(
         'StoryType',
         help_text=_('The type of story.')
-    )
-    dateline_place = models.CharField(
-        blank=True, max_length=50,
-        help_text=_('Where this story happened.')
-    )
-    dateline_date = models.DateField(
-        blank=True, null=True,
-        help_text=_('When this story happened.')
     )
     publication_date = models.DateTimeField(
         null=True, blank=True,
@@ -209,7 +199,7 @@ class Story(TextContent):
         editable=False,
     )
     issue = models.ForeignKey(
-        "PrintIssue",
+        PrintIssue,
         blank=True, null=True,
         help_text=_('Which issue this story was printed in.'),
     )
@@ -217,10 +207,18 @@ class Story(TextContent):
         blank=True, null=True,
         help_text=_('Which page the story was printed on.'),
     )
-    pdf_url = models.URLField(
-        blank=True, null=True,
-        help_text=_('URL to the story in pdf.')
-    )  # TODO create function
+    # dateline_place = models.CharField(
+    #     blank=True, max_length=50,
+    #     help_text=_('Where this story happened.')
+    # )
+    # dateline_date = models.DateField(
+    #     blank=True, null=True,
+    #     help_text=_('When this story happened.')
+    # )
+    # pdf_url = models.URLField(
+    #     blank=True, null=True,
+    #     help_text=_('URL to the story in pdf.')
+    # )  # TODO create function
     # related_stories = models.ManyToManyField(
     #     'self',
     #     help_text=_('Stories with related content.')
@@ -230,6 +228,7 @@ class Story(TextContent):
     class Meta:
         verbose_name = _('Story')
         verbose_name_plural = _('Stories')
+        app_label = 'stories'
 
     def __str__(self):
         return self.title
@@ -245,7 +244,7 @@ class Story(TextContent):
 
     def clean_markup(self, *args, **kwargs):
 
-        super(Story, self).clean_markup(*args, **kwargs)
+        super().clean_markup(*args, **kwargs)
 
         self.title = self.buckets.get("headline", self.title)
         self.kicker = self.buckets.get("stikktit", self.kicker)
@@ -309,6 +308,8 @@ class StoryElementMixin(models.Model):
             MaxValueValidator(MAXPOSITION), MinValueValidator(0)], help_text=_(
             'Where in the story does this belong? %d = At the very beginning, %d = At the end.' %
             (0, MAXPOSITION)))
+    class Meta:
+        app_label = 'stories'
 
 
 class Pullquote(TextContent, StoryElementMixin):
@@ -318,6 +319,7 @@ class Pullquote(TextContent, StoryElementMixin):
     class Meta:
         verbose_name = _('Pullquote')
         verbose_name_plural = _('Pullquotes')
+        app_label = 'stories'
 
 
 class Aside(TextContent, StoryElementMixin):
@@ -327,6 +329,7 @@ class Aside(TextContent, StoryElementMixin):
     class Meta:
         verbose_name = _('Aside')
         verbose_name_plural = _('Asides')
+        app_label = 'stories'
 
 
 class StoryType(models.Model):
@@ -343,6 +346,7 @@ class StoryType(models.Model):
     class Meta:
         verbose_name = _('StoryType')
         verbose_name_plural = _('StoryTypes')
+        app_label = 'stories'
 
     def __str__(self):
         return self.name
@@ -365,6 +369,7 @@ class Section(models.Model):
     class Meta:
         verbose_name = _('Section')
         verbose_name_plural = _('Sections')
+        app_label = 'stories'
 
     def __str__(self):
         return self.title + '!'
@@ -393,6 +398,7 @@ class Byline(models.Model):
     class Meta:
         verbose_name = _('Byline')
         verbose_name_plural = _('Bylines')
+        app_label = 'stories'
 
     def __str__(self):
         return '%s: %s' % (self.credit, self.contributor)
@@ -440,34 +446,6 @@ class Byline(models.Model):
 
         return new_byline
 
-
-class PrintIssue(models.Model):
-
-    """ An printed issue of the publication. """
-
-    issue_number = models.CharField(max_length=5)
-    publication_date = models.DateField()
-    pages = models.IntegerField(help_text='Number of pages')
-    pdf = models.FilePathField(
-        help_text=_('Pdf file for this issue.'),
-        blank=True, null=True,)
-    cover_page = models.FilePathField(
-        help_text=_('An image file of the front page'),
-        blank=True, null=True,)
-
-    class Meta:
-        verbose_name = _('Issue')
-        verbose_name_plural = _('Issues')
-
-    def __str__(self):
-        return self.issue_number
-
-    # TODO: File path and image should be refactored to be a function.
-    @models.permalink
-    def get_absolute_url(self):
-        return ('')
-
-
 class ProdsysTag(models.Model):
 
     """ Tag from prodsys """
@@ -479,6 +457,7 @@ class ProdsysTag(models.Model):
     class Meta:
         verbose_name = _('prodsys_tag')
         verbose_name_plural = _('prodsys_tags')
+        app_label = 'stories'
 
     def __str__(self):
         """ unicode  """
@@ -507,71 +486,63 @@ class ProdsysTag(models.Model):
         return tag.wrap(content)
 
 
-def import_from_prodsys(items, overwrite=False):
-    """
-    Imports one or more articles from prodsys.
-    args:
-        item: int or list of ints of prodsys_id
-        overwrite: boolean overwrite if item already exists.
+# def import_from_prodsys(items, overwrite=False):
+#     """
+#     Imports one or more articles from prodsys.
+#     args:
+#         item: int or list of ints of prodsys_id
+#         overwrite: boolean overwrite if item already exists.
 
-    returns:
-        Artice or list of Articles
-    """
-    prodsys = Prodsys()
+#     returns:
+#         Artice or list of Articles
+#     """
+#     prodsys = Prodsys()
 
-    def import_single_article(item):
-        """ Imports single item """
+#     def import_single_article(item):
+#         """ Imports single item """
 
-        story_kwargs = prodsys.fetch_article_from_prodsys(item)
-        prodsys_images = story_kwargs.pop('images')
-        prodsys_mappe = story_kwargs.pop('mappe')
-        date = story_kwargs.pop('date')
-        published = story_kwargs.pop('published')
-        try:
-            story_type = StoryType.objects.get(prodsys_mappe=prodsys_mappe)
-        except ObjectDoesNotExist:
-            story_type = StoryType.objects.create(
-                prodsys_mappe=prodsys_mappe,
-                name="New Story Type - " + prodsys_mappe,
-                section=Section.objects.first(),
-            )
-        except MultipleObjectsReturned:
-            # TODO: Det bør egentlig bare være en sakstype
-            story_type = StoryType.objects.filter(prodsys_mappe=prodsys_mappe).first()
+#         story_kwargs = prodsys.fetch_article_from_prodsys(item)
+#         prodsys_images = story_kwargs.pop('images')
+#         prodsys_mappe = story_kwargs.pop('mappe')
+#         date = story_kwargs.pop('date')
+#         published = story_kwargs.pop('published')
+#         try:
+#             story_type = StoryType.objects.get(prodsys_mappe=prodsys_mappe)
+#         except ObjectDoesNotExist:
+#             story_type = StoryType.objects.create(
+#                 prodsys_mappe=prodsys_mappe,
+#                 name="New Story Type - " + prodsys_mappe,
+#                 section=Section.objects.first(),
+#             )
+#         except MultipleObjectsReturned:
+#             # TODO: Det bør egentlig bare være en sakstype
+#             story_type = StoryType.objects.filter(prodsys_mappe=prodsys_mappe).first()
 
-        story_kwargs["dateline_date"] = date
-        if published:
-            story_kwargs["publication_date"] = date
-            story_kwargs["status"] = Story.STATUS_UNPUBLISHED
+#         story_kwargs["dateline_date"] = date
+#         if published:
+#             story_kwargs["publication_date"] = date
+#             story_kwargs["status"] = Story.STATUS_UNPUBLISHED
 
-        story_kwargs["story_type"] = story_type
+#         story_kwargs["story_type"] = story_type
 
-        new_story = Story(**story_kwargs)
-        new_story.save()
-        # print(story_kwargs['prodsys_id'], new_story.title)
-        for image in prodsys_images:
-            print(image)
+#         new_story = Story(**story_kwargs)
+#         new_story.save()
+#         # print(story_kwargs['prodsys_id'], new_story.title)
+#         for image in prodsys_images:
+#             print(image)
 
-        print(new_story.get_html())
-        return new_story
+#         print(new_story.get_html())
+#         return new_story
 
-    def import_single_image(dict):
-        """ Imports single image """
-        pass
+#     def import_single_image(dict):
+#         """ Imports single image """
+#         pass
 
-    if isinstance(items, list):
-        for item in items:
-            import_single_article(item)
-    else:
-        assert isinstance(items, int)
-        item = items
-        return import_single_article(item)
+#     if isinstance(items, list):
+#         for item in items:
+#             import_single_article(item)
+#     else:
+#         assert isinstance(items, int)
+#         item = items
+#         return import_single_article(item)
 
-# class Temaord(models.Model):
-    # TODO: Define fi# Temaord?
-    # Title
-    #     string
-    # CSS
-    #     text/css
-    # vignette?
-    #     text/htmlelds here

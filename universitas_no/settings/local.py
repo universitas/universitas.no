@@ -22,20 +22,10 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
-########## END CACHE CONFIGURATION
 
-
-DATABASES.update( {
-    'prodsys': {
-        'ENGINE': 'mysql.connector.django',
-        'NAME': environ["DJANGO_PRODSYS_DB_NAME"],
-        'USER': environ["DJANGO_PRODSYS_DB_USER"],
-        'PASSWORD': environ["DJANGO_PRODSYS_DB_PASSWORD"],
-        'HOST': environ["DJANGO_PRODSYS_DB_HOST"],
-        'PORT': '',       # Set to empty string for default.
-    }
+DATABASES['prodsys'].update({
+   'HOST': 'universitas.no',
 })
-DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
 
 ######### TOOLBAR CONFIGURATION
 # See: http://django-debug-toolbar.readthedocs.org/en/latest/installation.html#explicit-setup

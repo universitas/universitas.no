@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 # Project apps
 from apps.stories.models import Story
-from apps.photo.models import Image
+# from apps.photo.models import Image
 
 
 class Frontpage(TimeStampedModel):
@@ -43,7 +43,7 @@ class FrontpageStory(TimeStampedModel):
 
     story = models.ForeignKey(Story)
 
-    image = models.ForeignKey(Image)
+    # image = models.ForeignKey(Image)
 
     headline = models.CharField(
         help_text=_('headline'),
