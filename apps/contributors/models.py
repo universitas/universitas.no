@@ -51,9 +51,8 @@ class Contributor(models.Model):
                     # lets' try something else.
                     return None
                 except MultipleObjectsReturned:
-                    # We pass this error on for now.
                     # TODO: Make sure two people can have the same name.
-                    raise
+                    return None
             return inner_func
 
         @find_single_item_or_none
