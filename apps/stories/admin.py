@@ -17,6 +17,10 @@ class BylineInline(admin.TabularInline):
         'contributor',
         'title',
     )
+    readonly_fields = (
+        'story',
+        'contributor',
+        )
     extra = 0
 
 
@@ -80,10 +84,10 @@ class StoryAdmin(admin.ModelAdmin):
     )
 
     inlines = [
+        ImageInline,
         BylineInline,
         PullquoteInline,
         AsideInline,
-        ImageInline,
     ]
 
     search_fields = (
