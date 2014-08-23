@@ -23,7 +23,7 @@ class ImageFile(TimeStampedModel):
         verbose_name_plural = _('ImageFiles')
 
     source_file = ImageField(
-        upload_to='upload/',
+        upload_to='',
         height_field='full_height',
         width_field='full_width',
         max_length=1024,
@@ -46,9 +46,6 @@ class ImageFile(TimeStampedModel):
 
     def __str__(self):
         return self.source_file.name
-
-    # def thumb(self):
-        # TODO: Thumbnail-function. Det er nok bedre å bruke en tredjepart-app.
 
     # def save(self):
         # pass

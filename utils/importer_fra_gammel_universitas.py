@@ -291,6 +291,13 @@ def clean_up_xtags(xtags):
 
     return xtags.strip()
 
+def reset_db():
+    from django.db import connection
+    cursor = connection.cursor()
+    cursor.execute("SELECT setval('photo_imagefile_id_seq', (SELECT MAX(id) FROM photo_imagefile)+1)")
+    cursor.execute("SELECT setval('stories_story_id_seq', (SELECT MAX(id) FROM stories_story)+1)")
+
+
 def drop_images_stories_and_contributors():
     print('sletter images')
     ImageFile.objects.all().delete()
@@ -299,6 +306,7 @@ def drop_images_stories_and_contributors():
     print('sletter stories')
     Story.objects.all().delete()
 
-drop_images_stories_and_contributors()
-importer_utgaver_fra_gammel_webside()
-importer_saker_fra_gammel_webside()
+# drop_images_stories_and_contributors()
+# importer_utgaver_fra_gammel_webside()
+# importer_saker_fra_gammel_webside()
+reset_db()
