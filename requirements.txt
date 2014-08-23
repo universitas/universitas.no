@@ -1,24 +1,36 @@
+-e git+git@github.com:django/django.git@c19c7c192c1cdbfa29cc4a33fdc6f0c0bb477e86#egg=Django-origin/stable/1.7.x
 Jinja2==2.7.3
 MarkupSafe==0.23
 Pillow==2.5.1
 Werkzeug==0.9.6
 certifi==14.05.14
+django-admin-bootstrapped==1.6.7
 django-appconf==0.6
 django-classy-tags==0.5.1
 django-compressor==1.4
 django-debug-toolbar==1.2.1
 django-extensions==1.3.8
 django-model-utils==2.2
+django-nose==1.2
+-e git+git@github.com:Haakenlid/django-pymemcache.git@333882b689d33df6a9c3a091616ec8e4fdb3b3f4#egg=django_pymemcache-origin/HEAD
+django-redis-cache==0.13.0
 django-sekizai==0.7
 gunicorn==18.0
+hiredis==0.1.4
 ipdb==0.8
 ipython==2.1.0
+mysql-connector-python==1.2.2
+nose==1.3.3
 psycopg2==2.5.2
+pymemcache==1.2.4
 pyparsing==2.0.2
+pytz==2014.4
 pyzmq==14.3.1
+redis==2.10.3
 requests==2.3.0
 selenium==2.42.1
 setproctitle==1.1.8
 six==1.7.3
+-e git+git@github.com:mariocesar/sorl-thumbnail.git@33763bfc0514f7724c9e9fc1eb8c909fd8aa131c#egg=sorl_thumbnail-origin/master
 sqlparse==0.1.11
 tornado==4.0
