@@ -9,7 +9,6 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('photo', '0001_initial'),
         ('stories', '0001_initial'),
     ]
 
@@ -17,35 +16,34 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Frontpage',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(editable=False, verbose_name='created', default=django.utils.timezone.now)),
-                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, verbose_name='modified', default=django.utils.timezone.now)),
-                ('label', models.CharField(help_text='Unique label used in url', max_length=100, unique=True)),
-                ('published', models.BooleanField(help_text='This page is published.', default=False)),
-                ('draft_of', models.ForeignKey(editable=False, null=True, help_text='Is a draft version of other Frontpage.', to='frontpage.Frontpage', blank=True)),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('label', models.CharField(max_length=100, unique=True, help_text='Unique label used in url')),
+                ('published', models.BooleanField(default=False, help_text='This page is published.')),
+                ('draft_of', models.ForeignKey(to='frontpage.Frontpage', blank=True, null=True, editable=False, help_text='Is a draft version of other Frontpage.')),
             ],
             options={
-                'verbose_name_plural': 'Frontpages',
                 'verbose_name': 'Frontpage',
+                'verbose_name_plural': 'Frontpages',
             },
             bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='FrontpageStory',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(editable=False, verbose_name='created', default=django.utils.timezone.now)),
-                ('modified', model_utils.fields.AutoLastModifiedField(editable=False, verbose_name='modified', default=django.utils.timezone.now)),
-                ('headline', models.CharField(help_text='headline', max_length=200, blank=True)),
-                ('kicker', models.CharField(help_text='kicker', max_length=200, blank=True)),
-                ('lede', models.CharField(help_text='lede', max_length=200, blank=True)),
-                ('html_class', models.CharField(help_text='html_class', max_length=200, blank=True)),
-                ('image', models.ForeignKey(to='photo.Image')),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True, serialize=False)),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('headline', models.CharField(max_length=200, blank=True, help_text='headline')),
+                ('kicker', models.CharField(max_length=200, blank=True, help_text='kicker')),
+                ('lede', models.CharField(max_length=200, blank=True, help_text='lede')),
+                ('html_class', models.CharField(max_length=200, blank=True, help_text='html_class')),
                 ('story', models.ForeignKey(to='stories.Story')),
             ],
             options={
-                'verbose_name_plural': 'FrontpageStorys',
-                'verbose_name': 'FrontpageStory',
+                'verbose_name': 'Frontpage Story',
+                'verbose_name_plural': 'Frontpage Stories',
             },
             bases=(models.Model,),
         ),

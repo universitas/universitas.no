@@ -4,7 +4,15 @@ Admin for photo app.
 """
 
 from django.contrib import admin
-from . import models
-from utils.autoregister import autoregister_admin
+from . models import ImageFile
+from sorl.thumbnail.admin import AdminImageMixin
 
-autoregister_admin(models)
+
+@admin.register(ImageFile)
+class ImageFileAdmin(AdminImageMixin, admin.ModelAdmin, ):
+    list_display = (
+        'id',
+        'created',
+        'source_file',
+        'contributor',
+    )

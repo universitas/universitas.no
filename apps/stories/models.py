@@ -4,6 +4,7 @@
 # Python standard library
 import re
 # import html
+import ipdb
 from collections import defaultdict
 
 # Django core
@@ -31,7 +32,7 @@ class TextContent(TimeStampedModel):
     XTAG_FORMAT = '@%s:%s'
     XTAG_REGEXP = re.compile(r'^@([^ :]+): ?(.*)$')
     DEFAULT_TAG = 'txt'
-    SPLIT_HERE = '\n*** SPLIT HERE ***\n'
+    SPLIT_HERE = '¦\n'
 
     class Meta:
         abstract = True
@@ -55,7 +56,6 @@ class TextContent(TimeStampedModel):
 
 
     def save(self, *args, **kwargs):
-
         try:
             original = Story.objects.get(pk=self.pk)
             if original.bodytext_markup != self.bodytext_markup:
@@ -66,6 +66,8 @@ class TextContent(TimeStampedModel):
             self.clean_markup()
 
         super(TextContent, self).save(*args, **kwargs)
+
+
 
     def sort_paragraphs_by_tag(self, tag, paragraph_text):
         """ Magical sorting hat that puts each paragraph into the relevant bucket before saving or generating html. """
@@ -82,7 +84,8 @@ class TextContent(TimeStampedModel):
             bucket = self.buckets[tag]
             if tag == 'bl':
                 # split individual bylines with linebreak.
-                paragraph_text = re.sub(r'[\r\n;•]| og | and ', self.SPLIT_HERE, paragraph_text, re.M)
+                paragraph_text = clean_up_bylines(paragraph_text) + '\n'
+                paragraph_text = paragraph_text.replace('\n', self.SPLIT_HERE)
 
             if tag in ('sitat', 'fakta',):
                 # start new aside or pullquote and collect next paragraphs in the same bucket
@@ -130,8 +133,6 @@ class TextContent(TimeStampedModel):
         # joins text strings in all the self.buckets
         for key in self.buckets:
             self.buckets[key] = '\n'.join(self.buckets[key])
-            # print('\n%s:\n%s' % (key, self.buckets[key][:100]))
-            # print('\n%s:\n%s' % (key, len(self.buckets[key])))
 
         self.bodytext_markup = self.buckets[self.DEFAULT_TAG]
         self.bodytext_html = self.wrapInHTML()
@@ -208,7 +209,7 @@ class Story(TextContent):
         editable=False,
     )
     issue = models.ForeignKey(
-        PrintIssue,
+        'issues.PrintIssue',
         blank=True, null=True,
         help_text=_('Which issue this story was printed in.'),
     )
@@ -216,6 +217,10 @@ class Story(TextContent):
         blank=True, null=True,
         help_text=_('Which page the story was printed on.'),
     )
+    images = models.ManyToManyField(
+        ImageFile,
+        through='StoryImage',
+        )
     # dateline_place = models.CharField(
     #     blank=True, max_length=50,
     #     help_text=_('Where this story happened.')
@@ -242,6 +247,8 @@ class Story(TextContent):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)[:50]
         super(Story, self).save(*args, **kwargs)
+        if not self.title:
+            print(self.story_type, self.bodytext_html[:20], self.pk)
 
     @models.permalink
     def get_absolute_url(self):
@@ -256,8 +263,10 @@ class Story(TextContent):
         self.kicker = self.buckets.get("stikktit", self.kicker)
         self.lede = self.buckets.get("ing", self.lede)
         self.theme_word = self.buckets.get("temaord", self.theme_word)
-        # import ipdb
-        # ipdb.set_trace()
+        if len(self.theme_word) > 100:
+            # Feil tagging i prodsys - for langt temaord
+            self.buckets['txt'] = self.theme_word + self.buckets['txt']
+            self.theme_word = ''
         bylines = self.buckets.get("bl", "").split(self.SPLIT_HERE)
         pullquotes = self.buckets.get("sitat", "").split(self.SPLIT_HERE)
         asides = self.buckets.get("fakta", "").split(self.SPLIT_HERE)
@@ -277,12 +286,10 @@ class Story(TextContent):
                 bottom = len(paragraphs) or 1
                 for depth, haystack in enumerate(paragraphs):
                     if needle in haystack.lower():
-                        # print(needle + '\n'+ haystack)
                         break
                 else:
                     depth = 0
                 position = int(StoryElement.MAXPOSITION * depth / bottom)
-                # print('%s/%s (%s)\n%s\n%s' % (depth, bottom, position, needle, pullquote))
 
                 new_pullquote = Pullquote(
                     parent_story=self,
@@ -315,7 +322,7 @@ class StoryElement(models.Model):
             'Where in the story does this belong? %d = At the very beginning, %d = At the end.' %
             (0, MAXPOSITION)))
     class Meta:
-        # app_label = 'stories'
+        app_label = 'stories'
         abstract = True
 
 
@@ -339,8 +346,6 @@ class Aside(TextContent, StoryElement):
         app_label = 'stories'
 
 class StoryImage(StoryElement):
-    DEFAULT_TAG = 'fakta'
-
     """ Photo or illustration connected to a story """
 
     caption = models.CharField(
@@ -349,11 +354,19 @@ class StoryImage(StoryElement):
         max_length=1000)
 
     creditline = models.CharField(
-        help_text=_('Extra information about image copyrights. Not needed if image is created by a regular contributor.'),
+        help_text=_('Extra information about image.'),
         blank=True,
         max_length=100)
 
     imagefile = models.ForeignKey(ImageFile)
+
+    size = models.PositiveSmallIntegerField(
+        help_text=_('relative image size.'),
+        default = 1,
+        )
+
+    def source_image(self):
+        return self.imagefile.source_image.field
 
 
     class Meta:
@@ -430,7 +443,7 @@ class Byline(models.Model):
         app_label = 'stories'
 
     def __str__(self):
-        return '%s: %s' % (self.credit, self.contributor)
+        return '%s: %s (%s)'  % (self.get_credit_display(), self.contributor, self.story, )
 
     @classmethod
     def create(cls, full_byline, story, initials=''):
@@ -447,15 +460,16 @@ class Byline(models.Model):
         byline_pattern = re.compile(
             r'^((?P<credit>[^:,]+):)?\s*(?P<full_name>[^,]+)\s*(,\s*(?P<title>.+))?$'
         )
-        full_byline = full_byline.replace('\t', ':')
-        full_byline = re.sub(r'^(.*?) *\(([^)]*)\) *$', r'\2: \1', full_byline, re.M)
-        full_byline = re.sub(r'^\S*?(ph|f)oto\S*?:', 'foto:', full_byline, re.M)
+
 
         match = byline_pattern.match(full_byline)
-        d = match.groupdict()
-        full_name = d['full_name']
-        full_name = re.sub(r'^(by|av) ', '', full_name, re.M+re.I)
-        title = d['title']
+        try:
+            d = match.groupdict()
+        except AttributeError as e:
+            import ipdb; ipdb.set_trace()
+            raise e
+        full_name = d['full_name'].strip()
+        title = (d['title'] or '').strip()
         credit_first_letter = (d['credit'] or cls.DEFAULT_CREDIT[0])[0]
         for choice in cls.CREDIT_CHOICES:
             if credit_first_letter in choice[0]:
@@ -464,6 +478,7 @@ class Byline(models.Model):
         else:
             credit = cls.DEFAULT_CREDIT
 
+        initials = ''.join(letters[0] for letters in full_name.replace('-', ' ').split()).upper()[:5]
         contributor = Contributor.get_or_create(full_name, initials)
 
         new_byline = cls(
@@ -472,11 +487,7 @@ class Byline(models.Model):
             title=title,
             contributor=contributor,
         )
-        try:
-            new_byline.save()
-            print('\nsaved %s as\n%s\n%s\n%s' % (full_byline, credit, full_name, title or ''))
-        except:
-            print('failed to save %s as %s  %s  %s' % (full_byline, credit, full_name, title))
+        new_byline.save()
 
         return new_byline
 
@@ -542,3 +553,26 @@ class Byline(models.Model):
 #         item = items
 #         return import_single_article(item)
 
+def clean_up_bylines(xtags):
+    replacements =(
+        # (r'Oslo og Akershus', 'Oslo && Akershus', re.I),
+        (r'\r|;|•', r'\n', re.I),
+        (r' +(\S*?:)', r'\n\1', 0),
+        (r'\s*(,\s|\sog\s|\sand\s)\s*([A-ZÆØÅ][a-zæøå]+ [A-ZÆØÅ])', r'\n\2', 0),
+        (r'^(.*?) *\(([^)]*)\) *$', r'\2: \1',  re.M),
+        (r'\S*(ph|f)oto\S*?[\s:]*', '\nfoto: ',  re.I),
+        (r'\S*te(ks|x)t\S*?[\s:]*', '\ntekst: ',  re.I),
+        (r' *(,| og| and) *$', '', re.M + re.I),
+        (r'^ *(,|og |and |av ) *', '', re.M + re.I),
+        (r'^\S:\s*$', '', re.M ),
+        (r'\s*\n\s*', r'\n', 0),
+        (r'^([^:]+?)$', r'tekst:\1', re.M),
+        (r'\s*:+\s*', ': ', 0 ),
+    )
+    new_xtags = xtags
+    for pattern, replacement, flags in replacements:
+        new_xtags = re.sub(pattern, replacement, new_xtags, flags=flags)
+    new_xtags = new_xtags.strip()
+    # print('\n%s\n\t%s' % (xtags, new_xtags.replace('\n', '\n\t')))
+
+    return new_xtags

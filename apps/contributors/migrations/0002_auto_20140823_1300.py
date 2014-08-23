@@ -11,8 +11,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterModelOptions(
-            name='contactinfo',
-            options={'verbose_name': 'ContactInfo', 'verbose_name_plural': 'ContactInfo'},
+        migrations.RenameField(
+            model_name='contributor',
+            old_name='displayName',
+            new_name='display_name',
         ),
     ]

@@ -6,7 +6,7 @@
 # Django core
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
-from django.template.defaultfilters import slugify
+# from django.template.defaultfilters import slugify
 
 # Installed apps
 
@@ -29,9 +29,8 @@ class PrintIssue(models.Model):
         blank=True, null=True,)
 
     class Meta:
-        verbose_name = _('Issue')
-        verbose_name_plural = _('Issues')
-        app_label = 'issues'
+        verbose_name = _('Print issue')
+        verbose_name_plural = _('Print issues')
 
     def __str__(self):
         return self.issue_name

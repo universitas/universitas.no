@@ -36,13 +36,13 @@ TEMPLATE_DEBUG = DEBUG
 
 # CUSTOM APPS
 INSTALLED_APPS = (
+    'apps.issues',
     'apps.stories',
     'apps.core',
     'apps.photo',
     'apps.frontpage',
     'apps.prodsys_api_access',
     'apps.contributors',
-    'apps.issues',
     'apps.markup',
     'functional_tests',
     )
@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'compressor',
     'sekizai',
+    'sorl.thumbnail',
     ) + INSTALLED_APPS
 
 # CORE APPS
@@ -104,6 +105,53 @@ DATABASES = {
     }
 }
 DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
+
+# CACHE
+# CACHES = {
+#     'default': {
+#         # TODO: PyLibMCCache er visst rasker, men ikke ennå klar for python 3.
+#         'BACKEND': 'djpymemcache.backend.PyMemcacheCache',
+#         # 'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#         # 'LOCATION': 'unix:/tmp/memcached.sock',
+#         'LOCATION': '127.0.0.1:11211',
+#     }
+# }
+# When using TCP connections
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'localhost:6379',
+        'OPTIONS': {
+            'DB': 0,
+            # 'PASSWORD': 'yadayada',
+            'PARSER_CLASS': 'redis.connection.HiredisParser',
+            'CONNECTION_POOL_CLASS': 'redis.BlockingConnectionPool',
+            'CONNECTION_POOL_CLASS_KWARGS': {
+                'max_connections': 50,
+                'timeout': 20,
+            }
+        },
+    },
+}
+
+
+#SORL
+THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
+THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.convert_engine.Engine'
+# # When using unix domain sockets
+# # Note: ``LOCATION`` needs to be the same as the ``unixsocket`` setting
+# # in your redis.conf
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'redis_cache.RedisCache',
+#         'LOCATION': '/path/to/socket/file',
+#         'OPTIONS': {
+#             'DB': 1,
+#             'PASSWORD': 'yadayada',
+#             'PARSER_CLASS': 'redis.connection.HiredisParser'
+#         },
+#     },
+# }
 
 # INTERNATIONALIZATION
 LANGUAGE_CODE = 'no'

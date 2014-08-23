@@ -1,10 +1,27 @@
 # -*- coding: utf-8 -*-
 """
-Admin for stories app.
+Admin for contributors app.
 """
 
 from django.contrib import admin
 from . import models
-from utils.autoregister import autoregister_admin
+from apps.stories.admin import BylineInline
 
-autoregister_admin(models)
+@admin.register(models.Contributor)
+class ContributorAdmin(admin.ModelAdmin):
+    list_display = (
+        'display_name',
+        'bylines_count',
+        'initials',
+        )
+    list_editable = (
+        'display_name',
+        )
+    search_fields = (
+        'display_name',
+        )
+
+    inlines = [
+    BylineInline,
+
+    ]

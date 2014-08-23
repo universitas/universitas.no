@@ -25,7 +25,7 @@ class ProdsysTag(models.Model):
     class Meta:
         verbose_name = _('prodsys tag')
         verbose_name_plural = _('prodsys tags')
-        app_label = 'stories'
+        # app_label = 'stories'
 
     def __str__(self):
         """ unicode  """

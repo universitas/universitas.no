@@ -9,7 +9,7 @@ from django.conf import settings
 
 # Installed apps
 from model_utils.models import TimeStampedModel
-
+from sorl.thumbnail import ImageField
 # Project apps
 from apps.contributors.models import Contributor
 
@@ -22,7 +22,7 @@ class ImageFile(TimeStampedModel):
         verbose_name = _('ImageFile')
         verbose_name_plural = _('ImageFiles')
 
-    source_file = models.ImageField(
+    source_file = ImageField(
         upload_to='upload/',
         height_field='full_height',
         width_field='full_width',
@@ -33,10 +33,19 @@ class ImageFile(TimeStampedModel):
     old_file_path = models.CharField(
         help_text=_('previous path if the image has been moved.'),
         blank=True, null=True,
-        max_length=100)
+        max_length=1000)
+    contributor = models.ForeignKey(
+        Contributor,
+        help_text=_('who made this.'),
+        blank=True, null=True,
+        )
+    copyright_information = models.CharField(
+        help_text=_('If needed.'),
+        blank=True, null=True,
+        max_length=1000,)
 
-    def __unicode__(self):
-        return '{}'.format(self.source_file)
+    def __str__(self):
+        return self.source_file.name
 
     # def thumb(self):
         # TODO: Thumbnail-function. Det er nok bedre å bruke en tredjepart-app.

@@ -8,11 +8,14 @@ import re
 import subprocess
 from django.utils import timezone
 from django.core.serializers import serialize
+from django.core.cache import cache
 from django.conf import settings
 from apps.legacy_db.models import Bilde, Prodbilde, Sak, Prodsak
-from apps.stories.models import Story, StoryType, Section
+from apps.stories.models import Story, StoryType, Section, StoryImage
 from apps.photo.models import ImageFile
 from apps.issues.models import PrintIssue
+from apps.contributors.models import Contributor
+
 
 BILDEMAPPE = os.path.join(settings.MEDIA_ROOT, '')
 
@@ -20,47 +23,67 @@ PDFMAPPE = os.path.join(settings.MEDIA_ROOT, 'pdf')
 TIMEZONE = timezone.get_current_timezone()
 
 
-def importer_bilder_fra_gammel_webside(limit=100):
-    webbilder = Bilde.objects.exclude(size="0").order_by('-id_bilde')
-    if limit:
-        webbilder = webbilder.order_by('?')[:limit]
-    bildefiler = set(
-        subprocess.check_output(
-            'cd %s; find -iname "*.jp*g" | sed "s,./,,"' % (BILDEMAPPE,),
-            shell=True,
-        ).decode("utf-8").splitlines()
-    )
+def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
+    if not webbilder:
+        webbilder = Bilde.objects.exclude(size="0").order_by('-id_bilde')
+        if limit:
+            # tilfeldige bilder for stikkprøvetesting.
+            webbilder = webbilder.order_by('?')[:limit]
+    else:
+        webbilder = (webbilder,)
 
-    print('bildefiler: %s\nwebbilder: %s' % (len(bildefiler), webbilder.count()))
+    bildefiler = cache.get('bildefiler')
+    if not bildefiler:
+        # Dette tar litt tid, så det caches i redis, som kan huske det mellom skriptene kjører.
+        bildefiler = set(
+            subprocess.check_output(
+                'cd %s; find -iname "*.jp*g" | sed "s,./,,"' % (BILDEMAPPE,),
+                shell=True,
+            ).decode("utf-8").splitlines()
+        )
+        cache.set('bildefiler', bildefiler)
+
     for bilde in webbilder:
-        # print(serializers.serialize('json', [bilde, ]))
         path = bilde.path
-        filnavn = bilde.path.split('/')[-1]
-        if path in bildefiler:
-            # bildet eksisterer på disk.
-            fullpath = os.path.join(BILDEMAPPE, path)
+        try:
+            nyttbilde = ImageFile.objects.get(id=bilde.id_bilde)
+        except ObjectDoesNotExist:
+            if path in bildefiler:
+                # bildet eksisterer på disk.
+                fullpath = os.path.join(BILDEMAPPE, path)
 
-            modified = datetime.fromtimestamp(
-                os.path.getmtime(fullpath), TIMEZONE)
-            created = datetime.fromtimestamp(
-                os.path.getctime(fullpath), TIMEZONE)
+                modified = datetime.datetime.fromtimestamp(
+                    os.path.getmtime(fullpath), TIMEZONE)
+                created = datetime.datetime.fromtimestamp(
+                    os.path.getctime(fullpath), TIMEZONE)
+                dates = [modified, created, ]
+                try:
+                    saksdato = datetime.datetime.combine(bilde.sak.dato, datetime.time(tzinfo=TIMEZONE))
+                    dates.append(saksdato)
+                except ObjectDoesNotExist:
+                    # ingen sak knyttet til dette bildet. Gå videre.
+                    continue
 
-            if bilde.sak:
-                saksdato = bilde.sak.dato
-                created = min(saksdato, created, modified)
+                # Noen bilder har feil dato i fila.
+                # Men for å unngå for mange feil, så regner vi med at bildet
+                # senest kan ha blitt laget den dagen det ble publisert
+                created = min(dates)
 
-            nyttbilde = ImageFile(
-                id=bilde.id_bilde,
-                old_file_path=path,
-                source_file=path,
-                created=created,
-                modified=modified,
-            )
-            nyttbilde.save()
-            print(filnavn)
-        else:
-            print("finner ikke %s" % (path,))
+                nyttbilde = ImageFile(
+                    id=bilde.id_bilde,
+                    old_file_path=path,
+                    source_file=path,
+                    created=created,
+                    modified=modified,
+                )
+                try:
+                    nyttbilde.save()
+                except TypeError:
+                    nyttbilde = None
+            else:
+                nyttbilde = None
 
+    return nyttbilde
 
 def importer_utgaver_fra_gammel_webside():
     pdfer = set(
@@ -87,38 +110,74 @@ def importer_utgaver_fra_gammel_webside():
         new_issue.save()
 
 
-def importer_saker_fra_gammel_webside():
-    websaker = Sak.objects.order_by('?')[:10]
+def importer_saker_fra_gammel_webside(first=0,last=1000):
+    # websaker = Sak.objects.order_by('?')[:10]
+    websaker = Sak.objects.exclude(publisert=0).order_by('-id_sak')[first:last]
     for websak in websaker:
+        if Story.objects.filter(pk=websak.pk):
+            print('sak %s finnes' % (websak.pk,))
+            continue
         if websak.filnavn and websak.filnavn.isdigit():
+            # Er hentet fra prodsys
             prodsak_id = int(websak.filnavn)
         else:
+            # Gamle greier eller opprettet i nettavisa.
             prodsak_id = None
         try:
             prodsak = Prodsak.objects.get(prodsak_id=prodsak_id)
             assert "Vellykket eksport fra InDesign!" in prodsak.kommentar
+            assert "@tit:" in prodsak.tekst
             xtags = clean_up_prodsys_encoding(prodsak.tekst)
+            fra_prodsys = True
 
         except (ObjectDoesNotExist, TypeError, AssertionError, ValueError) as e:
             xtags = websak_til_xtags(websak)
+            fra_prodsys = False
 
         xtags = clean_up_html(xtags)
         xtags = clean_up_xtags(xtags)
-        # print(xtags)
-        # print('\n\n')
+
         year, month, day = websak.dato.year, websak.dato.month, websak.dato.day
         publication_date = datetime.datetime(year, month, day, tzinfo=TIMEZONE)
         story_type = get_story_type(websak.mappe)
 
-        new_story = Story(
-            id=websak.id_sak,
-            publication_date=publication_date,
-            # dateline_date=websak.dato,
-            status=Story.STATUS_PUBLISHED,
-            story_type=story_type,
-            bodytext_markup=xtags,
-        )
-        new_story.save()
+        if fra_prodsys and prodsak_id and Story.objects.filter(prodsak_id=prodsak_id).exists():
+            # undersak har samme prodsak_id som hovedsak.
+            new_story = Story.objects.get(prodsak_id=prodsak_id)
+
+        else:
+            new_story = Story(
+                id=websak.id_sak,
+                publication_date=publication_date,
+                status=Story.STATUS_PUBLISHED,
+                story_type=story_type,
+                bodytext_markup=xtags,
+                prodsak_id=prodsak_id,
+            )
+
+            new_story.save()
+
+        print(new_story, new_story.pk)
+
+        for bilde in websak.bilde_set.all():
+            try:
+                caption = bilde.bildetekst.tekst
+                caption = clean_up_html(caption)
+                caption = clean_up_xtags(caption)
+            except (ObjectDoesNotExist, AttributeError,):
+                caption = ''
+            image_file = importer_bilder_fra_gammel_webside(bilde)
+            if image_file:
+                story_image = StoryImage(
+                    parent_story=new_story,
+                    caption=caption[:1000],
+                    creditline='',
+                    published=bool(bilde.size),
+                    imagefile=image_file,
+                    size=bilde.size or 0,
+                )
+                story_image.save()
+        # TODO: Tilsvarende import av bilder fra prodsakbilde.
 
 
 def get_story_type(prodsys_mappe):
@@ -202,6 +261,7 @@ def clean_up_prodsys_encoding(text):
     text = text.replace('\x92', '\'')  # some fixes for win 1252
     text = text.replace('\x95', '•')  # bullet
     text = text.replace('\x96', '–')  # n-dash
+    text = text.replace('\x03', ' ')  # vetdafaen...
     return text
 
 
@@ -231,7 +291,16 @@ def clean_up_xtags(xtags):
 
     return xtags.strip()
 
-importer_utgaver_fra_gammel_webside()
-# importer_saker_fra_gammel_webside()
+def drop_images_stories_and_contributors():
+    print('sletter images')
+    ImageFile.objects.all().delete()
+    print('sletter contributors')
+    Contributor.objects.all().delete()
+    print('sletter stories')
+    Story.objects.all().delete()
+
+# drop_images_stories_and_contributors()
+importer_saker_fra_gammel_webside(1000, 2000)
+# importer_utgaver_fra_gammel_webside()
 # importer_bilder_fra_gammel_webside()
 # get_prodsaker()

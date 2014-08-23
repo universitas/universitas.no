@@ -1,3 +1,5 @@
+import re
+import difflib
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
@@ -10,7 +12,7 @@ class Contributor(models.Model):
     # user = models.ForeignKey(User, blank=True, null=True)
     # position = models.ForeignKey('Position')
     # contact_info = models.ForeignKey('ContactInfo')
-    displayName = models.CharField(blank=True, max_length=50)
+    display_name = models.CharField(blank=True, max_length=50)
     aliases = models.TextField(blank=True)
     initials = models.CharField(blank=True, null=True, max_length=5)
 
@@ -19,7 +21,10 @@ class Contributor(models.Model):
         verbose_name_plural = _('Contributors')
 
     def __str__(self):
-        return self.displayName or self.initials or 'N. N.'
+        return self.display_name or self.initials or 'N. N.'
+
+    def bylines_count(self):
+        return self.byline_set.count()
 
     @classmethod
     def get_or_create(cls, full_name, initials=''):
@@ -28,11 +33,12 @@ class Contributor(models.Model):
         Tries to avoid creation of multiple contributor instances
         for a single real contributor.
         """
+        full_name = full_name[:50].strip()
         names = full_name.split()
         last_name = names[-1]
-        first_name = names[:-1][:1]
+        first_name = ' '.join(names[:-1][:1])
         # middle_name = ' '.join(names[1:-1])
-
+        # print('"%s", "%s", "%s"' % (first_name, last_name, full_name))
         base_query = cls.objects
 
         def find_single_item_or_none(func):
@@ -52,15 +58,15 @@ class Contributor(models.Model):
 
         @find_single_item_or_none
         def search_for_full_name():
-            return base_query.get(displayName=full_name)
+            return base_query.get(display_name=full_name)
 
         @find_single_item_or_none
         def search_for_first_plus_last_name():
             if not first_name:
                 return None
             return base_query.get(
-                displayName__istartswith=first_name,
-                displayName__iendswith=last_name)
+                display_name__istartswith=first_name,
+                display_name__iendswith=last_name)
 
         @find_single_item_or_none
         def search_for_alias():
@@ -70,15 +76,19 @@ class Contributor(models.Model):
 
         @find_single_item_or_none
         def search_for_initials():
-            if first_name or not initials:
-                return None
-            contributor = base_query.get(initials__iexact=initials)
-            # TODO: contributor addalias(newalias-maybe).
-            # TODO: contributor merge.
-            # TODO: two contributors with same name.
-            contributor.aliases += full_name
-            contributor.save()
-            return contributor
+            if initials:
+                contributors = base_query.filter(initials__iexact=initials)
+                for contributor in contributors:
+                    ratio = difflib.SequenceMatcher(None, contributor.display_name, full_name).ratio()
+                    # print('"%s" -- "%s" : %s' % (contributor.display_name, full_name, ratio))
+                    if ratio >= 0.8:
+                        # TODO: contributor addalias(newalias-maybe).
+                        # TODO: contributor merge.
+                        # TODO: two contributors with same name.
+                        contributor.aliases += full_name
+                        contributor.save()
+                        return contributor
+            return None
 
         # Variuous queries to look for contributor in the database.
         contributor = (
@@ -91,7 +101,7 @@ class Contributor(models.Model):
         # Was not found with any of the methods.
         if not contributor:
             contributor = cls(
-                displayName=full_name[:50],
+                display_name=full_name[:50],
                 initials=initials,
             )
             contributor.save()

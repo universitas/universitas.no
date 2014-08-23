@@ -11,8 +11,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='story',
-            name='related_stories',
+        migrations.AddField(
+            model_name='storyimage',
+            name='size',
+            field=models.PositiveSmallIntegerField(help_text='relative image size.', default=1),
+            preserve_default=True,
         ),
     ]
