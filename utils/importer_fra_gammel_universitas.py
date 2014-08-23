@@ -1,16 +1,15 @@
 import django
 django.setup()
 
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 from pytz import datetime
 import os
 import re
 import subprocess
 from django.utils import timezone
-from django.core.serializers import serialize
 from django.core.cache import cache
 from django.conf import settings
-from apps.legacy_db.models import Bilde, Prodbilde, Sak, Prodsak
+from apps.legacy_db.models import Bilde, Sak, Prodsak
 from apps.stories.models import Story, StoryType, Section, StoryImage
 from apps.photo.models import ImageFile
 from apps.issues.models import PrintIssue
@@ -69,14 +68,14 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
                 # senest kan ha blitt laget den dagen det ble publisert
                 created = min(dates)
 
-                nyttbilde = ImageFile(
-                    id=bilde.id_bilde,
-                    old_file_path=path,
-                    source_file=path,
-                    created=created,
-                    modified=modified,
-                )
                 try:
+                    nyttbilde = ImageFile(
+                        id=bilde.id_bilde,
+                        old_file_path=path,
+                        source_file=path,
+                        created=created,
+                        modified=modified,
+                    )
                     nyttbilde.save()
                 except TypeError:
                     nyttbilde = None
@@ -110,9 +109,9 @@ def importer_utgaver_fra_gammel_webside():
         new_issue.save()
 
 
-def importer_saker_fra_gammel_webside(first=0,last=1000):
+def importer_saker_fra_gammel_webside(first=0,last=20000):
     # websaker = Sak.objects.order_by('?')[:10]
-    websaker = Sak.objects.exclude(publisert=0).order_by('-id_sak')[first:last]
+    websaker = Sak.objects.exclude(publisert=0).order_by('id_sak')[first:last]
     for websak in websaker:
         if Story.objects.filter(pk=websak.pk):
             print('sak %s finnes' % (websak.pk,))
@@ -124,13 +123,13 @@ def importer_saker_fra_gammel_webside(first=0,last=1000):
             # Gamle greier eller opprettet i nettavisa.
             prodsak_id = None
         try:
-            prodsak = Prodsak.objects.get(prodsak_id=prodsak_id)
+            prodsak = Prodsak.objects.filter(prodsak_id=prodsak_id).order_by('-version_no').last()
             assert "Vellykket eksport fra InDesign!" in prodsak.kommentar
             assert "@tit:" in prodsak.tekst
             xtags = clean_up_prodsys_encoding(prodsak.tekst)
             fra_prodsys = True
 
-        except (ObjectDoesNotExist, TypeError, AssertionError, ValueError) as e:
+        except (AttributeError, TypeError, AssertionError) as e:
             xtags = websak_til_xtags(websak)
             fra_prodsys = False
 
@@ -177,6 +176,7 @@ def importer_saker_fra_gammel_webside(first=0,last=1000):
                     size=bilde.size or 0,
                 )
                 story_image.save()
+
         # TODO: Tilsvarende import av bilder fra prodsakbilde.
 
 
@@ -299,8 +299,6 @@ def drop_images_stories_and_contributors():
     print('sletter stories')
     Story.objects.all().delete()
 
-# drop_images_stories_and_contributors()
-importer_saker_fra_gammel_webside(1000, 2000)
-# importer_utgaver_fra_gammel_webside()
-# importer_bilder_fra_gammel_webside()
-# get_prodsaker()
+drop_images_stories_and_contributors()
+importer_utgaver_fra_gammel_webside()
+importer_saker_fra_gammel_webside()

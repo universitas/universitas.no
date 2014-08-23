@@ -1,6 +1,6 @@
 """Development settings and globals."""
 
-from .local import *
+from .base import *
 from os import environ
 
 

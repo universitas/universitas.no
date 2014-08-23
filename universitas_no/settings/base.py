@@ -16,7 +16,7 @@ import django.conf.global_settings as DEFAULT_SETTINGS
 
 # PATH CONFIGURATION
 # Absolute filesystem path to the Django project directory:
-BASE_DIR = dirname(dirname(dirname(abspath(__file__))))
+BASE_DIR = environ["DJANGO_SOURCE_FOLDER"]
 
 # Absolute filesystem path to the top-level project folder:
 PROJECT_ROOT_FOLDER = dirname(BASE_DIR)
@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'apps.prodsys_api_access',
     'apps.contributors',
     'apps.markup',
+    'apps.legacy_db',
     'functional_tests',
     )
 
@@ -58,8 +59,6 @@ INSTALLED_APPS = (
 
 # CORE APPS
 INSTALLED_APPS = (
-    # 'django_admin_bootstrapped.bootstrap3',
-    # 'django_admin_bootstrapped',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -106,17 +105,11 @@ DATABASES = {
 }
 DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
 
+#SORL
+THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
+THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.convert_engine.Engine'
+
 # CACHE
-# CACHES = {
-#     'default': {
-#         # TODO: PyLibMCCache er visst rasker, men ikke ennå klar for python 3.
-#         'BACKEND': 'djpymemcache.backend.PyMemcacheCache',
-#         # 'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-#         # 'LOCATION': 'unix:/tmp/memcached.sock',
-#         'LOCATION': '127.0.0.1:11211',
-#     }
-# }
-# When using TCP connections
 CACHES = {
     'default': {
         'BACKEND': 'redis_cache.RedisCache',
@@ -135,10 +128,7 @@ CACHES = {
 }
 
 
-#SORL
-THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
-THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.convert_engine.Engine'
-# # When using unix domain sockets
+# # When using unix domain sockets with Redis
 # # Note: ``LOCATION`` needs to be the same as the ``unixsocket`` setting
 # # in your redis.conf
 # CACHES = {
@@ -151,7 +141,19 @@ THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.convert_engine.Engine'
 #             'PARSER_CLASS': 'redis.connection.HiredisParser'
 #         },
 #     },
+
+###############   MEMCACHED (Bruker redis i stedet)
 # }
+# CACHES = {
+#     'default': {
+#         # TODO: PyLibMCCache er visst rasker, men ikke ennå klar for python 3.
+#         'BACKEND': 'djpymemcache.backend.PyMemcacheCache',
+#         # 'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#         # 'LOCATION': 'unix:/tmp/memcached.sock',
+#         'LOCATION': '127.0.0.1:11211',
+#     }
+# }
+# When using TCP connections
 
 # INTERNATIONALIZATION
 LANGUAGE_CODE = 'no'

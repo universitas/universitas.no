@@ -55,6 +55,11 @@ def stop():
     with settings(warn_only=True):
         _enable_site(site_url, start=False)
 
+def dropdb():
+    site_url = env.host
+    db_name = site_url.replace('.', '_')
+    _drop_postgres_db(db_name)
+
 
 def reboot():
     site_url = env.host
@@ -174,6 +179,13 @@ def _create_linux_user(username, site_url, group):
     user_exists = run('id %s; echo $?' % username).split()[-1] == "0"
     if not user_exists:
         sudo('useradd --shell /bin/bash -g %s -M -c "runs gunicorn for %s" %s' % (group, site_url, username))
+
+def _drop_postgres_db(db_name):
+    # username = project_settings['user']
+    # password = project_settings['db password']
+    run('pg_dump -Fc dev_universitas_no > {}_$(date +"%Y-%m-%d").sql'.format(db_name,))
+    run('psql -c "DROP DATABASE %s ;"' % (db_name, ))
+    run('psql -c "DROP USER %s ;"' % (db_name, ))
 
 
 def _create_postgres_db(project_settings):
