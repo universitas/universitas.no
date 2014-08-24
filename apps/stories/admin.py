@@ -73,8 +73,8 @@ class StoryAdmin(admin.ModelAdmin):
     )
 
     list_editable = (
-        'title',
-        'kicker',
+        # 'title',
+        # 'kicker',
         # 'lede',
         'theme_word',
         'story_type',
@@ -129,7 +129,6 @@ class StoryTypeAdmin(admin.ModelAdmin):
     list_editable = (
         'name',
         'section',
-        # 'template',
         # 'prodsys_mappe',
     )
 
@@ -144,7 +143,6 @@ class BylineAdmin(admin.ModelAdmin):
         'title',
     )
     list_editable = (
-        'contributor',
         'credit',
         'title',
     )
