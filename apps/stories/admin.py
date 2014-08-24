@@ -17,10 +17,10 @@ class BylineInline(admin.TabularInline):
         'contributor',
         'title',
     )
-    readonly_fields = (
+    raw_id_fields = (
         'story',
         'contributor',
-        )
+    )
     extra = 0
 
 
@@ -43,10 +43,9 @@ class ImageInline(AdminImageMixin, admin.TabularInline):
         'creditline',
         'size',
         'imagefile',
-        'source_image',
     )
-    readonly_fields = (
-        'source_image',
+    raw_id_fields = (
+        'imagefile',
     )
     # model = ImageFile
     extra = 0
@@ -96,7 +95,7 @@ class StoryAdmin(admin.ModelAdmin):
         'theme_word',
         # 'story_type__name',
         # 'bylines',
-        )
+    )
 
 
 @admin.register(models.Section)
@@ -141,8 +140,13 @@ class BylineAdmin(admin.ModelAdmin):
         'contributor',
         'credit',
         'title',
-    )
+        )
     list_editable = (
         'credit',
         'title',
-    )
+        )
+
+    raw_id_fields = (
+        'story',
+        'contributor',
+        )
