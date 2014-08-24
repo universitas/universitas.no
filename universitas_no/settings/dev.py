@@ -3,6 +3,10 @@
 from .base import *
 from os import environ
 
+########## DEBUG CONFIGURATION
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+########## END DEBUG CONFIGURATION
 
 # EMAIL CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
@@ -14,3 +18,12 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 # END EMAIL CONFIGURATION
+INSTALLED_APPS += (
+    'debug_toolbar',
+)
+
+MIDDLEWARE_CLASSES += (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+)
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
