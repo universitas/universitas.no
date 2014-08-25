@@ -4,13 +4,15 @@ Admin for stories app.
 """
 
 from django.contrib import admin
-from . import models
-from apps.photo.models import ImageFile
+from .models import Byline, Aside, Pullquote, Story, StoryType, Section, StoryImage
+# from apps.photo.models import ImageFile
 from sorl.thumbnail.admin import AdminImageMixin
+import autocomplete_light
 
 
 class BylineInline(admin.TabularInline):
-    model = models.Byline
+    form = autocomplete_light.modelform_factory(Byline)
+    model = Byline
     fields = (
         'story',
         'credit',
@@ -18,24 +20,25 @@ class BylineInline(admin.TabularInline):
         'title',
     )
     raw_id_fields = (
-        'story',
-        'contributor',
+        # 'story',
+        # 'contributor',
     )
     extra = 0
 
 
 class AsideInline(admin.TabularInline):
-    model = models.Aside
+    model = Aside
     extra = 0
 
 
 class PullquoteInline(admin.TabularInline):
-    model = models.Pullquote
+    model = Pullquote
     extra = 0
 
 
-class ImageInline(AdminImageMixin, admin.TabularInline):
-    model = models.StoryImage
+class ImageInline(admin.TabularInline):
+    form = autocomplete_light.modelform_factory(StoryImage)
+    model = StoryImage
     fields = (
         'published',
         'position',
@@ -45,18 +48,17 @@ class ImageInline(AdminImageMixin, admin.TabularInline):
         'imagefile',
     )
     raw_id_fields = (
-        'imagefile',
+        # 'imagefile',
     )
-    # model = ImageFile
     extra = 0
 
 
 class StoryTypeInline(admin.TabularInline):
-    model = models.StoryType
+    model = StoryType
     extra = 1
 
 
-@admin.register(models.Story)
+@admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
 
     list_display = (
@@ -75,12 +77,17 @@ class StoryAdmin(admin.ModelAdmin):
         # 'title',
         # 'kicker',
         # 'lede',
-        'theme_word',
-        'story_type',
+        # 'theme_word',
+        # 'story_type',
         # 'publication_date',
         'status',
         # 'issue',
     )
+    fields = (
+        ('title', 'kicker', 'theme_word',),
+        ('story_type', 'publication_date', 'status',),
+        ('lede', 'bodytext_markup',),
+        )
 
     inlines = [
         ImageInline,
@@ -98,7 +105,7 @@ class StoryAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(models.Section)
+@admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
 
     list_display = (
@@ -115,7 +122,7 @@ class SectionAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(models.StoryType)
+@admin.register(StoryType)
 class StoryTypeAdmin(admin.ModelAdmin):
     list_display = (
         'id',
@@ -132,21 +139,22 @@ class StoryTypeAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(models.Byline)
+@admin.register(Byline)
 class BylineAdmin(admin.ModelAdmin):
+    form = autocomplete_light.modelform_factory(Byline)
     list_display = (
         'id',
         'story',
         'contributor',
         'credit',
         'title',
-        )
+    )
     list_editable = (
         'credit',
         'title',
-        )
+    )
 
     raw_id_fields = (
-        'story',
-        'contributor',
-        )
+        # 'story',
+        # 'contributor',
+    )

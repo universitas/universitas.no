@@ -4,8 +4,12 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from django.contrib.staticfiles.testing import StaticLiveServerCase
 from django.conf import settings
+from os import path
 
 PHANTOMJS_EXECUTABLE_PATH='/home/haakenlid/node_modules/phantomjs/lib/phantom/bin/phantomjs'
+PHANTOMJS_LOG_PATH = path.join(settings.LOG_FOLDER, 'phantom.log')
+# PHANTOMJS_LOG_PATH = settings.LOG_FOLDER
+
 
 ARTICLE_URL_REGEX = r'\S+/[a-z]+/\d+/[a-z\-]+/$',
 WEBDRIVER = 'PhantomJS'
@@ -18,7 +22,7 @@ class FrontPageVisitTest(StaticLiveServerCase):
         # TODO: load mocks∕fixtures of frontpage articles.
         if WEBDRIVER == 'PhantomJS':
             self.browser = webdriver.PhantomJS(
-                service_log_path=settings.LOG_FOLDER,
+                service_log_path=PHANTOMJS_LOG_PATH,
                 executable_path=PHANTOMJS_EXECUTABLE_PATH,
             )
         else:

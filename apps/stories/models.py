@@ -4,7 +4,6 @@
 # Python standard library
 import re
 # import html
-import ipdb
 from collections import defaultdict
 
 # Django core
@@ -36,7 +35,7 @@ class TextContent(TimeStampedModel):
 
     class Meta:
         abstract = True
-        app_label = 'stories'
+        # app_label = 'stories'
 
     bodytext_markup = models.TextField(
         blank=True,
@@ -154,7 +153,8 @@ class Story(TextContent):
     class Meta:
         verbose_name = _('Story')
         verbose_name_plural = _('Stories')
-        app_label = 'stories'
+        # app_label = 'stories'
+
     # TODO make this importable?
     STATUS_DRAFT = 0
     STATUS_UNPUBLISHED = 5
@@ -242,7 +242,7 @@ class Story(TextContent):
 
 
     def __str__(self):
-        return self.title
+        return '{} {:%Y-%m-%d}'.format(self.title, self.publication_date)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)[:50]
@@ -322,31 +322,33 @@ class StoryElement(models.Model):
             'Where in the story does this belong? %d = At the very beginning, %d = At the end.' %
             (0, MAXPOSITION)))
     class Meta:
-        app_label = 'stories'
         abstract = True
+        # app_label = 'stories'
 
 
 class Pullquote(TextContent, StoryElement):
     DEFAULT_TAG = 'sitat'
 
     """ A quote that is that is pulled out of the content. """
-    class Meta:
+    class Meta(StoryElement.Meta):
         verbose_name = _('Pullquote')
         verbose_name_plural = _('Pullquotes')
-        app_label = 'stories'
 
 
 class Aside(TextContent, StoryElement):
     DEFAULT_TAG = 'fakta'
 
     """ Fact box or other information typically placed in side bar """
-    class Meta:
+    class Meta(StoryElement.Meta):
         verbose_name = _('Aside')
         verbose_name_plural = _('Asides')
-        app_label = 'stories'
 
 class StoryImage(StoryElement):
     """ Photo or illustration connected to a story """
+
+    class Meta(StoryElement.Meta):
+        verbose_name = _('Image')
+        verbose_name_plural = _('Images')
 
     caption = models.CharField(
         help_text=_('Text explaining the image'),
@@ -369,10 +371,6 @@ class StoryImage(StoryElement):
         return self.imagefile.source_image.field
 
 
-    class Meta:
-        verbose_name = _('Image')
-        verbose_name_plural = _('Images')
-        app_label = 'stories'
 
 class StoryType(models.Model):
 
@@ -388,7 +386,7 @@ class StoryType(models.Model):
     class Meta:
         verbose_name = _('StoryType')
         verbose_name_plural = _('StoryTypes')
-        app_label = 'stories'
+        # app_label = 'stories'
 
     def __str__(self):
         return self.name
@@ -411,7 +409,7 @@ class Section(models.Model):
     class Meta:
         verbose_name = _('Section')
         verbose_name_plural = _('Sections')
-        app_label = 'stories'
+        # app_label = 'stories'
 
     def __str__(self):
         return self.title + '!'
@@ -438,9 +436,10 @@ class Byline(models.Model):
     title = models.CharField(blank=True, null=True, max_length=200)
 
     class Meta:
+        # order_with_respect_to = 'story'
+        # Denne ser ikke til å være særlig nyttig - ingen ui i admin og dårlig migration.
         verbose_name = _('Byline')
         verbose_name_plural = _('Bylines')
-        app_label = 'stories'
 
     def __str__(self):
         return '%s: %s (%s)'  % (self.get_credit_display(), self.contributor, self.story, )
@@ -491,67 +490,6 @@ class Byline(models.Model):
 
         return new_byline
 
-
-
-# def import_from_prodsys(items, overwrite=False):
-#     """
-#     Imports one or more articles from prodsys.
-#     args:
-#         item: int or list of ints of prodsys_id
-#         overwrite: boolean overwrite if item already exists.
-
-#     returns:
-#         Artice or list of Articles
-#     """
-#     prodsys = Prodsys()
-
-#     def import_single_article(item):
-#         """ Imports single item """
-
-#         story_kwargs = prodsys.fetch_article_from_prodsys(item)
-#         prodsys_images = story_kwargs.pop('images')
-#         prodsys_mappe = story_kwargs.pop('mappe')
-#         date = story_kwargs.pop('date')
-#         published = story_kwargs.pop('published')
-#         try:
-#             story_type = StoryType.objects.get(prodsys_mappe=prodsys_mappe)
-#         except ObjectDoesNotExist:
-#             story_type = StoryType.objects.create(
-#                 prodsys_mappe=prodsys_mappe,
-#                 name="New Story Type - " + prodsys_mappe,
-#                 section=Section.objects.first(),
-#             )
-#         except MultipleObjectsReturned:
-#             # TODO: Det bør egentlig bare være en sakstype
-#             story_type = StoryType.objects.filter(prodsys_mappe=prodsys_mappe).first()
-
-#         story_kwargs["dateline_date"] = date
-#         if published:
-#             story_kwargs["publication_date"] = date
-#             story_kwargs["status"] = Story.STATUS_UNPUBLISHED
-
-#         story_kwargs["story_type"] = story_type
-
-#         new_story = Story(**story_kwargs)
-#         new_story.save()
-#         # print(story_kwargs['prodsys_id'], new_story.title)
-#         for image in prodsys_images:
-#             print(image)
-
-#         print(new_story.get_html())
-#         return new_story
-
-#     def import_single_image(dict):
-#         """ Imports single image """
-#         pass
-
-#     if isinstance(items, list):
-#         for item in items:
-#             import_single_article(item)
-#     else:
-#         assert isinstance(items, int)
-#         item = items
-#         return import_single_article(item)
 
 def clean_up_bylines(xtags):
     replacements =(

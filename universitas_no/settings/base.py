@@ -41,7 +41,6 @@ INSTALLED_APPS = (
     'apps.core',
     'apps.photo',
     'apps.frontpage',
-    'apps.prodsys_api_access',
     'apps.contributors',
     'apps.markup',
     'apps.legacy_db',
@@ -51,6 +50,7 @@ INSTALLED_APPS = (
 # THIRD PARTY APPS
 INSTALLED_APPS = (
     # 'django_nose',
+    'autocomplete_light',
     'django_extensions',
     'compressor',
     'sekizai',
@@ -192,6 +192,4 @@ TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
 )
 # END TEMPLATES AND FIXTURES CONFIGURATION
 
-LOG_FOLDER = (
-    normpath(join(PROJECT_ROOT_FOLDER, 'logs')),
-)
+LOG_FOLDER = normpath(join(PROJECT_ROOT_FOLDER, 'logs'))
