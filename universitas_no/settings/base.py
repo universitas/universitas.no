@@ -36,14 +36,14 @@ TEMPLATE_DEBUG = DEBUG
 
 # CUSTOM APPS
 INSTALLED_APPS = (
-    'apps.issues',
-    'apps.stories',
-    'apps.core',
-    'apps.photo',
-    'apps.frontpage',
-    'apps.contributors',
-    'apps.markup',
-    'apps.legacy_db',
+    'myapps.issues',
+    'myapps.stories',
+    'myapps.core',
+    'myapps.photo',
+    'myapps.frontpage',
+    'myapps.contributors',
+    'myapps.markup',
+    'myapps.legacy_db',
     'functional_tests',
     )
 
@@ -103,7 +103,7 @@ DATABASES = {
         'PORT': '',       # Set to empty string for default.
     }
 }
-DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
+DATABASE_ROUTERS = ['myapps.legacy_db.router.ProdsysRouter']
 
 #SORL
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'

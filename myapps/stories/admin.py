@@ -5,8 +5,9 @@ Admin for stories app.
 
 from django.contrib import admin
 from .models import Byline, Aside, Pullquote, Story, StoryType, Section, StoryImage
-# from apps.photo.models import ImageFile
-from sorl.thumbnail.admin import AdminImageMixin
+# from myapps.photo.models import ImageFile
+# from sorl.thumbnail.admin import AdminImageMixin
+from myapps.frontpage.models import FrontpageStory
 import autocomplete_light
 
 
@@ -23,6 +24,13 @@ class BylineInline(admin.TabularInline):
         # 'story',
         # 'contributor',
     )
+    extra = 0
+
+
+class FrontpageStoryInline(admin.TabularInline):
+    form = autocomplete_light.modelform_factory(FrontpageStory)
+    model = FrontpageStory
+    fields = ('headline', 'kicker', 'lede', 'image',),
     extra = 0
 
 
@@ -55,11 +63,14 @@ class ImageInline(admin.TabularInline):
 
 class StoryTypeInline(admin.TabularInline):
     model = StoryType
+    # inlines [ContentblockInline]
     extra = 1
 
 
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
+
+    save_on_top = True
 
     list_display = (
         'id',
@@ -87,11 +98,12 @@ class StoryAdmin(admin.ModelAdmin):
         ('title', 'kicker', 'theme_word',),
         ('story_type', 'publication_date', 'status',),
         ('lede', 'bodytext_markup',),
-        )
+    )
 
     inlines = [
-        ImageInline,
         BylineInline,
+        FrontpageStoryInline,
+        ImageInline,
         PullquoteInline,
         AsideInline,
     ]

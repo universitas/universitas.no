@@ -9,11 +9,11 @@ import subprocess
 from django.utils import timezone
 from django.core.cache import cache
 from django.conf import settings
-from apps.legacy_db.models import Bilde, Sak, Prodsak
-from apps.stories.models import Story, StoryType, Section, StoryImage
-from apps.photo.models import ImageFile
-from apps.issues.models import PrintIssue
-from apps.contributors.models import Contributor
+from myapps.legacy_db.models import Bilde, Sak, Prodsak
+from myapps.stories.models import Story, StoryType, Section, StoryImage
+from myapps.photo.models import ImageFile
+from myapps.issues.models import PrintIssue
+from myapps.contributors.models import Contributor
 
 
 BILDEMAPPE = os.path.join(settings.MEDIA_ROOT, '')
@@ -84,6 +84,7 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
 
     return nyttbilde
 
+
 def importer_utgaver_fra_gammel_webside():
     pdfer = set(
         subprocess.check_output(
@@ -101,15 +102,15 @@ def importer_utgaver_fra_gammel_webside():
             created = created + datetime.timedelta(days=3 - created.isoweekday())
         print(created.strftime('%c'))
         new_issue = PrintIssue(
-            pdf = fullpath,
-            pages = 0,
-            publication_date = created,
-            issue_name = issue,
-            )
+            pdf=fullpath,
+            pages=0,
+            publication_date=created,
+            issue_name=issue,
+        )
         new_issue.save()
 
 
-def importer_saker_fra_gammel_webside(first=0,last=20000):
+def importer_saker_fra_gammel_webside(first=0, last=20000):
     # websaker = Sak.objects.order_by('?')[:10]
     websaker = Sak.objects.exclude(publisert=0).order_by('id_sak')[first:last]
     for websak in websaker:
@@ -290,6 +291,7 @@ def clean_up_xtags(xtags):
         xtags = re.sub(pattern, replacement, xtags, flags=flags)
 
     return xtags.strip()
+
 
 def reset_db():
     from django.db import connection

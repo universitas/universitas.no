@@ -11,7 +11,7 @@ from django.conf import settings
 from model_utils.models import TimeStampedModel
 from sorl.thumbnail import ImageField
 # Project apps
-from apps.contributors.models import Contributor
+from myapps.contributors.models import Contributor
 
 
 
@@ -45,7 +45,8 @@ class ImageFile(TimeStampedModel):
         max_length=1000,)
 
     def __str__(self):
-        return self.source_file.name
+        # file name only
+        return self.source_file.name.rpartition('/')[-1]
 
     # def save(self):
         # pass

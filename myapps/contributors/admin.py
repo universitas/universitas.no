@@ -5,7 +5,7 @@ Admin for contributors app.
 
 from django.contrib import admin
 from . import models
-from apps.stories.admin import BylineInline
+from myapps.stories.admin import BylineInline
 
 
 @admin.register(models.Contributor)

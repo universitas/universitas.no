@@ -7,9 +7,9 @@ from django.conf.urls.static import static
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 from django.contrib import admin
-from apps.core.views import RobotsTxtView, HumansTxtView
-from apps.frontpage.views import frontpageView
-from apps.stories.views import articleView
+from myapps.core.views import RobotsTxtView, HumansTxtView
+from myapps.frontpage.views import frontpage_view
+from myapps.stories.views import article_view
 from autocomplete_light import urls as autocomplete_light_urls
 
 admin.autodiscover()
@@ -17,9 +17,10 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    url(r'^$', frontpageView, name='frontpage'),
-    url(r'^$/(?P<section>[a-z]+)/(?P<story_id>\d+)/(?P<slug>[a-z\-]+)/$', articleView, name='article'),
+    # forside
+    url(r'^$', frontpage_view, name='frontpage'),
     # artikkelvisning
+    url(r'^$/(?P<story_id>\d+)/(?P<section>[a-z]+)/(?P<slug>[a-z\-]+)/$', article_view, name='article'),
     # seksjonsforside
     # personlig forside
     # personlig profil
