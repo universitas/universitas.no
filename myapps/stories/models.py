@@ -455,7 +455,7 @@ class Section(models.Model):
 
     @property
     def slug(self):
-        return slugify(self.title)
+        return slugify(self.title).replace('_', '')
 
     @models.permalink
     def get_absolute_url(self):
