@@ -45,7 +45,7 @@ class Frontpage(TimeStampedModel):
         return self.label
 
     def top_position(self):
-        top_story = self.contentblock_set.last()
+        top_story = self.contentblock_set.order_by('-position').first()
         if top_story is None:
             return 0
         else:
@@ -86,6 +86,10 @@ class Contentblock(TimeStampedModel):
             self.randomsize()
         super().save()
 
+
+    def __str__(self):
+        return '%s %s %s %s' % (self.frontpage_story.headline, self.columns, self.height, self.position,)
+
     def randomsize(self):
         widths = (3, 3, 3, 3, 4, 4, 4, 4, 6, 6, 8, 9, 12)
         heights = (1, 1, 1, 1, 1, 2, 2, 2, 2, 3)
@@ -93,7 +97,7 @@ class Contentblock(TimeStampedModel):
         self.columns = choice(widths)
         self.height = choice(heights)
         self.save()
-        print(self, self.height, self.columns)
+        print(self)
 
 
     @property
