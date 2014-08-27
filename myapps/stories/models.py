@@ -100,6 +100,7 @@ class TextContent(TimeStampedModel):
 
         elif tag in ('txt', 'mt'):
             # just to be sure that these always are in the default bucket, if someone does't close a pullquote properly.
+            tag = '' if tag == 'txt'
             bucket = self.bucket = self.buckets[self.DEFAULT_TAG]
 
         if tag:
@@ -124,8 +125,9 @@ class TextContent(TimeStampedModel):
             starts_with_tag = self.XTAG_REGEXP.match(paragraph)
             if starts_with_tag:
                 self.tag, text = starts_with_tag.groups()
-            else:  # same tag as last paragraph
+            else:  # ingen tag!
                 text = paragraph
+                self.tag = ''
             self.sort_paragraphs_by_tag(self.tag, text)
 
         # joins text strings in all the self.buckets
@@ -223,23 +225,6 @@ class Story(TextContent):
     images = models.ManyToManyField(
         ImageFile, through='StoryImage',
     )
-    # dateline_place = models.CharField(
-    #     blank=True, max_length=50,
-    #     help_text=_('Where this story happened.')
-    # )
-    # dateline_date = models.DateField(
-    #     blank=True, null=True,
-    #     help_text=_('When this story happened.')
-    # )
-    # pdf_url = models.URLField(
-    #     blank=True, null=True,
-    #     help_text=_('URL to the story in pdf.')
-    # )  # TODO create function
-    # related_stories = models.ManyToManyField(
-    #     'self',
-    #     help_text=_('Stories with related content.')
-    # )
-    # TODO: Revisions.
 
     def __str__(self):
         return '{} {:%Y-%m-%d}'.format(
@@ -335,6 +320,7 @@ class Story(TextContent):
     @classmethod
     def populate_frontpage(cls):
         FrontpageStory.objects.all().delete()
+        # TODO: Funker bare for 2014
         new_stories = cls.objects.filter(publication_date__year=2014).order_by('publication_date')
         for story in new_stories:
             story.save()
