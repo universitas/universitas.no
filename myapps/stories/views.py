@@ -21,7 +21,7 @@ def article_view(request, story_id, section, slug):
     else:
         image = None
 
-    logger.debug('info')
+    # logger.debug('info')
 
     context = {
         'story': story,

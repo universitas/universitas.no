@@ -142,7 +142,10 @@ class TextContent(TimeStampedModel):
         """ Return HTML representation of body text """
         html = []
         for paragraph in self.bodytext_markup.splitlines():
-            tag, text = self.XTAG_REGEXP.match(paragraph).groups()
+            try:
+                tag, text = self.XTAG_REGEXP.match(paragraph).groups()
+            except AttributeError:
+                tag, text = self.DEFAULT_TAG, paragraph
             html.append(ProdsysTag.wrap_text(tag, text))
         html_bodytext = '\n'.join(html)
         return html_bodytext
