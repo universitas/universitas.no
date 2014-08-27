@@ -263,7 +263,7 @@ class Story(TextContent):
 
     def get_absolute_url(self):
         from django.core.urlresolvers import reverse
-        return reverse('article', kwargs={'story_id': str(self.id), 'section': self.section.slug, 'slug': self.slug},)
+        return reverse('article', kwargs={'story_id': str(self.id), 'section': self.section.slug, 'slug': self.slug.replace('_','-')},)
 
     def clean_markup(self, *args, **kwargs):
 
@@ -441,7 +441,7 @@ class Section(models.Model):
 
     @property
     def slug(self):
-        return slugify(self.title).replace('_', '')
+        return slugify(self.title)
 
     @models.permalink
     def get_absolute_url(self):
