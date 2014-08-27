@@ -332,6 +332,13 @@ class Story(TextContent):
                 )
                 new_aside.save()
 
+    @classmethod
+    def populate_frontpage(cls):
+        FrontpageStory.objects.all().delete()
+        new_stories = cls.objects.filter(publication_date__year=2014).order_by('publication_date')
+        for story in new_stories:
+            story.save()
+
 
 class StoryElement(models.Model):
 
