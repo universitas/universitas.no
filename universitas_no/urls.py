@@ -20,7 +20,8 @@ urlpatterns = patterns(
     # forside
     url(r'^$', frontpage_view, name='frontpage'),
     # artikkelvisning
-    url(r'^$/(?P<story_id>\d+)/(?P<section>[a-z]+)/(?P<slug>[a-z\-]+)/$', article_view, name='article'),
+    url(r'^(?P<story_id>\d+)/(?P<section>[a-z0-9\-]+)/(?P<slug>[a-z0-9\-]+)/$', article_view, name='article'),
+    url(r'^(?P<story_id>\d+?)/.*$', article_view, name='article'), # så lenge id er med, så er det greit.
     # seksjonsforside
     # personlig forside
     # personlig profil

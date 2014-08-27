@@ -11,9 +11,9 @@ upstream dev_universitas_no {
 
 server {
     listen               80;
-    server_name          dev.universitas.no;
+    server_name          staging.universitas.no;
 
-    client_max_body_size 4G;
+    client_max_body_size 100M;
 
     access_log           /srv/dev.universitas.no/logs/access-nginx.log;
     error_log            /srv/dev.universitas.no/logs/error-nginx.log info;
@@ -22,8 +22,8 @@ server {
         alias            /srv/dev.universitas.no/static/;
     }
 
-    location /upload/ {
-        alias            /srv/dev.universitas.no/static/uploaded_files/;
+    location /foto/ {
+        alias            /srv/fotoarkiv_universitas/;
     }
 
     location / {

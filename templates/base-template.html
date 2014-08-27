@@ -21,11 +21,18 @@
 <body>
   <header>
     <div class="row">
-      <div class="large-12 columns me">
         {% block header %}
-        <h1>Universitas.no</h1>
+        <div class="medium-4 small-12 columns">
+        <h1 id="logo"><a href="/">Universitas.no</a></h1>
+        </div>
+        <div class="medium-8 small-12 columns"
+          <nav class="row" style="padding: 10px;">
+            <div class="small-4 columns" ><a href="/admin/stories/story/">Rediger saker</a></div>
+            <div class="small-4 columns" ><a href="/admin/frontpage/frontpagestory/">Rediger forsidetekst</a></div>
+            <div class="small-4 columns" ><a href="/admin/frontpage/contentblock/">Rediger forsideplassering</a></div>
+          </nav>
+        </div>
         {% endblock header %}
-      </div>
     </div>
   </header>
   <main>
@@ -36,15 +43,15 @@
   {% block footer %}
   <footer>
     <div class="row">
-      <div class="col medium-9 small-12 large-4">Footer here</div>
+      <div class="col medium-9 small-12 large-4"></div>
     </div>
   </footer>
   {% endblock footer %}
   {% addtoblock "js" %}
   <script src="{% static 'js/vendor/jquery.js' %}"></script>
   <script src="{% static 'js/foundation.min.js' %}"></script>
-  {% endaddtoblock %}
   {% include 'autocomplete_light/static.html' %}
+  {% endaddtoblock %}
   {% comment %}
     Autocomplete light - tror det innholder javascript. Kanskje det kan gjøres direkte, i stedet for å krølle det til på denne måten?
   {% endcomment %}

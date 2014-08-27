@@ -5,7 +5,7 @@ from .base import *
 
 ########## DEBUG CONFIGURATION
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+TEMPLATE_DEBUG = True
 ########## END DEBUG CONFIGURATION
 
 

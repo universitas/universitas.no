@@ -73,16 +73,32 @@ class Contentblock(TimeStampedModel):
         if not minvalue <= value <= maxvalue:
             raise ValidationError(_('{} is not a number between {} and {}').format(value, minvalue, maxvalue))
 
+    def validate_height(value, minvalue=1, maxvalue=3):
+        if not minvalue <= value <= maxvalue:
+            raise ValidationError(_('{} is not a number between {} and {}').format(value, minvalue, maxvalue))
+
     def position_default(self):
         return self.frontpage.top_position() + self.ORDER_GAP
 
     def save(self):
         if self.position is None:
             self.position = self.position_default()
+            self.randomsize()
         super().save()
+
+    def randomsize(self):
+        widths = (3, 3, 3, 3, 4, 4, 4, 4, 6, 6, 8, 9, 12)
+        heights = (1, 1, 1, 1, 1, 2, 2, 2, 2, 3)
+        from random import choice
+        self.columns = choice(widths)
+        self.height = choice(heights)
+        self.save()
+        print(self, self.height, self.columns)
+
 
     @property
     def publication_date(self):
+        # TODO: Bør være eget felt i databasen og i utgangspunktet settes likt databasen.
         return self.frontpage_story.story.publication_date
 
     frontpage = models.ForeignKey(
@@ -97,6 +113,12 @@ class Contentblock(TimeStampedModel):
 
     position = models.PositiveIntegerField(
         help_text=_('larger numbers come first'),
+    )
+
+    height = models.PositiveSmallIntegerField(
+        help_text=_('height - minimum 1 maximum 3'),
+        default=1,
+        validators=[validate_height, ],
     )
 
     columns = models.PositiveSmallIntegerField(
@@ -175,8 +197,8 @@ class FrontpageStory(TimeStampedModel):
             self.html_class = self.html_class or str(self.story.section)[:200].lower().replace(' ', '-')
             if self.image is None and not self.story.images.count() == 0:
                 self.image = self.story.images.first()
-        super().save(*args, **kwargs)
-        if self.placements.count() == 0:
+            super().save(*args, **kwargs)
+        if self.placements.count() == 0 and not self.image is None:
             content_block = Contentblock(
                 frontpage_story=self,
                 frontpage=Frontpage.objects.root(),

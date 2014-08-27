@@ -193,3 +193,36 @@ TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
 # END TEMPLATES AND FIXTURES CONFIGURATION
 
 LOG_FOLDER = normpath(join(PROJECT_ROOT_FOLDER, 'logs'))
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'stream_to_console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler'
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename':   normpath(join(LOG_FOLDER, 'django.log')),
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins', 'stream_to_console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'universitas': {
+            'handlers': ['stream_to_console', 'file',],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    }
+}

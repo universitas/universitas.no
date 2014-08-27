@@ -7,6 +7,7 @@ import re
 from collections import defaultdict
 
 # Django core
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.template.defaultfilters import slugify
@@ -22,6 +23,7 @@ from myapps.contributors.models import Contributor
 from myapps.markup.models import ProdsysTag
 from myapps.photo.models import ImageFile
 from myapps.frontpage.models import FrontpageStory
+# from .views import article_view
 
 # from myapps.issues.models import PrintIssue
 
@@ -143,6 +145,13 @@ class TextContent(TimeStampedModel):
         return html_bodytext
 
 
+class PublishedStoryManager(models.Manager):
+
+    def published(self):
+        now = timezone.now()
+        return super().get_queryset().filter(status=Story.STATUS_PUBLISHED).filter(publication_date__lt=now)
+
+
 class Story(TextContent):
 
     """ An article or story in the newspaper. """
@@ -151,6 +160,8 @@ class Story(TextContent):
         verbose_name = _('Story')
         verbose_name_plural = _('Stories')
         # app_label = 'stories'
+
+    objects = PublishedStoryManager()
 
     # TODO make this importable?
     STATUS_DRAFT = 0
@@ -234,6 +245,21 @@ class Story(TextContent):
         return '{} {:%Y-%m-%d}'.format(
             self.title, self.publication_date)
 
+    def display_bylines(self):
+        all_bylines = []
+        for bl in self.byline_set.all():
+            all_bylines.append(
+                '%s: %s, %s' % (
+                    bl.get_credit_display(),
+                    bl.contributor.display_name,
+                    bl.title,
+                )
+            )
+        return '\n'.join(all_bylines)
+
+    def image_count(self):
+        return self.images.count()
+
     @property
     def section(self):
         return self.story_type.section
@@ -251,8 +277,8 @@ class Story(TextContent):
             frontpagestory.save()
 
     def get_absolute_url(self):
-        return "http://change_this_method/%s/%s/" % (self.pk, self.slug)
-        # TODO: Make a proper permalink.
+        from django.core.urlresolvers import reverse
+        return reverse('article', kwargs={'story_id': str(self.id), 'section': self.section.slug, 'slug': self.slug},)
 
     def clean_markup(self, *args, **kwargs):
 
@@ -419,6 +445,10 @@ class Section(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def slug(self):
+        return slugify(self.title)
 
     @models.permalink
     def get_absolute_url(self):

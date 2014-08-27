@@ -81,6 +81,8 @@ class StoryAdmin(admin.ModelAdmin):
         'story_type',
         'publication_date',
         'status',
+        'display_bylines',
+        'image_count',
         # 'issue',
     )
 
