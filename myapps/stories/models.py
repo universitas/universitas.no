@@ -100,7 +100,8 @@ class TextContent(TimeStampedModel):
 
         elif tag in ('txt', 'mt'):
             # just to be sure that these always are in the default bucket, if someone does't close a pullquote properly.
-            tag = '' if tag == 'txt'
+            if tag == 'txt':
+                tag = ''
             bucket = self.bucket = self.buckets[self.DEFAULT_TAG]
 
         if tag:
