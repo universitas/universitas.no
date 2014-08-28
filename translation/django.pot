@@ -1,8 +1,9 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the universitas package.
-# FIRST AUTHOR <haakenlid@gmail.com>, 2014.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -18,375 +19,375 @@ msgstr ""
 
 #: myapps/contributors/autocomplete_light_registry.py:11
 msgid "Name of person."
-msgstr "Navn på person"
+msgstr ""
 
 #: myapps/contributors/models.py:20
 msgid "Contributor"
-msgstr "Opphavsperson"
+msgstr ""
 
 #: myapps/contributors/models.py:21
 msgid "Contributors"
-msgstr "Opphavspersoner"
+msgstr ""
 
 #: myapps/contributors/models.py:116
 msgid "Person"
-msgstr "Person"
+msgstr ""
 
 #: myapps/contributors/models.py:117
 msgid "Institution"
-msgstr "Institusjon"
+msgstr ""
 
 #: myapps/contributors/models.py:118 myapps/contributors/models.py:151
 msgid "Position"
-msgstr "Stilling"
+msgstr ""
 
 #: myapps/contributors/models.py:135 myapps/contributors/models.py:136
 msgid "ContactInfo"
-msgstr "Kontaktinformasjon"
+msgstr ""
 
 #: myapps/contributors/models.py:147
 msgid "Job title at the publication."
-msgstr "Stilling i redaksjonen"
+msgstr ""
 
 #: myapps/contributors/models.py:152
 msgid "Positions"
-msgstr "Stillinger"
+msgstr ""
 
 #: myapps/frontpage/models.py:27
 msgid "Unique label used in url"
-msgstr "Unikt nøkkelord i url"
+msgstr ""
 
 #: myapps/frontpage/models.py:33
 msgid "This page is published."
-msgstr "Denne artikkelen er publisert"
+msgstr ""
 
 #: myapps/frontpage/models.py:55
 msgid "Frontpage"
-msgstr "Forside"
+msgstr ""
 
 #: myapps/frontpage/models.py:56
 msgid "Frontpages"
-msgstr "Forsider"
+msgstr ""
 
 #: myapps/frontpage/models.py:74 myapps/frontpage/models.py:78
 msgid "{} is not a number between {} and {}"
-msgstr "{} er ikke et tall mellom {} og {}"
+msgstr ""
 
 #: myapps/frontpage/models.py:119
 msgid "larger numbers come first"
-msgstr "Større tall kommer først"
+msgstr ""
 
 #: myapps/frontpage/models.py:123
 msgid "height - minimum 1 maximum 3"
-msgstr "høyde - minimum 1, maksimalt 3"
+msgstr ""
 
 #: myapps/frontpage/models.py:129
 msgid "width - minimum 1 maximum 12"
-msgstr "bredde - minimum 1, maksimum 12"
+msgstr ""
 
 #: myapps/frontpage/models.py:135
 msgid "Content block"
-msgstr "Innholdsmodul"
+msgstr ""
 
 #: myapps/frontpage/models.py:136
 msgid "Content blocks"
-msgstr "Innholdsmoduler"
+msgstr ""
 
 #: myapps/frontpage/models.py:155
 msgid "Frontpage Story"
-msgstr "Forsideoppslag"
+msgstr ""
 
 #: myapps/frontpage/models.py:156
 msgid "Frontpage Stories"
-msgstr "Forsideoppslag"
+msgstr ""
 
 #: myapps/frontpage/models.py:163
 msgid "position and size of story element."
-msgstr "plassering og størrelse på elementet"
+msgstr ""
 
 #: myapps/frontpage/models.py:169
 msgid "image"
-msgstr "bilde"
+msgstr ""
 
 #: myapps/frontpage/models.py:173
 msgid "headline"
-msgstr "tittel / overskrift"
+msgstr ""
 
 #: myapps/frontpage/models.py:178 myapps/stories/models.py:221
 msgid "kicker"
-msgstr "stikktittel"
+msgstr ""
 
 #: myapps/frontpage/models.py:183 myapps/stories/models.py:226
 msgid "lede"
-msgstr "ingress"
+msgstr ""
 
 #: myapps/frontpage/models.py:188
 msgid "html_class"
-msgstr "html class"
+msgstr ""
 
 #: myapps/issues/models.py:25
 msgid "Pdf file for this issue."
-msgstr "Pdf-fil for denne papirutgaven"
+msgstr ""
 
 #: myapps/issues/models.py:28
 msgid "An image file of the front page"
-msgstr "Bildefil av forsiden"
+msgstr ""
 
 #: myapps/issues/models.py:32
 msgid "Print issue"
-msgstr "Papirutgave"
+msgstr ""
 
 #: myapps/issues/models.py:33
 msgid "Print issues"
-msgstr "Papirutgaver"
+msgstr ""
 
 #: myapps/legacy_db/models.py:57
 msgid "websak"
-msgstr "websak"
+msgstr ""
 
 #: myapps/legacy_db/models.py:58
 msgid "websaker"
-msgstr "websaker"
+msgstr ""
 
 #: myapps/legacy_db/models.py:95
 msgid "bildetekst"
-msgstr "bildetekst"
+msgstr ""
 
 #: myapps/legacy_db/models.py:96
 msgid "bildetekster"
-msgstr "bildetekster"
+msgstr ""
 
 #: myapps/legacy_db/models.py:116
 msgid "bilde"
-msgstr "bilde"
+msgstr ""
 
 #: myapps/legacy_db/models.py:117
 msgid "bilder"
-msgstr "bilder"
+msgstr ""
 
 #: myapps/legacy_db/models.py:145 myapps/legacy_db/models.py:146
 msgid "diskusjon innlegg"
-msgstr "nettdebattinnlegg"
+msgstr ""
 
 #: myapps/legacy_db/models.py:157 myapps/legacy_db/models.py:158
 msgid "diskusjon svar"
-msgstr "nettdebattsvar"
+msgstr ""
 
 #: myapps/legacy_db/models.py:172
 msgid "eposttinging"
-msgstr "epostabonnement"
+msgstr ""
 
 #: myapps/legacy_db/models.py:173
 msgid "eposttingingar"
-msgstr "epostabonnementer"
+msgstr ""
 
 #: myapps/legacy_db/models.py:186
 msgid "faktaboks"
-msgstr "faktaboks"
+msgstr ""
 
 #: myapps/legacy_db/models.py:187
 msgid "faktabokser"
-msgstr "faktabokser"
+msgstr ""
 
 #: myapps/legacy_db/models.py:208
 msgid "prodsys sak"
-msgstr "sak i prodsys"
+msgstr ""
 
 #: myapps/legacy_db/models.py:209
 msgid "prodsys saker"
-msgstr "saker i prodsys"
+msgstr ""
 
 #: myapps/legacy_db/models.py:224
 msgid "prodsys bilde"
-msgstr "bilde i prodsys"
+msgstr ""
 
 #: myapps/legacy_db/models.py:225
 msgid "prodsys bilder"
-msgstr "bilder i prodsys"
+msgstr ""
 
 #: myapps/markup/models.py:26
 msgid "prodsys tag"
-msgstr "tag i prodsys"
+msgstr ""
 
 #: myapps/markup/models.py:27
 msgid "prodsys tags"
-msgstr "tagger i prodsys"
+msgstr ""
 
 #: myapps/photo/autocomplete_light_registry.py:12
 msgid "Filename"
-msgstr "Filnavn"
+msgstr ""
 
 #: myapps/photo/models.py:22
 msgid "ImageFile"
-msgstr "Bildefil"
+msgstr ""
 
 #: myapps/photo/models.py:23
 msgid "ImageFiles"
-msgstr "Bildefiler"
+msgstr ""
 
 #: myapps/photo/models.py:34
 msgid "previous path if the image has been moved."
-msgstr "logg av tidligere filplasseringer"
+msgstr ""
 
 #: myapps/photo/models.py:39
 msgid "who made this."
-msgstr "hvem har laget dette?"
+msgstr ""
 
 #: myapps/photo/models.py:43
 msgid "If needed."
-msgstr "hvis nødvendig"
+msgstr ""
 
 #: myapps/stories/autocomplete_light_registry.py:11
 msgid "Story headline or lede."
-msgstr "Tittel eller ingress i saken"
+msgstr ""
 
 #: myapps/stories/models.py:45
 msgid "StoryType"
-msgstr "Artikkeltype"
+msgstr ""
 
 #: myapps/stories/models.py:46
 msgid "StoryTypes"
-msgstr "Artikkeltyper"
+msgstr ""
 
 #: myapps/stories/models.py:64
 msgid "text content"
-msgstr "tekstinnhold"
+msgstr ""
 
 #: myapps/stories/models.py:69
 msgid "Write your content here."
-msgstr "Skriv kommentarer her"
+msgstr ""
 
 #: myapps/stories/models.py:70
 msgid "Content with xtags markup."
-msgstr "Innhold som har xtags"
+msgstr ""
 
 #: myapps/stories/models.py:71
 msgid "bodytext tagged text"
-msgstr "brødtekst kilde"
+msgstr ""
 
 #: myapps/stories/models.py:78
 msgid "HTML tagged content"
-msgstr "Innhold formattert som html"
+msgstr ""
 
 #: myapps/stories/models.py:79
 msgid "bodytext html tagged"
-msgstr "brødtekst html"
+msgstr ""
 
 #: myapps/stories/models.py:193
 msgid "Story"
-msgstr "Artikkel"
+msgstr ""
 
 #: myapps/stories/models.py:194
 msgid "Stories"
-msgstr "Artikler"
+msgstr ""
 
 #: myapps/stories/models.py:204
 msgid "Draft"
-msgstr "Skisse"
+msgstr ""
 
 #: myapps/stories/models.py:205
 msgid "Unpublished"
-msgstr "Upublisert"
+msgstr ""
 
 #: myapps/stories/models.py:206
 msgid "Published"
-msgstr "Publisert"
+msgstr ""
 
 #: myapps/stories/models.py:210
 msgid "Id in the prodsys database."
-msgstr "Primærnøkkel i prodsysdatabasen"
+msgstr ""
 
 #: myapps/stories/models.py:211
 msgid "prodsak id"
-msgstr "bilde i prodsys"
+msgstr ""
 
 #: myapps/stories/models.py:215
 msgid "Headline"
-msgstr "Tittel – overskrift"
+msgstr ""
 
 #: myapps/stories/models.py:216
 msgid "title"
-msgstr "tittel"
+msgstr ""
 
 #: myapps/stories/models.py:220
 msgid "Secondary headline"
-msgstr "Stikktittel – supplerende tittel"
+msgstr ""
 
 #: myapps/stories/models.py:225
 msgid "Introduction or summary of the story"
-msgstr "Kort sammendrag eller introduksjon"
+msgstr ""
 
 #: myapps/stories/models.py:230
 msgid "Theme"
-msgstr "Temaord"
+msgstr ""
 
 #: myapps/stories/models.py:231
 msgid "theme word"
-msgstr "temaord"
+msgstr ""
 
 #: myapps/stories/models.py:235
 msgid "The people who created this content."
-msgstr "Opphavspersoner for redaksjonellt innhold"
+msgstr ""
 
 #: myapps/stories/models.py:236
 msgid "bylines"
-msgstr "bylines"
+msgstr ""
 
 #: myapps/stories/models.py:240
 msgid "The type of story."
-msgstr "Kategori som artikkelen hører til."
+msgstr ""
 
 #: myapps/stories/models.py:241
 msgid "article type"
-msgstr "artikkeltype"
+msgstr ""
 
 #: myapps/stories/models.py:245
 msgid "When this story will be published on the web."
-msgstr "Tidspunkt som denne saken blir eller ble publisert på nett"
+msgstr ""
 
 #: myapps/stories/models.py:246
 msgid "publication date"
-msgstr "publiseringsdato"
+msgstr ""
 
 #: myapps/stories/models.py:250
 msgid "Publication status."
-msgstr "publiseringsstatus"
+msgstr ""
 
 #: myapps/stories/models.py:251
 msgid "status"
-msgstr "status"
+msgstr ""
 
 #: myapps/stories/models.py:255
 msgid "Human readable url."
-msgstr "leservennlig url-segment"
+msgstr ""
 
 #: myapps/stories/models.py:256
 msgid "slug"
-msgstr "slug"
+msgstr ""
 
 #: myapps/stories/models.py:260
 msgid "Which issue this story was printed in."
-msgstr "Artikkelen sto på trykk i denne papirutgaven"
+msgstr ""
 
 #: myapps/stories/models.py:261
 msgid "issue"
-msgstr "Papirutgave"
+msgstr ""
 
 #: myapps/stories/models.py:265
 msgid "Which page the story was printed on."
-msgstr "Artikkelen sto på trykk på dette sidetallet"
+msgstr ""
 
 #: myapps/stories/models.py:266
 msgid "page"
-msgstr "side"
+msgstr ""
 
 #: myapps/stories/models.py:270
 msgid "images"
-msgstr "bilder"
+msgstr ""
 
 #: myapps/stories/models.py:387
 msgid "Choose whether this element is published"
-msgstr "Velg om dette elementet er publisert eller skjult"
+msgstr ""
 
 #: myapps/stories/models.py:395
 #, python-brace-format
@@ -394,103 +395,101 @@ msgid ""
 "Where in the story does this belong? {start} = At the very beginning, {end} "
 "= At the end."
 msgstr ""
-"Hvor langt ute i teksten skal elementet plasseres {start} = helt i "
-"starten{end} = helt til slutt."
 
 #: myapps/stories/models.py:409
 msgid "Pullquote"
-msgstr "Uthevet sitat"
+msgstr ""
 
 #: myapps/stories/models.py:410
 msgid "Pullquotes"
-msgstr "Uthevede sitater"
+msgstr ""
 
 #: myapps/stories/models.py:420
 msgid "Aside"
-msgstr "Faktaramme"
+msgstr ""
 
 #: myapps/stories/models.py:421
 msgid "Asides"
-msgstr "Faktarammer"
+msgstr ""
 
 #: myapps/stories/models.py:431
 msgid "Image"
-msgstr "Bilde"
+msgstr ""
 
 #: myapps/stories/models.py:432
 msgid "Images"
-msgstr "Bilder"
+msgstr ""
 
 #: myapps/stories/models.py:435
 msgid "Text explaining the image"
-msgstr "Tekst som hører med bildet"
+msgstr ""
 
 #: myapps/stories/models.py:440
 msgid "Extra information about image."
-msgstr "Supplerende informasjon om bildet"
+msgstr ""
 
 #: myapps/stories/models.py:447
 msgid "relative image size."
-msgstr "størrelse på bildet sammenlignet med andre bilder"
+msgstr ""
 
 #: myapps/stories/models.py:463
 msgid "Section title"
-msgstr "Seksjonstittel"
+msgstr ""
 
 #: myapps/stories/models.py:467
 msgid "Section"
-msgstr "Seksjon"
+msgstr ""
 
 #: myapps/stories/models.py:468
 msgid "Sections"
-msgstr "Seksjoner"
+msgstr ""
 
 #: myapps/stories/models.py:488
 msgid "Text"
-msgstr "Tekst"
+msgstr ""
 
 #: myapps/stories/models.py:489
 msgid "Photo"
-msgstr "Foto"
+msgstr ""
 
 #: myapps/stories/models.py:490
 msgid "Illustration"
-msgstr "Illustrasjon"
+msgstr ""
 
 #: myapps/stories/models.py:491
 msgid "Graphics"
-msgstr "Grafikk"
+msgstr ""
 
 #: myapps/stories/models.py:502
 msgid "Byline"
-msgstr "Byline"
+msgstr ""
 
 #: myapps/stories/models.py:503
 msgid "Bylines"
-msgstr "Bylines"
+msgstr ""
 
 #: templates/admin/base_site.html:8
 msgid "Django site admin"
-msgstr "Aminstrasjonsside for nettstedet"
+msgstr ""
 
 #: templates/admin/base_site.html:11
 msgid "Django administration"
-msgstr "Administrasjon"
+msgstr ""
 
 #: templates/registration/password_change_done.html:4
 #: templates/registration/password_change_form.html:5
 msgid "Documentation"
-msgstr "Dokumentasjon"
+msgstr ""
 
 #: templates/registration/password_change_done.html:4
 #: templates/registration/password_change_form.html:5
 msgid "Change password"
-msgstr "Endre passord"
+msgstr ""
 
 #: templates/registration/password_change_done.html:4
 #: templates/registration/password_change_form.html:5
 msgid "Log out"
-msgstr "Logg ut"
+msgstr ""
 
 #: templates/registration/password_change_done.html:7
 #: templates/registration/password_change_form.html:8
@@ -498,54 +497,52 @@ msgstr "Logg ut"
 #: templates/registration/password_reset_done.html:7
 #: templates/registration/password_reset_form.html:7
 msgid "Home"
-msgstr "Hjem"
+msgstr ""
 
 #: templates/registration/password_change_done.html:8
 #: templates/registration/password_change_form.html:9
 #: templates/registration/password_change_form.html:13
 #: templates/registration/password_change_form.html:25
 msgid "Password change"
-msgstr "Endre passord"
+msgstr ""
 
 #: templates/registration/password_change_done.html:12
 #: templates/registration/password_change_done.html:16
 msgid "Password change successful"
-msgstr "Passordet har blitt endret"
+msgstr ""
 
 #: templates/registration/password_change_done.html:18
 msgid "Your password was changed."
-msgstr "Ditt passord har blitt endret"
+msgstr ""
 
 #: templates/registration/password_change_form.html:21
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
-msgstr[0] "Korriger denne feilen"
-msgstr[1] "Korriger disse feilene"
+msgstr[0] ""
+msgstr[1] ""
 
 #: templates/registration/password_change_form.html:27
 msgid ""
 "Please enter your old password, for security's sake, and then enter your new "
 "password twice so we can verify you typed it in correctly."
 msgstr ""
-"Skriv ditt gamle passord, og deretter ditt nye passordto ganger, for å "
-"bekrefte at det er stavet riktig."
 
 #: templates/registration/password_change_form.html:31
 msgid "Old password"
-msgstr "Gammelt passord"
+msgstr ""
 
 #: templates/registration/password_change_form.html:37
 msgid "New password"
-msgstr "Nytt passord"
+msgstr ""
 
 #: templates/registration/password_change_form.html:43
 msgid "Password (again)"
-msgstr "Gjenta passord"
+msgstr ""
 
 #: templates/registration/password_change_form.html:49
 #: templates/registration/password_reset_confirm.html:20
 msgid "Change my password"
-msgstr "Endre mitt passord"
+msgstr ""
 
 #: templates/registration/password_reset_complete.html:8
 #: templates/registration/password_reset_confirm.html:5
@@ -554,62 +551,59 @@ msgstr "Endre mitt passord"
 #: templates/registration/password_reset_form.html:12
 #: templates/registration/password_reset_form.html:16
 msgid "Password reset"
-msgstr "Tilbakestill passordet"
+msgstr ""
 
 #: templates/registration/password_reset_complete.html:12
 #: templates/registration/password_reset_complete.html:16
 msgid "Password reset complete"
-msgstr "Passordet har blitt tilbakestilt"
+msgstr ""
 
 #: templates/registration/password_reset_complete.html:18
 msgid "Your password has been set.  You may go ahead and log in now."
-msgstr "Ditt passord har blitt lagret. Du kan logge inn nå."
+msgstr ""
 
 #: templates/registration/password_reset_complete.html:20
 msgid "Log in"
-msgstr "Logg inn"
+msgstr ""
 
 #: templates/registration/password_reset_confirm.html:11
 msgid "Enter new password"
-msgstr "Oppgi nytt passord"
+msgstr ""
 
 #: templates/registration/password_reset_confirm.html:13
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
-msgstr "Skriv passordet to ganger for å bekrefte at det ble stavet rett."
+msgstr ""
 
 #: templates/registration/password_reset_confirm.html:17
 msgid "New password:"
-msgstr "Nytt passord:"
+msgstr ""
 
 #: templates/registration/password_reset_confirm.html:19
 msgid "Confirm password:"
-msgstr "Bekreft passordet:"
+msgstr ""
 
 #: templates/registration/password_reset_confirm.html:25
 msgid "Password reset unsuccessful"
-msgstr "Passordet har blitt tilbakestilt"
+msgstr ""
 
 #: templates/registration/password_reset_confirm.html:27
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
 msgstr ""
-"Lenken for å tilbakestille passordet er ikke gyldig. Den kan være utdatert "
-"eller allerede benyttet.  Du kan bestille en ny tilbakestilling av passordet."
 
 #: templates/registration/password_reset_done.html:12
 #: templates/registration/password_reset_done.html:16
 msgid "Password reset successful"
-msgstr "Passordet har blitt tilbakestilt"
+msgstr ""
 
 #: templates/registration/password_reset_done.html:18
 msgid ""
 "We've e-mailed you instructions for setting your password to the e-mail "
 "address you submitted. You should be receiving it shortly."
 msgstr ""
-"Instrukser for å tilbakestille passordet har blitt sendt til din epost."
 
 #: templates/registration/password_reset_email.html:2
 #, python-format
@@ -617,38 +611,34 @@ msgid ""
 "You're receiving this e-mail because you requested a password reset for your "
 "user account at %(site_name)s."
 msgstr ""
-"Du mottar denne eposten fordi du har bedt om å tilbakestille passordet for "
-"din brukerkonto på %(site_name)s. "
 
 #: templates/registration/password_reset_email.html:4
 msgid "Please go to the following page and choose a new password:"
-msgstr "Gå til denne siden og velg et nytt passord:"
+msgstr ""
 
 #: templates/registration/password_reset_email.html:8
 msgid "Your username, in case you've forgotten:"
-msgstr "Ditt brukernavn, i tilfelle du skulle ha glemt det."
+msgstr ""
 
 #: templates/registration/password_reset_email.html:10
 msgid "Thanks for using our site!"
-msgstr "Takk for at du benytter vår nettside!"
+msgstr ""
 
 #: templates/registration/password_reset_email.html:12
 #, python-format
 msgid "The %(site_name)s team"
-msgstr "%(site_name)s"
+msgstr ""
 
 #: templates/registration/password_reset_form.html:18
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
 msgstr ""
-"Har du glemt passordet? Fyll inn din epostadresse for å få tilsendt "
-"instrukser for å sette et nytt passord."
 
 #: templates/registration/password_reset_form.html:22
 msgid "E-mail address:"
-msgstr "Epost-adresse"
+msgstr ""
 
 #: templates/registration/password_reset_form.html:22
 msgid "Reset my password"
-msgstr "Tilbakestill mitt passord"
+msgstr ""

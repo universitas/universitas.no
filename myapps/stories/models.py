@@ -30,6 +30,28 @@ import logging
 logger = logging.getLogger('universitas')
 
 
+class StoryType(models.Model):
+
+    """ A type of story in the publication. """
+
+    name = models.CharField(unique=True, max_length=50)
+    section = models.ForeignKey('Section')
+    template = models.ForeignKey('Story', blank=True, null=True)
+    prodsys_mappe = models.CharField(
+        blank=True, null=True,
+        max_length=20)
+
+    class Meta:
+        verbose_name = _('StoryType')
+        verbose_name_plural = _('StoryTypes')
+
+    def __str__(self):
+        return self.name
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('')
+
 class TextContent(TimeStampedModel):
 
     XTAG_FORMAT = '@%s:%s'
@@ -39,12 +61,14 @@ class TextContent(TimeStampedModel):
 
     class Meta:
         abstract = True
+        verbose_name = _('text content')
         # app_label = 'stories'
 
     bodytext_markup = models.TextField(
         blank=True,
         default=_('Write your content here.'),
         help_text=_('Content with xtags markup.'),
+        verbose_name=_('bodytext tagged text')
     )
 
     bodytext_html = models.TextField(
@@ -52,6 +76,7 @@ class TextContent(TimeStampedModel):
         editable=False,
         default='<p>Placeholder</p>',
         help_text=_('HTML tagged content'),
+        verbose_name=_('bodytext html tagged')
     )
 
     def get_html(self):
@@ -187,62 +212,62 @@ class Story(TextContent):
     )
     title = models.CharField(
         max_length=1000,
-        help_text=_('Headline')
-        verbose_name=_('title')
+        help_text=_('Headline'),
+        verbose_name=_('title'),
     )
     kicker = models.CharField(
         blank=True, max_length=1000,
-        help_text=_('Secondary headline')
-        verbose_name=_('kicker')
+        help_text=_('Secondary headline'),
+        verbose_name=_('kicker'),
     )
     lede = models.TextField(
         blank=True,
-        help_text=_('Introduction or summary of the story')
-        verbose_name=_('lede')
+        help_text=_('Introduction or summary of the story'),
+        verbose_name=_('lede'),
     )
     theme_word = models.CharField(
         blank=True, max_length=100,
-        help_text=_('Theme')
-        verbose_name=_('theme word')
+        help_text=_('Theme'),
+        verbose_name=_('theme word'),
     )
     bylines = models.ManyToManyField(
         Contributor, through='Byline',
-        help_text=_('The people who created this content.')
-        verbose_name=_('bylines')
+        help_text=_('The people who created this content.'),
+        verbose_name=_('bylines'),
     )
     story_type = models.ForeignKey(
-        'StoryType',
-        help_text=_('The type of story.')
-        verbose_name=_('story type')
+        StoryType,
+        help_text=_('The type of story.'),
+        verbose_name=_('article type'),
     )
     publication_date = models.DateTimeField(
         null=True, blank=True,
-        help_text=_('When this story will be published on the web.')
-        verbose_name=_('publication date')
+        help_text=_('When this story will be published on the web.'),
+        verbose_name=_('publication date'),
     )
     status = models.IntegerField(
         default=STATUS_DRAFT, choices=STATUS_CHOICES,
         help_text=_('Publication status.'),
-        verbose_name=_('status')
+        verbose_name=_('status'),
     )
     slug = models.SlugField(
         default='slug-here', editable=False,
         help_text=_('Human readable url.'),
-        verbose_name=_('slug')
+        verbose_name=_('slug'),
     )
     issue = models.ForeignKey(
         'issues.PrintIssue', blank=True, null=True,
         help_text=_('Which issue this story was printed in.'),
-        verbose_name=_('issue')
+        verbose_name=_('issue'),
     )
     page = models.IntegerField(
         blank=True, null=True,
         help_text=_('Which page the story was printed on.'),
-        verbose_name=_('page')
+        verbose_name=_('page'),
     )
     images = models.ManyToManyField(
         ImageFile, through='StoryImage',
-        verbose_name=_('images')
+        verbose_name=_('images'),
     )
 
     def __str__(self):
@@ -426,29 +451,6 @@ class StoryImage(StoryElement):
     def source_image(self):
         return self.imagefile.source_image.field
 
-
-class StoryType(models.Model):
-
-    """ A type of story in the publication. """
-
-    name = models.CharField(unique=True, max_length=50)
-    section = models.ForeignKey('Section')
-    template = models.ForeignKey('Story', blank=True, null=True)
-    prodsys_mappe = models.CharField(
-        blank=True, null=True,
-        max_length=20)
-
-    class Meta:
-        verbose_name = _('StoryType')
-        verbose_name_plural = _('StoryTypes')
-        # app_label = 'stories'
-
-    def __str__(self):
-        return self.name
-
-    @models.permalink
-    def get_absolute_url(self):
-        return ('')
 
 
 class Section(models.Model):
