@@ -155,19 +155,22 @@ CACHES = {
 # }
 # When using TCP connections
 
-# INTERNATIONALIZATION
-LANGUAGE_CODE = 'no'
-TIME_ZONE = 'Europe/Oslo'
-USE_I18N = True  # Internationalisation (string translation)
-USE_L10N = True  # Localisation (numbers and stuff)
-USE_TZ = True  # Use timezone
-
 # STATIC FILE CONFIGURATION
 STATIC_ROOT = normpath(join(PROJECT_ROOT_FOLDER, 'static'))
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     normpath(join(BASE_DIR, 'assets')),
 )
+
+# INTERNATIONALIZATION
+LANGUAGE_CODE = 'nb_NO'
+TIME_ZONE = 'Europe/Oslo'
+USE_I18N = True  # Internationalisation (string translation)
+USE_L10N = True  # Localisation (numbers and stuff)
+USE_TZ = True  # Use timezone
+LOCALE_PATHS = (
+    normpath(join(BASE_DIR, 'translation')),
+    )
 
 # MEDIA_ROOT = normpath(join(PHOTO_ARCHIVE, 'upload'))
 MEDIA_ROOT = '/srv/fotoarkiv_universitas'

@@ -24,8 +24,10 @@ from myapps.markup.models import ProdsysTag
 from myapps.photo.models import ImageFile
 from myapps.frontpage.models import FrontpageStory
 # from .views import article_view
-
 # from myapps.issues.models import PrintIssue
+
+import logging
+logger = logging.getLogger('universitas')
 
 
 class TextContent(TimeStampedModel):
@@ -144,7 +146,7 @@ class TextContent(TimeStampedModel):
         for paragraph in self.bodytext_markup.splitlines():
             try:
                 tag, text = self.XTAG_REGEXP.match(paragraph).groups()
-            except AttributeError:
+            except AttributeError:  # no tag.
                 tag, text = self.DEFAULT_TAG, paragraph
             html.append(ProdsysTag.wrap_text(tag, text))
         html_bodytext = '\n'.join(html)
@@ -181,53 +183,66 @@ class Story(TextContent):
     prodsak_id = models.PositiveIntegerField(
         blank=True, null=True, editable=False,
         help_text=_('Id in the prodsys database.'),
+        verbose_name=_('prodsak id')
     )
     title = models.CharField(
         max_length=1000,
         help_text=_('Headline')
+        verbose_name=_('title')
     )
     kicker = models.CharField(
         blank=True, max_length=1000,
         help_text=_('Secondary headline')
+        verbose_name=_('kicker')
     )
     lede = models.TextField(
         blank=True,
         help_text=_('Introduction or summary of the story')
+        verbose_name=_('lede')
     )
     theme_word = models.CharField(
         blank=True, max_length=100,
         help_text=_('Theme')
+        verbose_name=_('theme word')
     )
     bylines = models.ManyToManyField(
         Contributor, through='Byline',
         help_text=_('The people who created this content.')
+        verbose_name=_('bylines')
     )
     story_type = models.ForeignKey(
         'StoryType',
         help_text=_('The type of story.')
+        verbose_name=_('story type')
     )
     publication_date = models.DateTimeField(
         null=True, blank=True,
         help_text=_('When this story will be published on the web.')
+        verbose_name=_('publication date')
     )
     status = models.IntegerField(
         default=STATUS_DRAFT, choices=STATUS_CHOICES,
         help_text=_('Publication status.'),
+        verbose_name=_('status')
     )
     slug = models.SlugField(
         default='slug-here', editable=False,
         help_text=_('Human readable url.'),
+        verbose_name=_('slug')
     )
     issue = models.ForeignKey(
         'issues.PrintIssue', blank=True, null=True,
         help_text=_('Which issue this story was printed in.'),
+        verbose_name=_('issue')
     )
     page = models.IntegerField(
         blank=True, null=True,
         help_text=_('Which page the story was printed on.'),
+        verbose_name=_('page')
     )
     images = models.ManyToManyField(
         ImageFile, through='StoryImage',
+        verbose_name=_('images')
     )
 
     def __str__(self):
@@ -254,7 +269,7 @@ class Story(TextContent):
         return self.story_type.section
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)[:50]
+        self.slug = slugify(self.title).replace('_', '')[:50]
         super(Story, self).save(*args, **kwargs)
         if not self.title:
             print(self.story_type, self.bodytext_html[:20], self.pk)
@@ -267,7 +282,14 @@ class Story(TextContent):
 
     def get_absolute_url(self):
         from django.core.urlresolvers import reverse
-        return reverse('article', kwargs={'story_id': str(self.id), 'section': self.section.slug, 'slug': self.slug.replace('_','-')},)
+        url = reverse(
+            viewname='article',
+            kwargs={
+                'story_id': str(self.id),
+                'section': self.section.slug,
+                'slug': self.slug,
+            },)
+        return url
 
     def clean_markup(self, *args, **kwargs):
 
@@ -340,10 +362,14 @@ class StoryElement(models.Model):
         help_text=_('Choose whether this element is published'),
         default=True)
     position = models.PositiveSmallIntegerField(
-        default=0, validators=[
-            MaxValueValidator(MAXPOSITION), MinValueValidator(0)], help_text=_(
-            'Where in the story does this belong? %d = At the very beginning, %d = At the end.' %
-            (0, MAXPOSITION)))
+        default=0,
+        validators=[
+            MaxValueValidator(MAXPOSITION),
+            MinValueValidator(0)],
+        help_text=_(
+            'Where in the story does this belong? {start} = At the very beginning, {end} = At the end.'.format(
+                start=0,
+                end=MAXPOSITION)))
 
     class Meta:
         abstract = True
@@ -489,27 +515,34 @@ class Byline(models.Model):
             Byline object
         """
         byline_pattern = re.compile(
-            r'^((?P<credit>[^:,]+):)?\s*(?P<full_name>[^,]+)\s*(,\s*(?P<title>.+))?$'
+            # single word credit with colon. Person's name, Person's job title or similiar description.
+            # Example:
+            # text: Jane Doe, Just a regular person
+            r'^(?P<credit>[^:, ]+): (?P<full_name>[^,]+)\s*(, (?P<title>.+))?$'
         )
 
         match = byline_pattern.match(full_byline)
         try:
             d = match.groupdict()
-        except AttributeError as e:
-            import ipdb
-            ipdb.set_trace()
-            raise e
-        full_name = d['full_name'].strip()
-        title = (d['title'] or '').strip()
-        credit_first_letter = (d['credit'] or cls.DEFAULT_CREDIT[0])[0]
+            full_name = d['full_name']
+            title = d['title'] or ''
+            credit = d['credit'].lower()
+            initials = ''.join(letters[0] for letters in full_name.replace('-', ' ').split())
+            assert initials == initials.upper()
+
+        except (AssertionError, AttributeError, ) as e:
+            # Malformed byline
+            logger.warning('Malformed byline: {} {}'.format(full_byline, e))
+            full_name, title, initials, credit = 'Nomen Nescio', full_byline, 'XX', 'x'
+
         for choice in cls.CREDIT_CHOICES:
-            if credit_first_letter in choice[0]:
+
+            if credit[0] in choice[0]:
                 credit = choice[0]
                 break
         else:
             credit = cls.DEFAULT_CREDIT
 
-        initials = ''.join(letters[0] for letters in full_name.replace('-', ' ').split()).upper()[:5]
         contributor = Contributor.get_or_create(full_name, initials)
 
         new_byline = cls(
@@ -523,26 +556,49 @@ class Byline(models.Model):
         return new_byline
 
 
-def clean_up_bylines(xtags):
+def clean_up_bylines(bylines):
+    """
+    clean_up_bylines(string) -> string
+    Normalise misformatting and idiosyncraticies of bylines in legacy data.
+    """
     replacements = (
-        # (r'Oslo og Akershus', 'Oslo && Akershus', re.I),
+        # divides to different people
         (r'\r|;|•', r'\n', re.I),
+
+        # a word that ends with colon starts a new line
         (r' +(\S*?:)', r'\n\1', 0),
+
+        # comma, and or "og" before two capitalised words probably means it's a new person. Insert newline.
         (r'\s*(,\s|\sog\s|\sand\s)\s*([A-ZÆØÅ][a-zæøå]+ [A-ZÆØÅ])', r'\n\2', 0),
+
+        # words in parntheses at end of line is probably some creditation. Put in front with colon instead.
         (r'^(.*?) *\(([^)]*)\) *$', r'\2: \1', re.M),
+
+        # Any word containging "photo" is some kind of photo credit.
         (r'\S*(ph|f)oto\S*?[\s:]*', '\nfoto: ', re.I),
+
+        # Any word containing "text" is text credit.
         (r'\S*te(ks|x)t\S*?[\s:]*', '\ntekst: ', re.I),
+
+        # These words are stripped from end of line.
         (r' *(,| og| and) *$', '', re.M + re.I),
+
+        # These words are stripped from start of line
         (r'^ *(,|og |and |av ) *', '', re.M + re.I),
+
+        # Creditline with empty space after it is deleted.
         (r'^\S:\s*$', '', re.M),
+
+        # Strip lines containing only whitespace.
         (r'\s*\n\s*', r'\n', 0),
+
+        # Bylines with no credit are assumed to be text credit.
         (r'^([^:]+?)$', r'tekst:\1', re.M),
+
+        # Exactly one space after and no space before colon.
         (r'\s*:+\s*', ': ', 0),
     )
-    new_xtags = xtags
     for pattern, replacement, flags in replacements:
-        new_xtags = re.sub(pattern, replacement, new_xtags, flags=flags)
-    new_xtags = new_xtags.strip()
-    # print('\n%s\n\t%s' % (xtags, new_xtags.replace('\n', '\n\t')))
-
-    return new_xtags
+        bylines = re.sub(pattern, replacement, bylines, flags=flags)
+    bylines = bylines.strip()
+    return bylines

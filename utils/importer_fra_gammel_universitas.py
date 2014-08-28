@@ -1,7 +1,8 @@
 import django
 django.setup()
 
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from html.parser import HTMLParser
 from pytz import datetime
 import os
 import re
@@ -34,6 +35,7 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
     bildefiler = cache.get('bildefiler')
     if not bildefiler:
         # Dette tar litt tid, så det caches i redis, som kan huske det mellom skriptene kjører.
+        # TODO: Kanskje like raskt å bruke path.exists eller noe sånt?
         bildefiler = set(
             subprocess.check_output(
                 'cd %s; find -iname "*.jp*g" | sed "s,./,,"' % (BILDEMAPPE,),
@@ -68,6 +70,8 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
                 # senest kan ha blitt laget den dagen det ble publisert
                 created = min(dates)
 
+                contributor = identify_photo_file_initials(path)
+
                 try:
                     nyttbilde = ImageFile(
                         id=bilde.id_bilde,
@@ -75,14 +79,37 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
                         source_file=path,
                         created=created,
                         modified=modified,
+                        contributor=contributor,
                     )
                     nyttbilde.save()
                 except TypeError:
+                    # Something wrong with the file?
                     nyttbilde = None
             else:
                 nyttbilde = None
 
     return nyttbilde
+
+
+def identify_photo_file_initials(path, contributors=(),):
+    """
+    If passed a file path that matches the Universitas format for photo credit.
+    Searches database or optional iterable of contributors for a person that
+    matches initials at end of jpg-file name
+    """
+    filename_pattern = re.compile(r'^.+[-_]([A-ZÆØÅ]{2,5})\.jp.?g$')
+    match = filename_pattern.match(path)
+    if match:
+        initials = match.groups()[0]
+        for contributor in contributors:
+            if contributor.initials == initials:
+                return contributor
+        try:
+            return Contributor.objects.get(initials=initials)
+        except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
+            print(path, initials, e)
+
+    return None
 
 
 def importer_utgaver_fra_gammel_webside():
@@ -96,9 +123,12 @@ def importer_utgaver_fra_gammel_webside():
         fullpath = os.path.join(PDFMAPPE, filename)
         created = datetime.date.fromtimestamp(
             os.path.getmtime(fullpath))
-        year, issue = re.match(r'universitas_(?P<year>\d{4})-(?P<issue>.*)\.pdf$', filename).groups()
+        year, issue = re.match(
+            r'universitas_(?P<year>\d{4})-(?P<issue>.*)\.pdf$',
+            filename,
+        ).groups()
         print(filename, created.strftime('%c'), year, issue)
-        if created.isoweekday() != 3:
+        if created.isoweekday() != 3:  # should be a Wednesday
             created = created + datetime.timedelta(days=3 - created.isoweekday())
         print(created.strftime('%c'))
         new_issue = PrintIssue(
@@ -164,6 +194,7 @@ def importer_saker_fra_gammel_webside(first=0, last=20000):
                 caption = bilde.bildetekst.tekst
                 caption = clean_up_html(caption)
                 caption = clean_up_xtags(caption)
+                caption = re.sub(r'^@[^:]+: ?', '', caption)
             except (ObjectDoesNotExist, AttributeError,):
                 caption = ''
             image_file = importer_bilder_fra_gammel_webside(bilde)
@@ -233,23 +264,22 @@ def websak_til_xtags(websak):
 
 
 def clean_up_html(html):
-    """ Fixes some characters and stuff in old prodsys implementation.
+    """ Strips away html tags from input, or encodes appropriate xtags instead.
         string -> string
     """
-    from html import parser
-    html_parser = parser.HTMLParser()
-    html = html_parser.unescape(html)
+    html = HTMLParser().unescape(html)
     replacements = (
-        (r'\n*</', r'</', 0),
-        (r'<\W*(br|p)[^>]*>', '\n', 0),
-        (r'</ *h[^>]*>', '\n', re.M),
-        (r'<h[^>]*>', '\n@mt:', re.M),
-        (r'  +', ' ', 0),
-        (r'\s*\n\s*', '\n', 0),
-        (r'<\W*(i|em) *>', '_', re.IGNORECASE),
-        (r'<\W*(b|strong) *>', '*', re.IGNORECASE),
-        (r'< *li *>', '\n@li:', re.IGNORECASE),
-        (r'<.*?>', '', 0),  # Alle andre html-tags blir fjernet.
+        (r'\n*</', r'</', 0),  # trim newline before closing tag.
+        (r'<\W*(br|p)[^>]*>', '\n', 0),  # <br> and <p> -> newlines.
+        (r'</ *h[^>]*>', '\n', re.M),  # closing <h*> tags -> newline
+        (r'<h[^>]*>', '\n@mt:', re.M),  # <h*> -> @mt: (subheadings)
+        (r'  +', ' ', 0),  # trim multiple spaces.
+        (r'\s*\n\s*', '\n', 0),  # trim trailing spaces and extra newlines.
+        (r'<\W*(i|em) *>', '_', re.IGNORECASE),  # italic tags -> underscore
+        (r'<\W*(b|strong) *>', '*', re.IGNORECASE),  # strong tags -> asterix
+        (r'< *li *>', '\n@li:', re.IGNORECASE),  # list tags -> @li:
+        (r'<.*?>', '', 0),  # delete all other tags.
+        # TODO: Keep data from <a href= somehow.
     )
 
     for pattern, replacement, flags in replacements:
@@ -259,6 +289,7 @@ def clean_up_html(html):
 
 
 def clean_up_prodsys_encoding(text):
+    """ Changes some strange (win 1252 ?) characters into proper unicode. """
     text = text.replace('\x92', '\'')  # some fixes for win 1252
     text = text.replace('\x95', '•')  # bullet
     text = text.replace('\x96', '–')  # n-dash
@@ -272,19 +303,19 @@ def clean_up_xtags(xtags):
     """
     xtags = xtags.replace('@tit:', '@headline:', 1)
     replacements = (
-        (r'^@mt:', '\n@mt:', re.M),
-        (r'[–-]+', r'–', 0),
-        (r'(\w)–', r'\1-', 0),
-        (r'([,\w]) –(\w)', r'\1 -\2', 0),
-        (r' - ', r' – ', 0),
-        (r'["“”]', r'»', 0),
-        (r'»\b', r'«', 0),
-        (r'^# ?', '@li:', re.M),
-        (r'^(\W*)\*([^*\n]*)\*', r'@tingo:\1\2', re.I + re.M),
-        (r'^(\W*)[*_]([^_\n]*)[*_]$', r'@spm:\1\2', re.I + re.M),
-        (r'(^|@[^:]+:) *- *', r'\1– ', 0),
-        (r'^ *$', '', re.M),
-        (r'^(@spm:)?[.a-z]+@[.a-z]+$', '', re.M),
+        (r'^@mt:', '\n@mt:', re.M),  # extra newline before subheadings
+        (r'[—–-]+', r'–', 0),  # all dashes to n-dash
+        (r'(\w)–', r'\1-', 0),  # n-dash to hyphen when after word.
+        (r'([,\w]) –(\w)', r'\1 -\2', 0),  # hyphen before word
+        (r'["“”]', r'»', 0),  # proper quotation marks.
+        (r'»\b', r'«', 0),  # left side of words.
+        (r'^# ?', '@li:', re.M),  # list
+        # TODO: Decide which tag to use for list elements.
+        (r'^(\W*)[*_]([^*_\n]*)[*_]$', r'@spm:\1\2', re.I + re.M),  # inline italic full line.
+        (r'^(\W*)\*([^*\n]*)\*', r'@tingo:\1\2', re.I + re.M),  # inline bold starts word
+        (r'(^|@[^:]+:) *- *', r'\1– ', 0),  # line starts with hyphen. Should be ndash
+        (r' *$', '', re.M),  # trim trailing spaces.
+        (r'^(@spm:)?[.a-z]+@[.a-z]+$', '', re.M),  # line with only tags, no text.
     )
 
     for pattern, replacement, flags in replacements:
@@ -293,7 +324,9 @@ def clean_up_xtags(xtags):
     return xtags.strip()
 
 
-def reset_db():
+def reset_db_autoincrement():
+    """ updates the next autoincrement value for primary keys in tables that have been
+    populated using primary keys from legacy database."""
     from django.db import connection
     cursor = connection.cursor()
     cursor.execute("SELECT setval('photo_imagefile_id_seq', (SELECT MAX(id) FROM photo_imagefile)+1)")
@@ -301,6 +334,7 @@ def reset_db():
 
 
 def drop_images_stories_and_contributors():
+    """ Empty tables before importing from legacy database """
     print('sletter images')
     ImageFile.objects.all().delete()
     print('sletter contributors')
@@ -308,7 +342,7 @@ def drop_images_stories_and_contributors():
     print('sletter stories')
     Story.objects.all().delete()
 
-# drop_images_stories_and_contributors()
-# importer_utgaver_fra_gammel_webside()
-# importer_saker_fra_gammel_webside()
-reset_db()
+drop_images_stories_and_contributors()
+importer_utgaver_fra_gammel_webside()
+importer_saker_fra_gammel_webside()
+reset_db_autoincrement()
