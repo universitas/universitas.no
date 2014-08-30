@@ -28,11 +28,6 @@ server {
 
     location / {
         satisfy any;
-        allow            84.211.75.214;
-        auth_basic       "samme som prodsys";
-        auth_basic_user_file /etc/nginx/.htpasswd;
-        deny             all;
-
         error_page 403 = @public;
         proxy_set_header Host $host;
         proxy_pass       http://dev_universitas_no;

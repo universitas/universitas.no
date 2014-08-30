@@ -81,6 +81,12 @@ ROOT_URLCONF = 'universitas_no.urls'
 WSGI_APPLICATION = 'universitas_no.wsgi.application'
 
 
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = '/'
+LOGIN_URL = '/admin/login/'
+
+
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 

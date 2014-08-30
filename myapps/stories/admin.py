@@ -5,11 +5,14 @@ Admin for stories app.
 
 from django.contrib import admin
 from .models import Byline, Aside, Pullquote, Story, StoryType, Section, StoryImage
+from django.utils.html import format_html_join
+from django.utils.safestring import mark_safe
 # from myapps.photo.models import ImageFile
 # from sorl.thumbnail.admin import AdminImageMixin
 from myapps.frontpage.models import FrontpageStory
 import autocomplete_light
 
+from sorl.thumbnail import get_thumbnail
 
 class BylineInline(admin.TabularInline):
     form = autocomplete_light.modelform_factory(Byline)
@@ -54,11 +57,22 @@ class ImageInline(admin.TabularInline):
         'creditline',
         'size',
         'imagefile',
+        'thumb',
     )
-    raw_id_fields = (
-        # 'imagefile',
+    readonly_fields = (
+        'thumb',
     )
+
     extra = 0
+
+    def thumb(self, instance, width=200, height=100):
+        url = '/static/admin/img/icon-no.gif'
+        if instance.imagefile:
+            thumb = get_thumbnail(instance.imagefile.source_file, '%sx%s' % (width, height))
+            url = thumb.url
+        return mark_safe('<img src="{}">'.format(url))
+
+    thumb.allow_tags = True
 
 
 class StoryTypeInline(admin.TabularInline):
@@ -71,7 +85,7 @@ class StoryTypeInline(admin.TabularInline):
 class StoryAdmin(admin.ModelAdmin):
 
     save_on_top = True
-
+    list_per_page = 25
     list_display = (
         'id',
         'title',
@@ -113,10 +127,15 @@ class StoryAdmin(admin.ModelAdmin):
     search_fields = (
         'title',
         'lede',
-        'theme_word',
+        'bylines_html',
         # 'story_type__name',
         # 'bylines',
     )
+    def display_bylines(self, instance):
+        return mark_safe(instance.bylines_html) or " -- "
+
+    display_bylines.short_description = 'Bylines'
+    display_bylines.allow_tags = True
 
 
 @admin.register(Section)

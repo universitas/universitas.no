@@ -1,15 +1,15 @@
-{% extends "base_template.html" %}
+{% extends "base-template.html" %}
 
 {% block title %}Create an account{% endblock %}
 
 {% block content %}
-	
+
 	<form class = "inputform" id="register_user" action="" method="post">{% csrf_token %}
 	<table>
 		{{ form.as_table }}
-    </table>		
+    </table>
 		<input type="submit" value="Create the account" />
 
 	</form>
-		
+
 {% endblock %}

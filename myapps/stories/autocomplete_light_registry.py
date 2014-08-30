@@ -5,13 +5,14 @@ from django.utils.translation import ugettext_lazy as _
 # This will generate a PersonAutocomplete class
 autocomplete_light.register(Story,
     # Just like in ModelAdmin.search_fields
-    search_fields=['title', 'lede'],
+    search_fields=['title', 'lede', ],
+    order_by=['-publication_date'],
     attrs={
         # This will set the input placeholder attribute:
         'placeholder': _('Story headline or lede.'),
         # This will set the yourlabs.Autocomplete.minimumCharacters
         # options, the naming conversion is handled by jQuery
-        'data-autocomplete-minimum-characters': 3,
+        'data-autocomplete-minimum-characters': 2,
     },
     # This will set the data-widget-maximum-values attribute on the
     # widget container element, and will be set to

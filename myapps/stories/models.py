@@ -17,7 +17,6 @@ from django.utils.safestring import mark_safe
 
 # Installed apps
 from model_utils.models import TimeStampedModel
-
 # Project apps
 from myapps.contributors.models import Contributor
 from myapps.markup.models import ProdsysTag
@@ -51,6 +50,7 @@ class StoryType(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('')
+
 
 class TextContent(TimeStampedModel):
 
@@ -269,16 +269,30 @@ class Story(TextContent):
         ImageFile, through='StoryImage',
         verbose_name=_('images'),
     )
+    views = models.PositiveIntegerField(
+        default=0,
+        editable=False,
+        help_text=_('how many time the article has been viewed'),
+        verbose_name=_('views')
+    )
+    bylines_html = models.TextField(
+        default='',
+        verbose_name=('all bylines as html.'),
+    )
+
+    def increment_views(self):
+        self.views += 1
+        self.save(update_fields=['views'])
 
     def __str__(self):
         return '{} {:%Y-%m-%d}'.format(
             self.title, self.publication_date)
 
-    def display_bylines(self):
+    def get_bylines_as_html(self):
         all_bylines = []
-        for bl in self.byline_set.all():
+        for bl in self.byline_set.select_related('contributor'):
             all_bylines.append(
-                '%s: %s, %s' % (
+                '<p>%s: <strong>%s</strong>, %s</p>' % (
                     bl.get_credit_display(),
                     bl.contributor.display_name,
                     bl.title,
@@ -295,6 +309,7 @@ class Story(TextContent):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title).replace('_', '')[:50]
+        self.bylines_html = self.get_bylines_as_html()
         super(Story, self).save(*args, **kwargs)
         if not self.title:
             print(self.story_type, self.bodytext_html[:20], self.pk)
@@ -447,10 +462,6 @@ class StoryImage(StoryElement):
         help_text=_('relative image size.'),
         default=1,
     )
-
-    def source_image(self):
-        return self.imagefile.source_image.field
-
 
 
 class Section(models.Model):

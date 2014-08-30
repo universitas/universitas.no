@@ -6,7 +6,9 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def frontpage_view(request, frontpage=None):
     """ Shows the newspaper frontpage. """
     max_stories = 30

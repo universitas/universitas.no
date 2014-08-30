@@ -331,6 +331,8 @@ def reset_db_autoincrement():
     cursor = connection.cursor()
     cursor.execute("SELECT setval('photo_imagefile_id_seq', (SELECT MAX(id) FROM photo_imagefile)+1)")
     cursor.execute("SELECT setval('stories_story_id_seq', (SELECT MAX(id) FROM stories_story)+1)")
+    cursor.execute("SELECT setval('django_migrations_id_seq', (SELECT MAX(id) FROM django_migrations)+1)")
+
 
 
 def drop_images_stories_and_contributors():
@@ -342,7 +344,7 @@ def drop_images_stories_and_contributors():
     print('sletter stories')
     Story.objects.all().delete()
 
-drop_images_stories_and_contributors()
-importer_utgaver_fra_gammel_webside()
-importer_saker_fra_gammel_webside()
+# drop_images_stories_and_contributors()
+# importer_utgaver_fra_gammel_webside()
+# importer_saker_fra_gammel_webside()
 reset_db_autoincrement()

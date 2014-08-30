@@ -7,12 +7,13 @@ autocomplete_light.register(
     ImageFile,
     # Just like in ModelAdmin.search_fields
     search_fields=['source_file', ],
+    order_by='-modified',
     attrs={
         # This will set the input placeholder attribute:
         'placeholder': _('Filename'),
         # This will set the yourlabs.Autocomplete.minimumCharacters
         # options, the naming conversion is handled by jQuery
-        'data-autocomplete-minimum-characters': 3,
+        'data-autocomplete-minimum-characters': 1,
     },
     # This will set the data-widget-maximum-values attribute on the
     # widget container element, and will be set to

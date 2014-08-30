@@ -9,7 +9,7 @@
       <h2 class="frontpage-kicker">{{ item.story.kicker }}</h2>
       {% endif %}
       {# {% if item.image %} #}
-        {% thumbnail item.image item.image_size crop='center' as image %}
+        {% thumbnail item.image item.image_size crop='50% 30%' as image %}
           <a href="{{ item.story.url }}"><img src="{{ image.url }}" alt="{{ item.story.headline }}"></a>
         {% endthumbnail %}
       {# {% endif %} #}
