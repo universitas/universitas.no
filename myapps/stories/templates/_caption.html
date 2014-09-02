@@ -1,0 +1,6 @@
+{% load parse_markup %}
+{% if caption %}
+  <div class="image-caption">
+    {{ caption | inline_tags | caption }}
+  </div>
+{% endif %}

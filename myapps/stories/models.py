@@ -438,13 +438,12 @@ class Aside(TextContent, StoryElement):
     DEFAULT_TAG = 'fakta'
 
 
-class StoryImage(StoryElement):
+class StoryMedia(StoryElement):
 
-    """ Photo or illustration connected to a story """
+    """ Video, photo or illustration connected to a story """
 
     class Meta(StoryElement.Meta):
-        verbose_name = _('Image')
-        verbose_name_plural = _('Images')
+        abstract = True
 
     caption = models.CharField(
         help_text=_('Text explaining the image'),
@@ -456,12 +455,34 @@ class StoryImage(StoryElement):
         blank=True,
         max_length=100)
 
-    imagefile = models.ForeignKey(ImageFile)
-
     size = models.PositiveSmallIntegerField(
         help_text=_('relative image size.'),
         default=1,
     )
+
+
+class StoryImage(StoryMedia):
+
+    """ Photo or illustration connected to a story """
+
+    class Meta(StoryElement.Meta):
+        verbose_name = _('Image')
+        verbose_name_plural = _('Images')
+
+    imagefile = models.ForeignKey(ImageFile)
+
+# class StoryVideo(StoryMedia):
+
+#     """ Video content connected to a story """
+
+#     class Meta(StoryElement.Meta):
+#         verbose_name = _('Video')
+#         verbose_name_plural = _('Videos')
+
+#     vimeo_id = models.PositiveIntegerField(
+#         verbose_name=_('vimeo id number'),
+#         help_text=_('The number at the end of the url for this video at vimeo.com'),
+#         )
 
 
 class Section(models.Model):
@@ -589,6 +610,9 @@ def clean_up_bylines(bylines):
 
         # Any word containging "photo" is some kind of photo credit.
         (r'\S*(ph|f)oto\S*?[\s:]*', '\nfoto: ', re.I),
+
+        # "Anmeldt av" is text credit.
+        (r'anmeldt av:? ?', 'text: ', re.I),
 
         # Any word containing "text" is text credit.
         (r'\S*te(ks|x)t\S*?[\s:]*', '\ntekst: ', re.I),

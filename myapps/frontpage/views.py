@@ -36,12 +36,13 @@ def frontpage_view(request, frontpage=None):
             ratio = max_columns / columns_used
             columns_used = 0
             for item in floor:
+                story = item.frontpage_story
                 columns = round(item.columns * ratio)
                 columns_used += columns
                 if columns_used > 12:
                     columns = columns + 12 - columns_used
                 try:
-                    image = item.frontpage_story.image.source_file
+                    image = story.image.source_file
                 except:
                     image = None
 
@@ -51,7 +52,8 @@ def frontpage_view(request, frontpage=None):
                     'height': floorheight * 150 + 200,
                     'image_size': '%sx%s' % (pix_c * columns, pix_h * floorheight,),
                     'image': image,
-                    'story': item.frontpage_story,
+                    'crop': '{}% {}%'.format(story.horizontal_centre, story.vertical_centre),
+                    'story': story,
                 }
                 items.append(item)
             floor = []

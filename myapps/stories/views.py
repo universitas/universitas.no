@@ -19,16 +19,11 @@ def article_view(request, story_id, section, slug):
     if request.path != correct_url:
         return HttpResponseRedirect(correct_url)
 
-    if story.images.count():
-        image = story.images.first().source_file
-    else:
-        image = None
-
     # logger.debug('info')
 
     context = {
         'story': story,
-        'dummy_image': image,
+        'header_image': story.storyimage_set.first(),
     }
 
     return render(request, template, context,)

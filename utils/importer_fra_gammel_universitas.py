@@ -140,9 +140,8 @@ def importer_utgaver_fra_gammel_webside():
         new_issue.save()
 
 
-def importer_saker_fra_gammel_webside(first=0, last=20000):
-    # websaker = Sak.objects.order_by('?')[:10]
-    websaker = Sak.objects.exclude(publisert=0).order_by('id_sak')[first:last]
+def importer_saker_fra_gammel_webside(first=0, last=20000, order_by='id_sak'):
+    websaker = Sak.objects.exclude(publisert=0).order_by(order_by)[first:last]
     for websak in websaker:
         if Story.objects.filter(pk=websak.pk):
             print('sak %s finnes' % (websak.pk,))
@@ -264,8 +263,9 @@ def websak_til_xtags(websak):
 
 
 def clean_up_html(html):
-    """ Strips away html tags from input, or encodes appropriate xtags instead.
-        string -> string
+    """
+    Strips away html tags from input, or encodes appropriate xtags instead.
+    string -> string
     """
     html = HTMLParser().unescape(html)
     replacements = (
@@ -344,7 +344,7 @@ def drop_images_stories_and_contributors():
     print('sletter stories')
     Story.objects.all().delete()
 
-# drop_images_stories_and_contributors()
+drop_images_stories_and_contributors()
 # importer_utgaver_fra_gammel_webside()
-# importer_saker_fra_gammel_webside()
+importer_saker_fra_gammel_webside(last=100, order_by='-id_sak')
 reset_db_autoincrement()

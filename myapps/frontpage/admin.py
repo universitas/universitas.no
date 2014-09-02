@@ -25,16 +25,24 @@ class FrontpageStoryAdmin(admin.ModelAdmin):
         'lede',
         'image',
         'story',
+        'horizontal_centre',
+        'vertical_centre',
         # 'placements',
     )
 
     list_editable = (
         'headline',
-        'kicker',
-        'lede',
+        # 'kicker',
+        # 'lede',
+        'horizontal_centre',
+        'vertical_centre',
     )
     inlines = (
         ContentblockInline,
+    )
+    search_fields = (
+        'headline',
+        'kicker',
     )
 
 @admin.register(Contentblock)

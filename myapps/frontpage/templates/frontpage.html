@@ -1,23 +1,24 @@
 {% extends "base-template.html" %}
 {% load thumbnail %}
+{% load parse_markup %}
 {% block title %}universitas.no – Norges største studentavis.{% endblock title %}
 {% block content %}
   <div class="row">
     {% for item in frontpage_items %}
       <article class="medium-{{ item.columns }} small-{{ item.columns_small }} columns" style="min-height:{{ item.height }}px">
       {% if item.story.kicker %}
-      <h2 class="frontpage-kicker">{{ item.story.kicker }}</h2>
+      <h2 class="frontpage-kicker">{{ item.story.kicker|inline_tags }}</h2>
       {% endif %}
-      {# {% if item.image %} #}
-        {% thumbnail item.image item.image_size crop='50% 30%' as image %}
-          <a href="{{ item.story.url }}"><img src="{{ image.url }}" alt="{{ item.story.headline }}"></a>
+      {% if item.image %}
+        {% thumbnail item.image item.image_size crop=item.crop as image %}
+          <a href="{{ item.story.url }}"><img src="{{ image.url }}" alt="{{ item.story.headline|strip_tags }}"></a>
         {% endthumbnail %}
-      {# {% endif %} #}
+      {% endif %}
       {% if item.story.headline %}
-      <a href="{{ item.story.url }}"><h1 class="frontpage-headline">{{ item.story.headline }}</h1></a>
+      <a href="{{ item.story.url }}"><h1 class="frontpage-headline">{{ item.story.headline|inline_tags }}</h1></a>
       {% endif %}
       {% if item.story.lede %}
-      <p class="frontpage-lede">{{ item.story.lede }}</h1>
+      <p class="frontpage-lede">{{ item.story.lede|inline_tags }}</h1>
       {% endif %}
       </article>
     {% endfor %}

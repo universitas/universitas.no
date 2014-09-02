@@ -3,32 +3,29 @@
 {% block title %}universitas.no – {{ story.title }}{% endblock title %}
 {% block content %}
   <article class="story row">
-    <header class="row">
+    <header class="small-12 columns">
+      {% include '_image.html' with image=header_image %}
       {% if story.kicker %}
         <h2 id="kicker">{{ story.kicker }}</h2>
       {% endif %}
-      {% if dummy_image %}
-      <div class="row" id="main-image">
-        {% thumbnail dummy_image "1200x800" as image %}
-        <img src="{{ image.url }}" alt="{{ story.main_image_caption }}">
-        {% endthumbnail %}
-        <footer class="image-caption">{{ story.main_image_caption }}</footer>
-      </div>
-      {% endif %}
       <h1 id="headline">{{ story.title }}</h1>
-      <h4 class="lede">{{ story.lede }}</p>
+      <p class="lede">{{ story.lede }}</p>
       <ul id="bylines">
-
+        {% for byline in story.byline_set.all %}
+          <li class = "byline">
+            <span class="credit">{{ byline.get_credit_display }}: </span><span class="name">{{ byline.contributor }}</span>{% if byline.title %}<span class="title">, {{ byline.title }}</span>{% endif %}
+          </li>
+        {% endfor %}
       </ul>
     </header>
 
-    <main class="row">
+    <main class="medium-12 columns">
      {{ story.bodytext_html | safe }}
-     {#  {% for section in story.sections %}
-      <section class="bodytext large-12 columns">
+      {# {% for section in story.sections %} #}
+      {# <section class="bodytext large-12 columns"> #}
 
-      </section>
-      {% endfor %} #}
+      {# </section> #}
+      {# {% endfor %} #}
     </main>
   </article>
     <section id="after" class="row">

@@ -2,6 +2,7 @@
 from django.db import models
 from model_utils.models import TimeStampedModel
 from django.utils.translation import ugettext_lazy as _
+from django.core.validators import MaxValueValidator, MinValueValidator
 # from django.core.exceptions import ObjectDesNotExist
 
 # Project apps
@@ -68,7 +69,6 @@ class Contentblock(TimeStampedModel):
     # positions have free space inbetween to
     # make reordering possible without changing many objects in the database.
 
-    # @staticmethod
     def validate_columns(value, minvalue=1, maxvalue=12):
         if not minvalue <= value <= maxvalue:
             raise ValidationError(_('{} is not a number between {} and {}').format(value, minvalue, maxvalue))
@@ -86,7 +86,6 @@ class Contentblock(TimeStampedModel):
             self.randomsize()
         super().save()
 
-
     def __str__(self):
         return '%s %s %s %s' % (self.frontpage_story.headline, self.columns, self.height, self.position,)
 
@@ -98,7 +97,6 @@ class Contentblock(TimeStampedModel):
         self.height = choice(heights)
         self.save()
         print(self)
-
 
     @property
     def publication_date(self):
@@ -168,7 +166,16 @@ class FrontpageStory(TimeStampedModel):
         null=True, blank=True,
         help_text=_('image'),
     )
-
+    vertical_centre = models.PositiveSmallIntegerField(
+        default='50',
+        help_text=_('image crop vertical. Between 0 and 100.'),
+        validators=[MaxValueValidator(100), MinValueValidator(0)],
+    )
+    horizontal_centre = models.PositiveSmallIntegerField(
+        default='50',
+        help_text=_('image crop horizontal. Between 0 and 100.'),
+        validators=[MaxValueValidator(100), MinValueValidator(0)],
+    )
     headline = models.CharField(
         help_text=_('headline'),
         blank=True,
@@ -195,24 +202,22 @@ class FrontpageStory(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         if self.pk is None and self.story:
+            # default lede, kicker, headline and kicker is based on parent story.
             self.lede = self.lede or self.story.lede[:200]
             self.kicker = self.kicker or self.story.kicker[:200]
             self.headline = self.headline or self.story.title[:200]
             self.html_class = self.html_class or str(self.story.section)[:200].lower().replace(' ', '-')
             if self.image is None and not self.story.images.count() == 0:
                 self.image = self.story.images.first()
-            super().save(*args, **kwargs)
+            super().save()
         if self.placements.count() == 0 and not self.image is None:
+            # is automatically put on front page if it has an image.
             content_block = Contentblock(
                 frontpage_story=self,
                 frontpage=Frontpage.objects.root(),
             )
             content_block.save()
+        super().save()
 
     def __str__(self):
         return self.headline or self.story.title
-        # frontpage = self.placements.first()
-        # if frontpage:
-        #     return '%s %s' % (self.headline, frontpage)
-        # else:
-        #     return '%s %s' % (self.headline, 'ikke publisert')
