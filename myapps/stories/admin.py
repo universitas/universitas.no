@@ -14,6 +14,7 @@ import autocomplete_light
 
 from sorl.thumbnail import get_thumbnail
 
+
 class BylineInline(admin.TabularInline):
     form = autocomplete_light.modelform_factory(Byline)
     model = Byline
@@ -110,10 +111,23 @@ class StoryAdmin(admin.ModelAdmin):
         'status',
         # 'issue',
     )
-    fields = (
-        ('title', 'kicker', 'theme_word',),
-        ('story_type', 'publication_date', 'status',),
-        ('lede', 'bodytext_markup',),
+
+    readonly_fields=('legacy_html_source', 'legacy_prodsys_source',)
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('title', 'kicker', 'theme_word',),
+                ('story_type', 'publication_date', 'status',),
+                ('lede', 'bodytext_markup',),
+            )
+        }),
+        ('source', {
+            'classes': ('collapse',),
+            'fields': (
+                ('legacy_html_source', 'legacy_prodsys_source', ),
+            )
+        }),
     )
 
     inlines = [
@@ -131,6 +145,7 @@ class StoryAdmin(admin.ModelAdmin):
         # 'story_type__name',
         # 'bylines',
     )
+
     def display_bylines(self, instance):
         return mark_safe(instance.bylines_html) or " -- "
 

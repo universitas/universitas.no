@@ -22,6 +22,11 @@ BILDEMAPPE = os.path.join(settings.MEDIA_ROOT, '')
 PDFMAPPE = os.path.join(settings.MEDIA_ROOT, 'pdf')
 TIMEZONE = timezone.get_current_timezone()
 
+def main():
+    drop_images_stories_and_contributors()
+    # importer_utgaver_fra_gammel_webside()
+    importer_saker_fra_gammel_webside(last=100, order_by='-id_sak')
+    reset_db_autoincrement()
 
 def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
     if not webbilder:
@@ -32,26 +37,26 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
     else:
         webbilder = (webbilder,)
 
-    bildefiler = cache.get('bildefiler')
-    if not bildefiler:
-        # Dette tar litt tid, så det caches i redis, som kan huske det mellom skriptene kjører.
-        # TODO: Kanskje like raskt å bruke path.exists eller noe sånt?
-        bildefiler = set(
-            subprocess.check_output(
-                'cd %s; find -iname "*.jp*g" | sed "s,./,,"' % (BILDEMAPPE,),
-                shell=True,
-            ).decode("utf-8").splitlines()
-        )
-        cache.set('bildefiler', bildefiler)
+    # bildefiler = cache.get('bildefiler')
+    # if not bildefiler:
+    #     # Dette tar litt tid, så det caches i redis, som kan huske det mellom skriptene kjører.
+    #     # TODO: Kanskje like raskt å bruke path.exists eller noe sånt?
+    #     bildefiler = set(
+    #         subprocess.check_output(
+    #             'cd %s; find -iname "*.jp*g" | sed "s,./,,"' % (BILDEMAPPE,),
+    #             shell=True,
+    #         ).decode("utf-8").splitlines()
+    #     )
+    #     cache.set('bildefiler', bildefiler)
 
     for bilde in webbilder:
         path = bilde.path
         try:
             nyttbilde = ImageFile.objects.get(id=bilde.id_bilde)
         except ObjectDoesNotExist:
-            if path in bildefiler:
+            fullpath = os.path.join(BILDEMAPPE, path)
+            if os.path.exists(fullpath):
                 # bildet eksisterer på disk.
-                fullpath = os.path.join(BILDEMAPPE, path)
 
                 modified = datetime.datetime.fromtimestamp(
                     os.path.getmtime(fullpath), TIMEZONE)
@@ -70,8 +75,6 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
                 # senest kan ha blitt laget den dagen det ble publisert
                 created = min(dates)
 
-                contributor = identify_photo_file_initials(path)
-
                 try:
                     nyttbilde = ImageFile(
                         id=bilde.id_bilde,
@@ -79,7 +82,6 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
                         source_file=path,
                         created=created,
                         modified=modified,
-                        contributor=contributor,
                     )
                     nyttbilde.save()
                 except TypeError:
@@ -89,27 +91,6 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
                 nyttbilde = None
 
     return nyttbilde
-
-
-def identify_photo_file_initials(path, contributors=(),):
-    """
-    If passed a file path that matches the Universitas format for photo credit.
-    Searches database or optional iterable of contributors for a person that
-    matches initials at end of jpg-file name
-    """
-    filename_pattern = re.compile(r'^.+[-_]([A-ZÆØÅ]{2,5})\.jp.?g$')
-    match = filename_pattern.match(path)
-    if match:
-        initials = match.groups()[0]
-        for contributor in contributors:
-            if contributor.initials == initials:
-                return contributor
-        try:
-            return Contributor.objects.get(initials=initials)
-        except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
-            print(path, initials, e)
-
-    return None
 
 
 def importer_utgaver_fra_gammel_webside():
@@ -154,14 +135,17 @@ def importer_saker_fra_gammel_webside(first=0, last=20000, order_by='id_sak'):
             prodsak_id = None
         try:
             prodsak = Prodsak.objects.filter(prodsak_id=prodsak_id).order_by('-version_no').last()
+            print(prodsak.tekst[:30])
+            xtags = clean_up_prodsys_encoding(prodsak.tekst)
+            prodsys_source = xtags
             assert "Vellykket eksport fra InDesign!" in prodsak.kommentar
             assert "@tit:" in prodsak.tekst
-            xtags = clean_up_prodsys_encoding(prodsak.tekst)
-            fra_prodsys = True
+            from_prodsys=True
 
         except (AttributeError, TypeError, AssertionError) as e:
             xtags = websak_til_xtags(websak)
-            fra_prodsys = False
+            from_prodsys=False
+            # print (e)
 
         xtags = clean_up_html(xtags)
         xtags = clean_up_xtags(xtags)
@@ -170,7 +154,7 @@ def importer_saker_fra_gammel_webside(first=0, last=20000, order_by='id_sak'):
         publication_date = datetime.datetime(year, month, day, tzinfo=TIMEZONE)
         story_type = get_story_type(websak.mappe)
 
-        if fra_prodsys and prodsak_id and Story.objects.filter(prodsak_id=prodsak_id).exists():
+        if from_prodsys and Story.objects.filter(prodsak_id=prodsak_id).exists():
             # undersak har samme prodsak_id som hovedsak.
             new_story = Story.objects.get(prodsak_id=prodsak_id)
 
@@ -182,6 +166,9 @@ def importer_saker_fra_gammel_webside(first=0, last=20000, order_by='id_sak'):
                 story_type=story_type,
                 bodytext_markup=xtags,
                 prodsak_id=prodsak_id,
+                legacy_html_source=websak.brodtekst,
+                hit_count=websak.lesninger,
+                legacy_prodsys_source=prodsys_source,
             )
 
             new_story.save()
@@ -344,7 +331,6 @@ def drop_images_stories_and_contributors():
     print('sletter stories')
     Story.objects.all().delete()
 
-drop_images_stories_and_contributors()
-# importer_utgaver_fra_gammel_webside()
-importer_saker_fra_gammel_webside(last=100, order_by='-id_sak')
-reset_db_autoincrement()
+
+if __name__ == '__main__':
+    main()

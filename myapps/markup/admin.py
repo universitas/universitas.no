@@ -7,21 +7,21 @@ from django.contrib import admin
 from . import models
 
 
-# class BylineInline(admin.TabularInline):
-#     model = models.Byline
-#     extra = 0
-
-@admin.register(models.ProdsysTag)
-class ProdsysTagAdmin(admin.ModelAdmin):
+@admin.register(models.BlockTag)
+class BlockTagAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'xtag',
+        'start_tag',
+        # 'end_tag',
+        'action',
         'html_tag',
         'html_class',
     )
 
     list_editable = (
-        'xtag',
+        'start_tag',
+        # 'end_tag',
+        'action',
         'html_tag',
         'html_class',
     )
