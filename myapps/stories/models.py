@@ -541,7 +541,7 @@ class Byline(models.Model):
         match = byline_pattern.match(full_byline)
         try:
             d = match.groupdict()
-            full_name = d['full_name']
+            full_name = d['full_name'].title()
             title = d['title'] or ''
             credit = d['credit'].lower()
             initials = ''.join(letters[0] for letters in full_name.replace('-', ' ').split())
@@ -565,7 +565,7 @@ class Byline(models.Model):
         new_byline = cls(
             story=story,
             credit=credit,
-            title=title,
+            title=title[:200],
             contributor=contributor,
         )
         new_byline.save()
@@ -581,7 +581,10 @@ def clean_up_bylines(bylines):
 
     replacements = (
         # Symbols used to separate individual bylines.
-        (r'\r|;|•', r'\n', re.I),
+        (r'\r|;|•|\*', r'\n', re.I),
+
+        # Space after full stop
+        (r'\. *', r'. ', re.I),
 
         # A word that ends with colon must be at the beginning of a line.
         (r' +(\S*?:)', r'\n\1', 0),
@@ -589,7 +592,7 @@ def clean_up_bylines(bylines):
         # comma, and or "og" before two capitalised words probably means it's a new person. Insert newline.
         (r'\s*(,\s|\sog\s|\sand\s)\s*([A-ZÆØÅ][a-zæøå]+ [A-ZÆØÅ])', r'\n\2', 0),
 
-        # words in parntheses at end of line is probably some creditation. Put in front with colon instead.
+        # words in parantheses at end of line is probably some creditation. Put in front with colon instead.
         (r'^(.*?) *\(([^)]*)\) *$', r'\2: \1', re.M),
 
         # "Anmeldt av" is text credit.
