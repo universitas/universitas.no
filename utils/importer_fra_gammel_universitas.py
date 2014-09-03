@@ -56,7 +56,7 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
             nyttbilde = ImageFile.objects.get(id=bilde.id_bilde)
         except ObjectDoesNotExist:
             fullpath = os.path.join(BILDEMAPPE, path)
-            if os.path.exists(fullpath):
+            if os.path.isfile(fullpath):
                 # bildet eksisterer på disk.
 
                 modified = datetime.datetime.fromtimestamp(

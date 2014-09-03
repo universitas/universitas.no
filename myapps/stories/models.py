@@ -581,16 +581,16 @@ def clean_up_bylines(bylines):
 
     replacements = (
         # Symbols used to separate individual bylines.
-        (r'\r|;|•|\*', r'\n', re.I),
+        (r'\r|;|•|\*|·|/', r'\n', re.I),
 
-        # Space after full stop
-        (r'\. *', r'. ', re.I),
+        # No full stops
+        (r'\.', r' ', re.I),
 
         # A word that ends with colon must be at the beginning of a line.
         (r' +(\S*?:)', r'\n\1', 0),
 
         # comma, and or "og" before two capitalised words probably means it's a new person. Insert newline.
-        (r'\s*(,\s|\sog\s|\sand\s)\s*([A-ZÆØÅ][a-zæøå]+ [A-ZÆØÅ])', r'\n\2', 0),
+        (r'\s*(,\s|\s[oO]g\s|\s[aA]nd\s)\s*([A-ZÆØÅ][a-zæøå]+ [A-ZÆØÅ])', r'\n\2', 0),
 
         # words in parantheses at end of line is probably some creditation. Put in front with colon instead.
         (r'^(.*?) *\(([^)]*)\) *$', r'\2: \1', re.M),
@@ -609,6 +609,9 @@ def clean_up_bylines(bylines):
 
         # These words are stripped from start of line
         (r'^ *(,|og |and |av ) *', '', re.M + re.I),
+
+        # These words are stripped from after colon
+        (r': *(,|og |and |av ) *', ':', re.M + re.I),
 
         # Creditline with empty space after it is deleted.
         (r'^\S:\s*$', '', re.M),
