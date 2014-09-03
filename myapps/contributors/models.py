@@ -101,7 +101,7 @@ class Contributor(models.Model):
         if not contributor:
             contributor = cls(
                 display_name=full_name[:50],
-                initials=initials,
+                initials=initials[:5],
             )
             contributor.save()
         return contributor
