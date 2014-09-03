@@ -135,7 +135,6 @@ def importer_saker_fra_gammel_webside(first=0, last=20000, order_by='id_sak'):
             prodsak_id = None
         try:
             prodsak = Prodsak.objects.filter(prodsak_id=prodsak_id).order_by('-version_no').last()
-            print(prodsak.tekst[:30])
             xtags = clean_up_prodsys_encoding(prodsak.tekst)
             prodsys_source = xtags
             assert "Vellykket eksport fra InDesign!" in prodsak.kommentar

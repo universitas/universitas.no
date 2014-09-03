@@ -84,7 +84,9 @@ class StoryTypeInline(admin.TabularInline):
 
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
-
+    date_hierarchy = 'publication_date'
+    actions_on_top = True
+    actions_on_bottom = True
     save_on_top = True
     list_per_page = 25
     list_display = (
@@ -98,6 +100,7 @@ class StoryAdmin(admin.ModelAdmin):
         'status',
         'display_bylines',
         'image_count',
+        'hit_count',
         # 'issue',
     )
 

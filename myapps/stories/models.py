@@ -14,12 +14,12 @@ from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.safestring import mark_safe
-
+from django.db.models.fields import FieldDoesNotExist
 # Installed apps
 from model_utils.models import TimeStampedModel
 # Project apps
 from myapps.contributors.models import Contributor
-from myapps.markup.models import BlockTag
+from myapps.markup.models import BlockTag, InlineTag, Alias
 from myapps.photo.models import ImageFile
 from myapps.frontpage.models import FrontpageStory
 # from myapps.issues.models import PrintIssue
@@ -65,7 +65,7 @@ class TextContent(TimeStampedModel):
 
     bodytext_markup = models.TextField(
         blank=True,
-        default=_('Write your content here.'),
+        default='',
         help_text=_('Content with xtags markup.'),
         verbose_name=_('bodytext tagged text')
     )
@@ -78,114 +78,74 @@ class TextContent(TimeStampedModel):
         verbose_name=_('bodytext html tagged')
     )
 
-    def append_text_to_field(self, content, modelfield='bodytext_markup'):
+    def append(self, tag, content, modelfield=None):
         """ Appends content(string) to a modelfield """
+        modelfield = modelfield or 'bodytext_markup'
+        if modelfield != 'bodytext_markup':
+            tag = ''
         try:
-            field = getattr(self, modelfield)
-            field += '{}\n'.format(content)
+            content = '{}\n{}{}'.format(getattr(self, modelfield), tag, content).strip()
+            setattr(self, modelfield, content)
             return self
-        except Exception as e:
-            raise e
-            self.parent_story.append_text_to_field(content, modelfield)
+        except (AttributeError, FieldDoesNotExist,) as e:
+            self.parent_story.append(tag, content, modelfield)
+
+    def new(self, *args, **kwargs):
+        # pass it up.
+        return self.parent_story.new(*args, **kwargs)
+
+    def drop(self, *args, **kwargs):
+        # do nothing
+        pass
 
     def get_html(self):
         return mark_safe(self.bodytext_html)
 
     def save(self, *args, **kwargs):
-        # try:
-        #     original = Story.objects.get(pk=self.pk)
-        #     if original.bodytext_markup != self.bodytext_markup:
-        # self.clean_markup()
-        # except ObjectDoesNotExist:
-        # new story
-        #     super().save(*args, **kwargs)
-        # self.clean_markup()
-
+        try:
+            saved_markup = type(self).objects.get(pk=self.pk).bodytext_markup
+        except ObjectDoesNotExist:
+            super().save(*args, **kwargs)
+            saved_markup = ''
+        if saved_markup != self.bodytext_markup:
+            self.clean_markup()
+            self.make_html()
         super().save(*args, **kwargs)
 
+    def clean_markup(self):
+        bodytext = []
+        for paragraph in self.bodytext_markup.splitlines():
+            paragraph = Alias.objects.replace(content=paragraph, timing=1)
+            bodytext.append(paragraph)
+        self.bodytext_markup = '\n'.join(bodytext)
 
-    # def sort_paragraphs_by_tag(self, tag, paragraph_text):
-    #     """ Magical sorting hat that puts each paragraph into the relevant bucket before saving or generating html. """
-    # The bucket that the current paragraph will be put into.
-    #     bucket = self.bucket
+    def parse_markup(self):
+        paragraphs = self.bodytext_markup.splitlines()
+        self.bodytext_markup = ''
 
-    #     if not paragraph_text:
-    # empty paragraphs goes into the trashcan.
-    #         bucket = []
+        target = self
+        for paragraph in paragraphs:
+            blocktag = BlockTag.objects.match_or_create(paragraph)
+            tag, content = blocktag.split(paragraph)
+            function_name, field = blocktag.action.split(':')
+            action = getattr(target, function_name)
+            new_target = action(tag, content, field) or target
+            if new_target != target != self:
+                target.save()
+            target = new_target
 
-    #     elif tag in ('headline', 'ing', 'stikktit', 'temaord', 'bl', 'sitat', 'fakta'):
-    # special self.buckets used to populate modelfields in main story.
-    #         bucket = self.buckets[tag]
-    #         if tag == 'bl':
-    # split individual bylines with linebreak.
-    #             paragraph_text = clean_up_bylines(paragraph_text) + '\n'
-    #             paragraph_text = paragraph_text.replace('\n', self.SPLIT_HERE)
+        if target != self:
+            target.save()
 
-    #         if tag in ('sitat', 'fakta',):
-    # start new aside or pullquote and collect next paragraphs in the same bucket
-    #             self.bucket = bucket
-    #             if bucket:
-    # Not the first pullquote or aside.
-    #                 bucket.append(self.SPLIT_HERE)
-    #         else:
-    # paragraphs in these buckets don't need the tags anymore.
-    #             tag = None
-
-    #     elif tag in ('sitatbyline', 'kilde',):
-    # finishes aside or pullquote
-    #         self.bucket = self.buckets[self.DEFAULT_TAG]
-
-    #     elif tag in ('txt', 'mt'):
-    # just to be sure that these always are in the default bucket, if someone does't close a pullquote properly.
-    #         if tag == 'txt':
-    #             tag = ''
-    #         bucket = self.bucket = self.buckets[self.DEFAULT_TAG]
-
-    #     if tag:
-    # add tag back.
-    #         paragraph_text = self.XTAG_FORMAT % (tag, paragraph_text)
-
-    #     bucket.append(paragraph_text)
-
-    # def clean_markup(self):
-    #     """
-    #     Cleans up markup and populates model fields based on current xtags.
-    #     """
-    #     self.buckets = defaultdict(list)
-    #     self.bucket = self.buckets[self.DEFAULT_TAG]
-
-    #     input_markup = self.bodytext_markup.splitlines()
-    #     self.tag = self.DEFAULT_TAG
-
-    # Find correct tag for each paragraph and sort them into body text or other bucket.
-    #     for paragraph in input_markup:
-    #         paragraph = paragraph.strip()
-    #         starts_with_tag = self.XTAG_REGEXP.match(paragraph)
-    #         if starts_with_tag:
-    #             self.tag, text = starts_with_tag.groups()
-    # else:  # ingen tag!
-    #             text = paragraph
-    #             self.tag = ''
-    #         self.sort_paragraphs_by_tag(self.tag, text)
-
-    # joins text strings in all the self.buckets
-    #     for key in self.buckets:
-    #         self.buckets[key] = '\n'.join(self.buckets[key])
-
-    #     self.bodytext_markup = self.buckets[self.DEFAULT_TAG]
-    #     self.bodytext_html = self.wrapInHTML()
-
-    # def wrapInHTML(self):
-    #     """ Return HTML representation of body text """
-    #     html = []
-    #     for paragraph in self.bodytext_markup.splitlines():
-    #         try:
-    #             tag, text = self.XTAG_REGEXP.match(paragraph).groups()
-    # except AttributeError:  # no tag.
-    #             tag, text = self.DEFAULT_TAG, paragraph
-    #         html.append(BlockTag.wrap_text(tag, text))
-    #     html_bodytext = '\n'.join(html)
-    #     return html_bodytext
+    def make_html(self):
+        self.bodytext_html = ''
+        html = []
+        paragraphs = self.bodytext_markup.splitlines()
+        for paragraph in paragraphs:
+            paragraph = BlockTag.objects.make_html(paragraph)
+            paragraph = InlineTag.objects.make_html(paragraph)
+            html.append(paragraph)
+        self.bodytext_html = '\n'.join(html)
 
 
 class PublishedStoryManager(models.Manager):
@@ -337,8 +297,6 @@ class Story(TextContent):
         self.slug = slugify(self.title).replace('_', '')[:50]
         self.bylines_html = self.get_bylines_as_html()
         super(Story, self).save(*args, **kwargs)
-        if not self.title:
-            print(self.story_type, self.bodytext_html[:20], self.pk)
 
         if self.frontpagestory_set.count() == 0:
             frontpagestory = FrontpageStory(
@@ -357,14 +315,14 @@ class Story(TextContent):
             },)
         return url
 
-    def new_element(self, content, element):
+    def new(self, tag, content, element):
         """ Add a story element """
         if element == "byline":
             bylines_raw = clean_up_bylines(content)
-            for byline in bylines_raw.splitlines():
+            for raw_byline in bylines_raw.splitlines():
                 Byline.create(
                     story=self,
-                    full_byline=content,
+                    full_byline=raw_byline,
                     initials='',  # TODO: send over initials?
                 )
             return self
@@ -373,69 +331,17 @@ class Story(TextContent):
             new_element = Aside(
                 parent_story=self,
             )
-            return new_element.append_text_to_field(content)
+            return new_element.append(tag, content)
 
         elif element == "pullquote":
             new_element = Pullquote(
                 parent_story=self,
             )
-            return new_element.append_text_to_field(content)
+            return new_element.append(tag, content)
 
-    def drop(self, *args, **kwargs):
-        # do nothing.
-        pass
-
-    # def clean_markup(self, *args, **kwargs):
-
-    #     super().clean_markup(*args, **kwargs)
-
-    #     self.title = self.buckets.get("headline", self.title)
-    #     self.kicker = self.buckets.get("stikktit", self.kicker)
-    #     self.lede = self.buckets.get("ing", self.lede)
-    #     self.theme_word = self.buckets.get("temaord", self.theme_word)
-    #     if len(self.theme_word) > 100:
-    # Feil tagging i prodsys - for langt temaord
-    #         self.buckets['txt'] = self.theme_word + self.buckets['txt']
-    #         self.theme_word = ''
-    #     bylines = self.buckets.get("bl", "").split(self.SPLIT_HERE)
-    #     pullquotes = self.buckets.get("sitat", "").split(self.SPLIT_HERE)
-    #     asides = self.buckets.get("fakta", "").split(self.SPLIT_HERE)
-
-    #     for byline in bylines:
-    #         if byline:
-    #             Byline.create(
-    #                 story=self,
-    #                 full_byline=byline,
-    # initials='',  # TODO: send over initials?
-    #             )
-
-    #     for pullquote in pullquotes:
-    #         if pullquote:
-    #             needle = re.sub('@\S+:|«|»', '', pullquote.splitlines()[0].lower())[:30].strip()
-    #             paragraphs = self.bodytext_markup.splitlines()
-    #             bottom = len(paragraphs) or 1
-    #             for depth, haystack in enumerate(paragraphs):
-    #                 if needle in haystack.lower():
-    #                     break
-    #             else:
-    #                 depth = 0
-    #             position = int(StoryElement.MAXPOSITION * depth / bottom)
-
-    #             new_pullquote = Pullquote(
-    #                 parent_story=self,
-    #                 bodytext_markup=pullquote,
-    #                 position=position,
-    #             )
-    #             new_pullquote.save()
-
-    #     for aside in asides:
-    #         if aside:
-    #             new_aside = Aside(
-    #                 parent_story=self,
-    #                 bodytext_markup=aside,
-    #                 position=0,
-    #             )
-    #             new_aside.save()
+    def clean_markup(self, *args, **kwargs):
+        super().clean_markup(*args, **kwargs)
+        self.parse_markup()
 
     @classmethod
     def populate_frontpage(cls):
@@ -546,6 +452,7 @@ class StoryImage(StoryMedia):
 
     imagefile = models.ForeignKey(ImageFile)
 
+
 class StoryVideo(StoryMedia):
 
     """ Video content connected to a story """
@@ -557,7 +464,7 @@ class StoryVideo(StoryMedia):
     vimeo_id = models.PositiveIntegerField(
         verbose_name=_('vimeo id number'),
         help_text=_('The number at the end of the url for this video at vimeo.com'),
-        )
+    )
 
 
 class Section(models.Model):
@@ -667,7 +574,6 @@ class Byline(models.Model):
 
 
 def clean_up_bylines(bylines):
-
     """
     clean_up_bylines(string) -> string
     Normalise misformatting and idiosyncraticies of bylines in legacy data.
