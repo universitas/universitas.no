@@ -298,11 +298,11 @@ class Story(TextContent):
         self.bylines_html = self.get_bylines_as_html()
         super(Story, self).save(*args, **kwargs)
 
-        if self.frontpagestory_set.count() == 0:
-            frontpagestory = FrontpageStory(
-                story=self,
-            )
-            frontpagestory.save()
+        # if self.frontpagestory_set.count() == 0:
+        #     frontpagestory = FrontpageStory(
+        #         story=self,
+        #     )
+        #     frontpagestory.save()
 
     def get_absolute_url(self):
         from django.core.urlresolvers import reverse

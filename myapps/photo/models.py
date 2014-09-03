@@ -69,7 +69,8 @@ class ImageFile(TimeStampedModel):
         return None
     def save(self, *args, **kwargs):
         if self.contributor is None:
-            self.contributor = self.identify_photo_file_initials()
+            pass
+            # self.contributor = self.identify_photo_file_initials()
         super().save(*args, **kwargs)
 
 
