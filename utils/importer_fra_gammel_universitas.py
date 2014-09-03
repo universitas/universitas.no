@@ -25,7 +25,8 @@ TIMEZONE = timezone.get_current_timezone()
 def main():
     drop_images_stories_and_contributors()
     # importer_utgaver_fra_gammel_webside()
-    importer_saker_fra_gammel_webside(last=100, order_by='-id_sak')
+    # importer_saker_fra_gammel_webside(last=100, order_by='-id_sak')
+    importer_saker_fra_gammel_webside()
     reset_db_autoincrement()
 
 def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
@@ -124,6 +125,7 @@ def importer_utgaver_fra_gammel_webside():
 def importer_saker_fra_gammel_webside(first=0, last=20000, order_by='id_sak'):
     websaker = Sak.objects.exclude(publisert=0).order_by(order_by)[first:last]
     for websak in websaker:
+        prodsys_source = ''
         if Story.objects.filter(pk=websak.pk):
             print('sak %s finnes' % (websak.pk,))
             continue
