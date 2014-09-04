@@ -151,7 +151,7 @@ class BlockTag(MarkupTag):
 
     def make_html(self, content):
         if self.match(content):
-            html_block = '<{tag}{class_parameter}">{content}</{tag}>'.format(
+            html_block = '<{tag}{class_parameter}>{content}</{tag}>'.format(
                 tag=self.html_tag,
                 class_parameter=self.get_html_class(),
                 content=self.split(content)[1],

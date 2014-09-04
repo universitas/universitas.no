@@ -11,23 +11,25 @@ from django.utils import timezone
 from django.core.cache import cache
 from django.conf import settings
 from myapps.legacy_db.models import Bilde, Sak, Prodsak
-from myapps.stories.models import Story, StoryType, Section, StoryImage
+from myapps.stories.models import Story, StoryType, Section, StoryImage, InlineLink
 from myapps.photo.models import ImageFile
 from myapps.issues.models import PrintIssue
 from myapps.contributors.models import Contributor
-
+from django.core import serializers
 
 BILDEMAPPE = os.path.join(settings.MEDIA_ROOT, '')
 
 PDFMAPPE = os.path.join(settings.MEDIA_ROOT, 'pdf')
 TIMEZONE = timezone.get_current_timezone()
 
+
 def main():
-    drop_images_stories_and_contributors()
+    # drop_images_stories_and_contributors()
     # importer_utgaver_fra_gammel_webside()
-    # importer_saker_fra_gammel_webside(last=100, order_by='-id_sak')
-    importer_saker_fra_gammel_webside()
+    importer_saker_fra_gammel_webside(last=400, order_by='-id_sak')
+    # importer_saker_fra_gammel_webside()
     reset_db_autoincrement()
+
 
 def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
     if not webbilder:
@@ -38,17 +40,17 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
     else:
         webbilder = (webbilder,)
 
-    # bildefiler = cache.get('bildefiler')
-    # if not bildefiler:
-    #     # Dette tar litt tid, så det caches i redis, som kan huske det mellom skriptene kjører.
-    #     # TODO: Kanskje like raskt å bruke path.exists eller noe sånt?
-    #     bildefiler = set(
-    #         subprocess.check_output(
-    #             'cd %s; find -iname "*.jp*g" | sed "s,./,,"' % (BILDEMAPPE,),
-    #             shell=True,
-    #         ).decode("utf-8").splitlines()
-    #     )
-    #     cache.set('bildefiler', bildefiler)
+    bildefiler = cache.get('bildefiler')
+    if not bildefiler:
+        # Dette tar litt tid, så det caches i redis, som kan huske det mellom skriptene kjører.
+        # TODO: Kanskje like raskt å bruke path.exists eller noe sånt?
+        bildefiler = set(
+            subprocess.check_output(
+                'cd %s; find -iname "*.jp*g" | sed "s,./,,"' % (BILDEMAPPE,),
+                shell=True,
+            ).decode("utf-8").splitlines()
+        )
+        cache.set('bildefiler', bildefiler)
 
     for bilde in webbilder:
         path = bilde.path
@@ -90,6 +92,7 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
                     nyttbilde = None
             else:
                 nyttbilde = None
+                assert not (path in bildefiler)
 
     return nyttbilde
 
@@ -136,16 +139,16 @@ def importer_saker_fra_gammel_webside(first=0, last=20000, order_by='id_sak'):
             # Gamle greier eller opprettet i nettavisa.
             prodsak_id = None
         try:
-            prodsak = Prodsak.objects.filter(prodsak_id=prodsak_id).order_by('-version_no').last()
+            prodsak = Prodsak.objects.filter(prodsak_id=prodsak_id).order_by('-version_no').first()
+            prodsys_source = serializers.serialize('json', (prodsak,))
             xtags = clean_up_prodsys_encoding(prodsak.tekst)
-            prodsys_source = xtags
             assert "Vellykket eksport fra InDesign!" in prodsak.kommentar
             assert "@tit:" in prodsak.tekst
-            from_prodsys=True
+            from_prodsys = True
 
         except (AttributeError, TypeError, AssertionError) as e:
             xtags = websak_til_xtags(websak)
-            from_prodsys=False
+            from_prodsys = False
             # print (e)
 
         xtags = clean_up_html(xtags)
@@ -167,12 +170,13 @@ def importer_saker_fra_gammel_webside(first=0, last=20000, order_by='id_sak'):
                 story_type=story_type,
                 bodytext_markup=xtags,
                 prodsak_id=prodsak_id,
-                legacy_html_source=websak.brodtekst,
+                legacy_html_source=serializers.serialize('json', (websak,)),
                 hit_count=websak.lesninger,
                 legacy_prodsys_source=prodsys_source,
             )
 
             new_story.save()
+            InlineLink.find_links(new_story)
 
         print(new_story, new_story.pk)
 
@@ -267,9 +271,8 @@ def clean_up_html(html):
         (r'<\W*(b|strong) *>', '*', re.IGNORECASE),  # strong tags -> asterix
         (r'< *li *>', '\n@li:', re.IGNORECASE),  # list tags -> @li:
         (r'<.*?>', '', 0),  # delete all other tags.
-        # TODO: Keep data from <a href= somehow.
     )
-
+    html = InlineLink.convert_html_links(html)
     for pattern, replacement, flags in replacements:
         html = re.sub(pattern, replacement, html, flags=flags)
 
@@ -286,8 +289,9 @@ def clean_up_prodsys_encoding(text):
 
 
 def clean_up_xtags(xtags):
-    """ Fixes some characters and stuff in old prodsys implementation.
-        string -> string
+    """
+    Fixes some characters and stuff in old prodsys implementation.
+    string -> string
     """
     xtags = xtags.replace('@tit:', '@headline:', 1)
     replacements = (
@@ -299,7 +303,7 @@ def clean_up_xtags(xtags):
         (r'»\b', r'«', 0),  # left side of words.
         (r'^# ?', '@li:', re.M),  # list
         # TODO: Decide which tag to use for list elements.
-        (r'^(\W*)[*_]([^*_\n]*)[*_]$', r'@spm:\1\2', re.I + re.M),  # inline italic full line.
+        (r'^(\W*)[*_]([^*_\n]*\?)[*_]$', r'@spm:\1\2', re.I + re.M),  # inline italic full line.
         (r'^(\W*)\*([^*\n]*)\*', r'@tingo:\1\2', re.I + re.M),  # inline bold starts word
         (r'(^|@[^:]+:) *- *', r'\1– ', 0),  # line starts with hyphen. Should be ndash
         (r' *$', '', re.M),  # trim trailing spaces.
@@ -320,7 +324,6 @@ def reset_db_autoincrement():
     cursor.execute("SELECT setval('photo_imagefile_id_seq', (SELECT MAX(id) FROM photo_imagefile)+1)")
     cursor.execute("SELECT setval('stories_story_id_seq', (SELECT MAX(id) FROM stories_story)+1)")
     cursor.execute("SELECT setval('django_migrations_id_seq', (SELECT MAX(id) FROM django_migrations)+1)")
-
 
 
 def drop_images_stories_and_contributors():

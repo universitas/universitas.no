@@ -1,4 +1,3 @@
-import re
 import difflib
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -79,7 +78,6 @@ class Contributor(models.Model):
                 contributors = base_query.filter(initials__iexact=initials)
                 for contributor in contributors:
                     ratio = difflib.SequenceMatcher(None, contributor.display_name, full_name).ratio()
-                    # print('"%s" -- "%s" : %s' % (contributor.display_name, full_name, ratio))
                     if ratio >= 0.8:
                         # TODO: contributor addalias(newalias-maybe).
                         # TODO: contributor merge.

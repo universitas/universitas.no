@@ -1,17 +1,12 @@
-body {
-    // background: #FFFFDD;
-}
-.vimeo-container {
-    position: relative;
-    padding-bottom: 56.25%;
-    padding-top: 30px;
-    height: 0;
-    overflow: hidden;
-}
-.vimeo {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
+@charset "UTF-8";
+
+@import "includes/googlefonts";
+
+@import "normalize";
+// foundation scss components
+// foundation overrides
+@import "foundation/settings";
+@import "foundation";
+
+// vimeo custom css - but foundation has some better solution here, called flex-video.
+// @import "includes/vimeo";

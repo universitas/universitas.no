@@ -3,18 +3,21 @@
 
 # Python standard library
 import re
+import difflib
 # import html
-from collections import defaultdict
+# from collections import defaultdict
 
 # Django core
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.utils import translation
+from django.conf import settings
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, URLValidator, ValidationError
 from django.utils.safestring import mark_safe
-from django.db.models.fields import FieldDoesNotExist
+# from django.db.models.fields import FieldDoesNotExist
 # Installed apps
 from model_utils.models import TimeStampedModel
 # Project apps
@@ -53,15 +56,10 @@ class StoryType(models.Model):
 
 class TextContent(TimeStampedModel):
 
-    XTAG_FORMAT = '@%s:%s'
-    XTAG_REGEXP = re.compile(r'^@([^ :]+): ?(.*)$')
-    DEFAULT_TAG = 'txt'
-    SPLIT_HERE = '¦\n'
+    """ Abstract superclass for stories and related text elements. """
 
     class Meta:
         abstract = True
-        verbose_name = _('text content')
-        # app_label = 'stories'
 
     bodytext_markup = models.TextField(
         blank=True,
@@ -78,27 +76,8 @@ class TextContent(TimeStampedModel):
         verbose_name=_('bodytext html tagged')
     )
 
-    def append(self, tag, content, modelfield=None):
-        """ Appends content(string) to a modelfield """
-        modelfield = modelfield or 'bodytext_markup'
-        if modelfield != 'bodytext_markup':
-            tag = ''
-        try:
-            content = '{}\n{}{}'.format(getattr(self, modelfield), tag, content).strip()
-            setattr(self, modelfield, content)
-            return self
-        except (AttributeError, FieldDoesNotExist,) as e:
-            self.parent_story.append(tag, content, modelfield)
-
-    def new(self, *args, **kwargs):
-        # pass it up.
-        return self.parent_story.new(*args, **kwargs)
-
-    def drop(self, *args, **kwargs):
-        # do nothing
-        pass
-
     def get_html(self):
+        """ Returns text content as html. """
         return mark_safe(self.bodytext_html)
 
     def save(self, *args, **kwargs):
@@ -113,39 +92,77 @@ class TextContent(TimeStampedModel):
         super().save(*args, **kwargs)
 
     def clean_markup(self):
+        """ Cleans up and normalises raw input from user or import. """
         bodytext = []
         for paragraph in self.bodytext_markup.splitlines():
             paragraph = Alias.objects.replace(content=paragraph, timing=1)
             bodytext.append(paragraph)
         self.bodytext_markup = '\n'.join(bodytext)
 
+    def make_html(self):
+        """ Create html body text from markup """
+        html_blocks = []
+        paragraphs = self.bodytext_markup.splitlines()
+        for paragraph in paragraphs:
+            # Apply block scope tags.
+            paragraph = BlockTag.objects.make_html(paragraph)
+            # Apply inline tags.
+            paragraph = InlineTag.objects.make_html(paragraph)
+            html_blocks.append(paragraph)
+        self.bodytext_html = '\n\n'.join(html_blocks)
+
     def parse_markup(self):
+        """ Use raw input tagged text to populate fields and create related objects """
         paragraphs = self.bodytext_markup.splitlines()
         self.bodytext_markup = ''
 
         target = self
+        # Target is the model instance that will receive following line of text.
+        # It could be the main article, or some related element, such as multi
+        # paragraph aside.
         for paragraph in paragraphs:
             blocktag = BlockTag.objects.match_or_create(paragraph)
-            tag, content = blocktag.split(paragraph)
+            tag, text_content = blocktag.split(paragraph)
             function_name, field = blocktag.action.split(':')
+            # The blocktag table contains instructions for the various kinds of tags
+            # that exists. Actions are "append", "new" and "drop".
             action = getattr(target, function_name)
-            new_target = action(tag, content, field) or target
+            new_target = action(tag, text_content, field)
+            # new target could be newly created object or a parent element.
             if new_target != target != self:
+                # This story element is completed.
                 target.save()
             target = new_target
 
         if target != self:
             target.save()
 
-    def make_html(self):
-        self.bodytext_html = ''
-        html = []
-        paragraphs = self.bodytext_markup.splitlines()
-        for paragraph in paragraphs:
-            paragraph = BlockTag.objects.make_html(paragraph)
-            paragraph = InlineTag.objects.make_html(paragraph)
-            html.append(paragraph)
-        self.bodytext_html = '\n'.join(html)
+    def append(self, tag, content, modelfield=None):
+        """ Appends content(string) to a modelfield by string reference. """
+        modelfield = modelfield or 'bodytext_markup'
+        if modelfield != 'bodytext_markup':
+            tag = ''
+        try:
+            content = '{old_content}\n{tag}{added_content}'.format(
+                old_content=getattr(self, modelfield),
+                tag=tag,
+                added_content=content,
+            ).strip()
+            setattr(self, modelfield, content)
+            return self
+        except (AttributeError,):
+            # No such field. Try the main story instead.
+            return self.parent_story.append(tag, content, modelfield)
+
+    def new(self, *args, **kwargs):
+        """ Create new related story element. """
+        # Send control up to parent story instance.
+        return self.parent_story.new(*args, **kwargs)
+
+    def drop(self, *args, **kwargs):
+        """ Returns self and ignores any arguments """
+        # It's almost as fast as /dev/null.
+        return self
 
 
 class PublishedStoryManager(models.Manager):
@@ -153,6 +170,14 @@ class PublishedStoryManager(models.Manager):
     def published(self):
         now = timezone.now()
         return super().get_queryset().filter(status=Story.STATUS_PUBLISHED).filter(publication_date__lt=now)
+
+    def populate_frontpage(self):
+        """ create some random frontpage stories """
+        FrontpageStory.objects.all().delete()
+        # TODO: Funker bare for 2014
+        new_stories = self.filter(publication_date__year=2014).order_by('publication_date')
+        for story in new_stories:
+            story.save()
 
 
 class Story(TextContent):
@@ -240,6 +265,7 @@ class Story(TextContent):
     )
     images = models.ManyToManyField(
         ImageFile, through='StoryImage',
+        help_text=_('connected images with captions.'),
         verbose_name=_('images'),
     )
     hit_count = models.PositiveIntegerField(
@@ -254,14 +280,17 @@ class Story(TextContent):
     )
     legacy_html_source = models.TextField(
         blank=True, null=True, editable=False,
-        verbose_name=('Original html from old web page.'),
+        help_text=_('From old web page. For reference only.'),
+        verbose_name=('Imported html source.'),
     )
     legacy_prodsys_source = models.TextField(
         blank=True, null=True, editable=False,
-        verbose_name=('Original text in prodsys.'),
+        help_text=_('From prodsys. For reference only.'),
+        verbose_name=('Imported xtagged source.'),
     )
 
     def increment_hit_count(self):
+        """ One visitor """
         self.views += 1
         self.save(update_fields=['hit_count'])
 
@@ -270,8 +299,7 @@ class Story(TextContent):
             self.title, self.publication_date)
 
     def get_bylines_as_html(self):
-        from django.utils import translation
-        from django.conf import settings
+        """ create html table of bylines in db for search and admin display """
         translation.activate(settings.LANGUAGE_CODE)
         all_bylines = ['<table class="admin-bylines">']
         for bl in self.byline_set.select_related('contributor'):
@@ -298,11 +326,11 @@ class Story(TextContent):
         self.bylines_html = self.get_bylines_as_html()
         super(Story, self).save(*args, **kwargs)
 
-        # if self.frontpagestory_set.count() == 0:
-        #     frontpagestory = FrontpageStory(
-        #         story=self,
-        #     )
-        #     frontpagestory.save()
+        if self.frontpagestory_set.count() == 0:
+            frontpagestory = FrontpageStory(
+                story=self,
+            )
+            frontpagestory.save()
 
     def get_absolute_url(self):
         from django.core.urlresolvers import reverse
@@ -316,7 +344,7 @@ class Story(TextContent):
         return url
 
     def new(self, tag, content, element):
-        """ Add a story element """
+        """ Add a story element to the main story """
         if element == "byline":
             bylines_raw = clean_up_bylines(content)
             for raw_byline in bylines_raw.splitlines():
@@ -331,25 +359,18 @@ class Story(TextContent):
             new_element = Aside(
                 parent_story=self,
             )
-            return new_element.append(tag, content)
 
         elif element == "pullquote":
             new_element = Pullquote(
                 parent_story=self,
             )
-            return new_element.append(tag, content)
+
+        return new_element.append(tag, content)
 
     def clean_markup(self, *args, **kwargs):
+        """ Clean user input and populate fields """
         super().clean_markup(*args, **kwargs)
         self.parse_markup()
-
-    @classmethod
-    def populate_frontpage(cls):
-        FrontpageStory.objects.all().delete()
-        # TODO: Funker bare for 2014
-        new_stories = cls.objects.filter(publication_date__year=2014).order_by('publication_date')
-        for story in new_stories:
-            story.save()
 
 
 class StoryElement(models.Model):
@@ -359,8 +380,10 @@ class StoryElement(models.Model):
     MAXPOSITION = 10000
     parent_story = models.ForeignKey('Story')
     published = models.BooleanField(
+        default=True,
         help_text=_('Choose whether this element is published'),
-        default=True)
+        verbose_name=_('published')
+    )
     position = models.PositiveSmallIntegerField(
         default=0,
         validators=[
@@ -368,12 +391,226 @@ class StoryElement(models.Model):
             MinValueValidator(0)],
         help_text=_(
             'Where in the story does this belong? {start} = At the very beginning, {end} = At the end.'.format(
-                start=0,
-                end=MAXPOSITION)))
+                start=0, end=MAXPOSITION)),
+        verbose_name=_('position'),
+    )
 
     class Meta:
         abstract = True
-        # app_label = 'stories'
+
+
+class InlineLink(models.Model):
+
+    # Link looks like this: [[1:this is a link:www.universitas.no]]
+    # or                    [[1:this is a link]]
+    # or                    [[1]]
+
+    TOKEN_START = '|'
+    TOKEN_END = '|'
+    TOKEN_SEP = '|'
+
+    parent_story = models.ForeignKey(
+        Story,
+        related_name='inline_links'
+    )
+
+    # def autolabel(self):
+    #     return '{}'.format(self.parent_story.autolabel_set.count() + 1)
+
+    label = models.CharField(
+        default='1',
+        max_length=500,
+        help_text=_('short label'),
+        verbose_name=_('link shorthand'),
+    )
+
+    text = models.CharField(
+        max_length=1000,
+        help_text=_('link text'),
+        verbose_name=_('link text'),
+    )
+
+    alt_text = models.CharField(
+        max_length=500,
+        blank=True,
+        editable=False,
+        help_text=_('alternate link text'),
+        verbose_name=_('alt text'),
+    )
+
+    href = models.CharField(
+        blank=True,
+        max_length=500,
+        help_text=_('link target'),
+        verbose_name=_('link target'),
+    )
+
+    status_code = models.CharField(
+        max_length=3,
+        editable=False,
+        default='',
+        help_text=_('Status code returned from automatic check.'),
+        verbose_name=_('http status code'),
+    )
+
+    pass
+    linked_story = models.ForeignKey(
+        Story,
+        blank=True, null=True,
+        help_text=_('link to story on this website.'),
+        verbose_name=_('linked story'),
+        related_name='incoming_links',
+    )
+
+    @property
+    def link(self):
+        if self.linked_story:
+            return self.linked_story.get_absolute_url()
+        elif self.href:
+            return self.href
+        raise LookupError('No link exists.')
+
+    def find_linked_story(self):
+        try:
+            match = re.search(r'/.+?/(?P<id>\d+)/', self.href)
+            story_id = int(match.groupdict()['id'])
+            self.linked_story = Story.objects.get(pk=story_id)
+            self.href = None
+            return True
+        except (AttributeError, ObjectDoesNotExist) as e:
+            print(e)
+            return False
+
+    def check_link(self, method='head'):
+        """ Checks if link is still active. """
+        from requests import request
+        status_code = str(request(method, self.link).status_code)
+        if status_code != self.status_code:
+            self.status_code = status_code
+        return status_code
+
+    @classmethod
+    def find_links(cls, parent_story):
+        """ Find links in parent story """
+        bodytext = parent_story.bodytext_markup
+        bodytext = cls.convert_html_links(bodytext)
+        pattern = '{start}{label}{text}{href}{end}'.format(
+            start=re.escape(cls.TOKEN_START),
+            end=re.escape(cls.TOKEN_END),
+            label='(?P<label>.*?)',
+            text='(?P<text>{sep}.*?)?',
+            href='(?P<href>{sep}.*?)?',
+        ).format(sep=re.escape(cls.TOKEN_SEP),)
+        found_links = re.finditer(pattern, bodytext)
+        for match in found_links:
+            fullmatch = match.group(0)
+            label = match.group('label')
+            text = (match.group('text') or '').lstrip(cls.TOKEN_SEP)
+            href = (match.group('href') or '').lstrip(cls.TOKEN_SEP)
+            href = cls.validate_url((href or text or label)) or ''
+            label = label or text
+            link = cls.objects.get_or_create(parent_story=parent_story, label=label)[0]
+            if href:
+                link.href = href
+            if text:
+                link.text = text
+            link.find_linked_story()
+            link.check_link()
+            link.save()
+            if link.label == link.text:
+                substitution = '{start}{label}{end}'
+            else:
+                substitution = '{start}{label}{sep}{text}{end}'
+            substitution = substitution.format(
+                start=cls.TOKEN_START,
+                end=cls.TOKEN_END,
+                sep=cls.TOKEN_SEP,
+                label=link.label,
+                text=link.text,
+            )
+            bodytext = re.sub(fullmatch, substitution, bodytext)
+        if parent_story.bodytext_markup != bodytext:
+            parent_story.bodytext_markup = bodytext
+            parent_story.save()
+
+    @classmethod
+    def convert_html_links(cls, bodytext):
+        """ convert <a href=""> to other tag """
+        from bs4 import BeautifulSoup
+        import random
+        soup = BeautifulSoup(bodytext)
+        label = 0
+        linkstyles = (
+            '{start}{label}{sep}{text}{sep}{href}{end}',
+            #     '{start}{text}{sep}{href}{end}',
+            #     '{start}{label}{sep}{href}{end}',
+            #     '{start}{text}{end}',
+            #     '{start}{href}{end}',
+        )
+        for link in soup.find_all('a'):
+            print(link)
+            label += 1
+            href = link.get('href')
+            # alt_text = link.get('alt')
+            text = link.text
+            if href:
+                replacement = random.choice(linkstyles).format(
+                    start=cls.TOKEN_START,
+                    end=cls.TOKEN_END,
+                    sep=cls.TOKEN_SEP,
+                    label=label,
+                    href=href.strip(),
+                    text=text.strip(),
+                )
+            else:
+                replacement = '{text}'.format(text=text,)
+            link.replace_with(replacement)
+            print(replacement)
+        return soup.prettify()
+
+    @classmethod
+    def convert_old_stuff(cls):
+        """ For testing only """
+        from myapps.legacy_db.models import Sak
+        saker = Sak.objects.filter(brodtekst__icontains='href').order_by('?')[:50]
+        pattern = '{start}{label}{text}{href}{end}'.format(
+            start=re.escape(InlineLink.TOKEN_START),
+            end=re.escape(InlineLink.TOKEN_END),
+            label='(?P<label>.*?)',
+            text='(?P<text>{sep}.*?)?',
+            href='(?P<href>{sep}.*?)?',
+        ).format(sep=re.escape(InlineLink.TOKEN_SEP),)
+        for sak in saker:
+            new_bodytext = InlineLink.convert_html_links(sak.brodtekst)
+
+            found_links = re.finditer(pattern, new_bodytext)
+            for match in found_links:
+                groupdict = match.groupdict()
+                label = groupdict.get('label')
+                text = (groupdict.get('text') or '').lstrip(InlineLink.TOKEN_SEP)
+                href = (groupdict.get('href') or '').lstrip(InlineLink.TOKEN_SEP)
+
+                href = cls.validate_url((href or text or label)) or ''
+
+                # if re.search(r'\D', label):
+                #     label, text = '', label
+
+                print('label: {}\ntext: {}\nhref: {}\n'.format(label, text, href))
+
+    @classmethod
+    def validate_url(cls, url):
+        site = 'universitas.no'
+        validate = URLValidator()
+        url = url.strip('«»“”"\'')
+        if url.startswith('/'):
+            url = '{site}{link}'.format(site=site, link=url)
+        if not url.startswith('http://'):
+            url = 'http://{url}'.format(url=url)
+        try:
+            validate(url)
+            return url
+        except ValidationError:
+            return False
 
 
 class Pullquote(TextContent, StoryElement):
@@ -427,18 +664,21 @@ class StoryMedia(StoryElement):
         abstract = True
 
     caption = models.CharField(
+        blank=True, max_length=1000,
         help_text=_('Text explaining the media.'),
-        blank=True,
-        max_length=1000)
+        verbose_name=_('caption'),
+    )
 
     creditline = models.CharField(
+        blank=True, max_length=100,
         help_text=_('Extra information about media attribution and license.'),
-        blank=True,
-        max_length=100)
+        verbose_name=_('credit line'),
+    )
 
     size = models.PositiveSmallIntegerField(
-        help_text=_('relative image size.'),
         default=1,
+        help_text=_('Relative image size.'),
+        verbose_name=_('image size'),
     )
 
 
@@ -450,7 +690,11 @@ class StoryImage(StoryMedia):
         verbose_name = _('Image')
         verbose_name_plural = _('Images')
 
-    imagefile = models.ForeignKey(ImageFile)
+    imagefile = models.ForeignKey(
+        ImageFile,
+        help_text=_('Choose an image by name or upload a new one.'),
+        verbose_name=('image file'),
+    )
 
 
 class StoryVideo(StoryMedia):
@@ -478,9 +722,10 @@ class Section(models.Model):
         verbose_name_plural = _('Sections')
 
     title = models.CharField(
-        help_text=_('Section title'),
         unique=True,
-        max_length=50
+        max_length=50,
+        help_text=_('Section title'),
+        verbose_name=_('section title'),
     )
 
     def __str__(self):
@@ -500,25 +745,38 @@ class Byline(models.Model):
     """ Credits the people who created content for a story. """
 
     CREDIT_CHOICES = [
-        ('t', _('Text',)),
-        ('pf', _('Photo')),
-        ('i', _('Illustration')),
-        ('g', _('Graphics')),
+        ('text', _('Text',)),
+        ('photo', _('Photo')),
+        ('video', _('Video')),
+        ('illus', _('Illustration')),
+        ('graph', _('Graphics')),
+        ('trans', _('Translation')),
+        ('???', _('Unknown')),
     ]
     DEFAULT_CREDIT = CREDIT_CHOICES[0][0]
     story = models.ForeignKey(Story)
     contributor = models.ForeignKey(Contributor)
-    credit = models.CharField(choices=CREDIT_CHOICES, default=DEFAULT_CREDIT, max_length=20)
-    title = models.CharField(blank=True, null=True, max_length=200)
+    credit = models.CharField(
+        choices=CREDIT_CHOICES,
+        default=DEFAULT_CREDIT,
+        max_length=20,
+    )
+    title = models.CharField(
+        blank=True,
+        null=True,
+        max_length=200,
+    )
 
     class Meta:
-        # order_with_respect_to = 'story'
-        # Denne ser ikke til å være særlig nyttig - ingen ui i admin og dårlig migration.
         verbose_name = _('Byline')
         verbose_name_plural = _('Bylines')
 
     def __str__(self):
-        return '%s: %s (%s)' % (self.get_credit_display(), self.contributor, self.story, )
+        return '{credit}: {full_name} ({story_title})'.format(
+            credit=self.get_credit_display(),
+            full_name=self.contributor,
+            story_title=self.story,
+        )
 
     @classmethod
     def create(cls, full_byline, story, initials=''):
@@ -545,16 +803,26 @@ class Byline(models.Model):
             title = d['title'] or ''
             credit = d['credit'].lower()
             initials = ''.join(letters[0] for letters in full_name.replace('-', ' ').split())
-            assert initials == initials.upper()
+            assert initials == initials.upper()  # All names should be capitalisedd.
+            assert len(initials) <= 5  # Five names probably means something is wrong.
+            if len(initials) == 1:
+                initials = full_name.upper()
 
         except (AssertionError, AttributeError, ) as e:
             # Malformed byline
             logger.warning('Malformed byline: {} {}'.format(full_byline, e))
-            full_name, title, initials, credit = 'Nomen Nescio', full_byline, 'XX', 'x'
+            full_name, title, initials, credit = 'Nomen Nescio', full_byline, 'XX', '???'
 
         for choice in cls.CREDIT_CHOICES:
-
-            if credit[0] in choice[0]:
+            # Find correct credit.
+            ratio = difflib.SequenceMatcher(
+                None,
+                choice[0],
+                credit[:5],
+            ).ratio()
+            if .4 > ratio > .8:
+                print(choice[0], credit, ratio)
+            if ratio > .8:
                 credit = choice[0]
                 break
         else:
@@ -575,10 +843,9 @@ class Byline(models.Model):
 
 def clean_up_bylines(bylines):
     """
-    clean_up_bylines(string) -> string
     Normalise misformatting and idiosyncraticies of bylines in legacy data.
+    string -> string
     """
-
     replacements = (
         # Symbols used to separate individual bylines.
         (r'\r|;|•|\*|·|/', r'\n', re.I),
@@ -599,10 +866,10 @@ def clean_up_bylines(bylines):
         (r'anmeldt av:?', 'text: ', re.I),
 
         # Any word containging "photo" is some kind of photo credit.
-        (r'\S*(ph|f)oto\S*?[\s:]*', '\nfoto: ', re.I),
+        (r'\S*(ph|f)oto\S*?[\s:]*', '\nphoto: ', re.I),
 
         # Any word containing "text" is text credit.
-        (r'\S*te(ks|x)t\S*?[\s:]*', '\ntekst: ', re.I),
+        (r'\S*te(ks|x)t\S*?[\s:]*', '\ntext: ', re.I),
 
         # These words are stripped from end of line.
         (r' *(,| og| and) *$', '', re.M + re.I),
@@ -616,16 +883,31 @@ def clean_up_bylines(bylines):
         # Creditline with empty space after it is deleted.
         (r'^\S:\s*$', '', re.M),
 
+        # Multiple spaces.
+        (r' {2,}', ' ', 0),
+
         # Remove lines containing only whitespace.
         (r'\s*\n\s*', r'\n', 0),
 
         # Bylines with no credit are assumed to be text credit.
-        (r'^([^:]+?)$', r'tekst:\1', re.M),
+        (r'^([^:]+?)$', r'text:\1', re.M),
 
         # Exactly one space after and no space before colon or comma.
         (r'\s*([:,])+\s*', r'\1 ', 0),
     )
+
+    # print('\n', bylines)
+    byline_words = []
+    for word in bylines.split():
+        if word == word.upper():
+            word = word.title()
+        byline_words.append(word)
+
+    bylines = ' '.join(byline_words)
+    # print(bylines)
+
     for pattern, replacement, flags in replacements:
         bylines = re.sub(pattern, replacement, bylines, flags=flags)
     bylines = bylines.strip()
+    # print(bylines)
     return bylines

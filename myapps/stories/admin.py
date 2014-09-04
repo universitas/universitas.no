@@ -4,7 +4,7 @@ Admin for stories app.
 """
 
 from django.contrib import admin
-from .models import Byline, Aside, Pullquote, Story, StoryType, Section, StoryImage
+from .models import Byline, Aside, Pullquote, Story, StoryType, Section, StoryImage, InlineLink, StoryVideo
 from django.utils.html import format_html_join
 from django.utils.safestring import mark_safe
 # from myapps.photo.models import ImageFile
@@ -47,6 +47,23 @@ class PullquoteInline(admin.TabularInline):
     model = Pullquote
     extra = 0
 
+class LinkInline(admin.TabularInline):
+    form = autocomplete_light.modelform_factory(Story)
+    model = InlineLink
+    fk_name = 'parent_story'
+    extra = 0
+
+class VideoInline(admin.TabularInline):
+    model = StoryVideo
+    fields = (
+        'published',
+        'position',
+        'caption',
+        'creditline',
+        'size',
+        'vimeo_id',
+    )
+    extra = 0
 
 class ImageInline(admin.TabularInline):
     form = autocomplete_light.modelform_factory(StoryImage)
@@ -137,8 +154,10 @@ class StoryAdmin(admin.ModelAdmin):
         BylineInline,
         FrontpageStoryInline,
         ImageInline,
+        VideoInline,
         PullquoteInline,
         AsideInline,
+        LinkInline,
     ]
 
     search_fields = (
