@@ -1,5 +1,5 @@
-# Place nginx config files in /etc/nginx/sites-available, and make a symbolic link
-# to /etc/nginx/sites-enabled to activate the site.
+# Place nginx config files in /etc/nginx/sites-available, and make a symbolic 
+# link to /etc/nginx/sites-enabled to activate the site.
 
 
 upstream USERNAME {
