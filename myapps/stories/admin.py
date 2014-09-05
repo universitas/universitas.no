@@ -15,7 +15,7 @@ from myapps.photo.admin import ThumbAdmin
 
 
 class BylineInline(admin.TabularInline):
-    form = autocomplete_light.modelform_factory(Byline)
+    form = autocomplete_light.modelform_factory(Byline, exclude=())
     model = Byline
     fields = (
         'story',
@@ -31,7 +31,7 @@ class BylineInline(admin.TabularInline):
 
 
 class FrontpageStoryInline(admin.TabularInline):
-    form = autocomplete_light.modelform_factory(FrontpageStory)
+    form = autocomplete_light.modelform_factory(FrontpageStory, exclude=())
     model = FrontpageStory
     fields = ('headline', 'kicker', 'lede', 'image',),
     extra = 0
@@ -48,7 +48,7 @@ class PullquoteInline(admin.TabularInline):
 
 
 class LinkInline(admin.TabularInline):
-    form = autocomplete_light.modelform_factory(Story)
+    form = autocomplete_light.modelform_factory(InlineLink, exclude=())
     model = InlineLink
     fk_name = 'parent_story'
     extra = 0
@@ -68,7 +68,7 @@ class VideoInline(admin.TabularInline):
 
 
 class ImageInline(admin.TabularInline, ThumbAdmin):
-    form = autocomplete_light.modelform_factory(StoryImage)
+    form = autocomplete_light.modelform_factory(StoryImage, exclude=())
     model = StoryImage
     fields = (
         'published',
@@ -82,26 +82,11 @@ class ImageInline(admin.TabularInline, ThumbAdmin):
     readonly_fields = (
         'thumbnail',
     )
-    # def thumbnail(self, instance, width=200, height=100):
-    #     from sorl.thumbnail import get_thumbnail
-    #     url = '/static/admin/img/icon-no.gif'
-    #     if hasattr(instance, 'imagefile'):
-    #         imagefile = instance.imagefile
-    #     else:
-    #         imagefile = instance
-    #     if imagefile:
-    #         source = imagefile.source_file
-    #         thumb = get_thumbnail(source, '%sx%s' % (width, height))
-    #         url = thumb.url
-    #     return mark_safe('<img src="{}">'.format(url))
-
-    # thumbnail.allow_tags = True
     extra = 0
 
 
 class StoryTypeInline(admin.TabularInline):
     model = StoryType
-    # inlines [ContentblockInline]
     extra = 1
 
 
@@ -128,14 +113,7 @@ class StoryAdmin(admin.ModelAdmin):
     )
 
     list_editable = (
-        # 'title',
-        # 'kicker',
-        # 'lede',
-        # 'theme_word',
-        # 'story_type',
-        # 'publication_date',
         'status',
-        # 'issue',
     )
 
     readonly_fields = ('legacy_html_source', 'legacy_prodsys_source',)
@@ -217,7 +195,7 @@ class StoryTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Byline)
 class BylineAdmin(admin.ModelAdmin):
-    form = autocomplete_light.modelform_factory(Byline)
+    form = autocomplete_light.modelform_factory(Byline, exclude=())
     list_display = (
         'id',
         'story',

@@ -7,15 +7,16 @@ from django.contrib import admin
 from .models import Contentblock, FrontpageStory
 import autocomplete_light
 
+
 class ContentblockInline(admin.TabularInline):
-    # form = autocomplete_light.modelform_factory(FrontpageStory)
     model = Contentblock
-    fields = ( 'position', 'columns', 'height',),
+    fields = ('position', 'columns', 'height',),
     extra = 0
+
 
 @admin.register(FrontpageStory)
 class FrontpageStoryAdmin(admin.ModelAdmin):
-    form = autocomplete_light.modelform_factory(FrontpageStory)
+    form = autocomplete_light.modelform_factory(FrontpageStory, exclude=())
     save_on_top = True
     list_per_page = 25
     list_display = (
@@ -41,9 +42,9 @@ class FrontpageStoryAdmin(admin.ModelAdmin):
         'kicker',
     )
 
+
 @admin.register(Contentblock)
 class ContentblockAdmin(admin.ModelAdmin):
-
     save_on_top = True
     list_per_page = 25
     list_display = (

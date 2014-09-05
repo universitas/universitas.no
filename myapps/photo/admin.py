@@ -12,7 +12,7 @@ from django.utils.safestring import mark_safe
 
 
 class ThumbAdmin:
-
+    exclude=()
     def thumbnail(self, instance, width=200, height=100):
         url = '/static/admin/img/icon-no.gif'
         if hasattr(instance, 'imagefile'):
@@ -30,7 +30,7 @@ class ThumbAdmin:
 
 @admin.register(ImageFile)
 class ImageFileAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
-    form = autocomplete_light.modelform_factory(ImageFile)
+    form = autocomplete_light.modelform_factory(ImageFile, exclude=())
     date_hierarchy = 'created'
     actions_on_top = True
     actions_on_bottom = True
