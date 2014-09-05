@@ -1,8 +1,9 @@
--e git+git@github.com:django/django.git@c19c7c192c1cdbfa29cc4a33fdc6f0c0bb477e86#egg=Django-dev
+Django==1.7
 Jinja2==2.7.3
 MarkupSafe==0.23
 Pillow==2.5.1
 Werkzeug==0.9.6
+beautifulsoup4==4.3.2
 certifi==14.05.14
 django-appconf==0.6
 -e git+https://github.com/yourlabs/django-autocomplete-light@80b1d689f482c85764909d2908f3bcb0bbc32237#egg=django_autocomplete_light-v2
@@ -29,6 +30,6 @@ requests==2.3.0
 selenium==2.42.1
 setproctitle==1.1.8
 six==1.7.3
--e git+git@github.com:mariocesar/sorl-thumbnail.git@33763bfc0514f7724c9e9fc1eb8c909fd8aa131c#egg=sorl_thumbnail
+-e git+git@github.com:mariocesar/sorl-thumbnail.git@33763bfc0514f7724c9e9fc1eb8c909fd8aa131c#egg=sorl_thumbnail-origin/HEAD
 sqlparse==0.1.11
 tornado==4.0

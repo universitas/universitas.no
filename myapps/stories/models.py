@@ -4,8 +4,7 @@
 # Python standard library
 import re
 import difflib
-# import html
-# from collections import defaultdict
+import logging
 
 # Django core
 from django.utils import timezone
@@ -13,13 +12,18 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import translation
 from django.conf import settings
 from django.db import models
+from django.core.cache import cache
 from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import MaxValueValidator, MinValueValidator, URLValidator, ValidationError
 from django.utils.safestring import mark_safe
-# from django.db.models.fields import FieldDoesNotExist
-# Installed apps
 from model_utils.models import TimeStampedModel
+
+# Installed apps
+from bs4 import BeautifulSoup
+from requests import request
+from requests.exceptions import Timeout, MissingSchema
+
 # Project apps
 from myapps.contributors.models import Contributor
 from myapps.markup.models import BlockTag, InlineTag, Alias
@@ -27,8 +31,36 @@ from myapps.photo.models import ImageFile
 from myapps.frontpage.models import FrontpageStory
 # from myapps.issues.models import PrintIssue
 
-import logging
 logger = logging.getLogger('universitas')
+
+
+class Section(models.Model):
+
+    """
+    A Section in the publication containing one kind of content.
+    """
+
+    class Meta:
+        verbose_name = _('Section')
+        verbose_name_plural = _('Sections')
+
+    title = models.CharField(
+        unique=True,
+        max_length=50,
+        help_text=_('Section title'),
+        verbose_name=_('section title'),
+    )
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def slug(self):
+        return slugify(self.title)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('')
 
 
 class StoryType(models.Model):
@@ -36,7 +68,7 @@ class StoryType(models.Model):
     """ A type of story in the publication. """
 
     name = models.CharField(unique=True, max_length=50)
-    section = models.ForeignKey('Section')
+    section = models.ForeignKey(Section)
     template = models.ForeignKey('Story', blank=True, null=True)
     prodsys_mappe = models.CharField(
         blank=True, null=True,
@@ -87,6 +119,7 @@ class TextContent(TimeStampedModel):
             super().save(*args, **kwargs)
             saved_markup = ''
         if saved_markup != self.bodytext_markup:
+            # bodytext has been changed - clean and convert contents.
             self.clean_markup()
             self.make_html()
         super().save(*args, **kwargs)
@@ -123,11 +156,12 @@ class TextContent(TimeStampedModel):
         for paragraph in paragraphs:
             blocktag = BlockTag.objects.match_or_create(paragraph)
             tag, text_content = blocktag.split(paragraph)
-            function_name, field = blocktag.action.split(':')
-            # The blocktag table contains instructions for the various kinds of tags
-            # that exists. Actions are "append", "new" and "drop".
-            action = getattr(target, function_name)
-            new_target = action(tag, text_content, field)
+            function_name, target_field = blocktag.action.split(':')
+            # The Blocktag model contains instructions for the various kinds of block (paragraph) level tags
+            # that are in use. Actions are "_block_append", "_block_new" and "_block_drop".
+            action = getattr(target, '_block_{func}'.format(func=function_name))
+            # do action on
+            new_target = action(tag, text_content, target_field)
             # new target could be newly created object or a parent element.
             if new_target != target != self:
                 # This story element is completed.
@@ -137,31 +171,48 @@ class TextContent(TimeStampedModel):
         if target != self:
             target.save()
 
-    def append(self, tag, content, modelfield=None):
-        """ Appends content(string) to a modelfield by string reference. """
+    def _block_append(self, tag, content, modelfield=None):
+        """ Appends content(string) to a model field by string reference. """
+        # default is to add to body text
         modelfield = modelfield or 'bodytext_markup'
         if modelfield != 'bodytext_markup':
+            # only body text needs block tags.
             tag = ''
         try:
-            content = '{old_content}\n{tag}{added_content}'.format(
+            # since we use a sting reference, model fields are accessed with getattr() and setattr()
+            # if field / attribute does not exist, an AttributeError will be raised.
+            # if field does not contain string data, AssertionError will be raised.
+            assert isinstance(getattr(self, modelfield), str)
+
+            # new string in field
+            new_content = '{old_content}\n{tag}{added_content}'.format(
                 old_content=getattr(self, modelfield),
                 tag=tag,
                 added_content=content,
             ).strip()
-            setattr(self, modelfield, content)
+            # update modelfield
+            setattr(self, modelfield, new_content)
             return self
         except (AttributeError,):
             # No such field. Try the main story instead.
-            return self.parent_story.append(tag, content, modelfield)
+            return self.parent_story._block_append(tag, content, modelfield)
+        except (AssertionError,) as errormsg:
+            raise TypeError(
+                'Tried to append text to field {class_name}.{field}\n{errormsg}'.format(
+                    class_name=self.__class__.__name__,
+                    field=modelfield,
+                    errormsg=errormsg,
+                ),
+            )
 
-    def new(self, *args, **kwargs):
+    def _block_new(self, *args, **kwargs):
         """ Create new related story element. """
         # Send control up to parent story instance.
-        return self.parent_story.new(*args, **kwargs)
+        return self.parent_story._block_new(*args, **kwargs)
 
-    def drop(self, *args, **kwargs):
+    def _block_drop(self, *args, **kwargs):
         """ Returns self and ignores any arguments """
-        # It's almost as fast as /dev/null.
+        # The most reliable place to put this important data is /dev/null
         return self
 
 
@@ -190,7 +241,6 @@ class Story(TextContent):
 
     objects = PublishedStoryManager()
 
-    # TODO make this importable?
     STATUS_DRAFT = 0
     STATUS_EDITOR = 5
     STATUS_READY = 9
@@ -205,62 +255,62 @@ class Story(TextContent):
     ]
     prodsak_id = models.PositiveIntegerField(
         blank=True, null=True, editable=False,
-        help_text=_('Id in the prodsys database.'),
+        help_text=_('primary id in the legacy prodsys database.'),
         verbose_name=_('prodsak id')
     )
     title = models.CharField(
         max_length=1000,
-        help_text=_('Headline'),
+        help_text=_('main headline or title'),
         verbose_name=_('title'),
     )
     kicker = models.CharField(
         blank=True, max_length=1000,
-        help_text=_('Secondary headline'),
+        help_text=_('secondary headline, usually displayed above main headline'),
         verbose_name=_('kicker'),
     )
     lede = models.TextField(
         blank=True,
-        help_text=_('Introduction or summary of the story'),
+        help_text=_('brief introduction or summary of the story'),
         verbose_name=_('lede'),
     )
     theme_word = models.CharField(
         blank=True, max_length=100,
-        help_text=_('Theme'),
+        help_text=_('theme, topic, main keyword'),
         verbose_name=_('theme word'),
     )
     bylines = models.ManyToManyField(
         Contributor, through='Byline',
-        help_text=_('The people who created this content.'),
+        help_text=_('the people who created this content.'),
         verbose_name=_('bylines'),
     )
     story_type = models.ForeignKey(
         StoryType,
-        help_text=_('The type of story.'),
+        help_text=_('the type of story.'),
         verbose_name=_('article type'),
     )
     publication_date = models.DateTimeField(
         null=True, blank=True,
-        help_text=_('When this story will be published on the web.'),
+        help_text=_('when this story will be published on the web.'),
         verbose_name=_('publication date'),
     )
     status = models.IntegerField(
         default=STATUS_DRAFT, choices=STATUS_CHOICES,
-        help_text=_('Publication status.'),
+        help_text=_('publication status.'),
         verbose_name=_('status'),
     )
     slug = models.SlugField(
         default='slug-here', editable=False,
-        help_text=_('Human readable url.'),
+        help_text=_('human readable url.'),
         verbose_name=_('slug'),
     )
     issue = models.ForeignKey(
         'issues.PrintIssue', blank=True, null=True,
-        help_text=_('Which issue this story was printed in.'),
+        help_text=_('which issue this story was printed in.'),
         verbose_name=_('issue'),
     )
     page = models.IntegerField(
         blank=True, null=True,
-        help_text=_('Which page the story was printed on.'),
+        help_text=_('which page the story was printed on.'),
         verbose_name=_('page'),
     )
     images = models.ManyToManyField(
@@ -271,28 +321,60 @@ class Story(TextContent):
     hit_count = models.PositiveIntegerField(
         default=0,
         editable=False,
-        help_text=_('how many time the article has been viewed'),
-        verbose_name=_('views')
+        help_text=_('how many time the article has been viewed.'),
+        verbose_name=_('total page views')
+    )
+    hot_count = models.PositiveIntegerField(
+        default=0,
+        editable=False,
+        help_text=_('calculated value representing recent page views.'),
+        verbose_name=_('recent page views')
     )
     bylines_html = models.TextField(
         default='', editable=False,
-        verbose_name=('all bylines as html.'),
+        verbose_name=_('all bylines as html.'),
     )
     legacy_html_source = models.TextField(
         blank=True, null=True, editable=False,
         help_text=_('From old web page. For reference only.'),
-        verbose_name=('Imported html source.'),
+        verbose_name=_('Imported html source.'),
     )
     legacy_prodsys_source = models.TextField(
         blank=True, null=True, editable=False,
         help_text=_('From prodsys. For reference only.'),
-        verbose_name=('Imported xtagged source.'),
+        verbose_name=_('Imported xtagged source.'),
     )
 
-    def increment_hit_count(self):
-        """ One visitor """
-        self.views += 1
-        self.save(update_fields=['hit_count'])
+    def visit_page(self, request):
+        """ Check if visit looks like a human and update hit count """
+        if not self.status == self.STATUS_PUBLISHED:
+            # Must be a member of staff.
+            return False
+        user_agent = request.META.get('HTTP_USER_AGENT', '').lower()
+        if not user_agent:
+            # Visitor is not using a web browser. Not sure if this ever happens, but it would not be a proper visit.
+            return False
+
+        bots = ['bot', 'spider', 'yahoo', 'crawler']
+        for bot in bots:
+            if bot in user_agent:
+                # Search engine web crawler.
+                return False
+
+        cache_key = '{}{}'.format(
+            request.META.get('REMOTE_ADDR', ''),  # visitor ip
+            self.pk,  # story primary key
+        )
+        if cache.get(cache_key):
+            # same ip address has visited page recently
+            return False
+
+        cache.set(cache_key, 1, 600)  # time to live in seconds is 600
+
+        self.hit_count = models.F('hit_count') + 1
+        self.hot_count = models.F('hot_count') + 1
+        self.save(update_fields=['hit_count', 'hot_count'])
+        return True
 
     def __str__(self):
         return '{} {:%Y-%m-%d}'.format(
@@ -315,18 +397,27 @@ class Story(TextContent):
         return '\n'.join(all_bylines)
 
     def image_count(self):
+        # TODO: Move to admin? Only used in admin listview
         return self.images.count()
 
     @property
     def section(self):
+        """ Shortcut to related Section """
         return self.story_type.section
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title).replace('_', '')[:50]
+        # slugify title. Remove underscores and n-dash. If slug has been changed,
+        # old url will redirect to new url with status code 301.
+        self.slug = slugify(self.title).replace('_', '').replace('–', '-')[:50]
+        # bylines are cached in a modelfield for quicker search and admin display,
+        # avoiding joins and extra queries Only used in back-end
         self.bylines_html = self.get_bylines_as_html()
         super(Story, self).save(*args, **kwargs)
 
-        if self.frontpagestory_set.count() == 0:
+        # create a frontpagestory only if there are linked images. This avoids an
+        # empty frontpagestory when the model is initally saved before any related
+        # storyimage instances exist.
+        if self.images.count() != 0 and self.frontpagestory_set.count() == 0:
             frontpagestory = FrontpageStory(
                 story=self,
             )
@@ -343,7 +434,12 @@ class Story(TextContent):
             },)
         return url
 
-    def new(self, tag, content, element):
+    def clean_markup(self, *args, **kwargs):
+        """ Clean user input and populate fields """
+        super().clean_markup(*args, **kwargs)
+        self.parse_markup()
+
+    def _block_new(self, tag, content, element):
         """ Add a story element to the main story """
         if element == "byline":
             bylines_raw = clean_up_bylines(content)
@@ -365,12 +461,7 @@ class Story(TextContent):
                 parent_story=self,
             )
 
-        return new_element.append(tag, content)
-
-    def clean_markup(self, *args, **kwargs):
-        """ Clean user input and populate fields """
-        super().clean_markup(*args, **kwargs)
-        self.parse_markup()
+        return new_element._block_append(tag, content)
 
 
 class StoryElement(models.Model):
@@ -401,9 +492,9 @@ class StoryElement(models.Model):
 
 class InlineLink(models.Model):
 
-    # Link looks like this: [[1:this is a link:www.universitas.no]]
-    # or                    [[1:this is a link]]
-    # or                    [[1]]
+    # Link looks like this: |1|this is a link|www.universitas.no|
+    # or                    |1|this is a link|
+    # or                    |1|
 
     TOKEN_START = '|'
     TOKEN_END = '|'
@@ -453,7 +544,6 @@ class InlineLink(models.Model):
         verbose_name=_('http status code'),
     )
 
-    pass
     linked_story = models.ForeignKey(
         Story,
         blank=True, null=True,
@@ -464,36 +554,47 @@ class InlineLink(models.Model):
 
     @property
     def link(self):
+        site = 'http://universitas.no'  # TODO: find in django settings.
         if self.linked_story:
-            return self.linked_story.get_absolute_url()
+            return site + self.linked_story.get_absolute_url()
         elif self.href:
             return self.href
-        raise LookupError('No link exists.')
+        return ''
 
     def find_linked_story(self):
+        """ Change literal url to foreignkey if the target is another article in the database. """
         try:
             match = re.search(r'/.+?/(?P<id>\d+)/', self.href)
-            story_id = int(match.groupdict()['id'])
+            story_id = int(match.group('id'))
             self.linked_story = Story.objects.get(pk=story_id)
-            self.href = None
+            self.href = ''
             return True
-        except (AttributeError, ObjectDoesNotExist) as e:
-            print(e)
+        except (AttributeError, ObjectDoesNotExist):
+            # Not an internal link
             return False
 
     def check_link(self, method='head'):
-        """ Checks if link is still active. """
-        from requests import request
-        status_code = str(request(method, self.link).status_code)
+        """ Does a http request to check the status of the url. """
+        try:
+            status_code = str(request(method, self.link, timeout=1).status_code)
+        except Timeout:
+            status_code = 408  # HTTP Timout
+        except MissingSchema:
+            status_code = 0  # not a HTTP url
         if status_code != self.status_code:
             self.status_code = status_code
+        logger.information(self.link, status_code)
         return status_code
 
     @classmethod
     def find_links(cls, parent_story):
-        """ Find links in parent story """
+        """ Find links in parent story bodytext and convert them to InlineLink instances. """
         bodytext = parent_story.bodytext_markup
+
+        # convert html tags to custom markup
         bodytext = cls.convert_html_links(bodytext)
+
+        # regex pattern to search for
         pattern = '{start}{label}{text}{href}{end}'.format(
             start=re.escape(cls.TOKEN_START),
             end=re.escape(cls.TOKEN_END),
@@ -501,26 +602,33 @@ class InlineLink(models.Model):
             text='(?P<text>{sep}.*?)?',
             href='(?P<href>{sep}.*?)?',
         ).format(sep=re.escape(cls.TOKEN_SEP),)
+
         found_links = re.finditer(pattern, bodytext)
         for match in found_links:
-            fullmatch = match.group(0)
             label = match.group('label')
             text = (match.group('text') or '').lstrip(cls.TOKEN_SEP)
             href = (match.group('href') or '').lstrip(cls.TOKEN_SEP)
             href = cls.validate_url((href or text or label)) or ''
+
+            # label is mandatory, but could be identical to text
             label = label or text
             link = cls.objects.get_or_create(parent_story=parent_story, label=label)[0]
-            if href:
+            if not link.href or href:
+                # change or create a url.
                 link.href = href
             if text:
+                # update text
                 link.text = text
             link.find_linked_story()
-            link.check_link()
+            link.check_link()  # TODO: Time consuming. Could it be queued?
             link.save()
             if link.label == link.text:
+                # this is shorter and probably more common.
                 substitution = '{start}{label}{end}'
             else:
+                # both label and text is needed if multiple links have the same link text on one page.
                 substitution = '{start}{label}{sep}{text}{end}'
+
             substitution = substitution.format(
                 start=cls.TOKEN_START,
                 end=cls.TOKEN_END,
@@ -528,33 +636,27 @@ class InlineLink(models.Model):
                 label=link.label,
                 text=link.text,
             )
-            bodytext = re.sub(fullmatch, substitution, bodytext)
+            # change long link format to shorter one.
+            original_markup = re.escape(match.group(0))
+            bodytext = re.sub(original_markup, substitution, bodytext)
+
         if parent_story.bodytext_markup != bodytext:
+            # update parent story if bodytext has changed.
             parent_story.bodytext_markup = bodytext
             parent_story.save()
 
     @classmethod
-    def convert_html_links(cls, bodytext):
+    def convert_html_links(cls, bodytext, startlabel=0):
         """ convert <a href=""> to other tag """
-        from bs4 import BeautifulSoup
-        import random
         soup = BeautifulSoup(bodytext)
-        label = 0
-        linkstyles = (
-            '{start}{label}{sep}{text}{sep}{href}{end}',
-            #     '{start}{text}{sep}{href}{end}',
-            #     '{start}{label}{sep}{href}{end}',
-            #     '{start}{text}{end}',
-            #     '{start}{href}{end}',
-        )
+        linkstyle = '{start}{label}{sep}{text}{sep}{href}{end}',
+        label = startlabel
         for link in soup.find_all('a'):
-            print(link)
             label += 1
             href = link.get('href')
-            # alt_text = link.get('alt')
             text = link.text
             if href:
-                replacement = random.choice(linkstyles).format(
+                replacement = linkstyle.format(
                     start=cls.TOKEN_START,
                     end=cls.TOKEN_END,
                     sep=cls.TOKEN_SEP,
@@ -563,43 +665,18 @@ class InlineLink(models.Model):
                     text=text.strip(),
                 )
             else:
+                # <a> element with no href
                 replacement = '{text}'.format(text=text,)
+
+            # change the link from html to simple-tags
             link.replace_with(replacement)
-            print(replacement)
-        return soup.prettify()
 
-    @classmethod
-    def convert_old_stuff(cls):
-        """ For testing only """
-        from myapps.legacy_db.models import Sak
-        saker = Sak.objects.filter(brodtekst__icontains='href').order_by('?')[:50]
-        pattern = '{start}{label}{text}{href}{end}'.format(
-            start=re.escape(InlineLink.TOKEN_START),
-            end=re.escape(InlineLink.TOKEN_END),
-            label='(?P<label>.*?)',
-            text='(?P<text>{sep}.*?)?',
-            href='(?P<href>{sep}.*?)?',
-        ).format(sep=re.escape(InlineLink.TOKEN_SEP),)
-        for sak in saker:
-            new_bodytext = InlineLink.convert_html_links(sak.brodtekst)
-
-            found_links = re.finditer(pattern, new_bodytext)
-            for match in found_links:
-                groupdict = match.groupdict()
-                label = groupdict.get('label')
-                text = (groupdict.get('text') or '').lstrip(InlineLink.TOKEN_SEP)
-                href = (groupdict.get('href') or '').lstrip(InlineLink.TOKEN_SEP)
-
-                href = cls.validate_url((href or text or label)) or ''
-
-                # if re.search(r'\D', label):
-                #     label, text = '', label
-
-                print('label: {}\ntext: {}\nhref: {}\n'.format(label, text, href))
+        return str(soup)
 
     @classmethod
     def validate_url(cls, url):
-        site = 'universitas.no'
+        """ Checks if input string is a valid http url. """
+        site = 'universitas.no'  # todo - get from settings.
         validate = URLValidator()
         url = url.strip('«»“”"\'')
         if url.startswith('/'):
@@ -623,12 +700,9 @@ class Pullquote(TextContent, StoryElement):
 
     def find_pullquote_in_bodytext(self):
         """ Looks for the first paragraph in the parent story that matches pullquote content."""
-        # remove irrelevant characters from pullquote to make search term.
         needle = re.sub(
-            '@\S+:|«|»',
-            '',
-            self.bodytext_markup.splitlines()[0][:30].lower().strip(),
-        )
+            '@\S+:|«|»', '', self.bodytext_markup.splitlines()[0],
+        )[:30].lower().strip()
         paragraphs = self.parent_story.bodytext_markup.lower().splitlines()
         bottom = len(paragraphs) or 1
         for depth, haystack in enumerate(paragraphs):
@@ -701,43 +775,87 @@ class StoryVideo(StoryMedia):
 
     """ Video content connected to a story """
 
+    VIDEO_HOSTS = (
+        ('vimeo', _('vimeo'),),
+        ('youtu', _('youtube'),),
+    )
+
     class Meta(StoryElement.Meta):
         verbose_name = _('Video')
         verbose_name_plural = _('Videos')
 
-    vimeo_id = models.PositiveIntegerField(
-        verbose_name=_('vimeo id number'),
-        help_text=_('The number at the end of the url for this video at vimeo.com'),
+    video_host = models.CharField(
+        max_length=20,
+        default=VIDEO_HOSTS[0][0],
+        choices=VIDEO_HOSTS,
     )
 
-
-class Section(models.Model):
-
-    """
-    A Section in the publication containing one kind of content.
-    """
-
-    class Meta:
-        verbose_name = _('Section')
-        verbose_name_plural = _('Sections')
-
-    title = models.CharField(
-        unique=True,
-        max_length=50,
-        help_text=_('Section title'),
-        verbose_name=_('section title'),
+    host_video_id = models.CharField(
+        max_length=100,
+        verbose_name=_('id for video file.'),
+        help_text=_('the part of the url that identifies this particular video'),
     )
 
-    def __str__(self):
-        return self.title
+    def embed(self, width=1200, height=600):
+        """ Returns html embed code """
+        if self.video_host == 'vimeo':
+            #  <iframe src="//player.vimeo.com/video/105149174?title=0&amp;byline=0&amp;portrait=0&amp;color=f00008" width="1200" height="675" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+            embed_pattern = '<iframe src="//player.vimeo.com/video/{host_video_id}?title=0&amp;byline=0&amp;portrait=0&amp;color=f00008" width="{width}" height="{height}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+        elif self.video_host == 'youtu':
+            # <iframe width="1280" height="720" src="//www.youtube-nocookie.com/embed/HBk1GdcdALU?rel=0" frameborder="0" allowfullscreen></iframe>
+            embed_pattern = '<iframe width="{width}" height="{heigth}" src="//www.youtube-nocookie.com/embed/{host_video_id}?rel=0" frameborder="0" allowfullscreen></iframe>'
+        else:
+            raise Exception('unknown hosting site.')
 
-    @property
-    def slug(self):
-        return slugify(self.title)
+        return embed_pattern.format(height=height, width=width, host_video_id=self.host_video_id,)
 
-    @models.permalink
-    def get_absolute_url(self):
-        return ('')
+    @classmethod
+    def create_from_url(cls, url, parent_story):
+        """ create video object from input url """
+
+        # url formats:
+        # https://www.youtube.com/watch?v=roHl3PJsZPk
+        # http://youtu.be/roHl3PJsZPk
+        # http://vimeo.com/105149174
+
+        def check_link(url, method='head', timeout=2):
+            """ Does a http request to check the status of the url. """
+            try:
+                status_code = str(request(method, url, timeout=timeout).status_code)
+            except Timeout:
+                status_code = 408  # HTTP Timout
+            except MissingSchema:
+                status_code = 0  # not a HTTP url
+            return status_code
+
+
+        for host in cls.VIDEO_HOSTS:
+            hostname = host[0]
+            if hostname in url:
+                video_host = hostname
+                break
+        else:
+            video_host = None
+
+        if not check_link(url) == 200:
+            # something is wrong with the url?
+            return None
+
+        id_regex = r'[a-zA-Z0-9]+$'
+        host_video_id = re.search(id_regex, url)
+
+        try:
+            new_video = cls(
+                parent_story=parent_story,
+                video_host=video_host,
+                host_video_id=host_video_id,
+            )
+
+            new_video.save()
+            return new_video
+        except Exception as e:
+            logger.log(e)
+            return None
 
 
 class Byline(models.Model):

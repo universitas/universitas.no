@@ -23,10 +23,8 @@ class FrontpageStoryAdmin(admin.ModelAdmin):
         'kicker',
         'headline',
         'lede',
-        'image',
+        'imagefile',
         'story',
-        'horizontal_centre',
-        'vertical_centre',
         # 'placements',
     )
 
@@ -34,8 +32,6 @@ class FrontpageStoryAdmin(admin.ModelAdmin):
         'headline',
         # 'kicker',
         # 'lede',
-        'horizontal_centre',
-        'vertical_centre',
     )
     inlines = (
         ContentblockInline,

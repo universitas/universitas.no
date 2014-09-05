@@ -7,7 +7,7 @@ from os.path import join, dirname
 import os
 
 REPO_URL = 'https://github.com/Haakenlid/tassen.git'
-GIT_DJANGO_PACKAGE = 'https://github.com/django/django/archive/stable/1.7.x.zip'
+# GIT_DJANGO_PACKAGE = 'https://github.com/django/django/archive/stable/1.7.x.zip'
 PYVENV = 'pyvenv-3.4'
 LINUXGROUP = 'universitas'
 WEBSERVER_ROOT = '/srv'
@@ -215,7 +215,7 @@ def _create_virtualenv(venv_folder, global_venv_folder):
     if not exists(venv_folder + '/bin/pip'):
         run('%s %s' % (PYVENV, venv_folder,))
         run('ln -fs %s %s' % (venv_folder, global_venv_folder))
-        run('%s/bin/pip install %s' % (venv_folder, GIT_DJANGO_PACKAGE,))
+        # run('%s/bin/pip install %s' % (venv_folder, GIT_DJANGO_PACKAGE,))
 
 
 def _update_virtualenv(source_folder, venv_folder):

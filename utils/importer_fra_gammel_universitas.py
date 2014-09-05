@@ -26,7 +26,7 @@ TIMEZONE = timezone.get_current_timezone()
 def main():
     # drop_images_stories_and_contributors()
     # importer_utgaver_fra_gammel_webside()
-    importer_saker_fra_gammel_webside(last=400, order_by='-id_sak')
+    # importer_saker_fra_gammel_webside(last=400, order_by='-id_sak')
     # importer_saker_fra_gammel_webside()
     reset_db_autoincrement()
 

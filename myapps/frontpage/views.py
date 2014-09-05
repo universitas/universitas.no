@@ -41,18 +41,22 @@ def frontpage_view(request, frontpage=None):
                 columns_used += columns
                 if columns_used > 12:
                     columns = columns + 12 - columns_used
-                try:
-                    image = story.image.source_file
-                except:
-                    image = None
+
+                if story.imagefile:
+                    image = story.imagefile
+                    source = image.source_file
+                    crop = image.get_crop()
+                else:
+                    source = None
+                    crop = None
 
                 item = {
                     'columns': columns,
                     'columns_small': (12 if columns > 8 else 6),
                     'height': floorheight * 150 + 200,
                     'image_size': '%sx%s' % (pix_c * columns, pix_h * floorheight,),
-                    'image': image,
-                    'crop': '{}% {}%'.format(story.horizontal_centre, story.vertical_centre),
+                    'image': source,
+                    'crop': crop,
                     'story': story,
                 }
                 items.append(item)

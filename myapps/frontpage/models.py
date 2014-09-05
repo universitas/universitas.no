@@ -2,7 +2,6 @@
 from django.db import models
 from model_utils.models import TimeStampedModel
 from django.utils.translation import ugettext_lazy as _
-from django.core.validators import MaxValueValidator, MinValueValidator
 # from django.core.exceptions import ObjectDesNotExist
 
 # Project apps
@@ -158,43 +157,37 @@ class FrontpageStory(TimeStampedModel):
     )
     placements = models.ManyToManyField(
         Frontpage,
-        help_text=_('position and size of story element.'),
         through=Contentblock,
+        help_text=_('position and size of story element.'),
     )
-    image = models.ForeignKey(
+    imagefile = models.ForeignKey(
         ImageFile,
         null=True, blank=True,
         help_text=_('image'),
     )
-    vertical_centre = models.PositiveSmallIntegerField(
-        default='50',
-        help_text=_('image crop vertical. Between 0 and 100.'),
-        validators=[MaxValueValidator(100), MinValueValidator(0)],
-    )
-    horizontal_centre = models.PositiveSmallIntegerField(
-        default='50',
-        help_text=_('image crop horizontal. Between 0 and 100.'),
-        validators=[MaxValueValidator(100), MinValueValidator(0)],
-    )
     headline = models.CharField(
-        help_text=_('headline'),
         blank=True,
-        max_length=200)
+        max_length=200,
+        help_text=_('headline'),
+        )
 
     kicker = models.CharField(
-        help_text=_('kicker'),
         blank=True,
-        max_length=200)
+        max_length=200,
+        help_text=_('kicker'),
+        )
 
     lede = models.CharField(
-        help_text=_('lede'),
         blank=True,
-        max_length=200)
+        max_length=200,
+        help_text=_('lede'),
+        )
 
     html_class = models.CharField(
-        help_text=_('html_class'),
         blank=True,
-        max_length=200)
+        max_length=200,
+        help_text=_('html_class'),
+        )
 
     @property
     def url(self):
@@ -207,10 +200,10 @@ class FrontpageStory(TimeStampedModel):
             self.kicker = self.kicker or self.story.kicker[:200]
             self.headline = self.headline or self.story.title[:200]
             self.html_class = self.html_class or str(self.story.section)[:200].lower().replace(' ', '-')
-            if self.image is None and not self.story.images.count() == 0:
-                self.image = self.story.images.first()
+            if self.imagefile is None and not self.story.images.count() == 0:
+                self.imagefile = self.story.images.first()
             super().save()
-        if self.placements.count() == 0 and not self.image is None:
+        if self.placements.count() == 0 and not self.imagefile is None:
             # is automatically put on front page if it has an image.
             content_block = Contentblock(
                 frontpage_story=self,

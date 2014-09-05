@@ -10,30 +10,30 @@ upstream staging_universitas_no {
 }
 
 server {
-    listen   80;
-    server_name staging.universitas.no
+    listen               80;
+    server_name          staging.universitas.no;
 
     client_max_body_size 4G;
 
-    access_log /srv/staging.universitas.no/logs/access-nginx.log;
-    error_log /srv/staging.universitas.no/logs/error-nginx.log info;
+    access_log           /srv/staging.universitas.no/logs/access-nginx.log;
+    error_log            /srv/staging.universitas.no/logs/error-nginx.log info;
 
     location /static/ {
-        alias   /srv/staging.universitas.no/static/;
+        alias            /srv/staging.universitas.no/static/;
     }
 
     location /upload/ {
-        alias   /srv/staging.universitas.no/static/uploaded_files/;
+        alias            /srv/staging.universitas.no/static/uploaded_files/;
     }
 
     location / {
         proxy_set_header Host $host;
-        proxy_pass http://staging_universitas_no;
+        proxy_pass       http://staging_universitas_no;
     }
 
     # Error pages
     # error_page 500 502 503 504 /500.html;
     # location = /500.html {
-    #    root /srv/staging.universitas.no/static/error_pages/;
+    #    root            /srv/staging.universitas.no/static/error_pages/;
     # }
 }
