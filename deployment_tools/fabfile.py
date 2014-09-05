@@ -55,6 +55,7 @@ def stop():
     with settings(warn_only=True):
         _enable_site(site_url, start=False)
 
+
 def dropdb():
     site_url = env.host
     db_name = site_url.replace('.', '_')
@@ -180,10 +181,11 @@ def _create_linux_user(username, site_url, group):
     if not user_exists:
         sudo('useradd --shell /bin/bash -g %s -M -c "runs gunicorn for %s" %s' % (group, site_url, username))
 
+
 def _drop_postgres_db(db_name):
     # username = project_settings['user']
     # password = project_settings['db password']
-    run('pg_dump -Fc dev_universitas_no > {}_$(date +"%Y-%m-%d").sql'.format(db_name,))
+    run('pg_dump -Fc {db_name} > {db_name}_$(date +"%Y-%m-%d").sql'.format(db_name=db_name,))
     run('psql -c "DROP DATABASE %s ;"' % (db_name, ))
     run('psql -c "DROP USER %s ;"' % (db_name, ))
 
@@ -195,9 +197,9 @@ def _create_postgres_db(project_settings):
     databases = run(r"psql -l | grep --color=never -o '^ \w\+'").split()
     if db_name not in databases:
         print(db_name, databases)
-        run('psql -c "CREATE ROLE %s NOSUPERUSER CREATEDB NOCREATEROLE LOGIN;"' % (username, ))
-        run('psql -c "CREATE DATABASE %s WITH OWNER=%s  ENCODING=\'utf-8\';"' % (username, db_name, ))
-    run('psql -c "ALTER ROLE %s WITH PASSWORD \'%s\';"' % (username, password, ))
+        run('psql -c "CREATE ROLE {user} NOSUPERUSER CREATEDB NOCREATEROLE LOGIN;"'.format(user=username, ))
+        run('psql -c "CREATE DATABASE {db} WITH OWNER={user}  ENCODING=\'utf-8\';"'.format(db=db_name, user=username))
+    run('psql -c "ALTER ROLE {user} WITH PASSWORD \'{password}\';"'.format(user=username, password=password, ))
 
 
 def _get_latest_source(source_folder):
