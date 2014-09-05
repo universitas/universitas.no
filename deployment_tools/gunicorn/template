@@ -12,7 +12,7 @@ max_requests="0"
 wsgi="universitas_no.wsgi"
 
 source  $virtualenvfolder/bin/activate
-# Activate the virtual environment
+# Activate the virtual environment.
 
 
 # Start your Django Unicorn
