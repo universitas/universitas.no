@@ -15,7 +15,17 @@ from django.core.cache import cache
 # Project apps
 
 
-class MarkupTag(models.Model):
+class CachedTag(models.Model):
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        type(self).objects.delete_cache()
+        super().save(*args, **kwargs)
+
+
+class MarkupTag(CachedTag):
 
     class Meta:
         abstract = True
@@ -45,19 +55,6 @@ class MarkupTag(models.Model):
             return ' class="{}"'.format(self.html_class)
         else:
             return ''
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        type(self).objects.delete_cache()
-
-    # def match(self):
-    #     pass
-
-    # def strip_tag(self):
-    #     pass
-
-    # def make_html(self):
-    #     pass
 
 
 class TagManager(models.Manager):
@@ -217,7 +214,6 @@ class InlineTag(MarkupTag):
         content = re.sub(self.pattern, r'\1', content)
         return content
 
-
     def make_html(self, content):
         return re.sub(self.pattern, self.replacement, content)
 
@@ -244,19 +240,19 @@ class AliasManager(TagManager):
         return self.order_by('ordering')
 
     def replace(self, content, timing=1, ):
-        # import ipdb; ipdb.set_trace()
         for tag in self.cached():
             if tag.timing == timing:
                 content = tag.replace(content)
         return content
 
 
-class Alias(models.Model):
+class Alias(CachedTag):
 
     TIMING_CHOICES = (
-        (1, _('first'),),
-        (2, _('later'),),
-        (3, _('last'),),
+        (1, _('import'),),
+        (2, _('extra'),),
+        (3, _('bylines'),),
+        (4, _('template'),),
     )
 
     class Meta:
@@ -290,7 +286,7 @@ class Alias(models.Model):
     )
     comment = models.TextField(
         default=_('explain this pattern')
-        )
+    )
 
     def calculate_flags(self):
         flags_sum = 0
@@ -307,4 +303,4 @@ class Alias(models.Model):
         super().save(*args, **kwargs)
 
     def replace(self, content):
-        return re.sub(self.pattern, self.replacement, content, self.flags_sum)
+        return re.sub(self.pattern, self.replacement, content, flags=self.flags_sum)

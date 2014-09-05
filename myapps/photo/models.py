@@ -49,10 +49,10 @@ class ImageFile(TimeStampedModel):
         help_text=_('image crop horizontal. Between 0% and 100%.'),
         validators=[MaxValueValidator(100), MinValueValidator(0)],
     )
-    autocrop = models.BooleanField(
-        default=True,
-        help_text=_('this image has been automatically cropped'),
-        verbose_name=_('automatic cropping'),
+    manual_crop = models.BooleanField(
+        default=False,
+        help_text=_('this image has been manually cropped'),
+        verbose_name=_('manual cropping'),
     )
     old_file_path = models.CharField(
         help_text=_('previous path if the image has been moved.'),
@@ -101,20 +101,21 @@ class ImageFile(TimeStampedModel):
             pass
             # self.contributor = self.identify_photo_file_initials()
         if kwargs.pop('autocrop', False):
-            self.autocrop = True
+            self.manual_crop = False
         elif self.pk:
             saved_self = type(self).objects.get(id=self.pk)
 
-            if (self.horizontal_centre != saved_self.horizontal_centre or self.vertical_centre != saved_self.vertical_centre):
-                self.autocrop = False
+            if (self.horizontal_centre != saved_self.horizontal_centre or self.vertical_centre !=
+                    saved_self.vertical_centre):
+                self.manual_crop = True
         super().save(*args, **kwargs)
 
     def calculate_crop(self):
-        autocropped = self.autocrop
-        if not autocropped:
+        """ Calculates best crop using a clever algorithm. """
+        if self.manual_crop:
             return
-        horizontal = 50
-        vertical = 50
+        horizontal = 50 # ok - so it's not very clever...
+        vertical = 50 # maybe I'll try to make something based on the reddit thumbnail algorithm.
 
         self.horizontal_centre = horizontal
         self.vertical_centre = vertical

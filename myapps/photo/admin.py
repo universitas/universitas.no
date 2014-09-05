@@ -41,7 +41,7 @@ class ImageFileAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
         'created',
         'source_file',
         'contributor',
-        'autocrop',
+        'manual_crop',
         'horizontal_centre',
         'vertical_centre',
         'thumbnail',

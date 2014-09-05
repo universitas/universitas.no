@@ -120,8 +120,11 @@ class TextContent(TimeStampedModel):
             saved_markup = ''
         if saved_markup != self.bodytext_markup:
             # bodytext has been changed - clean and convert contents.
+            InlineLink.find_links(self)
             self.clean_markup()
             self.make_html()
+            self.bodytext_markup = Alias.objects.replace(
+                content=self.bodytext_markup, timing=2)
         super().save(*args, **kwargs)
 
     def clean_markup(self):
@@ -142,7 +145,7 @@ class TextContent(TimeStampedModel):
             # Apply inline tags.
             paragraph = InlineTag.objects.make_html(paragraph)
             html_blocks.append(paragraph)
-        self.bodytext_html = '\n\n'.join(html_blocks)
+        self.bodytext_html = ' '.join(html_blocks)
 
     def parse_markup(self):
         """ Use raw input tagged text to populate fields and create related objects """
@@ -156,6 +159,9 @@ class TextContent(TimeStampedModel):
         for paragraph in paragraphs:
             blocktag = BlockTag.objects.match_or_create(paragraph)
             tag, text_content = blocktag.split(paragraph)
+            if re.match(r'^\s*$', text_content):
+                # no text_content
+                continue
             function_name, target_field = blocktag.action.split(':')
             # The Blocktag model contains instructions for the various kinds of block (paragraph) level tags
             # that are in use. Actions are "_block_append", "_block_new" and "_block_drop".
@@ -434,6 +440,11 @@ class Story(TextContent):
             },)
         return url
 
+    def make_html(self):
+        super().make_html()
+        for link in self.inline_links.all():
+            link.insert_html()
+
     def clean_markup(self, *args, **kwargs):
         """ Clean user input and populate fields """
         super().clean_markup(*args, **kwargs)
@@ -492,18 +503,22 @@ class StoryElement(models.Model):
 
 class InlineLink(models.Model):
 
-    # Link looks like this: |1|this is a link|www.universitas.no|
-    # or                    |1|this is a link|
-    # or                    |1|
+    # Link looks like this: ¨1|this is a link|www.universitas.no¨
+    # or                    ¨1|this is a link¨
+    # or                    ¨this is a link¨
+    # or                    ¨1¨
 
-    TOKEN_START = '|'
-    TOKEN_END = '|'
-    TOKEN_SEP = '|'
+    TOKEN_START, TOKEN_SEP, TOKEN_END = '¨', '|', '¨'
 
     parent_story = models.ForeignKey(
         Story,
         related_name='inline_links'
     )
+
+    class Meta:
+        unique_together = ('label', 'parent_story')
+        verbose_name = _('inline link')
+        verbose_name_plural = _('inline links')
 
     # def autolabel(self):
     #     return '{}'.format(self.parent_story.autolabel_set.count() + 1)
@@ -552,11 +567,28 @@ class InlineLink(models.Model):
         related_name='incoming_links',
     )
 
+    def get_html(self):
+        return '<a href="{href}" alt="{alt}">{text}</a>'.format(
+            href=self.link,
+            alt=self.alt_text,
+            text=self.text,
+        )
+
+    def insert_html(self):
+        find = r'{start}{label}({end}|{sep}.*?{end})'.format(
+            start=re.escape(self.TOKEN_START),
+            sep=re.escape(self.TOKEN_SEP),
+            end=re.escape(self.TOKEN_END),
+            label=self.label,
+        )
+        replace = self.get_html()
+        self.parent_story.bodytext_html = re.sub(find, replace, self.parent_story.bodytext_html)
+
     @property
     def link(self):
         site = 'http://universitas.no'  # TODO: find in django settings.
         if self.linked_story:
-            return site + self.linked_story.get_absolute_url()
+            return self.linked_story.get_absolute_url()
         elif self.href:
             return self.href
         return ''
@@ -573,17 +605,17 @@ class InlineLink(models.Model):
             # Not an internal link
             return False
 
-    def check_link(self, method='head'):
+    def check_link(self, method='head', timeout=1):
         """ Does a http request to check the status of the url. """
         try:
-            status_code = str(request(method, self.link, timeout=1).status_code)
+            status_code = str(request(method, self.link, timeout=timeout).status_code)
         except Timeout:
             status_code = 408  # HTTP Timout
         except MissingSchema:
             status_code = 0  # not a HTTP url
         if status_code != self.status_code:
             self.status_code = status_code
-        logger.information(self.link, status_code)
+        logger.debug(self.link, status_code)
         return status_code
 
     @classmethod
@@ -620,7 +652,7 @@ class InlineLink(models.Model):
                 # update text
                 link.text = text
             link.find_linked_story()
-            link.check_link()  # TODO: Time consuming. Could it be queued?
+            # link.check_link()  # TODO: Time consuming. Could it be queued?
             link.save()
             if link.label == link.text:
                 # this is shorter and probably more common.
@@ -649,7 +681,7 @@ class InlineLink(models.Model):
     def convert_html_links(cls, bodytext, startlabel=0):
         """ convert <a href=""> to other tag """
         soup = BeautifulSoup(bodytext)
-        linkstyle = '{start}{label}{sep}{text}{sep}{href}{end}',
+        linkstyle = '{start}{label}{sep}{text}{sep}{href}{end}'
         label = startlabel
         for link in soup.find_all('a'):
             label += 1
@@ -828,7 +860,6 @@ class StoryVideo(StoryMedia):
                 status_code = 0  # not a HTTP url
             return status_code
 
-
         for host in cls.VIDEO_HOSTS:
             hostname = host[0]
             if hostname in url:
@@ -854,7 +885,7 @@ class StoryVideo(StoryMedia):
             new_video.save()
             return new_video
         except Exception as e:
-            logger.log(e)
+            logger.debug(e)
             return None
 
 

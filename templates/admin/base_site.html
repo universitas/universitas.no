@@ -2,6 +2,22 @@
 
 {% block extrahead %}
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js" type="text/javascript"></script>
+    <script>
+    $(document).ready(function (e) {
+        $('.field-thumbnail>img').click(function (e) {
+            var posX = $(this).offset().left,
+                posY = $(this).offset().top;
+            h_pos = Math.round(100 * (e.pageX - posX) / this.width);
+            v_pos = Math.round(100 * (e.pageY - posY) / this.height);
+            v_field = $(this).closest('tr').find('.field-vertical_centre input');
+            h_field = $(this).closest('tr').find('.field-horizontal_centre input');
+            v_field.val(v_pos);
+            h_field.val(h_pos);
+        });
+    });
+    </script>
+
+
     {% include 'autocomplete_light/static.html' %}
 {% endblock %}
 
