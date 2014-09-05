@@ -30,6 +30,6 @@ requests==2.3.0
 selenium==2.42.1
 setproctitle==1.1.8
 six==1.7.3
--e git+git@github.com:mariocesar/sorl-thumbnail.git@33763bfc0514f7724c9e9fc1eb8c909fd8aa131c#egg=sorl_thumbnail-origin/HEAD
+-e git+git@github.com:mariocesar/sorl-thumbnail.git@33763bfc0514f7724c9e9fc1eb8c909fd8aa131c#egg=sorl_thumbnail
 sqlparse==0.1.11
 tornado==4.0
