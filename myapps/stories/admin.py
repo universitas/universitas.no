@@ -3,6 +3,7 @@
 Admin for stories app.
 """
 
+from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from .models import Byline, Aside, Pullquote, Story, StoryType, Section, StoryImage, InlineLink, StoryVideo
 # from django.utils.html import format_html_join
@@ -201,3 +202,39 @@ class BylineAdmin(admin.ModelAdmin):
         # 'story',
         # 'contributor',
     )
+
+
+def find_linked_story(modeladmin, request, queryset):
+    find_linked_story.short_description = _('find linked stories')
+    for link in queryset:
+        if link.find_linked_story():
+            link.save()
+
+
+def check_link_status(modeladmin, request, queryset):
+    find_linked_story.short_description = _('find linked stories')
+    for link in queryset:
+        link.check_link(save_if_changed=True)
+
+
+@admin.register(InlineLink)
+class LinkAdmin(admin.ModelAdmin):
+    form = autocomplete_light.modelform_factory(Byline, exclude=())
+    actions_on_bottom = actions_on_top = True
+    actions = [find_linked_story, check_link_status]
+    list_display = (
+        'id',
+        # 'parent_story',
+        'number',
+        'alt_text',
+        'get_html',
+        'get_tag',
+        'link',
+        # 'linked_story',
+        'status_code',
+    )
+    list_editable = (
+        'alt_text',
+        # 'href',
+    )
+    list_filter = ('status_code',)

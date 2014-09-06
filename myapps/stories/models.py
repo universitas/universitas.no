@@ -120,11 +120,9 @@ class TextContent(TimeStampedModel):
             saved_markup = ''
         if saved_markup != self.bodytext_markup:
             # bodytext has been changed - clean and convert contents.
-            InlineLink.find_links(self)
             self.clean_markup()
             self.make_html()
-            self.bodytext_markup = Alias.objects.replace(
-                content=self.bodytext_markup, timing=2)
+            self.insert_links()
         super().save(*args, **kwargs)
 
     def clean_markup(self):
@@ -133,7 +131,9 @@ class TextContent(TimeStampedModel):
         for paragraph in self.bodytext_markup.splitlines():
             paragraph = Alias.objects.replace(content=paragraph, timing=1)
             bodytext.append(paragraph)
-        self.bodytext_markup = '\n'.join(bodytext)
+        bodytext = '\n'.join(bodytext)
+        bodytext = Alias.objects.replace(content=bodytext, timing=2)
+        self.bodytext_markup = bodytext
 
     def make_html(self):
         """ Create html body text from markup """
@@ -146,6 +146,15 @@ class TextContent(TimeStampedModel):
             paragraph = InlineTag.objects.make_html(paragraph)
             html_blocks.append(paragraph)
         self.bodytext_html = ' '.join(html_blocks)
+
+    def insert_links(self):
+        if hasattr(self, 'parent_story'):
+            parent_story = self.parent_story
+        else:
+            parent_story = self
+        new_html, new_body = InlineLink.find_links(self, parent_story)
+        self.bodytext_markup = new_body
+        self.bodytext_html = new_html
 
     def parse_markup(self):
         """ Use raw input tagged text to populate fields and create related objects """
@@ -503,45 +512,26 @@ class StoryElement(models.Model):
 
 class InlineLink(models.Model):
 
-    # Link looks like this: ¨1|this is a link|www.universitas.no¨
-    # or                    ¨1|this is a link¨
-    # or                    ¨this is a link¨
-    # or                    ¨1¨
+    # Link looks like this: [this is a link](www.universitas.no)
+    # Or this:              [this is a link](1)
 
-    TOKEN_START, TOKEN_SEP, TOKEN_END = '¨', '|', '¨'
+    # TOKEN_START, TOKEN_SEP, TOKEN_END = '¨', '|', '¨'
+    find_pattern = '\[(?P<text>.+?)\]\((?P<ref>\S+?)\)'
+    change_pattern = '[{text}]({ref})'
+    html_pattern = '<a href="{href}" alt="{alt}">{text}</a>'
+
+    class Meta:
+        verbose_name = _('inline link')
+        verbose_name_plural = _('inline links')
 
     parent_story = models.ForeignKey(
         Story,
         related_name='inline_links'
     )
 
-    class Meta:
-        unique_together = ('label', 'parent_story')
-        verbose_name = _('inline link')
-        verbose_name_plural = _('inline links')
-
-    # def autolabel(self):
-    #     return '{}'.format(self.parent_story.autolabel_set.count() + 1)
-
-    label = models.CharField(
-        default='1',
-        max_length=500,
-        help_text=_('short label'),
-        verbose_name=_('link shorthand'),
-    )
-
-    text = models.CharField(
-        max_length=1000,
-        help_text=_('link text'),
-        verbose_name=_('link text'),
-    )
-
-    alt_text = models.CharField(
-        max_length=500,
-        blank=True,
-        editable=False,
-        help_text=_('alternate link text'),
-        verbose_name=_('alt text'),
+    number = models.PositiveSmallIntegerField(
+        default=1,
+        help_text=_('link label'),
     )
 
     href = models.CharField(
@@ -551,6 +541,25 @@ class InlineLink(models.Model):
         verbose_name=_('link target'),
     )
 
+    linked_story = models.ForeignKey(
+        Story,
+        blank=True, null=True,
+        help_text=_('link to story on this website.'),
+        verbose_name=_('linked story'),
+        related_name='incoming_links',
+    )
+    alt_text = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text=_('alternate link text'),
+        verbose_name=_('alt text'),
+    )
+    text = models.TextField(
+        blank=True,
+        editable=False,
+        help_text=_('link text'),
+        verbose_name=_('link text'),
+    )
     status_code = models.CharField(
         max_length=3,
         editable=False,
@@ -559,34 +568,8 @@ class InlineLink(models.Model):
         verbose_name=_('http status code'),
     )
 
-    linked_story = models.ForeignKey(
-        Story,
-        blank=True, null=True,
-        help_text=_('link to story on this website.'),
-        verbose_name=_('linked story'),
-        related_name='incoming_links',
-    )
-
-    def get_html(self):
-        return '<a href="{href}" alt="{alt}">{text}</a>'.format(
-            href=self.link,
-            alt=self.alt_text,
-            text=self.text,
-        )
-
-    def insert_html(self):
-        find = r'{start}{label}({end}|{sep}.*?{end})'.format(
-            start=re.escape(self.TOKEN_START),
-            sep=re.escape(self.TOKEN_SEP),
-            end=re.escape(self.TOKEN_END),
-            label=self.label,
-        )
-        replace = self.get_html()
-        self.parent_story.bodytext_html = re.sub(find, replace, self.parent_story.bodytext_html)
-
     @property
     def link(self):
-        site = 'http://universitas.no'  # TODO: find in django settings.
         if self.linked_story:
             return self.linked_story.get_absolute_url()
         elif self.href:
@@ -594,106 +577,103 @@ class InlineLink(models.Model):
         return ''
 
     def find_linked_story(self):
-        """ Change literal url to foreignkey if the target is another article in the database. """
-        try:
-            match = re.search(r'/.+?/(?P<id>\d+)/', self.href)
-            story_id = int(match.group('id'))
-            self.linked_story = Story.objects.get(pk=story_id)
-            self.href = ''
-            return True
-        except (AttributeError, ObjectDoesNotExist):
-            # Not an internal link
+        """ Change literal url to foreign key if the target is another article in the database. """
+        if not self.href or self.linked_story:
             return False
 
-    def check_link(self, method='head', timeout=1):
+        if not self.linked_story:
+            try:
+                match = re.search(r'universitas.no/.+?/(?P<id>\d+)/', self.href)
+                story_id = int(match.group('id'))
+                self.linked_story = Story.objects.get(pk=story_id)
+            except (AttributeError, ObjectDoesNotExist):
+                # Not an internal link
+                return False
+        self.href = ''
+        self.alt_text = self.linked_story.title
+        return self.linked_story
+
+    def save(self, *args, **kwargs):
+        self.find_linked_story()
+        super().save(*args, **kwargs)
+
+    def check_link(self, save_if_changed=False, method='head', timeout=1):
         """ Does a http request to check the status of the url. """
+        url = self.validate_url(self.link)
         try:
-            status_code = str(request(method, self.link, timeout=timeout).status_code)
+            status_code = str(request(method, url, timeout=timeout).status_code)
         except Timeout:
             status_code = 408  # HTTP Timout
         except MissingSchema:
             status_code = 0  # not a HTTP url
-        if status_code != self.status_code:
+        if save_if_changed and status_code != self.status_code:
             self.status_code = status_code
-        logger.debug(self.link, status_code)
+            self.save()
+        logger.debug('{code}: {url}'.format(url=url, code=status_code))
         return status_code
 
     @classmethod
-    def find_links(cls, parent_story):
-        """ Find links in parent story bodytext and convert them to InlineLink instances. """
-        bodytext = parent_story.bodytext_markup
+    def find_links(cls, text_content, parent_story):
+        """ Find links in TextContent bodytext and convert them to InlineLink instances.
+        Then update link tags in both bodytext and html """
 
-        # convert html tags to custom markup
-        bodytext = cls.convert_html_links(bodytext)
+        new_body = text_content.bodytext_markup
+        new_html = text_content.bodytext_html
 
-        # regex pattern to search for
-        pattern = '{start}{label}{text}{href}{end}'.format(
-            start=re.escape(cls.TOKEN_START),
-            end=re.escape(cls.TOKEN_END),
-            label='(?P<label>.*?)',
-            text='(?P<text>{sep}.*?)?',
-            href='(?P<href>{sep}.*?)?',
-        ).format(sep=re.escape(cls.TOKEN_SEP),)
+        new_body = cls.convert_html_links(new_body)
+        found_links = re.finditer(cls.find_pattern, new_body)
 
-        found_links = re.finditer(pattern, bodytext)
-        for match in found_links:
-            label = match.group('label')
-            text = (match.group('text') or '').lstrip(cls.TOKEN_SEP)
-            href = (match.group('href') or '').lstrip(cls.TOKEN_SEP)
-            href = cls.validate_url((href or text or label)) or ''
+        for number, match in enumerate(found_links):
+            ref = match.group('ref')
+            text = match.group('text')
 
-            # label is mandatory, but could be identical to text
-            label = label or text
-            link = cls.objects.get_or_create(parent_story=parent_story, label=label)[0]
-            if not link.href or href:
-                # change or create a url.
-                link.href = href
-            if text:
-                # update text
+            if re.match(r'^\d+$', ref):
+                link = cls.objects.get_or_create(number=ref, parent_story=parent_story,)[0]
                 link.text = text
-            link.find_linked_story()
-            # link.check_link()  # TODO: Time consuming. Could it be queued?
-            link.save()
-            if link.label == link.text:
-                # this is shorter and probably more common.
-                substitution = '{start}{label}{end}'
+                if ref > number:
+                    link.number = number
+                link.save()
             else:
-                # both label and text is needed if multiple links have the same link text on one page.
-                substitution = '{start}{label}{sep}{text}{end}'
+                link = cls(
+                    parent_story=parent_story,
+                    href=ref,
+                    number=number,
+                    alt_text=text,
+                    text=text,
+                )
+                link.save()
 
-            substitution = substitution.format(
-                start=cls.TOKEN_START,
-                end=cls.TOKEN_END,
-                sep=cls.TOKEN_SEP,
-                label=link.label,
-                text=link.text,
-            )
-            # change long link format to shorter one.
             original_markup = re.escape(match.group(0))
-            bodytext = re.sub(original_markup, substitution, bodytext)
+            new_body = re.sub(original_markup, link.get_tag(), new_body)
+            new_html = re.sub(original_markup, link.get_html(), new_html)
 
-        if parent_story.bodytext_markup != bodytext:
-            # update parent story if bodytext has changed.
-            parent_story.bodytext_markup = bodytext
-            parent_story.save()
+        return new_html, new_body
+
+    def get_tag(self):
+        pattern = self.change_pattern
+        return pattern.format(text=self.text, ref=self.number)
+
+    def get_html(self):
+        pattern = self.html_pattern
+        html = pattern.format(text=self.text, href=self.link, alt=self.alt_text)
+        return mark_safe(html)
+
+    get_html.allow_tags = True
 
     @classmethod
-    def convert_html_links(cls, bodytext, startlabel=0):
+    def convert_html_links(cls, bodytext):
         """ convert <a href=""> to other tag """
+        if '&' in bodytext:
+            find = re.findall(r'.{,20}&.{,20}', bodytext)
+            print(find)
         soup = BeautifulSoup(bodytext)
-        linkstyle = '{start}{label}{sep}{text}{sep}{href}{end}'
-        label = startlabel
         for link in soup.find_all('a'):
-            label += 1
             href = link.get('href')
             text = link.text
+            href = cls.validate_url(href)
             if href:
-                replacement = linkstyle.format(
-                    start=cls.TOKEN_START,
-                    end=cls.TOKEN_END,
-                    sep=cls.TOKEN_SEP,
-                    label=label,
-                    href=href.strip(),
+                replacement = cls.change_pattern.format(
+                    ref=href.strip(),
                     text=text.strip(),
                 )
             else:
@@ -709,17 +689,19 @@ class InlineLink(models.Model):
     def validate_url(cls, url):
         """ Checks if input string is a valid http url. """
         site = 'universitas.no'  # todo - get from settings.
-        validate = URLValidator()
         url = url.strip('«»“”"\'')
+        if url.startswith('//'):
+            url = 'http:{url}'.format(url=url)
         if url.startswith('/'):
-            url = '{site}{link}'.format(site=site, link=url)
+            url = 'http://{site}{url}'.format(site=site, url=url)
         if not url.startswith('http://'):
             url = 'http://{url}'.format(url=url)
         try:
+            validate = URLValidator()
             validate(url)
             return url
         except ValidationError:
-            return False
+            return None
 
 
 class Pullquote(TextContent, StoryElement):
@@ -786,6 +768,11 @@ class StoryMedia(StoryElement):
         help_text=_('Relative image size.'),
         verbose_name=_('image size'),
     )
+
+    def save(self, *args, **kwargs):
+        self.caption = self.caption.replace('*', '')
+        self.creditline = self.creditline.replace('*', '')
+        super().save(*args, **kwargs)
 
 
 class StoryImage(StoryMedia):

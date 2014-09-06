@@ -24,9 +24,9 @@ TIMEZONE = timezone.get_current_timezone()
 
 
 def main():
-    # drop_images_stories_and_contributors()
+    drop_images_stories_and_contributors()
     # importer_utgaver_fra_gammel_webside()
-    # importer_saker_fra_gammel_webside(last=400, order_by='-id_sak')
+    importer_saker_fra_gammel_webside(last=400, order_by='-id_sak')
     # importer_saker_fra_gammel_webside()
     reset_db_autoincrement()
 
@@ -146,13 +146,11 @@ def importer_saker_fra_gammel_webside(first=0, last=20000, order_by='id_sak'):
             assert "@tit:" in prodsak.tekst
             from_prodsys = True
 
-        except (AttributeError, TypeError, AssertionError) as e:
+        except (AttributeError, TypeError, AssertionError):
             xtags = websak_til_xtags(websak)
             from_prodsys = False
-            # print (e)
 
         xtags = clean_up_html(xtags)
-        xtags = clean_up_xtags(xtags)
 
         year, month, day = websak.dato.year, websak.dato.month, websak.dato.day
         publication_date = datetime.datetime(year, month, day, tzinfo=TIMEZONE)
@@ -176,18 +174,17 @@ def importer_saker_fra_gammel_webside(first=0, last=20000, order_by='id_sak'):
             )
 
             new_story.save()
-            InlineLink.find_links(new_story)
 
         print(new_story, new_story.pk)
 
         for bilde in websak.bilde_set.all():
             try:
                 caption = bilde.bildetekst.tekst
-                caption = clean_up_html(caption)
-                caption = clean_up_xtags(caption)
-                caption = re.sub(r'^@[^:]+: ?', '', caption)
-            except (ObjectDoesNotExist, AttributeError,):
+            except (ObjectDoesNotExist, AttributeError):
                 caption = ''
+            if caption:
+                caption = clean_up_html(caption)
+                caption = re.sub(r'^@[^:]+: ?', '', caption)
             image_file = importer_bilder_fra_gammel_webside(bilde)
             if image_file:
                 story_image = StoryImage(
@@ -199,6 +196,8 @@ def importer_saker_fra_gammel_webside(first=0, last=20000, order_by='id_sak'):
                     size=bilde.size or 0,
                 )
                 story_image.save()
+
+        new_story.save()
 
         # TODO: Tilsvarende import av bilder fra prodsakbilde.
 
@@ -246,9 +245,8 @@ def websak_til_xtags(websak):
         content.append(anmfakta)
 
     for faktaboks in websak.fakta_set.all():
-        content.append('\n@fakta: %s' % (
-            clean_up_html(faktaboks.tekst),
-        ))
+        content.append('\n@fakta: {fakta}'.format(fakta=faktaboks.tekst
+                                                  ))
 
     xtags = '\n'.join(content)
     return xtags
@@ -270,11 +268,14 @@ def clean_up_html(html):
         (r'<\W*(i|em) *>', '_', re.IGNORECASE),  # italic tags -> underscore
         (r'<\W*(b|strong) *>', '*', re.IGNORECASE),  # strong tags -> asterix
         (r'< *li *>', '\n@li:', re.IGNORECASE),  # list tags -> @li:
-        (r'<.*?>', '', 0),  # delete all other tags.
     )
     html = InlineLink.convert_html_links(html)
     for pattern, replacement, flags in replacements:
         html = re.sub(pattern, replacement, html, flags=flags)
+
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(html)
+    html = soup.text
 
     return html
 
@@ -286,34 +287,6 @@ def clean_up_prodsys_encoding(text):
     text = text.replace('\x96', '–')  # n-dash
     text = text.replace('\x03', ' ')  # vetdafaen...
     return text
-
-
-def clean_up_xtags(xtags):
-    """
-    Fixes some characters and stuff in old prodsys implementation.
-    string -> string
-    """
-    xtags = xtags.replace('@tit:', '@headline:', 1)
-    replacements = (
-        (r'^@mt:', '\n@mt:', re.M),  # extra newline before subheadings
-        (r'[—–-]+', r'–', 0),  # all dashes to n-dash
-        (r'(\w)–', r'\1-', 0),  # n-dash to hyphen when after word.
-        (r'([,\w]) –(\w)', r'\1 -\2', 0),  # hyphen before word
-        (r'["“”]', r'»', 0),  # proper quotation marks.
-        (r'»\b', r'«', 0),  # left side of words.
-        (r'^# ?', '@li:', re.M),  # list
-        # TODO: Decide which tag to use for list elements.
-        (r'^(\W*)[*_]([^*_\n]*\?)[*_]$', r'@spm:\1\2', re.I + re.M),  # inline italic full line.
-        (r'^(\W*)\*([^*\n]*)\*', r'@tingo:\1\2', re.I + re.M),  # inline bold starts word
-        (r'(^|@[^:]+:) *- *', r'\1– ', 0),  # line starts with hyphen. Should be ndash
-        (r' *$', '', re.M),  # trim trailing spaces.
-        (r'^(@spm:)?[.a-z]+@[.a-z]+$', '', re.M),  # line with only tags, no text.
-    )
-
-    for pattern, replacement, flags in replacements:
-        xtags = re.sub(pattern, replacement, xtags, flags=flags)
-
-    return xtags.strip()
 
 
 def reset_db_autoincrement():

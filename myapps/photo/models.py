@@ -102,12 +102,14 @@ class ImageFile(TimeStampedModel):
             # self.contributor = self.identify_photo_file_initials()
         if kwargs.pop('autocrop', False):
             self.manual_crop = False
-        elif self.pk:
+        try:
             saved_self = type(self).objects.get(id=self.pk)
 
             if (self.horizontal_centre != saved_self.horizontal_centre or self.vertical_centre !=
                     saved_self.vertical_centre):
                 self.manual_crop = True
+        except ObjectDoesNotExist:
+            pass
         super().save(*args, **kwargs)
 
     def calculate_crop(self):
