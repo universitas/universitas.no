@@ -169,7 +169,7 @@ STATICFILES_DIRS = (
 )
 
 # INTERNATIONALIZATION
-LANGUAGE_CODE = 'nb_NO'
+LANGUAGE_CODE = 'en'
 TIME_ZONE = 'Europe/Oslo'
 USE_I18N = True  # Internationalisation (string translation)
 USE_L10N = True  # Localisation (numbers and stuff)

@@ -1,12 +1,4 @@
 @charset "UTF-8";
 
-@import "includes/googlefonts";
+@import "includes/googlefonts", "foundation/settings", "foundation";
 
-@import "normalize";
-// foundation scss components
-// foundation overrides
-@import "foundation/settings";
-@import "foundation";
-
-// vimeo custom css - but foundation has some better solution here, called flex-video.
-// @import "includes/vimeo";

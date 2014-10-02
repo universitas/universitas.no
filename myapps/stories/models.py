@@ -13,7 +13,7 @@ from django.utils import translation
 from django.conf import settings
 from django.db import models
 from django.core.cache import cache
-from django.template.defaultfilters import slugify
+from django.utils.text import slugify
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import MaxValueValidator, MinValueValidator, URLValidator, ValidationError
 from django.utils.safestring import mark_safe

@@ -6,7 +6,7 @@
 # Django core
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
-# from django.template.defaultfilters import slugify
+# from django.utils.text import slugify
 
 # Installed apps
 
