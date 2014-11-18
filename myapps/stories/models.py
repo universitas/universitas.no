@@ -33,6 +33,8 @@ from myapps.photo.models import ImageFile
 from myapps.frontpage.models import FrontpageStory
 # from myapps.issues.models import PrintIssue
 
+from .status_codes import HTTP_STATUS_CODES
+
 
 class Section(models.Model):
 
@@ -575,6 +577,7 @@ class InlineLink(models.Model):
         max_length=3,
         editable=False,
         default='',
+        choices=HTTP_STATUS_CODES,
         help_text=_('Status code returned from automatic check.'),
         verbose_name=_('http status code'),
     )
@@ -616,11 +619,11 @@ class InlineLink(models.Model):
         try:
             status_code = str(request(method, url, timeout=timeout).status_code)
         except Timeout:
-            status_code = 408  # HTTP Timout
+            status_code = '408'  # HTTP Timout
         except MissingSchema:
-            status_code = 0  # not a HTTP url
+            status_code = 'URL'  # not a HTTP url
         except ConnectionError:
-            status_code = 0  # DNS error
+            status_code = 'DNS'  # DNS error
 
         if save_if_changed and status_code != self.status_code:
             self.status_code = status_code

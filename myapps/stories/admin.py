@@ -224,7 +224,7 @@ class LinkAdmin(admin.ModelAdmin):
     actions = [find_linked_story, check_link_status]
     list_display = (
         'id',
-        # 'parent_story',
+        'parent_story',
         'number',
         'alt_text',
         'get_html',
