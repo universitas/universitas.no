@@ -610,6 +610,8 @@ class InlineLink(models.Model):
 
     def check_link(self, save_if_changed=False, method='head', timeout=1):
         """ Does a http request to check the status of the url. """
+        if not self.link:
+            return 0
         url = self.validate_url(self.link)
         try:
             status_code = str(request(method, url, timeout=timeout).status_code)
@@ -681,7 +683,7 @@ class InlineLink(models.Model):
             # logger.debug(find)
         soup = BeautifulSoup(bodytext)
         for link in soup.find_all('a'):
-            href = link.get('href')
+            href = link.get('href') or ''
             text = link.text
             href = cls.validate_url(href)
             if href:
@@ -700,20 +702,20 @@ class InlineLink(models.Model):
         return str(soup)
 
     @classmethod
-    def validate_url(cls, url):
-        """ Checks if input string is a valid http url. """
+    def validate_url(cls, href):
+        """ Checks if input string is a valid http href. """
         site = 'universitas.no'  # todo - get from settings.
-        url = url.strip('«»“”"\'')
-        if url.startswith('//'):
-            url = 'http:{url}'.format(url=url)
-        if url.startswith('/'):
-            url = 'http://{site}{url}'.format(site=site, url=url)
-        if not url.startswith('http://'):
-            url = 'http://{url}'.format(url=url)
+        href = href.strip('«»“”"\'')
+        if href.startswith('//'):
+            href = 'http:{href}'.format(href=href)
+        if href.startswith('/'):
+            href = 'http://{site}{href}'.format(site=site, href=href)
+        if not href.startswith('http://'):
+            href = 'http://{href}'.format(href=href)
         try:
             validate = URLValidator()
-            validate(url)
-            return url
+            validate(href)
+            return href
         except ValidationError:
             return None
 

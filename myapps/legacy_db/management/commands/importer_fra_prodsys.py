@@ -25,10 +25,39 @@ logger = logging.getLogger('universitas')
 
 from django.core.management.base import BaseCommand, CommandError
 
+import gc
+import objgraph
+
+
+def dump_garbage():
+    """
+    show us what's the garbage about
+    """
+
+    # force collection
+    print("\nGARBAGE:")
+    gc.collect()
+    objgraph.show_most_common_types()
+    import ipdb; ipdb.set_trace()
+
+    print("\nGARBAGE OBJECTS:")
+    for x in gc.garbage:
+        s = str(x)
+        if len(s) > 80:
+            s = s[:80]
+        print(type(x), "\n  ", s)
+
 
 class Command(BaseCommand):
     help = 'Imports content from legacy website.'
     option_list = BaseCommand.option_list + (
+        make_option(
+            '--garbagecollection', '-g',
+            action='store_true',
+            dest='garbage',
+            default=False,
+            help='Garbage collection'
+        ),
         make_option(
             '--first', '-f',
             type='int',
@@ -67,6 +96,9 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
+        # if options['garbage']:
+            # gc.enable()
+            # gc.set_debug(gc.DEBUG_LEAK)
 
         if options['drop']:
             drop_images_stories_and_contributors()
@@ -77,7 +109,10 @@ class Command(BaseCommand):
         order_by = '-id_sak' if options['reverse'] else 'id_sak'
         last = options['first'] + options['number'] if options['number'] else None
 
-        importer_saker_fra_gammel_webside(first=options['first'], last=last, order_by=order_by)
+        importer_saker_fra_gammel_webside(first=options['first'], last=last, order_by=order_by, collect_garbage=options['garbage'])
+
+        # if options['garbage']:
+            # dump_garbage()
 
         reset_db_autoincrement()
         self.stdout.write('Successfully imported content')
@@ -94,8 +129,8 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
 
     # bildefiler = cache.get('bildefiler')
     # if not bildefiler:
-    #     # Dette tar litt tid, så det caches i redis, som kan huske det mellom skriptene kjører.
-    #     # TODO: Kanskje like raskt å bruke path.exists eller noe sånt?
+    # Dette tar litt tid, så det caches i redis, som kan huske det mellom skriptene kjører.
+    # TODO: Kanskje like raskt å bruke path.exists eller noe sånt?
     #     bildefiler = set(
     #         subprocess.check_output(
     #             'cd %s; find -iname "*.jp*g" | sed "s,./,,"' % (BILDEMAPPE,),
@@ -185,9 +220,16 @@ def importer_utgaver_fra_gammel_webside():
         new_issue.save()
 
 
-def importer_saker_fra_gammel_webside(first=0, last=None, order_by='id_sak'):
+def importer_saker_fra_gammel_webside(first=0, last=None, order_by='id_sak', collect_garbage=False):
     websaker = Sak.objects.exclude(publisert=0).order_by(order_by)[first:last]
+    counter = 0
+    # check = 10
     for websak in websaker:
+        counter += 1
+        if collect_garbage and counter % 100 == 0:
+            logger.warn('collecting garbage {count}'.format(count=counter))
+            logger.info(gc.get_stats())
+            gc.collect()
         prodsys_source = ''
         if Story.objects.filter(pk=websak.pk):
             logger.debug('sak %s finnes' % (websak.pk,))
