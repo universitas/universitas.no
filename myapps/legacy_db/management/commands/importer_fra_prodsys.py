@@ -13,6 +13,7 @@ from myapps.photo.models import ImageFile
 from myapps.issues.models import PrintIssue
 from myapps.contributors.models import Contributor
 from django.core import serializers
+from optparse import make_option
 
 BILDEMAPPE = os.path.join(settings.MEDIA_ROOT, '')
 
@@ -26,17 +27,58 @@ from django.core.management.base import BaseCommand, CommandError
 
 
 class Command(BaseCommand):
-    args = '<number_of_articles>'
     help = 'Imports content from legacy website.'
+    option_list = BaseCommand.option_list + (
+        make_option(
+            '--first', '-f',
+            type='int',
+            dest='first',
+            default=0,
+            help='First article id to import'
+        ),
+        make_option(
+            '--number', '-n',
+            type='int',
+            dest='number',
+            default=0,
+            help='Number of articles to import'
+        ),
+        make_option(
+            '--reverse', '-r',
+            action='store_true',
+            dest='reverse',
+            default=False,
+            help='Start with newest articles.'
+        ),
+        make_option(
+            '--nodrop', '-N',
+            action='store_false',
+            dest='drop',
+            default=True,
+            help='Don\'t rop old content from the database.'
+        ),
+        make_option(
+            '--issues', '-i',
+            action='store_true',
+            dest='issues',
+            default=False,
+            help='Import issues'
+        ),
+    )
 
     def handle(self, *args, **options):
-        drop_images_stories_and_contributors()
-        # importer_utgaver_fra_gammel_webside()
-        if len(args):
-            number_of_articles = int(args[0])
-            importer_saker_fra_gammel_webside(last=number_of_articles, order_by='-id_sak')
-        else:
-            importer_saker_fra_gammel_webside()
+
+        if options['drop']:
+            drop_images_stories_and_contributors()
+
+        if options['issues']:
+            importer_utgaver_fra_gammel_webside()
+
+        order_by = '-id_sak' if options['reverse'] else 'id_sak'
+        last = options['first'] + options['number'] if options['number'] else None
+
+        importer_saker_fra_gammel_webside(first=options['first'], last=last, order_by=order_by)
+
         reset_db_autoincrement()
         self.stdout.write('Successfully imported content')
 
@@ -143,7 +185,7 @@ def importer_utgaver_fra_gammel_webside():
         new_issue.save()
 
 
-def importer_saker_fra_gammel_webside(first=0, last=20000, order_by='id_sak'):
+def importer_saker_fra_gammel_webside(first=0, last=None, order_by='id_sak'):
     websaker = Sak.objects.exclude(publisert=0).order_by(order_by)[first:last]
     for websak in websaker:
         prodsys_source = ''

@@ -34,7 +34,6 @@ from myapps.frontpage.models import FrontpageStory
 # from myapps.issues.models import PrintIssue
 
 
-
 class Section(models.Model):
 
     """
@@ -124,6 +123,8 @@ class TextContent(TimeStampedModel):
             self.clean_markup()
             self.make_html()
             self.insert_links()
+            # soup = BeautifulSoup(self.bodytext_html)
+            # self.bodytext_html = soup.prettify()
         super().save(*args, **kwargs)
 
     def clean_markup(self):
@@ -441,11 +442,11 @@ class Story(TextContent):
 
     def get_edit_url(self):
         url = reverse(
-           'admin:{app}_{object}_change'.format(
-               app=self._meta.app_label,
-               object=self._meta.model_name,
-           ),
-           args=[self.id],
+            'admin:{app}_{object}_change'.format(
+                app=self._meta.app_label,
+                object=self._meta.model_name,
+            ),
+            args=[self.id],
         )
         return url
 
@@ -461,8 +462,8 @@ class Story(TextContent):
 
     def make_html(self):
         super().make_html()
-        for link in self.inline_links.all():
-            link.insert_html()
+        # for link in self.inline_links.all():
+            # self.bodytext_html = link.insert_html(self.bodytext_html)
 
     def clean_markup(self, *args, **kwargs):
         """ Clean user input and populate fields """
@@ -624,9 +625,10 @@ class InlineLink(models.Model):
 
     @classmethod
     def find_links(cls, text_content, parent_story):
-        """ Find links in TextContent bodytext and convert them to InlineLink instances.
-        Then update link tags in both bodytext and html """
-
+        """
+        Find links in TextContent bodytext and convert them to InlineLink instances.
+        Then update link tags in both bodytext and html
+        """
         new_body = text_content.bodytext_markup
         new_html = text_content.bodytext_html
 
@@ -638,6 +640,7 @@ class InlineLink(models.Model):
             text = match.group('text')
 
             if re.match(r'^\d+$', ref):
+                ref = int(ref)
                 link = cls.objects.get_or_create(number=ref, parent_story=parent_story,)[0]
                 link.text = text
                 if ref > number:
@@ -673,8 +676,8 @@ class InlineLink(models.Model):
     @classmethod
     def convert_html_links(cls, bodytext):
         """ convert <a href=""> to other tag """
-        if '&' in bodytext:
-            find = re.findall(r'.{,20}&.{,20}', bodytext)
+        # if '&' in bodytext:
+            # find = re.findall(r'.{,20}&.{,20}', bodytext)
             # logger.debug(find)
         soup = BeautifulSoup(bodytext)
         for link in soup.find_all('a'):
@@ -692,6 +695,7 @@ class InlineLink(models.Model):
 
             # change the link from html to simple-tags
             link.replace_with(replacement)
+            logger.debug('found link: {link} - replace with: {replacement}'.format(link=link, replacement=replacement))
 
         return str(soup)
 
@@ -712,6 +716,18 @@ class InlineLink(models.Model):
             return url
         except ValidationError:
             return None
+
+    def insert_html(self, bodytext_html):
+        """ inserts the link as a html element in parent story """
+        link_tag = self.get_html()
+        pattern = r'\[.*?\]\({number}\)'.format(number=self.number)
+        if re.search(pattern, bodytext_html):
+            bodytext_html = re.sub(pattern, link_tag, bodytext_html)
+            logger.debug('change link: {pattern} - replace with: {tag}'.format(pattern=pattern, tag=link_tag))
+        else:
+            logger.warning('could not find link: {pattern} - replace with: {tag}'.format(pattern=pattern, tag=link_tag))
+
+        return bodytext_html
 
 
 class Pullquote(TextContent, StoryElement):
@@ -828,11 +844,23 @@ class StoryVideo(StoryMedia):
     def embed(self, width=1200, height=600):
         """ Returns html embed code """
         if self.video_host == 'vimeo':
-            #  <iframe src="//player.vimeo.com/video/105149174?title=0&amp;byline=0&amp;portrait=0&amp;color=f00008" width="1200" height="675" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-            embed_pattern = '<iframe src="//player.vimeo.com/video/{host_video_id}?title=0&amp;byline=0&amp;portrait=0&amp;color=f00008" width="{width}" height="{height}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+            # <iframe src="//player.vimeo.com/video/105149174?title=0&amp;byline=0&amp;portrait=0&amp;color=f00008"
+            # width="1200" height="675" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+            # </iframe>
+            embed_pattern = (
+                '<iframe src="//player.vimeo.com/'
+                'video/{host_video_id}?title=0&amp;byline=0&amp;portrait=0&amp;color=f00008" '
+                'width="{width}" height="{height}" frameborder="0" '
+                'webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+            )
         elif self.video_host == 'youtu':
-            # <iframe width="1280" height="720" src="//www.youtube-nocookie.com/embed/HBk1GdcdALU?rel=0" frameborder="0" allowfullscreen></iframe>
-            embed_pattern = '<iframe width="{width}" height="{heigth}" src="//www.youtube-nocookie.com/embed/{host_video_id}?rel=0" frameborder="0" allowfullscreen></iframe>'
+            # <iframe width="1280" height="720" src="//www.youtube-nocookie.com/embed/HBk1GdcdALU?rel=0"
+            # frameborder="0" allowfullscreen></iframe>
+            embed_pattern = (
+                '<iframe width="{width}" height="{heigth}" '
+                'src="//www.youtube-nocookie.com/embed/{host_video_id}?'
+                'rel=0" frameborder="0" allowfullscreen></iframe>'
+            )
         else:
             raise Exception('unknown hosting site.')
 
@@ -841,7 +869,6 @@ class StoryVideo(StoryMedia):
     @classmethod
     def create_from_url(cls, url, parent_story):
         """ create video object from input url """
-
         # url formats:
         # https://www.youtube.com/watch?v=roHl3PJsZPk
         # http://youtu.be/roHl3PJsZPk
@@ -961,8 +988,8 @@ class Byline(models.Model):
                     story=story,
                     byline=full_byline,
                     error=e
-                    )
                 )
+            )
 
             full_name, title, initials, credit = 'Nomen Nescio', full_byline, 'XX', '???'
 
