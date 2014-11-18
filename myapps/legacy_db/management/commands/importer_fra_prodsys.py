@@ -92,17 +92,17 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
     else:
         webbilder = (webbilder,)
 
-    bildefiler = cache.get('bildefiler')
-    if not bildefiler:
-        # Dette tar litt tid, så det caches i redis, som kan huske det mellom skriptene kjører.
-        # TODO: Kanskje like raskt å bruke path.exists eller noe sånt?
-        bildefiler = set(
-            subprocess.check_output(
-                'cd %s; find -iname "*.jp*g" | sed "s,./,,"' % (BILDEMAPPE,),
-                shell=True,
-            ).decode("utf-8").splitlines()
-        )
-        cache.set('bildefiler', bildefiler)
+    # bildefiler = cache.get('bildefiler')
+    # if not bildefiler:
+    #     # Dette tar litt tid, så det caches i redis, som kan huske det mellom skriptene kjører.
+    #     # TODO: Kanskje like raskt å bruke path.exists eller noe sånt?
+    #     bildefiler = set(
+    #         subprocess.check_output(
+    #             'cd %s; find -iname "*.jp*g" | sed "s,./,,"' % (BILDEMAPPE,),
+    #             shell=True,
+    #         ).decode("utf-8").splitlines()
+    #     )
+    #     cache.set('bildefiler', bildefiler)
 
     for bilde in webbilder:
         path = bilde.path
@@ -146,7 +146,7 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
                     nyttbilde = None
             else:
                 nyttbilde = None
-                assert not (path in bildefiler)
+                # assert not (path in bildefiler)
 
     return nyttbilde
 

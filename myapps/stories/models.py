@@ -984,7 +984,8 @@ class Byline(models.Model):
         except (AssertionError, AttributeError, ) as e:
             # Malformed byline
             logger.warning(
-                'Malformed byline: {story}:{byline} ({error})'.format(
+                'Malformed byline: "{byline}" error: {error} prodsak_id: {prodsak_id}'.format(
+                    prodsak_id=story.prodsak_id,
                     story=story,
                     byline=full_byline,
                     error=e
