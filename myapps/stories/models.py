@@ -615,8 +615,10 @@ class InlineLink(models.Model):
         """ Does a http request to check the status of the url. """
         if self.linked_story:
             status_code = 'INT'
+            url = self.validate_url(self.link)
         elif not self.link:
             status_code = ''
+            url = ''
         else:
             url = self.validate_url(self.link)
             try:
@@ -637,6 +639,7 @@ class InlineLink(models.Model):
         if save_if_changed and status_code != self.status_code:
             self.status_code = status_code
             self.save()
+
         logger.debug('{code}: {url}'.format(url=url, code=status_code))
         return status_code
 
