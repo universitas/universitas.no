@@ -618,12 +618,15 @@ class InlineLink(models.Model):
         url = self.validate_url(self.link)
         try:
             status_code = str(request(method, url, timeout=timeout).status_code)
+            if status_code > 500:
+                status_code = 500
         except Timeout:
             status_code = '408'  # HTTP Timout
         except MissingSchema:
             status_code = 'URL'  # not a HTTP url
         except ConnectionError:
             status_code = 'DNS'  # DNS error
+
 
         if save_if_changed and status_code != self.status_code:
             self.status_code = status_code
@@ -710,7 +713,7 @@ class InlineLink(models.Model):
     @classmethod
     def validate_url(cls, href):
         """ Checks if input string is a valid http href. """
-        site = 'universitas.no'  # todo - get from settings.
+        site = settings.SITE_URL  # todo - get from settings.
         href = href.strip('«»“”"\'')
         if href.startswith('//'):
             href = 'http:{href}'.format(href=href)
@@ -725,17 +728,18 @@ class InlineLink(models.Model):
         except ValidationError:
             return None
 
-    def insert_html(self, bodytext_html):
-        """ inserts the link as a html element in parent story """
-        link_tag = self.get_html()
-        pattern = r'\[.*?\]\({number}\)'.format(number=self.number)
-        if re.search(pattern, bodytext_html):
-            bodytext_html = re.sub(pattern, link_tag, bodytext_html)
-            logger.debug('change link: {pattern} - replace with: {tag}'.format(pattern=pattern, tag=link_tag))
-        else:
-            logger.warning('could not find link: {pattern} - replace with: {tag}'.format(pattern=pattern, tag=link_tag))
+    ## TROR IKKE DENNE SKAL VÆRE NØDVENDIG
+    # def insert_html(self, bodytext_html):
+    #     """ inserts the link as a html element in parent story """
+    #     link_tag = self.get_html()
+    #     pattern = r'\[.*?\]\({number}\)'.format(number=self.number)
+    #     if re.search(pattern, bodytext_html):
+    #         bodytext_html = re.sub(pattern, link_tag, bodytext_html)
+    #         logger.debug('change link: {pattern} - replace with: {tag}'.format(pattern=pattern, tag=link_tag))
+    #     else:
+    #         logger.warning('could not find link: {pattern} - replace with: {tag}'.format(pattern=pattern, tag=link_tag))
 
-        return bodytext_html
+    #     return bodytext_html
 
 
 class Pullquote(TextContent, StoryElement):

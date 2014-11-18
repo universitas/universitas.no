@@ -3,6 +3,7 @@ import logging
 logger = logging.getLogger('universitas')
 
 from django.core.management.base import BaseCommand  # , CommandError
+from django.db.models import Count
 from myapps.stories.models import InlineLink
 
 
@@ -27,8 +28,6 @@ class Command(BaseCommand):
 
         self._check_links(status_in=status_in)
 
-        self.stdout.write('Successfully imported content')
-
     def _check_links(self, status_in=None):
         links_to_check = InlineLink.objects.all()
         if status_in:
@@ -40,3 +39,8 @@ class Command(BaseCommand):
 
         for link in links_to_check:
             link.check_link()
+
+        self.stdout.write('Checked {} links'.format(links_to_check.count()))
+        link_statuses = InlineLink.objects.values('status_code').annotate(count=Count('status_code'))
+        for status in link_statuses:
+            self.stdout.write('{count} - {status_code}'.format(**status))
