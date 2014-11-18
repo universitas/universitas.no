@@ -38,7 +38,7 @@ class Command(BaseCommand):
         self.stdout.write('Checking {} links'.format(links_to_check.count()))
 
         for link in links_to_check:
-            link.check_link()
+            link.check_link(save_if_changed=True)
 
         self.stdout.write('Checked {} links'.format(links_to_check.count()))
         link_statuses = InlineLink.objects.values('status_code').annotate(count=Count('status_code'))
