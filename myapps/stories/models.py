@@ -617,9 +617,10 @@ class InlineLink(models.Model):
             return 0
         url = self.validate_url(self.link)
         try:
-            status_code = str(request(method, url, timeout=timeout).status_code)
+            status_code = request(method, url, timeout=timeout).status_code
             if status_code > 500:
                 status_code = 500
+            status_code = str(status_code)
         except Timeout:
             status_code = '408'  # HTTP Timout
         except MissingSchema:
@@ -888,6 +889,7 @@ class StoryVideo(StoryMedia):
 
         def check_link(url, method='head', timeout=2):
             """ Does a http request to check the status of the url. """
+            # TODO: samme metode som i inlinelink.
             try:
                 status_code = str(request(method, url, timeout=timeout).status_code)
             except Timeout:
