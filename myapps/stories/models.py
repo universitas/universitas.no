@@ -613,20 +613,25 @@ class InlineLink(models.Model):
 
     def check_link(self, save_if_changed=False, method='head', timeout=1):
         """ Does a http request to check the status of the url. """
-        if not self.link:
-            return 0
-        url = self.validate_url(self.link)
-        try:
-            status_code = request(method, url, timeout=timeout).status_code
-            if status_code > 500:
-                status_code = 500
-            status_code = str(status_code)
-        except Timeout:
-            status_code = '408'  # HTTP Timout
-        except MissingSchema:
-            status_code = 'URL'  # not a HTTP url
-        except ConnectionError:
-            status_code = 'DNS'  # DNS error
+        if self.linked_story:
+            status_code = 'INT'
+        elif not self.link:
+            status_code = ''
+        else:
+            url = self.validate_url(self.link)
+            try:
+                status_code = request(method, url, timeout=timeout).status_code
+                if status_code == 410:
+                    status_code = request('get', url, timeout=timeout).status_code
+                if status_code > 500:
+                    status_code = 500
+                status_code = str(status_code)
+            except Timeout:
+                status_code = '408'  # HTTP Timout
+            except MissingSchema:
+                status_code = 'URL'  # not a HTTP url
+            except ConnectionError:
+                status_code = 'DNS'  # DNS error
 
 
         if save_if_changed and status_code != self.status_code:

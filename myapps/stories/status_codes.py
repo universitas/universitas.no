@@ -3,6 +3,7 @@ HTTP_STATUS_CODES = [
     ('', 'Not checked yet', ),
     ('DNS', 'DNS lookup error', ),
     ('URL', 'Malformed http url', ),
+    ('INT', 'Internal link', ),
     # ('100', '100 Continue', ),
     # ('101', '101 Switching Protocols', ),
     # ('102', '102 Processing (WebDAV; RFC 2518)', ),
