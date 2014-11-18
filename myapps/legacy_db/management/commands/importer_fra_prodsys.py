@@ -5,7 +5,7 @@ import os
 import re
 import subprocess
 from django.utils import timezone
-from django.core.cache import cache
+# from django.core.cache import cache
 from django.conf import settings
 from myapps.legacy_db.models import Bilde, Sak, Prodsak
 from myapps.stories.models import Story, StoryType, Section, StoryImage, InlineLink
@@ -36,7 +36,7 @@ def dump_garbage():
     # force collection
     print("\nGARBAGE:")
     gc.collect()
-    objgraph.show_most_common_types()
+    # objgraph.show_most_common_types()
     import ipdb; ipdb.set_trace()
 
     print("\nGARBAGE OBJECTS:")

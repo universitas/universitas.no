@@ -24,7 +24,7 @@ from django.core.urlresolvers import reverse
 # Installed apps
 from bs4 import BeautifulSoup
 from requests import request
-from requests.exceptions import Timeout, MissingSchema
+from requests.exceptions import Timeout, MissingSchema, ConnectionError
 
 # Project apps
 from myapps.contributors.models import Contributor
@@ -619,6 +619,9 @@ class InlineLink(models.Model):
             status_code = 408  # HTTP Timout
         except MissingSchema:
             status_code = 0  # not a HTTP url
+        except ConnectionError:
+            status_code = 0  # DNS error
+
         if save_if_changed and status_code != self.status_code:
             self.status_code = status_code
             self.save()
