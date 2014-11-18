@@ -1,9 +1,11 @@
+import re
 from optparse import make_option
 import logging
 logger = logging.getLogger('universitas')
 
 from django.core.management.base import BaseCommand  # , CommandError
 from django.db.models import Count
+
 from myapps.stories.models import InlineLink
 
 
@@ -18,7 +20,7 @@ class Command(BaseCommand):
             help='Only check new links'
         ),
         make_option(
-            '--fix', '-x',
+            '--fix', '-f',
             action='store_true',
             dest='fix broken',
             default=False,
@@ -31,6 +33,14 @@ class Command(BaseCommand):
             default=[],
             help='Check links with these status codes'
         ),
+        make_option(
+            '--timout', '-t',
+            type=float,
+            action='store',
+            dest='timeout',
+            default=1,
+            help='Seconds to wait for a http response'
+        ),
     )
 
     def handle(self, *args, **options):
@@ -40,34 +50,33 @@ class Command(BaseCommand):
         if options['new links']:
             status_in = ['']
 
-        if options['fix broken']:
-            self._repair_legacy_links()
-
-        self._check_links(status_in=status_in)
-
-    def _check_links(self, status_in=None):
-        """ Check and update status code for inline links in articles. """
-        links_to_check = InlineLink.objects.all()
         if status_in:
             links_to_check = InlineLink.objects.filter(status_code__in=status_in)
         else:
             links_to_check = InlineLink.objects.all()
 
+        if options['fix broken']:
+            self._repair_legacy_links(links_to_check)
+
+        self._check_links(links_to_check, timeout=options['timeout'])
+
+    def _check_links(self, links_to_check, timeout):
+        """ Check and update status code for inline links in articles. """
+
         self.stdout.write('Checking {} links'.format(links_to_check.count()))
 
         for link in links_to_check:
-            link.check_link(save_if_changed=True)
+            link.check_link(save_if_changed=True, timeout=timeout)
 
         self.stdout.write('Checked {} links'.format(links_to_check.count()))
         link_statuses = InlineLink.objects.values('status_code').annotate(count=Count('status_code'))
         for status in link_statuses:
             self.stdout.write('{count} - {status_code}'.format(**status))
 
-    def _repair_legacy_links(self):
+    def _repair_legacy_links(self, links_to_check):
         """ Fix some strange formatting in links from the old webpage """
-        import re
-        for link in InlineLink.objects.filter(href__endswith=r'/a'):
+        for link in links_to_check.filter(href__endswith=r'/a'):
             link.href = re.sub(r'/a$', '', link.href)
             link.save()
 
-        InlineLink.objects.filter(href__endswith='kontakt.shtml').update(href='http://universitas.no/kontakt/')
+        links_to_check.filter(href__endswith='kontakt.shtml').update(href='http://universitas.no/kontakt/')
