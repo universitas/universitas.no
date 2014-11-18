@@ -26,7 +26,6 @@ logger = logging.getLogger('universitas')
 from django.core.management.base import BaseCommand, CommandError
 
 import gc
-import objgraph
 
 
 def dump_garbage():
