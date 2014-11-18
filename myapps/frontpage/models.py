@@ -7,6 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 # Project apps
 # from myapps.stories.models import Story
 from myapps.photo.models import ImageFile
+import logging
+logger = logging.getLogger('universitas')
 
 
 class FrontpageManager(models.Manager):
@@ -95,7 +97,7 @@ class Contentblock(TimeStampedModel):
         self.columns = choice(widths)
         self.height = choice(heights)
         self.save()
-        print(self)
+        # logger.debug(self)
 
     @property
     def publication_date(self):

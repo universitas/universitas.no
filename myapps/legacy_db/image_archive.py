@@ -5,6 +5,8 @@ import re
 from django.utils.text import slugify
 from django.utils.timezone import datetime
 
+import logging
+logger = logging.getLogger('universitas')
 
 class ImageFile(object):
 
@@ -17,7 +19,7 @@ class ImageFile(object):
         self.path = fullpath
         self.filename = fullpath.split('/')[-1]
         self._slugify_filename()
-        # print(self._slugify_filename())
+        # logger.debug(self._slugify_filename())
 
     def _slugify_filename(self):
         filename, dot, extension = self.filename.rpartition('.')
@@ -25,7 +27,7 @@ class ImageFile(object):
         filename = re.sub(r'^[\d-]*', '', filename)
         filename = slugify(filename)
         if filename == "":
-            print (self.path)
+            logger.debug(self.path)
         year = self.year
         issue = self.issue
         extension = extension.lower()
@@ -60,7 +62,7 @@ def main():
         filedate = datetime.fromtimestamp(unix_timestamp)
         filepath = ''.join(fields[6:])
         filename = filepath.split('/')[-1]
-        # print("{} {} {}".format(size, unix_timestamp, path))
+        # logger.debug("{} {} {}".format(size, unix_timestamp, path))
         year_issue_match = (
             re.match(r'\./(?P<year>\d{4})/(?P<issue>\d{1,2})/(?P=issue)\D', filepath) or
             re.match(r'\./(?P<year>\d{4})/(?P<issue>\d{1,2})/', filepath) or
@@ -82,20 +84,20 @@ def main():
                 year = filedate.year
                 issue = '00'
 
-        # print('year: {}, issue: {}, file: {}'.format(issuematch.group('year'), issuematch.group('issue'), filename))
+        # logger.debug('year: {}, issue: {}, file: {}'.format(issuematch.group('year'), issuematch.group('issue'), filename))
         if year and issue:
             image_file = ImageFile(filepath, filesize_in_bytes, filedate, issue, year)
             if filename in imagedict:
                 old_filepath = imagedict[filename]
                 duplicates += 1
-                # print('old: {}\nnew: {}'.format(old_filepath, filepath))
+                # logger.debug('old: {}\nnew: {}'.format(old_filepath, filepath))
             else:
                 imagedict[filename] = image_file
         else:
-            print('No match {}'.format(filepath))
+            logger.debug('No match {}'.format(filepath))
             pass
 
-    print('all: {} placed: {} duplicates: {}'.format(len(images), len(imagedict), duplicates))
+    logger.debug('all: {} placed: {} duplicates: {}'.format(len(images), len(imagedict), duplicates))
 
 
 if __name__ == '__main__':

@@ -3,13 +3,17 @@
 {% block title %}universitas.no – {{ story.title }}{% endblock title %}
 {% block content %}
   <article class="story row">
+    {% include '_story_menu.html' %}
     <header class="small-12 columns">
+{# Main image #}
       {% include '_image.html' with image=header_image %}
       {% if story.kicker %}
         <h2 id="kicker">{{ story.kicker }}</h2>
       {% endif %}
+{# Main headline and lede #}
       <h1 id="headline">{{ story.title }}</h1>
       <p class="lede">{{ story.lede }}</p>
+{# bylines #}
       <ul id="bylines">
         {% for byline in story.byline_set.all %}
           <li class = "byline">
@@ -20,6 +24,7 @@
     </header>
 
     <main class="medium-12 columns">
+{# body text #}
      {{ story.bodytext_html | safe }}
       {# {% for section in story.sections %} #}
       {# <section class="bodytext large-12 columns"> #}

@@ -5,6 +5,7 @@
 import re
 import difflib
 import logging
+logger = logging.getLogger('universitas')
 
 # Django core
 from django.utils import timezone
@@ -18,6 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import MaxValueValidator, MinValueValidator, URLValidator, ValidationError
 from django.utils.safestring import mark_safe
 from model_utils.models import TimeStampedModel
+from django.core.urlresolvers import reverse
 
 # Installed apps
 from bs4 import BeautifulSoup
@@ -31,7 +33,6 @@ from myapps.photo.models import ImageFile
 from myapps.frontpage.models import FrontpageStory
 # from myapps.issues.models import PrintIssue
 
-logger = logging.getLogger('universitas')
 
 
 class Section(models.Model):
@@ -438,8 +439,17 @@ class Story(TextContent):
             )
             frontpagestory.save()
 
+    def get_edit_url(self):
+        url = reverse(
+           'admin:{app}_{object}_change'.format(
+               app=self._meta.app_label,
+               object=self._meta.model_name,
+           ),
+           args=[self.id],
+        )
+        return url
+
     def get_absolute_url(self):
-        from django.core.urlresolvers import reverse
         url = reverse(
             viewname='article',
             kwargs={
@@ -665,7 +675,7 @@ class InlineLink(models.Model):
         """ convert <a href=""> to other tag """
         if '&' in bodytext:
             find = re.findall(r'.{,20}&.{,20}', bodytext)
-            print(find)
+            # logger.debug(find)
         soup = BeautifulSoup(bodytext)
         for link in soup.find_all('a'):
             href = link.get('href')
@@ -946,7 +956,14 @@ class Byline(models.Model):
 
         except (AssertionError, AttributeError, ) as e:
             # Malformed byline
-            logger.warning('Malformed byline: {} {}'.format(full_byline, e))
+            logger.warning(
+                'Malformed byline: {story}:{byline} ({error})'.format(
+                    story=story,
+                    byline=full_byline,
+                    error=e
+                    )
+                )
+
             full_name, title, initials, credit = 'Nomen Nescio', full_byline, 'XX', '???'
 
         for choice in cls.CREDIT_CHOICES:
@@ -957,7 +974,7 @@ class Byline(models.Model):
                 credit[:5],
             ).ratio()
             if .4 > ratio > .8:
-                print(choice[0], credit, ratio)
+                logger.debug(choice[0], credit, ratio)
             if ratio > .8:
                 credit = choice[0]
                 break
@@ -1032,7 +1049,7 @@ def clean_up_bylines(bylines):
         (r'\s*([:,])+\s*', r'\1 ', 0),
     )
 
-    # print('\n', bylines)
+    # logger.debug('\n', bylines)
     byline_words = []
     for word in bylines.split():
         if word == word.upper():
@@ -1040,10 +1057,10 @@ def clean_up_bylines(bylines):
         byline_words.append(word)
 
     bylines = ' '.join(byline_words)
-    # print(bylines)
+    # logger.debug(bylines)
 
     for pattern, replacement, flags in replacements:
         bylines = re.sub(pattern, replacement, bylines, flags=flags)
     bylines = bylines.strip()
-    # print(bylines)
+    # logger.debug(bylines)
     return bylines

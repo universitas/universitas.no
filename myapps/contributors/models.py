@@ -37,11 +37,11 @@ class Contributor(models.Model):
         last_name = names[-1]
         first_name = ' '.join(names[:-1][:1])
         # middle_name = ' '.join(names[1:-1])
-        # print('"%s", "%s", "%s"' % (first_name, last_name, full_name))
+        # logger.debug('"%s", "%s", "%s"' % (first_name, last_name, full_name))
         base_query = cls.objects
 
         def find_single_item_or_none(func):
-            """ Decorator to return one item or none """
+            """ Decorator to return one item or none by catching exceptions """
 
             def inner_func(*args, **kwargs):
                 try:

@@ -1,7 +1,8 @@
 class ProdsysRouter(object):
     """
-    A router to control all database operations on models in the
-    auth application.
+    A router to control access to the legacy prodsys database.
+
+    IMPORTANT: This database should be read only, so we don't mess up anything.
     """
     def db_for_read(self, model, **hints):
         """

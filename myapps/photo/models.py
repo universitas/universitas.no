@@ -15,6 +15,8 @@ from sorl.thumbnail import ImageField
 # Project apps
 from myapps.contributors.models import Contributor, Position
 
+import logging
+logger = logging.getLogger('universitas')
 
 class ImageFile(TimeStampedModel):
     # TODO: Define fields here
@@ -92,7 +94,7 @@ class ImageFile(TimeStampedModel):
             try:
                 return Contributor.objects.get(initials=initials)
             except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
-                print(self, initials, e)
+                logger.warning(self, initials, e)
 
         return None
 

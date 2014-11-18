@@ -1,7 +1,6 @@
 {% load parse_markup %}
 {% load thumbnail %}
 <div class="image-container">
-  {# {% thumbnail image.imagefile.source_file image.sorl_size crop=image.imagefile.sorl_crop as thumb %} #}
   {% thumbnail image.imagefile.source_file "1000x500" crop="center" as thumb %}
     <img src="{{ thumb.url }}" alt="{{ image.caption|strip_tags }}">
   {% endthumbnail %}

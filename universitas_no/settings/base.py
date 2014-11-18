@@ -114,6 +114,8 @@ DATABASE_ROUTERS = ['myapps.legacy_db.router.ProdsysRouter']
 #SORL
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
 THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.convert_engine.Engine'
+FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
+FILE_UPLOAD_PERMISSIONS = 0o664
 
 # CACHE
 CACHES = {
@@ -207,19 +209,29 @@ LOG_FOLDER = normpath(join(PROJECT_ROOT_FOLDER, 'logs'))
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(name)s%(levelname)6s %(filename)25s:%(lineno)-4d (%(funcName)s) - %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler'
+            'class': 'django.utils.log.AdminEmailHandler',
         },
         'stream_to_console': {
             'level': 'DEBUG',
-            'class': 'logging.StreamHandler'
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
         },
         'file': {
-            'level': 'DEBUG',
+            'level': 'WARNING',
             'class': 'logging.FileHandler',
             'filename':   normpath(join(LOG_FOLDER, 'django.log')),
+            'formatter': 'verbose',
         },
     },
     'loggers': {

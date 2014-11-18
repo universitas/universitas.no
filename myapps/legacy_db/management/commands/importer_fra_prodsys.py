@@ -1,6 +1,3 @@
-import django
-django.setup()
-
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from html.parser import HTMLParser
 from pytz import datetime
@@ -25,12 +22,23 @@ TIMEZONE = timezone.get_current_timezone()
 import logging
 logger = logging.getLogger('universitas')
 
-def main():
-    drop_images_stories_and_contributors()
-    # importer_utgaver_fra_gammel_webside()
-    importer_saker_fra_gammel_webside(last=400, order_by='-id_sak')
-    # importer_saker_fra_gammel_webside()
-    reset_db_autoincrement()
+from django.core.management.base import BaseCommand, CommandError
+
+
+class Command(BaseCommand):
+    args = '<number_of_articles>'
+    help = 'Imports content from legacy website.'
+
+    def handle(self, *args, **options):
+        drop_images_stories_and_contributors()
+        # importer_utgaver_fra_gammel_webside()
+        if args[0]:
+            number_of_articles = int(args[0])
+            importer_saker_fra_gammel_webside(last=number_of_articles, order_by='-id_sak')
+        else:
+            importer_saker_fra_gammel_webside()
+        reset_db_autoincrement()
+        self.stdout.write('Successfully imported content')
 
 
 def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
@@ -58,7 +66,7 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
         path = bilde.path
         try:
             nyttbilde = ImageFile.objects.get(id=bilde.id_bilde)
-        except ImageFile.ObjectDoesNotExist:
+        except ImageFile.DoesNotExist:
             fullpath = os.path.join(BILDEMAPPE, path)
             if os.path.isfile(fullpath):
                 # bildet eksisterer på disk.
@@ -73,7 +81,7 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
                     dates.append(saksdato)
                 except ObjectDoesNotExist:
                     # ingen sak knyttet til dette bildet. Gå videre.
-                    logger.debug('No prodak for {}'.format(bilde) )
+                    logger.debug('No prodak for {}'.format(bilde))
                     continue
 
                 # Noen bilder har feil dato i fila.
@@ -90,6 +98,7 @@ def importer_bilder_fra_gammel_webside(webbilder=None, limit=100):
                         modified=modified,
                     )
                     nyttbilde.save()
+                    logger.debug('    new image: {}'.format(path))
                 except TypeError:
                     # Something wrong with the file?
                     nyttbilde = None
@@ -115,10 +124,16 @@ def importer_utgaver_fra_gammel_webside():
             r'universitas_(?P<year>\d{4})-(?P<issue>.*)\.pdf$',
             filename,
         ).groups()
-        logger.debug(filename, created.strftime('%c'), year, issue)
+        logger.debug(
+            'issue found {filename} #{issue} {year} ({date})'.format(
+                filename=filename,
+                date=created.strftime('%c'),
+                year=year,
+                issue=issue,
+            )
+        )
         if created.isoweekday() != 3:  # should be a Wednesday
             created = created + datetime.timedelta(days=3 - created.isoweekday())
-        logger.debug(created.strftime('%c'))
         new_issue = PrintIssue(
             pdf=fullpath,
             pages=0,
@@ -178,7 +193,7 @@ def importer_saker_fra_gammel_webside(first=0, last=20000, order_by='id_sak'):
 
             new_story.save()
 
-        logger.debug(new_story, new_story.pk)
+        logger.debug('story saved: {} {}'.format(new_story, new_story.pk))
 
         for bilde in websak.bilde_set.all():
             try:
@@ -310,7 +325,3 @@ def drop_images_stories_and_contributors():
     Contributor.objects.all().delete()
     logger.debug('sletter stories')
     Story.objects.all().delete()
-
-
-if __name__ == '__main__':
-    main()
