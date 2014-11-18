@@ -32,7 +32,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         drop_images_stories_and_contributors()
         # importer_utgaver_fra_gammel_webside()
-        if args[0]:
+        if len(args):
             number_of_articles = int(args[0])
             importer_saker_fra_gammel_webside(last=number_of_articles, order_by='-id_sak')
         else:
