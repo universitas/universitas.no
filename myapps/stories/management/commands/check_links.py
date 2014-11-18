@@ -17,18 +17,36 @@ class Command(BaseCommand):
             default=False,
             help='Only check new links'
         ),
+        make_option(
+            '--fix', '-x',
+            action='store_true',
+            dest='fix broken',
+            default=False,
+            help='Fix broken legacy links'
+        ),
+        make_option(
+            '--status', '-s',
+            action='append',
+            dest='status in',
+            default=[],
+            help='Check links with these status codes'
+        ),
     )
 
     def handle(self, *args, **options):
 
-        status_in = None
+        status_in = options['status in']
 
         if options['new links']:
-            status_in = [None]
+            status_in = ['']
+
+        if options['fix broken']:
+            self._repair_legacy_links()
 
         self._check_links(status_in=status_in)
 
     def _check_links(self, status_in=None):
+        """ Check and update status code for inline links in articles. """
         links_to_check = InlineLink.objects.all()
         if status_in:
             links_to_check = InlineLink.objects.filter(status_code__in=status_in)
@@ -44,3 +62,12 @@ class Command(BaseCommand):
         link_statuses = InlineLink.objects.values('status_code').annotate(count=Count('status_code'))
         for status in link_statuses:
             self.stdout.write('{count} - {status_code}'.format(**status))
+
+    def _repair_legacy_links(self):
+        """ Fix some strange formatting in links from the old webpage """
+        import re
+        for link in InlineLink.objects.filter(href__endswith=r'/a'):
+            link.href = re.sub(r'/a$', '', link.href)
+            link.save()
+
+        InlineLink.objects.filter(href__endswith='kontakt.shtml').update(href='http://universitas.no/kontakt/')
