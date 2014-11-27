@@ -61,28 +61,6 @@ class Sak(models.Model):
         return self.overskrift
 
 
-# class Articles(models.Model):
-# id = models.IntegerField(primary_key=True)  # AutoField?
-#     title = models.CharField(max_length=255)
-#     image = models.CharField(max_length=255)
-#     subtitle1 = models.CharField(max_length=255, blank=True)
-#     subtitle2 = models.CharField(max_length=255, blank=True)
-#     subtitle3 = models.CharField(max_length=255, blank=True)
-#     body = models.CharField(max_length=255)
-#     author = models.IntegerField(blank=True, null=True)
-#     ingress = models.CharField(max_length=255, blank=True)
-# byline = models.CharField(db_column='byLine', max_length=255, blank=True)  # Field name made lowercase.
-#     lead_title = models.CharField(max_length=255, blank=True)
-#     sitat = models.CharField(max_length=255, blank=True)
-#     subarticle = models.CharField(max_length=255, blank=True)
-#     published = models.CharField(max_length=255, blank=True)
-#     created_at = models.DateTimeField()
-#     updated_at = models.DateTimeField()
-
-#     class Meta:
-#         managed = False
-#         db_table = 'articles'
-
 class Bildetekst(models.Model):
     id_bildetekst = models.IntegerField(primary_key=True)
     tekst = models.TextField()
@@ -117,7 +95,6 @@ class Bilde(models.Model):
         verbose_name_plural = _('bilder')
 
 
-
 class InnleggAbstract(models.Model):
 
     navn = models.CharField(max_length=128)
@@ -145,10 +122,11 @@ class DiskInnlegg(InnleggAbstract):
         verbose_name = _('diskusjon innlegg')
         verbose_name_plural = _('diskusjon innlegg')
 
+
 class DiskSvar(InnleggAbstract):
     id_svar = models.IntegerField(primary_key=True)
     innlegg = models.ForeignKey(DiskInnlegg, db_column='id_innlegg', blank=True, null=True)
-    sak = models.ForeignKey(Sak,db_column='sak_id', blank=True, null=True)
+    sak = models.ForeignKey(Sak, db_column='sak_id', blank=True, null=True)
     epost_sendt = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -187,26 +165,78 @@ class Fakta(models.Model):
         verbose_name_plural = _('faktabokser')
 
 
+class ProdsakManager(models.Manager):
+
+    """docstring for ProdsakManager"""
+
+    def latest_version(self):
+        latest = self.extra(
+            where=[
+                ''' (prodsak_id, version_no) IN (
+                SELECT prodsak_id, MAX(version_no)
+                FROM prodsak
+                GROUP BY prodsak_id
+                ) '''
+            ]
+        )
+        return latest
+
 
 class Prodsak(models.Model):
-    prodsak_id = models.IntegerField()
+
+    DRAFT = 0
+    OLD_DRAFT = 1
+    READY_FOR_PRINT = 3
+    IMPORTED_TO_INDESIGN = 4
+    EXPORTED_FROM_INDESIGN = 6
+    READY_FOR_WEB = 7
+    PUBLISHED_ON_WEB = 8
+    ARCHIVED = 9
+
+    PRODUSERT_CHOICES = (
+        (DRAFT, 'i arbeid',),
+        (OLD_DRAFT, 'overligger',),
+        (READY_FOR_PRINT, 'til desk',),
+        (IMPORTED_TO_INDESIGN, 'gammel desk',),
+        (EXPORTED_FROM_INDESIGN, 'edit2web',),
+        (READY_FOR_WEB, 'til web',),
+        (PUBLISHED_ON_WEB, 'gammel web',),
+        (ARCHIVED, 'slettet',),
+    )
+
+    FLAGG_CHOICES = (
+        (1, 'Journalist'),
+        (2, 'Mellomleder'),
+        (3, 'Redaksjonsleder'),
+        (4, 'Redaktør'),
+    )
+
+    objects = ProdsakManager()
+
+    prodsak_id = models.IntegerField(editable=False)
     arbeidstittel = models.CharField(max_length=200, blank=True)
     journalist = models.CharField(max_length=50, blank=True)
     tekst = models.TextField(blank=True)
     kommentar = models.TextField(blank=True)
     mappe = models.CharField(max_length=100, blank=True)
-    flagg = models.IntegerField(blank=True, null=True)
-    produsert = models.IntegerField(blank=True, null=True)
+    flagg = models.IntegerField(blank=True, null=True, choices=FLAGG_CHOICES)
+    produsert = models.IntegerField(blank=True, null=True, choices=PRODUSERT_CHOICES)
     dato = models.DateTimeField()
-    version_no = models.IntegerField()
-    version_date = models.DateTimeField(blank=True, null=True)
-    timelock = models.DateTimeField(blank=True, null=True)
+    version_no = models.IntegerField(editable=False,)
+    version_date = models.DateTimeField(editable=False, blank=True, null=True)
+    timelock = models.DateTimeField(editable=False, blank=True, null=True)
 
     class Meta:
+        # ordering = ['produsert']
         managed = False
         db_table = 'prodsak'
         verbose_name = _('prodsys sak')
         verbose_name_plural = _('prodsys saker')
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        versions = Prodsak.objects.filter(prodsak_id=self.prodsak_id)
+        versions.update(produsert=self.produsert)
 
 
 class Prodbilde(models.Model):

@@ -20,6 +20,7 @@ ipython
 --allow-external mysql-connector-python
 mysql-connector-python==1.2.2
 nose
+pypdf2
 psycopg2
 pyparsing
 pytz
@@ -32,4 +33,4 @@ six
 sqlparse
 tornado
 -e git+git@github.com:mariocesar/sorl-thumbnail.git#egg=sorl_thumbnail
--e git+git@github.com:Haakenlid/django-autocomplete-light.git#egg=autocomplete-light
+-e git+git@github.com:Haakenlid/django-autocomplete-light.git@v2#egg=autocomplete-light

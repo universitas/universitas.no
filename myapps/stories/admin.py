@@ -89,11 +89,11 @@ class StoryAdmin(admin.ModelAdmin):
     list_per_page = 25
     list_display = (
         'id', 'title', 'kicker', 'lede', 'theme_word', 'story_type', 'publication_date',
-        'status', 'display_bylines', 'image_count', 'hit_count',
+        'publication_status', 'display_bylines', 'image_count', 'hit_count',
     )
 
     list_editable = (
-        'status',
+        'publication_status',
     )
 
     readonly_fields = ('legacy_html_source', 'legacy_prodsys_source', 'get_html')
@@ -107,7 +107,7 @@ class StoryAdmin(admin.ModelAdmin):
         ('header', {
             'fields': (
                 ('title', 'kicker', 'theme_word',),
-                ('story_type', 'publication_date', 'status',),
+                ('story_type', 'publication_date', 'publication_status',),
             ),
         }),
         ('content', {

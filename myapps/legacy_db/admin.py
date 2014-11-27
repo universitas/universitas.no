@@ -34,6 +34,14 @@ class SakAdmin(admin.ModelAdmin):
 
 @admin.register(Prodsak)
 class ProdsakAdmin(admin.ModelAdmin):
+
+    def get_queryset(self, request):
+        qs = Prodsak.objects.latest_version()
+        ordering = self.get_ordering(request)
+        if ordering:
+            qs = qs.order_by(*ordering)
+        return qs
+
     list_display = (
         'id',
         'prodsak_id',
@@ -51,9 +59,11 @@ class ProdsakAdmin(admin.ModelAdmin):
     )
     search_fields = (
         'prodsak_id',
-        'tekst',
+        'arbeidstittel',
         'kommentar',
     )
+    list_filter = ['produsert']
+
 
 @admin.register(DiskSvar)
 class DiskSvarAdmin(admin.ModelAdmin):
@@ -68,14 +78,15 @@ class DiskSvarAdmin(admin.ModelAdmin):
         'status',
         # 'sak',
         'epost_sendt',
-        )
+    )
     list_editable = (
         'sensurert',
-        )
+    )
     search_fields = (
         'navn',
         'tekst',
-        )
+    )
+
 
 @admin.register(Bilde)
 class BildeAdmin(admin.ModelAdmin):
@@ -86,4 +97,4 @@ class BildeAdmin(admin.ModelAdmin):
         # 'bildetekst',
         'size',
         'crop',
-        )
+    )

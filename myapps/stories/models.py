@@ -127,6 +127,7 @@ class TextContent(TimeStampedModel):
             self.insert_links()
             # soup = BeautifulSoup(self.bodytext_html)
             # self.bodytext_html = soup.prettify()
+
         super().save(*args, **kwargs)
 
     def clean_markup(self):
@@ -239,7 +240,7 @@ class PublishedStoryManager(models.Manager):
 
     def published(self):
         now = timezone.now()
-        return super().get_queryset().filter(status=Story.STATUS_PUBLISHED).filter(publication_date__lt=now)
+        return super().get_queryset().filter(publication_status=Story.STATUS_PUBLISHED).filter(publication_date__lt=now)
 
     def populate_frontpage(self):
         """ create some random frontpage stories """
@@ -312,7 +313,7 @@ class Story(TextContent):
         help_text=_('when this story will be published on the web.'),
         verbose_name=_('publication date'),
     )
-    status = models.IntegerField(
+    publication_status = models.IntegerField(
         default=STATUS_DRAFT, choices=STATUS_CHOICES,
         help_text=_('publication status.'),
         verbose_name=_('status'),
@@ -396,8 +397,10 @@ class Story(TextContent):
         return True
 
     def __str__(self):
-        return '{} {:%Y-%m-%d}'.format(
-            self.title, self.publication_date)
+        if self.publication_date:
+            return '{} {:%Y-%m-%d}'.format(self.title, self.publication_date)
+        else:
+            return '{}'.format(self.title,)
 
     def get_bylines_as_html(self):
         """ create html table of bylines in db for search and admin display """
@@ -431,6 +434,10 @@ class Story(TextContent):
         # bylines are cached in a modelfield for quicker search and admin display,
         # avoiding joins and extra queries Only used in back-end
         self.bylines_html = self.get_bylines_as_html()
+
+        if not self.publication_date and self.publication_status == self.STATUS_PUBLISHED:
+            self.publication_date = timezone.now()
+
         super(Story, self).save(*args, **kwargs)
 
         # create a frontpagestory only if there are linked images. This avoids an
@@ -441,6 +448,7 @@ class Story(TextContent):
                 story=self,
             )
             frontpagestory.save()
+
 
     def get_edit_url(self):
         url = reverse(
@@ -635,7 +643,6 @@ class InlineLink(models.Model):
             except ConnectionError:
                 status_code = 'DNS'  # DNS error
 
-
         if save_if_changed and status_code != self.status_code:
             self.status_code = status_code
             self.save()
@@ -737,7 +744,7 @@ class InlineLink(models.Model):
         except ValidationError:
             return None
 
-    ## TROR IKKE DENNE SKAL VÆRE NØDVENDIG
+    # TROR IKKE DENNE SKAL VÆRE NØDVENDIG
     # def insert_html(self, bodytext_html):
     #     """ inserts the link as a html element in parent story """
     #     link_tag = self.get_html()

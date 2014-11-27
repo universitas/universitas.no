@@ -23,9 +23,9 @@ DEFAULT_FROM_EMAIL = 'localemail@localhost'
 #     }
 # }
 
-DATABASES['prodsys'].update({
-   'HOST': 'universitas.no',
-})
+# DATABASES['prodsys'].update({
+#    'HOST': 'universitas.no',
+# })
 
 ######### TOOLBAR CONFIGURATION
 # See: http://django-debug-toolbar.readthedocs.org/en/latest/installation.html#explicit-setup
