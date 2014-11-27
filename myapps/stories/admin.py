@@ -111,7 +111,7 @@ class StoryAdmin(admin.ModelAdmin):
             ),
         }),
         ('content', {
-            'classes': ('collapse',),
+            'classes': ('collapsible',),
             'fields': (('lede', 'bodytext_markup',), ),
         }),
         ('preview', {

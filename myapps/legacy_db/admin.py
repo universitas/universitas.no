@@ -5,7 +5,7 @@ Admin for stories app.
 
 from django.contrib import admin
 from .models import Sak, Prodsak, DiskSvar, Bilde
-
+from django.utils.translation import ugettext_lazy as _
 
 @admin.register(Sak)
 class SakAdmin(admin.ModelAdmin):
@@ -32,15 +32,48 @@ class SakAdmin(admin.ModelAdmin):
     )
 
 
+def move_to_archive(modeladmin, request, queryset):
+    for story in queryset:
+        story.produsert = Prodsak.ARCHIVED
+        story.save()
+
+move_to_archive.short_description = _('Move story to archive.')
+
+
+class ProdusertFilter(admin.SimpleListFilter):
+    # Human-readable title which will be displayed in the
+    # right admin sidebar just above the filter options.
+    title = _('status')
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'status'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('active', _('active')),
+            ('archive', _('archived')),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'active':
+            return queryset.exclude(
+                produsert=Prodsak.ARCHIVED).extra(where=[
+                    ''' (prodsak_id, version_no) IN (
+                SELECT prodsak_id, MAX(version_no)
+                FROM prodsak
+                GROUP BY prodsak_id
+                ) '''
+                ]).order_by('produsert', '-dato')
+
+        if self.value() == 'archive':
+            return queryset.filter(produsert=Prodsak.ARCHIVED).order_by('-prodsak_id', '-version_no')
+
+
 @admin.register(Prodsak)
 class ProdsakAdmin(admin.ModelAdmin):
 
-    def get_queryset(self, request):
-        qs = Prodsak.objects.latest_version()
-        ordering = self.get_ordering(request)
-        if ordering:
-            qs = qs.order_by(*ordering)
-        return qs
+    list_filter = (ProdusertFilter, 'produsert')
+    actions = [move_to_archive]
 
     list_display = (
         'id',
@@ -62,7 +95,6 @@ class ProdsakAdmin(admin.ModelAdmin):
         'arbeidstittel',
         'kommentar',
     )
-    list_filter = ['produsert']
 
 
 @admin.register(DiskSvar)

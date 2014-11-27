@@ -171,7 +171,8 @@ STATICFILES_DIRS = (
 )
 
 # INTERNATIONALIZATION
-LANGUAGE_CODE = 'en'
+# LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'NB_no'
 TIME_ZONE = 'Europe/Oslo'
 USE_I18N = True  # Internationalisation (string translation)
 USE_L10N = True  # Localisation (numbers and stuff)
@@ -179,6 +180,13 @@ USE_TZ = True  # Use timezone
 LOCALE_PATHS = (
     normpath(join(BASE_DIR, 'translation')),
     )
+
+DATE_FORMAT = 'j. F, Y'
+DATETIME_FORMAT = 'Y-m-d H:i'
+SHORT_DATE_FORMAT = 'Y-m-d'
+SHORT_DATETIME_FORMAT = 'y-m-d H:i'
+
+
 
 # MEDIA_ROOT = normpath(join(PHOTO_ARCHIVE, 'upload'))
 MEDIA_ROOT = '/srv/fotoarkiv_universitas'

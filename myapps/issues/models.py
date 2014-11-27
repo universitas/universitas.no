@@ -2,7 +2,7 @@
 """ Content in the publication. """
 
 # Python standard library
-import subprocess
+# import subprocess
 
 # Django core
 from django.utils.translation import ugettext_lazy as _

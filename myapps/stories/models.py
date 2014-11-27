@@ -947,7 +947,7 @@ class Byline(models.Model):
     """ Credits the people who created content for a story. """
 
     CREDIT_CHOICES = [
-        ('text', _('Text',)),
+        ('text', _('Text')),
         ('photo', _('Photo')),
         ('video', _('Video')),
         ('illus', _('Illustration')),
