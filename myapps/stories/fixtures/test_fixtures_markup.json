@@ -1,0 +1,881 @@
+[
+{
+  "pk": 14,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@mt:",
+    "html_tag": "h3",
+    "action": "append:",
+    "html_class": "mellomtittel"
+  }
+},
+{
+  "pk": 15,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 16,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@txt:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 17,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@bl:",
+    "html_tag": "li",
+    "action": "new:byline",
+    "html_class": "byline"
+  }
+},
+{
+  "pk": 18,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@headline:",
+    "html_tag": "h1",
+    "action": "append:title",
+    "html_class": ""
+  }
+},
+{
+  "pk": 19,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@ing:",
+    "html_tag": "p",
+    "action": "append:lede",
+    "html_class": "lede"
+  }
+},
+{
+  "pk": 20,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@stikktit:",
+    "html_tag": "h2",
+    "action": "append:kicker",
+    "html_class": "kicker"
+  }
+},
+{
+  "pk": 21,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@tema:",
+    "html_tag": "p",
+    "action": "append:theme_word",
+    "html_class": "theme"
+  }
+},
+{
+  "pk": 23,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@sitat:",
+    "html_tag": "bq",
+    "action": "new:pullquote",
+    "html_class": "pullquote"
+  }
+},
+{
+  "pk": 24,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@fakta:",
+    "html_tag": "h2",
+    "action": "new:aside",
+    "html_class": "facts"
+  }
+},
+{
+  "pk": 25,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@spm:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": "question"
+  }
+},
+{
+  "pk": 26,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@tingo:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": "tingo"
+  }
+},
+{
+  "pk": 27,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@tit:",
+    "html_tag": "h2",
+    "action": "append:title",
+    "html_class": "subheading"
+  }
+},
+{
+  "pk": 28,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@sitatbyline:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": "by"
+  }
+},
+{
+  "pk": 29,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@li:",
+    "html_tag": "li",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 30,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@bt:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": "caption"
+  }
+},
+{
+  "pk": 31,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@bln:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 32,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@faktaboks:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 33,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@husk:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 34,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@FOTO:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 35,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@maging:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 36,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@sit:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 37,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@faktatxt:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 38,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@btit:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 39,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@magtxt:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 40,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@beskjed:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 41,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@info:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 42,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@matxt:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 43,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@tx:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 44,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@ttit:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 45,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@bt(U)ENIG:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 46,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@mtxt:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 47,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@Ill:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 48,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@overtit:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 49,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@txtSvar:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 50,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@txt.:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 51,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@bn:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 52,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@mat:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 53,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@Illustrasjon:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 54,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@FAKSIMILE:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 55,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@ingr:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 56,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@Ing:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 57,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@.mt:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 58,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@navn:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 59,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@Av:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 60,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@faK:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 61,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@V\u00c5RRENGJ\u00d8RING:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 62,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@Sit:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 63,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@bl\u00e5ramme:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 64,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@temaord:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 65,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@slagord:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 66,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@illustrasjon:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 67,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@svar:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 68,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@TEST:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 69,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@Bl:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 70,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@P\u00f8lsepremie:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 71,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@tx2t:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 72,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@bl\u00e5case:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 73,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@fk:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 74,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@bt-hvit:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 75,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@start.no@txt:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 76,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@plaktxt:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 77,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@FAKTA:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 78,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@MT:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 79,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@TXT:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 80,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@plakdag:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 81,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@kom:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 82,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@Fakta:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 83,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@BT:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 84,
+  "model": "markup.blocktag",
+  "fields": {
+    "start_tag": "@bilde:",
+    "html_tag": "p",
+    "action": "append:",
+    "html_class": ""
+  }
+},
+{
+  "pk": 1,
+  "model": "markup.inlinetag",
+  "fields": {
+    "pattern": "_(.+?)_",
+    "end_tag": "_",
+    "html_tag": "em",
+    "replacement": "<em>\\1</em>",
+    "start_tag": "_",
+    "html_class": ""
+  }
+},
+{
+  "pk": 2,
+  "model": "markup.inlinetag",
+  "fields": {
+    "pattern": "\\*(.+?)\\*",
+    "end_tag": "\\*",
+    "html_tag": "strong",
+    "replacement": "<strong>\\1</strong>",
+    "start_tag": "\\*",
+    "html_class": ""
+  }
+},
+{
+  "pk": 3,
+  "model": "markup.inlinetag",
+  "fields": {
+    "pattern": "__(.+?)\\(([^ )]+)\\)__",
+    "end_tag": "__",
+    "html_tag": "a",
+    "replacement": "<a href=\"\\2\">\\1</a>",
+    "start_tag": "__",
+    "html_class": ""
+  }
+},
+{
+  "pk": 1,
+  "model": "markup.alias",
+  "fields": {
+    "flags": "LMI",
+    "comment": "Anmeldelsesfakta",
+    "ordering": 1,
+    "timing": 1,
+    "replacement": "# ",
+    "pattern": "^@fak[0-9]:",
+    "flags_sum": 14
+  }
+},
+{
+  "pk": 2,
+  "model": "markup.alias",
+  "fields": {
+    "flags": "LMI",
+    "comment": "all dashes to n-dash",
+    "ordering": 2,
+    "timing": 1,
+    "replacement": "\u2013",
+    "pattern": "[\u2014\u2013-]+",
+    "flags_sum": 14
+  }
+},
+{
+  "pk": 3,
+  "model": "markup.alias",
+  "fields": {
+    "flags": "L",
+    "comment": "n-dash to hyphen when after word.",
+    "ordering": 3,
+    "timing": 1,
+    "replacement": "\\1-",
+    "pattern": "(\\w)\u2013",
+    "flags_sum": 4
+  }
+},
+{
+  "pk": 4,
+  "model": "markup.alias",
+  "fields": {
+    "flags": "L",
+    "comment": "hyphen before word",
+    "ordering": 4,
+    "timing": 1,
+    "replacement": "\\1 -\\2",
+    "pattern": "([,\\w]) \u2013(\\w)",
+    "flags_sum": 4
+  }
+},
+{
+  "pk": 5,
+  "model": "markup.alias",
+  "fields": {
+    "flags": "",
+    "comment": "proper quotation marks.",
+    "ordering": 5,
+    "timing": 1,
+    "replacement": "\u00bb",
+    "pattern": "[\"\u201c\u201d]",
+    "flags_sum": 0
+  }
+},
+{
+  "pk": 6,
+  "model": "markup.alias",
+  "fields": {
+    "flags": "ILM",
+    "comment": "proper quotation marks.",
+    "ordering": 6,
+    "timing": 1,
+    "replacement": "\u00ab\\1",
+    "pattern": "\u00bb(\\w)",
+    "flags_sum": 14
+  }
+},
+{
+  "pk": 7,
+  "model": "markup.alias",
+  "fields": {
+    "flags": "LMI",
+    "comment": "inline italic full line.",
+    "ordering": 7,
+    "timing": 1,
+    "replacement": "@spm:\\1\\2",
+    "pattern": "^(\\W*)[*_]([^*_\\n]*)[*_]$",
+    "flags_sum": 14
+  }
+},
+{
+  "pk": 8,
+  "model": "markup.alias",
+  "fields": {
+    "flags": "LMI",
+    "comment": "inline bold starts word",
+    "ordering": 8,
+    "timing": 1,
+    "replacement": "@tingo:\\1\\2",
+    "pattern": "^(\\W*)\\*([^*\\n]*)\\*",
+    "flags_sum": 14
+  }
+},
+{
+  "pk": 9,
+  "model": "markup.alias",
+  "fields": {
+    "flags": "",
+    "comment": "line starts with hyphen. Should be ndash",
+    "ordering": 9,
+    "timing": 1,
+    "replacement": "\\1\u2013 ",
+    "pattern": "(^|@[^:]+:) *- *",
+    "flags_sum": 0
+  }
+},
+{
+  "pk": 10,
+  "model": "markup.alias",
+  "fields": {
+    "flags": "M",
+    "comment": "trim trailing spaces.",
+    "ordering": 10,
+    "timing": 1,
+    "replacement": "",
+    "pattern": " *$",
+    "flags_sum": 8
+  }
+},
+{
+  "pk": 11,
+  "model": "markup.alias",
+  "fields": {
+    "flags": "M",
+    "comment": " line with only tags, no text.",
+    "ordering": 11,
+    "timing": 1,
+    "replacement": "",
+    "pattern": "^(@spm:)?[.a-z]+@[.a-z]+$",
+    "flags_sum": 8
+  }
+}
+]

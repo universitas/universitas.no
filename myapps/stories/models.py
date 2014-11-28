@@ -171,6 +171,9 @@ class TextContent(TimeStampedModel):
         # It could be the main article, or some related element, such as multi
         # paragraph aside.
         for paragraph in paragraphs:
+            paragraph = paragraph.strip()
+            if paragraph == "":
+                continue
             blocktag = BlockTag.objects.match_or_create(paragraph)
             tag, text_content = blocktag.split(paragraph)
             if re.match(r'^\s*$', text_content):
