@@ -1,15 +1,19 @@
+""" Django settings for testing. Using some tricks to speed up things. """
 from universitas_no.settings.base import *
-import os
+# import os
 # TEST SETTINGS
 # TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-os.environ['REUSE_DB'] = "1"
-# TEST_RUNNER = 'discover_runner.DiscoverRunner'
+TEST_RUNNER = 'utils.fast_test_runner.FastTestRunner'
 # TEST_DISCOVER_TOP_LEVEL = SITE_ROOT
 # TEST_DISCOVER_ROOT = SITE_ROOT
 # TEST_DISCOVER_PATTERN = "test_*.py"
 
-# IN-MEMORY TEST DATABASE
 
+# Speed up password hashing during testing.
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+)
+# IN-MEMORY TEST DATABASE
 
 DATABASES = {
     "default": {

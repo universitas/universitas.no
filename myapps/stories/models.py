@@ -5,6 +5,7 @@
 import re
 import difflib
 import logging
+from collections import namedtuple
 logger = logging.getLogger('universitas')
 
 # Django core
@@ -452,7 +453,6 @@ class Story(TextContent):
             )
             frontpagestory.save()
 
-
     def get_edit_url(self):
         url = reverse(
             'admin:{app}_{object}_change'.format(
@@ -494,18 +494,69 @@ class Story(TextContent):
                     initials='',  # TODO: send over initials?
                 )
             return self
-
         elif element == "aside":
-            new_element = Aside(
-                parent_story=self,
-            )
-
+            new_element = Aside(parent_story=self, )
         elif element == "pullquote":
-            new_element = Pullquote(
-                parent_story=self,
-            )
-
+            new_element = Pullquote(parent_story=self, )
         return new_element._block_append(tag, content)
+
+    @property
+    def positions(self):
+        return self._Positions(self)
+
+    class _Positions:
+
+        """ Represents where child StoryElements are placed within the body text """
+
+        find_pattern = '^@(?P<class_name>\w+)(?P<index>\.\d+)?(?P<style>[.\w]*)?@(?P<comment>.*)$'
+        template = '@{class_name}.{index}.{style}@ {comment}'
+        # html_pattern = '<a href="{href}" alt="{alt}">{text}</a>'
+
+        def __init__(self, parent):
+            self.parent = parent
+
+        def placeholders(self):
+            Placeholder = namedtuple(
+                'placeholder',
+                ['match', 'type', 'index', 'styles', 'comment']
+            )
+            placeholders = []
+            body = self.parent.bodytext_markup
+            regex = re.compile(self.find_pattern, flags=re.M)
+            for match in regex.finditer(body):
+                groups = match.groups()
+                placeholders.append(
+                    Placeholder(
+                        match=match.group(0),
+                        type=groups[0],
+                        index=int(groups[1].strip('.')) if groups[1] else None,
+                        styles=groups[2].strip('.').split('.') if groups[2] else [],
+                        comment=groups[3].strip() if groups[1] else '',
+                    )
+                )
+                # print(match.group(0), placeholders[-1])
+            return placeholders
+
+        def reindex(self):
+            body = self.parent.bodytext_markup
+            for n, placeholder in enumerate(self.placeholders(), start=1):
+                if placeholder.index != n:
+                    old = placeholder.match
+                    new = self.template.format(
+                        class_name=placeholder.type,
+                        index=n,
+                        comment=placeholder.comment,
+                        style='.'.join(placeholder.styles),
+                        )
+                    body = body.replace(old, new, 1)
+            print(body)
+            self.parent.bodytext_markup = body
+
+        def objects(self):
+            images = self.parent.story_image_set.all()
+            videos = self.parent.story_video.all()
+            asides = self.parent.aside_set.all()
+            blockquotes = self.parent.blockquote__set.all()
 
 
 class StoryElement(models.Model):
@@ -746,19 +797,6 @@ class InlineLink(models.Model):
             return href
         except ValidationError:
             return None
-
-    # TROR IKKE DENNE SKAL VÆRE NØDVENDIG
-    # def insert_html(self, bodytext_html):
-    #     """ inserts the link as a html element in parent story """
-    #     link_tag = self.get_html()
-    #     pattern = r'\[.*?\]\({number}\)'.format(number=self.number)
-    #     if re.search(pattern, bodytext_html):
-    #         bodytext_html = re.sub(pattern, link_tag, bodytext_html)
-    #         logger.debug('change link: {pattern} - replace with: {tag}'.format(pattern=pattern, tag=link_tag))
-    #     else:
-    #         logger.warning('could not find link: {pattern} - replace with: {tag}'.format(pattern=pattern, tag=link_tag))
-
-    #     return bodytext_html
 
 
 class Pullquote(TextContent, StoryElement):
