@@ -501,37 +501,40 @@ class Story(TextContent):
         return new_element._block_append(tag, content)
 
     @property
-    def positions(self):
-        return self._Positions(self)
+    def elements(self):
+        return self._Elements(self)
 
-    class _Positions:
+    class _Elements:
 
         """ Represents where child StoryElements are placed within the body text """
-
-        find_pattern = '^@(?P<class_name>\w+)(?P<index>\.\d+)?(?P<style>[.\w]*)?@(?P<comment>.*)$'
-        template = '@{class_name}.{index}.{style}@ {comment}'
-        # html_pattern = '<a href="{href}" alt="{alt}">{text}</a>'
 
         def __init__(self, parent):
             self.parent = parent
 
         def placeholders(self):
+
             Placeholder = namedtuple(
                 'placeholder',
-                ['match', 'type', 'index', 'styles', 'comment']
+                [
+                    'match',
+                    'type',
+                    'index',
+                    'styles',
+                    'comment'
+                ]
             )
             placeholders = []
             body = self.parent.bodytext_markup
-            regex = re.compile(self.find_pattern, flags=re.M)
+            regex = re.compile(StoryElement.find_pattern, flags=re.M)
             for match in regex.finditer(body):
                 groups = match.groups()
                 placeholders.append(
                     Placeholder(
                         match=match.group(0),
-                        type=groups[0],
-                        index=int(groups[1].strip('.')) if groups[1] else None,
-                        styles=groups[2].strip('.').split('.') if groups[2] else [],
-                        comment=groups[3].strip() if groups[1] else '',
+                        type=None,
+                        index=int(groups[0]) if groups[0] else None,
+                        styles=[],
+                        comment=groups[1].strip(),
                     )
                 )
                 # print(match.group(0), placeholders[-1])
@@ -542,35 +545,78 @@ class Story(TextContent):
             for n, placeholder in enumerate(self.placeholders(), start=1):
                 if placeholder.index != n:
                     old = placeholder.match
-                    new = self.template.format(
+                    new = StoryElement.template.format(
                         class_name=placeholder.type,
                         index=n,
                         comment=placeholder.comment,
                         style='.'.join(placeholder.styles),
-                        )
+                    )
                     body = body.replace(old, new, 1)
             print(body)
             self.parent.bodytext_markup = body
 
-        def objects(self):
-            images = self.parent.story_image_set.all()
-            videos = self.parent.story_video.all()
+        @property
+        def elements(self):
+            images = self.parent.storyimage_set.all()
+            videos = self.parent.storyvideo_set.all()
             asides = self.parent.aside_set.all()
-            blockquotes = self.parent.blockquote__set.all()
+            pullquotes = self.parent.pullquote_set.all()
+            all_elements = list(images) + list(videos) + list(asides) + list(pullquotes)
+            return all_elements
+
+
+class ElementManager(models.Manager):
+
+    def first_items(self):
+        """ Elements that are placed at the start of the parent article """
+        return self.filter(position_vertical=0).order_by('position_horizontal')
+
+    def last_items(self):
+        """ Elements that are placed at the end of the parent article """
+        return self.filter(position_vertical__gte=StoryElement.MAXPOSITION).order_by('position_vertical', 'position_horizontal')
+
+    def inline_items(self):
+        """ Elements that are placed somewhere inside the parent article """
+        return self.exclude(position_vertical=0).exclude(position_vertical__gte=StoryElement.MAXPOSITION).order_by('position_vertical', 'position_horizontal')
+
+    def reindex(self):
+        groups = [
+            (0, self.first_items,),
+            (StoryElement.MAXPOSITION, self.last_items,),
+            (1, self.inline_items,),
+            ]
+        for position_vertical, query in groups:
+            queryset = query()
+            while queryset.count():
+                actual_index = queryset.first().position_vertical
+                these_items = queryset.filter(position_vertical=actual_index)
+                for position_horizontal, element in enumerate(these_items):
+                    if element.position_horizontal != position_horizontal:
+                        element.position_horizontal = position_horizontal
+                        element.save()
+                if position_vertical != actual_index:
+                    these_items.update(position_vertical=position_vertical)
+
+                queryset = queryset.filter(position_vertical__gt=actual_index)
+                position_vertical += 1
+
 
 
 class StoryElement(models.Model):
 
     """ Models that are placed somewhere inside an article """
 
-    MAXPOSITION = 10000
+    objects = ElementManager()
+    find_pattern = r'^\((?P<index>\d+)?\)(?P<comment>.*)$'
+    template = '({index}) {comment}'
+    MAXPOSITION = 1000
     parent_story = models.ForeignKey('Story')
     published = models.BooleanField(
         default=True,
         help_text=_('Choose whether this element is published'),
         verbose_name=_('published')
     )
-    position = models.PositiveSmallIntegerField(
+    position_vertical = models.PositiveSmallIntegerField(
         default=0,
         validators=[
             MaxValueValidator(MAXPOSITION),
@@ -580,6 +626,35 @@ class StoryElement(models.Model):
                 start=0, end=MAXPOSITION)),
         verbose_name=_('position'),
     )
+    position_horizontal = models.PositiveSmallIntegerField(
+        default=0,
+        help_text=_('Secondary ordering.'),
+        verbose_name=_('horizontal position'),
+    )
+
+    def get_or_create_placeholder(self):
+        """ make sure there is a placeholder in parent story markup """
+        if self.position_vertical in (0, self.MAXPOSITION):
+            return None
+
+        look_for = self.find_pattern.replace(r'\d+', str(self.position_vertical))
+        body = self.parent_story.bodytext_markup
+        if re.search(look_for, body, flags=re.MULTILINE):
+            return True
+        else:
+            return self.place_element()
+
+    def place_element(self):
+        paragraphs = [p for p in self.parent_story.bodytext_markup.splitlines() if re.search('\S', p)]
+        if self.position_vertical > len(paragraphs):
+            self.position_vertical = self.MAXPOSITION
+            return None
+        placeholder_text = self.template(
+            index=self.position_vertical,
+            comment=str(self),
+        )
+        paragraphs[self.position_vertical] = placeholder_text
+        self.parent_story.bodytext_markup = '\n'.join(paragraphs)
 
     class Meta:
         abstract = True
@@ -813,7 +888,6 @@ class Pullquote(TextContent, StoryElement):
             '@\S+:|«|»', '', self.bodytext_markup.splitlines()[0],
         )[:30].lower().strip()
         paragraphs = self.parent_story.bodytext_markup.lower().splitlines()
-        bottom = len(paragraphs) or 1
         for depth, haystack in enumerate(paragraphs):
             if needle in haystack:
                 # found matching text.
@@ -822,12 +896,12 @@ class Pullquote(TextContent, StoryElement):
             # no matching text. Pullqoute at top.
             depth = 0
 
-        return int(self.MAXPOSITION * depth / bottom)
+        return depth
 
-    def place_pullquote(self):
+    def place_element(self):
         """ Places the pullquote with the relevant paragraph. """
-        self.position = self.find_pullquote_in_bodytext()
-        self.save()
+        self.position_vertical = self.find_pullquote_in_bodytext()
+        super().place_element()
 
 
 class Aside(TextContent, StoryElement):
