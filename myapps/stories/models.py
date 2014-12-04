@@ -5,7 +5,7 @@
 import re
 import difflib
 import logging
-from collections import namedtuple
+# from collections import namedtuple
 logger = logging.getLogger('universitas')
 
 # Django core
@@ -35,6 +35,9 @@ from myapps.frontpage.models import FrontpageStory
 # from myapps.issues.models import PrintIssue
 
 from .status_codes import HTTP_STATUS_CODES
+
+INLINE_ELEMENT_REGEX = r'^\((?P<index>\d+)?\)(?P<comment>.*)$'
+INLINE_ELEMENT_TEMPLATE = '({index}) {comment}'
 
 
 class Section(models.Model):
@@ -121,6 +124,7 @@ class TextContent(TimeStampedModel):
         except ObjectDoesNotExist:
             super().save(*args, **kwargs)
             saved_markup = ''
+
         if saved_markup != self.bodytext_markup:
             # bodytext has been changed - clean and convert contents.
             self.clean_markup()
@@ -135,23 +139,40 @@ class TextContent(TimeStampedModel):
         """ Cleans up and normalises raw input from user or import. """
         bodytext = []
         for paragraph in self.bodytext_markup.splitlines():
-            paragraph = Alias.objects.replace(content=paragraph, timing=1)
+            paragraph = Alias.objects.replace(content=paragraph, timing=Alias.TIMING_IMPORT)
             bodytext.append(paragraph)
         bodytext = '\n'.join(bodytext)
-        bodytext = Alias.objects.replace(content=bodytext, timing=2)
+        bodytext = Alias.objects.replace(content=bodytext, timing=Alias.TIMING_EXTRA)
         self.bodytext_markup = bodytext
 
     def make_html(self):
         """ Create html body text from markup """
-        html_blocks = []
-        paragraphs = self.bodytext_markup.splitlines()
+        html_blocks = ['{% load inline_elements %}']
+        body = self.bodytext_markup
+        paragraphs = body.splitlines()
+        REGEX = INLINE_ELEMENT_REGEX
+
         for paragraph in paragraphs:
             # Apply block scope tags.
-            paragraph = BlockTag.objects.make_html(paragraph)
-            # Apply inline tags.
-            paragraph = InlineTag.objects.make_html(paragraph)
+            # templatetag = Alias.objects.replace(content=paragraph, timing=Alias.TIMING_TEMPLATE)
+            inline_element_match = re.match(REGEX, paragraph)
+            if inline_element_match:
+                paragraph = '{0} {2} {1}'.format(
+                    '{% inline_images', '%}', inline_element_match.group('index'))
+            else:
+                paragraph = BlockTag.objects.make_html(paragraph)
+                # Apply inline tags.
+                paragraph = InlineTag.objects.make_html(paragraph)
             html_blocks.append(paragraph)
-        self.bodytext_html = ' '.join(html_blocks)
+        bodytext_html_as_template = '\n'.join(html_blocks)
+
+        from django.template import Context, Template
+
+        t = Template(bodytext_html_as_template)
+        c = Context({"story": self})
+        bodytext_html = t.render(c)
+
+        self.bodytext_html = bodytext_html
 
     def insert_links(self):
         if hasattr(self, 'parent_story'):
@@ -337,11 +358,11 @@ class Story(TextContent):
         help_text=_('which page the story was printed on.'),
         verbose_name=_('page'),
     )
-    images = models.ManyToManyField(
-        ImageFile, through='StoryImage',
-        help_text=_('connected images with captions.'),
-        verbose_name=_('images'),
-    )
+    # images = models.ManyToManyField(
+    #     ImageFile, through='StoryImage',
+    #     help_text=_('connected images with captions.'),
+    #     verbose_name=_('images'),
+    # )
     hit_count = models.PositiveIntegerField(
         default=0,
         editable=False,
@@ -368,6 +389,22 @@ class Story(TextContent):
         help_text=_('From prodsys. For reference only.'),
         verbose_name=_('Imported xtagged source.'),
     )
+
+    # @property
+    def pullquotes(self):
+        return self.storyelement_set.pullquotes()
+
+    # @property
+    def asides(self):
+        return self.storyelement_set.asides()
+
+    # @property
+    def images(self):
+        return self.storyelement_set.images()
+
+    # @property
+    def videos(self):
+        return self.storyelement_set.videos()
 
     def visit_page(self, request):
         """ Check if visit looks like a human and update hit count """
@@ -424,7 +461,7 @@ class Story(TextContent):
 
     def image_count(self):
         # TODO: Move to admin? Only used in admin listview
-        return self.images.count()
+        return len(self.images())
 
     @property
     def section(self):
@@ -442,12 +479,14 @@ class Story(TextContent):
         if not self.publication_date and self.publication_status == self.STATUS_PUBLISHED:
             self.publication_date = timezone.now()
 
+        self.bodytext_markup = self.reindex_inline_elements()
+
         super(Story, self).save(*args, **kwargs)
 
         # create a frontpagestory only if there are linked images. This avoids an
         # empty frontpagestory when the model is initally saved before any related
         # storyimage instances exist.
-        if self.images.count() != 0 and self.frontpagestory_set.count() == 0:
+        if self.images() and self.frontpagestory_set.count() == 0:
             frontpagestory = FrontpageStory(
                 story=self,
             )
@@ -500,164 +539,430 @@ class Story(TextContent):
             new_element = Pullquote(parent_story=self, )
         return new_element._block_append(tag, content)
 
-    @property
-    def elements(self):
-        return self._Elements(self)
+    def reindex_inline_elements(self):
+        REGEX = INLINE_ELEMENT_REGEX
+        TEMPLATE = INLINE_ELEMENT_TEMPLATE
 
-    class _Elements:
+        def _sort_placeholders_ascending(body):
+            highest_index = 0
+            matches = re.finditer(REGEX, body, flags=re.MULTILINE)
+            for m in matches:
+                index = int(m.group(1) or 0)
+                highest_index += 1
+                if index < highest_index:
+                    body = body.replace(m.group(0), TEMPLATE.format(index=highest_index, comment=''), 1)
+                else:
+                    highest_index = index
+            return body
 
-        """ Represents where child StoryElements are placed within the body text """
+        def _reindex_placeholders(body, correct_placeholders):
+            CHANGED = 'VERIFIEDPLACEHOLDER'
+            for p in correct_placeholders:
+                needle = r'^\({}\).*$'.format(p[0])
+                replace = TEMPLATE.format(index=p[1], comment=p[2]).strip()
+                replace = CHANGED + replace
+                body = re.sub(needle, replace, body, flags=re.M)
 
-        def __init__(self, parent):
-            self.parent = parent
+            body = re.sub(REGEX, '', body, flags=re.M)
+            body = re.sub(CHANGED, '', body)
+            return body
 
-        def placeholders(self):
+        def _insert_placeholders(correct_placeholders, body):
+            if len(correct_placeholders) == 0:
+                return body
 
-            Placeholder = namedtuple(
-                'placeholder',
-                [
-                    'match',
-                    'type',
-                    'index',
-                    'styles',
-                    'comment'
-                ]
-            )
-            placeholders = []
-            body = self.parent.bodytext_markup
-            regex = re.compile(StoryElement.find_pattern, flags=re.M)
-            for match in regex.finditer(body):
-                groups = match.groups()
-                placeholders.append(
-                    Placeholder(
-                        match=match.group(0),
-                        type=None,
-                        index=int(groups[0]) if groups[0] else None,
-                        styles=[],
-                        comment=groups[1].strip(),
-                    )
-                )
-                # print(match.group(0), placeholders[-1])
-            return placeholders
+            paragraphs = body.splitlines()
+            spacing = len(paragraphs) / (len(correct_placeholders) + 1)
+            skipped = 0.0
+            placeholders = (TEMPLATE.format(index=p[1], comment=p[2]) for p in correct_placeholders)
+            new_body = []
+            for par in paragraphs:
+                if skipped >= spacing:
+                    skipped -= spacing
+                    try:
+                        placeholder = next(placeholders)
+                        new_body.append(placeholder)
+                    except StopIteration:
+                        pass
+                skipped += 1
+                new_body.append(par)
+            new_body += list(placeholders)  # add those that were missed
+            body = '\n'.join(new_body)
+            return body
 
-        def reindex(self):
-            body = self.parent.bodytext_markup
-            for n, placeholder in enumerate(self.placeholders(), start=1):
-                if placeholder.index != n:
-                    old = placeholder.match
-                    new = StoryElement.template.format(
-                        class_name=placeholder.type,
-                        index=n,
-                        comment=placeholder.comment,
-                        style='.'.join(placeholder.styles),
-                    )
-                    body = body.replace(old, new, 1)
-            print(body)
-            self.parent.bodytext_markup = body
+        body = self.bodytext_markup
+        body = _sort_placeholders_ascending(body)
+        correct_placeholders = self.storyelement_set.reindex()
+        body = _reindex_placeholders(body, correct_placeholders)
+        existing_placeholders = re.findall(REGEX, body, flags=re.MULTILINE)
 
-        @property
-        def elements(self):
-            images = self.parent.storyimage_set.all()
-            videos = self.parent.storyvideo_set.all()
-            asides = self.parent.aside_set.all()
-            pullquotes = self.parent.pullquote_set.all()
-            all_elements = list(images) + list(videos) + list(asides) + list(pullquotes)
-            return all_elements
+        if existing_placeholders:
+            sections = re.split(r'^(\(\d+\).*)$', body, flags=re.MULTILINE)
+            limits = [StoryElement.MAXPOSITION] + [int(e[0]) for e in existing_placeholders[::-1]]
+            top = 0
+            new_sections = []
+            for n, section in enumerate(sections):
+                if n % 2:
+                    new_sections.append(section)
+                    continue
+                bottom, top = top, limits.pop()
+                to_insert = [p for p in correct_placeholders if bottom < p[0] < top]
+                if to_insert:
+                    new_sections.append(_insert_placeholders(to_insert, section))
+                else:
+                    new_sections.append(section)
+            body = '\n'.join(s.strip() for s in new_sections)
+            return body
+
+        elif correct_placeholders:
+            body = _insert_placeholders(correct_placeholders, body)
+
+        return body
+
+
+class ElementQuerySet(models.QuerySet):
+
+    def top(self):
+        """ Elements that are placed at the start of the parent article """
+        return self.published().filter(inline=False)
+
+    def inline(self):
+        """ Elements that are placed inside the story """
+        return self.published().filter(inline=True)
+
+    def published(self):
+        return self.filter(index__isnull=False)
+
+    def unpublished(self):
+        return self.filter(index__isnull=True)
+
+    def images(self):
+        return self.filter(_subclass='storyimage')
+
+    def videos(self):
+        return self.filter(_subclass='storyvideo')
+
+    def pullquotes(self):
+        return self.filter(_subclass='pullquote')
+
+    def asides(self):
+        return self.filter(_subclass='aside')
+
+    # def reindex(self):
+    #     placeholders = []
+    #     groups = [
+    #         (0, self.top_items,),
+    #         (1, self.inline_items,),
+    #         (self.model.MAXPOSITION, self.bottom_items,),
+    #     ]
+    #     for position_vertical, query in groups:
+    #         queryset = query().exclude(published=False)
+    #         while queryset.count():
+    #             comment = ''
+    #             actual_index = queryset.first().position_vertical
+    #             these_items = queryset.filter(position_vertical=actual_index)
+
+    #             for position_horizontal, element in enumerate(these_items):
+    #                 if element.position_horizontal != position_horizontal:
+    #                     element.position_horizontal = position_horizontal
+    #                     element.save()
+    #                 comment += str(element._subclass) + ' '
+
+    #             if position_vertical != actual_index:
+    #                 these_items.update(position_vertical=position_vertical)
+
+    #             queryset = queryset.filter(position_vertical__gt=actual_index)
+    #             placeholders.append((actual_index, position_vertical, comment))
+    #             position_vertical += 1
+    #     return [p for p in placeholders if 0 < p[0] < self.model.MAXPOSITION]
 
 
 class ElementManager(models.Manager):
 
-    def first_items(self):
-        """ Elements that are placed at the start of the parent article """
-        return self.filter(position_vertical=0).order_by('position_horizontal')
+    def get_queryset(self):
+        return ElementQuerySet(self.model, using=self._db)
 
-    def last_items(self):
-        """ Elements that are placed at the end of the parent article """
-        return self.filter(position_vertical__gte=StoryElement.MAXPOSITION).order_by('position_vertical', 'position_horizontal')
-
-    def inline_items(self):
-        """ Elements that are placed somewhere inside the parent article """
-        return self.exclude(position_vertical=0).exclude(position_vertical__gte=StoryElement.MAXPOSITION).order_by('position_vertical', 'position_horizontal')
-
-    def reindex(self):
-        groups = [
-            (0, self.first_items,),
-            (StoryElement.MAXPOSITION, self.last_items,),
-            (1, self.inline_items,),
-            ]
-        for position_vertical, query in groups:
-            queryset = query()
-            while queryset.count():
-                actual_index = queryset.first().position_vertical
-                these_items = queryset.filter(position_vertical=actual_index)
-                for position_horizontal, element in enumerate(these_items):
-                    if element.position_horizontal != position_horizontal:
-                        element.position_horizontal = position_horizontal
-                        element.save()
-                if position_vertical != actual_index:
-                    these_items.update(position_vertical=position_vertical)
-
-                queryset = queryset.filter(position_vertical__gt=actual_index)
-                position_vertical += 1
+    def __getattr__(self, attr, *args):
+        """ Checks the queryset class for missing methods. """
+        try:
+            # return getattr(self.__class__, attr, *args)
+            return super().__getattr__(attr, *args)
+        except AttributeError:
+            return getattr(self.get_queryset(), attr, *args)
 
 
+class RemembersSubClass(models.Model):
 
-class StoryElement(models.Model):
+    """ Mixin for storyelements. Saves their class name in a field. """
+
+    _subclass = models.CharField(
+        editable=False,
+        max_length=200,
+    )
+
+    class Meta:
+        abstract = True
+
+    @property
+    def child(self):
+        return getattr(self, self._subclass)
+
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            subclass = self.__class__
+            # Save name of the subclass
+            self._subclass = subclass.__name__.lower()
+
+        super().save(*args, **kwargs)
+
+
+class StoryElement(RemembersSubClass):
 
     """ Models that are placed somewhere inside an article """
 
     objects = ElementManager()
-    find_pattern = r'^\((?P<index>\d+)?\)(?P<comment>.*)$'
-    template = '({index}) {comment}'
-    MAXPOSITION = 1000
     parent_story = models.ForeignKey('Story')
-    published = models.BooleanField(
+    index = models.PositiveSmallIntegerField(
+        default=0,
+        blank=True, null=True,
+        help_text=_('Leave blank to unpublish'),
+        verbose_name=_('index'),
+    )
+    inline = models.BooleanField(
+        editable=False,
         default=True,
-        help_text=_('Choose whether this element is published'),
-        verbose_name=_('published')
-    )
-    position_vertical = models.PositiveSmallIntegerField(
-        default=0,
-        validators=[
-            MaxValueValidator(MAXPOSITION),
-            MinValueValidator(0)],
-        help_text=_(
-            'Where in the story does this belong? {start} = At the very beginning, {end} = At the end.'.format(
-                start=0, end=MAXPOSITION)),
-        verbose_name=_('position'),
-    )
-    position_horizontal = models.PositiveSmallIntegerField(
-        default=0,
-        help_text=_('Secondary ordering.'),
-        verbose_name=_('horizontal position'),
+        help_text=_('Is this element inline or placed at the top?'),
     )
 
-    def get_or_create_placeholder(self):
-        """ make sure there is a placeholder in parent story markup """
-        if self.position_vertical in (0, self.MAXPOSITION):
-            return None
+    def siblings(self):
+        return self.__class__.objects.filter(parent_story=self.parent_story)
 
-        look_for = self.find_pattern.replace(r'\d+', str(self.position_vertical))
-        body = self.parent_story.bodytext_markup
-        if re.search(look_for, body, flags=re.MULTILINE):
-            return True
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            if self.index == 0:
+                last_item = self.siblings().filter(index__isnull=False).order_by('index').last()
+                if last_item:
+                    # Set index to be higher than the previous object of the same class.
+                    self.index = last_item.index + 1
+                else:
+                    self.index = 1
+
+        super().save(*args, **kwargs)
+
+    # position_horizontal = models.PositiveSmallIntegerField(
+        # default=0,
+        # help_text=_('Secondary ordering.'),
+        # verbose_name=_('horizontal position'),
+    # )
+    # def get_or_create_placeholder(self):
+    #     """ make sure there is a placeholder in parent story markup """
+    #     if self.position_vertical in (0, self.MAXPOSITION):
+    #         return None
+    #     look_for = self.find_pattern.replace(r'\d+', str(self.position_vertical))
+    #     body = self.parent_story.bodytext_markup
+    #     if re.search(look_for, body, flags=re.MULTILINE):
+    #         return True
+    #     else:
+    #         return self.place_element()
+    # def place_element(self):
+    #     paragraphs = [p for p in self.parent_story.bodytext_markup.splitlines() if re.search('\S', p)]
+    #     if self.position_vertical > len(paragraphs):
+    #         self.position_vertical = self.MAXPOSITION
+    #         return None
+    #     placeholder_text = self.template(
+    #         index=self.position_vertical,
+    #         comment=str(self),
+    #     )
+    #     paragraphs[self.position_vertical] = placeholder_text
+    #     self.parent_story.bodytext_markup = '\n'.join(paragraphs)
+    # class Meta:
+    class Meta:
+        verbose_name = _('story element')
+        verbose_name_plural = _('story elements')
+        ordering = ['index']
+
+
+class Pullquote(TextContent, StoryElement):
+
+    """ A quote that is that is pulled out of the content. """
+
+    class Meta:
+        verbose_name = _('Pullquote')
+        verbose_name_plural = _('Pullquotes')
+
+    def find_pullquote_in_bodytext(self):
+        """ Looks for the first paragraph in the parent story that matches pullquote content."""
+        needle = re.sub(
+            '@\S+:|«|»', '', self.bodytext_markup.splitlines()[0],
+        )[:30].lower().strip()
+        paragraphs = self.parent_story.bodytext_markup.lower().splitlines()
+        for depth, haystack in enumerate(paragraphs):
+            if needle in haystack:
+                # found matching text.
+                break
         else:
-            return self.place_element()
+            # no matching text. Pullqoute at top.
+            depth = 0
+
+        return depth
 
     def place_element(self):
-        paragraphs = [p for p in self.parent_story.bodytext_markup.splitlines() if re.search('\S', p)]
-        if self.position_vertical > len(paragraphs):
-            self.position_vertical = self.MAXPOSITION
-            return None
-        placeholder_text = self.template(
-            index=self.position_vertical,
-            comment=str(self),
-        )
-        paragraphs[self.position_vertical] = placeholder_text
-        self.parent_story.bodytext_markup = '\n'.join(paragraphs)
+        """ Places the pullquote with the relevant paragraph. """
+        self.position_vertical = self.find_pullquote_in_bodytext()
+        super().place_element()
+
+
+class Aside(TextContent, StoryElement):
+
+    """ Fact box or other information typically placed in side bar """
+
+    class Meta:
+        verbose_name = _('Aside')
+        verbose_name_plural = _('Asides')
+
+
+class StoryMedia(StoryElement):
+
+    """ Video, photo or illustration connected to a story """
 
     class Meta:
         abstract = True
+
+    caption = models.CharField(
+        blank=True, max_length=1000,
+        help_text=_('Text explaining the media.'),
+        verbose_name=_('caption'),
+    )
+
+    creditline = models.CharField(
+        blank=True, max_length=100,
+        help_text=_('Extra information about media attribution and license.'),
+        verbose_name=_('credit line'),
+    )
+
+    size = models.PositiveSmallIntegerField(
+        default=1,
+        help_text=_('Relative image size.'),
+        verbose_name=_('image size'),
+    )
+
+    def save(self, *args, **kwargs):
+        self.caption = self.caption.replace('*', '')
+        self.creditline = self.creditline.replace('*', '')
+        super().save(*args, **kwargs)
+
+
+class StoryImage(StoryMedia):
+
+    """ Photo or illustration connected to a story """
+
+    class Meta:
+        verbose_name = _('Image')
+        verbose_name_plural = _('Images')
+
+    imagefile = models.ForeignKey(
+        ImageFile,
+        help_text=_('Choose an image by name or upload a new one.'),
+        verbose_name=('image file'),
+    )
+
+
+class StoryVideo(StoryMedia):
+
+    """ Video content connected to a story """
+
+    VIDEO_HOSTS = (
+        ('vimeo', _('vimeo'),),
+        ('youtu', _('youtube'),),
+    )
+
+    class Meta:
+        verbose_name = _('Video')
+        verbose_name_plural = _('Videos')
+
+    video_host = models.CharField(
+        max_length=20,
+        default=VIDEO_HOSTS[0][0],
+        choices=VIDEO_HOSTS,
+    )
+
+    host_video_id = models.CharField(
+        max_length=100,
+        verbose_name=_('id for video file.'),
+        help_text=_('the part of the url that identifies this particular video'),
+    )
+
+    def embed(self, width=1200, height=600):
+        """ Returns html embed code """
+        if self.video_host == 'vimeo':
+            # <iframe src="//player.vimeo.com/video/105149174?title=0&amp;byline=0&amp;portrait=0&amp;color=f00008"
+            # width="1200" height="675" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+            # </iframe>
+            embed_pattern = (
+                '<iframe src="//player.vimeo.com/'
+                'video/{host_video_id}?title=0&amp;byline=0&amp;portrait=0&amp;color=f00008" '
+                'width="{width}" height="{height}" frameborder="0" '
+                'webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+            )
+        elif self.video_host == 'youtu':
+            # <iframe width="1280" height="720" src="//www.youtube-nocookie.com/embed/HBk1GdcdALU?rel=0"
+            # frameborder="0" allowfullscreen></iframe>
+            embed_pattern = (
+                '<iframe width="{width}" height="{heigth}" '
+                'src="//www.youtube-nocookie.com/embed/{host_video_id}?'
+                'rel=0" frameborder="0" allowfullscreen></iframe>'
+            )
+        else:
+            raise Exception('unknown hosting site.')
+
+        return embed_pattern.format(height=height, width=width, host_video_id=self.host_video_id,)
+
+    @classmethod
+    def create_from_url(cls, url, parent_story):
+        """ create video object from input url """
+        # url formats:
+        # https://www.youtube.com/watch?v=roHl3PJsZPk
+        # http://youtu.be/roHl3PJsZPk
+        # http://vimeo.com/105149174
+
+        def check_link(url, method='head', timeout=2):
+            """ Does a http request to check the status of the url. """
+            # TODO: samme metode som i inlinelink.
+            try:
+                status_code = str(request(method, url, timeout=timeout).status_code)
+            except Timeout:
+                status_code = 408  # HTTP Timout
+            except MissingSchema:
+                status_code = 0  # not a HTTP url
+            return status_code
+
+        for host in cls.VIDEO_HOSTS:
+            hostname = host[0]
+            if hostname in url:
+                video_host = hostname
+                break
+        else:
+            video_host = None
+
+        if not check_link(url) == 200:
+            # something is wrong with the url?
+            return None
+
+        id_regex = r'[a-zA-Z0-9]+$'
+        host_video_id = re.search(id_regex, url)
+
+        try:
+            new_video = cls(
+                parent_story=parent_story,
+                video_host=video_host,
+                host_video_id=host_video_id,
+            )
+
+            new_video.save()
+            return new_video
+        except Exception as e:
+            logger.debug(e)
+            return None
 
 
 class InlineLink(models.Model):
@@ -871,189 +1176,6 @@ class InlineLink(models.Model):
             validate(href)
             return href
         except ValidationError:
-            return None
-
-
-class Pullquote(TextContent, StoryElement):
-
-    """ A quote that is that is pulled out of the content. """
-
-    class Meta(StoryElement.Meta):
-        verbose_name = _('Pullquote')
-        verbose_name_plural = _('Pullquotes')
-
-    def find_pullquote_in_bodytext(self):
-        """ Looks for the first paragraph in the parent story that matches pullquote content."""
-        needle = re.sub(
-            '@\S+:|«|»', '', self.bodytext_markup.splitlines()[0],
-        )[:30].lower().strip()
-        paragraphs = self.parent_story.bodytext_markup.lower().splitlines()
-        for depth, haystack in enumerate(paragraphs):
-            if needle in haystack:
-                # found matching text.
-                break
-        else:
-            # no matching text. Pullqoute at top.
-            depth = 0
-
-        return depth
-
-    def place_element(self):
-        """ Places the pullquote with the relevant paragraph. """
-        self.position_vertical = self.find_pullquote_in_bodytext()
-        super().place_element()
-
-
-class Aside(TextContent, StoryElement):
-
-    """ Fact box or other information typically placed in side bar """
-
-    class Meta(StoryElement.Meta):
-        verbose_name = _('Aside')
-        verbose_name_plural = _('Asides')
-
-
-class StoryMedia(StoryElement):
-
-    """ Video, photo or illustration connected to a story """
-
-    class Meta(StoryElement.Meta):
-        abstract = True
-
-    caption = models.CharField(
-        blank=True, max_length=1000,
-        help_text=_('Text explaining the media.'),
-        verbose_name=_('caption'),
-    )
-
-    creditline = models.CharField(
-        blank=True, max_length=100,
-        help_text=_('Extra information about media attribution and license.'),
-        verbose_name=_('credit line'),
-    )
-
-    size = models.PositiveSmallIntegerField(
-        default=1,
-        help_text=_('Relative image size.'),
-        verbose_name=_('image size'),
-    )
-
-    def save(self, *args, **kwargs):
-        self.caption = self.caption.replace('*', '')
-        self.creditline = self.creditline.replace('*', '')
-        super().save(*args, **kwargs)
-
-
-class StoryImage(StoryMedia):
-
-    """ Photo or illustration connected to a story """
-
-    class Meta(StoryElement.Meta):
-        verbose_name = _('Image')
-        verbose_name_plural = _('Images')
-
-    imagefile = models.ForeignKey(
-        ImageFile,
-        help_text=_('Choose an image by name or upload a new one.'),
-        verbose_name=('image file'),
-    )
-
-
-class StoryVideo(StoryMedia):
-
-    """ Video content connected to a story """
-
-    VIDEO_HOSTS = (
-        ('vimeo', _('vimeo'),),
-        ('youtu', _('youtube'),),
-    )
-
-    class Meta(StoryElement.Meta):
-        verbose_name = _('Video')
-        verbose_name_plural = _('Videos')
-
-    video_host = models.CharField(
-        max_length=20,
-        default=VIDEO_HOSTS[0][0],
-        choices=VIDEO_HOSTS,
-    )
-
-    host_video_id = models.CharField(
-        max_length=100,
-        verbose_name=_('id for video file.'),
-        help_text=_('the part of the url that identifies this particular video'),
-    )
-
-    def embed(self, width=1200, height=600):
-        """ Returns html embed code """
-        if self.video_host == 'vimeo':
-            # <iframe src="//player.vimeo.com/video/105149174?title=0&amp;byline=0&amp;portrait=0&amp;color=f00008"
-            # width="1200" height="675" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
-            # </iframe>
-            embed_pattern = (
-                '<iframe src="//player.vimeo.com/'
-                'video/{host_video_id}?title=0&amp;byline=0&amp;portrait=0&amp;color=f00008" '
-                'width="{width}" height="{height}" frameborder="0" '
-                'webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
-            )
-        elif self.video_host == 'youtu':
-            # <iframe width="1280" height="720" src="//www.youtube-nocookie.com/embed/HBk1GdcdALU?rel=0"
-            # frameborder="0" allowfullscreen></iframe>
-            embed_pattern = (
-                '<iframe width="{width}" height="{heigth}" '
-                'src="//www.youtube-nocookie.com/embed/{host_video_id}?'
-                'rel=0" frameborder="0" allowfullscreen></iframe>'
-            )
-        else:
-            raise Exception('unknown hosting site.')
-
-        return embed_pattern.format(height=height, width=width, host_video_id=self.host_video_id,)
-
-    @classmethod
-    def create_from_url(cls, url, parent_story):
-        """ create video object from input url """
-        # url formats:
-        # https://www.youtube.com/watch?v=roHl3PJsZPk
-        # http://youtu.be/roHl3PJsZPk
-        # http://vimeo.com/105149174
-
-        def check_link(url, method='head', timeout=2):
-            """ Does a http request to check the status of the url. """
-            # TODO: samme metode som i inlinelink.
-            try:
-                status_code = str(request(method, url, timeout=timeout).status_code)
-            except Timeout:
-                status_code = 408  # HTTP Timout
-            except MissingSchema:
-                status_code = 0  # not a HTTP url
-            return status_code
-
-        for host in cls.VIDEO_HOSTS:
-            hostname = host[0]
-            if hostname in url:
-                video_host = hostname
-                break
-        else:
-            video_host = None
-
-        if not check_link(url) == 200:
-            # something is wrong with the url?
-            return None
-
-        id_regex = r'[a-zA-Z0-9]+$'
-        host_video_id = re.search(id_regex, url)
-
-        try:
-            new_video = cls(
-                parent_story=parent_story,
-                video_host=video_host,
-                host_video_id=host_video_id,
-            )
-
-            new_video.save()
-            return new_video
-        except Exception as e:
-            logger.debug(e)
             return None
 
 

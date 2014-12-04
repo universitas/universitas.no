@@ -202,8 +202,8 @@ class FrontpageStory(TimeStampedModel):
             self.kicker = self.kicker or self.story.kicker[:200]
             self.headline = self.headline or self.story.title[:200]
             self.html_class = self.html_class or str(self.story.section)[:200].lower().replace(' ', '-')
-            if self.imagefile is None and not self.story.images.count() == 0:
-                self.imagefile = self.story.images.first()
+            if self.imagefile is None and self.story.images():
+                self.imagefile = self.story.images().first().child.imagefile
             super().save()
         if self.placements.count() == 0 and not self.imagefile is None:
             # is automatically put on front page if it has an image.

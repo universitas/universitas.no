@@ -248,11 +248,16 @@ class AliasManager(TagManager):
 
 class Alias(CachedTag):
 
+    TIMING_IMPORT = 1
+    TIMING_EXTRA = 2
+    TIMING_BYLINES = 3
+    TIMING_TEMPLATE = 4
+
     TIMING_CHOICES = (
-        (1, _('import'),),
-        (2, _('extra'),),
-        (3, _('bylines'),),
-        (4, _('template'),),
+        (TIMING_IMPORT, _('import'),),
+        (TIMING_EXTRA, _('extra'),),
+        (TIMING_BYLINES, _('bylines'),),
+        (TIMING_TEMPLATE, _('template'),),
     )
 
     class Meta:

@@ -1,0 +1,13 @@
+{% load thumbnail %}
+{% load parse_markup %}
+<div class="slideshow">
+  {% for image in images %}
+  <div class="image-container">
+    {% thumbnail image.imagefile.source_file "1000x500" crop="center" as thumb %}
+      <img src="{{ thumb.url }}" alt="{{ image.caption|strip_tags }}">
+    {% endthumbnail %}
+    {% include '_caption.html' with caption=image.caption %}
+  </div>
+  {% endfor %}
+</div>
+

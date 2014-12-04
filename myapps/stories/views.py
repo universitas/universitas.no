@@ -4,7 +4,7 @@ Views for articles
 """
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from .models import Story
+from .models import Story, StoryImage
 from django.http import HttpResponseRedirect, Http404
 import logging
 logger = logging.getLogger('universitas')
@@ -19,11 +19,14 @@ def article_view(request, story_id, section, slug):
     if request.path != correct_url:
         return HttpResponseRedirect(correct_url)
 
-    # logger.debug('info')
+    try:
+        header_image = story.images().top_items().first().child
+    except StoryImage.DoesNotExist:
+        header_image = None
 
     context = {
         'story': story,
-        'header_image': story.storyimage_set.first(),
+        'header_image': header_image,
     }
 
     return render(request, template, context,)
