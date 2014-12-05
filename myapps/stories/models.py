@@ -1168,6 +1168,8 @@ class InlineLink(models.Model):
                 except InlineLink.MultipleObjectsReturned as e:
                     # TODO: Dette skal ikke skje.
                     logger.error('story: {} error:{}'.format(parent_story.pk, e))
+                    link = cls.objects.filter(
+                        number=ref, parent_story=parent_story,)[0]
                 link.text = text
                 if ref > number:
                     link.number = number
