@@ -1,0 +1,11 @@
+{% load thumbnail %}
+{% load parse_markup %}
+{% for video in elements %}
+<div class="inline_video {{ css_classes }}">
+    <div class="image-container">
+      {{ self.embed }}
+      {% include '_caption.html' with caption=video.caption %}
+    </div>
+</div>
+{% endfor %}
+

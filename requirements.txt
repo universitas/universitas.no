@@ -34,3 +34,4 @@ sqlparse
 tornado
 -e git+git@github.com:mariocesar/sorl-thumbnail.git#egg=sorl_thumbnail
 -e git+git@github.com:Haakenlid/django-autocomplete-light.git@v2#egg=autocomplete-light
+diff-match-patch

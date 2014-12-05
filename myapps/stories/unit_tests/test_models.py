@@ -7,56 +7,81 @@ import re
 # from unittest import TestCase
 # from .model.s import BlockTag, InlineTag
 from django.test import SimpleTestCase
-from myapps.stories.models import Section, Story, StoryType
+from myapps.stories.models import Section, Story, StoryType, StoryImage, Pullquote
+from pprint import pprint
 
 
-class PositionsTest(SimpleTestCase):
+class InLineElementsTest(SimpleTestCase):
 
-    def test_positions_regex(self):
-        """ Positions regular expression picks up stuff """
-        elements = [
-            ('image', 1, 'large',),
-            ('aside', 3, 'left',),
-            ('video', 4, 'right',),
-            ('blockquote', 1, 'center',),
-        ]
+    # def set_up(self):
+    #     exists, section = Section.objects.get_or_create(title='section')
+    #     StoryType.objects.get_or_create(title='section', section=section)
 
-        markup = '@txt: Lorem ipsum'
-        for element in elements:
-            markup += '\n({1}) {0}'.format(*element)
-            markup += '\n()'.format(*element)
+    def test_find_inlines(self):
+        text = re.sub(
+            r'\s*\n\s*',
+            '\n',
+            """
+            @tit: lol
+            @txt: no chance
+            @image: < 1 3 50
+            sdlkfjslkfjalkjdf
+            slkdfj sldkfj aa allslsdkf
+            @mt: oh no!
+            @box: 3
+            @quote: > 1
+            @image: 44 444 4
+            """,
+        ).strip()
 
-        story = Story()
-        story.bodytext_markup = markup
-        story.title = 'new story'
-        labels = story.elements.placeholders()
+        story = Story(bodytext_markup=text)
 
-        self.assertEqual(len(elements) * 2, len(labels), 'two labels per element')
-        for n, label in enumerate(labels):
-            element = elements[n // 2]
-            # self.assertEqual(label.type, element[0], 'label type is correct')
-            if n % 2:  # minimal markup
-                self.assertEqual(label.index, None, 'no index')
-                # self.assertEqual(len(label.styles), 0, 'no styles')
-                self.assertEqual(len(label.comment), 0, 'no comment')
-            else:  # full markup
-                self.assertEqual(label.index, element[1], 'index is integer')
-                # self.assertEqual(label.styles[0], element[2], 'correct style')
-                # self.assertEqual(len(label.styles), 1, 'has one style')
-                self.assertGreater(len(label.comment), 3, 'has comment')
+        image_placeholders = story.find_inline_placeholders(element_class=StoryImage)
+        self.assertEqual(len(image_placeholders), 2)
+        self.assertEqual(image_placeholders[1]['indexes'], [44, 444, 4])
+        self.assertEqual(image_placeholders[0]['flags'][0], '<')
 
-        story.elements.reindex()
-        labels = story.elements.placeholders()
+        pullquote_placeholders = story.find_inline_placeholders(element_class=Pullquote)
+        self.assertEqual(len(pullquote_placeholders), 1)
+        self.assertEqual(pullquote_placeholders[0]['indexes'], [1])
+        self.assertEqual(pullquote_placeholders[0]['flags'], ['>'])
 
-        for n, label in enumerate(labels):
-            element = elements[n // 2]
-            # self.assertEqual(label.comment, element[0], 'label type is correct')
-            self.assertEqual(label.index, n+1, 'index is now reordered')
+from itertools import permutations
+import math
 
+def sieve_of_eratosthenes(ceiling):
+    primes = []
+    for num in range(2, math.ceil(ceiling)):
+        root = math.ceil(num ** .5)
+        for pr in primes:
+            if num % pr == 0:
+                break
+            if root < pr:
+                primes.append(num)
+                break
+        else:
+            primes.append(num)
+    return primes
 
-    def test_position_objects(self):
+def main():
+    seed = 123456789
+    storetall = (int(''.join(p)) for p in permutations(str(seed)))
+    smallest = int(seed ** .5)
+    primes = sieve_of_eratosthenes(smallest)
+    for nn, tall in enumerate(storetall):
+        tt = tall
+        factors = []
+        for prime in primes:
+            if prime > smallest or prime >= tt:
+                break
+            while tt % prime == 0:
+                tt = tt // prime
+                factors.append(prime)
+        if tt != 1:
+            factors.append(tt)
+        if factors[-1] <= smallest:
+            smallest = factors[-1]
+            print('{sum} = {factors}'.format(sum=tall, factors=' × '.join(str(f) for f in factors[::-1])))
+    print(smallest)
 
-        new_story = Story()
-        elements = new_story.elements.elements
-
-        self.assertEqual(elements, [])
+main()

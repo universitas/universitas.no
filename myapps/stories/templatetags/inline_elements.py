@@ -1,9 +1,65 @@
+""" Template tags for inline story elements such as images, asides and pullquotes """
+
+import logging
 from django import template
+
 register = template.Library()
+logger = logging.getLogger('universitas')
+
 
 @register.inclusion_tag('_inline_images.html', takes_context=True)
-def inline_images(context, index):
-    story = context['story']
-    images = story.images().published().filter(position_vertical=index)
-    context = {'images': [i.child for i in images]}
+def inline_storyimage(context, argument_string):
+    queryset = context['story'].images().published()
+    context = get_items(queryset, argument_string)
+    if len(context['elements']) > 1:
+        context['css_classes'] += ' slideshow'
+    context['img_size'] = '1000x500'
+    context['img_crop'] = 'center'
+    return context
+
+
+@register.inclusion_tag('_inline_pullquotes.html', takes_context=True)
+def inline_pullquote(context, argument_string):
+    queryset = context['story'].pullquotes().published()
+    return get_items(queryset, argument_string)
+
+
+@register.inclusion_tag('_inline_videos.html', takes_context=True)
+def inline_storyvideo(context, argument_string):
+    queryset = context['story'].videos().published()
+    return get_items(queryset, argument_string)
+
+
+@register.inclusion_tag('_inline_asides.html', takes_context=True)
+def inline_aside(context, argument_string):
+    queryset = context['story'].asides().published()
+    return get_items(queryset, argument_string)
+
+
+def get_items(queryset, argument_string):
+    """ Turn arguments into classes and items from the queryset """
+    FLAGS = {
+        '<': 'left',
+        '>': 'right',
+    }
+
+    context = {'elements': [], 'css_classes': ''}
+    indexes, classes = [], []
+
+    arguments = argument_string.split()
+
+    for arg in arguments:
+        if arg.isdigit():
+            indexes.append(int(arg))
+        elif arg in FLAGS:
+            classes.append(FLAGS[arg])
+        else:
+            error_message = 'Unknown argument: {} in {}'.format(arg, argument_string)
+            # logger.warn(error_message)
+            raise template.TemplateSyntaxError(error_message)
+
+    for index in indexes:
+        context['elements'].extend([i.child for i in queryset.filter(index=index)])
+
+    context['css_classes'] = ' '.join(classes)
     return context

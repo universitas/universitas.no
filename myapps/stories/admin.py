@@ -62,7 +62,7 @@ class LinkInline(admin.TabularInline):
 class VideoInline(admin.TabularInline, ):
     model = StoryVideo
     formfield_overrides = {models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})}, }
-    fields = ('published', 'position_vertical', 'position_horizontal', 'caption', 'creditline', 'size', 'video_host', 'host_video_id', )
+    fields = ['top', 'index', 'caption', 'creditline', 'size', 'video_host', 'host_video_id', ]
     extra = 0
 
 
@@ -70,7 +70,7 @@ class ImageInline(admin.TabularInline, ThumbAdmin, ):
     form = autocomplete_light.modelform_factory(StoryImage, exclude=())
     formfield_overrides = {models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})}, }
     model = StoryImage
-    fields = ('published', 'position_vertical', 'position_horizontal', 'caption', 'creditline', 'size', 'imagefile', 'thumbnail', )
+    fields = ['top', 'index', 'caption', 'creditline', 'size', 'imagefile', 'thumbnail', ]
     readonly_fields = ('thumbnail', )
     extra = 0
 

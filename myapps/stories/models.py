@@ -19,13 +19,15 @@ from django.utils.text import slugify
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import MaxValueValidator, MinValueValidator, URLValidator, ValidationError
 from django.utils.safestring import mark_safe
-from model_utils.models import TimeStampedModel
 from django.core.urlresolvers import reverse
+from django.template import Context, Template
 
 # Installed apps
 from bs4 import BeautifulSoup
+from diff_match_patch import diff_match_patch
 from requests import request
 from requests.exceptions import Timeout, MissingSchema, ConnectionError
+from model_utils.models import TimeStampedModel
 
 # Project apps
 from myapps.contributors.models import Contributor
@@ -36,15 +38,10 @@ from myapps.frontpage.models import FrontpageStory
 
 from .status_codes import HTTP_STATUS_CODES
 
-INLINE_ELEMENT_REGEX = r'^\((?P<index>\d+)?\)(?P<comment>.*)$'
-INLINE_ELEMENT_TEMPLATE = '({index}) {comment}'
-
 
 class Section(models.Model):
 
-    """
-    A Section in the publication containing one kind of content.
-    """
+    """ A Section in the publication containing one kind of content. """
 
     class Meta:
         verbose_name = _('Section')
@@ -130,8 +127,6 @@ class TextContent(TimeStampedModel):
             self.clean_markup()
             self.make_html()
             self.insert_links()
-            # soup = BeautifulSoup(self.bodytext_html)
-            # self.bodytext_html = soup.prettify()
 
         super().save(*args, **kwargs)
 
@@ -144,35 +139,40 @@ class TextContent(TimeStampedModel):
         bodytext = '\n'.join(bodytext)
         bodytext = Alias.objects.replace(content=bodytext, timing=Alias.TIMING_EXTRA)
         self.bodytext_markup = bodytext
+        self.insert_links()
 
     def make_html(self):
         """ Create html body text from markup """
         html_blocks = ['{% load inline_elements %}']
         body = self.bodytext_markup
+
+        tag_template = '{{% inline_{classname} "\\1" %}}'
+        regex = '^{markup_tag} *(.*) *$'
+
+        for cls in (StoryImage, Pullquote, Aside, StoryVideo):
+            classname = cls.__name__.lower().replace(' ', '')
+            find = regex.format(markup_tag=cls.markup_tag)
+            replace = tag_template.format(classname=classname)
+            body = re.sub(find, replace, body, flags=re.M)
+        # logger.warn(str(re.findall(r'{%.*?%}', body)))
+
         paragraphs = body.splitlines()
-        REGEX = INLINE_ELEMENT_REGEX
 
         for paragraph in paragraphs:
-            # Apply block scope tags.
-            # templatetag = Alias.objects.replace(content=paragraph, timing=Alias.TIMING_TEMPLATE)
-            inline_element_match = re.match(REGEX, paragraph)
-            if inline_element_match:
-                paragraph = '{0} {2} {1}'.format(
-                    '{% inline_images', '%}', inline_element_match.group('index'))
-            else:
+            if not paragraph.startswith('{'):
                 paragraph = BlockTag.objects.make_html(paragraph)
-                # Apply inline tags.
-                paragraph = InlineTag.objects.make_html(paragraph)
             html_blocks.append(paragraph)
-        bodytext_html_as_template = '\n'.join(html_blocks)
 
-        from django.template import Context, Template
+        bodytext_html = '\n'.join(html_blocks)
 
-        t = Template(bodytext_html_as_template)
-        c = Context({"story": self})
-        bodytext_html = t.render(c)
+        bodytext_html = Template(bodytext_html).render(Context({"story": self}))
+
+        bodytext_html = BeautifulSoup(bodytext_html).prettify()
+
+        bodytext_html = InlineTag.objects.make_html(bodytext_html)
 
         self.bodytext_html = bodytext_html
+
 
     def insert_links(self):
         if hasattr(self, 'parent_story'):
@@ -298,6 +298,7 @@ class Story(TextContent):
         (STATUS_PUBLISHED, _('Published on website')),
         (STATUS_PRIVATE, _('Will not be published')),
     ]
+
     prodsak_id = models.PositiveIntegerField(
         blank=True, null=True, editable=False,
         help_text=_('primary id in the legacy prodsys database.'),
@@ -358,11 +359,6 @@ class Story(TextContent):
         help_text=_('which page the story was printed on.'),
         verbose_name=_('page'),
     )
-    # images = models.ManyToManyField(
-    #     ImageFile, through='StoryImage',
-    #     help_text=_('connected images with captions.'),
-    #     verbose_name=_('images'),
-    # )
     hit_count = models.PositiveIntegerField(
         default=0,
         editable=False,
@@ -468,7 +464,8 @@ class Story(TextContent):
         """ Shortcut to related Section """
         return self.story_type.section
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, new=False, **kwargs):
+        new = self.pk is None or new
         # slugify title. Remove underscores and n-dash. If slug has been changed,
         # old url will redirect to new url with status code 301.
         self.slug = slugify(self.title).replace('_', '').replace('–', '-')[:50]
@@ -479,18 +476,23 @@ class Story(TextContent):
         if not self.publication_date and self.publication_status == self.STATUS_PUBLISHED:
             self.publication_date = timezone.now()
 
-        self.bodytext_markup = self.reindex_inline_elements()
+        super().save(*args, **kwargs)
 
-        super(Story, self).save(*args, **kwargs)
+        if new:
+            # When the story is created
+            # make inline elements
+            self.bodytext_markup = self.insert_all_inline_elements()
+            super().save(*args, **kwargs)
 
-        # create a frontpagestory only if there are linked images. This avoids an
-        # empty frontpagestory when the model is initally saved before any related
-        # storyimage instances exist.
-        if self.images() and self.frontpagestory_set.count() == 0:
-            frontpagestory = FrontpageStory(
-                story=self,
-            )
-            frontpagestory.save()
+            if self.images() and self.frontpagestory_set.count() == 0:
+                # create a frontpagestory only if there are linked images. This avoids an
+                # empty frontpagestory when the model is initally saved before any related
+                # storyimage instances exist.
+                frontpagestory = FrontpageStory(
+                    story=self,
+                )
+                frontpagestory.save()
+
 
     def get_edit_url(self):
         url = reverse(
@@ -519,6 +521,7 @@ class Story(TextContent):
 
     def clean_markup(self, *args, **kwargs):
         """ Clean user input and populate fields """
+        self.bodytext_markup = self.reindex_inlines()
         super().clean_markup(*args, **kwargs)
         self.parse_markup()
 
@@ -539,84 +542,194 @@ class Story(TextContent):
             new_element = Pullquote(parent_story=self, )
         return new_element._block_append(tag, content)
 
-    def reindex_inline_elements(self):
-        REGEX = INLINE_ELEMENT_REGEX
-        TEMPLATE = INLINE_ELEMENT_TEMPLATE
+    def insert_all_inline_elements(self):
+        """ Insert inline elements into the bodytext according to heuristics. """
 
-        def _sort_placeholders_ascending(body):
-            highest_index = 0
-            matches = re.finditer(REGEX, body, flags=re.MULTILINE)
-            for m in matches:
-                index = int(m.group(1) or 0)
-                highest_index += 1
-                if index < highest_index:
-                    body = body.replace(m.group(0), TEMPLATE.format(index=highest_index, comment=''), 1)
-                else:
-                    highest_index = index
+        def _main(self=self, body=self.bodytext_markup):
+            # insert asides
+            asides = self.asides().inline()
+            body = top_right(asides, body)
+
+            # insert images
+            images = self.images().inline()
+            body = fifty_fifty(images, body)
+
+            # insert videos
+            videos = self.videos().inline()
+            body = fifty_fifty(videos, body)
+
+            # insert pullquotes
+            pullquotes = self.pullquotes().inline()
+            body = fuzzy_search(pullquotes, body)
+
             return body
 
-        def _reindex_placeholders(body, correct_placeholders):
-            CHANGED = 'VERIFIEDPLACEHOLDER'
-            for p in correct_placeholders:
-                needle = r'^\({}\).*$'.format(p[0])
-                replace = TEMPLATE.format(index=p[1], comment=p[2]).strip()
-                replace = CHANGED + replace
-                body = re.sub(needle, replace, body, flags=re.M)
+        def fifty_fifty(queryset, body):
+            """ Half of elements in header, rest spread evenly through body. """
+            # TODO: Denne legger til i bunn nå.
+            addlines = []
+            for item in queryset:
+                flags = ''
+                line = '{tag} {flags} {index}'.format(
+                    tag=item.child.markup_tag,
+                    flags=flags,
+                    index=item.index,
+                )
+                addlines.append(line)
 
-            body = re.sub(REGEX, '', body, flags=re.M)
-            body = re.sub(CHANGED, '', body)
+            body = '\n'.join(addlines + [body.strip()])
             return body
 
-        def _insert_placeholders(correct_placeholders, body):
-            if len(correct_placeholders) == 0:
-                return body
+        def top_right(queryset, body, flags='>'):
+            """ All elements at top, pulled right """
+            addlines = []
+
+            for item in queryset:
+                line = '{tag} {flags} {index}'.format(
+                    tag=item.child.markup_tag,
+                    flags=flags,
+                    index=item.index,
+                )
+                addlines.append(line)
+
+            body = '\n'.join(addlines + [body.strip()])
+            return body
+
+        def fuzzy_search(queryset, body, flags=''):
+            """ Place elements according to fuzzy text search. """
+            diff = diff_match_patch()
+            diff.Match_Distance = 5000  # default is 1000
+            diff.Match_Threshold = .25  # default is .5
+
+            def _find_in_text(needle, haystack):
+                """ strips away all spaces and puctuations before comparing. """
+                needle = re.sub(r'\W', '', needle).lower()
+                haystack = re.sub(r'\W', '', haystack).lower()
+                value = diff.match_main(haystack, needle, 0)
+                return value is not -1
 
             paragraphs = body.splitlines()
-            spacing = len(paragraphs) / (len(correct_placeholders) + 1)
-            skipped = 0.0
-            placeholders = (TEMPLATE.format(index=p[1], comment=p[2]) for p in correct_placeholders)
-            new_body = []
-            for par in paragraphs:
-                if skipped >= spacing:
-                    skipped -= spacing
-                    try:
-                        placeholder = next(placeholders)
-                        new_body.append(placeholder)
-                    except StopIteration:
-                        pass
-                skipped += 1
-                new_body.append(par)
-            new_body += list(placeholders)  # add those that were missed
-            body = '\n'.join(new_body)
-            return body
+            items = [item.child for item in queryset]
 
-        body = self.bodytext_markup
-        body = _sort_placeholders_ascending(body)
-        correct_placeholders = self.storyelement_set.reindex()
-        body = _reindex_placeholders(body, correct_placeholders)
-        existing_placeholders = re.findall(REGEX, body, flags=re.MULTILINE)
-
-        if existing_placeholders:
-            sections = re.split(r'^(\(\d+\).*)$', body, flags=re.MULTILINE)
-            limits = [StoryElement.MAXPOSITION] + [int(e[0]) for e in existing_placeholders[::-1]]
-            top = 0
-            new_sections = []
-            for n, section in enumerate(sections):
-                if n % 2:
-                    new_sections.append(section)
+            for item in items:
+                needle = item.needle()
+                if not needle:
                     continue
-                bottom, top = top, limits.pop()
-                to_insert = [p for p in correct_placeholders if bottom < p[0] < top]
-                if to_insert:
-                    new_sections.append(_insert_placeholders(to_insert, section))
-                else:
-                    new_sections.append(section)
-            body = '\n'.join(s.strip() for s in new_sections)
+
+                if item.index is None:
+                    item.index = 0
+                    item.save()  # reset index
+
+                line = '{tag} {flags} {index}'.format(
+                    tag=item.markup_tag,
+                    flags=flags,
+                    index=item.index
+                )
+                new_paragraphs = []
+                for paragraph in paragraphs:
+                    if needle and _find_in_text(needle, paragraph):
+                        # found an acceptable match
+                        new_paragraphs.append(line)
+                        needle = None
+                    new_paragraphs.append(paragraph)
+                paragraphs = new_paragraphs
+
+                if needle:
+                    # place on top if no match is found.
+                    paragraphs = [line] + paragraphs
+
+            body = '\n'.join(paragraphs)
             return body
 
-        elif correct_placeholders:
-            body = _insert_placeholders(correct_placeholders, body)
+        return _main()
 
+    def find_inline_placeholders(self, element_class, body):
+        regex = r'^{}\s*(.*)\s*$'.format(element_class.markup_tag)
+        FLAGS = ['<', '>']
+        matches = re.finditer(regex, body, flags=re.M)
+        result = []
+        for match in matches:
+            elements = re.split(r'[\s,]+', match.group(1))
+            result.append(
+                {
+                    'elements': elements,
+                    'line': match.group(0),
+                    'flags': [item for item in elements if item in FLAGS],
+                    'indexes': [int(index) for index in elements if index.isdigit()],
+                }
+            )
+        return result
+
+    def reindex_inlines(self, element_classes=None, body=None):
+        """
+        Change placeholders in bodytext markup.
+        Updates indexes in related elements to match.
+        Remove orphan placeholders.
+        """
+        body = body or self.bodytext_markup
+        element_classes = element_classes or [Aside, StoryImage, StoryVideo, Pullquote]
+
+        for element_class in element_classes:
+
+            elements = {}
+            top_index = 0
+            body_changed = False
+            elements_changed = False
+
+            subclass = element_class.__name__.lower()
+            placeholders = self.find_inline_placeholders(element_class, body)
+            queryset = self.storyelement_set.filter(_subclass=subclass, top=False)
+
+            for placeholder in placeholders:
+                replace = []
+                seen_indexes = set()
+                for index in placeholder['indexes']:
+                    if index in seen_indexes:
+                        continue
+                    seen_indexes.add(index)
+                    for element in queryset.filter(index=index):
+                        if element.pk in elements:
+                            this_index = elements[element.pk].index
+                        else:
+                            elements[element.pk] = element
+                            top_index += 1
+                            this_index = top_index
+                            if (element.index, element.top) != (this_index, False):
+                                elements_changed = True
+                                element.index = this_index
+                                element.top = False
+                        if not this_index in replace:
+                            replace.append(this_index)
+                        else:
+                            pass
+                            # logger.warn('duplicate index: ' + placeholder['line'])
+                if replace:
+                    replace = [element_class.markup_tag] + [str(r) for r in placeholder['flags'] + replace]
+                placeholder['replace'] = ' '.join(replace)
+
+                if placeholder['line'] != placeholder['replace']:
+                    body_changed = True
+
+                # logger.warn('\nflags: {flags}\nindexes: {indexes}\n {line} -> {replace}'.format(**placeholder)))
+
+            if elements_changed:
+                for element in elements.values():
+                    element.save()
+
+            if body_changed:
+                for placeholder in placeholders:
+                    old_line = re.compile('^' + placeholder['line'] + '$', flags=re.M)
+                    new_line = '#@##@#' + placeholder['replace']
+                    body = old_line.sub(new_line, body, count=1)  # change
+                    # body = old_line.sub('', body)  # remove other occurences.
+                body = re.sub('#@##@#', '', body)
+                lookfor = r'^({}).*$'.format(
+                    '|'.join(cls.markup_tag for cls in element_classes),
+                )
+                found = '\n'.join(m.group(0) for m in re.finditer(lookfor, body, flags=re.M))
+                # logger.warn('after change:\n' + found)
+
+        self.bodytext_markup = body
         return body
 
 
@@ -624,11 +737,11 @@ class ElementQuerySet(models.QuerySet):
 
     def top(self):
         """ Elements that are placed at the start of the parent article """
-        return self.published().filter(inline=False)
+        return self.published().filter(top=True)
 
     def inline(self):
         """ Elements that are placed inside the story """
-        return self.published().filter(inline=True)
+        return self.published().filter(top=False)
 
     def published(self):
         return self.filter(index__isnull=False)
@@ -648,34 +761,6 @@ class ElementQuerySet(models.QuerySet):
     def asides(self):
         return self.filter(_subclass='aside')
 
-    # def reindex(self):
-    #     placeholders = []
-    #     groups = [
-    #         (0, self.top_items,),
-    #         (1, self.inline_items,),
-    #         (self.model.MAXPOSITION, self.bottom_items,),
-    #     ]
-    #     for position_vertical, query in groups:
-    #         queryset = query().exclude(published=False)
-    #         while queryset.count():
-    #             comment = ''
-    #             actual_index = queryset.first().position_vertical
-    #             these_items = queryset.filter(position_vertical=actual_index)
-
-    #             for position_horizontal, element in enumerate(these_items):
-    #                 if element.position_horizontal != position_horizontal:
-    #                     element.position_horizontal = position_horizontal
-    #                     element.save()
-    #                 comment += str(element._subclass) + ' '
-
-    #             if position_vertical != actual_index:
-    #                 these_items.update(position_vertical=position_vertical)
-
-    #             queryset = queryset.filter(position_vertical__gt=actual_index)
-    #             placeholders.append((actual_index, position_vertical, comment))
-    #             position_vertical += 1
-    #     return [p for p in placeholders if 0 < p[0] < self.model.MAXPOSITION]
-
 
 class ElementManager(models.Manager):
 
@@ -685,7 +770,6 @@ class ElementManager(models.Manager):
     def __getattr__(self, attr, *args):
         """ Checks the queryset class for missing methods. """
         try:
-            # return getattr(self.__class__, attr, *args)
             return super().__getattr__(attr, *args)
         except AttributeError:
             return getattr(self.get_queryset(), attr, *args)
@@ -720,6 +804,9 @@ class StoryElement(RemembersSubClass):
 
     """ Models that are placed somewhere inside an article """
 
+    markup_tag = ''  # change in subclasses
+    needle = ''  # for fuzzy search
+
     objects = ElementManager()
     parent_story = models.ForeignKey('Story')
     index = models.PositiveSmallIntegerField(
@@ -728,14 +815,17 @@ class StoryElement(RemembersSubClass):
         help_text=_('Leave blank to unpublish'),
         verbose_name=_('index'),
     )
-    inline = models.BooleanField(
-        editable=False,
-        default=True,
-        help_text=_('Is this element inline or placed at the top?'),
+    top = models.BooleanField(
+        # editable=False,
+        default=False,
+        help_text=_('Is this element placed on top?'),
     )
 
     def siblings(self):
         return self.__class__.objects.filter(parent_story=self.parent_story)
+
+    def needle(self):
+        return None
 
     def save(self, *args, **kwargs):
         if self.pk is None:
@@ -749,33 +839,6 @@ class StoryElement(RemembersSubClass):
 
         super().save(*args, **kwargs)
 
-    # position_horizontal = models.PositiveSmallIntegerField(
-        # default=0,
-        # help_text=_('Secondary ordering.'),
-        # verbose_name=_('horizontal position'),
-    # )
-    # def get_or_create_placeholder(self):
-    #     """ make sure there is a placeholder in parent story markup """
-    #     if self.position_vertical in (0, self.MAXPOSITION):
-    #         return None
-    #     look_for = self.find_pattern.replace(r'\d+', str(self.position_vertical))
-    #     body = self.parent_story.bodytext_markup
-    #     if re.search(look_for, body, flags=re.MULTILINE):
-    #         return True
-    #     else:
-    #         return self.place_element()
-    # def place_element(self):
-    #     paragraphs = [p for p in self.parent_story.bodytext_markup.splitlines() if re.search('\S', p)]
-    #     if self.position_vertical > len(paragraphs):
-    #         self.position_vertical = self.MAXPOSITION
-    #         return None
-    #     placeholder_text = self.template(
-    #         index=self.position_vertical,
-    #         comment=str(self),
-    #     )
-    #     paragraphs[self.position_vertical] = placeholder_text
-    #     self.parent_story.bodytext_markup = '\n'.join(paragraphs)
-    # class Meta:
     class Meta:
         verbose_name = _('story element')
         verbose_name_plural = _('story elements')
@@ -786,35 +849,23 @@ class Pullquote(TextContent, StoryElement):
 
     """ A quote that is that is pulled out of the content. """
 
+    markup_tag = '@quote:'
+
+    def needle(self):
+        firstline = self.bodytext_markup.splitlines()[0]
+        needle = re.sub('@\S+:|«|»', '', firstline)
+        return needle
+
     class Meta:
         verbose_name = _('Pullquote')
         verbose_name_plural = _('Pullquotes')
-
-    def find_pullquote_in_bodytext(self):
-        """ Looks for the first paragraph in the parent story that matches pullquote content."""
-        needle = re.sub(
-            '@\S+:|«|»', '', self.bodytext_markup.splitlines()[0],
-        )[:30].lower().strip()
-        paragraphs = self.parent_story.bodytext_markup.lower().splitlines()
-        for depth, haystack in enumerate(paragraphs):
-            if needle in haystack:
-                # found matching text.
-                break
-        else:
-            # no matching text. Pullqoute at top.
-            depth = 0
-
-        return depth
-
-    def place_element(self):
-        """ Places the pullquote with the relevant paragraph. """
-        self.position_vertical = self.find_pullquote_in_bodytext()
-        super().place_element()
 
 
 class Aside(TextContent, StoryElement):
 
     """ Fact box or other information typically placed in side bar """
+
+    markup_tag = '@box:'
 
     class Meta:
         verbose_name = _('Aside')
@@ -849,12 +900,16 @@ class StoryMedia(StoryElement):
     def save(self, *args, **kwargs):
         self.caption = self.caption.replace('*', '')
         self.creditline = self.creditline.replace('*', '')
+        if self.pk is None and not self.siblings().filter(top=True).exists():
+            self.top = True
         super().save(*args, **kwargs)
 
 
 class StoryImage(StoryMedia):
 
     """ Photo or illustration connected to a story """
+
+    markup_tag = '@image:'
 
     class Meta:
         verbose_name = _('Image')
@@ -866,10 +921,15 @@ class StoryImage(StoryMedia):
         verbose_name=('image file'),
     )
 
+    def needle(self):
+        return str(self.imagefile)
+
 
 class StoryVideo(StoryMedia):
 
     """ Video content connected to a story """
+
+    markup_tag = '@video:'
 
     VIDEO_HOSTS = (
         ('vimeo', _('vimeo'),),
@@ -1135,7 +1195,7 @@ class InlineLink(models.Model):
     get_html.allow_tags = True
 
     @classmethod
-    def convert_html_links(cls, bodytext):
+    def convert_html_links(cls, bodytext, formatter=None):
         """ convert <a href=""> to other tag """
         # if '&' in bodytext:
             # find = re.findall(r'.{,20}&.{,20}', bodytext)
@@ -1158,7 +1218,7 @@ class InlineLink(models.Model):
             link.replace_with(replacement)
             logger.debug('found link: {link} - replace with: {replacement}'.format(link=link, replacement=replacement))
 
-        return str(soup)
+        return soup.decode(formatter=formatter)
 
     @classmethod
     def validate_url(cls, href):

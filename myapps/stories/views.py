@@ -20,8 +20,8 @@ def article_view(request, story_id, section, slug):
         return HttpResponseRedirect(correct_url)
 
     try:
-        header_image = story.images().top_items().first().child
-    except StoryImage.DoesNotExist:
+        header_image = story.images().top().first().child
+    except AttributeError:
         header_image = None
 
     context = {
@@ -31,5 +31,3 @@ def article_view(request, story_id, section, slug):
 
     return render(request, template, context,)
 
-    pass
-# Create your views here.

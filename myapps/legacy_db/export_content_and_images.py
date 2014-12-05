@@ -99,6 +99,7 @@ def import_legacy_website_content(first=0, last=None, reverse=False, replace_exi
 
         new_story = _importer_websak(websak)
         _importer_bilder_fra_webside(websak, new_story)
+        new_story.save(new=True)
 
 
 def import_prodsys_content(first=0, last=None, reverse=False, replace_existing=False):
@@ -180,7 +181,7 @@ def _importer_prodsak(prodsak_id, replace_existing):
 
     # Create a new Story.
     xtags, status, json, prodsak = _get_xtags_from_prodsys(prodsak_id)
-    story_type=_get_story_type(prodsak.mappe)
+    story_type = _get_story_type(prodsak.mappe)
     new_story = Story(
         prodsak_id=prodsak_id,
         bodytext_markup=xtags,
@@ -193,6 +194,7 @@ def _importer_prodsak(prodsak_id, replace_existing):
 
     # Import images from prodsys to the new Story.
     _importer_bilder_fra_prodsys(prodsak, new_story)
+    new_story.save(new=True)
 
     # Update the prodsys object if needed.
     if prodsak.produsert == Prodsak.READY_FOR_WEB:
@@ -233,7 +235,6 @@ def _importer_bilder_fra_prodsys(prodsak, story):
 
     prod_bilder = Prodbilde.objects.filter(prodsak_id=prodsak.prodsak_id)
 
-
     for bilde in prod_bilder:
         # import ipdb; ipdb.set_trace()
         story_image = None
@@ -243,20 +244,22 @@ def _importer_bilder_fra_prodsys(prodsak, story):
         caption = re.sub(r'^@[^:]+: ?', '', caption)  # strip xtag.
 
         # Make the ImageFile and StoryImage objects.
-        image_file = _create_image_file(filepath=bilde.bildefil, prodsys=True )
+        image_file = _create_image_file(filepath=bilde.bildefil, prodsys=True)
 
         if image_file:
+            published = bool(bilde.prioritet)
             story_image = StoryImage(
                 parent_story=story,
-                caption=caption[:1000],
-                creditline='',
-                published=bool(bilde.prioritet),
                 imagefile=image_file,
+                index=0 if published else None,
                 size=bilde.prioritet or 0,
+                creditline='',
+                caption=caption[:1000],
             )
             story_image.save()
 
         # logger.debug(story_image)
+
 
 def _importer_bilder_fra_webside(websak, story):
     """ Import all images connected to a single story. """
@@ -279,13 +282,14 @@ def _importer_bilder_fra_webside(websak, story):
 
         # Make the StoryImage object.
         if image_file:
+            published=bool(bilde.size)
             story_image = StoryImage(
                 parent_story=story,
-                caption=caption[:1000],
-                creditline='',
-                published=bool(bilde.size),
                 imagefile=image_file,
+                index=0 if published else None,
                 size=bilde.size or 0,
+                creditline='',
+                caption=caption[:1000],
             )
             story_image.save()
 
