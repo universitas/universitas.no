@@ -28,7 +28,7 @@ TIMEZONE = timezone.get_current_timezone()
 
 import logging
 logger = logging.getLogger('universitas')
-
+count = 0
 
 def import_issues_from_file_system():
     """ Finds pdf files on disks and creates PrintIssue objects. """
@@ -118,6 +118,7 @@ def import_prodsys_content(first=0, last=None, reverse=False, replace_existing=F
 
 def _importer_websak(websak):
     """ Import a single story from legacy website. """
+    global count
     new_story = Story(
         id=websak.id_sak,
         publication_date=_make_aware(websak.dato),
@@ -164,7 +165,8 @@ def _importer_websak(websak):
         new_story.publication_status = Story.STATUS_PUBLISHED
 
     new_story.save()
-    logger.debug('story saved: {} {}'.format(new_story, new_story.pk))
+    count += 1
+    logger.debug('{:>5} story saved: {} {}'.format(count, new_story, new_story.pk))
     return new_story
 
 

@@ -1162,7 +1162,12 @@ class InlineLink(models.Model):
 
             if re.match(r'^\d+$', ref):
                 ref = int(ref)
-                link = cls.objects.get_or_create(number=ref, parent_story=parent_story,)[0]
+                try:
+                    link = cls.objects.get_or_create(
+                        number=ref, parent_story=parent_story,)[0]
+                except InlineLink.MultipleObjectsReturned as e:
+                    # TODO: Dette skal ikke skje.
+                    logger.error('story: {} error:{}'.format(parent_story.pk, e))
                 link.text = text
                 if ref > number:
                     link.number = number
@@ -1216,7 +1221,7 @@ class InlineLink(models.Model):
 
             # change the link from html to simple-tags
             link.replace_with(replacement)
-            logger.debug('found link: {link} - replace with: {replacement}'.format(link=link, replacement=replacement))
+            # logger.debug('found link: {link} - replace with: {replacement}'.format(link=link, replacement=replacement))
 
         return soup.decode(formatter=formatter)
 
@@ -1296,6 +1301,7 @@ class Byline(models.Model):
         )
 
         match = byline_pattern.match(full_byline)
+        full_name = None
         try:
             d = match.groupdict()
             full_name = d['full_name'].title()
@@ -1309,12 +1315,24 @@ class Byline(models.Model):
 
         except (AssertionError, AttributeError, ) as e:
             # Malformed byline
+            original = ' -- '
+            if story.prodsak_id:
+                source = story.legacy_prodsys_source or ''
+            else:
+                source = story.legacy_html_source or ''
+            if not source:
+                original = 'no source'
+            else:
+                original = needle_in_haystack(full_byline, source)
+
             logger.warning(
-                'Malformed byline: "{byline}" error: {error} prodsak_id: {prodsak_id}'.format(
-                    prodsak_id=story.prodsak_id,
+                'Malformed byline: "{byline}" error: {error} id: {id} p_id: {p_id}\n{original}'.format(
+                    id=story.id,
+                    p_id=story.prodsak_id,
                     story=story,
                     byline=full_byline,
-                    error=e
+                    error=e,
+                    original=original,
                 )
             )
 
@@ -1346,6 +1364,21 @@ class Byline(models.Model):
         new_byline.save()
 
         return new_byline
+
+
+def needle_in_haystack(needle, haystack):
+    """ strips away all spaces and puctuations before comparing. """
+    needle = re.sub(r'\W', '', needle).lower()
+    diff = diff_match_patch()
+    diff.Match_Distance = 5000  # default is 1000
+    diff.Match_Threshold = .5  # default is .5
+    lines = haystack.splitlines()
+    for line in lines:
+        line = re.sub(r'\W', '', line).lower()
+        value = diff.match_main(line, needle, 0)
+        if value is not -1:
+            return line
+    return 'no match in %d lines' % (len(lines),)
 
 
 def clean_up_bylines(bylines):
