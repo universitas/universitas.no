@@ -5,7 +5,7 @@
 import re
 import difflib
 import logging
-# from collections import namedtuple
+import json
 logger = logging.getLogger('universitas')
 
 # Django core
@@ -1318,26 +1318,24 @@ class Byline(models.Model):
 
         except (AssertionError, AttributeError, ) as e:
             # Malformed byline
-            original = ' -- '
-            import json
+            p_org = w_org = ' -- '
             if story.legacy_prodsys_source:
                 dump = story.legacy_prodsys_source
-                fields = json.loads(dump)[0]['fields']
-                text = fields['tekst']
-                original = needle_in_haystack(full_byline, text)
-            elif story.legacy_html_source:
+                tekst = json.loads(dump)[0]['fields']['tekst']
+                p_org = needle_in_haystack(full_byline, tekst)
+            if story.legacy_html_source:
                 dump = story.legacy_html_source
-                fields = json.loads(dump)[0]['fields']
-                original = fields['byline']
+                w_org = json.loads(dump)[0]['fields']['byline']
 
             logger.warning(
-                'Malformed byline: "{byline}" error: {error} id: {id} p_id: {p_id}\n{original}'.format(
+                'Malformed byline: "{byline}" error: {error} id: {id} p_id: {p_id}\n{p_org} | {w_org} '.format(
                     id=story.id,
                     p_id=story.prodsak_id,
                     story=story,
                     byline=full_byline,
                     error=e,
-                    original=original,
+                    p_org=p_org,
+                    w_org=w_org,
                 )
             )
 
