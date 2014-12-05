@@ -1312,20 +1312,23 @@ class Byline(models.Model):
             initials = ''.join(letters[0] for letters in full_name.replace('-', ' ').split())
             assert initials == initials.upper()  # All names should be capitalisedd.
             assert len(initials) <= 5  # Five names probably means something is wrong.
+            # assert not story.legacy_prodsys_source
             if len(initials) == 1:
                 initials = full_name.upper()
 
         except (AssertionError, AttributeError, ) as e:
             # Malformed byline
             original = ' -- '
-            if story.prodsak_id:
-                source = story.legacy_prodsys_source or ''
-            else:
-                source = story.legacy_html_source or ''
-            if not source:
-                original = 'no source'
-            else:
-                original = needle_in_haystack(full_byline, source)
+            import json
+            if story.legacy_prodsys_source:
+                dump = story.legacy_prodsys_source
+                fields = json.loads(dump)[0]['fields']
+                text = fields['tekst']
+                original = needle_in_haystack(full_byline, text)
+            elif story.legacy_html_source:
+                dump = story.legacy_html_source
+                fields = json.loads(dump)[0]['fields']
+                original = fields['byline']
 
             logger.warning(
                 'Malformed byline: "{byline}" error: {error} id: {id} p_id: {p_id}\n{original}'.format(
@@ -1376,8 +1379,8 @@ def needle_in_haystack(needle, haystack):
     diff.Match_Threshold = .5  # default is .5
     lines = haystack.splitlines()
     for line in lines:
-        line = re.sub(r'\W', '', line).lower()
-        value = diff.match_main(line, needle, 0)
+        line2 = re.sub(r'\W', '', line).lower()
+        value = diff.match_main(line2, needle, 0)
         if value is not -1:
             return line
     return 'no match in %d lines' % (len(lines),)
