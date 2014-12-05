@@ -3,8 +3,8 @@
 <div class="inline_image {{ css_classes }}">
   {% for image in elements %}
     <div class="image-container">
-      {% thumbnail image.imagefile.source_file img_size crop=img_crop as thumb %}
-        <img src="{{ thumb.url }}" alt="{{ image.caption|strip_tags }}"></img>
+      {% thumbnail image.imagefile.source_file img_size crop=image.imagefile.get_crop as thumb %}
+        <img id="img_{{ image.pk }}" src="{{ thumb.url }}" alt="{{ image.caption|strip_tags }}"></img>
       {% endthumbnail %}
       {% include '_caption.html' with caption=image.caption %}
     </div>

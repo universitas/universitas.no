@@ -8,8 +8,23 @@ logger = logging.getLogger('universitas')
 
 
 @register.inclusion_tag('_inline_images.html', takes_context=True)
+def header_image(context):
+    story = context['story']
+    queryset = story.images().top()
+    # images = context['story'].images().top()
+    context = {
+        'elements': [i.child for i in queryset],
+        'css_classes': 'main_image',
+    }
+    if len(context['elements']) > 1:
+        context['css_classes'] += ' slideshow'
+    context['img_size'] = '1000x500'
+    return context
+
+
+@register.inclusion_tag('_inline_images.html', takes_context=True)
 def inline_storyimage(context, argument_string):
-    queryset = context['story'].images().published()
+    queryset = context['story'].images().inline()
     context = get_items(queryset, argument_string)
     if len(context['elements']) > 1:
         context['css_classes'] += ' slideshow'

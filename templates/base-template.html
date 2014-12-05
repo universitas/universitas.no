@@ -13,6 +13,7 @@
   {% addtoblock "css" %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'css/universitas.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/slick.css' %}">
   {% endaddtoblock %}
   {% render_block "css" postprocessor "compressor.contrib.sekizai.compress" %}
   <script src="{% static 'js/vendor/modernizr.js' %}"></script>
@@ -49,7 +50,8 @@
   {% endblock footer %}
   {% addtoblock "js" %}
   <script src="{% static 'js/vendor/jquery.js' %}"></script>
-  <script src="{% static 'js/foundation/foundation.js' %}"></script>
+  <script src="{% static 'js/foundation/founduniversitasation.js' %}"></script>
+  <script src="{% static 'js/vendor/slick.js' %}"></script>
   {% include 'autocomplete_light/static.html' %}
   {% endaddtoblock %}
   {% comment %}
@@ -57,6 +59,7 @@
   {% endcomment %}
   {% render_block "js" postprocessor "compressor.contrib.sekizai.compress" %}
   <script> $(document).foundation(); </script>
+  <script> $(document).ready(function(){ $('.slideshow').slick({ /* settings */ }); });</script>
 
 </body>
 
