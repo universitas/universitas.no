@@ -9,15 +9,15 @@ import json
 logger = logging.getLogger('universitas')
 
 # Django core
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django.utils import translation
 from django.conf import settings
+from django.utils import timezone
+from django.utils import translation
 from django.db import models
 from django.core.cache import cache
 from django.utils.text import slugify
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.validators import MaxValueValidator, MinValueValidator, URLValidator, ValidationError
+from django.core.validators import URLValidator, ValidationError
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django.template import Context, Template
@@ -173,7 +173,6 @@ class TextContent(TimeStampedModel):
 
         self.bodytext_html = bodytext_html
 
-
     def insert_links(self):
         if hasattr(self, 'parent_story'):
             parent_story = self.parent_story
@@ -291,12 +290,14 @@ class Story(TextContent):
     STATUS_READY = 9
     STATUS_PUBLISHED = 10
     STATUS_PRIVATE = 15
+    STATUS_ERROR = 500
     STATUS_CHOICES = [
         (STATUS_DRAFT, _('Draft')),
         (STATUS_EDITOR, _('Ready to edit')),
         (STATUS_READY, _('Ready to publish on website')),
         (STATUS_PUBLISHED, _('Published on website')),
         (STATUS_PRIVATE, _('Will not be published')),
+        (STATUS_ERROR, _('Technical error')),
     ]
 
     prodsak_id = models.PositiveIntegerField(
@@ -318,6 +319,11 @@ class Story(TextContent):
         blank=True,
         help_text=_('brief introduction or summary of the story'),
         verbose_name=_('lede'),
+    )
+    comment = models.TextField(
+        default='', blank=True,
+        help_text=_('for internal use only'),
+        verbose_name=_('comment'),
     )
     theme_word = models.CharField(
         blank=True, max_length=100,
@@ -492,7 +498,6 @@ class Story(TextContent):
                     story=self,
                 )
                 frontpagestory.save()
-
 
     def get_edit_url(self):
         url = reverse(
@@ -721,13 +726,7 @@ class Story(TextContent):
                     old_line = re.compile('^' + placeholder['line'] + '$', flags=re.M)
                     new_line = '#@##@#' + placeholder['replace']
                     body = old_line.sub(new_line, body, count=1)  # change
-                    # body = old_line.sub('', body)  # remove other occurences.
                 body = re.sub('#@##@#', '', body)
-                lookfor = r'^({}).*$'.format(
-                    '|'.join(cls.markup_tag for cls in element_classes),
-                )
-                found = '\n'.join(m.group(0) for m in re.finditer(lookfor, body, flags=re.M))
-                # logger.warn('after change:\n' + found)
 
         self.bodytext_markup = body
         return body
@@ -1162,14 +1161,22 @@ class InlineLink(models.Model):
 
             if re.match(r'^\d+$', ref):
                 ref = int(ref)
-                try:
-                    link = cls.objects.get_or_create(
-                        number=ref, parent_story=parent_story,)[0]
-                except InlineLink.MultipleObjectsReturned as e:
-                    # TODO: Dette skal ikke skje.
-                    logger.error('story: {} error:{}'.format(parent_story.pk, e))
-                    link = cls.objects.filter(
-                        number=ref, parent_story=parent_story,)[0]
+                links = cls.objects.filter(number=ref, parent_story=parent_story,)
+                if not links:
+                    link = cls.objects.create(number=ref, parent_story=parent_story,)
+                else:
+                    # Duplicates might happen.
+                    link = links.first()
+                    links = links.exclude(pk=link.pk)
+                    if links:
+                        error_message = 'Links are messed up ' + ' '.join(l.href for l in links)
+                        logger.error(error_message)
+                        parent_story.comment += error_message
+                        parent_story.publication_status = Story.STATUS_ERROR
+                        # links = links.exclude(pk=link.pk)
+                        # if links.count() == links.filter(href=link.href).count():
+                            # links.delete()
+
                 link.text = text
                 if ref > number:
                     link.number = number
@@ -1299,7 +1306,8 @@ class Byline(models.Model):
             # single word credit with colon. Person's name, Person's job title or similiar description.
             # Example:
             # text: Jane Doe, Just a regular person
-            r'^(?P<credit>[^:, ]+): (?P<full_name>[^,]+)\s*(, (?P<title>.+))?$'
+            r'^(?P<credit>[^:, ]+): (?P<full_name>[^,]+)\s*(, (?P<title>.+))?$',
+            flags=re.UNICODE,
         )
 
         match = byline_pattern.match(full_byline)
@@ -1310,9 +1318,8 @@ class Byline(models.Model):
             title = d['title'] or ''
             credit = d['credit'].lower()
             initials = ''.join(letters[0] for letters in full_name.replace('-', ' ').split())
-            assert initials == initials.upper()  # All names should be capitalisedd.
-            assert len(initials) <= 5  # Five names probably means something is wrong.
-            # assert not story.legacy_prodsys_source
+            assert initials == initials.upper(), 'All names should be capitalised'
+            assert len(initials) <= 5, 'Five names probably means something is wrong.'
             if len(initials) == 1:
                 initials = full_name.upper()
 
@@ -1327,7 +1334,7 @@ class Byline(models.Model):
                 dump = story.legacy_html_source
                 w_org = json.loads(dump)[0]['fields']['byline']
 
-            logger.warning(
+            warning = (
                 'Malformed byline: "{byline}" error: {error} id: {id} p_id: {p_id}\n{p_org} | {w_org} '.format(
                     id=story.id,
                     p_id=story.prodsak_id,
@@ -1338,6 +1345,9 @@ class Byline(models.Model):
                     w_org=w_org,
                 )
             )
+            logger.warn(warning)
+            story.comment += warning
+            story.publication_status = Story.STATUS_ERROR
 
             full_name, title, initials, credit = 'Nomen Nescio', full_byline, 'XX', '???'
 
@@ -1399,14 +1409,25 @@ def clean_up_bylines(bylines):
         # A word that ends with colon must be at the beginning of a line.
         (r' +(\S*?:)', r'\n\1', 0),
 
+
         # comma, and or "og" before two capitalised words probably means it's a new person. Insert newline.
-        (r'\s*(,\s|\s[oO]g\s|\s[aA]nd\s)\s*([A-ZÆØÅ][a-zæøå]+ [A-ZÆØÅ])', r'\n\2', 0),
+        (r'\s*(,\s|\s[oO]g\s|\s[aA]nd\s)\s*([A-ZÆØÅ]\S+ [A-ZÆØÅ])', r'\n\2', 0),
+        # TODO: Bytt ut byline regular expression med ny regex-modul som funker med unicode
+
+        # parantheses shall have no spaces inside them, but after and before.
+        (r' *\( *(.*?) *\) *', ' (\1) ', 0),
+
+        # email addresses will die!
+        (r'\S+@\S+', '', 0),
 
         # words in parantheses at end of line is probably some creditation. Put in front with colon instead.
         (r'^(.*?) *\(([^)]*)\) *$', r'\2: \1', re.M),
 
         # "Anmeldt av" is text credit.
         (r'anmeldt av:?', 'text: ', re.I),
+
+        # Oversatt = translatrion
+        (r'oversatt av:?', 'translation: ', re.I),
 
         # Any word containging "photo" is some kind of photo credit.
         (r'\S*(ph|f)oto\S*?[\s:]*', '\nphoto: ', re.I),
@@ -1415,13 +1436,13 @@ def clean_up_bylines(bylines):
         (r'\S*te(ks|x)t\S*?[\s:]*', '\ntext: ', re.I),
 
         # These words are stripped from end of line.
-        (r' *(,| og| and) *$', '', re.M + re.I),
+        (r' *(,| og| and) *$', '', re.M | re.I),
 
         # These words are stripped from start of line
-        (r'^ *(,|og |and |av ) *', '', re.M + re.I),
+        (r'^ *(,|og |and |av ) *', '', re.M | re.I),
 
         # These words are stripped from after colon
-        (r': *(,|og |and |av ) *', ':', re.M + re.I),
+        (r': *(,|og |and |av ) *', ':', re.M | re.I),
 
         # Creditline with empty space after it is deleted.
         (r'^\S:\s*$', '', re.M),
@@ -1437,6 +1458,13 @@ def clean_up_bylines(bylines):
 
         # Exactly one space after and no space before colon or comma.
         (r'\s*([:,])+\s*', r'\1 ', 0),
+
+        # No multi colons
+        (r': *:', r':', 0),
+
+        # No random colons at the start or end of a line
+        (r'^\s*:', r'', re.M),
+        (r':\s*$', r'', re.M),
     )
 
     # logger.debug('\n', bylines)

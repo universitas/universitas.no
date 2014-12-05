@@ -31,23 +31,4 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 # http://django-debug-toolbar.readthedocs.org/en/latest/installation.html
 INTERNAL_IPS = ('84.211.75.214')
 
-# DATABASES['prodsys']['HOST'] = 'localhost'
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': environ["DJANGO_DB_NAME"],
-        'USER': environ["DJANGO_DB_USER"],
-        'PASSWORD': environ["DJANGO_DB_PASSWORD"],
-        'HOST': 'localhost',
-        'PORT': '',       # Set to empty string for default.
-    },
-    'prodsys': {
-        'ENGINE': 'mysql.connector.django',
-        'NAME': environ["DJANGO_PRODSYS_DB_NAME"],
-        'USER': environ["DJANGO_PRODSYS_DB_USER"],
-        'PASSWORD': environ["DJANGO_PRODSYS_DB_PASSWORD"],
-        'HOST': environ["DJANGO_PRODSYS_DB_HOST"],
-        # 'HOST': 'localhost', # TODO: Endre dette tilbake det er bare et eksperiment.
-        'PORT': '',       # Set to empty string for default.
-    }
-}
+DATABASES['prodsys'].update({'HOST': 'localhost'})
