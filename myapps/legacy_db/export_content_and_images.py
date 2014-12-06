@@ -226,7 +226,7 @@ def _get_xtags_from_prodsys(prodsak_id, status_in=None):
 
     # Prepare content data.
     json = serializers.serialize('json', (final_version,))
-    xtags = _clean_up_prodsys_encoding(final_version.tekst)
+    xtags = _clean_up_prodsys_encoding(final_version.tekst or '')
     xtags = _clean_up_html(xtags)
 
     return (xtags, status, json, final_version)

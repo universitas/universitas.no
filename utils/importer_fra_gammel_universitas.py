@@ -285,6 +285,7 @@ def clean_up_html(html):
 
 def clean_up_prodsys_encoding(text):
     """ Changes some strange (win 1252 ?) characters into proper unicode. """
+    import ipdb; ipdb.set_trace()
     text = text.replace('\x92', '\'')  # some fixes for win 1252
     text = text.replace('\x95', '•')  # bullet
     text = text.replace('\x96', '–')  # n-dash

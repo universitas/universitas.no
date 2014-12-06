@@ -3,6 +3,7 @@
 
 # Python standard library
 import re
+import sys
 import difflib
 import logging
 import json
@@ -1231,8 +1232,9 @@ class InlineLink(models.Model):
             # change the link from html to simple-tags
             link.replace_with(replacement)
             # logger.debug('found link: {link} - replace with: {replacement}'.format(link=link, replacement=replacement))
-
+        sys.setrecursionlimit(2000)
         return soup.decode(formatter=formatter)
+
 
     @classmethod
     def validate_url(cls, href):
