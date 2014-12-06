@@ -175,10 +175,14 @@ def _importer_websak(websak):
         new_story.bodytext_markup = _websak_til_xtags(websak)
         new_story.publication_status = Story.STATUS_PUBLISHED
         if websak.undersak:
-            undersak = Sak.objects.get(pk=websak.undersak)
-            xtags = _websak_til_xtags(undersak).replace('@tit:', '@undersaktit:')
-            new_story.bodytext_markup += '\n' + xtags
-            logger.debug('undersak: {} len:{}'.format(websak.undersak, len(xtags)))
+            try:
+                undersak = Sak.objects.get(pk=websak.undersak)
+                xtags = _websak_til_xtags(undersak).replace('@tit:', '@undersaktit:')
+                new_story.bodytext_markup += '\n' + xtags
+                logger.debug('undersak: {} len:{}'.format(websak.undersak, len(xtags)))
+            except Sak.DoesNotExist:
+                # Dangling reference in database.
+                pass
 
     new_story.save()
     logger.debug('{:>5} story saved: {} {}'.format(count, new_story, new_story.pk))
