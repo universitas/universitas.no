@@ -30,6 +30,7 @@ import logging
 logger = logging.getLogger('universitas')
 count = 0
 
+
 def import_issues_from_file_system():
     """ Finds pdf files on disks and creates PrintIssue objects. """
     pdf_files = set(
@@ -119,6 +120,27 @@ def import_prodsys_content(first=0, last=None, reverse=False, replace_existing=F
 def _importer_websak(websak):
     """ Import a single story from legacy website. """
     global count
+    count += 1
+
+    # check if story exists
+    try:
+        old_story = Story.objects.get(id=websak.id_sak)
+        logger.warn('{:>5} story already exists: {} {}'.format(count, old_story, old_story.pk))
+        return old_story
+    except Story.DoesNotExist:
+        pass
+
+    # check whether this story has a parent story
+    try:
+        new_websak = Sak.objects.get(undersak=websak.pk)
+        logger.warn('{:>5} Has parent: {} {}'.format(count, new_websak.pk, websak.pk ))
+        return _importer_websak(new_websak)
+    except Sak.DoesNotExist:
+        pass
+    except Sak.MultipleObjectsReturned:
+        if websak.pk == 0:
+            pass
+
     new_story = Story(
         id=websak.id_sak,
         publication_date=_make_aware(websak.dato),
@@ -130,32 +152,21 @@ def _importer_websak(websak):
     try:
         prodsak_id = int(websak.filnavn)
     except (TypeError, ValueError):  # No integer prodsak_id means that this article does not exist in prodsys.
+        prodsak_id = None
+
+    new_story.prodsak_id = prodsak_id
+
+    try:  # import this story from prodsys
+        prodsak = _get_xtags_from_prodsys(
+            prodsak_id=prodsak_id,
+            status_in=[Prodsak.READY_FOR_WEB, Prodsak.PUBLISHED_ON_WEB, Prodsak.ARCHIVED, ]
+        )
+    except Prodsak.DoesNotExist:  # couldn't find the story in prodsys
         pass
-    else:  # prodsak_id is an integer, which means that this story should exist in prodsys database.
-        # Stories and substories share the same prodsakid.
-        # Check if the story already has been imported as a main story.
-        main_story = Story.objects.filter(prodsak_id=prodsak_id)
-        if main_story.exists():
-            # If this is a substory, the main story is already imported.
-            story = main_story.first()
-            logger.debug('main story already exists: {} {}'.format(story, story.pk))
-            return story
-        else:
-            new_story.prodsak_id = prodsak_id
-
-        try:  # import this story from prodsys
-            status_in = (
-                Prodsak.READY_FOR_WEB,
-                Prodsak.PUBLISHED_ON_WEB,
-                Prodsak.ARCHIVED,
-            )
-            prodsak = _get_xtags_from_prodsys(prodsak_id, status_in)
-            new_story.bodytext_markup = prodsak[0]
-            new_story.publication_status = prodsak[1]
-            new_story.prodsys_json = prodsak[2]
-
-        except Prodsak.DoesNotExist:  # couldn't find the story in prodsys
-            pass
+    else:
+        new_story.bodytext_markup = prodsak[0]
+        new_story.publication_status = prodsak[1]
+        new_story.prodsys_json = prodsak[2]
 
     if new_story.publication_status != Story.STATUS_PUBLISHED:
         # prodsys story cannot be used for import.
@@ -163,9 +174,13 @@ def _importer_websak(websak):
         # create xtags from the legacy website story instead.
         new_story.bodytext_markup = _websak_til_xtags(websak)
         new_story.publication_status = Story.STATUS_PUBLISHED
+        if websak.undersak:
+            undersak = Sak.objects.get(pk=websak.undersak)
+            xtags = _websak_til_xtags(undersak).replace('@tit:', '@undersaktit:')
+            new_story.bodytext_markup += '\n' + xtags
+            logger.debug('undersak: {} len:{}'.format(websak.undersak, len(xtags)))
 
     new_story.save()
-    count += 1
     logger.debug('{:>5} story saved: {} {}'.format(count, new_story, new_story.pk))
     return new_story
 
@@ -208,18 +223,17 @@ def _importer_prodsak(prodsak_id, replace_existing):
 
 def _get_xtags_from_prodsys(prodsak_id, status_in=None):
     """ Get cleaned xtag from a story in the prodsys database. """
+    filters = {'prodsak_id': prodsak_id}
+    if status_in:
+        filters.update(produsert__in=status_in)
 
     # Find the correct story in the database.
-    objects = Prodsak.objects.filter(prodsak_id=prodsak_id)
-    if status_in:
-        objects = objects.filter(produsert__in=status_in)
-    try:
-        final_version = objects.order_by('-version_no').first()
-    except Prodsak.DoesNotExist:
-        raise
+    final_version = Prodsak.objects.filter(**filters).order_by('-version_no').first()
+    if not final_version:
+        raise Prodsak.DoesNotExist
 
     # Check whether the story has been edited in InDesign.
-    if final_version.kommentar and "Vellykket eksport fra InDesign!" in final_version.kommentar and '@tit' in final_version.tekst:
+    if "Vellykket eksport fra InDesign!" in (final_version.kommentar or '') and '@tit' in (final_version.tekst or ''):
         status = Story.STATUS_READY
     else:
         status = Story.STATUS_DRAFT
@@ -284,7 +298,7 @@ def _importer_bilder_fra_webside(websak, story):
 
         # Make the StoryImage object.
         if image_file:
-            published=bool(bilde.size)
+            published = bool(bilde.size)
             story_image = StoryImage(
                 parent_story=story,
                 imagefile=image_file,
