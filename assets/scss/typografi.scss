@@ -1,0 +1,61 @@
+@charset "UTF-8";
+
+.mellomtittel {
+  // color: blue;
+  font-size: 1.4rem;
+}
+
+.question {
+  font-style: bold italic;
+}
+
+.bodytext {
+  @extend .columns;
+  @extend .medium-9;
+  @extend .pull-3;
+  // @extend .end;
+}
+// .left {
+ // @extend .medium-4;
+ // @extend .columns;
+// }
+
+.inline-right {
+  @extend .columns;
+  @extend .medium-3;
+  @extend .push-9;
+}
+
+main .row {
+  border-top: 1px solid grey;
+}
+
+.inline-aside {
+  // background: yellow;
+  h2 {
+    font-size: 1rem;
+  }
+
+  p, ul li {
+    font-size: 0.8rem;
+  }
+
+  $listindent: .5rem;
+
+  ul {
+    list-style: disc outside none;
+    // margin-left: 0;
+    padding-left: $listindent;
+    li {
+      padding-left: $listindent;
+    }
+  }
+}
+
+.image-caption {
+  font-size: 0.8rem;
+}
+
+.lede {
+  font-size: larger;
+}

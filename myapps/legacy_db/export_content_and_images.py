@@ -101,6 +101,8 @@ def import_legacy_website_content(first=0, last=None, reverse=False, replace_exi
         new_story = _importer_websak(websak)
         _importer_bilder_fra_webside(websak, new_story)
         new_story.save(new=True)
+        new_story.full_clean()
+        new_story.save()
 
 
 def import_prodsys_content(first=0, last=None, reverse=False, replace_existing=False):
@@ -184,6 +186,8 @@ def _importer_websak(websak):
                 # Dangling reference in database.
                 pass
 
+    new_story.save(new=True)
+    new_story.full_clean()
     new_story.save()
     logger.debug('{:>5} story saved: {} {}'.format(count, new_story, new_story.pk))
     return new_story

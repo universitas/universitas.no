@@ -24,15 +24,8 @@
         {% endfor %}
       </ul>
     </header>
-
     <main class="medium-12 columns">
-{# body text #}
-     {{ story.bodytext_html | safe }}
-      {# {% for section in story.sections %} #}
-      {# <section class="bodytext large-12 columns"> #}
-
-      {# </section> #}
-      {# {% endfor %} #}
+     {{ story.get_html }}
     </main>
   </article>
     <section id="after" class="row">

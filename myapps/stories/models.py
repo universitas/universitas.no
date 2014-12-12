@@ -5,8 +5,8 @@
 import re
 import sys
 import difflib
-import logging
 import json
+import logging
 logger = logging.getLogger('universitas')
 
 # Django core
@@ -22,6 +22,7 @@ from django.core.validators import URLValidator, ValidationError
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django.template import Context, Template
+from django.template.loader import get_template
 
 # Installed apps
 from bs4 import BeautifulSoup
@@ -38,6 +39,52 @@ from myapps.frontpage.models import FrontpageStory
 # from myapps.issues.models import PrintIssue
 
 from .status_codes import HTTP_STATUS_CODES
+
+
+PULLQUOTE_TAG = '@quote:'
+ASIDE_TAG = '@box:'
+IMAGE_TAG = '@image:'
+
+class MarkupFieldMixin:
+
+    def __init__(self, *args, **kwargs):
+        kwargs.update(
+            blank=True,
+            default='',
+        )
+        super().__init__(*args, **kwargs)
+
+    def clean(self, value, model_instance):
+        value = super().clean(value, model_instance)
+        value = self.clean_links(value, model_instance)
+        soup = BeautifulSoup(value)
+        if value != soup.text:
+            error_message = '{warning} {tags}'.format(warning=_('HTML tags found in text: '), tags=soup.find_all())
+            raise ValidationError(error_message)
+
+        value = Alias.objects.replace(content=value, timing=Alias.TIMING_IMPORT)
+        value = Alias.objects.replace(content=value, timing=Alias.TIMING_EXTRA)
+        return value
+
+    def value_to_string(self, obj):
+        # logger.warn(str(obj))
+        value = super().value_to_string(obj)
+        value = obj.insert_urls_in_links(value)
+        return value
+
+    def clean_links(self, text, model_instance):
+        """ Clean up links into markup format """
+        text = InlineLink.convert_html_links(text)
+        text = InlineLink.clean_and_create_links(text, model_instance.parent_story)
+        return text
+
+
+class MarkupTextField(MarkupFieldMixin, models.TextField):
+    description = _('subclass of Textfield containing markup.')
+
+
+class MarkupCharField(MarkupFieldMixin, models.CharField):
+    description = _('subclass of Charfield containing markup.')
 
 
 class Section(models.Model):
@@ -90,16 +137,16 @@ class StoryType(models.Model):
         return ('')
 
 
-class TextContent(TimeStampedModel):
+class TextContent(models.Model):
 
     """ Abstract superclass for stories and related text elements. """
 
     class Meta:
         abstract = True
 
-    bodytext_markup = models.TextField(
-        blank=True,
-        default='',
+    template_name = 'bodytext_element.html'
+
+    bodytext_markup = MarkupTextField(
         help_text=_('Content with xtags markup.'),
         verbose_name=_('bodytext tagged text')
     )
@@ -107,47 +154,40 @@ class TextContent(TimeStampedModel):
     bodytext_html = models.TextField(
         blank=True,
         editable=False,
-        default='<p>Placeholder</p>',
+        default='',
         help_text=_('HTML tagged content'),
         verbose_name=_('bodytext html tagged')
     )
 
+
+    def pullquotes(self):
+        return self.parent_story.storyelement_set.pullquotes()
+
+    def asides(self):
+        return self.parent_story.storyelement_set.asides()
+
+    def images(self):
+        return self.parent_story.storyelement_set.images()
+
+    def videos(self):
+        return self.parent_story.storyelement_set.videos()
+
+    def links(self):
+        return self.parent_story.inline_links
+
     def get_html(self):
         """ Returns text content as html. """
-        return mark_safe(self.bodytext_html)
+        if self.bodytext_markup and not self.bodytext_html:
+            self.bodytext_html = self.make_html()
+            self.save(update_fields=['bodytext_html'])
+            return mark_safe(self.bodytext_html)
+        else:
+            return mark_safe(self.make_html())
 
-    def save(self, *args, **kwargs):
-        try:
-            saved_markup = type(self).objects.get(pk=self.pk).bodytext_markup
-        except ObjectDoesNotExist:
-            super().save(*args, **kwargs)
-            saved_markup = ''
-
-        if saved_markup != self.bodytext_markup:
-            # bodytext has been changed - clean and convert contents.
-            self.clean_markup()
-            self.make_html()
-            self.insert_links()
-
-        super().save(*args, **kwargs)
-
-    def clean_markup(self):
-        """ Cleans up and normalises raw input from user or import. """
-        bodytext = []
-        for paragraph in self.bodytext_markup.splitlines():
-            paragraph = Alias.objects.replace(content=paragraph, timing=Alias.TIMING_IMPORT)
-            bodytext.append(paragraph)
-        bodytext = '\n'.join(bodytext)
-        bodytext = Alias.objects.replace(content=bodytext, timing=Alias.TIMING_EXTRA)
-        self.bodytext_markup = bodytext
-        self.insert_links()
-
-    def make_html(self):
+    def make_html(self, body=None):
         """ Create html body text from markup """
-        html_blocks = ['{% load inline_elements %}']
-        body = self.bodytext_markup
-
-        tag_template = '{{% inline_{classname} "\\1" %}}'
+        body = body or self.bodytext_markup
+        tag_template = '{{% load inline_elements %}}{{% inline_{classname} "\\1" %}}'
         regex = '^{markup_tag} *(.*) *$'
 
         for cls in (StoryImage, Pullquote, Aside, StoryVideo):
@@ -155,33 +195,50 @@ class TextContent(TimeStampedModel):
             find = regex.format(markup_tag=cls.markup_tag)
             replace = tag_template.format(classname=classname)
             body = re.sub(find, replace, body, flags=re.M)
-        # logger.warn(str(re.findall(r'{%.*?%}', body)))
 
-        paragraphs = body.splitlines()
-
+        paragraphs = body.splitlines() + ['']
+        sections, main_body = [], []
         for paragraph in paragraphs:
             if not paragraph.startswith('{'):
                 paragraph = BlockTag.objects.make_html(paragraph)
-            html_blocks.append(paragraph)
+                main_body.append(paragraph)
+            else:
+                sections.append(main_body)
+                main_body = []
+                paragraph = Template(paragraph).render(Context({"story": self}))
+                sections.append(paragraph)
+        sections.append(main_body)
 
-        bodytext_html = '\n'.join(html_blocks)
+        blocks = []
+        for section in sections:
+            if type(section) is list:
+                inline = False
+                section = '\n'.join(section).strip()
+            else:
+                inline = True
+            if section:
+                # section = BeautifulSoup(section).prettify(formatter=None)
+                blocks.append({
+                    'inline': inline,
+                    'html': mark_safe(section)
+                })
 
-        bodytext_html = Template(bodytext_html).render(Context({"story": self}))
+        t = get_template(self.template_name)
+        html = t.render(Context({"blocks": blocks}))
+        html = BeautifulSoup(html).prettify()
+        html = self.links().markup_to_html(html)
+        html = InlineTag.objects.make_html(html)
+        return html
 
-        bodytext_html = BeautifulSoup(bodytext_html).prettify()
+    # def save(self, *args, **kwargs):
+    #     if kwargs.pop('update_html', False):
+    #         pass
+    #     super().save(*args, **kwargs)
 
-        bodytext_html = InlineTag.objects.make_html(bodytext_html)
-
-        self.bodytext_html = bodytext_html
-
-    def insert_links(self):
-        if hasattr(self, 'parent_story'):
-            parent_story = self.parent_story
-        else:
-            parent_story = self
-        new_html, new_body = InlineLink.find_links(self, parent_story)
-        self.bodytext_markup = new_body
-        self.bodytext_html = new_html
+    def insert_urls_in_links(self, text):
+        """ Change markup references to urls. """
+        text = self.links().insert_urls(text)
+        return text
 
     def parse_markup(self):
         """ Use raw input tagged text to populate fields and create related objects """
@@ -196,7 +253,7 @@ class TextContent(TimeStampedModel):
             paragraph = paragraph.strip()
             if paragraph == "":
                 continue
-            blocktag = BlockTag.objects.match_or_create(paragraph)
+            blocktag, paragraph = BlockTag.objects.match_or_create(paragraph)
             tag, text_content = blocktag.split(paragraph)
             if re.match(r'^\s*$', text_content):
                 # no text_content
@@ -276,7 +333,7 @@ class PublishedStoryManager(models.Manager):
             story.save()
 
 
-class Story(TextContent):
+class Story(TextContent, TimeStampedModel):
 
     """ An article or story in the newspaper. """
 
@@ -285,6 +342,7 @@ class Story(TextContent):
         verbose_name_plural = _('Stories')
 
     objects = PublishedStoryManager()
+    template_name='bodytext.html'
 
     STATUS_DRAFT = 0
     STATUS_EDITOR = 5
@@ -306,17 +364,17 @@ class Story(TextContent):
         help_text=_('primary id in the legacy prodsys database.'),
         verbose_name=_('prodsak id')
     )
-    title = models.CharField(
+    title = MarkupCharField(
         max_length=1000,
         help_text=_('main headline or title'),
         verbose_name=_('title'),
     )
-    kicker = models.CharField(
-        blank=True, max_length=1000,
+    kicker = MarkupCharField(
+        max_length=1000,
         help_text=_('secondary headline, usually displayed above main headline'),
         verbose_name=_('kicker'),
     )
-    lede = models.TextField(
+    lede = MarkupTextField(
         blank=True,
         help_text=_('brief introduction or summary of the story'),
         verbose_name=_('lede'),
@@ -326,8 +384,8 @@ class Story(TextContent):
         help_text=_('for internal use only'),
         verbose_name=_('comment'),
     )
-    theme_word = models.CharField(
-        blank=True, max_length=100,
+    theme_word = MarkupCharField(
+        max_length=100,
         help_text=_('theme, topic, main keyword'),
         verbose_name=_('theme word'),
     )
@@ -393,21 +451,10 @@ class Story(TextContent):
         verbose_name=_('Imported xtagged source.'),
     )
 
-    # @property
-    def pullquotes(self):
-        return self.storyelement_set.pullquotes()
-
-    # @property
-    def asides(self):
-        return self.storyelement_set.asides()
-
-    # @property
-    def images(self):
-        return self.storyelement_set.images()
-
-    # @property
-    def videos(self):
-        return self.storyelement_set.videos()
+    @property
+    def parent_story(self):
+        # for polymorphism with related content.
+        return self
 
     def visit_page(self, request):
         """ Check if visit looks like a human and update hit count """
@@ -471,36 +518,31 @@ class Story(TextContent):
         """ Shortcut to related Section """
         return self.story_type.section
 
-    def save(self, *args, new=False, **kwargs):
-        new = self.pk is None or new
-        # slugify title. Remove underscores and n-dash. If slug has been changed,
-        # old url will redirect to new url with status code 301.
-        self.slug = slugify(self.title).replace('_', '').replace('–', '-')[:50]
-        # bylines are cached in a modelfield for quicker search and admin display,
-        # avoiding joins and extra queries Only used in back-end
-        self.bylines_html = self.get_bylines_as_html()
-
-        if not self.publication_date and self.publication_status == self.STATUS_PUBLISHED:
-            self.publication_date = timezone.now()
+    def save(self, *args, **kwargs):
+        new = self.pk is None or kwargs.pop('new', None)
+        if not new and self.bodytext_markup != Story.objects.get(pk=self.pk).bodytext_markup:
+            self.bodytext_html = ''
 
         super().save(*args, **kwargs)
 
         if new:
-            # When the story is created
             # make inline elements
-            self.bodytext_markup = self.insert_all_inline_elements()
-            super().save(*args, **kwargs)
+            self.bodytext_markup = self.place_all_inline_elements()
+            super().save(update_fields=['bodytext_markup'])
 
             if self.images() and self.frontpagestory_set.count() == 0:
-                # create a frontpagestory only if there are linked images. This avoids an
-                # empty frontpagestory when the model is initally saved before any related
-                # storyimage instances exist.
-                frontpagestory = FrontpageStory(
-                    story=self,
-                )
-                frontpagestory.save()
+                FrontpageStory.objects.create(story=self)
+
+    def clear_html(self):
+        """ clears html after child is changed """
+        if self.bodytext_html != '':
+            Aside.objects.filter(parent_story__pk=self.pk).update(bodytext_html='')
+            Pullquote.objects.filter(parent_story__pk=self.pk).update(bodytext_html='')
+            self.bodytext_html = ''
+            self.save(update_fields=['bodytext_html'])
 
     def get_edit_url(self):
+        """ Url to django admin for this object """
         url = reverse(
             'admin:{app}_{object}_change'.format(
                 app=self._meta.app_label,
@@ -520,16 +562,27 @@ class Story(TextContent):
             },)
         return url
 
-    def make_html(self):
-        super().make_html()
-        # for link in self.inline_links.all():
-            # self.bodytext_html = link.insert_html(self.bodytext_html)
+    # def get_html(self):
+        # return super().get_html()
 
-    def clean_markup(self, *args, **kwargs):
+    # def make_html(self):
+        # super().make_html()
+
+    def children_modified(self):
+        """ check if any related objects have been modified after self was last saved. """
+        changed_elements = self.storyelement_set.filter(modified__gt=self.modified)
+        changed_links = self.links.filter(modified__gt=self.modified)
+        return bool(changed_elements or changed_links)
+
+    def clean(self):
         """ Clean user input and populate fields """
-        self.bodytext_markup = self.reindex_inlines()
-        super().clean_markup(*args, **kwargs)
         self.parse_markup()
+        self.bodytext_markup = self.reindex_inlines()
+        self.slug = slugify(self.title).replace('_', '').replace('–', '-')[:50]
+        self.bylines_html = self.get_bylines_as_html()
+        if not self.publication_date and self.publication_status == self.STATUS_PUBLISHED:
+            self.publication_date = timezone.now()
+        super().clean()
 
     def _block_new(self, tag, content, element):
         """ Add a story element to the main story """
@@ -548,7 +601,7 @@ class Story(TextContent):
             new_element = Pullquote(parent_story=self, )
         return new_element._block_append(tag, content)
 
-    def insert_all_inline_elements(self):
+    def place_all_inline_elements(self):
         """ Insert inline elements into the bodytext according to heuristics. """
 
         def _main(self=self, body=self.bodytext_markup):
@@ -558,7 +611,7 @@ class Story(TextContent):
 
             # insert images
             images = self.images().inline()
-            body = fifty_fifty(images, body)
+            body = big_on_top_search_for_rest(images, body)
 
             # insert videos
             videos = self.videos().inline()
@@ -586,6 +639,14 @@ class Story(TextContent):
             body = '\n'.join(addlines + [body.strip()])
             return body
 
+        def big_on_top_search_for_rest(queryset, body):
+            for item in queryset:
+                if item.child.size < 2:
+                    item.top = True
+                    item.save()
+
+            return fuzzy_search(queryset.inline(), body, flags='>')
+
         def top_right(queryset, body, flags='>'):
             """ All elements at top, pulled right """
             addlines = []
@@ -603,15 +664,15 @@ class Story(TextContent):
 
         def fuzzy_search(queryset, body, flags=''):
             """ Place elements according to fuzzy text search. """
-            diff = diff_match_patch()
-            diff.Match_Distance = 5000  # default is 1000
-            diff.Match_Threshold = .25  # default is .5
+            diff = diff_match_patch()   # Google's diff-match-patch library for fuzzy matching
+            diff.Match_Distance = 5000  # default is 1000 characters match distance
+            diff.Match_Threshold = 0.25  # default is 0.5 ; 1.0 matches everything, 0.0 matches only perfect hits.
 
             def _find_in_text(needle, haystack):
-                """ strips away all spaces and puctuations before comparing. """
+                # strip whitespace and non-word characters. Converts to lowercase.
                 needle = re.sub(r'\W', '', needle).lower()
                 haystack = re.sub(r'\W', '', haystack).lower()
-                value = diff.match_main(haystack, needle, 0)
+                value = diff.match_main(haystack, needle, 0)  # -1 is no match
                 return value is not -1
 
             paragraphs = body.splitlines()
@@ -650,21 +711,22 @@ class Story(TextContent):
         return _main()
 
     def find_inline_placeholders(self, element_class, body):
+        """ Find placeholder markup for images, pullquotes and other story elements. """
         regex = r'^{}\s*(.*)\s*$'.format(element_class.markup_tag)
-        FLAGS = ['<', '>']
+        FLAGS = ['<', '>']  # TODO: Placeholder flags are magic constants, and should be moved somewhere smart.
         matches = re.finditer(regex, body, flags=re.M)
-        result = []
+        placeholders = []
         for match in matches:
             elements = re.split(r'[\s,]+', match.group(1))
-            result.append(
+            placeholders.append(
                 {
-                    'elements': elements,
-                    'line': match.group(0),
+                    'elements': elements,  # for bugtesting
+                    'line': match.group(0),  # full match
                     'flags': [item for item in elements if item in FLAGS],
                     'indexes': [int(index) for index in elements if index.isdigit()],
                 }
             )
-        return result
+        return placeholders
 
     def reindex_inlines(self, element_classes=None, body=None):
         """
@@ -710,8 +772,8 @@ class Story(TextContent):
                             pass
                             # logger.warn('duplicate index: ' + placeholder['line'])
                 if replace:
-                    replace = [element_class.markup_tag] + [str(r) for r in placeholder['flags'] + replace]
-                placeholder['replace'] = ' '.join(replace)
+                    replace = [str(r) for r in placeholder['flags'] + replace]
+                placeholder['replace'] = element_class.markup_tag + ' '.join(replace)
 
                 if placeholder['line'] != placeholder['replace']:
                     body_changed = True
@@ -772,7 +834,8 @@ class ElementManager(models.Manager):
         try:
             return super().__getattr__(attr, *args)
         except AttributeError:
-            return getattr(self.get_queryset(), attr, *args)
+            if attr not in ('model', '_db'):
+                return getattr(self.get_queryset(), attr, *args)
 
 
 class RemembersSubClass(models.Model):
@@ -800,7 +863,7 @@ class RemembersSubClass(models.Model):
         super().save(*args, **kwargs)
 
 
-class StoryElement(RemembersSubClass):
+class StoryElement(TimeStampedModel, RemembersSubClass):
 
     """ Models that are placed somewhere inside an article """
 
@@ -821,11 +884,16 @@ class StoryElement(RemembersSubClass):
         help_text=_('Is this element placed on top?'),
     )
 
+    @property
+    def published(self):
+        return bool(self.index)
+
     def siblings(self):
         return self.__class__.objects.filter(parent_story=self.parent_story)
 
     def needle(self):
         return None
+
 
     def save(self, *args, **kwargs):
         if self.pk is None:
@@ -838,6 +906,7 @@ class StoryElement(RemembersSubClass):
                     self.index = 1
 
         super().save(*args, **kwargs)
+        self.parent_story.clear_html()
 
     class Meta:
         verbose_name = _('story element')
@@ -849,7 +918,7 @@ class Pullquote(TextContent, StoryElement):
 
     """ A quote that is that is pulled out of the content. """
 
-    markup_tag = '@quote:'
+    markup_tag = PULLQUOTE_TAG
 
     def needle(self):
         firstline = self.bodytext_markup.splitlines()[0]
@@ -865,7 +934,7 @@ class Aside(TextContent, StoryElement):
 
     """ Fact box or other information typically placed in side bar """
 
-    markup_tag = '@box:'
+    markup_tag = ASIDE_TAG
 
     class Meta:
         verbose_name = _('Aside')
@@ -879,14 +948,14 @@ class StoryMedia(StoryElement):
     class Meta:
         abstract = True
 
-    caption = models.CharField(
-        blank=True, max_length=1000,
+    caption = MarkupCharField(
+        max_length=1000,
         help_text=_('Text explaining the media.'),
         verbose_name=_('caption'),
     )
 
-    creditline = models.CharField(
-        blank=True, max_length=100,
+    creditline = MarkupCharField(
+        max_length=100,
         help_text=_('Extra information about media attribution and license.'),
         verbose_name=_('credit line'),
     )
@@ -909,7 +978,7 @@ class StoryImage(StoryMedia):
 
     """ Photo or illustration connected to a story """
 
-    markup_tag = '@image:'
+    markup_tag = IMAGE_TAG
 
     class Meta:
         verbose_name = _('Image')
@@ -922,7 +991,12 @@ class StoryImage(StoryMedia):
     )
 
     def needle(self):
-        return str(self.imagefile)
+        """ Look for a name in the text """
+        needle = re.sub(r'^.+:', '', self.caption)
+        name = re.search(r'([A-ZÆØÅ]\w+ ){2,}', needle)
+        if name:
+            needle = name.group(0)
+        return needle.strip()[:60] or str(self.imagefile)
 
 
 class StoryVideo(StoryMedia):
@@ -1025,7 +1099,22 @@ class StoryVideo(StoryMedia):
             return None
 
 
-class InlineLink(models.Model):
+class InlineLinkManager(models.Manager):
+
+    def markup_to_html(self, text):
+        """ replace markup version of tag with html version """
+        for link in self.all():
+            text = link.markup_to_html(text)
+        return text
+
+    def insert_urls(self, text):
+        """ insert url as reference in link """
+        for link in self.all():
+            text = link.insert_url(text)
+        return text
+
+
+class InlineLink(TimeStampedModel):
 
     # Link looks like this: [this is a link](www.universitas.no)
     # Or this:              [this is a link](1)
@@ -1034,6 +1123,7 @@ class InlineLink(models.Model):
     find_pattern = '\[(?P<text>.+?)\]\((?P<ref>\S+?)\)'
     change_pattern = '[{text}]({ref})'
     html_pattern = '<a href="{href}" alt="{alt}">{text}</a>'
+    objects = InlineLinkManager()
 
     class Meta:
         verbose_name = _('inline link')
@@ -1043,19 +1133,16 @@ class InlineLink(models.Model):
         Story,
         related_name='inline_links'
     )
-
     number = models.PositiveSmallIntegerField(
         default=1,
         help_text=_('link label'),
     )
-
     href = models.CharField(
         blank=True,
         max_length=500,
         help_text=_('link target'),
         verbose_name=_('link target'),
     )
-
     linked_story = models.ForeignKey(
         Story,
         blank=True, null=True,
@@ -1083,6 +1170,29 @@ class InlineLink(models.Model):
         help_text=_('Status code returned from automatic check.'),
         verbose_name=_('http status code'),
     )
+
+    def get_tag(self, ref=None):
+        """ Get markup placeholder for the link """
+        pattern = self.change_pattern
+        return pattern.format(text=self.text, ref=ref or self.number)
+
+    def markup_to_html(self, text):
+        """ replace markup version of tag with html version """
+        text = re.sub(re.escape(self.get_tag()), self.get_html(), text)
+        return text
+
+    def insert_url(self, text):
+        """ insert url as reference in link """
+        text = re.sub(re.escape(self.get_tag()), self.get_tag(ref=self.link), text)
+        return text
+
+    def get_html(self):
+        """ get <a> html tag for the link """
+        pattern = self.html_pattern
+        html = pattern.format(text=self.text, href=self.link, alt=self.alt_text)
+        return mark_safe(html)
+
+    get_html.allow_tags = True
 
     @property
     def link(self):
@@ -1145,44 +1255,45 @@ class InlineLink(models.Model):
         return status_code
 
     @classmethod
-    def find_links(cls, text_content, parent_story):
+    def clean_and_create_links(cls, body, parent_story):
         """
-        Find links in TextContent bodytext and convert them to InlineLink instances.
-        Then update link tags in both bodytext and html
+        Find markup links in text.
+        Create new InlineLink objects if needed.
+        Return text with updated markup for the changed links.
         """
-        new_body = text_content.bodytext_markup
-        new_html = text_content.bodytext_html
+        body = cls.convert_html_links(body)
+        found_links = re.finditer(cls.find_pattern, body)
+        queryset = parent_story.links()
 
-        new_body = cls.convert_html_links(new_body)
-        found_links = re.finditer(cls.find_pattern, new_body)
-
-        for number, match in enumerate(found_links):
+        number = queryset.count()
+        for match in found_links:
             ref = match.group('ref')
             text = match.group('text')
+            original_markup = re.escape(match.group(0))
+            new_markup = []
 
             if re.match(r'^\d+$', ref):
+                # ref is an integer
                 ref = int(ref)
-                links = cls.objects.filter(number=ref, parent_story=parent_story,)
+                links = queryset.filter(number=ref)
+                # links = cls.objects.filter(number=ref, parent_story=parent_story,)
                 if not links:
                     link = cls.objects.create(number=ref, parent_story=parent_story,)
                 else:
-                    # Duplicates might happen.
-                    link = links.first()
-                    links = links.exclude(pk=link.pk)
-                    if links:
-                        error_message = 'Links are messed up ' + ' '.join(l.href for l in links)
-                        logger.error(error_message)
-                        parent_story.comment += error_message
-                        parent_story.publication_status = Story.STATUS_ERROR
-                        # links = links.exclude(pk=link.pk)
-                        # if links.count() == links.filter(href=link.href).count():
-                            # links.delete()
+                    link = links[0]
+                    if link.text != text:
+                        link.text = text
+                        link.save()
+                    # other_links = links.exclude(pk=link.pk)
+                    for otherlink in links[1:]:
+                        otherlink.number = number
+                        otherlink.save()
+                        number += 1
+                        logger.warn('multiple links with same ref: ({}) {} {}'.format(ref, link, otherlink))
+                        new_markup.append(otherlink.get_tag())
 
-                link.text = text
-                if ref > number:
-                    link.number = number
-                link.save()
             else:
+                # ref is a url
                 link = cls(
                     parent_story=parent_story,
                     href=ref,
@@ -1190,24 +1301,14 @@ class InlineLink(models.Model):
                     alt_text=text,
                     text=text,
                 )
+                number += 1
                 link.save()
 
-            original_markup = re.escape(match.group(0))
-            new_body = re.sub(original_markup, link.get_tag(), new_body)
-            new_html = re.sub(original_markup, link.get_html(), new_html)
+            new_markup = [link.get_tag()] + new_markup
+            new_markup = ' '.join(new_markup)
 
-        return new_html, new_body
-
-    def get_tag(self):
-        pattern = self.change_pattern
-        return pattern.format(text=self.text, ref=self.number)
-
-    def get_html(self):
-        pattern = self.html_pattern
-        html = pattern.format(text=self.text, href=self.link, alt=self.alt_text)
-        return mark_safe(html)
-
-    get_html.allow_tags = True
+            body = re.sub(original_markup, new_markup, body)
+        return body
 
     @classmethod
     def convert_html_links(cls, bodytext, formatter=None):
@@ -1229,12 +1330,14 @@ class InlineLink(models.Model):
                 # <a> element with no href
                 replacement = '{text}'.format(text=text,)
 
-            # change the link from html to simple-tags
+            # change the link from html to markup
             link.replace_with(replacement)
-            # logger.debug('found link: {link} - replace with: {replacement}'.format(link=link, replacement=replacement))
-        sys.setrecursionlimit(2000)
-        return soup.decode(formatter=formatter)
 
+        sys.setrecursionlimit(2000)
+        # TODO: Recursion limit hack with soup decode might not be needed.
+        bodytext = soup.decode(formatter=formatter)
+        sys.setrecursionlimit(1000)
+        return bodytext
 
     @classmethod
     def validate_url(cls, href):

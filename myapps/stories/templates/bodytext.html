@@ -1,0 +1,15 @@
+<div class="row">
+{% for b in blocks %}
+  {% if b.inline %}
+    {% if not forloop.first %}
+      </div>
+      <div class="row">
+    {% endif %}
+    {{ b.html }}
+  {% else %}
+    <div class="bodytext">
+      {{ b.html }}
+    </div>
+  {% endif %}
+{% endfor %}
+</div>

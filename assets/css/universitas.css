@@ -1,4 +1,29 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto+Condensed:300italic,400italic,700italic,400,700,300|Roboto+Slab:700,400|Roboto:400,400italic,300italic,300);
+.mellomtittel {
+  font-size: 1.4rem; }
+
+.question {
+  font-style: bold italic; }
+
+main .row {
+  border-top: 1px solid grey; }
+
+.inline-aside h2 {
+  font-size: 1rem; }
+.inline-aside p, .inline-aside ul li {
+  font-size: 0.8rem; }
+.inline-aside ul {
+  list-style: disc outside none;
+  padding-left: 0.5rem; }
+  .inline-aside ul li {
+    padding-left: 0.5rem; }
+
+.image-caption {
+  font-size: 0.8rem; }
+
+.lede {
+  font-size: larger; }
+
 meta.foundation-version {
   font-family: "/{{ VERSION }}/"; }
 
@@ -112,7 +137,9 @@ select {
   .row:after {
     clear: both; }
   .row.collapse > .column,
-  .row.collapse > .columns {
+  .row.collapse > .columns,
+  .row.collapse > .bodytext,
+  .row.collapse > .inline-right {
     padding-left: 0;
     padding-right: 0; }
   .row.collapse .row {
@@ -141,7 +168,9 @@ select {
         clear: both; }
 
 .column,
-.columns {
+.columns,
+.bodytext,
+.inline-right {
   padding-left: 0.9375rem;
   padding-right: 0.9375rem;
   width: 100%;
@@ -275,7 +304,9 @@ select {
     left: auto; }
 
   .column,
-  .columns {
+  .columns,
+  .bodytext,
+  .inline-right {
     position: relative;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
@@ -361,27 +392,37 @@ select {
     float: left; }
 
   .column.small-centered,
-  .columns.small-centered {
+  .columns.small-centered,
+  .small-centered.bodytext,
+  .small-centered.inline-right {
     margin-left: auto;
     margin-right: auto;
     float: none; }
 
   .column.small-uncentered,
-  .columns.small-uncentered {
+  .columns.small-uncentered,
+  .small-uncentered.bodytext,
+  .small-uncentered.inline-right {
     margin-left: 0;
     margin-right: 0;
     float: left; }
 
   .column.small-centered:last-child,
-  .columns.small-centered:last-child {
+  .columns.small-centered:last-child,
+  .small-centered.bodytext:last-child,
+  .small-centered.inline-right:last-child {
     float: none; }
 
   .column.small-uncentered:last-child,
-  .columns.small-uncentered:last-child {
+  .columns.small-uncentered:last-child,
+  .small-uncentered.bodytext:last-child,
+  .small-uncentered.inline-right:last-child {
     float: left; }
 
   .column.small-uncentered.opposite,
-  .columns.small-uncentered.opposite {
+  .columns.small-uncentered.opposite,
+  .small-uncentered.opposite.bodytext,
+  .small-uncentered.opposite.inline-right {
     float: right; } }
 @media only screen and (min-width: 40.063em) {
   .medium-push-0 {
@@ -505,7 +546,9 @@ select {
     left: auto; }
 
   .column,
-  .columns {
+  .columns,
+  .bodytext,
+  .inline-right {
     position: relative;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
@@ -517,7 +560,7 @@ select {
   .medium-2 {
     width: 16.66667%; }
 
-  .medium-3 {
+  .medium-3, .inline-right {
     width: 25%; }
 
   .medium-4 {
@@ -535,7 +578,7 @@ select {
   .medium-8 {
     width: 66.66667%; }
 
-  .medium-9 {
+  .medium-9, .bodytext {
     width: 75%; }
 
   .medium-10 {
@@ -591,27 +634,37 @@ select {
     float: left; }
 
   .column.medium-centered,
-  .columns.medium-centered {
+  .columns.medium-centered,
+  .medium-centered.bodytext,
+  .medium-centered.inline-right {
     margin-left: auto;
     margin-right: auto;
     float: none; }
 
   .column.medium-uncentered,
-  .columns.medium-uncentered {
+  .columns.medium-uncentered,
+  .medium-uncentered.bodytext,
+  .medium-uncentered.inline-right {
     margin-left: 0;
     margin-right: 0;
     float: left; }
 
   .column.medium-centered:last-child,
-  .columns.medium-centered:last-child {
+  .columns.medium-centered:last-child,
+  .medium-centered.bodytext:last-child,
+  .medium-centered.inline-right:last-child {
     float: none; }
 
   .column.medium-uncentered:last-child,
-  .columns.medium-uncentered:last-child {
+  .columns.medium-uncentered:last-child,
+  .medium-uncentered.bodytext:last-child,
+  .medium-uncentered.inline-right:last-child {
     float: left; }
 
   .column.medium-uncentered.opposite,
-  .columns.medium-uncentered.opposite {
+  .columns.medium-uncentered.opposite,
+  .medium-uncentered.opposite.bodytext,
+  .medium-uncentered.opposite.inline-right {
     float: right; }
 
   .push-0 {
@@ -649,7 +702,7 @@ select {
     left: 25%;
     right: auto; }
 
-  .pull-3 {
+  .pull-3, .bodytext {
     position: relative;
     right: 25%;
     left: auto; }
@@ -704,7 +757,7 @@ select {
     right: 66.66667%;
     left: auto; }
 
-  .push-9 {
+  .push-9, .inline-right {
     position: relative;
     left: 75%;
     right: auto; }
@@ -855,7 +908,9 @@ select {
     left: auto; }
 
   .column,
-  .columns {
+  .columns,
+  .bodytext,
+  .inline-right {
     position: relative;
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
@@ -941,27 +996,37 @@ select {
     float: left; }
 
   .column.large-centered,
-  .columns.large-centered {
+  .columns.large-centered,
+  .large-centered.bodytext,
+  .large-centered.inline-right {
     margin-left: auto;
     margin-right: auto;
     float: none; }
 
   .column.large-uncentered,
-  .columns.large-uncentered {
+  .columns.large-uncentered,
+  .large-uncentered.bodytext,
+  .large-uncentered.inline-right {
     margin-left: 0;
     margin-right: 0;
     float: left; }
 
   .column.large-centered:last-child,
-  .columns.large-centered:last-child {
+  .columns.large-centered:last-child,
+  .large-centered.bodytext:last-child,
+  .large-centered.inline-right:last-child {
     float: none; }
 
   .column.large-uncentered:last-child,
-  .columns.large-uncentered:last-child {
+  .columns.large-uncentered:last-child,
+  .large-uncentered.bodytext:last-child,
+  .large-uncentered.inline-right:last-child {
     float: left; }
 
   .column.large-uncentered.opposite,
-  .columns.large-uncentered.opposite {
+  .columns.large-uncentered.opposite,
+  .large-uncentered.opposite.bodytext,
+  .large-uncentered.opposite.inline-right {
     float: right; }
 
   .push-0 {
@@ -999,7 +1064,7 @@ select {
     left: 25%;
     right: auto; }
 
-  .pull-3 {
+  .pull-3, .bodytext {
     position: relative;
     right: 25%;
     left: auto; }
@@ -1054,7 +1119,7 @@ select {
     right: 66.66667%;
     left: auto; }
 
-  .push-9 {
+  .push-9, .inline-right {
     position: relative;
     left: 75%;
     right: auto; }
@@ -1255,20 +1320,28 @@ form {
 form .row .row {
   margin: 0 -0.5rem; }
   form .row .row .column,
-  form .row .row .columns {
+  form .row .row .columns,
+  form .row .row .bodytext,
+  form .row .row .inline-right {
     padding: 0 0.5rem; }
   form .row .row.collapse {
     margin: 0; }
     form .row .row.collapse .column,
-    form .row .row.collapse .columns {
+    form .row .row.collapse .columns,
+    form .row .row.collapse .bodytext,
+    form .row .row.collapse .inline-right {
       padding: 0; }
     form .row .row.collapse input {
       border-bottom-right-radius: 0;
       border-top-right-radius: 0; }
 form .row input.column,
 form .row input.columns,
+form .row input.bodytext,
+form .row input.inline-right,
 form .row textarea.column,
-form .row textarea.columns {
+form .row textarea.columns,
+form .row textarea.bodytext,
+form .row textarea.inline-right {
   padding-left: 0.5rem; }
 
 /* Label Styles */

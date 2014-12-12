@@ -7,7 +7,7 @@ register = template.Library()
 logger = logging.getLogger('universitas')
 
 
-@register.inclusion_tag('_inline_images.html', takes_context=True)
+@register.inclusion_tag('_header_images.html', takes_context=True)
 def header_image(context):
     story = context['story']
     queryset = story.images().top()
@@ -54,8 +54,8 @@ def inline_aside(context, argument_string):
 def get_items(queryset, argument_string):
     """ Turn arguments into classes and items from the queryset """
     FLAGS = {
-        '<': 'left',
-        '>': 'right',
+        '<': 'inline-left',
+        '>': 'inline-right',
     }
 
     context = {'elements': [], 'css_classes': ''}

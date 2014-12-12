@@ -3,6 +3,11 @@
 
 # Python standard library
 import re
+from diff_match_patch import diff_match_patch
+import difflib
+import logging
+logger = logging.getLogger('universitas')
+
 # import html
 
 # Django core
@@ -37,8 +42,9 @@ class MarkupTag(CachedTag):
         max_length=50,
     )
     html_tag = models.CharField(
-        default='p',
-        max_length=50
+        default='',
+        blank=True,
+        max_length=50,
     )
     html_class = models.CharField(
         default='',
@@ -99,17 +105,47 @@ class BlockTagManager(TagManager):
             content = tag.split(content)[1]
         return content
 
-    def match_or_create(self, content):
-        tag = self.match(content)
-        xtag_pattern = r'^@[^: ]+:'
-        if tag.start_tag == '' and re.search(xtag_pattern, content):
-            match = re.search(xtag_pattern, content).group()
-            tag = self.create(start_tag=match)
-        return tag
+    def match_or_create(self, paragraph):
+        xtag_pattern = BlockTag.XTAG_PATTERN
+        start_tag = re.search(xtag_pattern, paragraph)
+        blocktag = self.match(paragraph)  # Look for exact match
+        if blocktag.start_tag == '' and start_tag:
+            start_tag = start_tag.group()
+            # Found the empty tag, but there is a xtag in content.
+            similar_tag = self.similar_tag(start_tag=start_tag)
+            if similar_tag:
+                BlockTag(start_tag=start_tag).make_new_alias(change_to=similar_tag.start_tag)
+                paragraph = paragraph.replace(start_tag, similar_tag.start_tag, 1)
+                blocktag = similar_tag
+            else:
+                start_tag = start_tag.lower()
+                html_class = re.sub(r'\W', '', start_tag)
+                blocktag = self.create(start_tag=start_tag, html_class=html_class)
+        return blocktag, paragraph
+
+    def similar_tag(self, start_tag, cutoff=0.6):
+        """ returns blocktag with most similar, but not identical tag """
+        blocktags = self.exclude(start_tag=start_tag).all()
+        best_diffratio = 0
+        best_candidate = None
+        for candidate in blocktags:
+            diffratio = difflib.SequenceMatcher(None, candidate.start_tag.lower(), start_tag.lower()).ratio()
+            if best_diffratio < diffratio:
+                best_diffratio = diffratio
+                best_candidate = candidate
+        if best_diffratio < cutoff and best_candidate:
+            error_message = 'Looked for {} with cutoff {}. Best candidate is {} with ratio {}'.format(
+                start_tag, cutoff, best_candidate.start_tag, best_diffratio, )
+            logger.warn(error_message)
+            best_candidate = None
+
+        return best_candidate
 
 
 class BlockTag(MarkupTag):
-
+    ALIAS_ACTION = 'alias'
+    DEFAULT_HTML_TAG = 'p'
+    XTAG_PATTERN = r'^@[^: ]+:'
     objects = BlockTagManager()
 
     class Meta:
@@ -118,6 +154,7 @@ class BlockTag(MarkupTag):
     # TODO: Should maybe not be hard coded, but imported from apps.stories.Story
     ACTION_CHOICES = (
         ('append:', _('add'),),
+        (ALIAS_ACTION, _('alias'),),
         ('append:bodytext', _('body text'),),
         ('append:title', _('title'),),
         ('append:kicker', _('kicker'),),
@@ -146,16 +183,64 @@ class BlockTag(MarkupTag):
             content = content.replace(self.start_tag, '', 1).strip()
         return self.start_tag, content
 
-    def make_html(self, content):
+    def make_html(self, content, parent_tags=[]):
         if self.match(content):
-            html_block = '<{tag}{class_parameter}>{content}</{tag}>'.format(
-                tag=self.html_tag,
+            tags = self.html_tag.split('>')
+            inner = tags[-1]
+            outer = tags[0] if len(tags) == 2 else ''
+            openparent, closeparent = '', ''
+
+            try:
+                parent = parent_tags.pop()
+            except IndexError:
+                parent = ''
+
+            assert len(parent_tags) == 0, 'Skal være tom nå'
+
+            if parent != outer:
+                if parent:
+                    closeparent = '\n</{}>'.format(parent)
+                if outer:
+                    openparent = '\n<{}>\n'.format(outer)
+
+            if content.strip() == '':
+                return closeparent + openparent
+
+            if outer:
+                parent_tags.append(outer)
+
+            html_block = '{close}{open}<{tag}{class_parameter}>{content}</{tag}>'.format(
+                tag=inner,
                 class_parameter=self.get_html_class(),
                 content=self.split(content)[1],
+                open=openparent,
+                close=closeparent,
             )
             return html_block
         else:
             return content
+
+    def save(self, *args, **kwargs):
+        if self.action == self.ALIAS_ACTION:
+            # Make an alias instead
+            self.make_new_alias()
+            if self.pk:
+                self.delete()
+        else:
+            self.html_tag = self.html_tag or self.DEFAULT_HTML_TAG
+            super().save(*args, **kwargs)
+
+    def make_new_alias(self, change_to=None):
+        change_to = change_to or self.html_tag
+        if not change_to or change_to == self.DEFAULT_HTML_TAG:
+            similar_blocktag = self.__class__.objects.similar_tag(self.start_tag)
+            change_to = similar_blocktag.start_tag if similar_blocktag else self.start_tag
+        Alias.objects.create(
+            pattern='^' + re.escape(self.start_tag),
+            replacement=change_to,
+            timing=Alias.TIMING_EXTRA,
+            comment=_('Misspelling found during import.')
+        )
 
 
 class InlineTagManager(BlockTagManager):
@@ -289,18 +374,20 @@ class Alias(CachedTag):
     ordering = models.PositiveSmallIntegerField(
         default=1,
     )
-    comment = models.TextField(
+    comment = models.CharField(
+        max_length=1000,
+        blank=True,
         default=_('explain this pattern')
     )
 
     def calculate_flags(self):
         flags_sum = 0
-        flags = ''
-        for letter in set(self.flags.upper()):
+        flags = []
+        for letter in sorted(set(self.flags.upper())):
             if hasattr(re, letter):
-                flags_sum += getattr(re, letter)
-                flags += letter
-        self.flags = flags
+                flags_sum | getattr(re, letter)
+                flags.append(letter)
+        self.flags = ''.join(flags)
         self.flags_sum = flags_sum
 
     def save(self, *args, **kwargs):
