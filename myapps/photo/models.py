@@ -130,7 +130,11 @@ class ImageFile(TimeStampedModel):
 
     def opencv_image(self, size=400, grayscale=True):
         """ Convert ImageFile into a cv2 image for image processing. """
-        cv2img = cv2.imread(self.source_file.file.name)
+        filename = self.source_file.file.name
+        color_mode = cv2.IMREAD_GRAYSCALE if grayscale else cv2.IMREAD_UNCHANGED
+        cv2img = cv2.imread(filename, color_mode)
+
+        self.source_file.close()  # cv2 doesn't close the file for some reason.
 
         width, height = cv2img.shape[0], cv2img.shape[1]
         if width > height:
@@ -139,8 +143,8 @@ class ImageFile(TimeStampedModel):
             height, width = size, size * width // height
 
         cv2img = cv2.resize(cv2img, (height, width))
-        if grayscale:
-            cv2img = cv2.cvtColor(cv2img, cv2.COLOR_BGR2GRAY)
+        # if grayscale:
+            # cv2img = cv2.cvtColor(cv2img, cv2.COLOR_BGR2GRAY)
         return cv2img
 
     def autocrop(self):
