@@ -166,6 +166,7 @@ class ImageFile(TimeStampedModel):
             warning = 'Autocrop  ({left:2.0f}, {top:2.0f})  {method:18} {file}'.format(
                 file=self, method=self.get_cropping_method_display(), left=self.from_left, top=self.from_top)
             logger.debug(warning)
+            del(grayscale_image) # Hjelper kanskje?
 
         def detect_faces(cv2img):
             """ Detects faces in image and adjust cropping. """
