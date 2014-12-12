@@ -147,7 +147,12 @@ class ImageFile(TimeStampedModel):
         """ Calculates best crop using a clever algorithm. """
         def main():
             """ Try different algorithms, change crop and save model. """
-            grayscale_image = self.opencv_image()
+            try:
+                grayscale_image = self.opencv_image()
+            except AttributeError:  # No file access?
+                warning = 'Autocrop failed {file}'.format(self)
+                logger.error(warning)
+                return
             centre = detect_faces(grayscale_image)
             if centre:
                 self.cropping_method = self.CROP_FACES
