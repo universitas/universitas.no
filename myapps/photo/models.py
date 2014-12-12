@@ -167,8 +167,8 @@ class ImageFile(TimeStampedModel):
             self.from_left = int(round(100 * centre[0] / grayscale_image.shape[1]))
             self.from_top = int(round(100 * centre[1] / grayscale_image.shape[0]))
             self.save(autocrop=True)
-            warning = 'Autocrop  ({left:2.0f}, {top:2.0f})  {method:18} {file}'.format(
-                file=self, method=self.get_cropping_method_display(), left=self.from_left, top=self.from_top)
+            warning = 'Autocrop  ({left:2.0f}, {top:2.0f})  {method:18} {pk} {file}'.format(
+                file=self, method=self.get_cropping_method_display(), pk=self.pk, left=self.from_left, top=self.from_top)
             logger.debug(warning)
             del(grayscale_image) # Hjelper kanskje?
 
