@@ -56,12 +56,12 @@ class ImageFile(TimeStampedModel):
         verbose_name=_('full height'),
         editable=False,
     )
-    vertical_centre = models.PositiveSmallIntegerField(
+    from_top = models.PositiveSmallIntegerField(
         default=50,
         help_text=_('image crop vertical. Between 0% and 100%.'),
         validators=[MaxValueValidator(100), MinValueValidator(0)],
     )
-    horizontal_centre = models.PositiveSmallIntegerField(
+    from_left = models.PositiveSmallIntegerField(
         default=50,
         help_text=_('image crop horizontal. Between 0% and 100%.'),
         validators=[MaxValueValidator(100), MinValueValidator(0)],
@@ -89,7 +89,7 @@ class ImageFile(TimeStampedModel):
     def get_crop(self):
         if self.cropping_method == self.CROP_NONE:
             self.autocrop()
-        return '{h}% {v}%'.format(h=self.horizontal_centre, v=self.vertical_centre)
+        return '{h}% {v}%'.format(h=self.from_left, v=self.from_top)
 
     def __str__(self):
         # file name only
@@ -122,7 +122,7 @@ class ImageFile(TimeStampedModel):
         if self.pk and not kwargs.pop('autocrop', False):
             try:
                 saved = type(self).objects.get(id=self.pk)
-                if (self.horizontal_centre, self.vertical_centre) != (saved.horizontal_centre, saved.vertical_centre):
+                if (self.from_left, self.from_top) != (saved.from_left, saved.from_top):
                     self.cropping_method = self.CROP_MANUAL
             except ImageFile.DoesNotExist:
                 pass
@@ -155,36 +155,65 @@ class ImageFile(TimeStampedModel):
                 centre = detect_features(grayscale_image)
                 self.cropping_method = self.CROP_FEATURES
 
-            self.horizontal_centre = round(100 * centre[0] / grayscale_image.shape[0])
-            self.vertical_centre = round(100 * centre[1] / grayscale_image.shape[1])
+            self.from_left = int(round(100 * centre[0] / grayscale_image.shape[1]))
+            self.from_top = int(round(100 * centre[1] / grayscale_image.shape[0]))
             self.save(autocrop=True)
+            warning = 'Autocrop  ({left:2.0f}, {top:2.0f})  {method:18} {file}'.format(
+                file=self, method=self.get_cropping_method_display(), left=self.from_left, top=self.from_top)
+            logger.debug(warning)
 
         def detect_faces(cv2img):
             """ Detects faces in image and adjust cropping. """
-            # datafolder = ''
+            # http://docs.opencv.org/trunk/modules/objdetect/doc/cascade_classification.html
+            # cv2.CascadeClassifier.detectMultiScale(image[, scaleFactor[, minNeighbors[, flags[, minSize[, maxSize]]]]])
+                # cascade – Haar classifier cascade (OpenCV 1.x API only). It can be loaded from XML or YAML file using Load(). When the cascade is not needed anymore, release it using cvReleaseHaarClassifierCascade(&cascade).
+                # image – Matrix of the type CV_8U containing an image where objects are detected.
+                # objects – Vector of rectangles where each rectangle contains the detected object, the rectangles may be partially outside the original image.
+                # numDetections – Vector of detection numbers for the corresponding objects. An object’s number of detections is the number of neighboring positively classified rectangles that were joined together to form the object.
+                # scaleFactor – Parameter specifying how much the image size is reduced at each image scale.
+                # minNeighbors – Parameter specifying how many neighbors each candidate rectangle should have to retain it.
+                # flags – Parameter with the same meaning for an old cascade as in the function cvHaarDetectObjects. It is not used for a new cascade.
+                # minSize – Minimum possible object size. Objects smaller than that are ignored.
+                # maxSize – Maximum possible object size. Objects larger than that are ignored.
+                # outputRejectLevels – Boolean. If True, it returns the rejectLevels and levelWeights. Default value is False.
+
+
             face_cascade = cv2.CascadeClassifier('myapps/photo/haarcascade_frontalface_default.xml')
-            faces = face_cascade.detectMultiScale(cv2img, 1.3, 5)
+            faces = face_cascade.detectMultiScale(cv2img,)
             horizontal_faces, vertical_faces = [], []
-            for (face_x, face_y, face_w, face_h) in faces:
-                # Create weighted sum here.
-                horizontal_faces.extend([face_y + face_h / 2] * face_h)
-                vertical_faces.extend([face_x + face_w / 2] * face_w)
+            for (face_left, face_top, face_width, face_height) in faces:
+                # Create weighted average of faces. Bigger is heavier.
+                horizontal_faces.extend([face_left + face_width / 2] * face_width)
+                vertical_faces.extend([face_top + face_height / 2] * face_height)
 
             if horizontal_faces:
-                horizontal_centre = sum(horizontal_faces) / len(horizontal_faces)
-                vertical_centre = sum(vertical_faces) / len(vertical_faces)
-                return horizontal_centre, vertical_centre
+                from_left = sum(horizontal_faces) / len(horizontal_faces)
+                from_top = sum(vertical_faces) / len(vertical_faces)
+                return from_left, from_top
             else:
                 # No faces found
                 return None
 
         def detect_features(cv2img):
             """ Detect features in the image to determine cropping """
+            # http://docs.opencv.org/trunk/modules/imgproc/doc/feature_detection.html
+            # cv2.goodFeaturesToTrack(image, maxCorners, qualityLevel, minDistance[, corners[, mask[, blockSize[, useHarrisDetector[, k]]]]]) → corners
+                # image – Input 8-bit or floating-point 32-bit, single-channel image.
+                # corners – Output vector of detected corners.
+                # maxCorners – Maximum number of corners to return. If there are more corners than are found, the strongest of them is returned.
+                # qualityLevel – Parameter characterizing the minimal accepted quality of image corners. The parameter value is multiplied by the best corner quality measure, which is the minimal eigenvalue (see cornerMinEigenVal() ) or the Harris function response (see cornerHarris() ). The corners with the quality measure less than the product are rejected. For example, if the best corner has the quality measure = 1500, and the qualityLevel=0.01 , then all the corners with the quality measure less than 15 are rejected.
+                # minDistance – Minimum possible Euclidean distance between the returned corners.
+                # mask – Optional region of interest. If the image is not empty (it needs to have the type CV_8UC1 and the same size as image ), it specifies the region in which the corners are detected.
+                # blockSize – Size of an average block for computing a derivative covariation matrix over each pixel neighborhood. See cornerEigenValsAndVecs() .
+                # useHarrisDetector – Parameter indicating whether to use a Harris detector (see cornerHarris()) or cornerMinEigenVal().
+                # k – Free parameter of the Harris detector.
+
             corners = cv2.goodFeaturesToTrack(cv2img, 25, 0.01, 10)
             corners = numpy.int0(corners)
-            horizontal_centre = corners.ravel()[::2].mean()
-            vertical_centre = corners.ravel()[1::2].mean()
+            from_left = corners.ravel()[::2].mean()
+            from_top = corners.ravel()[1::2].mean()
 
-            return horizontal_centre, vertical_centre
+            return from_left, from_top
 
         main()
+

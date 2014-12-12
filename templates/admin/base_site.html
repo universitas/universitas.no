@@ -9,15 +9,15 @@
                 posY = $(this).offset().top;
             h_pos = Math.round(100 * (e.pageX - posX) / this.width);
             v_pos = Math.round(100 * (e.pageY - posY) / this.height);
-            v_field = $(this).closest('tr').find('.field-vertical_centre input');
-            h_field = $(this).closest('tr').find('.field-horizontal_centre input');
+            v_field = $(this).closest('tr').find('.field-from_top input');
+            h_field = $(this).closest('tr').find('.field-from_left input');
             v_field.val(v_pos);
             h_field.val(h_pos);
         });
     });
     </script>
     <style>
-    .field-vertical_centre+.field-thumbnail>img{cursor: crosshair;}
+    .field-from_top+.field-thumbnail>img{cursor: crosshair;}
     </style>
 
 

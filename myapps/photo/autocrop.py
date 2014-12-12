@@ -24,7 +24,7 @@ def detect_faces(cv2img):
 
     faces = face_cascade.detectMultiScale(cv2img, 1.3, 5)
 
-    horizontal_centre, vertical_centre = None, None
+    from_left, from_top = None, None
     horizontal_faces, vertical_faces = [], []
 
     for (face_x, face_y, face_w, face_h) in faces:
@@ -34,19 +34,19 @@ def detect_faces(cv2img):
 
     if horizontal_faces:
         # Found faces. Sum the matches together to find a mid point.
-        horizontal_centre = sum(horizontal_faces) / len(horizontal_faces)
-        vertical_centre = sum(vertical_faces) / len(vertical_faces)
+        from_left = sum(horizontal_faces) / len(horizontal_faces)
+        from_top = sum(vertical_faces) / len(vertical_faces)
 
-    return horizontal_centre, vertical_centre
+    return from_left, from_top
 
 def detect_corners(cv2img):
     """ Detect features in the image to determine cropping """
     corners = cv2.goodFeaturesToTrack(cv2img, 25, 0.01, 10)
     corners = np.int0(corners)
-    horizontal_centre = corners.ravel()[::2].mean()
-    vertical_centre = corners.ravel()[1::2].mean()
+    from_left = corners.ravel()[::2].mean()
+    from_top = corners.ravel()[1::2].mean()
 
-    return horizontal_centre, vertical_centre
+    return from_left, from_top
 
-imgfile.horizontal_centre = round(100 * horizontal_centre / cv2img.shape[0])
-imgfile.vertical_centre = round(100 * vertical_centre / cv2img.shape[1])
+imgfile.from_left = round(100 * from_left / cv2img.shape[0])
+imgfile.from_top = round(100 * from_top / cv2img.shape[1])

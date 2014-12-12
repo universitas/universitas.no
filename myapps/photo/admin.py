@@ -42,13 +42,13 @@ class ImageFileAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
         'source_file',
         'contributor',
         'cropping_method',
-        'horizontal_centre',
-        'vertical_centre',
+        'from_left',
+        'from_top',
         'thumbnail',
     )
     list_editable = (
-        'horizontal_centre',
-        'vertical_centre',
+        'from_left',
+        'from_top',
     )
     search_fields = (
         'source_file',
