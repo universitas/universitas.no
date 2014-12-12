@@ -149,8 +149,8 @@ class ImageFile(TimeStampedModel):
             """ Try different algorithms, change crop and save model. """
             try:
                 grayscale_image = self.opencv_image()
-            except AttributeError:  # No file access?
-                warning = 'Autocrop failed {file}'.format(self)
+            except AttributeError as e:  # No file access?
+                warning = 'Autocrop failed {} {}'.format(e, self)
                 logger.error(warning)
                 return
             centre = detect_faces(grayscale_image)
