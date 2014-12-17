@@ -29,7 +29,7 @@ def inline_storyimage(context, argument_string):
     if '<' in argument_string or '>' in argument_string:
         size = '400x400'
     else:
-        size = '1200x600'
+        size = '1200x800'
     images = story.images().inline()
     videos = story.videos().inline()
     context = get_items(images, argument_string)

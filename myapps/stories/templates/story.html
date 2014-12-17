@@ -10,11 +10,11 @@
       {# {% include '_image.html' with image=header_image %} #}
       {% header_image %}
       {% if story.kicker %}
-        <h2 id="kicker">{{ story.kicker }}</h2>
+        <h2 id="kicker">{{ story.html.kicker }}</h2>
       {% endif %}
 {# Main headline and lede #}
-      <h1 id="headline">{{ story.title }}</h1>
-      <p class="lede">{{ story.lede }}</p>
+      <h1 id="headline">{{ story.html.title }}</h1>
+      <p class="lede">{{ story.html.lede }}</p>
 {# bylines #}
       <ul id="bylines">
         {% for byline in story.byline_set.all %}
@@ -43,8 +43,8 @@
             </div>
             {% endthumbnail %}
           <div class="related-text large-8 columns">
-            <h2 class="headline"> <a href="{{ related_item.link }}">{{ related_story.title }}</a> </h2>
-            <p class="lede"> {{ related_story.lede }} </p>
+            <h2 class="headline"> <a href="{{ related_item.link }}">{{ related_story.html.title }}</a> </h2>
+            <p class="lede"> {{ related_story.html.lede }} </p>
           </div>
           </article>
         {% endfor %}
