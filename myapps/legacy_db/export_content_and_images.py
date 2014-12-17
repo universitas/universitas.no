@@ -18,7 +18,9 @@ from myapps.legacy_db.models import (
 from myapps.stories.models import (
     Story, StoryType, Section, StoryImage, InlineLink)
 from myapps.photo.models import ImageFile
+from myapps.frontpage.models import Frontpage
 from myapps.issues.models import PrintIssue, next_issue
+
 # from myapps.contributors.models import Contributor
 from django.core import serializers
 
@@ -77,6 +79,9 @@ def reset_db_autoincrement():
         logger.debug(query)
         cursor.execute(query)
 
+def check_fixtures():
+    if not Frontpage.objects.count():
+        Frontpage.objects.create(label='front')
 
 def drop_model_tables(*models):
     """ Empty tables before importing from legacy database """
@@ -88,7 +93,7 @@ def drop_model_tables(*models):
 def import_legacy_website_content(first=0, last=None, reverse=False, replace_existing=False, autocrop=False):
     """ Import old content from legacy website. """
     order_by = 'id_sak' if not reverse else '-id_sak'
-
+    check_fixtures()
     websaker = Sak.objects.exclude(publisert=0).order_by(order_by)[first:last]
     for websak in websaker:
 
@@ -107,6 +112,7 @@ def import_legacy_website_content(first=0, last=None, reverse=False, replace_exi
 def import_prodsys_content(first=0, last=None, reverse=False, replace_existing=False, autocrop=False):
     """ Import all new stories from prodsys. """
     # status = [Prodsak.READY_FOR_WEB]
+    check_fixtures()
     status = list(range(Prodsak.READY_FOR_WEB, Prodsak.ARCHIVED))
     objects = Prodsak.objects.filter(produsert__in=status).order_by('prodsak_id').values('prodsak_id').distinct()
 
@@ -479,7 +485,7 @@ def _clean_up_html(html):
     html = unescape(html)
 
     # Convert <a href=''> links into InlineLink objects. Insert reference strings in source instead.
-    html = InlineLink.convert_html_links(html)
+    html = InlineLink.convert_html_links(html, return_html=True)
 
     # Search and replace regular expressions.
     for pattern, replacement, flags in replacements:

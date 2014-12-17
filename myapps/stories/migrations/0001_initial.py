@@ -2,26 +2,26 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import myapps.stories.models
-import model_utils.fields
 import django.utils.timezone
+import model_utils.fields
+import myapps.stories.models
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('issues', '0001_initial'),
-        ('contributors', '0001_initial'),
         ('photo', '0001_initial'),
+        ('contributors', '0001_initial'),
+        ('issues', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='Byline',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
-                ('credit', models.CharField(choices=[('text', 'Text'), ('photo', 'Photo'), ('video', 'Video'), ('illus', 'Illustration'), ('graph', 'Graphics'), ('trans', 'Translation'), ('???', 'Unknown')], default='text', max_length=20)),
-                ('title', models.CharField(null=True, blank=True, max_length=200)),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('credit', models.CharField(max_length=20, default='text', choices=[('text', 'Text'), ('photo', 'Photo'), ('video', 'Video'), ('illus', 'Illustration'), ('graph', 'Graphics'), ('trans', 'Translation'), ('???', 'Unknown')])),
+                ('title', models.CharField(max_length=200, blank=True, null=True)),
                 ('contributor', models.ForeignKey(to='contributors.Contributor')),
             ],
             options={
@@ -33,14 +33,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='InlineLink',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('created', model_utils.fields.AutoCreatedField(verbose_name='created', editable=False, default=django.utils.timezone.now)),
+                ('modified', model_utils.fields.AutoLastModifiedField(verbose_name='modified', editable=False, default=django.utils.timezone.now)),
                 ('number', models.PositiveSmallIntegerField(default=1, help_text='link label')),
-                ('href', models.CharField(max_length=500, verbose_name='link target', blank=True, help_text='link target')),
-                ('alt_text', models.CharField(max_length=500, verbose_name='alt text', blank=True, help_text='alternate link text')),
+                ('href', models.CharField(verbose_name='link target', max_length=500, blank=True, help_text='link target')),
+                ('alt_text', models.CharField(verbose_name='alt text', max_length=500, blank=True, help_text='alternate link text')),
                 ('text', models.TextField(verbose_name='link text', editable=False, blank=True, help_text='link text')),
-                ('status_code', models.CharField(default='', help_text='Status code returned from automatic check.', choices=[('', 'Not checked yet'), ('DNS', 'DNS lookup error'), ('URL', 'Malformed http url'), ('INT', 'Internal link'), ('200', '200 OK'), ('403', '403 Forbidden'), ('404', '404 Not Found'), ('408', '408 Request Timeout'), ('410', '410 Gone'), ('418', "418 I'm a teapot (RFC 2324)"), ('500', '500 Internal Server Error')], verbose_name='http status code', editable=False, max_length=3)),
+                ('status_code', models.CharField(editable=False, default='', help_text='Status code returned from automatic check.', verbose_name='http status code', max_length=3, choices=[('', 'Not checked yet'), ('DNS', 'DNS lookup error'), ('URL', 'Malformed http url'), ('INT', 'Internal link'), ('200', '200 OK'), ('403', '403 Forbidden'), ('404', '404 Not Found'), ('408', '408 Request Timeout'), ('410', '410 Gone'), ('418', "418 I'm a teapot (RFC 2324)"), ('500', '500 Internal Server Error')])),
             ],
             options={
                 'verbose_name': 'inline link',
@@ -51,8 +51,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Section',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
-                ('title', models.CharField(verbose_name='section title', unique=True, max_length=50, help_text='Section title')),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('title', models.CharField(verbose_name='section title', max_length=50, unique=True, help_text='Section title')),
             ],
             options={
                 'verbose_name': 'Section',
@@ -63,28 +63,27 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Story',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
-                ('bodytext_markup', myapps.stories.models.MarkupTextField(default='', verbose_name='bodytext tagged text', blank=True, help_text='Content with xtags markup.')),
-                ('bodytext_html', models.TextField(default='', verbose_name='bodytext html tagged', editable=False, blank=True, help_text='HTML tagged content')),
-                ('prodsak_id', models.PositiveIntegerField(verbose_name='prodsak id', null=True, editable=False, blank=True, help_text='primary id in the legacy prodsys database.')),
-                ('title', myapps.stories.models.MarkupCharField(default='', max_length=1000, verbose_name='title', blank=True, help_text='main headline or title')),
-                ('kicker', myapps.stories.models.MarkupCharField(default='', max_length=1000, verbose_name='kicker', blank=True, help_text='secondary headline, usually displayed above main headline')),
-                ('lede', myapps.stories.models.MarkupTextField(default='', verbose_name='lede', blank=True, help_text='brief introduction or summary of the story')),
-                ('comment', models.TextField(default='', verbose_name='comment', blank=True, help_text='for internal use only')),
-                ('theme_word', myapps.stories.models.MarkupCharField(default='', max_length=100, verbose_name='theme word', blank=True, help_text='theme, topic, main keyword')),
-                ('publication_date', models.DateTimeField(verbose_name='publication date', null=True, blank=True, help_text='when this story will be published on the web.')),
-                ('publication_status', models.IntegerField(choices=[(0, 'Draft'), (5, 'Ready to edit'), (9, 'Ready to publish on website'), (10, 'Published on website'), (15, 'Will not be published'), (500, 'Technical error')], default=0, verbose_name='status', help_text='publication status.')),
-                ('slug', models.SlugField(default='slug-here', help_text='human readable url.', verbose_name='slug', editable=False)),
-                ('page', models.IntegerField(verbose_name='page', null=True, blank=True, help_text='which page the story was printed on.')),
-                ('hit_count', models.PositiveIntegerField(default=0, verbose_name='total page views', editable=False, help_text='how many time the article has been viewed.')),
-                ('hot_count', models.PositiveIntegerField(default=0, verbose_name='recent page views', editable=False, help_text='calculated value representing recent page views.')),
-                ('bylines_html', models.TextField(default='', verbose_name='all bylines as html.', editable=False)),
-                ('legacy_html_source', models.TextField(verbose_name='Imported html source.', null=True, editable=False, blank=True, help_text='From old web page. For reference only.')),
-                ('legacy_prodsys_source', models.TextField(verbose_name='Imported xtagged source.', null=True, editable=False, blank=True, help_text='From prodsys. For reference only.')),
-                ('bylines', models.ManyToManyField(through='stories.Byline', verbose_name='bylines', to='contributors.Contributor', help_text='the people who created this content.')),
-                ('issue', models.ForeignKey(to='issues.PrintIssue', blank=True, help_text='which issue this story was printed in.', verbose_name='issue', null=True)),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('created', model_utils.fields.AutoCreatedField(verbose_name='created', editable=False, default=django.utils.timezone.now)),
+                ('modified', model_utils.fields.AutoLastModifiedField(verbose_name='modified', editable=False, default=django.utils.timezone.now)),
+                ('bodytext_markup', myapps.stories.models.MarkupTextField(verbose_name='bodytext tagged text', default='', help_text='Content with xtags markup.', blank=True)),
+                ('prodsak_id', models.PositiveIntegerField(verbose_name='prodsak id', editable=False, null=True, help_text='primary id in the legacy prodsys database.', blank=True)),
+                ('title', myapps.stories.models.MarkupCharField(verbose_name='title', max_length=1000, default='', help_text='main headline or title', blank=True)),
+                ('kicker', myapps.stories.models.MarkupCharField(verbose_name='kicker', max_length=1000, default='', help_text='secondary headline, usually displayed above main headline', blank=True)),
+                ('lede', myapps.stories.models.MarkupTextField(verbose_name='lede', default='', help_text='brief introduction or summary of the story', blank=True)),
+                ('comment', models.TextField(verbose_name='comment', default='', help_text='for internal use only', blank=True)),
+                ('theme_word', myapps.stories.models.MarkupCharField(verbose_name='theme word', max_length=100, default='', help_text='theme, topic, main keyword', blank=True)),
+                ('publication_date', models.DateTimeField(verbose_name='publication date', null=True, help_text='when this story will be published on the web.', blank=True)),
+                ('publication_status', models.IntegerField(verbose_name='status', default=0, help_text='publication status.', choices=[(0, 'Draft'), (5, 'Ready to edit'), (9, 'Ready to publish on website'), (10, 'Published on website'), (15, 'Will not be published'), (500, 'Technical error')])),
+                ('slug', models.SlugField(editable=False, default='slug-here', help_text='human readable url.', verbose_name='slug')),
+                ('page', models.IntegerField(verbose_name='page', null=True, help_text='which page the story was printed on.', blank=True)),
+                ('hit_count', models.PositiveIntegerField(verbose_name='total page views', editable=False, default=0, help_text='how many time the article has been viewed.')),
+                ('hot_count', models.PositiveIntegerField(verbose_name='recent page views', editable=False, default=0, help_text='calculated value representing recent page views.')),
+                ('bylines_html', models.TextField(verbose_name='all bylines as html.', editable=False, default='')),
+                ('legacy_html_source', models.TextField(verbose_name='Imported html source.', editable=False, null=True, help_text='From old web page. For reference only.', blank=True)),
+                ('legacy_prodsys_source', models.TextField(verbose_name='Imported xtagged source.', editable=False, null=True, help_text='From prodsys. For reference only.', blank=True)),
+                ('bylines', models.ManyToManyField(verbose_name='bylines', through='stories.Byline', help_text='the people who created this content.', to='contributors.Contributor')),
+                ('issue', models.ForeignKey(null=True, help_text='which issue this story was printed in.', verbose_name='issue', blank=True, to='issues.PrintIssue')),
             ],
             options={
                 'verbose_name': 'Story',
@@ -95,16 +94,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='StoryElement',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
-                ('_subclass', models.CharField(editable=False, max_length=200)),
-                ('index', models.PositiveSmallIntegerField(default=0, verbose_name='index', null=True, blank=True, help_text='Leave blank to unpublish')),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('created', model_utils.fields.AutoCreatedField(verbose_name='created', editable=False, default=django.utils.timezone.now)),
+                ('modified', model_utils.fields.AutoLastModifiedField(verbose_name='modified', editable=False, default=django.utils.timezone.now)),
+                ('_subclass', models.CharField(max_length=200, editable=False)),
+                ('index', models.PositiveSmallIntegerField(verbose_name='index', null=True, default=0, help_text='Leave blank to unpublish', blank=True)),
                 ('top', models.BooleanField(default=False, help_text='Is this element placed on top?')),
             ],
             options={
-                'ordering': ['index'],
                 'verbose_name': 'story element',
+                'ordering': ['index'],
                 'verbose_name_plural': 'story elements',
             },
             bases=(models.Model,),
@@ -112,9 +111,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Pullquote',
             fields=[
-                ('storyelement_ptr', models.OneToOneField(primary_key=True, parent_link=True, auto_created=True, to='stories.StoryElement', serialize=False)),
-                ('bodytext_markup', myapps.stories.models.MarkupTextField(default='', verbose_name='bodytext tagged text', blank=True, help_text='Content with xtags markup.')),
-                ('bodytext_html', models.TextField(default='', verbose_name='bodytext html tagged', editable=False, blank=True, help_text='HTML tagged content')),
+                ('storyelement_ptr', models.OneToOneField(serialize=False, parent_link=True, primary_key=True, auto_created=True, to='stories.StoryElement')),
+                ('bodytext_markup', myapps.stories.models.MarkupTextField(verbose_name='bodytext tagged text', default='', help_text='Content with xtags markup.', blank=True)),
             ],
             options={
                 'verbose_name': 'Pullquote',
@@ -125,9 +123,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Aside',
             fields=[
-                ('storyelement_ptr', models.OneToOneField(primary_key=True, parent_link=True, auto_created=True, to='stories.StoryElement', serialize=False)),
-                ('bodytext_markup', myapps.stories.models.MarkupTextField(default='', verbose_name='bodytext tagged text', blank=True, help_text='Content with xtags markup.')),
-                ('bodytext_html', models.TextField(default='', verbose_name='bodytext html tagged', editable=False, blank=True, help_text='HTML tagged content')),
+                ('storyelement_ptr', models.OneToOneField(serialize=False, parent_link=True, primary_key=True, auto_created=True, to='stories.StoryElement')),
+                ('bodytext_markup', myapps.stories.models.MarkupTextField(verbose_name='bodytext tagged text', default='', help_text='Content with xtags markup.', blank=True)),
             ],
             options={
                 'verbose_name': 'Aside',
@@ -138,11 +135,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='StoryImage',
             fields=[
-                ('storyelement_ptr', models.OneToOneField(primary_key=True, parent_link=True, auto_created=True, to='stories.StoryElement', serialize=False)),
-                ('caption', myapps.stories.models.MarkupCharField(default='', max_length=1000, verbose_name='caption', blank=True, help_text='Text explaining the media.')),
-                ('creditline', myapps.stories.models.MarkupCharField(default='', max_length=100, verbose_name='credit line', blank=True, help_text='Extra information about media attribution and license.')),
-                ('size', models.PositiveSmallIntegerField(default=1, verbose_name='image size', help_text='Relative image size.')),
-                ('imagefile', models.ForeignKey(to='photo.ImageFile', help_text='Choose an image by name or upload a new one.', verbose_name='image file')),
+                ('storyelement_ptr', models.OneToOneField(serialize=False, parent_link=True, primary_key=True, auto_created=True, to='stories.StoryElement')),
+                ('caption', myapps.stories.models.MarkupCharField(verbose_name='caption', max_length=1000, default='', help_text='Text explaining the media.', blank=True)),
+                ('creditline', myapps.stories.models.MarkupCharField(verbose_name='credit line', max_length=100, default='', help_text='Extra information about media attribution and license.', blank=True)),
+                ('size', models.PositiveSmallIntegerField(verbose_name='image size', default=1, help_text='Relative image size.')),
+                ('imagefile', models.ForeignKey(help_text='Choose an image by name or upload a new one.', verbose_name='image file', to='photo.ImageFile')),
             ],
             options={
                 'verbose_name': 'Image',
@@ -153,11 +150,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='StoryType',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
-                ('name', models.CharField(unique=True, max_length=50)),
-                ('prodsys_mappe', models.CharField(null=True, blank=True, max_length=20)),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=50, unique=True)),
+                ('prodsys_mappe', models.CharField(max_length=20, blank=True, null=True)),
                 ('section', models.ForeignKey(to='stories.Section')),
-                ('template', models.ForeignKey(to='stories.Story', blank=True, null=True)),
+                ('template', models.ForeignKey(null=True, blank=True, to='stories.Story')),
             ],
             options={
                 'verbose_name': 'StoryType',
@@ -168,11 +165,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='StoryVideo',
             fields=[
-                ('storyelement_ptr', models.OneToOneField(primary_key=True, parent_link=True, auto_created=True, to='stories.StoryElement', serialize=False)),
-                ('caption', myapps.stories.models.MarkupCharField(default='', max_length=1000, verbose_name='caption', blank=True, help_text='Text explaining the media.')),
-                ('creditline', myapps.stories.models.MarkupCharField(default='', max_length=100, verbose_name='credit line', blank=True, help_text='Extra information about media attribution and license.')),
-                ('size', models.PositiveSmallIntegerField(default=1, verbose_name='image size', help_text='Relative image size.')),
-                ('video_host', models.CharField(choices=[('vimeo', 'vimeo'), ('youtu', 'youtube')], default='vimeo', max_length=20)),
+                ('storyelement_ptr', models.OneToOneField(serialize=False, parent_link=True, primary_key=True, auto_created=True, to='stories.StoryElement')),
+                ('caption', myapps.stories.models.MarkupCharField(verbose_name='caption', max_length=1000, default='', help_text='Text explaining the media.', blank=True)),
+                ('creditline', myapps.stories.models.MarkupCharField(verbose_name='credit line', max_length=100, default='', help_text='Extra information about media attribution and license.', blank=True)),
+                ('size', models.PositiveSmallIntegerField(verbose_name='image size', default=1, help_text='Relative image size.')),
+                ('video_host', models.CharField(max_length=20, default='vimeo', choices=[('vimeo', 'vimeo'), ('youtu', 'youtube')])),
                 ('host_video_id', models.CharField(verbose_name='id for video file.', max_length=100, help_text='the part of the url that identifies this particular video')),
             ],
             options={
@@ -190,19 +187,19 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='story',
             name='story_type',
-            field=models.ForeignKey(to='stories.StoryType', help_text='the type of story.', verbose_name='article type'),
+            field=models.ForeignKey(help_text='the type of story.', verbose_name='article type', to='stories.StoryType'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='inlinelink',
             name='linked_story',
-            field=models.ForeignKey(to='stories.Story', blank=True, help_text='link to story on this website.', related_name='incoming_links', verbose_name='linked story', null=True),
+            field=models.ForeignKey(null=True, help_text='link to story on this website.', verbose_name='linked story', to='stories.Story', blank=True, related_name='incoming_links'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='inlinelink',
             name='parent_story',
-            field=models.ForeignKey(related_name='inline_links', to='stories.Story'),
+            field=models.ForeignKey(to='stories.Story', related_name='inline_links'),
             preserve_default=True,
         ),
         migrations.AddField(

@@ -2,32 +2,32 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import model_utils.fields
 import myapps.frontpage.models
 import django.utils.timezone
+import model_utils.fields
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('stories', '0001_initial'),
         ('photo', '0001_initial'),
+        ('stories', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='Contentblock',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('created', model_utils.fields.AutoCreatedField(verbose_name='created', editable=False, default=django.utils.timezone.now)),
+                ('modified', model_utils.fields.AutoLastModifiedField(verbose_name='modified', editable=False, default=django.utils.timezone.now)),
                 ('position', models.PositiveIntegerField(help_text='larger numbers come first')),
-                ('height', models.PositiveSmallIntegerField(default=1, validators=[myapps.frontpage.models.Contentblock.validate_height], help_text='height - minimum 1 maximum 3')),
-                ('columns', models.PositiveSmallIntegerField(default=6, validators=[myapps.frontpage.models.Contentblock.validate_columns], help_text='width - minimum 1 maximum 12')),
+                ('height', models.PositiveSmallIntegerField(default=1, help_text='height - minimum 1 maximum 3', validators=[myapps.frontpage.models.Contentblock.validate_height])),
+                ('columns', models.PositiveSmallIntegerField(default=6, help_text='width - minimum 1 maximum 12', validators=[myapps.frontpage.models.Contentblock.validate_columns])),
             ],
             options={
-                'ordering': ['-position'],
                 'verbose_name': 'Content block',
+                'ordering': ['-position'],
                 'verbose_name_plural': 'Content blocks',
             },
             bases=(models.Model,),
@@ -35,9 +35,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Frontpage',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('created', model_utils.fields.AutoCreatedField(verbose_name='created', editable=False, default=django.utils.timezone.now)),
+                ('modified', model_utils.fields.AutoLastModifiedField(verbose_name='modified', editable=False, default=django.utils.timezone.now)),
                 ('label', models.CharField(max_length=100, unique=True, blank=True, help_text='Unique label used in url')),
                 ('published', models.BooleanField(default=False, help_text='This page is published.')),
             ],
@@ -50,15 +50,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='FrontpageStory',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('created', model_utils.fields.AutoCreatedField(verbose_name='created', editable=False, default=django.utils.timezone.now)),
+                ('modified', model_utils.fields.AutoLastModifiedField(verbose_name='modified', editable=False, default=django.utils.timezone.now)),
                 ('headline', models.CharField(max_length=200, blank=True, help_text='headline')),
                 ('kicker', models.CharField(max_length=200, blank=True, help_text='kicker')),
                 ('lede', models.CharField(max_length=200, blank=True, help_text='lede')),
                 ('html_class', models.CharField(max_length=200, blank=True, help_text='html_class')),
-                ('imagefile', models.ForeignKey(to='photo.ImageFile', blank=True, help_text='image', null=True)),
-                ('placements', models.ManyToManyField(through='frontpage.Contentblock', to='frontpage.Frontpage', help_text='position and size of story element.')),
+                ('imagefile', models.ForeignKey(null=True, help_text='image', blank=True, to='photo.ImageFile')),
+                ('placements', models.ManyToManyField(through='frontpage.Contentblock', help_text='position and size of story element.', to='frontpage.Frontpage')),
                 ('story', models.ForeignKey(to='stories.Story')),
             ],
             options={

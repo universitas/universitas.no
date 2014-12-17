@@ -76,13 +76,12 @@ class MarkupFieldMixin(object):
         )
         return text
 
-    def get_internal_type(self):
-        return 'MarkupField'
-
 
 # class MarkupTextField(models.TextField, MarkupFieldMixin):
 class MarkupTextField(MarkupFieldMixin, models.TextField):
     description = _('subclass of Textfield containing markup.')
+
+# class MarkupCharField(models.CharField, MarkupFieldMixin):
 
 
 class MarkupCharField(MarkupFieldMixin, models.CharField, ):
@@ -116,9 +115,9 @@ class MarkupModelMixin(object):
             try:
                 field = type(
                     self.parent)._meta.get_field(attr)
-                assert field.get_internal_type(
-                ) == 'MarkupField', 'only MarkupFields can be html'
-            except models.fields.FieldDoesNotExist as e:
+                assert issubclass(
+                    field, MarkupFieldMixin), 'only MarkupFields can be html'
+            except models.fields.FieldDoesNotExist:
                 pass
 
             raw = getattr(self.parent, attr, *args)
@@ -1430,7 +1429,7 @@ class InlineLink(TimeStampedModel):
         return body
 
     @classmethod
-    def convert_html_links(cls, bodytext, formatter=None):
+    def convert_html_links(cls, bodytext, return_html=False):
         """ convert <a href=""> to other tag """
         # if '&' in bodytext:
             # find = re.findall(r'.{,20}&.{,20}', bodytext)
@@ -1452,11 +1451,10 @@ class InlineLink(TimeStampedModel):
             # change the link from html to markup
             link.replace_with(replacement)
 
-        # sys.setrecursionlimit(2000)
-        # TODO: Recursion limit hack with soup decode might not be needed.
-        # import ipdb; ipdb.set_trace()
-        bodytext = soup.text
-        # sys.setrecursionlimit(1000)
+        if return_html:
+            bodytext = soup.decode()
+        else:
+            bodytext = soup.text
         return bodytext
 
     @classmethod
