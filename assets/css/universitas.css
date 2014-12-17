@@ -3,7 +3,8 @@
   font-size: 1.4rem; }
 
 .question {
-  font-style: bold italic; }
+  font-weight: bold;
+  font-style: italic; }
 
 main .row {
   border-top: 1px solid grey; }

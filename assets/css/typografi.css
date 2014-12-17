@@ -5,7 +5,7 @@ Use "@extend .medium-9 !optional" if the extend should be able to fail.
 
 
 Backtrace:
-/srv/local.universitas.no/source/assets/scss/typografi.scss:13
+/srv/local.universitas.no/source/assets/scss/typografi.scss:14
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/extend.rb:61:in `block in check_extends_fired!'
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/util/subset_map.rb:106:in `block in each_value'
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/util/subset_map.rb:106:in `each'
@@ -19,12 +19,15 @@ Backtrace:
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/plugin/compiler.rb:189:in `block in update_stylesheets'
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/plugin/compiler.rb:186:in `each'
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/plugin/compiler.rb:186:in `update_stylesheets'
-/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/plugin/compiler.rb:284:in `block in watch'
-/usr/lib/ruby/vendor_ruby/listen/listener.rb:150:in `call'
-/usr/lib/ruby/vendor_ruby/listen/listener.rb:150:in `block in _wait_for_changes'
-/usr/lib/ruby/vendor_ruby/listen/listener.rb:145:in `loop'
-/usr/lib/ruby/vendor_ruby/listen/listener.rb:145:in `_wait_for_changes'
-/usr/lib/ruby/vendor_ruby/listen/listener.rb:43:in `block in start'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/plugin/compiler.rb:221:in `watch'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/plugin.rb:108:in `method_missing'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/exec.rb:509:in `watch_or_update'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/exec.rb:346:in `process_result'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/exec.rb:43:in `parse'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/exec.rb:22:in `parse!'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/bin/sass:13:in `<top (required)>'
+/usr/local/bin/sass:23:in `load'
+/usr/local/bin/sass:23:in `<main>'
 */
 body:before {
   white-space: pre;
