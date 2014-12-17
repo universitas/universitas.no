@@ -115,8 +115,7 @@ class MarkupModelMixin(object):
             try:
                 field = type(
                     self.parent)._meta.get_field(attr)
-                assert issubclass(
-                    field, MarkupFieldMixin), 'only MarkupFields can be html'
+                assert issubclass( type(field), MarkupFieldMixin), 'only MarkupFields can be html'
             except models.fields.FieldDoesNotExist:
                 pass
 
