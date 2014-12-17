@@ -1,7 +1,7 @@
 /*
-Sass::SyntaxError: ".bodytext" failed to @extend ".columns".
-The selector ".columns" was not found.
-Use "@extend .columns !optional" if the extend should be able to fail.
+Sass::SyntaxError: ".bodytext" failed to @extend ".medium-9".
+The selector ".medium-9" was not found.
+Use "@extend .medium-9 !optional" if the extend should be able to fail.
 
 
 Backtrace:
@@ -29,4 +29,4 @@ Backtrace:
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Sass::SyntaxError: \".bodytext\" failed to @extend \".columns\".\A The selector \".columns\" was not found.\A Use \"@extend .columns !optional\" if the extend should be able to fail.\A "; }
+  content: "Sass::SyntaxError: \".bodytext\" failed to @extend \".medium-9\".\A The selector \".medium-9\" was not found.\A Use \"@extend .medium-9 !optional\" if the extend should be able to fail.\A "; }

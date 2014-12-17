@@ -85,7 +85,7 @@ def drop_model_tables(*models):
         model.objects.all().delete()
 
 
-def import_legacy_website_content(first=0, last=None, reverse=False, replace_existing=False):
+def import_legacy_website_content(first=0, last=None, reverse=False, replace_existing=False, autocrop=False):
     """ Import old content from legacy website. """
     order_by = 'id_sak' if not reverse else '-id_sak'
 
@@ -99,13 +99,12 @@ def import_legacy_website_content(first=0, last=None, reverse=False, replace_exi
                 this_story.delete()
 
         new_story = _importer_websak(websak)
-        _importer_bilder_fra_webside(websak, new_story)
-        new_story.save(new=True)
+        _importer_bilder_fra_webside(websak, new_story, autocrop)
         new_story.full_clean()
-        new_story.save()
+        new_story.save(new=True)
 
 
-def import_prodsys_content(first=0, last=None, reverse=False, replace_existing=False):
+def import_prodsys_content(first=0, last=None, reverse=False, replace_existing=False, autocrop=False):
     """ Import all new stories from prodsys. """
     # status = [Prodsak.READY_FOR_WEB]
     status = list(range(Prodsak.READY_FOR_WEB, Prodsak.ARCHIVED))
@@ -116,7 +115,7 @@ def import_prodsys_content(first=0, last=None, reverse=False, replace_existing=F
     logger.info('Found {} stories to import'.format(len(objects)))
     prodsak_ids = [obj['prodsak_id'] for obj in objects[first:last]]
     for prodsak_id in prodsak_ids:
-        _importer_prodsak(prodsak_id, replace_existing)
+        _importer_prodsak(prodsak_id, replace_existing, autocrop)
 
 
 def _importer_websak(websak):
@@ -186,8 +185,6 @@ def _importer_websak(websak):
                 # Dangling reference in database.
                 pass
 
-    new_story.save(new=True)
-    new_story.full_clean()
     new_story.save()
     logger.debug('{:>5} story saved: {} {}'.format(count, new_story, new_story.pk))
     return new_story
@@ -219,6 +216,7 @@ def _importer_prodsak(prodsak_id, replace_existing):
 
     # Import images from prodsys to the new Story.
     _importer_bilder_fra_prodsys(prodsak, new_story)
+    new_story.full_clean()
     new_story.save(new=True)
 
     # Update the prodsys object if needed.
@@ -254,7 +252,7 @@ def _get_xtags_from_prodsys(prodsak_id, status_in=None):
     return (xtags, status, json, final_version)
 
 
-def _importer_bilder_fra_prodsys(prodsak, story):
+def _importer_bilder_fra_prodsys(prodsak, story, autocrop):
     """ Import all images connected to a single story. """
 
     prod_bilder = Prodbilde.objects.filter(prodsak_id=prodsak.prodsak_id)
@@ -281,11 +279,13 @@ def _importer_bilder_fra_prodsys(prodsak, story):
                 caption=caption[:1000],
             )
             story_image.save()
+            if autocrop:
+                image_file.autocrop()
 
         # logger.debug(story_image)
 
 
-def _importer_bilder_fra_webside(websak, story):
+def _importer_bilder_fra_webside(websak, story, autocrop):
     """ Import all images connected to a single story. """
 
     for bilde in websak.bilde_set.all():
@@ -316,6 +316,8 @@ def _importer_bilder_fra_webside(websak, story):
                 caption=caption[:1000],
             )
             story_image.save()
+            if autocrop:
+                image_file.autocrop()
 
 
 def _create_image_file(filepath, publication_date=None, id=None, prodsys=False):

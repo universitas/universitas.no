@@ -8,15 +8,30 @@
 main .row {
   border-top: 1px solid grey; }
 
-.inline-aside h2 {
-  font-size: 1rem; }
-.inline-aside p, .inline-aside ul li {
-  font-size: 0.8rem; }
-.inline-aside ul {
-  list-style: disc outside none;
-  padding-left: 0.5rem; }
-  .inline-aside ul li {
+.inline-aside {
+  background: #f5f5f5; }
+  .inline-aside h2 {
+    font-size: 1rem; }
+  .inline-aside p, .inline-aside ul li {
+    font-size: 0.8rem; }
+  .inline-aside ul {
+    list-style: disc outside none;
     padding-left: 0.5rem; }
+    .inline-aside ul li {
+      padding-left: 0.5rem; }
+
+.inline-pullquote {
+  display: block;
+  font-style: italic;
+  padding: 0 2rem; }
+  .inline-pullquote bq {
+    display: block;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: lighter; }
+  .inline-pullquote .by {
+    font-size: 0.8rem;
+    text-align: right; }
 
 .image-caption {
   font-size: 0.8rem; }
@@ -94,10 +109,10 @@ img {
 .map_canvas object {
   max-width: none !important; }
 
-.left {
+.left, .inline-left {
   float: left !important; }
 
-.right {
+.right, .inline-right {
   float: right !important; }
 
 .clearfix:before, .clearfix:after {
@@ -139,6 +154,8 @@ select {
   .row.collapse > .column,
   .row.collapse > .columns,
   .row.collapse > .bodytext,
+  .row.collapse > .inline-full,
+  .row.collapse > .inline-left,
   .row.collapse > .inline-right {
     padding-left: 0;
     padding-right: 0; }
@@ -170,6 +187,8 @@ select {
 .column,
 .columns,
 .bodytext,
+.inline-full,
+.inline-left,
 .inline-right {
   padding-left: 0.9375rem;
   padding-right: 0.9375rem;
@@ -306,6 +325,8 @@ select {
   .column,
   .columns,
   .bodytext,
+  .inline-full,
+  .inline-left,
   .inline-right {
     position: relative;
     padding-left: 0.9375rem;
@@ -394,6 +415,8 @@ select {
   .column.small-centered,
   .columns.small-centered,
   .small-centered.bodytext,
+  .small-centered.inline-full,
+  .small-centered.inline-left,
   .small-centered.inline-right {
     margin-left: auto;
     margin-right: auto;
@@ -402,6 +425,8 @@ select {
   .column.small-uncentered,
   .columns.small-uncentered,
   .small-uncentered.bodytext,
+  .small-uncentered.inline-full,
+  .small-uncentered.inline-left,
   .small-uncentered.inline-right {
     margin-left: 0;
     margin-right: 0;
@@ -410,18 +435,24 @@ select {
   .column.small-centered:last-child,
   .columns.small-centered:last-child,
   .small-centered.bodytext:last-child,
+  .small-centered.inline-full:last-child,
+  .small-centered.inline-left:last-child,
   .small-centered.inline-right:last-child {
     float: none; }
 
   .column.small-uncentered:last-child,
   .columns.small-uncentered:last-child,
   .small-uncentered.bodytext:last-child,
+  .small-uncentered.inline-full:last-child,
+  .small-uncentered.inline-left:last-child,
   .small-uncentered.inline-right:last-child {
     float: left; }
 
   .column.small-uncentered.opposite,
   .columns.small-uncentered.opposite,
   .small-uncentered.opposite.bodytext,
+  .small-uncentered.opposite.inline-full,
+  .small-uncentered.opposite.inline-left,
   .small-uncentered.opposite.inline-right {
     float: right; } }
 @media only screen and (min-width: 40.063em) {
@@ -548,6 +579,8 @@ select {
   .column,
   .columns,
   .bodytext,
+  .inline-full,
+  .inline-left,
   .inline-right {
     position: relative;
     padding-left: 0.9375rem;
@@ -560,7 +593,7 @@ select {
   .medium-2 {
     width: 16.66667%; }
 
-  .medium-3, .inline-right {
+  .medium-3, .inline-left, .inline-right {
     width: 25%; }
 
   .medium-4 {
@@ -578,7 +611,7 @@ select {
   .medium-8 {
     width: 66.66667%; }
 
-  .medium-9, .bodytext {
+  .medium-9, .bodytext, .inline-full {
     width: 75%; }
 
   .medium-10 {
@@ -636,6 +669,8 @@ select {
   .column.medium-centered,
   .columns.medium-centered,
   .medium-centered.bodytext,
+  .medium-centered.inline-full,
+  .medium-centered.inline-left,
   .medium-centered.inline-right {
     margin-left: auto;
     margin-right: auto;
@@ -644,6 +679,8 @@ select {
   .column.medium-uncentered,
   .columns.medium-uncentered,
   .medium-uncentered.bodytext,
+  .medium-uncentered.inline-full,
+  .medium-uncentered.inline-left,
   .medium-uncentered.inline-right {
     margin-left: 0;
     margin-right: 0;
@@ -652,18 +689,24 @@ select {
   .column.medium-centered:last-child,
   .columns.medium-centered:last-child,
   .medium-centered.bodytext:last-child,
+  .medium-centered.inline-full:last-child,
+  .medium-centered.inline-left:last-child,
   .medium-centered.inline-right:last-child {
     float: none; }
 
   .column.medium-uncentered:last-child,
   .columns.medium-uncentered:last-child,
   .medium-uncentered.bodytext:last-child,
+  .medium-uncentered.inline-full:last-child,
+  .medium-uncentered.inline-left:last-child,
   .medium-uncentered.inline-right:last-child {
     float: left; }
 
   .column.medium-uncentered.opposite,
   .columns.medium-uncentered.opposite,
   .medium-uncentered.opposite.bodytext,
+  .medium-uncentered.opposite.inline-full,
+  .medium-uncentered.opposite.inline-left,
   .medium-uncentered.opposite.inline-right {
     float: right; }
 
@@ -702,7 +745,7 @@ select {
     left: 25%;
     right: auto; }
 
-  .pull-3, .bodytext {
+  .pull-3 {
     position: relative;
     right: 25%;
     left: auto; }
@@ -757,7 +800,7 @@ select {
     right: 66.66667%;
     left: auto; }
 
-  .push-9, .inline-right {
+  .push-9 {
     position: relative;
     left: 75%;
     right: auto; }
@@ -910,6 +953,8 @@ select {
   .column,
   .columns,
   .bodytext,
+  .inline-full,
+  .inline-left,
   .inline-right {
     position: relative;
     padding-left: 0.9375rem;
@@ -998,6 +1043,8 @@ select {
   .column.large-centered,
   .columns.large-centered,
   .large-centered.bodytext,
+  .large-centered.inline-full,
+  .large-centered.inline-left,
   .large-centered.inline-right {
     margin-left: auto;
     margin-right: auto;
@@ -1006,6 +1053,8 @@ select {
   .column.large-uncentered,
   .columns.large-uncentered,
   .large-uncentered.bodytext,
+  .large-uncentered.inline-full,
+  .large-uncentered.inline-left,
   .large-uncentered.inline-right {
     margin-left: 0;
     margin-right: 0;
@@ -1014,18 +1063,24 @@ select {
   .column.large-centered:last-child,
   .columns.large-centered:last-child,
   .large-centered.bodytext:last-child,
+  .large-centered.inline-full:last-child,
+  .large-centered.inline-left:last-child,
   .large-centered.inline-right:last-child {
     float: none; }
 
   .column.large-uncentered:last-child,
   .columns.large-uncentered:last-child,
   .large-uncentered.bodytext:last-child,
+  .large-uncentered.inline-full:last-child,
+  .large-uncentered.inline-left:last-child,
   .large-uncentered.inline-right:last-child {
     float: left; }
 
   .column.large-uncentered.opposite,
   .columns.large-uncentered.opposite,
   .large-uncentered.opposite.bodytext,
+  .large-uncentered.opposite.inline-full,
+  .large-uncentered.opposite.inline-left,
   .large-uncentered.opposite.inline-right {
     float: right; }
 
@@ -1064,7 +1119,7 @@ select {
     left: 25%;
     right: auto; }
 
-  .pull-3, .bodytext {
+  .pull-3 {
     position: relative;
     right: 25%;
     left: auto; }
@@ -1119,7 +1174,7 @@ select {
     right: 66.66667%;
     left: auto; }
 
-  .push-9, .inline-right {
+  .push-9 {
     position: relative;
     left: 75%;
     right: auto; }
@@ -1150,10 +1205,10 @@ select {
     left: auto; } }
 .flex-video {
   position: relative;
-  padding-top: 1.5625rem;
-  padding-bottom: 67.5%;
+  padding-top: 0;
+  padding-bottom: 50%;
   height: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
   overflow: hidden; }
   .flex-video.widescreen {
     padding-bottom: 56.34%; }
@@ -1322,6 +1377,8 @@ form .row .row {
   form .row .row .column,
   form .row .row .columns,
   form .row .row .bodytext,
+  form .row .row .inline-full,
+  form .row .row .inline-left,
   form .row .row .inline-right {
     padding: 0 0.5rem; }
   form .row .row.collapse {
@@ -1329,6 +1386,8 @@ form .row .row {
     form .row .row.collapse .column,
     form .row .row.collapse .columns,
     form .row .row.collapse .bodytext,
+    form .row .row.collapse .inline-full,
+    form .row .row.collapse .inline-left,
     form .row .row.collapse .inline-right {
       padding: 0; }
     form .row .row.collapse input {
@@ -1337,10 +1396,14 @@ form .row .row {
 form .row input.column,
 form .row input.columns,
 form .row input.bodytext,
+form .row input.inline-full,
+form .row input.inline-left,
 form .row input.inline-right,
 form .row textarea.column,
 form .row textarea.columns,
 form .row textarea.bodytext,
+form .row textarea.inline-full,
+form .row textarea.inline-left,
 form .row textarea.inline-right {
   padding-left: 0.5rem; }
 
@@ -1354,7 +1417,7 @@ label {
   line-height: 1.5;
   margin-bottom: 0;
   /* Styles for required inputs */ }
-  label.right {
+  label.right, label.inline-right {
     float: none !important;
     text-align: right; }
   label.inline {

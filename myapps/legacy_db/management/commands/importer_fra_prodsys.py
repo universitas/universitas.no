@@ -76,6 +76,13 @@ class Command(BaseCommand):
             default=False,
             help='Import articles from prodsys.'
         ),
+        make_option(
+            '--crop', '-c',
+            action='store_true',
+            dest='autocrop',
+            default=False,
+            help='Autocrop images'
+        ),
     )
 
     def handle(self, *args, **options):
@@ -97,7 +104,8 @@ class Command(BaseCommand):
                 first=options['first'],
                 last=last,
                 reverse=options['reverse'],
-                replace_existing=options['replace existing']
+                replace_existing=options['replace existing'],
+                autocrop=options['autocrop'],
             )
             self.stdout.write('Successfully imported content from prodsys.')
 
@@ -113,7 +121,8 @@ class Command(BaseCommand):
                 first=first,
                 last=last,
                 reverse=options['reverse'],
-                replace_existing=options['replace existing']
+                replace_existing=options['replace existing'],
+                autocrop=options['autocrop'],
             )
 
             reset_db_autoincrement()

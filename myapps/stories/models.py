@@ -3,7 +3,6 @@
 
 # Python standard library
 import re
-import sys
 import difflib
 import json
 import logging
@@ -45,7 +44,8 @@ PULLQUOTE_TAG = '@quote:'
 ASIDE_TAG = '@box:'
 IMAGE_TAG = '@image:'
 
-class MarkupFieldMixin:
+
+class MarkupFieldMixin(object):
 
     def __init__(self, *args, **kwargs):
         kwargs.update(
@@ -56,35 +56,83 @@ class MarkupFieldMixin:
 
     def clean(self, value, model_instance):
         value = super().clean(value, model_instance)
+        value = re.sub(r'\r\n', '\n', value)
         value = self.clean_links(value, model_instance)
         soup = BeautifulSoup(value)
         if value != soup.text:
-            error_message = '{warning} {tags}'.format(warning=_('HTML tags found in text: '), tags=soup.find_all())
+            error_message = '{warning} {tags}'.format(
+                warning=_('HTML tags found in text: '), tags=soup.find_all())
             raise ValidationError(error_message)
-
         value = Alias.objects.replace(content=value, timing=Alias.TIMING_IMPORT)
         value = Alias.objects.replace(content=value, timing=Alias.TIMING_EXTRA)
-        return value
-
-    def value_to_string(self, obj):
-        # logger.warn(str(obj))
-        value = super().value_to_string(obj)
-        value = obj.insert_urls_in_links(value)
         return value
 
     def clean_links(self, text, model_instance):
         """ Clean up links into markup format """
         text = InlineLink.convert_html_links(text)
-        text = InlineLink.clean_and_create_links(text, model_instance.parent_story)
+        text = InlineLink.clean_and_create_links(
+            body=text,
+            parent_story=model_instance.parent_story
+        )
         return text
 
+    def get_internal_type(self):
+        return 'MarkupField'
 
+
+# class MarkupTextField(models.TextField, MarkupFieldMixin):
 class MarkupTextField(MarkupFieldMixin, models.TextField):
     description = _('subclass of Textfield containing markup.')
 
 
-class MarkupCharField(MarkupFieldMixin, models.CharField):
+class MarkupCharField(MarkupFieldMixin, models.CharField, ):
     description = _('subclass of Charfield containing markup.')
+
+
+class MarkupModelMixin(object):
+
+    """ adds the 'html' property to a Model
+    Lets regular django models be louder!
+
+    Regular field:
+    >>> blogpost.title
+    'hello world'
+
+    Same field, but louder.
+    >>> blogpost.html.title
+    '<strong>HELLO WORLD!</strong>'
+    """
+
+    @property
+    def html(self):
+        return self._HTML(self)
+
+    class _HTML(object):
+
+        def __init__(self, parent):
+            self.parent = parent
+
+        def __getattr__(self, attr, *args):
+            try:
+                field = type(
+                    self.parent)._meta.get_field(attr)
+                assert field.get_internal_type(
+                ) == 'MarkupField', 'only MarkupFields can be html'
+            except models.fields.FieldDoesNotExist as e:
+                pass
+
+            raw = getattr(self.parent, attr, *args)
+            assert isinstance(raw, str), 'Only strings can be htmlized'
+            return mark_safe(self.make_html(raw))
+
+        def make_html(self, raw):
+            result = []
+            for line in raw.splitlines():
+                # line = BlockTag.objects.make_html(line)
+                line = InlineTag.objects.make_html(line)
+                line = self.parent.links().markup_to_html(line)
+                result.append(line)
+            return '\n'.join(result)
 
 
 class Section(models.Model):
@@ -137,7 +185,7 @@ class StoryType(models.Model):
         return ('')
 
 
-class TextContent(models.Model):
+class TextContent(models.Model, MarkupModelMixin):
 
     """ Abstract superclass for stories and related text elements. """
 
@@ -158,7 +206,6 @@ class TextContent(models.Model):
         help_text=_('HTML tagged content'),
         verbose_name=_('bodytext html tagged')
     )
-
 
     def pullquotes(self):
         return self.parent_story.storyelement_set.pullquotes()
@@ -186,9 +233,12 @@ class TextContent(models.Model):
 
     def make_html(self, body=None):
         """ Create html body text from markup """
-        body = body or self.bodytext_markup
-        tag_template = '{{% load inline_elements %}}{{% inline_{classname} "\\1" %}}'
-        regex = '^{markup_tag} *(.*) *$'
+        body = body or self.html.bodytext_markup
+        tag_template = (
+            '{{% load inline_elements %}}'
+            '{{% inline_{classname} "\\1" %}}'
+        )
+        regex = '^{markup_tag} *([^#\n]*) *$'
 
         for cls in (StoryImage, Pullquote, Aside, StoryVideo):
             classname = cls.__name__.lower().replace(' ', '')
@@ -211,13 +261,12 @@ class TextContent(models.Model):
 
         blocks = []
         for section in sections:
-            if type(section) is list:
+            if isinstance(section, list):
                 inline = False
                 section = '\n'.join(section).strip()
             else:
                 inline = True
             if section:
-                # section = BeautifulSoup(section).prettify(formatter=None)
                 blocks.append({
                     'inline': inline,
                     'html': mark_safe(section)
@@ -225,15 +274,7 @@ class TextContent(models.Model):
 
         t = get_template(self.template_name)
         html = t.render(Context({"blocks": blocks}))
-        html = BeautifulSoup(html).prettify()
-        html = self.links().markup_to_html(html)
-        html = InlineTag.objects.make_html(html)
         return html
-
-    # def save(self, *args, **kwargs):
-    #     if kwargs.pop('update_html', False):
-    #         pass
-    #     super().save(*args, **kwargs)
 
     def insert_urls_in_links(self, text):
         """ Change markup references to urls. """
@@ -241,26 +282,29 @@ class TextContent(models.Model):
         return text
 
     def parse_markup(self):
-        """ Use raw input tagged text to populate fields and create related objects """
+        """ Use raw input tagged text to populate
+        fields and create related objects """
         paragraphs = self.bodytext_markup.splitlines()
         self.bodytext_markup = ''
-
         target = self
         # Target is the model instance that will receive following line of text.
         # It could be the main article, or some related element, such as multi
         # paragraph aside.
         for paragraph in paragraphs:
             paragraph = paragraph.strip()
-            if paragraph == "":
-                continue
+            # if paragraph == '':
+            # skip empty paragraphs
+            #     continue
             blocktag, paragraph = BlockTag.objects.match_or_create(paragraph)
             tag, text_content = blocktag.split(paragraph)
             if re.match(r'^\s*$', text_content):
-                # no text_content
+                # no text_content, prune this line.
                 continue
             function_name, target_field = blocktag.action.split(':')
-            # The Blocktag model contains instructions for the various kinds of block (paragraph) level tags
-            # that are in use. Actions are "_block_append", "_block_new" and "_block_drop".
+            # The Blocktag model contains instructions for the
+            # various kinds of block (paragraph) level tags
+            # that are in use. Actions are "_block_append", "_block_new" and
+            # "_block_drop".
             action = getattr(target, '_block_{func}'.format(func=function_name))
             # do action on
             new_target = action(tag, text_content, target_field)
@@ -271,6 +315,7 @@ class TextContent(models.Model):
             target = new_target
 
         if target != self:
+            # Cleanup
             target.save()
 
     def _block_append(self, tag, content, modelfield=None):
@@ -281,31 +326,27 @@ class TextContent(models.Model):
             # only body text needs block tags.
             tag = ''
         try:
-            # since we use a sting reference, model fields are accessed with getattr() and setattr()
-            # if field / attribute does not exist, an AttributeError will be raised.
-            # if field does not contain string data, AssertionError will be raised.
             assert isinstance(getattr(self, modelfield), str)
-
-            # new string in field
             new_content = '{old_content}\n{tag}{added_content}'.format(
                 old_content=getattr(self, modelfield),
                 tag=tag,
                 added_content=content,
             ).strip()
-            # update modelfield
             setattr(self, modelfield, new_content)
             return self
         except (AttributeError,):
             # No such field. Try the main story instead.
             return self.parent_story._block_append(tag, content, modelfield)
         except (AssertionError,) as errormsg:
-            raise TypeError(
-                'Tried to append text to field {class_name}.{field}\n{errormsg}'.format(
-                    class_name=self.__class__.__name__,
-                    field=modelfield,
-                    errormsg=errormsg,
-                ),
+            msg = (
+                'Tried to append text to field '
+                '{class_name}.{field}\n{errormsg}'
+            ).format(
+                class_name=self.__class__.__name__,
+                field=modelfield,
+                errormsg=errormsg,
             )
+            raise TypeError(msg)
 
     def _block_new(self, *args, **kwargs):
         """ Create new related story element. """
@@ -314,7 +355,6 @@ class TextContent(models.Model):
 
     def _block_drop(self, *args, **kwargs):
         """ Returns self and ignores any arguments """
-        # The most reliable place to put this important data is /dev/null
         return self
 
 
@@ -322,13 +362,17 @@ class PublishedStoryManager(models.Manager):
 
     def published(self):
         now = timezone.now()
-        return super().get_queryset().filter(publication_status=Story.STATUS_PUBLISHED).filter(publication_date__lt=now)
+        return super().get_queryset().filter(
+            publication_status=Story.STATUS_PUBLISHED).filter(
+            publication_date__lt=now)
 
     def populate_frontpage(self):
         """ create some random frontpage stories """
         FrontpageStory.objects.all().delete()
-        # TODO: Funker bare for 2014
-        new_stories = self.filter(publication_date__year=2014).order_by('publication_date')
+        # TODO: populate_frontpage() lager random forsidesaker, men kun for
+        # 2014. Fix det.
+        new_stories = self.filter(
+            publication_date__year=2014).order_by('publication_date')
         for story in new_stories:
             story.save()
 
@@ -342,7 +386,7 @@ class Story(TextContent, TimeStampedModel):
         verbose_name_plural = _('Stories')
 
     objects = PublishedStoryManager()
-    template_name='bodytext.html'
+    template_name = 'bodytext.html'
 
     STATUS_DRAFT = 0
     STATUS_EDITOR = 5
@@ -371,7 +415,9 @@ class Story(TextContent, TimeStampedModel):
     )
     kicker = MarkupCharField(
         max_length=1000,
-        help_text=_('secondary headline, usually displayed above main headline'),
+        blank=True,
+        help_text=_(
+            'secondary headline, usually displayed above main headline'),
         verbose_name=_('kicker'),
     )
     lede = MarkupTextField(
@@ -386,6 +432,7 @@ class Story(TextContent, TimeStampedModel):
     )
     theme_word = MarkupCharField(
         max_length=100,
+        blank=True,
         help_text=_('theme, topic, main keyword'),
         verbose_name=_('theme word'),
     )
@@ -463,7 +510,8 @@ class Story(TextContent, TimeStampedModel):
             return False
         user_agent = request.META.get('HTTP_USER_AGENT', '').lower()
         if not user_agent:
-            # Visitor is not using a web browser. Not sure if this ever happens, but it would not be a proper visit.
+            # Visitor is not using a web browser. Not sure if this ever happens,
+            # but it would not be a proper visit.
             return False
 
         bots = ['bot', 'spider', 'yahoo', 'crawler']
@@ -510,7 +558,6 @@ class Story(TextContent, TimeStampedModel):
         return '\n'.join(all_bylines)
 
     def image_count(self):
-        # TODO: Move to admin? Only used in admin listview
         return len(self.images())
 
     @property
@@ -520,8 +567,9 @@ class Story(TextContent, TimeStampedModel):
 
     def save(self, *args, **kwargs):
         new = self.pk is None or kwargs.pop('new', None)
-        if not new and self.bodytext_markup != Story.objects.get(pk=self.pk).bodytext_markup:
-            self.bodytext_html = ''
+        # if not new and self.bodytext_markup != Story.objects.get(
+                # pk=self.pk).bodytext_markup:
+            # self.bodytext_html = ''
 
         super().save(*args, **kwargs)
 
@@ -536,8 +584,12 @@ class Story(TextContent, TimeStampedModel):
     def clear_html(self):
         """ clears html after child is changed """
         if self.bodytext_html != '':
-            Aside.objects.filter(parent_story__pk=self.pk).update(bodytext_html='')
-            Pullquote.objects.filter(parent_story__pk=self.pk).update(bodytext_html='')
+            Aside.objects.filter(
+                parent_story__pk=self.pk).update(
+                bodytext_html='')
+            Pullquote.objects.filter(
+                parent_story__pk=self.pk).update(
+                bodytext_html='')
             self.bodytext_html = ''
             self.save(update_fields=['bodytext_html'])
 
@@ -569,9 +621,11 @@ class Story(TextContent, TimeStampedModel):
         # super().make_html()
 
     def children_modified(self):
-        """ check if any related objects have been modified after self was last saved. """
-        changed_elements = self.storyelement_set.filter(modified__gt=self.modified)
-        changed_links = self.links.filter(modified__gt=self.modified)
+        """ check if any related objects have been
+        modified after self was last saved. """
+        changed_elements = self.storyelement_set.filter(
+            modified__gt=self.modified)
+        changed_links = self.links().filter(modified__gt=self.modified)
         return bool(changed_elements or changed_links)
 
     def clean(self):
@@ -580,8 +634,12 @@ class Story(TextContent, TimeStampedModel):
         self.bodytext_markup = self.reindex_inlines()
         self.slug = slugify(self.title).replace('_', '').replace('–', '-')[:50]
         self.bylines_html = self.get_bylines_as_html()
-        if not self.publication_date and self.publication_status == self.STATUS_PUBLISHED:
+        if (not self.publication_date
+                and self.publication_status == self.STATUS_PUBLISHED):
             self.publication_date = timezone.now()
+        self.bodytext_markup = Alias.objects.replace(
+            content=self.bodytext_markup,
+            timing=Alias.TIMING_CLEAN)
         super().clean()
 
     def _block_new(self, tag, content, element):
@@ -592,7 +650,9 @@ class Story(TextContent, TimeStampedModel):
                 Byline.create(
                     story=self,
                     full_byline=raw_byline,
-                    initials='',  # TODO: send over initials?
+                    initials='',
+                    # TODO: legg inn initialer i bylines som er importert fra
+                    # prodsys.
                 )
             return self
         elif element == "aside":
@@ -602,9 +662,16 @@ class Story(TextContent, TimeStampedModel):
         return new_element._block_append(tag, content)
 
     def place_all_inline_elements(self):
-        """ Insert inline elements into the bodytext according to heuristics. """
+        """ Insert inline elements into the
+        bodytext according to heuristics. """
 
         def _main(self=self, body=self.bodytext_markup):
+
+            # remove tags:
+            for cls in Aside, StoryImage, Pullquote, StoryVideo:
+                find = r'^{tag}.*$'.format(tag=cls.markup_tag)
+                body = re.sub(find, '', body, flags=re.M)
+
             # insert asides
             asides = self.asides().inline()
             body = top_right(asides, body)
@@ -625,7 +692,7 @@ class Story(TextContent, TimeStampedModel):
 
         def fifty_fifty(queryset, body):
             """ Half of elements in header, rest spread evenly through body. """
-            # TODO: Denne legger til i bunn nå.
+            # TODO: Bedre autoplassering av foto.
             addlines = []
             for item in queryset:
                 flags = ''
@@ -664,12 +731,17 @@ class Story(TextContent, TimeStampedModel):
 
         def fuzzy_search(queryset, body, flags=''):
             """ Place elements according to fuzzy text search. """
-            diff = diff_match_patch()   # Google's diff-match-patch library for fuzzy matching
-            diff.Match_Distance = 5000  # default is 1000 characters match distance
-            diff.Match_Threshold = 0.25  # default is 0.5 ; 1.0 matches everything, 0.0 matches only perfect hits.
+            diff = diff_match_patch(
+            )   # Google's diff-match-patch library for fuzzy matching
+            # default is 1000 characters match distance
+            diff.Match_Distance = 5000
+            # default is 0.5 ; 1.0 matches everything, 0.0 matches only perfect
+            # hits.
+            diff.Match_Threshold = 0.25
 
             def _find_in_text(needle, haystack):
-                # strip whitespace and non-word characters. Converts to lowercase.
+                # strip whitespace and non-word characters. Converts to
+                # lowercase.
                 needle = re.sub(r'\W', '', needle).lower()
                 haystack = re.sub(r'\W', '', haystack).lower()
                 value = diff.match_main(haystack, needle, 0)  # -1 is no match
@@ -706,14 +778,18 @@ class Story(TextContent, TimeStampedModel):
                     paragraphs = [line] + paragraphs
 
             body = '\n'.join(paragraphs)
+            # logger.debug(body)
             return body
 
         return _main()
 
     def find_inline_placeholders(self, element_class, body):
-        """ Find placeholder markup for images, pullquotes and other story elements. """
-        regex = r'^{}\s*(.*)\s*$'.format(element_class.markup_tag)
-        FLAGS = ['<', '>']  # TODO: Placeholder flags are magic constants, and should be moved somewhere smart.
+        """ Find placeholder markup for images,
+        pullquotes and other story elements. """
+        regex = r'^{tag}\s*([^#\n]*).*$'.format(tag=element_class.markup_tag)
+        # TODO: Placeholder flags ( <, > ) are magic constants, and should be
+        # moved somewhere smart.
+        FLAGS = ['<', '>']
         matches = re.finditer(regex, body, flags=re.M)
         placeholders = []
         for match in matches:
@@ -723,7 +799,9 @@ class Story(TextContent, TimeStampedModel):
                     'elements': elements,  # for bugtesting
                     'line': match.group(0),  # full match
                     'flags': [item for item in elements if item in FLAGS],
-                    'indexes': [int(index) for index in elements if index.isdigit()],
+                    'indexes': [
+                        int(index) for index in elements if index.isdigit()
+                    ],
                 }
             )
         return placeholders
@@ -734,8 +812,13 @@ class Story(TextContent, TimeStampedModel):
         Updates indexes in related elements to match.
         Remove orphan placeholders.
         """
+        INDEX_NOT_FOUND = _('No such element. Valid indexes: ')
         body = body or self.bodytext_markup
-        element_classes = element_classes or [Aside, StoryImage, StoryVideo, Pullquote]
+        element_classes = element_classes or [
+            Aside,
+            StoryImage,
+            StoryVideo,
+            Pullquote]
 
         for element_class in element_classes:
 
@@ -746,8 +829,10 @@ class Story(TextContent, TimeStampedModel):
 
             subclass = element_class.__name__.lower()
             placeholders = self.find_inline_placeholders(element_class, body)
-            queryset = self.storyelement_set.filter(_subclass=subclass, top=False)
-
+            queryset = self.storyelement_set.filter(
+                _subclass=subclass,
+                top=False)
+            indexes = list(queryset.values_list('index', flat=True))
             for placeholder in placeholders:
                 replace = []
                 seen_indexes = set()
@@ -762,7 +847,9 @@ class Story(TextContent, TimeStampedModel):
                             elements[element.pk] = element
                             top_index += 1
                             this_index = top_index
-                            if (element.index, element.top) != (this_index, False):
+                            if (element.index,
+                                element.top) != (this_index,
+                                                 False):
                                 elements_changed = True
                                 element.index = this_index
                                 element.top = False
@@ -770,15 +857,19 @@ class Story(TextContent, TimeStampedModel):
                             replace.append(this_index)
                         else:
                             pass
-                            # logger.warn('duplicate index: ' + placeholder['line'])
                 if replace:
-                    replace = [str(r) for r in placeholder['flags'] + replace]
-                placeholder['replace'] = element_class.markup_tag + ' '.join(replace)
+                    replace = placeholder['flags'] + replace
+                else:
+                    replace = placeholder['elements'] + \
+                        ['#', INDEX_NOT_FOUND] + indexes or ['None']
+                placeholder['replace'] = element_class.markup_tag + \
+                    ' '.join(str(r) for r in replace)
 
                 if placeholder['line'] != placeholder['replace']:
                     body_changed = True
 
-                # logger.warn('\nflags: {flags}\nindexes: {indexes}\n {line} -> {replace}'.format(**placeholder)))
+                # logger.warn('\nflags: {flags}\nindexes: {indexes}\n {line} ->
+                # {replace}'.format(**placeholder)))
 
             if elements_changed:
                 for element in elements.values():
@@ -786,7 +877,8 @@ class Story(TextContent, TimeStampedModel):
 
             if body_changed:
                 for placeholder in placeholders:
-                    old_line = re.compile('^' + placeholder['line'] + '$', flags=re.M)
+                    regex = '^{line}$'.format(line=placeholder['line'])
+                    old_line = re.compile(regex, flags=re.M)
                     new_line = '#@##@#' + placeholder['replace']
                     body = old_line.sub(new_line, body, count=1)  # change
                 body = re.sub('#@##@#', '', body)
@@ -832,7 +924,7 @@ class ElementManager(models.Manager):
     def __getattr__(self, attr, *args):
         """ Checks the queryset class for missing methods. """
         try:
-            return super().__getattr__(attr, *args)
+            return getattr(super(), attr, *args)
         except AttributeError:
             if attr not in ('model', '_db'):
                 return getattr(self.get_queryset(), attr, *args)
@@ -894,13 +986,14 @@ class StoryElement(TimeStampedModel, RemembersSubClass):
     def needle(self):
         return None
 
-
     def save(self, *args, **kwargs):
         if self.pk is None:
             if self.index == 0:
-                last_item = self.siblings().filter(index__isnull=False).order_by('index').last()
+                last_item = self.siblings().filter(
+                    index__isnull=False).order_by('index').last()
                 if last_item:
-                    # Set index to be higher than the previous object of the same class.
+                    # Set index to be higher than the previous object of the
+                    # same class.
                     self.index = last_item.index + 1
                 else:
                     self.index = 1
@@ -941,7 +1034,7 @@ class Aside(TextContent, StoryElement):
         verbose_name_plural = _('Asides')
 
 
-class StoryMedia(StoryElement):
+class StoryMedia(StoryElement, MarkupModelMixin):
 
     """ Video, photo or illustration connected to a story """
 
@@ -1023,33 +1116,39 @@ class StoryVideo(StoryMedia):
     host_video_id = models.CharField(
         max_length=100,
         verbose_name=_('id for video file.'),
-        help_text=_('the part of the url that identifies this particular video'),
+        help_text=_('the part of the url that identifies this particular video')
     )
 
-    def embed(self, width=1200, height=600):
+    def embed(self, width=1200, height=400):
         """ Returns html embed code """
         if self.video_host == 'vimeo':
-            # <iframe src="//player.vimeo.com/video/105149174?title=0&amp;byline=0&amp;portrait=0&amp;color=f00008"
-            # width="1200" height="675" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+            # <iframe src="//player.vimeo.com/video/105149174?
+            # title=0&amp;byline=0&amp;portrait=0&amp;color=f00008"
+            # width="1200" height="675" frameborder="0"
+            # webkitallowfullscreen mozallowfullscreen allowfullscreen>
             # </iframe>
             embed_pattern = (
                 '<iframe src="//player.vimeo.com/'
-                'video/{host_video_id}?title=0&amp;byline=0&amp;portrait=0&amp;color=f00008" '
+                'video/{host_video_id}?title=0&amp;'
+                'byline=0&amp;portrait=0&amp;color=f00008" '
                 'width="{width}" height="{height}" frameborder="0" '
-                'webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
-            )
+                'webkitallowfullscreen mozallowfullscreen allowfullscreen>'
+                '</iframe>')
         elif self.video_host == 'youtu':
-            # <iframe width="1280" height="720" src="//www.youtube-nocookie.com/embed/HBk1GdcdALU?rel=0"
+            # <iframe width="1280" height="720"
+            # src="//www.youtube-nocookie.com/embed/HBk1GdcdALU?rel=0"
             # frameborder="0" allowfullscreen></iframe>
             embed_pattern = (
-                '<iframe width="{width}" height="{heigth}" '
+                '<iframe width="{width}" height="{height}" '
                 'src="//www.youtube-nocookie.com/embed/{host_video_id}?'
                 'rel=0" frameborder="0" allowfullscreen></iframe>'
             )
         else:
             raise Exception('unknown hosting site.')
 
-        return embed_pattern.format(height=height, width=width, host_video_id=self.host_video_id,)
+        return embed_pattern.format(
+            height=height, width=width, host_video_id=self.host_video_id,
+        )
 
     @classmethod
     def create_from_url(cls, url, parent_story):
@@ -1057,13 +1156,18 @@ class StoryVideo(StoryMedia):
         # url formats:
         # https://www.youtube.com/watch?v=roHl3PJsZPk
         # http://youtu.be/roHl3PJsZPk
-        # http://vimeo.com/105149174
+            # http://vimeo.com/105149174
 
         def check_link(url, method='head', timeout=2):
             """ Does a http request to check the status of the url. """
-            # TODO: samme metode som i inlinelink.
+            # TODO: check_link() er omtrent lik som metode med samme navn i
+            # InlineLink
             try:
-                status_code = str(request(method, url, timeout=timeout).status_code)
+                status_code = str(
+                    request(
+                        method,
+                        url,
+                        timeout=timeout).status_code)
             except Timeout:
                 status_code = 408  # HTTP Timout
             except MissingSchema:
@@ -1183,7 +1287,10 @@ class InlineLink(TimeStampedModel):
 
     def insert_url(self, text):
         """ insert url as reference in link """
-        text = re.sub(re.escape(self.get_tag()), self.get_tag(ref=self.link), text)
+        text = re.sub(
+            re.escape(
+                self.get_tag()), self.get_tag(
+                ref=self.link), text)
         return text
 
     def get_html(self):
@@ -1203,7 +1310,10 @@ class InlineLink(TimeStampedModel):
         return ''
 
     def find_linked_story(self):
-        """ Change literal url to foreign key if the target is another article in the database. """
+        """
+        Change literal url to foreign key if the target is
+        another article in the database.
+        """
         if not self.href or self.linked_story:
             return False
 
@@ -1236,7 +1346,10 @@ class InlineLink(TimeStampedModel):
             try:
                 status_code = request(method, url, timeout=timeout).status_code
                 if status_code == 410:
-                    status_code = request('get', url, timeout=timeout).status_code
+                    status_code = request(
+                        'get',
+                        url,
+                        timeout=timeout).status_code
                 if status_code > 500:
                     status_code = 500
                 status_code = str(status_code)
@@ -1265,7 +1378,7 @@ class InlineLink(TimeStampedModel):
         found_links = re.finditer(cls.find_pattern, body)
         queryset = parent_story.links()
 
-        number = queryset.count()
+        number = queryset.count() + 1
         for match in found_links:
             ref = match.group('ref')
             text = match.group('text')
@@ -1276,9 +1389,11 @@ class InlineLink(TimeStampedModel):
                 # ref is an integer
                 ref = int(ref)
                 links = queryset.filter(number=ref)
-                # links = cls.objects.filter(number=ref, parent_story=parent_story,)
                 if not links:
-                    link = cls.objects.create(number=ref, parent_story=parent_story,)
+                    link = cls.objects.create(
+                        number=ref,
+                        parent_story=parent_story,
+                    )
                 else:
                     link = links[0]
                     if link.text != text:
@@ -1289,7 +1404,11 @@ class InlineLink(TimeStampedModel):
                         otherlink.number = number
                         otherlink.save()
                         number += 1
-                        logger.warn('multiple links with same ref: ({}) {} {}'.format(ref, link, otherlink))
+                        logger.warn(
+                            'multiple links with same ref: ({}) {} {}'.format(
+                                ref,
+                                link,
+                                otherlink))
                         new_markup.append(otherlink.get_tag())
 
             else:
@@ -1333,10 +1452,11 @@ class InlineLink(TimeStampedModel):
             # change the link from html to markup
             link.replace_with(replacement)
 
-        sys.setrecursionlimit(2000)
+        # sys.setrecursionlimit(2000)
         # TODO: Recursion limit hack with soup decode might not be needed.
-        bodytext = soup.decode(formatter=formatter)
-        sys.setrecursionlimit(1000)
+        # import ipdb; ipdb.set_trace()
+        bodytext = soup.text
+        # sys.setrecursionlimit(1000)
         return bodytext
 
     @classmethod
@@ -1408,7 +1528,8 @@ class Byline(models.Model):
             Byline object
         """
         byline_pattern = re.compile(
-            # single word credit with colon. Person's name, Person's job title or similiar description.
+            # single word credit with colon. Person's name, Person's job title
+            # or similiar description.
             # Example:
             # text: Jane Doe, Just a regular person
             r'^(?P<credit>[^:, ]+): (?P<full_name>[^,]+)\s*(, (?P<title>.+))?$',
@@ -1422,9 +1543,14 @@ class Byline(models.Model):
             full_name = d['full_name'].title()
             title = d['title'] or ''
             credit = d['credit'].lower()
-            initials = ''.join(letters[0] for letters in full_name.replace('-', ' ').split())
-            assert initials == initials.upper(), 'All names should be capitalised'
-            assert len(initials) <= 5, 'Five names probably means something is wrong.'
+            initials = ''.join(
+                letters[0] for letters in full_name.replace(
+                    '-',
+                    ' ').split())
+            assert initials == initials.upper(
+            ), 'All names should be capitalised'
+            assert len(
+                initials) <= 5, 'Five names probably means something is wrong.'
             if len(initials) == 1:
                 initials = full_name.upper()
 
@@ -1439,22 +1565,25 @@ class Byline(models.Model):
                 dump = story.legacy_html_source
                 w_org = json.loads(dump)[0]['fields']['byline']
 
-            warning = (
-                'Malformed byline: "{byline}" error: {error} id: {id} p_id: {p_id}\n{p_org} | {w_org} '.format(
-                    id=story.id,
-                    p_id=story.prodsak_id,
-                    story=story,
-                    byline=full_byline,
-                    error=e,
-                    p_org=p_org,
-                    w_org=w_org,
-                )
-            )
+            warning = ((
+                'Malformed byline: "{byline}" error: {error} id: {id}'
+                ' p_id: {p_id}\n{p_org} | {w_org} ').format(
+                id=story.id,
+                p_id=story.prodsak_id,
+                story=story,
+                byline=full_byline,
+                error=e,
+                p_org=p_org,
+                w_org=w_org,
+            ))
             logger.warn(warning)
             story.comment += warning
             story.publication_status = Story.STATUS_ERROR
 
-            full_name, title, initials, credit = 'Nomen Nescio', full_byline, 'XX', '???'
+            full_name = 'Nomen Nescio'
+            title = full_byline
+            initials = 'XX'
+            credit = '???'
 
         for choice in cls.CREDIT_CHOICES:
             # Find correct credit.
@@ -1515,9 +1644,11 @@ def clean_up_bylines(bylines):
         (r' +(\S*?:)', r'\n\1', 0),
 
 
-        # comma, and or "og" before two capitalised words probably means it's a new person. Insert newline.
+        # comma, and or "og" before two capitalised words probably means it's
+        # a new person. Insert newline.
         (r'\s*(,\s|\s[oO]g\s|\s[aA]nd\s)\s*([A-ZÆØÅ]\S+ [A-ZÆØÅ])', r'\n\2', 0),
-        # TODO: Bytt ut byline regular expression med ny regex-modul som funker med unicode
+        # TODO: Bytt ut byline regular expression med ny regex-modul som funker
+        # med unicode
 
         # parantheses shall have no spaces inside them, but after and before.
         (r' *\( *(.*?) *\) *', ' (\1) ', 0),
@@ -1525,7 +1656,8 @@ def clean_up_bylines(bylines):
         # email addresses will die!
         (r'\S+@\S+', '', 0),
 
-        # words in parantheses at end of line is probably some creditation. Put in front with colon instead.
+        # words in parantheses at end of line is probably some creditation.
+        # Put in front with colon instead.
         (r'^(.*?) *\(([^)]*)\) *$', r'\2: \1', re.M),
 
         # "Anmeldt av" is text credit.

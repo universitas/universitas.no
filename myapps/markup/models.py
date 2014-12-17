@@ -199,9 +199,9 @@ class BlockTag(MarkupTag):
 
             if parent != outer:
                 if parent:
-                    closeparent = '\n</{}>'.format(parent)
+                    closeparent = '</{}>\n'.format(parent)
                 if outer:
-                    openparent = '\n<{}>\n'.format(outer)
+                    openparent = '<{}>\n'.format(outer)
 
             if content.strip() == '':
                 return closeparent + openparent
@@ -336,13 +336,13 @@ class Alias(CachedTag):
     TIMING_IMPORT = 1
     TIMING_EXTRA = 2
     TIMING_BYLINES = 3
-    TIMING_TEMPLATE = 4
+    TIMING_CLEAN = 4
 
     TIMING_CHOICES = (
         (TIMING_IMPORT, _('import'),),
         (TIMING_EXTRA, _('extra'),),
         (TIMING_BYLINES, _('bylines'),),
-        (TIMING_TEMPLATE, _('template'),),
+        (TIMING_CLEAN, _('clean'),),
     )
 
     class Meta:
@@ -385,7 +385,7 @@ class Alias(CachedTag):
         flags = []
         for letter in sorted(set(self.flags.upper())):
             if hasattr(re, letter):
-                flags_sum | getattr(re, letter)
+                flags_sum = flags_sum | getattr(re, letter)
                 flags.append(letter)
         self.flags = ''.join(flags)
         self.flags_sum = flags_sum

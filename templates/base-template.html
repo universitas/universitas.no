@@ -52,6 +52,7 @@
   <script src="{% static 'js/vendor/jquery.js' %}"></script>
   <script src="{% static 'js/foundation/foundation.js' %}"></script>
   <script src="{% static 'js/vendor/slick.js' %}"></script>
+  <script src="{% static 'js/vendor/balancetext.js' %}"></script>
   {% include 'autocomplete_light/static.html' %}
   {% endaddtoblock %}
   {% comment %}
@@ -60,7 +61,9 @@
   {% render_block "js" postprocessor "compressor.contrib.sekizai.compress" %}
   <script> $(document).foundation(); </script>
   <script> $(document).ready(function(){
-    $('.slideshow').slick({ dots:true, arrows:true }); });</script>
+    $('.slideshow').slick({ dots:true, arrows:true });
+  });
+  </script>
 
 </body>
 

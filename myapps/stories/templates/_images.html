@@ -1,10 +1,19 @@
 {% load thumbnail %}
 {% load parse_markup %}
 {% for image in elements %}
+  {% if image.video_host %}
+  <div class="video-container">
+    <div class="flex-video">
+      {{ image.embed | safe}}
+    </div>
+    {% include '_caption.html' with caption=image.caption %}
+  </div>
+  {% else %}
   <div class="image-container">
     {% thumbnail image.imagefile.source_file img_size crop=image.imagefile.get_crop as thumb %}
       <img id="img_{{ image.pk }}" src="{{ thumb.url }}" alt="{{ image.caption|strip_tags }}"></img>
     {% endthumbnail %}
     {% include '_caption.html' with caption=image.caption %}
   </div>
+  {% endif %}
 {% endfor %}

@@ -150,18 +150,6 @@ CACHES = {
 #         },
 #     },
 
-###############   MEMCACHED (Bruker redis i stedet)
-# }
-# CACHES = {
-#     'default': {
-#         # TODO: PyLibMCCache er visst rasker, men ikke ennå klar for python 3.
-#         'BACKEND': 'djpymemcache.backend.PyMemcacheCache',
-#         # 'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-#         # 'LOCATION': 'unix:/tmp/memcached.sock',
-#         'LOCATION': '127.0.0.1:11211',
-#     }
-# }
-# When using TCP connections
 
 # STATIC FILE CONFIGURATION
 STATIC_ROOT = normpath(join(PROJECT_ROOT_FOLDER, 'static'))

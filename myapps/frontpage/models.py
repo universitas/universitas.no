@@ -101,7 +101,7 @@ class Contentblock(TimeStampedModel):
 
     @property
     def publication_date(self):
-        # TODO: Bør være eget felt i databasen og i utgangspunktet settes likt databasen.
+        # TODO: Frontpagestory publication date eget felt i modellen, i stedet for å hentes fra related story.
         return self.frontpage_story.story.publication_date
 
     frontpage = models.ForeignKey(

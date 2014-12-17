@@ -18,7 +18,7 @@ def next_issue():
     name = 33
     year = 2014
     return (year, name)
-    # TODO: Denne er halvdårlig.
+    # TODO: issues.models.next_issue() er fake. Må finne neste utgave fra databasen i stedet.
 
 class PrintIssue(models.Model):
 

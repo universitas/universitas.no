@@ -10,26 +10,33 @@ logger = logging.getLogger('universitas')
 @register.inclusion_tag('_header_images.html', takes_context=True)
 def header_image(context):
     story = context['story']
-    queryset = story.images().top()
+    images = story.images().top()
+    videos = story.videos().top()
     # images = context['story'].images().top()
     context = {
-        'elements': [i.child for i in queryset],
+        'elements': [i.child for i in images] + [i.child for i in videos],
         'css_classes': 'main_image',
     }
     if len(context['elements']) > 1:
         context['css_classes'] += ' slideshow'
-    context['img_size'] = '1000x500'
+    context['img_size'] = '1200x600'
     return context
 
 
 @register.inclusion_tag('_inline_images.html', takes_context=True)
 def inline_storyimage(context, argument_string):
-    queryset = context['story'].images().inline()
-    context = get_items(queryset, argument_string)
+    story = context['story']
+    if '<' in argument_string or '>' in argument_string:
+        size = '400x400'
+    else:
+        size = '1200x600'
+    images = story.images().inline()
+    videos = story.videos().inline()
+    context = get_items(images, argument_string)
+    context['elements'] += [i.child for i in videos]
     if len(context['elements']) > 1:
         context['css_classes'] += ' slideshow'
-    context['img_size'] = '1000x500'
-    context['img_crop'] = 'center'
+    context['img_size'] = size
     return context
 
 
@@ -56,6 +63,7 @@ def get_items(queryset, argument_string):
     FLAGS = {
         '<': 'inline-left',
         '>': 'inline-right',
+        '=': 'inline-full',
     }
 
     context = {'elements': [], 'css_classes': ''}
@@ -69,12 +77,15 @@ def get_items(queryset, argument_string):
         elif arg in FLAGS:
             classes.append(FLAGS[arg])
         else:
-            error_message = 'Unknown argument: {} in {}'.format(arg, argument_string)
+            error_message = 'Unknown argument: {} in {}'.format(
+                arg,
+                argument_string)
             # logger.warn(error_message)
             raise template.TemplateSyntaxError(error_message)
 
     for index in indexes:
-        context['elements'].extend([i.child for i in queryset.filter(index=index)])
+        context['elements'].extend(
+            [i.child for i in queryset.filter(index=index)])
 
-    context['css_classes'] = ' '.join(classes)
+    context['css_classes'] = ' '.join(classes) or FLAGS['=']
     return context
