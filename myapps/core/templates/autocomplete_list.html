@@ -1,0 +1,10 @@
+{% for model in models %}
+  <span class="separator">{{ model.name }}</span>
+  {% for item in model.items %}
+    <a class="block choice" href="{% url model.change item.pk %}">
+      {{ item }}
+    </a>
+  {% endfor %}
+{% empty %}
+  <span class="separator">No hits</span>
+{% endfor %}
