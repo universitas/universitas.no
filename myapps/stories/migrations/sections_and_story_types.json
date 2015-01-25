@@ -1,0 +1,429 @@
+[
+{
+  "model": "stories.section",
+  "fields": {
+    "title": "Nyheter"
+  },
+  "pk": 1
+},
+{
+  "model": "stories.section",
+  "fields": {
+    "title": "Magasin"
+  },
+  "pk": 2
+},
+{
+  "model": "stories.section",
+  "fields": {
+    "title": "Kultur"
+  },
+  "pk": 3
+},
+{
+  "model": "stories.section",
+  "fields": {
+    "title": "Debatt"
+  },
+  "pk": 4
+},
+{
+  "model": "stories.section",
+  "fields": {
+    "title": "Nett"
+  },
+  "pk": 5
+},
+{
+  "model": "stories.section",
+  "fields": {
+    "title": "Baksiden"
+  },
+  "pk": 6
+},
+{
+  "model": "stories.section",
+  "fields": {
+    "title": "Side 2"
+  },
+  "pk": 7
+},
+{
+  "model": "stories.section",
+  "fields": {
+    "title": "Anmeldelser"
+  },
+  "pk": 8
+},
+{
+  "model": "stories.section",
+  "fields": {
+    "title": "Feature"
+  },
+  "pk": 9
+},
+{
+  "model": "stories.section",
+  "fields": {
+    "title": "Annet"
+  },
+  "pk": 10
+},
+{
+  "model": "stories.section",
+  "fields": {
+    "title": "New Section"
+  },
+  "pk": 11
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "vispor",
+    "name": "Vi sp\u00f8r",
+    "template": null,
+    "section": 6
+  },
+  "pk": 1
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "nyhet",
+    "name": "Nyhet",
+    "template": null,
+    "section": 1
+  },
+  "pk": 2
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "leserbrev",
+    "name": "Leserbrev",
+    "template": null,
+    "section": 4
+  },
+  "pk": 3
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "omverden",
+    "name": "Omverden",
+    "template": null,
+    "section": 1
+  },
+  "pk": 4
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "studietid",
+    "name": "Studietid",
+    "template": null,
+    "section": 9
+  },
+  "pk": 5
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "velkomstbilag",
+    "name": "Velkomstbilag",
+    "template": null,
+    "section": 2
+  },
+  "pk": 6
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "kommentar",
+    "name": "Kommentar",
+    "template": null,
+    "section": 7
+  },
+  "pk": 7
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "anmeldelser",
+    "name": "Anmeldelse",
+    "template": null,
+    "section": 8
+  },
+  "pk": 8
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "kronikk",
+    "name": "Kronikk",
+    "template": null,
+    "section": 4
+  },
+  "pk": 9
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "kultur",
+    "name": "Kultur",
+    "template": null,
+    "section": 3
+  },
+  "pk": 10
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "leder",
+    "name": "Leder",
+    "template": null,
+    "section": 7
+  },
+  "pk": 11
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "magasin",
+    "name": "Magasin",
+    "template": null,
+    "section": 2
+  },
+  "pk": 12
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "petit",
+    "name": "Petit",
+    "template": null,
+    "section": 2
+  },
+  "pk": 13
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "minstudietid",
+    "name": "Min studietid",
+    "template": null,
+    "section": 9
+  },
+  "pk": 14
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "adnotam",
+    "name": "Ad Notam",
+    "template": null,
+    "section": 6
+  },
+  "pk": 15
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "hvaskjer",
+    "name": "Hva skjer",
+    "template": null,
+    "section": 8
+  },
+  "pk": 16
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "nett",
+    "name": "Nett",
+    "template": null,
+    "section": 5
+  },
+  "pk": 17
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "news",
+    "name": "News",
+    "template": null,
+    "section": 1
+  },
+  "pk": 18
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "oyeblikket",
+    "name": "\u00d8yeblikket",
+    "template": null,
+    "section": 7
+  },
+  "pk": 19
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "sms",
+    "name": "SMS",
+    "template": null,
+    "section": 4
+  },
+  "pk": 20
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "debatt",
+    "name": "Debatt",
+    "template": null,
+    "section": 4
+  },
+  "pk": 21
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "reportasje",
+    "name": "Reportasje",
+    "template": null,
+    "section": 9
+  },
+  "pk": 22
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "akademia",
+    "name": "Akademia",
+    "template": null,
+    "section": 3
+  },
+  "pk": 23
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "universitasmelder",
+    "name": "Universitas Melder",
+    "template": null,
+    "section": 10
+  },
+  "pk": 24
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "camillaskollektion",
+    "name": "Camillas Kollektion",
+    "template": null,
+    "section": 2
+  },
+  "pk": 25
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "tassen",
+    "name": "Tassen",
+    "template": null,
+    "section": 10
+  },
+  "pk": 26
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "reisebilag",
+    "name": "Reisebilag",
+    "template": null,
+    "section": 2
+  },
+  "pk": 27
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "sletta",
+    "name": "Sletta",
+    "template": null,
+    "section": 1
+  },
+  "pk": 28
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "nett\r\nnett",
+    "name": "New Story Type - nettnett",
+    "template": null,
+    "section": 10
+  },
+  "pk": 29
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "nyhetsnotis",
+    "name": "New Story Type (nyhetsnotis)",
+    "template": null,
+    "section": 11
+  },
+  "pk": 30
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "novanoir",
+    "name": "New Story Type (novanoir)",
+    "template": null,
+    "section": 11
+  },
+  "pk": 31
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "novatilr\u00e5r",
+    "name": "New Story Type (novatilr\u00e5r)",
+    "template": null,
+    "section": 11
+  },
+  "pk": 32
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "kulturnotis",
+    "name": "New Story Type (kulturnotis)",
+    "template": null,
+    "section": 11
+  },
+  "pk": 33
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "quiz",
+    "name": "New Story Type (quiz)",
+    "template": null,
+    "section": 11
+  },
+  "pk": 34
+},
+{
+  "model": "stories.storytype",
+  "fields": {
+    "prodsys_mappe": "fempaaPlassen",
+    "name": "New Story Type (fempaaPlassen)",
+    "template": null,
+    "section": 11
+  },
+  "pk": 35
+}
+]

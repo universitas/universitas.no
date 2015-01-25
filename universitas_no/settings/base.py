@@ -97,7 +97,7 @@ DATABASES = {
         'USER': environ["DJANGO_DB_USER"],
         'PASSWORD': environ["DJANGO_DB_PASSWORD"],
         'HOST': 'localhost',
-        'PORT': '',       # Set to empty string for default.
+        'PORT': '5433',       # Set to empty string for default.
     },
     'prodsys': {
         'ENGINE': 'mysql.connector.django',
