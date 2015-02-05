@@ -5,17 +5,19 @@ Admin for stories app.
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
-from .models import Byline, Aside, Pullquote, Story, StoryType, Section, StoryImage, InlineLink, StoryVideo
-# from django.utils.html import format_html_join
-from django.utils.safestring import mark_safe
-# from myapps.photo.models import ImageFile
-# from sorl.thumbnail.admin import AdminImageMixin
-from myapps.frontpage.models import FrontpageStory
-import autocomplete_light
-from myapps.photo.admin import ThumbAdmin
 from django.db import models
 from django.forms import Textarea, TextInput
+from django.utils.safestring import mark_safe
+# from django.utils.html import format_html_join
+# from myapps.photo.models import ImageFile
+# from sorl.thumbnail.admin import AdminImageMixin
 
+import autocomplete_light
+
+from myapps.photo.admin import ThumbAdmin
+from myapps.frontpage.models import FrontpageStory
+
+from .models import Byline, Aside, Pullquote, Story, StoryType, Section, StoryImage, InlineLink, StoryVideo
 
 class SmallTextArea:
     formfield_overrides = {

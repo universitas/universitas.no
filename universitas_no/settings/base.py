@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'myapps.contributors',
     'myapps.markup',
     'myapps.legacy_db',
+    'myapps.adverts',
     'functional_tests',
     )
 
