@@ -51,6 +51,10 @@
         </div>
       {% endfor %}
     </div>
-    <div id="comments" class="large-8 columns"></div>
+  {% if story.disqus_enabled %}
+    <div id="comments" class="large-8 columns">
+      {% include '_disqus.html' %}
+    </div>
+  {% endif %}
   </section>
 {% endblock content %}

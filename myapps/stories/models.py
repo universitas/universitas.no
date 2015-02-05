@@ -392,6 +392,7 @@ class Story(TextContent, TimeStampedModel):
     STATUS_READY = 9
     STATUS_PUBLISHED = 10
     STATUS_PRIVATE = 15
+    STATUS_TEMPLATE = 100
     STATUS_ERROR = 500
     STATUS_CHOICES = [
         (STATUS_DRAFT, _('Draft')),
@@ -399,6 +400,7 @@ class Story(TextContent, TimeStampedModel):
         (STATUS_READY, _('Ready to publish on website')),
         (STATUS_PUBLISHED, _('Published on website')),
         (STATUS_PRIVATE, _('Will not be published')),
+        (STATUS_TEMPLATE, _('Used as template for new articles')),
         (STATUS_ERROR, _('Technical error')),
     ]
 
@@ -497,10 +499,36 @@ class Story(TextContent, TimeStampedModel):
         verbose_name=_('Imported xtagged source.'),
     )
 
+    def __str__(self):
+        if self.publication_date:
+            return '{} {:%Y-%m-%d}'.format(self.title, self.publication_date)
+        else:
+            return '{}'.format(self.title,)
+
+    def save(self, *args, **kwargs):
+        new = self.pk is None or kwargs.pop('new', None)
+        # if not new and self.bodytext_markup != Story.objects.get(
+                # pk=self.pk).bodytext_markup:
+            # self.bodytext_html = ''
+
+        super().save(*args, **kwargs)
+
+        if new:
+            # make inline elements
+            self.bodytext_markup = self.place_all_inline_elements()
+            super().save(update_fields=['bodytext_markup'])
+
+            if self.images() and self.frontpagestory_set.count() == 0:
+                FrontpageStory.objects.create(story=self)
     @property
     def parent_story(self):
         # for polymorphism with related content.
         return self
+
+    @property
+    def disqus_enabled(self):
+        # Is Disqus available here?
+        return True
 
     def visit_page(self, request):
         """ Check if visit looks like a human and update hit count """
@@ -534,12 +562,6 @@ class Story(TextContent, TimeStampedModel):
         self.save(update_fields=['hit_count', 'hot_count'])
         return True
 
-    def __str__(self):
-        if self.publication_date:
-            return '{} {:%Y-%m-%d}'.format(self.title, self.publication_date)
-        else:
-            return '{}'.format(self.title,)
-
     def get_bylines_as_html(self):
         """ create html table of bylines in db for search and admin display """
         translation.activate(settings.LANGUAGE_CODE)
@@ -564,21 +586,6 @@ class Story(TextContent, TimeStampedModel):
         """ Shortcut to related Section """
         return self.story_type.section
 
-    def save(self, *args, **kwargs):
-        new = self.pk is None or kwargs.pop('new', None)
-        # if not new and self.bodytext_markup != Story.objects.get(
-                # pk=self.pk).bodytext_markup:
-            # self.bodytext_html = ''
-
-        super().save(*args, **kwargs)
-
-        if new:
-            # make inline elements
-            self.bodytext_markup = self.place_all_inline_elements()
-            super().save(update_fields=['bodytext_markup'])
-
-            if self.images() and self.frontpagestory_set.count() == 0:
-                FrontpageStory.objects.create(story=self)
 
     def clear_html(self):
         """ clears html after child is changed """
