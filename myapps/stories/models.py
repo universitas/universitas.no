@@ -511,6 +511,7 @@ class Story(TextContent, TimeStampedModel):
                 # pk=self.pk).bodytext_markup:
             # self.bodytext_html = ''
 
+
         super().save(*args, **kwargs)
 
         if new:
@@ -636,6 +637,8 @@ class Story(TextContent, TimeStampedModel):
 
     def clean(self):
         """ Clean user input and populate fields """
+        if not self.title and not '@headline:' in self.bodytext_markup:
+            self.bodytext_markup = self.bodytext_markup.replace('@tit:', '@headline:', 1)
         self.parse_markup()
         self.bodytext_markup = self.reindex_inlines()
         self.slug = slugify(self.title).replace('_', '').replace('–', '-')[:50]

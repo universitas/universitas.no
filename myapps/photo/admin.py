@@ -4,7 +4,7 @@ Admin for photo app.
 """
 
 from django.contrib import admin
-from . models import ImageFile
+from .models import ImageFile
 from sorl.thumbnail.admin import AdminImageMixin
 from sorl.thumbnail import get_thumbnail
 import autocomplete_light

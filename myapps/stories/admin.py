@@ -221,7 +221,7 @@ def check_link_status(modeladmin, request, queryset):
 
 @admin.register(InlineLink)
 class LinkAdmin(admin.ModelAdmin):
-    form = autocomplete_light.modelform_factory(Byline, exclude=())
+    form = autocomplete_light.modelform_factory(InlineLink, exclude=())
     actions_on_bottom = actions_on_top = True
     actions = [find_linked_story, check_link_status]
     list_display = (

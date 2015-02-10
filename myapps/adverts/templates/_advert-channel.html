@@ -1,0 +1,5 @@
+{% for advert in ads %}
+  {{ advert.get_html }}
+{% empty %}
+  Ingen annonser.
+{% endfor %}

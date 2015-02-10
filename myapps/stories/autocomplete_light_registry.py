@@ -2,7 +2,6 @@ import autocomplete_light
 from .models import Story
 from django.utils.translation import ugettext_lazy as _
 
-# This will generate a PersonAutocomplete class
 autocomplete_light.register(Story,
     # Just like in ModelAdmin.search_fields
     search_fields=['title', 'lede', ],
