@@ -1,0 +1,14 @@
+@charset "UTF-8";
+
+.left-content {
+  width: 180px;
+  height: 500px;
+  position: absolute;
+}
+
+@media #{$large-up} {
+  .left-content + .main-content {
+    margin-left: 180px;
+    position: relative;
+  }
+}

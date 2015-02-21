@@ -1,0 +1,78 @@
+/*
+Syntax error: Undefined variable: "$medium-grey".
+        on line 46 of /srv/local.universitas.no/source/assets/scss/frontpage.scss
+
+41: 
+42:   .kicker-block {
+43:     margin: 0 0 .5em 0;
+44:     padding: .2rem;
+45:     width: 100%;
+46:     background: $medium-grey;
+47:     color: white;
+48:     position: absolute;
+49:     top: 0;
+50:     z-index: 11;
+51:     font-size: 1.2rem;
+
+Backtrace:
+/srv/local.universitas.no/source/assets/scss/frontpage.scss:46
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/script/tree/variable.rb:49:in `_perform'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/script/tree/node.rb:50:in `perform'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:366:in `visit_prop'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/base.rb:36:in `visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:152:in `block in visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/stack.rb:79:in `block in with_base'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/stack.rb:121:in `with_frame'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/stack.rb:79:in `with_base'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:152:in `visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:389:in `block (2 levels) in visit_rule'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:389:in `map'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:389:in `block in visit_rule'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:173:in `with_environment'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:387:in `visit_rule'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/base.rb:36:in `visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:152:in `block in visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/stack.rb:79:in `block in with_base'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/stack.rb:121:in `with_frame'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/stack.rb:79:in `with_base'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:152:in `visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:389:in `block (2 levels) in visit_rule'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:389:in `map'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:389:in `block in visit_rule'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:173:in `with_environment'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:387:in `visit_rule'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/base.rb:36:in `visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:152:in `block in visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/stack.rb:79:in `block in with_base'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/stack.rb:121:in `with_frame'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/stack.rb:79:in `with_base'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:152:in `visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/base.rb:52:in `map'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/base.rb:52:in `visit_children'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:161:in `block in visit_children'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:173:in `with_environment'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:160:in `visit_children'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/base.rb:36:in `block in visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:180:in `visit_root'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/base.rb:36:in `visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:151:in `visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:8:in `visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/root_node.rb:36:in `css_tree'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/root_node.rb:20:in `render'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/engine.rb:274:in `render'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/plugin/compiler.rb:371:in `update_stylesheet'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/plugin/compiler.rb:189:in `block in update_stylesheets'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/plugin/compiler.rb:186:in `each'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/plugin/compiler.rb:186:in `update_stylesheets'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/plugin/compiler.rb:284:in `block in watch'
+/usr/lib/ruby/vendor_ruby/listen/listener.rb:150:in `call'
+/usr/lib/ruby/vendor_ruby/listen/listener.rb:150:in `block in _wait_for_changes'
+/usr/lib/ruby/vendor_ruby/listen/listener.rb:145:in `loop'
+/usr/lib/ruby/vendor_ruby/listen/listener.rb:145:in `_wait_for_changes'
+/usr/lib/ruby/vendor_ruby/listen/listener.rb:43:in `block in start'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Syntax error: Undefined variable: \"$medium-grey\".\A         on line 46 of /srv/local.universitas.no/source/assets/scss/frontpage.scss\A \A 41: \A 42:   .kicker-block {\A 43:     margin: 0 0 .5em 0;\A 44:     padding: .2rem;\A 45:     width: 100%;\A 46:     background: $medium-grey;\A 47:     color: white;\A 48:     position: absolute;\A 49:     top: 0;\A 50:     z-index: 11;\A 51:     font-size: 1.2rem;"; }

@@ -300,25 +300,15 @@ class Advert(models.Model):
         else:
             return self.DUMMY_AD
 
-    @property
-    def height(self):
-        return self.ad_format.height
-
-    @property
-    def width(self):
-        return self.ad_format.width
-
     def get_html(self):
         img_template = (
             '<a href="{self.link}">'
             '<img src="{src}"'
             'alt="{self.alt_text}" '
-            # 'width="{self.width}" '
-            # 'height="{self.height}">'
             '</a>'
         )
         div_template = (
-            '<div style="border: 1px solid #EEE; height:{self.height}px; width:{self.width}px;" class="{html_class}">{content}</div>'
+            '<div style="border: 1px solid #EEE; class="{html_class}">{content}</div>'
         )
         if self.ad_type == self.CODE_AD:
             content = self.html_source

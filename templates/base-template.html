@@ -37,9 +37,11 @@
     </div>
   </header>
   <main>
-    {% block content %}
-    <p>Some other content?</p>
-    {% endblock content %}
+      {% block content-left %}{% endblock content-left %}
+      {% block content %}
+      <p>Main content of page</p>
+      {% endblock content %}
+      {% block content-right %}{% endblock content-right %}
   </main>
   {% block footer %}
   <footer>

@@ -14,8 +14,9 @@ def advert(context, channel_name):
     if new:
         # no channel with that name exists.
         dummy_ad = Advert()
-        dummy_ad.ad_channels.add(channel)
         dummy_ad.status = Advert.DEFAULT
+        dummy_ad.save()
+        dummy_ad.ad_channels.add(channel)
         dummy_ad.save()
 
         channel.description = 'autocreate'

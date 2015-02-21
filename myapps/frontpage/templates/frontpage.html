@@ -1,26 +1,44 @@
 {% extends "base-template.html" %}
 {% load thumbnail %}
+{% load advert_channel %}
 {% load parse_markup %}
 {% block title %}universitas.no – Norges største studentavis.{% endblock title %}
+{% block content-left %}
+  <div class="left-content show-for-large-up">
+    {% advert column_left %}
+  </div>
+{% endblock content-left %}
 {% block content %}
-  <div class="row">
+  <div class="main-content">
+    <div id="frontpage" class="row">
     {% for item in frontpage_items %}
-      <article class="medium-{{ item.columns }} small-{{ item.columns_small }} columns" style="min-height:{{ item.height }}px">
-      {% if item.story.kicker %}
-      <h2 class="frontpage-kicker">{{ item.story.kicker|inline_tags }}</h2>
-      {% endif %}
-      {% if item.image %}
-        {% thumbnail item.image item.image_size crop=item.crop as image %}
-          <a href="{{ item.story.url }}"><img src="{{ image.url }}" alt="{{ item.story.headline|strip_tags }}"></a>
-        {% endthumbnail %}
-      {% endif %}
-      {% if item.story.headline %}
-      <a href="{{ item.story.url }}"><h1 class="frontpage-headline">{{ item.story.headline|inline_tags }}</h1></a>
-      {% endif %}
-      {% if item.story.lede %}
-      <p class="frontpage-lede">{{ item.story.lede|inline_tags }}</h1>
-      {% endif %}
+      <article class="{{ item.css_width }} columns">
+        <div class="story-block {{ item.css_height }}">
+          {% if item.story.kicker %}
+            <h2 class="kicker-block">{{ item.story.kicker|inline_tags }}</h2>
+          {% endif %}
+          {% if item.image %}
+            <div class="image-block">
+              {% thumbnail item.image item.image_size crop=item.crop as image %}
+                <a href="{{ item.story.url }}"><img src="{{ image.url }}" alt="{{ item.story.headline|strip_tags }}"></img></a>
+              {% endthumbnail %}
+            </div>
+          {% endif %}
+          <div class="text-block">
+            {% if item.story.headline %}
+              <a href="{{ item.story.url }}">
+                <h1 class="frontpage-headline {{ item.headline_class }}">
+                    {{ item.story.headline|inline_tags }}
+                </h1>
+              </a>
+            {% endif %}
+            {% if item.story.lede %}
+              <p class="lede">{{ item.story.lede|inline_tags }}</p>
+            {% endif %}
+          </div>
+        </div>
       </article>
     {% endfor %}
+    </div>
   </div>
 {% endblock content %}

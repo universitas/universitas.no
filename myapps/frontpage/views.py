@@ -5,8 +5,11 @@ from myapps.frontpage.models import Frontpage, Contentblock
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+import logging
+logger = logging.getLogger('universitas')
 
 from django.contrib.auth.decorators import login_required
+
 
 @login_required
 def frontpage_view(request, frontpage=None):
@@ -29,6 +32,11 @@ def frontpage_view(request, frontpage=None):
     floor = []
     items = []
     columns_used = 0
+    headline_sizes = [
+        (10, 's'),
+        (25, 'm'),
+        (40, 'l'),
+    ]
 
     for block in blocks:
         if block.columns + columns_used > max_columns:
@@ -50,10 +58,18 @@ def frontpage_view(request, frontpage=None):
                     source = None
                     crop = None
 
+                headline_size = 'xl'
+                headline = story.headline
+                for length, size in headline_sizes:
+                    if len(headline) < length:
+                        headline_size = size
+                        break
+                logger.debug('{} {}'.format(headline, headline_size))
+
                 item = {
-                    'columns': columns,
-                    'columns_small': (12 if columns > 8 else 6),
-                    'height': floorheight * 150 + 200,
+                    'css_width': 'cols-{}'.format(columns),
+                    'css_height': 'rows-{}'.format(floorheight),
+                    'headline_class': 'headline-{size}'.format(size=headline_size),
                     'image_size': '%sx%s' % (pix_c * columns, pix_h * floorheight,),
                     'image': source,
                     'crop': crop,

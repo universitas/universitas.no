@@ -1,0 +1,71 @@
+@charset "UTF-8";
+
+$cols-slug: cols;
+$rows-slug: rows;
+$base-headline: 3em;
+$block-height: 100px;
+$minimum-height: 200px;
+$minimum-headline: 1.5em;
+
+@for $columns from 1 through 12 {
+  $small-cols: ".small-" + ceil($columns/6) * 6;
+  $medium-cols: ".medium-" + $columns;
+
+  $headline-size: $base-headline * $columns / 6;
+
+  $s:  max($minimum-headline, $headline-size * 1.5);
+  $m:  max($minimum-headline, $headline-size * 1);
+  $l:  max($minimum-headline, $headline-size * 0.75);
+  $xl: max($minimum-headline, $headline-size * 0.5);
+
+  .#{$cols-slug}-#{$columns} {
+    @extend #{$medium-cols};
+    @extend #{$small-cols};
+    .headline-s { font-size: $s; line-height: 1; }
+    .headline-m { font-size: $m; line-height: 1; }
+    .headline-l { font-size: $l; line-height: 1; }
+    .headline-xl { font-size: $xl; line-height: 1; }
+
+  }
+}
+
+@for $height from 1 through 4 {
+  .#{$rows-slug}-#{$height} {
+    height: $minimum-height + $block-height * $height;
+  }
+}
+
+
+.story-block {
+  position: relative;
+
+  .kicker-block {
+    margin: 0 0 .5em 0;
+    padding: .2rem;
+    width: 100%;
+    background: $medium-grey;
+    color: white;
+    position: absolute;
+    top: 0;
+    z-index: 11;
+    font-size: 1.2rem;
+    line-height: 1rem;
+  }
+
+  .text-block {
+    margin: .5em 0 0 0;
+    position: absolute;
+    bottom: 0;
+    background: white;
+    z-index: 10;
+      .lede {
+        color: $medium-grey;
+      }
+  }
+
+  .image-block {
+    position: absolute;
+    top: 0;
+    z-index: 9;
+  }
+}

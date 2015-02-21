@@ -365,15 +365,15 @@ class PublishedStoryManager(models.Manager):
             publication_status=Story.STATUS_PUBLISHED).filter(
             publication_date__lt=now)
 
-    def populate_frontpage(self):
+    def populate_frontpage(self, **kwargs):
         """ create some random frontpage stories """
-        FrontpageStory.objects.all().delete()
-        # TODO: populate_frontpage() lager random forsidesaker, men kun for
-        # 2014. Fix det.
-        new_stories = self.filter(
-            publication_date__year=2014).order_by('publication_date')
+        if not kwargs:
+            this_year = timezone.now().year
+            kwargs = {'publication_date__year': this_year}
+        new_stories = self.filter(**kwargs).order_by('publication_date')
         for story in new_stories:
-            story.save()
+            story.frontpagestory_set.all().delete()
+            story.save(new=True)
 
 
 class Story(TextContent, TimeStampedModel):
@@ -511,7 +511,6 @@ class Story(TextContent, TimeStampedModel):
                 # pk=self.pk).bodytext_markup:
             # self.bodytext_html = ''
 
-
         super().save(*args, **kwargs)
 
         if new:
@@ -521,6 +520,7 @@ class Story(TextContent, TimeStampedModel):
 
             if self.images() and self.frontpagestory_set.count() == 0:
                 FrontpageStory.objects.create(story=self)
+
     @property
     def parent_story(self):
         # for polymorphism with related content.
@@ -587,7 +587,6 @@ class Story(TextContent, TimeStampedModel):
         """ Shortcut to related Section """
         return self.story_type.section
 
-
     def clear_html(self):
         """ clears html after child is changed """
         if self.bodytext_html != '':
@@ -638,7 +637,10 @@ class Story(TextContent, TimeStampedModel):
     def clean(self):
         """ Clean user input and populate fields """
         if not self.title and not '@headline:' in self.bodytext_markup:
-            self.bodytext_markup = self.bodytext_markup.replace('@tit:', '@headline:', 1)
+            self.bodytext_markup = self.bodytext_markup.replace(
+                '@tit:',
+                '@headline:',
+                1)
         self.parse_markup()
         self.bodytext_markup = self.reindex_inlines()
         self.slug = slugify(self.title).replace('_', '').replace('–', '-')[:50]
