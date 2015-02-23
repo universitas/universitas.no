@@ -7,17 +7,20 @@ from ..models import AdChannel, Advert, AdFormat
 register = template.Library()
 logger = logging.getLogger('universitas')
 
+
 @register.inclusion_tag('_advert-channel.html', takes_context=True)
 def advert(context, channel_name):
     logger.debug('args = {}'.format(channel_name))
     channel, new = AdChannel.objects.get_or_create(name=channel_name)
     if new:
-        adformat = AdFormat.objects.order_by('width', 'height').first()
+        adformat = AdFormat.objects.order_by('?').first()
         dummy_ad = Advert.objects.create_dummy(adformat)
+        dummy_ad.status = Advert.PUBLISHED
         dummy_ad.ad_channels.add(channel)
-        # dummy_ad.save()
+        channel.ad_formats.add(adformat)
+        dummy_ad.save()
         channel.description = 'autocreate'
-        logger.warning('Template requests unknown ad channel '+ channel_name)
+        logger.warning('Template requests unknown ad channel ' + channel_name)
         channel.save()
 
     new_ads = channel.serve_ads()

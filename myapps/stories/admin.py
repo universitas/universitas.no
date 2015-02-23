@@ -82,8 +82,14 @@ class StoryTypeInline(admin.TabularInline):
     extra = 1
 
 
+def make_frontpage_story(modeladmin, request, queryset):
+    make_frontpage_story.short_description = _('make frontpage story')
+    for story in queryset:
+        FrontpageStory.objects.create(story=story)
+
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
+    actions=[make_frontpage_story,]
     date_hierarchy = 'publication_date'
     actions_on_top = True
     actions_on_bottom = True

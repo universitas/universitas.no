@@ -86,6 +86,12 @@ class AdChannel(models.Model):
     def __str__(self):
         return self.name
 
+    def css_classes(self):
+        return '{name} {extra}'.format(
+            name = self.name.lower().replace(' ', '-'),
+            extra = self.extra_classes,
+            )
+
     def current_ads(self, at_time=None, publication_status=None):
         """ All ads in current position at current time """
         if publication_status is None:
@@ -359,7 +365,7 @@ class Advert(models.Model):
             '</a>'
         )
         div_template = (
-            '<div style="border: 1px solid #EEE; height: {self.height}px; width: {self.width}px;" class="{html_class}">{content}</div>'
+            '<div class="annonse {html_class}">{content}</div>'
         )
         if self.ad_type == self.CODE_AD:
             content = self.html_source

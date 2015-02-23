@@ -21,8 +21,14 @@ class CustomerAdmin(admin.ModelAdmin):
 @admin.register(Advert)
 class AdvertAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
     form = autocomplete_light.modelform_factory(Advert, exclude=())
-    list_display = ['__str__', 'customer', 'start_time', 'end_time', 'ad_type']
-    list_editable = ['start_time', 'end_time']
+    list_display = [
+        '__str__',
+        'customer',
+        'start_time',
+        'end_time',
+        'ad_type',
+        'status']
+    list_editable = ['start_time', 'end_time', 'status']
     readonly_fields = ['get_html']
 
 
@@ -34,12 +40,25 @@ def create_dummy_ads(modeladmin, request, queryset):
             dummy_ad = Advert.objects.create_dummy(adformat)
             dummy_ad.ad_channels.add(channel)
 
+
 @admin.register(AdChannel)
 class ChannelAdmin(admin.ModelAdmin):
     form = autocomplete_light.modelform_factory(AdChannel, exclude=())
-    list_display = ['id', 'name', 'description', 'formats', 'active_ads', ]
-    list_editable = ['name']
-    actions = [create_dummy_ads,]
+    list_display = [
+        'id',
+        'name',
+        'description',
+        'formats',
+        'active_ads',
+        'extra_classes',
+        'max_at_once',
+    ]
+    list_editable = [
+        'extra_classes',
+        'description',
+        'max_at_once',
+    ]
+    actions = [create_dummy_ads, ]
 
 
 @admin.register(AdFormat)

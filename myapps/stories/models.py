@@ -7,6 +7,7 @@ import difflib
 import json
 import logging
 logger = logging.getLogger('universitas')
+bylines_logger = logging.getLogger('bylines')
 
 # Django core
 from django.utils.translation import ugettext_lazy as _
@@ -519,6 +520,7 @@ class Story(TextContent, TimeStampedModel):
             super().save(update_fields=['bodytext_markup'])
 
             if self.images() and self.frontpagestory_set.count() == 0:
+                # make random frontpage story
                 FrontpageStory.objects.create(story=self)
 
     @property
@@ -1638,7 +1640,7 @@ def needle_in_haystack(needle, haystack):
     return 'no match in %d lines' % (len(lines),)
 
 
-def clean_up_bylines(bylines):
+def clean_up_bylines(raw_bylines):
     """
     Normalise misformatting and idiosyncraticies of bylines in legacy data.
     string -> string
@@ -1661,7 +1663,7 @@ def clean_up_bylines(bylines):
         # med unicode
 
         # parantheses shall have no spaces inside them, but after and before.
-        (r' *\( *(.*?) *\) *', ' (\1) ', 0),
+        (r' *\( *(.*?) *\) *', r' (\1) ', 0),
 
         # email addresses will die!
         (r'\S+@\S+', '', 0),
@@ -1714,18 +1716,20 @@ def clean_up_bylines(bylines):
         (r':\s*$', r'', re.M),
     )
 
-    # logger.debug('\n', bylines)
     byline_words = []
-    for word in bylines.split():
+    for word in raw_bylines.split():
         if word == word.upper():
             word = word.title()
         byline_words.append(word)
 
     bylines = ' '.join(byline_words)
-    # logger.debug(bylines)
-
     for pattern, replacement, flags in replacements:
         bylines = re.sub(pattern, replacement, bylines, flags=flags)
     bylines = bylines.strip()
-    # logger.debug(bylines)
+    from re import escape
+    bylines_logger.debug(
+        '(\n"{input}",\n"{out}"\n),'.format(
+            input=raw_bylines.replace('\n', r'\n'),
+            out=bylines.replace('\n', r'\n'),
+        ))
     return bylines

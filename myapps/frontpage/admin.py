@@ -4,12 +4,12 @@ Admin for frontpage app.
 """
 
 from django.contrib import admin
-from .models import Contentblock, FrontpageStory
+from .models import StoryModule, FrontpageStory, StaticModule
 import autocomplete_light
 
 
-class ContentblockInline(admin.TabularInline):
-    model = Contentblock
+class StoryModuleInline(admin.TabularInline):
+    model = StoryModule
     fields = ('position', 'columns', 'height',),
     extra = 0
 
@@ -35,7 +35,7 @@ class FrontpageStoryAdmin(admin.ModelAdmin):
         # 'lede',
     )
     inlines = (
-        ContentblockInline,
+        StoryModuleInline,
     )
     search_fields = (
         'headline',
@@ -43,8 +43,8 @@ class FrontpageStoryAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(Contentblock)
-class ContentblockAdmin(admin.ModelAdmin):
+@admin.register(StoryModule)
+class StoryModuleAdmin(admin.ModelAdmin):
     save_on_top = True
     list_per_page = 25
     list_display = (
@@ -65,3 +65,22 @@ class ContentblockAdmin(admin.ModelAdmin):
     # inlines = (
     #     FrontpageStoryInline,
     # )
+
+@admin.register(StaticModule)
+class StaticModuleAdmin(admin.ModelAdmin):
+    save_on_top = True
+    list_per_page = 25
+    list_display = (
+        'id',
+        'position',
+        'columns',
+        'height',
+        'content',
+        'frontpage',
+    )
+
+    list_editable = (
+        'position',
+        'columns',
+        'height',
+    )

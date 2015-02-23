@@ -6,6 +6,8 @@ from PIL import Image, ImageEnhance, ImageDraw, ImageFont
 from colorsys import hls_to_rgb
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
+FONT_FILE = os.path.join(os.path.dirname(__file__), 'arial.ttf')
+
 def dummy_image_advert(width, height, watermarktext, labeltext):
     """ Create a dummy image ad that can be used for testing purposes """
     img = Image.new('RGB', (width, height), color=random_color())
@@ -47,8 +49,7 @@ def random_color():
 
 def create_watermark(text='xxx', angle=0, thumb_size=(50, 50)):
     """ Create a PIL.Image containing text on transparent background """
-    font_file = os.path.join(os.path.dirname(__file__), 'arial.ttf')
-    font = ImageFont.truetype(font_file, 50)
+    font = ImageFont.truetype(FONT_FILE, 50)
     img = Image.new('RGBA', font.getsize(text), (0, 0, 0, 0))
     drawing = ImageDraw.Draw(img)
     drawing.text((0, 0), text, font=font, fill='white')

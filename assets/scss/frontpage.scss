@@ -38,17 +38,17 @@ $minimum-headline: 1.5em;
 
 .story-block {
   position: relative;
+  margin-bottom: 10px;
+
 
   .kicker-block {
-    margin: 0 0 .5em 0;
-    padding: .2rem;
+    padding: 4px 8px;
+    margin: 0;
     width: 100%;
-    background: $medium-grey;
+    background: $dark-grey;
     color: white;
-    position: absolute;
-    top: 0;
-    z-index: 11;
-    font-size: 1.2rem;
+    text-transform: uppercase;
+    font-size: 1rem;
     line-height: 1rem;
   }
 
@@ -57,15 +57,63 @@ $minimum-headline: 1.5em;
     position: absolute;
     bottom: 0;
     background: white;
+    width: 100%;
     z-index: 10;
-      .lede {
-        color: $medium-grey;
-      }
+    .lede {
+      color: $dark-grey;
+    }
   }
 
   .image-block {
-    position: absolute;
-    top: 0;
-    z-index: 9;
+    position: relative;
+  }
+}
+
+.negative {
+  .text-block {
+    background: $dark-grey;
+    padding: 0 1rem;
+    .lede, .frontpage-headline {
+      color: white;
+    }
+  }
+}
+
+.debatt {
+  .frontpage-headline {
+    font-family: $univ-serif;
+    font-weight: lighter;
+  }
+}
+
+.kultur {
+  .frontpage-headline {
+    font-weight: lighter;
+  }
+}
+
+.vignette {
+  padding: .2rem;
+  background: $dark-grey;
+  color: white;
+
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 12;
+
+  font-family: $univ-serif;
+  font-size: 1rem;
+  line-height: 1rem;
+  font-weight: bold;
+
+  .kultur & {
+    background: $medium-kultur;
+  }
+  .debatt & {
+    background: $medium-debatt;
+  }
+  .nyheter & {
+    background: $medium-nyheter;
   }
 }

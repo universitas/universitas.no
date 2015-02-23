@@ -1,5 +1,7 @@
-{% for advert in ads %}
-  {{ advert.get_html }}
-{% empty %}
-  Ingen annonser.
-{% endfor %}
+{% if ads %}
+  <div class="{{ channel.css_classes }}">
+  {% for advert in ads %}
+    {{ advert.get_html }}
+  {% endfor %}
+  </div>
+{% endif %}

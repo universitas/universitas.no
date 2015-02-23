@@ -5,6 +5,7 @@
 import re
 import numpy
 import cv2
+import os
 
 # Django core
 from django.db import models
@@ -21,6 +22,11 @@ from myapps.contributors.models import Contributor
 
 import logging
 logger = logging.getLogger('universitas')
+
+CASCADE_FILE = os.path.join(
+    os.path.dirname(__file__),
+    'haarcascade_frontalface_default.xml'
+)
 
 
 class ImageFile(TimeStampedModel):
@@ -82,7 +88,8 @@ class ImageFile(TimeStampedModel):
     )
     copyright_information = models.CharField(
         help_text=_('extra information about license and attribution if needed.'),
-        blank=True, null=True,
+        blank=True,
+        null=True,
         max_length=1000,
     )
 
@@ -122,7 +129,9 @@ class ImageFile(TimeStampedModel):
         if self.pk and not kwargs.pop('autocrop', False):
             try:
                 saved = type(self).objects.get(id=self.pk)
-                if (self.from_left, self.from_top) != (saved.from_left, saved.from_top):
+                if (self.from_left,
+                    self.from_top) != (saved.from_left,
+                                       saved.from_top):
                     self.cropping_method = self.CROP_MANUAL
             except ImageFile.DoesNotExist:
                 pass
@@ -164,13 +173,25 @@ class ImageFile(TimeStampedModel):
                 centre = detect_features(grayscale_image)
                 self.cropping_method = self.CROP_FEATURES
 
-            self.from_left = int(round(100 * centre[0] / grayscale_image.shape[1]))
-            self.from_top = int(round(100 * centre[1] / grayscale_image.shape[0]))
+            self.from_left = int(
+                round(
+                    100 *
+                    centre[0] /
+                    grayscale_image.shape[1]))
+            self.from_top = int(
+                round(
+                    100 *
+                    centre[1] /
+                    grayscale_image.shape[0]))
             self.save(autocrop=True)
             warning = 'Autocrop  ({left:2.0f}, {top:2.0f})  {method:18} {pk} {file}'.format(
-                file=self, method=self.get_cropping_method_display(), pk=self.pk, left=self.from_left, top=self.from_top)
+                file=self,
+                method=self.get_cropping_method_display(),
+                pk=self.pk,
+                left=self.from_left,
+                top=self.from_top)
             logger.debug(warning)
-            del(grayscale_image) # Hjelper kanskje?
+            del(grayscale_image)  # Hjelper kanskje?
 
         def detect_faces(cv2img):
             """ Detects faces in image and adjust cropping. """
@@ -185,16 +206,18 @@ class ImageFile(TimeStampedModel):
                 # flags – Parameter with the same meaning for an old cascade as in the function cvHaarDetectObjects. It is not used for a new cascade.
                 # minSize – Minimum possible object size. Objects smaller than that are ignored.
                 # maxSize – Maximum possible object size. Objects larger than that are ignored.
-                # outputRejectLevels – Boolean. If True, it returns the rejectLevels and levelWeights. Default value is False.
+                # outputRejectLevels – Boolean. If True, it returns the
+                # rejectLevels and levelWeights. Default value is False.
 
-
-            face_cascade = cv2.CascadeClassifier('myapps/photo/haarcascade_frontalface_default.xml')
+            face_cascade = cv2.CascadeClassifier(CASCADE_FILE)
             faces = face_cascade.detectMultiScale(cv2img,)
             horizontal_faces, vertical_faces = [], []
             for (face_left, face_top, face_width, face_height) in faces:
                 # Create weighted average of faces. Bigger is heavier.
-                horizontal_faces.extend([face_left + face_width / 2] * face_width)
-                vertical_faces.extend([face_top + face_height / 2] * face_height)
+                horizontal_faces.extend(
+                    [face_left + face_width / 2] * face_width)
+                vertical_faces.extend(
+                    [face_top + face_height / 2] * face_height)
 
             if horizontal_faces:
                 from_left = sum(horizontal_faces) / len(horizontal_faces)
@@ -226,4 +249,3 @@ class ImageFile(TimeStampedModel):
             return from_left, from_top
 
         main()
-

@@ -37,11 +37,12 @@
     </div>
   </header>
   <main>
-      {% block content-left %}{% endblock content-left %}
+    <div class="content-wrapper">
+      {% block columns %}{% endblock %}
       {% block content %}
       <p>Main content of page</p>
       {% endblock content %}
-      {% block content-right %}{% endblock content-right %}
+    </div>
   </main>
   {% block footer %}
   <footer>

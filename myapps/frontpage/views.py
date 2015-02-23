@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from myapps.stories.models import Story
 from myapps.photo.models import ImageFile
-from myapps.frontpage.models import Frontpage, Contentblock
+from myapps.frontpage.models import Frontpage, StoryModule
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -16,7 +16,7 @@ def frontpage_view(request, frontpage=None):
     """ Shows the newspaper frontpage. """
     max_stories = 30
     max_columns = 12
-    pix_c = 80
+    pix_c = 1000 / 12
     pix_h = 100
     min_h = 100
     if frontpage is None:
@@ -25,7 +25,7 @@ def frontpage_view(request, frontpage=None):
         frontpage = get_object_or_404(Frontpage.published, label=frontpage)
     context = {}
     now = timezone.now()
-    blocks = Contentblock.objects.filter(
+    blocks = StoryModule.objects.filter(
         frontpage=frontpage,
         # frontpage_story__story__publication_date__lt=now,
     )[:max_stories]
@@ -35,10 +35,12 @@ def frontpage_view(request, frontpage=None):
     columns_used = 0
     headline_sizes = [
         (10, 's'),
-        (25, 'm'),
-        (40, 'l'),
+        (20, 'm'),
+        (30, 'l'),
     ]
 
+
+    # TODO: Refaktorisere forsideplassering i etasjer - del opp i funksjoner.
     for block in blocks:
         if block.columns + columns_used > max_columns:
             floorheight = max(item.height for item in floor)
@@ -70,8 +72,12 @@ def frontpage_view(request, frontpage=None):
                 item = {
                     'css_width': 'cols-{}'.format(columns),
                     'css_height': 'rows-{}'.format(floorheight),
-                    'headline_class': 'headline-{size}'.format(size=headline_size),
-                    'image_size': '%sx%s' % (pix_c * columns, min_h + pix_h * floorheight,),
+                    'headline_class': 'headline-{size}'.format(
+                        size=headline_size),
+                    'image_size': '{width:.0f}x{height:.0f}'.format(
+                        width=pix_c * columns,
+                        height=min_h + pix_h * floorheight,
+                    ),
                     'image': source,
                     'crop': crop,
                     'story': story,

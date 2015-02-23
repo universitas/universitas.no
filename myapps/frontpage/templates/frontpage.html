@@ -3,22 +3,25 @@
 {% load advert_channel %}
 {% load parse_markup %}
 {% block title %}universitas.no – Norges største studentavis.{% endblock title %}
-{% block content-left %}
-  <div class="left-content show-for-large-up">
-    {% advert "column_left" %}
-  </div>
-{% endblock content-left %}
+{% block columns %}
+  {% advert "frontpage column left" %}
+  {% advert "frontpage column right" %}
+{% endblock columns %}
 {% block content %}
   <div class="main-content">
     <div id="frontpage" class="row">
+    {% advert "frontpage banner" %}
     {% for item in frontpage_items %}
       <article class="{{ item.css_width }} columns">
-        <div class="story-block {{ item.css_height }}">
+        <div class="story-block {{ item.css_height }} {{ item.story.html_class }}">
           {% if item.story.kicker %}
             <h2 class="kicker-block">{{ item.story.kicker|inline_tags }}</h2>
           {% endif %}
           {% if item.image %}
             <div class="image-block">
+            {% if item.story.vignette %}
+              <div class="vignette">{{ item.story.vignette }}</div>
+            {% endif %}
               {% thumbnail item.image item.image_size crop=item.crop as image %}
                 <a href="{{ item.story.url }}"><img src="{{ image.url }}" alt="{{ item.story.headline|strip_tags }}"></img></a>
               {% endthumbnail %}

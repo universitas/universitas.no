@@ -213,6 +213,9 @@ LOGGING = {
         'simple': {
             'format': '%(levelname)s %(message)s'
         },
+        'minimal': {
+            'format': '%(message)s'
+        },
     },
     'handlers': {
         'mail_admins': {
@@ -230,6 +233,12 @@ LOGGING = {
             'filename':   normpath(join(LOG_FOLDER, 'django.log')),
             'formatter': 'verbose',
         },
+        'bylines_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename':   normpath(join(LOG_FOLDER, 'bylines.log')),
+            'formatter': 'minimal',
+        },
     },
     'loggers': {
         'django.request': {
@@ -239,6 +248,11 @@ LOGGING = {
         },
         'universitas': {
             'handlers': ['stream_to_console', 'file',],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'bylines': {
+            'handlers': ['stream_to_console', 'bylines_file',],
             'level': 'DEBUG',
             'propagate': False,
         },

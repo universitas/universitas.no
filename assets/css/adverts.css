@@ -1,21 +1,21 @@
 /*
 Syntax error: Undefined variable: "$large-up".
-        on line 9 of /srv/local.universitas.no/source/assets/scss/adverts.scss
+        on line 28 of /srv/local.universitas.no/source/assets/scss/adverts.scss
 
-4:   width: 180px;
-5:   height: 500px;
-6:   position: absolute;
-7: }
-8: 
-9: @media #{$large-up} {
-10:   .left-content + .main-content {
-11:     margin-left: 180px;
-12:     position: relative;
-13:   }
-14: }
+23: .right-content {
+24:   @extend %column;
+25:   right: 0px;
+26: }
+27: 
+28: @media #{$large-up} {
+29:   .left-content + .main-content {
+30:     margin-left: 170px;
+31:   }
+32:   .right-content + .main-content {
+33:     margin-right: 170px;
 
 Backtrace:
-/srv/local.universitas.no/source/assets/scss/adverts.scss:9
+/srv/local.universitas.no/source/assets/scss/adverts.scss:28
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/script/tree/variable.rb:49:in `_perform'
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/script/tree/node.rb:50:in `perform'
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:503:in `block in run_interp_no_strip'
@@ -57,4 +57,4 @@ Backtrace:
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Syntax error: Undefined variable: \"$large-up\".\A         on line 9 of /srv/local.universitas.no/source/assets/scss/adverts.scss\A \A 4:   width: 180px;\A 5:   height: 500px;\A 6:   position: absolute;\A 7: }\A 8: \A 9: @media #{$large-up} {\A 10:   .left-content + .main-content {\A 11:     margin-left: 180px;\A 12:     position: relative;\A 13:   }\A 14: }"; }
+  content: "Syntax error: Undefined variable: \"$large-up\".\A         on line 28 of /srv/local.universitas.no/source/assets/scss/adverts.scss\A \A 23: .right-content {\A 24:   @extend %column;\A 25:   right: 0px;\A 26: }\A 27: \A 28: @media #{$large-up} {\A 29:   .left-content + .main-content {\A 30:     margin-left: 170px;\A 31:   }\A 32:   .right-content + .main-content {\A 33:     margin-right: 170px;"; }

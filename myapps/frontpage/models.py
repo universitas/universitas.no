@@ -1,5 +1,6 @@
 # Django core
 from django.db import models
+import random
 from model_utils.models import TimeStampedModel
 from django.utils.translation import ugettext_lazy as _
 # from django.core.exceptions import ObjectDesNotExist
@@ -47,7 +48,7 @@ class Frontpage(TimeStampedModel):
         return self.label
 
     def top_position(self):
-        top_story = self.contentblock_set.order_by('-position').first()
+        top_story = self.storymodule_set.order_by('-position').first()
         if top_story is None:
             return 0
         else:
@@ -63,59 +64,32 @@ class Frontpage(TimeStampedModel):
 from django.core.exceptions import ValidationError
 
 
-class Contentblock(TimeStampedModel):
+class FrontPageModule(TimeStampedModel):
 
     """ A single item on the front page """
-    ORDER_GAP = 100
-    # positions have free space inbetween to
-    # make reordering possible without changing many objects in the database.
+
+    class Meta:
+        abstract = True
 
     def validate_columns(value, minvalue=1, maxvalue=12):
         if not minvalue <= value <= maxvalue:
-            raise ValidationError(_('{} is not a number between {} and {}').format(value, minvalue, maxvalue))
+            raise ValidationError(
+                _('{} is not a number between {} and {}').format(
+                    value,
+                    minvalue,
+                    maxvalue))
 
     def validate_height(value, minvalue=1, maxvalue=3):
         if not minvalue <= value <= maxvalue:
-            raise ValidationError(_('{} is not a number between {} and {}').format(value, minvalue, maxvalue))
-
-    def position_default(self):
-        return self.frontpage.top_position() + self.ORDER_GAP
-
-    def save(self):
-        if self.position is None:
-            self.position = self.position_default()
-            self.randomsize()
-        super().save()
-
-    def __str__(self):
-        return '%s %s %s %s' % (self.frontpage_story.headline, self.columns, self.height, self.position,)
-
-    def randomsize(self):
-        widths = (3, 3, 3, 3, 4, 4, 4, 4, 6, 6, 8, 9, 12)
-        heights = (1, 1, 1, 1, 1, 2, 2, 2, 2, 3)
-        from random import choice
-        self.columns = choice(widths)
-        self.height = choice(heights)
-        self.save()
-        # logger.debug(self)
-
-    @property
-    def publication_date(self):
-        # TODO: Frontpagestory publication date eget felt i modellen, i stedet for å hentes fra related story.
-        return self.frontpage_story.story.publication_date
+            raise ValidationError(
+                _('{} is not a number between {} and {}').format(
+                    value,
+                    minvalue,
+                    maxvalue))
 
     frontpage = models.ForeignKey(
         Frontpage,
-        editable=False,
-    )
-
-    frontpage_story = models.ForeignKey(
-        'FrontpageStory',
-        editable=False,
-    )
-
-    position = models.PositiveIntegerField(
-        help_text=_('larger numbers come first'),
+        editable=True,
     )
 
     height = models.PositiveSmallIntegerField(
@@ -130,22 +104,85 @@ class Contentblock(TimeStampedModel):
         validators=[validate_columns, ],
     )
 
+
+class StoryModule(FrontPageModule):
+
+    """ Frontpage Story placement module """
+
+    ORDER_GAP = 100
+    # positions have free space inbetween to
+    # make reordering possible without changing many objects in the database.
+
     class Meta:
-        verbose_name = _('Content block')
-        verbose_name_plural = _('Content blocks')
+        verbose_name = _('Story module')
+        verbose_name_plural = _('Story module')
         ordering = ['-position']
 
+    frontpage_story = models.ForeignKey(
+        'FrontpageStory',
+        editable=False,
+    )
 
-# class FrontPageBlock(TimeStampedModel):
-#     class Meta:
-#         verbose_name = _('Frontpage block')
-#         verbose_name_plural = _('Frontpage blocks')
-#         abstract = True
-#         ordering = ['position']
+    position = models.PositiveIntegerField(
+        help_text=_('larger numbers come first'),
+    )
+
+    def save(self):
+        if self.position is None:
+            self.position = self.position_default()
+            self.randomsize()
+        super().save()
+
+    def __str__(self):
+        return '{headline} {columns} {height} {position}'.format(
+            headline=self.frontpage_story.headline,
+            columns=self.columns,
+            height=self.height,
+            position=self.position,
+        )
+
+    def position_default(self):
+        return self.frontpage.top_position() + self.ORDER_GAP
+
+    def randomsize(self):
+        widths = (3, 3, 3, 3, 4, 4, 4, 4, 6, 6, 8, 9, 12)
+        heights = (1, 1, 1, 1, 1, 2, 2, 2, 2, 3)
+        self.columns = random.choice(widths)
+        self.height = random.choice(heights)
+        self.save()
+        # logger.debug(self)
+
+    @property
+    def publication_date(self):
+        # TODO: Frontpagestory publication date eget felt i modellen, i stedet
+        # for å hentes fra related story.
+        return self.frontpage_story.story.publication_date
 
 
-# class AdvertBlock(FrontpageBlock):
-#     pass
+class StaticModule(FrontPageModule):
+
+    """ Block with static placement containing special content """
+
+    class Meta:
+        verbose_name = _('Static module')
+        verbose_name_plural = _('Static modules')
+        ordering = ['position']
+
+    name = models.CharField(max_length=50)
+    content = models.TextField()
+
+    position = models.IntegerField(
+        help_text=_('Placement on front page'),
+    )
+
+    render_template = models.BooleanField(
+        help_text=_('Use django rendering'),
+        default=False)
+
+    def save(self, *args, **kwargs):
+        if '{%' in self.content or '{{' in self.content:
+            self.render_template = True
+        super().save(*args, **kwargs)
 
 
 class FrontpageStory(TimeStampedModel):
@@ -159,7 +196,7 @@ class FrontpageStory(TimeStampedModel):
     )
     placements = models.ManyToManyField(
         Frontpage,
-        through=Contentblock,
+        through=StoryModule,
         help_text=_('position and size of story element.'),
     )
     imagefile = models.ForeignKey(
@@ -171,25 +208,27 @@ class FrontpageStory(TimeStampedModel):
         blank=True,
         max_length=200,
         help_text=_('headline'),
-        )
-
+    )
     kicker = models.CharField(
         blank=True,
         max_length=200,
         help_text=_('kicker'),
-        )
-
+    )
+    vignette = models.CharField(
+        blank=True,
+        max_length=50,
+        help_text=_('vignette'),
+    )
     lede = models.CharField(
         blank=True,
         max_length=200,
         help_text=_('lede'),
-        )
-
+    )
     html_class = models.CharField(
         blank=True,
         max_length=200,
         help_text=_('html_class'),
-        )
+    )
 
     @property
     def url(self):
@@ -197,17 +236,23 @@ class FrontpageStory(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         if self.pk is None and self.story:
-            # default lede, kicker, headline and kicker is based on parent story.
+            # default lede, kicker, headline and kicker is based on parent
+            # story.
+            section = '{}'.format(self.story.section).lower()
             self.lede = self.lede or self.story.lede[:200]
             self.kicker = self.kicker or self.story.kicker[:200]
             self.headline = self.headline or self.story.title[:200]
-            self.html_class = self.html_class or str(self.story.section)[:200].lower().replace(' ', '-')
+            self.vignette = self.vignette or section[:50]
+            self.html_class = self.html_class or section[:200].replace(' ', '-')
+            if random.randint(1, 4) == 1:
+                self.html_class += " negative"
+
             if self.imagefile is None and self.story.images():
                 self.imagefile = self.story.images().first().child.imagefile
             super().save()
         if self.placements.count() == 0 and not self.imagefile is None:
             # is automatically put on front page if it has an image.
-            content_block = Contentblock(
+            content_block = StoryModule(
                 frontpage_story=self,
                 frontpage=Frontpage.objects.root(),
             )

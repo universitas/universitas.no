@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.core.urlresolvers import resolve
 # import unittest
 # from .views import frontpage_view
-from .models import Frontpage, Contentblock, FrontpageStory
+from .models import Frontpage, StoryModule, FrontpageStory
 
 # class FrontpageViewTest(TestCase):
 

@@ -1,0 +1,110 @@
+[
+{
+  "pk": 2,
+  "fields": {
+    "published": true,
+    "height": 150,
+    "price": 1500,
+    "width": 980,
+    "name": "Board 150",
+    "category": 2
+  },
+  "model": "adverts.adformat"
+},
+{
+  "pk": 3,
+  "fields": {
+    "published": true,
+    "height": 300,
+    "price": 2200,
+    "width": 980,
+    "name": "Board 300",
+    "category": 2
+  },
+  "model": "adverts.adformat"
+},
+{
+  "pk": 4,
+  "fields": {
+    "published": true,
+    "height": 500,
+    "price": 1500,
+    "width": 980,
+    "name": "Superboard 500",
+    "category": 2
+  },
+  "model": "adverts.adformat"
+},
+{
+  "pk": 5,
+  "fields": {
+    "published": true,
+    "height": 500,
+    "price": 1300,
+    "width": 580,
+    "name": "Netboard",
+    "category": 2
+  },
+  "model": "adverts.adformat"
+},
+{
+  "pk": 6,
+  "fields": {
+    "published": true,
+    "height": 500,
+    "price": 1100,
+    "width": 180,
+    "name": "Skyscraper",
+    "category": 2
+  },
+  "model": "adverts.adformat"
+},
+{
+  "pk": 7,
+  "fields": {
+    "published": true,
+    "height": 500,
+    "price": 1500,
+    "width": 360,
+    "name": "Skyscraper Bred",
+    "category": 2
+  },
+  "model": "adverts.adformat"
+},
+{
+  "pk": 8,
+  "fields": {
+    "published": true,
+    "height": 1000,
+    "price": 2500,
+    "width": 360,
+    "name": "Skyscraper XL",
+    "category": 2
+  },
+  "model": "adverts.adformat"
+},
+{
+  "pk": 9,
+  "fields": {
+    "published": true,
+    "height": 500,
+    "price": 1500,
+    "width": 380,
+    "name": "Articleboard",
+    "category": 2
+  },
+  "model": "adverts.adformat"
+},
+{
+  "pk": 10,
+  "fields": {
+    "published": true,
+    "height": 150,
+    "price": 1000,
+    "width": 180,
+    "name": "Knapp",
+    "category": 2
+  },
+  "model": "adverts.adformat"
+}
+]

@@ -1,21 +1,21 @@
 /*
-Syntax error: Undefined variable: "$medium-grey".
-        on line 46 of /srv/local.universitas.no/source/assets/scss/frontpage.scss
+Syntax error: Undefined variable: "$dark-grey".
+        on line 48 of /srv/local.universitas.no/source/assets/scss/frontpage.scss
 
-41: 
-42:   .kicker-block {
-43:     margin: 0 0 .5em 0;
-44:     padding: .2rem;
-45:     width: 100%;
-46:     background: $medium-grey;
-47:     color: white;
-48:     position: absolute;
-49:     top: 0;
-50:     z-index: 11;
-51:     font-size: 1.2rem;
+43: 
+44:   .kicker-block {
+45:     padding: 4px 8px;
+46:     margin: 0;
+47:     width: 100%;
+48:     background: $dark-grey;
+49:     color: white;
+50:     text-transform: uppercase;
+51:     font-size: 1rem;
+52:     line-height: 1rem;
+53:   }
 
 Backtrace:
-/srv/local.universitas.no/source/assets/scss/frontpage.scss:46
+/srv/local.universitas.no/source/assets/scss/frontpage.scss:48
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/script/tree/variable.rb:49:in `_perform'
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/script/tree/node.rb:50:in `perform'
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:366:in `visit_prop'
@@ -75,4 +75,4 @@ Backtrace:
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Syntax error: Undefined variable: \"$medium-grey\".\A         on line 46 of /srv/local.universitas.no/source/assets/scss/frontpage.scss\A \A 41: \A 42:   .kicker-block {\A 43:     margin: 0 0 .5em 0;\A 44:     padding: .2rem;\A 45:     width: 100%;\A 46:     background: $medium-grey;\A 47:     color: white;\A 48:     position: absolute;\A 49:     top: 0;\A 50:     z-index: 11;\A 51:     font-size: 1.2rem;"; }
+  content: "Syntax error: Undefined variable: \"$dark-grey\".\A         on line 48 of /srv/local.universitas.no/source/assets/scss/frontpage.scss\A \A 43: \A 44:   .kicker-block {\A 45:     padding: 4px 8px;\A 46:     margin: 0;\A 47:     width: 100%;\A 48:     background: $dark-grey;\A 49:     color: white;\A 50:     text-transform: uppercase;\A 51:     font-size: 1rem;\A 52:     line-height: 1rem;\A 53:   }"; }
