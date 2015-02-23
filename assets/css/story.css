@@ -1,28 +1,35 @@
 /*
-Syntax error: Undefined variable: "$light-grey".
-        on line 36 of /srv/local.universitas.no/source/assets/scss/story.scss
+Syntax error: Undefined variable: "$medium-grey".
+        on line 7 of /srv/local.universitas.no/source/assets/scss/story.scss
 
-31:     @extend .columns;
-32:     @extend .right;
-33:   }
-34: 
-35:   main .row {
-36:     border-top: 1px solid $light-grey;
-37:   }
-38: 
-39:   .inline-aside {
-40:     background: #f5f5f5;
-41:     h2 {
+2:  #story{
+3:   .header-text{
+4:     font-size: 3em;
+5:     line-height: 1.2;
+6:     .lede {
+7:       color: $medium-grey;
+8:     }
+9:     .headline{
+10:       color: $dark-grey;
+11:     }
+12:   }
 
 Backtrace:
-/srv/local.universitas.no/source/assets/scss/story.scss:36
+/srv/local.universitas.no/source/assets/scss/story.scss:7
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/script/tree/variable.rb:49:in `_perform'
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/script/tree/node.rb:50:in `perform'
-/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/script/tree/list_literal.rb:62:in `block in _perform'
-/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/script/tree/list_literal.rb:62:in `map'
-/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/script/tree/list_literal.rb:62:in `_perform'
-/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/script/tree/node.rb:50:in `perform'
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:366:in `visit_prop'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/base.rb:36:in `visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:152:in `block in visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/stack.rb:79:in `block in with_base'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/stack.rb:121:in `with_frame'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/stack.rb:79:in `with_base'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:152:in `visit'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:389:in `block (2 levels) in visit_rule'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:389:in `map'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:389:in `block in visit_rule'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:173:in `with_environment'
+/var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:387:in `visit_rule'
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/base.rb:36:in `visit'
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/tree/visitors/perform.rb:152:in `block in visit'
 /var/lib/gems/2.1.0/gems/sass-3.3.0/lib/sass/stack.rb:79:in `block in with_base'
@@ -79,4 +86,4 @@ Backtrace:
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Syntax error: Undefined variable: \"$light-grey\".\A         on line 36 of /srv/local.universitas.no/source/assets/scss/story.scss\A \A 31:     @extend .columns;\A 32:     @extend .right;\A 33:   }\A 34: \A 35:   main .row {\A 36:     border-top: 1px solid $light-grey;\A 37:   }\A 38: \A 39:   .inline-aside {\A 40:     background: #f5f5f5;\A 41:     h2 {"; }
+  content: "Syntax error: Undefined variable: \"$medium-grey\".\A         on line 7 of /srv/local.universitas.no/source/assets/scss/story.scss\A \A 2:  #story{\A 3:   .header-text{\A 4:     font-size: 3em;\A 5:     line-height: 1.2;\A 6:     .lede {\A 7:       color: $medium-grey;\A 8:     }\A 9:     .headline{\A 10:       color: $dark-grey;\A 11:     }\A 12:   }"; }

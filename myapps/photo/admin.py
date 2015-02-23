@@ -29,8 +29,9 @@ class ThumbAdmin:
 
 
 @admin.register(ImageFile)
-class ImageFileAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
-    form = autocomplete_light.modelform_factory(ImageFile, exclude=())
+class ImageFileAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin, ):
+    # form = autocomplete_light.modelform_factory(ImageFile, exclude=())
+
     date_hierarchy = 'created'
     actions_on_top = True
     actions_on_bottom = True

@@ -1,8 +1,18 @@
 @charset "UTF-8";
  #story{
+  .header-text{
+    font-size: 3em;
+    line-height: 1.2;
+    .lede {
+      color: $medium-grey;
+    }
+    .headline{
+      color: $dark-grey;
+    }
+  }
   .mellomtittel {
-    // color: blue;
-    font-size: 1.4rem;
+    color: $dark-grey;
+    font-size: 1.3rem;
   }
 
   .question {
@@ -61,6 +71,7 @@
   .inline-pullquote {
     display: block;
     font-style: italic;
+    color: $light-grey;
     padding: 0 2rem;
 
     bq {
@@ -80,10 +91,7 @@
 
   .image-caption {
     font-size: 0.8rem;
-    font-color: $medium-grey;
+    color: $light-grey;
   }
 
-  .lede {
-    font-size: larger;
-  }
 }

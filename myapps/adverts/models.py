@@ -12,6 +12,9 @@ from django.utils.safestring import mark_safe
 
 from sorl.thumbnail import ImageField, get_thumbnail
 
+from .dummy_image_advert import dummy_image_advert
+
+
 logger = logging.getLogger('universitas')
 
 
@@ -140,6 +143,28 @@ class AdvertManager(models.Manager):
             end_time__gte=at_time,
         )
 
+    def create_dummy(self, adformat):
+        """ Create a dummy ad """
+        dummy_customer, new = Customer.objects.get_or_create(name='dummy')
+
+        new_image = dummy_image_advert(
+            adformat.width, adformat.height,
+            watermarktext='reklame',
+            labeltext=adformat.name,
+        )
+
+        new_ad = Advert(
+            customer=dummy_customer,
+            description='dummy jpg {}'.format(adformat),
+            alt_text='dummy',
+            link='http://example.com',
+            imagefile=new_image,
+            ad_type=Advert.IMAGE_AD,
+            status=Advert.PRIVATE,
+        )
+        new_ad.save()
+        return new_ad
+
 
 def upload_folder(instance, filename):
     customer_name = re.sub(r'\s+', '', instance.customer.name)[:15].lower()
@@ -170,14 +195,14 @@ class Advert(models.Model):
     ]
 
     DRAFT = 1
-    UNPUBLISHED = 2
+    PRIVATE = 2
     PUBLISHED = 3
     DEFAULT = 4
     STATUS_CHOICES = [
         (DRAFT, _(
             "Not ready to publish.")),
-        (UNPUBLISHED, _(
-            "Not published.")),
+        (PRIVATE, _(
+            "Private.")),
         (PUBLISHED, _(
             "Served to visiting audience.")),
         (DEFAULT, _(
@@ -291,6 +316,32 @@ class Advert(models.Model):
                     'end_time': _('End time must be after start time.')
                 })
 
+    def dimension(self, axis):
+        """ return default height or width of this ad in pixels """
+        if axis in ('w', 'width', 'x'):
+            axis = 'width'
+        else:
+            axis = 'height'
+
+        try:
+            return getattr(self.imagefile, axis)
+        except AttributeError:
+            pass
+        try:
+            return getattr(self.ad_channels.first().ad_formats.first(), axis)
+        except AttributeError:
+            pass
+
+        return 300
+
+    @property
+    def width(self):
+        return self.dimension('width')
+
+    @property
+    def height(self):
+        return self.dimension('height')
+
     def determine_ad_type(self, as_string=False):
         """ Determine which kind of ad it is based on which fields are filled in. """
         if self.html_source:
@@ -302,13 +353,13 @@ class Advert(models.Model):
 
     def get_html(self):
         img_template = (
-            '<a href="{self.link}">'
-            '<img src="{src}"'
-            'alt="{self.alt_text}" '
+            '<a href="{self.link}" '
+            'alt="{self.alt_text}" >'
+            '<img src="{src}">'
             '</a>'
         )
         div_template = (
-            '<div style="border: 1px solid #EEE; class="{html_class}">{content}</div>'
+            '<div style="border: 1px solid #EEE; height: {self.height}px; width: {self.width}px;" class="{html_class}">{content}</div>'
         )
         if self.ad_type == self.CODE_AD:
             content = self.html_source

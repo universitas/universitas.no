@@ -2,7 +2,7 @@
 
 import logging
 from django import template
-from ..models import AdChannel, Advert
+from ..models import AdChannel, Advert, AdFormat
 
 register = template.Library()
 logger = logging.getLogger('universitas')
@@ -12,15 +12,12 @@ def advert(context, channel_name):
     logger.debug('args = {}'.format(channel_name))
     channel, new = AdChannel.objects.get_or_create(name=channel_name)
     if new:
-        # no channel with that name exists.
-        dummy_ad = Advert()
-        dummy_ad.status = Advert.DEFAULT
-        dummy_ad.save()
+        adformat = AdFormat.objects.order_by('width', 'height').first()
+        dummy_ad = Advert.objects.create_dummy(adformat)
         dummy_ad.ad_channels.add(channel)
-        dummy_ad.save()
-
+        # dummy_ad.save()
         channel.description = 'autocreate'
-        logger.warning('Template requests unkown ad channel '+ channel_name)
+        logger.warning('Template requests unknown ad channel '+ channel_name)
         channel.save()
 
     new_ads = channel.serve_ads()

@@ -2547,13 +2547,21 @@ th.hide-for-touch {
   .left-content + .main-content {
     margin-left: 180px;
     position: relative; } }
+#story .header-text {
+  font-size: 3em;
+  line-height: 1.2; }
+  #story .header-text .lede {
+    color: #777777; }
+  #story .header-text .headline {
+    color: #444444; }
 #story .mellomtittel {
-  font-size: 1.4rem; }
+  color: #444444;
+  font-size: 1.3rem; }
 #story .question {
   font-weight: bold;
   font-style: italic; }
 #story main .row {
-  border-top: 1px solid #999999; }
+  border-top: 1px solid #aaaaaa; }
 #story .inline-aside {
   background: #f5f5f5; }
   #story .inline-aside h2 {
@@ -2568,6 +2576,7 @@ th.hide-for-touch {
 #story .inline-pullquote {
   display: block;
   font-style: italic;
+  color: #aaaaaa;
   padding: 0 2rem; }
   #story .inline-pullquote bq {
     display: block;
@@ -2579,9 +2588,7 @@ th.hide-for-touch {
     text-align: right; }
 #story .image-caption {
   font-size: 0.8rem;
-  font-color: #666666; }
-#story .lede {
-  font-size: larger; }
+  color: #aaaaaa; }
 
 .cols-1 .headline-s {
   font-size: 1.5em;
@@ -2757,7 +2764,7 @@ th.hide-for-touch {
     margin: 0 0 .5em 0;
     padding: .2rem;
     width: 100%;
-    background: #666666;
+    background: #777777;
     color: white;
     position: absolute;
     top: 0;
@@ -2771,7 +2778,7 @@ th.hide-for-touch {
     background: white;
     z-index: 10; }
     .story-block .text-block .lede {
-      color: #666666; }
+      color: #777777; }
   .story-block .image-block {
     position: absolute;
     top: 0;

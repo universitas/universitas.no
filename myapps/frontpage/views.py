@@ -17,7 +17,8 @@ def frontpage_view(request, frontpage=None):
     max_stories = 30
     max_columns = 12
     pix_c = 80
-    pix_h = 130
+    pix_h = 100
+    min_h = 100
     if frontpage is None:
         frontpage = Frontpage.objects.root()
     else:
@@ -70,7 +71,7 @@ def frontpage_view(request, frontpage=None):
                     'css_width': 'cols-{}'.format(columns),
                     'css_height': 'rows-{}'.format(floorheight),
                     'headline_class': 'headline-{size}'.format(size=headline_size),
-                    'image_size': '%sx%s' % (pix_c * columns, pix_h * floorheight,),
+                    'image_size': '%sx%s' % (pix_c * columns, min_h + pix_h * floorheight,),
                     'image': source,
                     'crop': crop,
                     'story': story,

@@ -7,14 +7,15 @@
     {% include '_story_menu.html' %}
     <header class="small-12 columns">
 {# Main image #}
-      {# {% include '_image.html' with image=header_image %} #}
       {% header_image %}
-      {% if story.kicker %}
-        <h2 id="kicker">{{ story.html.kicker }}</h2>
-      {% endif %}
+      <div class="header-text">
+        {% if story.kicker %}
+          <h2 id="kicker">{{ story.html.kicker }}</h2>
+        {% endif %}
 {# Main headline and lede #}
-      <h1 id="headline">{{ story.html.title }}</h1>
-      <p class="lede">{{ story.html.lede }}</p>
+        <h1 class="headline">{{ story.html.title }}</h1>
+        <p class="lede">{{ story.html.lede }}</p>
+      </div>
 {# bylines #}
       <ul id="bylines">
         {% for byline in story.byline_set.all %}
