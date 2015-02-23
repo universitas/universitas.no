@@ -2556,10 +2556,10 @@ th.hide-for-touch {
   right: 0px; }
 
 @media only screen and (min-width: 64.063em) {
-  .left-content + .main-content {
+  .left-content ~ .main-content {
     margin-left: 170px; }
 
-  .right-content + .main-content {
+  .right-content ~ .main-content {
     margin-right: 170px; } }
 .annonse {
   padding: 10px 0 10px 0;
@@ -2833,6 +2833,8 @@ th.hide-for-touch {
   font-size: 1rem;
   line-height: 1rem;
   font-weight: bold; }
+  .anmeldelser .vignette {
+    background: #449944; }
   .kultur .vignette {
     background: #008800; }
   .debatt .vignette {

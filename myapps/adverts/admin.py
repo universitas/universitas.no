@@ -17,7 +17,6 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = ['name', 'contact_info']
     list_editable = []
 
-
 @admin.register(Advert)
 class AdvertAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
     form = autocomplete_light.modelform_factory(Advert, exclude=())
@@ -27,7 +26,9 @@ class AdvertAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
         'start_time',
         'end_time',
         'ad_type',
-        'status']
+        'status',
+        'channels',
+        ]
     list_editable = ['start_time', 'end_time', 'status']
     readonly_fields = ['get_html']
 

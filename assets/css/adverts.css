@@ -8,10 +8,10 @@ Syntax error: Undefined variable: "$large-up".
 26: }
 27: 
 28: @media #{$large-up} {
-29:   .left-content + .main-content {
+29:   .left-content ~ .main-content {
 30:     margin-left: 170px;
 31:   }
-32:   .right-content + .main-content {
+32:   .right-content ~ .main-content {
 33:     margin-right: 170px;
 
 Backtrace:
@@ -57,4 +57,4 @@ Backtrace:
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Syntax error: Undefined variable: \"$large-up\".\A         on line 28 of /srv/local.universitas.no/source/assets/scss/adverts.scss\A \A 23: .right-content {\A 24:   @extend %column;\A 25:   right: 0px;\A 26: }\A 27: \A 28: @media #{$large-up} {\A 29:   .left-content + .main-content {\A 30:     margin-left: 170px;\A 31:   }\A 32:   .right-content + .main-content {\A 33:     margin-right: 170px;"; }
+  content: "Syntax error: Undefined variable: \"$large-up\".\A         on line 28 of /srv/local.universitas.no/source/assets/scss/adverts.scss\A \A 23: .right-content {\A 24:   @extend %column;\A 25:   right: 0px;\A 26: }\A 27: \A 28: @media #{$large-up} {\A 29:   .left-content ~ .main-content {\A 30:     margin-left: 170px;\A 31:   }\A 32:   .right-content ~ .main-content {\A 33:     margin-right: 170px;"; }

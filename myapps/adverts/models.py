@@ -385,3 +385,6 @@ class Advert(models.Model):
             self=self,
             content=content)
         return mark_safe(html_source)
+
+    def channels(self):
+        return ','.join(channel.name for channel in self.ad_channels.all()) or '-'

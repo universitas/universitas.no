@@ -26,10 +26,10 @@
 }
 
 @media #{$large-up} {
-  .left-content + .main-content {
+  .left-content ~ .main-content {
     margin-left: 170px;
   }
-  .right-content + .main-content {
+  .right-content ~ .main-content {
     margin-right: 170px;
   }
 }

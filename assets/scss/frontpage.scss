@@ -107,6 +107,10 @@ $minimum-headline: 1.5em;
   line-height: 1rem;
   font-weight: bold;
 
+  .anmeldelser & {
+    background: $light-kultur;
+  }
+
   .kultur & {
     background: $medium-kultur;
   }
