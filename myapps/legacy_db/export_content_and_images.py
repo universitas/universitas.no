@@ -404,6 +404,7 @@ def _websak_til_xtags(websak):
         """ Construct an xtags string from relevant fields in the websak model. """
         # Add content to the content list.
         xtags_header_title_and_bylines()
+        # TODO: HTML entiteter i bylines blir ikke fikset under import
         xtags_body_text()
         xtags_pull_quotes()
         xtags_review_aside()

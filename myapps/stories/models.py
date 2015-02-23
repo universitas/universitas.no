@@ -1658,12 +1658,15 @@ def clean_up_bylines(raw_bylines):
 
         # comma, and or "og" before two capitalised words probably means it's
         # a new person. Insert newline.
-        (r'\s*(,\s|\s[oO]g\s|\s[aA]nd\s)\s*([A-ZÆØÅ]\S+ [A-ZÆØÅ])', r'\n\2', 0),
+        (r'\s*(&|#|,\s|\s[oO]g\s|\s[aA]nd\s)\s*([A-ZÆØÅ]\S+ [A-ZÆØÅ])', r'\n\2', 0),
         # TODO: Bytt ut byline regular expression med ny regex-modul som funker
         # med unicode
 
         # parantheses shall have no spaces inside them, but after and before.
         (r' *\( *(.*?) *\) *', r' (\1) ', 0),
+
+        # close parantheses.
+        (r'\([^)]+$', r'\0)', re.M),
 
         # email addresses will die!
         (r'\S+@\S+', '', 0),

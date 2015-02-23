@@ -1,0 +1,45 @@
+[
+{
+  "model": "adverts.adchannel",
+  "fields": {
+    "description": "Bannerannonse forside",
+    "extra_classes": "medium-12 columns show-for-medium-up",
+    "max_at_once": 1,
+    "name": "frontpage banner",
+    "ad_formats": [
+      3,
+      2,
+      4
+    ]
+  },
+  "pk": 2
+},
+{
+  "model": "adverts.adchannel",
+  "fields": {
+    "description": "Adverts frontpage right column",
+    "extra_classes": "right-content",
+    "max_at_once": 5,
+    "name": "frontpage column right",
+    "ad_formats": [
+      6,
+      10
+    ]
+  },
+  "pk": 3
+},
+{
+  "model": "adverts.adchannel",
+  "fields": {
+    "description": "Adverts frontpage left column",
+    "extra_classes": "left-content",
+    "max_at_once": 5,
+    "name": "frontpage column left",
+    "ad_formats": [
+      6,
+      10
+    ]
+  },
+  "pk": 4
+}
+]

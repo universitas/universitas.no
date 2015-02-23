@@ -252,7 +252,7 @@ LOGGING = {
             'propagate': False,
         },
         'bylines': {
-            'handlers': ['stream_to_console', 'bylines_file',],
+            'handlers': ['bylines_file',],
             'level': 'DEBUG',
             'propagate': False,
         },
