@@ -55,7 +55,8 @@ def inline_storyvideo(context, argument_string):
 @register.inclusion_tag('_inline_asides.html', takes_context=True)
 def inline_aside(context, argument_string):
     queryset = context['story'].asides().published()
-    return get_items(queryset, argument_string)
+    context.update(get_items(queryset, argument_string))
+    return context
 
 
 def get_items(queryset, argument_string):

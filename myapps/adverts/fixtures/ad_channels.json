@@ -1,45 +1,88 @@
 [
 {
-  "model": "adverts.adchannel",
   "fields": {
-    "description": "Bannerannonse forside",
-    "extra_classes": "medium-12 columns show-for-medium-up",
-    "max_at_once": 1,
-    "name": "frontpage banner",
     "ad_formats": [
       3,
       2,
       4
-    ]
+    ],
+    "description": "Bannerannonse forside",
+    "max_at_once": 1,
+    "extra_classes": "medium-12 columns show-for-medium-up",
+    "name": "frontpage banner"
   },
-  "pk": 2
+  "pk": 2,
+  "model": "adverts.adchannel"
 },
 {
-  "model": "adverts.adchannel",
   "fields": {
+    "ad_formats": [
+      6,
+      10
+    ],
     "description": "Adverts frontpage right column",
-    "extra_classes": "right-content",
     "max_at_once": 5,
-    "name": "frontpage column right",
-    "ad_formats": [
-      6,
-      10
-    ]
+    "extra_classes": "right-content",
+    "name": "frontpage column right"
   },
-  "pk": 3
+  "pk": 3,
+  "model": "adverts.adchannel"
 },
 {
-  "model": "adverts.adchannel",
   "fields": {
-    "description": "Adverts frontpage left column",
-    "extra_classes": "left-content",
-    "max_at_once": 5,
-    "name": "frontpage column left",
     "ad_formats": [
       6,
       10
-    ]
+    ],
+    "description": "Adverts frontpage left column",
+    "max_at_once": 5,
+    "extra_classes": "left-content",
+    "name": "frontpage column left"
   },
-  "pk": 4
+  "pk": 4,
+  "model": "adverts.adchannel"
+},
+{
+  "fields": {
+    "ad_formats": [
+      6,
+      10
+    ],
+    "description": "Story left column",
+    "max_at_once": 5,
+    "extra_classes": "left-content",
+    "name": "story column left"
+  },
+  "pk": 6,
+  "model": "adverts.adchannel"
+},
+{
+  "fields": {
+    "ad_formats": [
+      6,
+      10
+    ],
+    "description": "Story right column",
+    "max_at_once": 5,
+    "extra_classes": "right-content",
+    "name": "story column right"
+  },
+  "pk": 7,
+  "model": "adverts.adchannel"
+},
+{
+  "fields": {
+    "ad_formats": [
+      3,
+      4,
+      5
+    ],
+    "description": "Story after body text.",
+    "max_at_once": 1,
+    "extra_classes": "medium-12 columns show-for-medium-up",
+    "name": "story after"
+  },
+  "pk": 8,
+  "model": "adverts.adchannel"
 }
 ]

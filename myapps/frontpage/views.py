@@ -23,7 +23,8 @@ def frontpage_view(request, frontpage=None):
         frontpage = Frontpage.objects.root()
     else:
         frontpage = get_object_or_404(Frontpage.published, label=frontpage)
-    context = {}
+    editor = True
+    context = {'editor': editor }
     now = timezone.now()
     blocks = StoryModule.objects.filter(
         frontpage=frontpage,
@@ -46,9 +47,9 @@ def frontpage_view(request, frontpage=None):
             floorheight = max(item.height for item in floor)
             ratio = max_columns / columns_used
             columns_used = 0
-            for item in floor:
-                story = item.frontpage_story
-                columns = round(item.columns * ratio)
+            for bb in floor:
+                story = bb.frontpage_story
+                columns = round(bb.columns * ratio)
                 columns_used += columns
                 if columns_used > 12:
                     columns = columns + 12 - columns_used
@@ -81,6 +82,7 @@ def frontpage_view(request, frontpage=None):
                     'image': source,
                     'crop': crop,
                     'story': story,
+                    'block': bb,
                 }
                 items.append(item)
             floor = []

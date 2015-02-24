@@ -1,5 +1,8 @@
+{% if index > 0 %}
+  </div><div class="row">
+{% endif %}
 {% for aside in elements %}
 <aside class="inline-aside {{ css_classes }}">
-  {{ aside.get_html }}
+  <div>{{ aside.get_html }}</div>
 </aside>
 {% endfor %}

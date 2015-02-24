@@ -4,6 +4,7 @@ import random
 from model_utils.models import TimeStampedModel
 from django.utils.translation import ugettext_lazy as _
 # from django.core.exceptions import ObjectDesNotExist
+from django.core.urlresolvers import reverse
 
 # Project apps
 # from myapps.stories.models import Story
@@ -11,6 +12,19 @@ from myapps.photo.models import ImageFile
 import logging
 logger = logging.getLogger('universitas')
 
+
+class Edit_url_mixin:
+
+    def get_edit_url(self):
+        """ Url to django admin for this object """
+        url = reverse(
+            'admin:{app}_{object}_change'.format(
+                app=self._meta.app_label,
+                object=self._meta.model_name,
+            ),
+            args=[self.id],
+        )
+        return url
 
 class FrontpageManager(models.Manager):
 
@@ -64,7 +78,7 @@ class Frontpage(TimeStampedModel):
 from django.core.exceptions import ValidationError
 
 
-class FrontPageModule(TimeStampedModel):
+class FrontPageModule(TimeStampedModel, Edit_url_mixin):
 
     """ A single item on the front page """
 
@@ -185,7 +199,7 @@ class StaticModule(FrontPageModule):
         super().save(*args, **kwargs)
 
 
-class FrontpageStory(TimeStampedModel):
+class FrontpageStory(TimeStampedModel, Edit_url_mixin):
 
     class Meta:
         verbose_name = _('Frontpage Story')

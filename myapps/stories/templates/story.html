@@ -1,8 +1,14 @@
 {% extends "base-template.html" %}
 {% load thumbnail %}
 {% load inline_elements %}
+{% load advert_channel %}
 {% block title %}universitas.no – {{ story.title }}{% endblock title %}
+{% block columns %}
+  {% advert "story column left" %}
+  {% advert "story column right" %}
+{% endblock columns %}
 {% block content %}
+<div class="main-content">
   <article class="row" id="story">
     {% include '_story_menu.html' %}
     <header class="small-12 columns">
@@ -14,7 +20,9 @@
         {% endif %}
 {# Main headline and lede #}
         <h1 class="headline">{{ story.html.title }}</h1>
-        <p class="lede">{{ story.html.lede }}</p>
+        {% if story.lede %}
+          <p class="lede">{{ story.html.lede }}</p>
+        {% endif %}
       </div>
 {# bylines #}
       <ul id="bylines">
@@ -30,6 +38,7 @@
     </main>
   </article>
     <section id="after" class="row">
+    {% advert "story after" %}
       <div class="row">
         {% for related_group in story.related_items %}
           <div class="related large-6 columns">
@@ -58,4 +67,5 @@
     </div>
   {% endif %}
   </section>
+</div>
 {% endblock content %}

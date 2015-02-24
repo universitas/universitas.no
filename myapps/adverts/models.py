@@ -106,7 +106,7 @@ class AdChannel(models.Model):
 
     def serve_ads(self):
         served_ads = self.current_ads().order_by(
-            '-ordering',
+            'ordering',
             '?',
         )[:self.max_at_once]
         return served_ads
@@ -212,7 +212,7 @@ class Advert(models.Model):
         (PUBLISHED, _(
             "Served to visiting audience.")),
         (DEFAULT, _(
-            "Fallback ad served if no published ad exists in this channel.")),
+            "Fallback")),
     ]
     description = models.CharField(
         help_text=_('Short description of this ad.'),
@@ -274,6 +274,10 @@ class Advert(models.Model):
         help_text=_('HTML to use for ad instead of serving an image ad.'),
         blank=True, null=True,
     )
+    extra_classes = models.CharField(
+        blank=True,
+        max_length=200,
+        )
     objects = AdvertManager()
 
     class Meta:
@@ -358,6 +362,7 @@ class Advert(models.Model):
             return self.DUMMY_AD
 
     def get_html(self):
+        html_class = 'annonse ' + self.extra_classes
         img_template = (
             '<a href="{self.link}" '
             'alt="{self.alt_text}" >'
@@ -365,21 +370,17 @@ class Advert(models.Model):
             '</a>'
         )
         div_template = (
-            '<div class="annonse {html_class}">{content}</div>'
+            '<div class="{html_class}">{content}</div>'
         )
         if self.ad_type == self.CODE_AD:
             content = self.html_source
-            html_class = 'annonse'
         elif self.ad_type == self.IMAGE_AD:
             thumb = get_thumbnail(
                 self.imagefile, '%sx%s' %
                 (self.width, self.height))
             content = img_template.format(self=self, src=thumb.url)
-            html_class = 'annonse'
         elif self.ad_type == self.DUMMY_AD:
             content = str(self)
-            html_class = 'annonse dummy ' + \
-                random.choice(['blue_ad', 'red_ad', 'yellow_ad'])
         html_source = div_template.format(
             html_class=html_class,
             self=self,

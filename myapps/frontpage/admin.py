@@ -5,7 +5,9 @@ Admin for frontpage app.
 
 from django.contrib import admin
 from .models import StoryModule, FrontpageStory, StaticModule
+from myapps.photo.admin import ThumbAdmin
 import autocomplete_light
+from sorl.thumbnail.admin import AdminImageMixin
 
 
 class StoryModuleInline(admin.TabularInline):
@@ -15,7 +17,7 @@ class StoryModuleInline(admin.TabularInline):
 
 
 @admin.register(FrontpageStory)
-class FrontpageStoryAdmin(admin.ModelAdmin):
+class FrontpageStoryAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin):
     form = autocomplete_light.modelform_factory(FrontpageStory, exclude=())
     save_on_top = True
     list_per_page = 25
@@ -24,10 +26,12 @@ class FrontpageStoryAdmin(admin.ModelAdmin):
         'kicker',
         'headline',
         'lede',
-        'imagefile',
+        # 'imagefile',
         'story',
+        'thumbnail',
         # 'placements',
     )
+    readonly_fields = ['thumbnail']
 
     list_editable = (
         'headline',

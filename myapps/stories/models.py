@@ -233,8 +233,13 @@ class TextContent(models.Model, MarkupModelMixin):
 
     def make_html(self, body=None):
         """ Create html body text from markup """
-        body = body or self.html.bodytext_markup
-        tag_template = (
+
+        # TODO: Måten artikler blir rendret på er veldig rotete. Mest mulig bør flyttes fra model til template.
+
+        if body is None:
+            body = self.html.bodytext_markup
+
+        tag_template = ( # Used as django template to render inline stuff.
             '{{% load inline_elements %}}'
             '{{% inline_{classname} "\\1" %}}'
         )
@@ -248,15 +253,17 @@ class TextContent(models.Model, MarkupModelMixin):
 
         paragraphs = body.splitlines() + ['']
         sections, main_body = [], []
-        for paragraph in paragraphs:
+        for index, paragraph in enumerate(paragraphs):
             if not paragraph.startswith('{'):
+                # Regular paragraph.
                 paragraph = BlockTag.objects.make_html(paragraph)
                 main_body.append(paragraph)
-            else:
+            else: # Inline element.
                 sections.append(main_body)
-                main_body = []
-                paragraph = Template(paragraph).render(Context({"story": self}))
+                paragraph = Template(paragraph).render(Context({"story": self, "index": index,}))
                 sections.append(paragraph)
+                main_body = []
+
         sections.append(main_body)
 
         blocks = []

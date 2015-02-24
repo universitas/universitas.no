@@ -3,9 +3,12 @@
 @import "includes/googlefonts";
 @import "foundation/settings";
 @import "foundation";
+@import "_foundation-icons";
 
 
-@import "colors";
-@import "adverts";
-@import "story";
-@import "frontpage";
+@import "includes/colors";
+@import "includes/adverts";
+@import "includes/story";
+@import "includes/frontpage";
+
+@import "includes/sticky"

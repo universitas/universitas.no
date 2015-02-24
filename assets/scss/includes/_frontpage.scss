@@ -1,0 +1,143 @@
+@charset "UTF-8";
+
+$cols-slug: cols;
+$rows-slug: rows;
+$base-headline: 3em;
+$block-height: 100px;
+$minimum-height: 200px;
+$minimum-headline: 1.5em;
+
+@for $columns from 1 through 12 {
+  $small-cols: ".small-" + ceil($columns/6) * 6;
+  $medium-cols: ".medium-" + $columns;
+
+  $headline-size: $base-headline * $columns / 6;
+
+  $s:  max($minimum-headline, $headline-size * 1.5);
+  $m:  max($minimum-headline, $headline-size * 1);
+  $l:  max($minimum-headline, $headline-size * 0.75);
+  $xl: max($minimum-headline, $headline-size * 0.5);
+
+  .#{$cols-slug}-#{$columns} {
+    @extend #{$medium-cols};
+    @extend #{$small-cols};
+    .headline-s { font-size: $s; line-height: 1; }
+    .headline-m { font-size: $m; line-height: 1; }
+    .headline-l { font-size: $l; line-height: 1; }
+    .headline-xl { font-size: $xl; line-height: 1; }
+
+  }
+}
+
+@for $height from 1 through 4 {
+  .#{$rows-slug}-#{$height} {
+    height: $minimum-height + $block-height * $height;
+  }
+}
+
+
+.story-block {
+  position: relative;
+  margin-bottom: 10px;
+
+
+  .kicker-block {
+    padding: 4px 8px;
+    margin: 0;
+    width: 100%;
+    background: $dark-grey;
+    color: white;
+    text-transform: uppercase;
+    font-size: 1rem;
+    line-height: 1rem;
+  }
+
+  .text-block {
+    margin: .5rem 0 .5rem 0;
+    position: absolute;
+    bottom: 0;
+    background: white;
+    width: 100%;
+    z-index: 10;
+    .lede {
+      color: $dark-grey;
+      line-height: 1.4em;
+      margin: 0;
+    }
+  }
+
+  .image-block {
+    position: relative;
+  }
+}
+
+.negative {
+  .text-block {
+    background: $dark-grey;
+    padding: 5px 10px;
+    .lede, .frontpage-headline {
+      color: white;
+    }
+  }
+}
+
+.debatt {
+  .frontpage-headline {
+    font-family: $univ-serif;
+    font-weight: lighter;
+  }
+}
+
+.kultur {
+  .frontpage-headline {
+    font-weight: lighter;
+  }
+}
+
+.vignette {
+  padding: .2rem;
+  background: $dark-grey;
+  color: white;
+
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 12;
+
+  font-family: $univ-serif;
+  font-size: 1rem;
+  line-height: 1rem;
+  font-weight: bold;
+
+  .anmeldelser & {
+    background: $light-kultur;
+  }
+
+  .kultur & {
+    background: $medium-kultur;
+  }
+  .debatt & {
+    background: $medium-debatt;
+  }
+  .nyheter & {
+    background: $medium-nyheter;
+  }
+}
+
+.edit-frontpage-story {
+ padding: .2rem;
+ position: absolute;
+ top: 5px;
+ right: 5px;
+ z-index: 12;
+
+ font-size: 1.5rem;
+ line-height: 1rem;
+ a {
+  opacity: .5;
+  color: white;
+  &:hover {
+    opacity: 1;
+  }
+ }
+}
