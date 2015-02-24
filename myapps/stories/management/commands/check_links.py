@@ -34,7 +34,7 @@ class Command(BaseCommand):
             help='Check links with these status codes'
         ),
         make_option(
-            '--timout', '-t',
+            '--timeout', '-t',
             type=float,
             action='store',
             dest='timeout',

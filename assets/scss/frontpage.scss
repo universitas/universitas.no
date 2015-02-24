@@ -53,7 +53,7 @@ $minimum-headline: 1.5em;
   }
 
   .text-block {
-    margin: .5em 0 0 0;
+    margin: .5rem 0 .5rem 0;
     position: absolute;
     bottom: 0;
     background: white;
@@ -61,6 +61,8 @@ $minimum-headline: 1.5em;
     z-index: 10;
     .lede {
       color: $dark-grey;
+      line-height: 1.4em;
+      margin: 0;
     }
   }
 
@@ -72,7 +74,7 @@ $minimum-headline: 1.5em;
 .negative {
   .text-block {
     background: $dark-grey;
-    padding: 0 1rem;
+    padding: 5px 10px;
     .lede, .frontpage-headline {
       color: white;
     }

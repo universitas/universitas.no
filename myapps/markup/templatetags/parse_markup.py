@@ -26,6 +26,16 @@ def insert_span_to(value, marker=':'):
     strip = False
     if marker in value:
         find = r'^(.*?){}'.format(marker)
-        replace = r'<strong class="{}">\1{}</strong>'.format(html_class, '' if strip else marker)
+        replace = r'<span class="{}">\1{}</span>'.format(html_class, '' if strip else marker)
         value = re.sub(find, replace, value, re.M)
+    return mark_safe(value)
+
+
+@register.filter('tingo')
+def insert_tingo(value, marker=':'):
+    """ tingo filter """
+    html_class = 'inngangsord'
+    find = r'^(.{10}\S*)'
+    replace = r'<span class="{}">\1{}</span>'.format(html_class)
+    value = re.sub(find, replace, value, re.M)
     return mark_safe(value)

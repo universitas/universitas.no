@@ -2583,6 +2583,8 @@ th.hide-for-touch {
 #story .mellomtittel {
   color: #444444;
   font-size: 1.3rem; }
+#story .tingo .inngangsord {
+  font-weight: bolder; }
 #story .question {
   font-weight: bold;
   font-style: italic; }
@@ -2615,6 +2617,8 @@ th.hide-for-touch {
 #story .image-caption {
   font-size: 0.8rem;
   color: #aaaaaa; }
+  #story .image-caption .inngangsord {
+    font-weight: bolder; }
 
 .cols-1 .headline-s {
   font-size: 1.5em;
@@ -2797,20 +2801,22 @@ th.hide-for-touch {
     font-size: 1rem;
     line-height: 1rem; }
   .story-block .text-block {
-    margin: .5em 0 0 0;
+    margin: .5rem 0 .5rem 0;
     position: absolute;
     bottom: 0;
     background: white;
     width: 100%;
     z-index: 10; }
     .story-block .text-block .lede {
-      color: #444444; }
+      color: #444444;
+      line-height: 1.4em;
+      margin: 0; }
   .story-block .image-block {
     position: relative; }
 
 .negative .text-block {
   background: #444444;
-  padding: 0 1rem; }
+  padding: 5px 10px; }
   .negative .text-block .lede, .negative .text-block .frontpage-headline {
     color: white; }
 

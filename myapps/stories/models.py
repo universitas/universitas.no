@@ -318,6 +318,8 @@ class TextContent(models.Model, MarkupModelMixin):
             # Cleanup
             target.save()
 
+
+
     def _block_append(self, tag, content, modelfield=None):
         """ Appends content(string) to a model field by string reference. """
         # default is to add to body text
@@ -622,11 +624,6 @@ class Story(TextContent, TimeStampedModel):
             },)
         return url
 
-    # def get_html(self):
-        # return super().get_html()
-
-    # def make_html(self):
-        # super().make_html()
 
     def children_modified(self):
         """ check if any related objects have been
