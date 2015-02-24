@@ -4,27 +4,15 @@ import random
 from model_utils.models import TimeStampedModel
 from django.utils.translation import ugettext_lazy as _
 # from django.core.exceptions import ObjectDesNotExist
-from django.core.urlresolvers import reverse
 
 # Project apps
 # from myapps.stories.models import Story
+from utils.model_mixins import Edit_url_mixin
 from myapps.photo.models import ImageFile
 import logging
 logger = logging.getLogger('universitas')
 
 
-class Edit_url_mixin:
-
-    def get_edit_url(self):
-        """ Url to django admin for this object """
-        url = reverse(
-            'admin:{app}_{object}_change'.format(
-                app=self._meta.app_label,
-                object=self._meta.model_name,
-            ),
-            args=[self.id],
-        )
-        return url
 
 class FrontpageManager(models.Manager):
 

@@ -30,6 +30,7 @@ from diff_match_patch import diff_match_patch
 from requests import request
 from requests.exceptions import Timeout, MissingSchema, ConnectionError
 from model_utils.models import TimeStampedModel
+from utils.model_mixins import Edit_url_mixin
 
 # Project apps
 from myapps.contributors.models import Contributor
@@ -386,7 +387,7 @@ class PublishedStoryManager(models.Manager):
             story.save(new=True)
 
 
-class Story(TextContent, TimeStampedModel):
+class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
     """ An article or story in the newspaper. """
 
@@ -610,16 +611,6 @@ class Story(TextContent, TimeStampedModel):
             self.bodytext_html = ''
             self.save(update_fields=['bodytext_html'])
 
-    def get_edit_url(self):
-        """ Url to django admin for this object """
-        url = reverse(
-            'admin:{app}_{object}_change'.format(
-                app=self._meta.app_label,
-                object=self._meta.model_name,
-            ),
-            args=[self.id],
-        )
-        return url
 
     def get_absolute_url(self):
         url = reverse(

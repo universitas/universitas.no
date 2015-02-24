@@ -15,6 +15,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 # Installed apps
 
 from model_utils.models import TimeStampedModel
+from utils.model_mixins import Edit_url_mixin
 from sorl.thumbnail import ImageField
 
 # Project apps
@@ -29,7 +30,7 @@ CASCADE_FILE = os.path.join(
 )
 
 
-class ImageFile(TimeStampedModel):
+class ImageFile(TimeStampedModel, Edit_url_mixin):
     CROP_NONE = 0
     CROP_FEATURES = 5
     CROP_FACES = 10
