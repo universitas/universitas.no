@@ -4115,8 +4115,14 @@ th.hide-for-touch {
   top: -330px;
   height: 300px; }
 
+main {
+  margin-top: 35px; }
+
 #sticky-top-menu {
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   background: #888888;
   height: 30px;
   z-index: 1000; }

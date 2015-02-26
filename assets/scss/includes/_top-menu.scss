@@ -42,8 +42,16 @@ $fontsize: $menu-height - $menu-padding * 2;
     @extend %onscreen;
   }
 }
+main{
+  margin-top: $menu-height + $menu-padding;
+}
+
+
 #sticky-top-menu {
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   background: $menu-color;
   height: $menu-height;
   z-index: 1000;
