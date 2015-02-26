@@ -1,5 +1,6 @@
 {% load sekizai_tags %}
 {% load staticfiles %}
+{% load universitas_menu %}
 <!DOCTYPE html>
 <html class="no-js" lang="no">
   <head>
@@ -19,24 +20,9 @@
   </head>
 
   <body>
-    <div id="sticky-top-menu" class="fixedsticky">
-      <header>
-        <div class="row">
-          {% block header %}
-          <div class="medium-4 small-12 columns">
-            <h1 id="logo"><a href="/">Universitas.no</a></h1>
-          </div>
-          <div class="medium-8 small-12 columns">
-            <nav class="row" style="padding: 10px;">
-              <div class="small-4 columns" ><a href="/admin/stories/story/">Rediger saker</a></div>
-              <div class="small-4 columns" ><a href="/admin/frontpage/frontpagestory/">Rediger forsidetekst</a></div>
-              <div class="small-4 columns" ><a href="/admin/frontpage/contentblock/">Rediger forsideplassering</a></div>
-            </nav>
-          </div>
-          {% endblock header %}
-        </div>
-      </header>
-    </div>
+    <header id="sticky-top-menu" class="fixedsticky">
+      {% universitas_menu "" %}
+    </header>
     <main>
       <div class="content-wrapper">
         {% block columns %}{% endblock %}

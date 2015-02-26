@@ -1,0 +1,11 @@
+{% for story in stories %}
+  <div class="story">
+    <a href="{{ story.get_absolute_url }}">
+    <div class="image"><img src="" alt=""></div>
+    <div class="text">
+      <h3 class="headline">{{ story.title }}</h3>
+      <p class="lede">{{ story.lede }}</p>
+    </div>
+  </a>
+  </div>
+{% endfor %}

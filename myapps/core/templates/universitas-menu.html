@@ -1,0 +1,39 @@
+{% load universitas_menu %}
+<div class="menu-wrapper">
+  <div class="menu-left">
+    <div id="logo">
+      <a href="/">{% include "universitas_logo.svg" %}</a>
+    </div>
+    <div class="logo-panel">
+      <div class="row">
+        <div class="panel-1">
+          <p>Logo panel</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="menu-right">
+    <nav class="sections">
+      {% for section in sections %}
+        <div class="section-item {{ section.slug }}">
+          <span class="section-title">{{ section.title }}</span>
+        </div>
+        <div class="section-panel">
+          <div class="row">
+            <div class="panel-2">
+              <h2>Nyeste i {{ section.title }}</h2>
+              {% top_stories section 5 "-publication_date" %}
+            </div>
+            <div class="panel-3">
+              <h2>Mest lest i {{ section.title }}</h2>
+              {% top_stories section 5 "-hot_count" %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </nav>
+    <div id="search">
+      <i class="fi-magnifying-glass"></i>
+    </div>
+  </div>
+</div>

@@ -99,54 +99,52 @@ textarea {
 select {
   width: 100%; }
 
-.row, .content-wrapper {
+.row {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 0;
   margin-bottom: 0;
   max-width: 73.75rem; }
-  .row:before, .content-wrapper:before, .row:after, .content-wrapper:after {
+  .row:before, .row:after {
     content: " ";
     display: table; }
-  .row:after, .content-wrapper:after {
+  .row:after {
     clear: both; }
-  .row.collapse > .column, .collapse.content-wrapper > .column,
+  .row.collapse > .column,
   .row.collapse > .columns,
-  .collapse.content-wrapper > .columns,
   #story .row.collapse > .bodytext,
-  #story .collapse.content-wrapper > .bodytext,
   #story .row.collapse > .inline-full,
-  #story .collapse.content-wrapper > .inline-full,
   #story .row.collapse > .inline-left,
-  #story .collapse.content-wrapper > .inline-left,
   #story .row.collapse > .inline-right,
-  #story .collapse.content-wrapper > .inline-right {
+  .row.collapse > .panel-1,
+  .row.collapse > .panel-2,
+  .row.collapse > .panel-3 {
     padding-left: 0;
     padding-right: 0; }
-  .row.collapse .row, .collapse.content-wrapper .row, .row.collapse .content-wrapper, .collapse.content-wrapper .content-wrapper {
+  .row.collapse .row {
     margin-left: 0;
     margin-right: 0; }
-  .row .row, .content-wrapper .row, .row .content-wrapper, .content-wrapper .content-wrapper {
+  .row .row {
     width: auto;
     margin-left: -0.625rem;
     margin-right: -0.625rem;
     margin-top: 0;
     margin-bottom: 0;
     max-width: none; }
-    .row .row:before, .content-wrapper .row:before, .row .content-wrapper:before, .content-wrapper .content-wrapper:before, .row .row:after, .content-wrapper .row:after, .row .content-wrapper:after, .content-wrapper .content-wrapper:after {
+    .row .row:before, .row .row:after {
       content: " ";
       display: table; }
-    .row .row:after, .content-wrapper .row:after, .row .content-wrapper:after, .content-wrapper .content-wrapper:after {
+    .row .row:after {
       clear: both; }
-    .row .row.collapse, .content-wrapper .row.collapse, .row .collapse.content-wrapper, .content-wrapper .collapse.content-wrapper {
+    .row .row.collapse {
       width: auto;
       margin: 0;
       max-width: none; }
-      .row .row.collapse:before, .content-wrapper .row.collapse:before, .row .collapse.content-wrapper:before, .content-wrapper .collapse.content-wrapper:before, .row .row.collapse:after, .content-wrapper .row.collapse:after, .row .collapse.content-wrapper:after, .content-wrapper .collapse.content-wrapper:after {
+      .row .row.collapse:before, .row .row.collapse:after {
         content: " ";
         display: table; }
-      .row .row.collapse:after, .content-wrapper .row.collapse:after, .row .collapse.content-wrapper:after, .content-wrapper .collapse.content-wrapper:after {
+      .row .row.collapse:after {
         clear: both; }
 
 .column,
@@ -154,7 +152,10 @@ select {
 #story .bodytext,
 #story .inline-full,
 #story .inline-left,
-#story .inline-right {
+#story .inline-right,
+.panel-1,
+.panel-2,
+.panel-3 {
   padding-left: 0.625rem;
   padding-right: 0.625rem;
   width: 100%;
@@ -292,7 +293,10 @@ select {
   #story .bodytext,
   #story .inline-full,
   #story .inline-left,
-  #story .inline-right {
+  #story .inline-right,
+  .panel-1,
+  .panel-2,
+  .panel-3 {
     position: relative;
     padding-left: 0.625rem;
     padding-right: 0.625rem;
@@ -313,7 +317,7 @@ select {
   .small-5 {
     width: 41.66667%; }
 
-  .small-6, .cols-1, .cols-2, .cols-3, .cols-4, .cols-5, .cols-6 {
+  .small-6, .cols-1, .cols-2, .cols-3, .cols-4, .cols-5, .cols-6, .panel-2, .panel-3 {
     width: 50%; }
 
   .small-7 {
@@ -331,7 +335,7 @@ select {
   .small-11 {
     width: 91.66667%; }
 
-  .small-12, .cols-7, .cols-8, .cols-9, .cols-10, .cols-11, .cols-12 {
+  .small-12, .cols-7, .cols-8, .cols-9, .cols-10, .cols-11, .cols-12, .panel-1 {
     width: 100%; }
 
   .small-offset-0 {
@@ -382,7 +386,10 @@ select {
   #story .small-centered.bodytext,
   #story .small-centered.inline-full,
   #story .small-centered.inline-left,
-  #story .small-centered.inline-right {
+  #story .small-centered.inline-right,
+  .small-centered.panel-1,
+  .small-centered.panel-2,
+  .small-centered.panel-3 {
     margin-left: auto;
     margin-right: auto;
     float: none; }
@@ -392,7 +399,10 @@ select {
   #story .small-uncentered.bodytext,
   #story .small-uncentered.inline-full,
   #story .small-uncentered.inline-left,
-  #story .small-uncentered.inline-right {
+  #story .small-uncentered.inline-right,
+  .small-uncentered.panel-1,
+  .small-uncentered.panel-2,
+  .small-uncentered.panel-3 {
     margin-left: 0;
     margin-right: 0;
     float: left; }
@@ -402,7 +412,10 @@ select {
   #story .small-centered.bodytext:last-child,
   #story .small-centered.inline-full:last-child,
   #story .small-centered.inline-left:last-child,
-  #story .small-centered.inline-right:last-child {
+  #story .small-centered.inline-right:last-child,
+  .small-centered.panel-1:last-child,
+  .small-centered.panel-2:last-child,
+  .small-centered.panel-3:last-child {
     float: none; }
 
   .column.small-uncentered:last-child,
@@ -410,7 +423,10 @@ select {
   #story .small-uncentered.bodytext:last-child,
   #story .small-uncentered.inline-full:last-child,
   #story .small-uncentered.inline-left:last-child,
-  #story .small-uncentered.inline-right:last-child {
+  #story .small-uncentered.inline-right:last-child,
+  .small-uncentered.panel-1:last-child,
+  .small-uncentered.panel-2:last-child,
+  .small-uncentered.panel-3:last-child {
     float: left; }
 
   .column.small-uncentered.opposite,
@@ -418,7 +434,10 @@ select {
   #story .small-uncentered.opposite.bodytext,
   #story .small-uncentered.opposite.inline-full,
   #story .small-uncentered.opposite.inline-left,
-  #story .small-uncentered.opposite.inline-right {
+  #story .small-uncentered.opposite.inline-right,
+  .small-uncentered.opposite.panel-1,
+  .small-uncentered.opposite.panel-2,
+  .small-uncentered.opposite.panel-3 {
     float: right; } }
 @media only screen and (min-width: 40.063em) {
   .medium-push-0 {
@@ -546,7 +565,10 @@ select {
   #story .bodytext,
   #story .inline-full,
   #story .inline-left,
-  #story .inline-right {
+  #story .inline-right,
+  .panel-1,
+  .panel-2,
+  .panel-3 {
     position: relative;
     padding-left: 0.625rem;
     padding-right: 0.625rem;
@@ -636,7 +658,10 @@ select {
   #story .medium-centered.bodytext,
   #story .medium-centered.inline-full,
   #story .medium-centered.inline-left,
-  #story .medium-centered.inline-right {
+  #story .medium-centered.inline-right,
+  .medium-centered.panel-1,
+  .medium-centered.panel-2,
+  .medium-centered.panel-3 {
     margin-left: auto;
     margin-right: auto;
     float: none; }
@@ -646,7 +671,10 @@ select {
   #story .medium-uncentered.bodytext,
   #story .medium-uncentered.inline-full,
   #story .medium-uncentered.inline-left,
-  #story .medium-uncentered.inline-right {
+  #story .medium-uncentered.inline-right,
+  .medium-uncentered.panel-1,
+  .medium-uncentered.panel-2,
+  .medium-uncentered.panel-3 {
     margin-left: 0;
     margin-right: 0;
     float: left; }
@@ -656,7 +684,10 @@ select {
   #story .medium-centered.bodytext:last-child,
   #story .medium-centered.inline-full:last-child,
   #story .medium-centered.inline-left:last-child,
-  #story .medium-centered.inline-right:last-child {
+  #story .medium-centered.inline-right:last-child,
+  .medium-centered.panel-1:last-child,
+  .medium-centered.panel-2:last-child,
+  .medium-centered.panel-3:last-child {
     float: none; }
 
   .column.medium-uncentered:last-child,
@@ -664,7 +695,10 @@ select {
   #story .medium-uncentered.bodytext:last-child,
   #story .medium-uncentered.inline-full:last-child,
   #story .medium-uncentered.inline-left:last-child,
-  #story .medium-uncentered.inline-right:last-child {
+  #story .medium-uncentered.inline-right:last-child,
+  .medium-uncentered.panel-1:last-child,
+  .medium-uncentered.panel-2:last-child,
+  .medium-uncentered.panel-3:last-child {
     float: left; }
 
   .column.medium-uncentered.opposite,
@@ -672,7 +706,10 @@ select {
   #story .medium-uncentered.opposite.bodytext,
   #story .medium-uncentered.opposite.inline-full,
   #story .medium-uncentered.opposite.inline-left,
-  #story .medium-uncentered.opposite.inline-right {
+  #story .medium-uncentered.opposite.inline-right,
+  .medium-uncentered.opposite.panel-1,
+  .medium-uncentered.opposite.panel-2,
+  .medium-uncentered.opposite.panel-3 {
     float: right; }
 
   .push-0 {
@@ -920,7 +957,10 @@ select {
   #story .bodytext,
   #story .inline-full,
   #story .inline-left,
-  #story .inline-right {
+  #story .inline-right,
+  .panel-1,
+  .panel-2,
+  .panel-3 {
     position: relative;
     padding-left: 0.625rem;
     padding-right: 0.625rem;
@@ -1010,7 +1050,10 @@ select {
   #story .large-centered.bodytext,
   #story .large-centered.inline-full,
   #story .large-centered.inline-left,
-  #story .large-centered.inline-right {
+  #story .large-centered.inline-right,
+  .large-centered.panel-1,
+  .large-centered.panel-2,
+  .large-centered.panel-3 {
     margin-left: auto;
     margin-right: auto;
     float: none; }
@@ -1020,7 +1063,10 @@ select {
   #story .large-uncentered.bodytext,
   #story .large-uncentered.inline-full,
   #story .large-uncentered.inline-left,
-  #story .large-uncentered.inline-right {
+  #story .large-uncentered.inline-right,
+  .large-uncentered.panel-1,
+  .large-uncentered.panel-2,
+  .large-uncentered.panel-3 {
     margin-left: 0;
     margin-right: 0;
     float: left; }
@@ -1030,7 +1076,10 @@ select {
   #story .large-centered.bodytext:last-child,
   #story .large-centered.inline-full:last-child,
   #story .large-centered.inline-left:last-child,
-  #story .large-centered.inline-right:last-child {
+  #story .large-centered.inline-right:last-child,
+  .large-centered.panel-1:last-child,
+  .large-centered.panel-2:last-child,
+  .large-centered.panel-3:last-child {
     float: none; }
 
   .column.large-uncentered:last-child,
@@ -1038,7 +1087,10 @@ select {
   #story .large-uncentered.bodytext:last-child,
   #story .large-uncentered.inline-full:last-child,
   #story .large-uncentered.inline-left:last-child,
-  #story .large-uncentered.inline-right:last-child {
+  #story .large-uncentered.inline-right:last-child,
+  .large-uncentered.panel-1:last-child,
+  .large-uncentered.panel-2:last-child,
+  .large-uncentered.panel-3:last-child {
     float: left; }
 
   .column.large-uncentered.opposite,
@@ -1046,7 +1098,10 @@ select {
   #story .large-uncentered.opposite.bodytext,
   #story .large-uncentered.opposite.inline-full,
   #story .large-uncentered.opposite.inline-left,
-  #story .large-uncentered.opposite.inline-right {
+  #story .large-uncentered.opposite.inline-right,
+  .large-uncentered.opposite.panel-1,
+  .large-uncentered.opposite.panel-2,
+  .large-uncentered.opposite.panel-3 {
     float: right; }
 
   .push-0 {
@@ -1337,128 +1392,67 @@ form {
   margin: 0 0 1rem; }
 
 /* Using forms within rows, we need to set some defaults */
-form .row .row, form .content-wrapper .row, form .row .content-wrapper, form .content-wrapper .content-wrapper {
+form .row .row {
   margin: 0 -0.5rem; }
-  form .row .row .column, form .content-wrapper .row .column, form .row .content-wrapper .column, form .content-wrapper .content-wrapper .column,
+  form .row .row .column,
   form .row .row .columns,
-  form .content-wrapper .row .columns,
-  form .row .content-wrapper .columns,
-  form .content-wrapper .content-wrapper .columns,
   form .row .row #story .bodytext,
   #story form .row .row .bodytext,
-  form .content-wrapper .row #story .bodytext,
-  #story form .content-wrapper .row .bodytext,
-  form .row .content-wrapper #story .bodytext,
-  #story form .row .content-wrapper .bodytext,
-  form .content-wrapper .content-wrapper #story .bodytext,
-  #story form .content-wrapper .content-wrapper .bodytext,
   form .row .row #story .inline-full,
   #story form .row .row .inline-full,
-  form .content-wrapper .row #story .inline-full,
-  #story form .content-wrapper .row .inline-full,
-  form .row .content-wrapper #story .inline-full,
-  #story form .row .content-wrapper .inline-full,
-  form .content-wrapper .content-wrapper #story .inline-full,
-  #story form .content-wrapper .content-wrapper .inline-full,
   form .row .row #story .inline-left,
   #story form .row .row .inline-left,
-  form .content-wrapper .row #story .inline-left,
-  #story form .content-wrapper .row .inline-left,
-  form .row .content-wrapper #story .inline-left,
-  #story form .row .content-wrapper .inline-left,
-  form .content-wrapper .content-wrapper #story .inline-left,
-  #story form .content-wrapper .content-wrapper .inline-left,
   form .row .row #story .inline-right,
   #story form .row .row .inline-right,
-  form .content-wrapper .row #story .inline-right,
-  #story form .content-wrapper .row .inline-right,
-  form .row .content-wrapper #story .inline-right,
-  #story form .row .content-wrapper .inline-right,
-  form .content-wrapper .content-wrapper #story .inline-right,
-  #story form .content-wrapper .content-wrapper .inline-right {
+  form .row .row .panel-1,
+  form .row .row .panel-2,
+  form .row .row .panel-3 {
     padding: 0 0.5rem; }
-  form .row .row.collapse, form .content-wrapper .row.collapse, form .row .collapse.content-wrapper, form .content-wrapper .collapse.content-wrapper {
+  form .row .row.collapse {
     margin: 0; }
-    form .row .row.collapse .column, form .content-wrapper .row.collapse .column, form .row .collapse.content-wrapper .column, form .content-wrapper .collapse.content-wrapper .column,
+    form .row .row.collapse .column,
     form .row .row.collapse .columns,
-    form .content-wrapper .row.collapse .columns,
-    form .row .collapse.content-wrapper .columns,
-    form .content-wrapper .collapse.content-wrapper .columns,
     form .row .row.collapse #story .bodytext,
     #story form .row .row.collapse .bodytext,
-    form .content-wrapper .row.collapse #story .bodytext,
-    #story form .content-wrapper .row.collapse .bodytext,
-    form .row .collapse.content-wrapper #story .bodytext,
-    #story form .row .collapse.content-wrapper .bodytext,
-    form .content-wrapper .collapse.content-wrapper #story .bodytext,
-    #story form .content-wrapper .collapse.content-wrapper .bodytext,
     form .row .row.collapse #story .inline-full,
     #story form .row .row.collapse .inline-full,
-    form .content-wrapper .row.collapse #story .inline-full,
-    #story form .content-wrapper .row.collapse .inline-full,
-    form .row .collapse.content-wrapper #story .inline-full,
-    #story form .row .collapse.content-wrapper .inline-full,
-    form .content-wrapper .collapse.content-wrapper #story .inline-full,
-    #story form .content-wrapper .collapse.content-wrapper .inline-full,
     form .row .row.collapse #story .inline-left,
     #story form .row .row.collapse .inline-left,
-    form .content-wrapper .row.collapse #story .inline-left,
-    #story form .content-wrapper .row.collapse .inline-left,
-    form .row .collapse.content-wrapper #story .inline-left,
-    #story form .row .collapse.content-wrapper .inline-left,
-    form .content-wrapper .collapse.content-wrapper #story .inline-left,
-    #story form .content-wrapper .collapse.content-wrapper .inline-left,
     form .row .row.collapse #story .inline-right,
     #story form .row .row.collapse .inline-right,
-    form .content-wrapper .row.collapse #story .inline-right,
-    #story form .content-wrapper .row.collapse .inline-right,
-    form .row .collapse.content-wrapper #story .inline-right,
-    #story form .row .collapse.content-wrapper .inline-right,
-    form .content-wrapper .collapse.content-wrapper #story .inline-right,
-    #story form .content-wrapper .collapse.content-wrapper .inline-right {
+    form .row .row.collapse .panel-1,
+    form .row .row.collapse .panel-2,
+    form .row .row.collapse .panel-3 {
       padding: 0; }
-    form .row .row.collapse input, form .content-wrapper .row.collapse input, form .row .collapse.content-wrapper input, form .content-wrapper .collapse.content-wrapper input {
+    form .row .row.collapse input {
       border-bottom-right-radius: 0;
       border-top-right-radius: 0; }
-form .row input.column, form .content-wrapper input.column,
+form .row input.column,
 form .row input.columns,
-form .content-wrapper input.columns,
 form .row #story input.bodytext,
 #story form .row input.bodytext,
-form .content-wrapper #story input.bodytext,
-#story form .content-wrapper input.bodytext,
 form .row #story input.inline-full,
 #story form .row input.inline-full,
-form .content-wrapper #story input.inline-full,
-#story form .content-wrapper input.inline-full,
 form .row #story input.inline-left,
 #story form .row input.inline-left,
-form .content-wrapper #story input.inline-left,
-#story form .content-wrapper input.inline-left,
 form .row #story input.inline-right,
 #story form .row input.inline-right,
-form .content-wrapper #story input.inline-right,
-#story form .content-wrapper input.inline-right,
+form .row input.panel-1,
+form .row input.panel-2,
+form .row input.panel-3,
 form .row textarea.column,
-form .content-wrapper textarea.column,
 form .row textarea.columns,
-form .content-wrapper textarea.columns,
 form .row #story textarea.bodytext,
 #story form .row textarea.bodytext,
-form .content-wrapper #story textarea.bodytext,
-#story form .content-wrapper textarea.bodytext,
 form .row #story textarea.inline-full,
 #story form .row textarea.inline-full,
-form .content-wrapper #story textarea.inline-full,
-#story form .content-wrapper textarea.inline-full,
 form .row #story textarea.inline-left,
 #story form .row textarea.inline-left,
-form .content-wrapper #story textarea.inline-left,
-#story form .content-wrapper textarea.inline-left,
 form .row #story textarea.inline-right,
 #story form .row textarea.inline-right,
-form .content-wrapper #story textarea.inline-right,
-#story form .content-wrapper textarea.inline-right {
+form .row textarea.panel-1,
+form .row textarea.panel-2,
+form .row textarea.panel-3 {
   padding-left: 0.5rem; }
 
 /* Label Styles */
@@ -3769,12 +3763,15 @@ th.hide-for-touch {
 .fi-zoom-out:before {
   content: "\f21a"; }
 
-.content-wrapper {
-  position: relative;
-  padding: 0 0.625rem; }
+.content-wrapper, .menu-wrapper {
+  max-width: 73.75rem;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative; }
 
 .left-content, .right-content {
   position: absolute;
+  margin: 0 10px;
   width: 180px;
   top: 0px;
   height: 100%; }
@@ -3787,10 +3784,10 @@ th.hide-for-touch {
 
 @media only screen and (min-width: 64.063em) {
   .left-content ~ .main-content {
-    margin-left: 190px; }
+    margin-left: 200px; }
 
   .right-content ~ .main-content {
-    margin-right: 190px; } }
+    margin-right: 200px; } }
 .annonse {
   padding: 10px 0 10px 0;
   position: relative;
@@ -3819,7 +3816,7 @@ th.hide-for-touch {
 #story .question {
   font-weight: bold;
   font-style: italic; }
-#story main .row, #story main .content-wrapper {
+#story main .row {
   border-top: 1px solid #aaaaaa; }
 #story .inline-aside {
   background: #f5f5f5; }
@@ -4094,7 +4091,124 @@ th.hide-for-touch {
     .edit-frontpage-story a:hover {
       opacity: 1; }
 
+.sections .section-title, #search {
+  color: white;
+  margin: 5px;
+  font-size: 20px;
+  font-size: 20px;
+  line-height: normal;
+  font-weight: bolder; }
+
+.logo-panel:hover, .section-panel:hover, .menu-wrapper:hover .logo-panel, .sections .section-item:hover + .section-panel {
+  top: 30px;
+  z-index: -10;
+  transition-delay: 0s; }
+
+.logo-panel, .section-panel {
+  transition-delay: .3s;
+  padding: 15px 0;
+  position: absolute;
+  width: 100%;
+  background: #BBB;
+  overflow: hidden;
+  z-index: -100;
+  top: -330px;
+  height: 300px; }
+
 #sticky-top-menu {
-  height: 50px;
-  z-index: 1000;
-  background: white; }
+  position: relative;
+  background: #888888;
+  height: 30px;
+  z-index: 1000; }
+
+.menu-wrapper {
+  padding: 0 10px;
+  line-height: 1.1; }
+  .menu-wrapper h2 {
+    color: white;
+    font-size: 1rem; }
+  .menu-wrapper h3 {
+    color: white;
+    font-size: 1rem; }
+  .menu-wrapper p {
+    color: white;
+    font-size: .8rem; }
+  .menu-wrapper .menu-right, .menu-wrapper .menu-left {
+    position: relative; }
+
+.menu-left {
+  width: 160px; }
+
+.menu-right {
+  margin-left: 160px; }
+
+#logo {
+  position: relative;
+  float: left;
+  margin: 0;
+  height: 30px;
+  background: #888888;
+  padding-right: 10px; }
+  #logo .main-logo {
+    height: 100%; }
+    #logo .main-logo .text {
+      fill: white; }
+
+.logo-panel {
+  background: #888888;
+  padding-left: 400%;
+  left: -400%;
+  width: 500%; }
+
+.sections {
+  float: left;
+  background: white;
+  padding-right: 5px; }
+  .sections .section-item {
+    display: inline-block;
+    float: left;
+    background: #333;
+    margin-left: 5px;
+    min-width: 30px;
+    height: 30px; }
+    .sections .section-item:hover + .section-panel {
+      z-index: -5; }
+  .sections .section-title {
+    font-family: "Roboto Slab", serif;
+    opacity: 0;
+    display: block;
+    transition: all 0.2s ease-in;
+    max-width: 0;
+    overflow: hidden; }
+    @media only screen and (min-width: 64.063em) {
+      .menu-wrapper:hover .sections .section-title {
+        max-width: 120px;
+        opacity: 1; } }
+
+#search {
+  float: right; }
+
+.section-item.nyheter {
+  background-color: #c44530; }
+  .section-item.nyheter + .section-panel {
+    background-color: #c44530; }
+
+.section-item.kultur {
+  background-color: #6fab50; }
+  .section-item.kultur + .section-panel {
+    background-color: #6fab50; }
+
+.section-item.debatt {
+  background-color: #3b7e9c; }
+  .section-item.debatt + .section-panel {
+    background-color: #3b7e9c; }
+
+.section-item.magasin {
+  background-color: #ffb653; }
+  .section-item.magasin + .section-panel {
+    background-color: #ffb653; }
+
+.section-panel {
+  padding-right: 100%;
+  right: -100%;
+  width: 200%; }

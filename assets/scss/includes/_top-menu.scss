@@ -1,0 +1,166 @@
+@charset "UTF-8";
+
+$section-map: (
+  nyheter: $nyheter,
+  kultur: $kultur,
+  debatt: $debatt,
+  magasin: $magasin,
+);
+
+$menu-height: 30px;
+$panel-height: 300px;
+$menu-padding: 5px;
+$menu-color: #888;
+$fontsize: $menu-height - $menu-padding * 2;
+
+%menu-text {
+  color: white;
+  margin: $menu-padding;
+  font-size: $menu-height - $menu-padding * 2;
+  font-size: $fontsize;
+  line-height: normal;
+  font-weight: bolder;
+}
+
+%onscreen {
+  top: $menu-height;
+  z-index: -10;
+  transition-delay: 0s;
+}
+
+%offscreen {
+  transition-delay: .3s;
+  padding: 15px 0;
+  position: absolute;
+  width: 100%;
+  background: #BBB;
+  overflow: hidden;
+  z-index: -100;
+  top: ($panel-height + $menu-height) * -1;
+  height: $panel-height;
+  &:hover{
+    @extend %onscreen;
+  }
+}
+#sticky-top-menu {
+  position: relative;
+  background: $menu-color;
+  height: $menu-height;
+  z-index: 1000;
+}
+.menu-wrapper {
+  @extend .content-wrapper;
+  padding: 0 $column-gutter/2;
+  line-height: 1.1;
+  h2 {
+    color: white;
+    font-size: 1rem;
+  }
+  h3 {
+    color: white;
+    font-size: 1rem;
+  }
+  p {
+    color: white;
+    font-size: .8rem;
+  }
+  .menu-right, .menu-left {
+    position: relative;
+  }
+  &:hover{
+    .logo-panel{
+      @extend %onscreen;
+    }
+  }
+}
+.menu-left {
+  width: 160px;
+}
+.menu-right {
+  margin-left: 160px;
+}
+
+
+#logo {
+  position: relative;
+  float: left;
+  margin: 0;
+  height: $menu-height;
+  background: $menu-color;
+  padding-right: $menu-padding * 2;
+  .main-logo{
+    height: 100%;
+    .text {
+      fill: white;
+    }
+  }
+}
+.logo-panel{
+  @extend %offscreen;
+  background: $menu-color;
+  padding-left: 400%;
+  left: -400%;
+  width: 500%;
+}
+.sections {
+  float: left;
+  background: white;
+  padding-right: $menu-padding;
+  .section-item {
+    display: inline-block;
+    float: left;
+    background: #333;
+    margin-left: $menu-padding;
+    min-width: $menu-height;
+    height: $menu-height;
+    &:hover + .section-panel {
+      @extend %onscreen;
+      z-index:-5;
+    }
+  }
+  .section-title {
+    @extend %menu-text;
+    font-family: $univ-serif;
+    opacity: 0;
+    display: block;
+    transition: all 0.2s ease-in;
+    max-width: 0;
+    overflow: hidden;
+    .menu-wrapper:hover & {
+      @media #{$large-up} {
+        max-width: $menu-height * 4;
+        opacity: 1;
+      }
+    }
+  }
+}
+
+#search {
+  @extend %menu-text;
+  float: right;
+}
+
+@each $section-name, $color in $section-map {
+  .section-item.#{$section-name} {
+    background-color: $color;
+    & + .section-panel {
+      background-color: $color;
+    }
+  }
+}
+
+.section-panel{
+  @extend %offscreen;
+  padding-right: 100%;
+  right: -100%;
+  width: 200%;
+}
+
+.panel-1 {
+  @extend .small-12;
+  @extend .columns;
+}
+.panel-2, .panel-3 {
+  @extend .small-6;
+  @extend .columns;
+}

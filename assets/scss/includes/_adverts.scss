@@ -1,16 +1,20 @@
 @charset "UTF-8";
 
+$column-width: 180px;
+$column-gutter: 20px;
 
 .content-wrapper {
-  @extend .row;
+  max-width: $row-width;
+  margin-left: auto;
+  margin-right: auto;
   position: relative;
-  padding: 0 $column-gutter/2;
 }
 
 %column {
   @extend .show-for-large-up;
   position: absolute;
-  width: 180px;
+  margin: 0 $column-gutter/2;
+  width: $column-width;
   top: 0px;
   height: 100%;
 }
@@ -27,10 +31,10 @@
 
 @media #{$large-up} {
   .left-content ~ .main-content {
-    margin-left: 190px;
+    margin-left: $column-width + $column-gutter;
   }
   .right-content ~ .main-content {
-    margin-right: 190px;
+    margin-right: $column-width + $column-gutter;
   }
 }
 
