@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Roboto+Condensed:300italic,400italic,700italic,400,700,300|Roboto+Slab:700,400|Roboto:400,400italic,300italic,300);
+@import url(http://fonts.googleapis.com/css?family=Roboto+Condensed:300italic,400italic,700italic,400,700,300|Roboto+Slab:700,400|Roboto:500,500italic,400,400italic,300italic,300);
 meta.foundation-version {
   font-family: "/{{ VERSION }}/"; }
 
@@ -99,49 +99,54 @@ textarea {
 select {
   width: 100%; }
 
-.row {
+.row, .content-wrapper {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 0;
   margin-bottom: 0;
-  max-width: 62.5rem; }
-  .row:before, .row:after {
+  max-width: 73.75rem; }
+  .row:before, .content-wrapper:before, .row:after, .content-wrapper:after {
     content: " ";
     display: table; }
-  .row:after {
+  .row:after, .content-wrapper:after {
     clear: both; }
-  .row.collapse > .column,
+  .row.collapse > .column, .collapse.content-wrapper > .column,
   .row.collapse > .columns,
+  .collapse.content-wrapper > .columns,
   #story .row.collapse > .bodytext,
+  #story .collapse.content-wrapper > .bodytext,
   #story .row.collapse > .inline-full,
+  #story .collapse.content-wrapper > .inline-full,
   #story .row.collapse > .inline-left,
-  #story .row.collapse > .inline-right {
+  #story .collapse.content-wrapper > .inline-left,
+  #story .row.collapse > .inline-right,
+  #story .collapse.content-wrapper > .inline-right {
     padding-left: 0;
     padding-right: 0; }
-  .row.collapse .row {
+  .row.collapse .row, .collapse.content-wrapper .row, .row.collapse .content-wrapper, .collapse.content-wrapper .content-wrapper {
     margin-left: 0;
     margin-right: 0; }
-  .row .row {
+  .row .row, .content-wrapper .row, .row .content-wrapper, .content-wrapper .content-wrapper {
     width: auto;
-    margin-left: -0.9375rem;
-    margin-right: -0.9375rem;
+    margin-left: -0.625rem;
+    margin-right: -0.625rem;
     margin-top: 0;
     margin-bottom: 0;
     max-width: none; }
-    .row .row:before, .row .row:after {
+    .row .row:before, .content-wrapper .row:before, .row .content-wrapper:before, .content-wrapper .content-wrapper:before, .row .row:after, .content-wrapper .row:after, .row .content-wrapper:after, .content-wrapper .content-wrapper:after {
       content: " ";
       display: table; }
-    .row .row:after {
+    .row .row:after, .content-wrapper .row:after, .row .content-wrapper:after, .content-wrapper .content-wrapper:after {
       clear: both; }
-    .row .row.collapse {
+    .row .row.collapse, .content-wrapper .row.collapse, .row .collapse.content-wrapper, .content-wrapper .collapse.content-wrapper {
       width: auto;
       margin: 0;
       max-width: none; }
-      .row .row.collapse:before, .row .row.collapse:after {
+      .row .row.collapse:before, .content-wrapper .row.collapse:before, .row .collapse.content-wrapper:before, .content-wrapper .collapse.content-wrapper:before, .row .row.collapse:after, .content-wrapper .row.collapse:after, .row .collapse.content-wrapper:after, .content-wrapper .collapse.content-wrapper:after {
         content: " ";
         display: table; }
-      .row .row.collapse:after {
+      .row .row.collapse:after, .content-wrapper .row.collapse:after, .row .collapse.content-wrapper:after, .content-wrapper .collapse.content-wrapper:after {
         clear: both; }
 
 .column,
@@ -150,8 +155,8 @@ select {
 #story .inline-full,
 #story .inline-left,
 #story .inline-right {
-  padding-left: 0.9375rem;
-  padding-right: 0.9375rem;
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
   width: 100%;
   float: left; }
 
@@ -289,8 +294,8 @@ select {
   #story .inline-left,
   #story .inline-right {
     position: relative;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
+    padding-left: 0.625rem;
+    padding-right: 0.625rem;
     float: left; }
 
   .small-1 {
@@ -543,8 +548,8 @@ select {
   #story .inline-left,
   #story .inline-right {
     position: relative;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
+    padding-left: 0.625rem;
+    padding-right: 0.625rem;
     float: left; }
 
   .medium-1, .cols-1 {
@@ -917,8 +922,8 @@ select {
   #story .inline-left,
   #story .inline-right {
     position: relative;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
+    padding-left: 0.625rem;
+    padding-right: 0.625rem;
     float: left; }
 
   .large-1 {
@@ -1332,55 +1337,128 @@ form {
   margin: 0 0 1rem; }
 
 /* Using forms within rows, we need to set some defaults */
-form .row .row {
+form .row .row, form .content-wrapper .row, form .row .content-wrapper, form .content-wrapper .content-wrapper {
   margin: 0 -0.5rem; }
-  form .row .row .column,
+  form .row .row .column, form .content-wrapper .row .column, form .row .content-wrapper .column, form .content-wrapper .content-wrapper .column,
   form .row .row .columns,
+  form .content-wrapper .row .columns,
+  form .row .content-wrapper .columns,
+  form .content-wrapper .content-wrapper .columns,
   form .row .row #story .bodytext,
   #story form .row .row .bodytext,
+  form .content-wrapper .row #story .bodytext,
+  #story form .content-wrapper .row .bodytext,
+  form .row .content-wrapper #story .bodytext,
+  #story form .row .content-wrapper .bodytext,
+  form .content-wrapper .content-wrapper #story .bodytext,
+  #story form .content-wrapper .content-wrapper .bodytext,
   form .row .row #story .inline-full,
   #story form .row .row .inline-full,
+  form .content-wrapper .row #story .inline-full,
+  #story form .content-wrapper .row .inline-full,
+  form .row .content-wrapper #story .inline-full,
+  #story form .row .content-wrapper .inline-full,
+  form .content-wrapper .content-wrapper #story .inline-full,
+  #story form .content-wrapper .content-wrapper .inline-full,
   form .row .row #story .inline-left,
   #story form .row .row .inline-left,
+  form .content-wrapper .row #story .inline-left,
+  #story form .content-wrapper .row .inline-left,
+  form .row .content-wrapper #story .inline-left,
+  #story form .row .content-wrapper .inline-left,
+  form .content-wrapper .content-wrapper #story .inline-left,
+  #story form .content-wrapper .content-wrapper .inline-left,
   form .row .row #story .inline-right,
-  #story form .row .row .inline-right {
+  #story form .row .row .inline-right,
+  form .content-wrapper .row #story .inline-right,
+  #story form .content-wrapper .row .inline-right,
+  form .row .content-wrapper #story .inline-right,
+  #story form .row .content-wrapper .inline-right,
+  form .content-wrapper .content-wrapper #story .inline-right,
+  #story form .content-wrapper .content-wrapper .inline-right {
     padding: 0 0.5rem; }
-  form .row .row.collapse {
+  form .row .row.collapse, form .content-wrapper .row.collapse, form .row .collapse.content-wrapper, form .content-wrapper .collapse.content-wrapper {
     margin: 0; }
-    form .row .row.collapse .column,
+    form .row .row.collapse .column, form .content-wrapper .row.collapse .column, form .row .collapse.content-wrapper .column, form .content-wrapper .collapse.content-wrapper .column,
     form .row .row.collapse .columns,
+    form .content-wrapper .row.collapse .columns,
+    form .row .collapse.content-wrapper .columns,
+    form .content-wrapper .collapse.content-wrapper .columns,
     form .row .row.collapse #story .bodytext,
     #story form .row .row.collapse .bodytext,
+    form .content-wrapper .row.collapse #story .bodytext,
+    #story form .content-wrapper .row.collapse .bodytext,
+    form .row .collapse.content-wrapper #story .bodytext,
+    #story form .row .collapse.content-wrapper .bodytext,
+    form .content-wrapper .collapse.content-wrapper #story .bodytext,
+    #story form .content-wrapper .collapse.content-wrapper .bodytext,
     form .row .row.collapse #story .inline-full,
     #story form .row .row.collapse .inline-full,
+    form .content-wrapper .row.collapse #story .inline-full,
+    #story form .content-wrapper .row.collapse .inline-full,
+    form .row .collapse.content-wrapper #story .inline-full,
+    #story form .row .collapse.content-wrapper .inline-full,
+    form .content-wrapper .collapse.content-wrapper #story .inline-full,
+    #story form .content-wrapper .collapse.content-wrapper .inline-full,
     form .row .row.collapse #story .inline-left,
     #story form .row .row.collapse .inline-left,
+    form .content-wrapper .row.collapse #story .inline-left,
+    #story form .content-wrapper .row.collapse .inline-left,
+    form .row .collapse.content-wrapper #story .inline-left,
+    #story form .row .collapse.content-wrapper .inline-left,
+    form .content-wrapper .collapse.content-wrapper #story .inline-left,
+    #story form .content-wrapper .collapse.content-wrapper .inline-left,
     form .row .row.collapse #story .inline-right,
-    #story form .row .row.collapse .inline-right {
+    #story form .row .row.collapse .inline-right,
+    form .content-wrapper .row.collapse #story .inline-right,
+    #story form .content-wrapper .row.collapse .inline-right,
+    form .row .collapse.content-wrapper #story .inline-right,
+    #story form .row .collapse.content-wrapper .inline-right,
+    form .content-wrapper .collapse.content-wrapper #story .inline-right,
+    #story form .content-wrapper .collapse.content-wrapper .inline-right {
       padding: 0; }
-    form .row .row.collapse input {
+    form .row .row.collapse input, form .content-wrapper .row.collapse input, form .row .collapse.content-wrapper input, form .content-wrapper .collapse.content-wrapper input {
       border-bottom-right-radius: 0;
       border-top-right-radius: 0; }
-form .row input.column,
+form .row input.column, form .content-wrapper input.column,
 form .row input.columns,
+form .content-wrapper input.columns,
 form .row #story input.bodytext,
 #story form .row input.bodytext,
+form .content-wrapper #story input.bodytext,
+#story form .content-wrapper input.bodytext,
 form .row #story input.inline-full,
 #story form .row input.inline-full,
+form .content-wrapper #story input.inline-full,
+#story form .content-wrapper input.inline-full,
 form .row #story input.inline-left,
 #story form .row input.inline-left,
+form .content-wrapper #story input.inline-left,
+#story form .content-wrapper input.inline-left,
 form .row #story input.inline-right,
 #story form .row input.inline-right,
+form .content-wrapper #story input.inline-right,
+#story form .content-wrapper input.inline-right,
 form .row textarea.column,
+form .content-wrapper textarea.column,
 form .row textarea.columns,
+form .content-wrapper textarea.columns,
 form .row #story textarea.bodytext,
 #story form .row textarea.bodytext,
+form .content-wrapper #story textarea.bodytext,
+#story form .content-wrapper textarea.bodytext,
 form .row #story textarea.inline-full,
 #story form .row textarea.inline-full,
+form .content-wrapper #story textarea.inline-full,
+#story form .content-wrapper textarea.inline-full,
 form .row #story textarea.inline-left,
 #story form .row textarea.inline-left,
+form .content-wrapper #story textarea.inline-left,
+#story form .content-wrapper textarea.inline-left,
 form .row #story textarea.inline-right,
-#story form .row textarea.inline-right {
+#story form .row textarea.inline-right,
+form .content-wrapper #story textarea.inline-right,
+#story form .content-wrapper textarea.inline-right {
   padding-left: 0.5rem; }
 
 /* Label Styles */
@@ -3693,9 +3771,7 @@ th.hide-for-touch {
 
 .content-wrapper {
   position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 1200px; }
+  padding: 0 0.625rem; }
 
 .left-content, .right-content {
   position: absolute;
@@ -3711,10 +3787,10 @@ th.hide-for-touch {
 
 @media only screen and (min-width: 64.063em) {
   .left-content ~ .main-content {
-    margin-left: 170px; }
+    margin-left: 190px; }
 
   .right-content ~ .main-content {
-    margin-right: 170px; } }
+    margin-right: 190px; } }
 .annonse {
   padding: 10px 0 10px 0;
   position: relative;
@@ -3743,7 +3819,7 @@ th.hide-for-touch {
 #story .question {
   font-weight: bold;
   font-style: italic; }
-#story main .row {
+#story main .row, #story main .content-wrapper {
   border-top: 1px solid #aaaaaa; }
 #story .inline-aside {
   background: #f5f5f5; }

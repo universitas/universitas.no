@@ -2,10 +2,9 @@
 
 
 .content-wrapper {
+  @extend .row;
   position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 1200px;
+  padding: 0 $column-gutter/2;
 }
 
 %column {
@@ -28,10 +27,10 @@
 
 @media #{$large-up} {
   .left-content ~ .main-content {
-    margin-left: 170px;
+    margin-left: 190px;
   }
   .right-content ~ .main-content {
-    margin-right: 170px;
+    margin-right: 190px;
   }
 }
 
