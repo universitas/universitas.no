@@ -4016,6 +4016,9 @@ th.hide-for-touch {
 .rows-4 {
   height: 600px; }
 
+#frontpage {
+  padding-top: 10px; }
+
 .story-block {
   position: relative;
   margin-bottom: 10px; }
