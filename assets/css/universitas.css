@@ -4005,13 +4005,13 @@ th.hide-for-touch {
   line-height: 1; }
 
 .rows-1 {
-  height: 300px; }
+  height: 150px; }
 
 .rows-2 {
-  height: 400px; }
+  height: 300px; }
 
 .rows-3 {
-  height: 500px; }
+  height: 450px; }
 
 .rows-4 {
   height: 600px; }
@@ -4070,23 +4070,25 @@ th.hide-for-touch {
   .anmeldelser .vignette {
     background: #449944; }
   .kultur .vignette {
-    background: #008800; }
+    background: #6fab50; }
   .debatt .vignette {
-    background: #333388; }
+    background: #3b7e9c; }
   .nyheter .vignette {
-    background: #880000; }
+    background: #c44530; }
 
 .edit-frontpage-story {
-  padding: .2rem;
-  background: rgba(0, 0, 0, 0.2);
+  display: none;
+  text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.8);
   position: absolute;
   top: 5px;
   right: 5px;
   z-index: 12;
   font-size: 1.5rem;
   line-height: 1rem; }
+  .story-block:hover .edit-frontpage-story {
+    display: block; }
   .edit-frontpage-story a {
-    opacity: .5;
+    opacity: .6;
     color: white; }
     .edit-frontpage-story a:hover {
       opacity: 1; }
@@ -4218,3 +4220,6 @@ main {
   padding-right: 100%;
   right: -100%;
   width: 200%; }
+
+.panel-1 {
+  padding-left: 0; }

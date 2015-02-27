@@ -46,7 +46,6 @@ main{
   margin-top: $menu-height + $menu-padding;
 }
 
-
 #sticky-top-menu {
   position: fixed;
   top: 0;
@@ -165,6 +164,7 @@ main{
 }
 
 .panel-1 {
+  padding-left: 0;
   @extend .small-12;
   @extend .columns;
 }

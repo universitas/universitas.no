@@ -17,8 +17,8 @@ def frontpage_view(request, frontpage=None):
     max_stories = 30
     max_columns = 12
     pix_c = 1000 / 12
-    pix_h = 100
-    min_h = 200
+    pix_h = 150
+    min_h = -50
     if frontpage is None:
         frontpage = Frontpage.objects.root()
     else:

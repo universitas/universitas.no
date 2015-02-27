@@ -7,26 +7,29 @@ $header-font-color: #333;
 $header-line-height: 1.1;
 $header-top-margin: .3rem;
 
+$debatt: #3B7E9C;
+$nyheter: #C44530;
+$kultur: #6FAB50;
+$magasin: #FFB653;
+
 $light-grey: #AAA;
 $medium-grey: #777;
 $dark-grey: #444;
 
 $light-debatt: #449;
-$medium-debatt: #338;
+$medium-debatt: $debatt;
 $dark-debatt: #225;
 $contrast-debatt: #883;
 
 $light-nyheter: #944;
-$medium-nyheter: #800;
+$medium-nyheter: $nyheter;
 $dark-nyheter: #500;
 $contrast-nyheter: #099;
 
 $light-kultur: #494;
-$medium-kultur: #080;
+$medium-kultur: $kultur;
 $dark-kultur: #050;
 $contrast-kultur: #909;
 
-$debatt: #3B7E9C;
-$nyheter: #C44530;
-$kultur: #6FAB50;
-$magasin: #FFB653;
+
+$medium-magasin: $magasin;
