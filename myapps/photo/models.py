@@ -12,6 +12,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.validators import MaxValueValidator, MinValueValidator
+from collections import namedtuple
 # Installed apps
 
 from model_utils.models import TimeStampedModel
@@ -28,6 +29,8 @@ CASCADE_FILE = os.path.join(
     os.path.dirname(__file__),
     'haarcascade_frontalface_default.xml'
 )
+
+Cropping = namedtuple('Cropping', ['top', 'left', 'diameter'])
 
 
 class ImageFile(TimeStampedModel, Edit_url_mixin):
@@ -73,6 +76,13 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
         help_text=_('image crop horizontal. Between 0% and 100%.'),
         validators=[MaxValueValidator(100), MinValueValidator(0)],
     )
+    crop_diameter = models.PositiveSmallIntegerField(
+        default=100,
+        help_text=_('area containing most relevant content. Area is considered a circle with center x,y and diameter d where x and y are the values "from_left" and "from_right" and d is a percentage of the shortest axis. This is used for close cropping of some images, for instance byline photos.'),
+        validators=[
+            MaxValueValidator(100),
+            MinValueValidator(0)],
+    )
     cropping_method = models.PositiveSmallIntegerField(
         choices=CROP_CHOICES,
         default=CROP_CHOICES[0][0],
@@ -94,14 +104,50 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
         max_length=1000,
     )
 
-    def get_crop(self):
-        if self.cropping_method == self.CROP_NONE:
-            self.autocrop()
-        return '{h}% {v}%'.format(h=self.from_left, v=self.from_top)
-
     def __str__(self):
         # file name only
         return self.source_file.name.rpartition('/')[-1]
+
+    def save(self, *args, **kwargs):
+        if self.contributor is None:
+            pass
+            # self.contributor = self.identify_photo_file_initials()
+        if self.pk and not kwargs.pop('autocrop', False):
+            try:
+                saved = type(self).objects.get(id=self.pk)
+                if (self.from_left,
+                    self.from_top) != (saved.from_left,
+                                       saved.from_top):
+                    self.cropping_method = self.CROP_MANUAL
+            except ImageFile.DoesNotExist:
+                pass
+        super().save(*args, **kwargs)
+
+    @property
+    def cropping(self):
+        return Cropping(
+            top=self.from_top,
+            left=self.from_left,
+            diameter=self.crop_diameter)
+
+    @cropping.setter
+    def cropping(self, crop):
+        self.from_top = crop.top
+        self.from_left = crop.left
+        self.crop_diameter = crop.diameter
+
+    @cropping.deleter
+    def cropping(self):
+        field_names = 'from_top', 'from_left', 'crop_diameter', 'cropping_method'
+        for field_name in field_names:
+            field = self._meta.get_field(field_name)
+            setattr(self, field.name, field.default)
+
+    def get_crop(self):
+        """ return a string representing the visual center point of the image in the form used by sorl thumbnail. """
+        if self.cropping_method == self.CROP_NONE:
+            self.autocrop()
+        return '{h}% {v}%'.format(h=self.from_left, v=self.from_top)
 
     def identify_photo_file_initials(self, contributors=(),):
         """
@@ -123,21 +169,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
 
         return None
 
-    def save(self, *args, **kwargs):
-        if self.contributor is None:
-            pass
-            # self.contributor = self.identify_photo_file_initials()
-        if self.pk and not kwargs.pop('autocrop', False):
-            try:
-                saved = type(self).objects.get(id=self.pk)
-                if (self.from_left,
-                    self.from_top) != (saved.from_left,
-                                       saved.from_top):
-                    self.cropping_method = self.CROP_MANUAL
-            except ImageFile.DoesNotExist:
-                pass
-        super().save(*args, **kwargs)
-
     def opencv_image(self, size=400, grayscale=True):
         """ Convert ImageFile into a cv2 image for image processing. """
         filename = self.source_file.file.name
@@ -158,7 +189,8 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
         return cv2img
 
     def autocrop(self):
-        """ Calculates best crop using a clever algorithm. """
+        """ Calculates best crop using a clever algorithm, and saves Image with new data. """
+
         def main():
             """ Try different algorithms, change crop and save model. """
             try:
@@ -167,32 +199,43 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
                 warning = 'Autocrop failed {} {}'.format(e, self)
                 logger.error(warning)
                 return
-            centre = detect_faces(grayscale_image)
-            if centre:
+            cropping = detect_faces(grayscale_image)
+            if cropping:
                 self.cropping_method = self.CROP_FACES
             else:
-                centre = detect_features(grayscale_image)
+                cropping = detect_features(grayscale_image)
                 self.cropping_method = self.CROP_FEATURES
 
-            self.from_left = int(
+            left = int(
                 round(
                     100 *
-                    centre[0] /
+                    cropping.left /
                     grayscale_image.shape[1]))
-            self.from_top = int(
+            top = int(
                 round(
                     100 *
-                    centre[1] /
+                    cropping.top /
                     grayscale_image.shape[0]))
+            diameter = int(
+                round(
+                    100 *
+                    cropping.diameter /
+                    min(grayscale_image.shape)))
+
+            diameter = min(100, diameter)
+
+            self.cropping = Cropping(left=left, top=top, diameter=diameter)
             self.save(autocrop=True)
-            warning = 'Autocrop  ({left:2.0f}, {top:2.0f})  {method:18} {pk} {file}'.format(
+            msg = 'Autocrop  ({left:2.0f}, {top:2.0f})  {method:18} {pk} {file}'.format(
                 file=self,
                 method=self.get_cropping_method_display(),
                 pk=self.pk,
                 left=self.from_left,
-                top=self.from_top)
-            logger.debug(warning)
-            del(grayscale_image)  # Hjelper kanskje?
+                top=self.from_top,
+                diameter=self.crop_diameter
+            )
+            logger.debug(msg)
+            del(grayscale_image)  # Might save some memory?
 
         def detect_faces(cv2img):
             """ Detects faces in image and adjust cropping. """
@@ -213,6 +256,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
             face_cascade = cv2.CascadeClassifier(CASCADE_FILE)
             faces = face_cascade.detectMultiScale(cv2img,)
             horizontal_faces, vertical_faces = [], []
+            box = {}
             for (face_left, face_top, face_width, face_height) in faces:
                 # Create weighted average of faces. Bigger is heavier.
                 horizontal_faces.extend(
@@ -220,10 +264,25 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
                 vertical_faces.extend(
                     [face_top + face_height / 2] * face_height)
 
+                face_right = face_left + face_width
+                face_bottom = face_top + face_height
+                box['left'] = min(
+                    face_left, box.get('left', face_left))
+                box['top'] = min(
+                    face_top, box.get('top', face_top))
+                box['right'] = max(
+                    face_right, box.get('right', face_right))
+                box['bottom'] = max(
+                    face_bottom, box.get('bottom', face_bottom))
+
             if horizontal_faces:
-                from_left = sum(horizontal_faces) / len(horizontal_faces)
-                from_top = sum(vertical_faces) / len(vertical_faces)
-                return from_left, from_top
+                left = sum(horizontal_faces) / len(horizontal_faces)
+                top = sum(vertical_faces) / len(vertical_faces)
+                diameter = max(
+                    box['right'] - box['left'],
+                    box['bottom'] - box['top']
+                )
+                return Cropping(left=left, top=top, diameter=diameter)
             else:
                 # No faces found
                 return None
@@ -244,9 +303,13 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
 
             corners = cv2.goodFeaturesToTrack(cv2img, 25, 0.01, 10)
             corners = numpy.int0(corners)
-            from_left = corners.ravel()[::2].mean()
-            from_top = corners.ravel()[1::2].mean()
-
-            return from_left, from_top
+            xx = corners.ravel()[0::2]
+            yy = corners.ravel()[1::2]
+            w = max(xx) - min(xx)
+            h = max(yy) - min(yy)
+            d = max(w, h)
+            x = xx.mean()
+            y = yy.mean()
+            return Cropping(left=x, top=y, diameter=d)
 
         main()

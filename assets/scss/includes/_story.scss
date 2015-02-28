@@ -13,6 +13,8 @@
   .mellomtittel {
     color: $dark-grey;
     font-size: 1.3rem;
+    margin: 1rem 0 0 0;
+
   }
 
   .tingo {
@@ -22,7 +24,7 @@
   }
 
   .question {
-    font-weight: bold;
+    font-weight: 500;
     font-style: italic;
   }
 
@@ -99,8 +101,17 @@
     font-size: 0.8rem;
     color: $light-grey;
     .inngangsord {
-      font-weight: bolder;
+      font-weight: 500;
     }
   }
 
+}
+
+.slideshow.slick-slider {
+  margin-bottom: 20px;
+
+  .slick-dots {
+      bottom: -20px;
+      margin: 0;
+  }
 }

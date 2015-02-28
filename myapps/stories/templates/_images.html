@@ -1,5 +1,8 @@
 {% load thumbnail %}
 {% load parse_markup %}
+{% if slideshow %}
+  <div class="slideshow">
+{% endif %}
 {% for image in elements %}
   {% if image.video_host %}
   <div class="video-container">
@@ -17,3 +20,6 @@
   </div>
   {% endif %}
 {% endfor %}
+{% if slideshow %}
+  </div>
+{% endif %}

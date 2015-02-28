@@ -47,7 +47,7 @@ body {
   font-family: "Roboto", sans-serif;
   font-weight: normal;
   font-style: normal;
-  line-height: 140%;
+  line-height: 130%;
   position: relative;
   cursor: default; }
 
@@ -1244,585 +1244,6 @@ select {
     width: 100%;
     height: 100%; }
 
-button, .button {
-  border-style: solid;
-  border-width: 0px;
-  cursor: pointer;
-  font-family: "Roboto", sans-serif;
-  font-weight: normal;
-  line-height: normal;
-  margin: 0 0 1.25rem;
-  position: relative;
-  text-decoration: none;
-  text-align: center;
-  -webkit-appearance: none;
-  -webkit-border-radius: 0;
-  display: inline-block;
-  padding-top: 1rem;
-  padding-right: 2rem;
-  padding-bottom: 1.0625rem;
-  padding-left: 2rem;
-  font-size: 1rem;
-  background-color: #008cba;
-  border-color: #007095;
-  color: white;
-  transition: background-color 300ms ease-out; }
-  button:hover, button:focus, .button:hover, .button:focus {
-    background-color: #007095; }
-  button:hover, button:focus, .button:hover, .button:focus {
-    color: white; }
-  button.secondary, .button.secondary {
-    background-color: #e7e7e7;
-    border-color: #b9b9b9;
-    color: #333333; }
-    button.secondary:hover, button.secondary:focus, .button.secondary:hover, .button.secondary:focus {
-      background-color: #b9b9b9; }
-    button.secondary:hover, button.secondary:focus, .button.secondary:hover, .button.secondary:focus {
-      color: #333333; }
-  button.success, .button.success {
-    background-color: #43ac6a;
-    border-color: #368a55;
-    color: white; }
-    button.success:hover, button.success:focus, .button.success:hover, .button.success:focus {
-      background-color: #368a55; }
-    button.success:hover, button.success:focus, .button.success:hover, .button.success:focus {
-      color: white; }
-  button.alert, .button.alert {
-    background-color: #f04124;
-    border-color: #cf2a0e;
-    color: white; }
-    button.alert:hover, button.alert:focus, .button.alert:hover, .button.alert:focus {
-      background-color: #cf2a0e; }
-    button.alert:hover, button.alert:focus, .button.alert:hover, .button.alert:focus {
-      color: white; }
-  button.large, .button.large {
-    padding-top: 1.125rem;
-    padding-right: 2.25rem;
-    padding-bottom: 1.1875rem;
-    padding-left: 2.25rem;
-    font-size: 1.25rem; }
-  button.small, .button.small {
-    padding-top: 0.875rem;
-    padding-right: 1.75rem;
-    padding-bottom: 0.9375rem;
-    padding-left: 1.75rem;
-    font-size: 0.8125rem; }
-  button.tiny, .button.tiny {
-    padding-top: 0.625rem;
-    padding-right: 1.25rem;
-    padding-bottom: 0.6875rem;
-    padding-left: 1.25rem;
-    font-size: 0.6875rem; }
-  button.expand, .button.expand {
-    padding-right: 0;
-    padding-left: 0;
-    width: 100%; }
-  button.left-align, .button.left-align {
-    text-align: left;
-    text-indent: 0.75rem; }
-  button.right-align, .button.right-align {
-    text-align: right;
-    padding-right: 0.75rem; }
-  button.radius, .button.radius {
-    border-radius: 3px; }
-  button.round, .button.round {
-    border-radius: 1000px; }
-  button.disabled, button[disabled], .button.disabled, .button[disabled] {
-    background-color: #008cba;
-    border-color: #007095;
-    color: white;
-    cursor: default;
-    opacity: 0.7;
-    box-shadow: none; }
-    button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[disabled]:focus, .button.disabled:hover, .button.disabled:focus, .button[disabled]:hover, .button[disabled]:focus {
-      background-color: #007095; }
-    button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[disabled]:focus, .button.disabled:hover, .button.disabled:focus, .button[disabled]:hover, .button[disabled]:focus {
-      color: white; }
-    button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[disabled]:focus, .button.disabled:hover, .button.disabled:focus, .button[disabled]:hover, .button[disabled]:focus {
-      background-color: #008cba; }
-    button.disabled.secondary, button[disabled].secondary, .button.disabled.secondary, .button[disabled].secondary {
-      background-color: #e7e7e7;
-      border-color: #b9b9b9;
-      color: #333333;
-      cursor: default;
-      opacity: 0.7;
-      box-shadow: none; }
-      button.disabled.secondary:hover, button.disabled.secondary:focus, button[disabled].secondary:hover, button[disabled].secondary:focus, .button.disabled.secondary:hover, .button.disabled.secondary:focus, .button[disabled].secondary:hover, .button[disabled].secondary:focus {
-        background-color: #b9b9b9; }
-      button.disabled.secondary:hover, button.disabled.secondary:focus, button[disabled].secondary:hover, button[disabled].secondary:focus, .button.disabled.secondary:hover, .button.disabled.secondary:focus, .button[disabled].secondary:hover, .button[disabled].secondary:focus {
-        color: #333333; }
-      button.disabled.secondary:hover, button.disabled.secondary:focus, button[disabled].secondary:hover, button[disabled].secondary:focus, .button.disabled.secondary:hover, .button.disabled.secondary:focus, .button[disabled].secondary:hover, .button[disabled].secondary:focus {
-        background-color: #e7e7e7; }
-    button.disabled.success, button[disabled].success, .button.disabled.success, .button[disabled].success {
-      background-color: #43ac6a;
-      border-color: #368a55;
-      color: white;
-      cursor: default;
-      opacity: 0.7;
-      box-shadow: none; }
-      button.disabled.success:hover, button.disabled.success:focus, button[disabled].success:hover, button[disabled].success:focus, .button.disabled.success:hover, .button.disabled.success:focus, .button[disabled].success:hover, .button[disabled].success:focus {
-        background-color: #368a55; }
-      button.disabled.success:hover, button.disabled.success:focus, button[disabled].success:hover, button[disabled].success:focus, .button.disabled.success:hover, .button.disabled.success:focus, .button[disabled].success:hover, .button[disabled].success:focus {
-        color: white; }
-      button.disabled.success:hover, button.disabled.success:focus, button[disabled].success:hover, button[disabled].success:focus, .button.disabled.success:hover, .button.disabled.success:focus, .button[disabled].success:hover, .button[disabled].success:focus {
-        background-color: #43ac6a; }
-    button.disabled.alert, button[disabled].alert, .button.disabled.alert, .button[disabled].alert {
-      background-color: #f04124;
-      border-color: #cf2a0e;
-      color: white;
-      cursor: default;
-      opacity: 0.7;
-      box-shadow: none; }
-      button.disabled.alert:hover, button.disabled.alert:focus, button[disabled].alert:hover, button[disabled].alert:focus, .button.disabled.alert:hover, .button.disabled.alert:focus, .button[disabled].alert:hover, .button[disabled].alert:focus {
-        background-color: #cf2a0e; }
-      button.disabled.alert:hover, button.disabled.alert:focus, button[disabled].alert:hover, button[disabled].alert:focus, .button.disabled.alert:hover, .button.disabled.alert:focus, .button[disabled].alert:hover, .button[disabled].alert:focus {
-        color: white; }
-      button.disabled.alert:hover, button.disabled.alert:focus, button[disabled].alert:hover, button[disabled].alert:focus, .button.disabled.alert:hover, .button.disabled.alert:focus, .button[disabled].alert:hover, .button[disabled].alert:focus {
-        background-color: #f04124; }
-
-button::-moz-focus-inner {
-  border: 0;
-  padding: 0; }
-
-@media only screen and (min-width: 40.063em) {
-  button, .button {
-    display: inline-block; } }
-/* Standard Forms */
-form {
-  margin: 0 0 1rem; }
-
-/* Using forms within rows, we need to set some defaults */
-form .row .row {
-  margin: 0 -0.5rem; }
-  form .row .row .column,
-  form .row .row .columns,
-  form .row .row #story .bodytext,
-  #story form .row .row .bodytext,
-  form .row .row #story .inline-full,
-  #story form .row .row .inline-full,
-  form .row .row #story .inline-left,
-  #story form .row .row .inline-left,
-  form .row .row #story .inline-right,
-  #story form .row .row .inline-right,
-  form .row .row .panel-1,
-  form .row .row .panel-2,
-  form .row .row .panel-3 {
-    padding: 0 0.5rem; }
-  form .row .row.collapse {
-    margin: 0; }
-    form .row .row.collapse .column,
-    form .row .row.collapse .columns,
-    form .row .row.collapse #story .bodytext,
-    #story form .row .row.collapse .bodytext,
-    form .row .row.collapse #story .inline-full,
-    #story form .row .row.collapse .inline-full,
-    form .row .row.collapse #story .inline-left,
-    #story form .row .row.collapse .inline-left,
-    form .row .row.collapse #story .inline-right,
-    #story form .row .row.collapse .inline-right,
-    form .row .row.collapse .panel-1,
-    form .row .row.collapse .panel-2,
-    form .row .row.collapse .panel-3 {
-      padding: 0; }
-    form .row .row.collapse input {
-      border-bottom-right-radius: 0;
-      border-top-right-radius: 0; }
-form .row input.column,
-form .row input.columns,
-form .row #story input.bodytext,
-#story form .row input.bodytext,
-form .row #story input.inline-full,
-#story form .row input.inline-full,
-form .row #story input.inline-left,
-#story form .row input.inline-left,
-form .row #story input.inline-right,
-#story form .row input.inline-right,
-form .row input.panel-1,
-form .row input.panel-2,
-form .row input.panel-3,
-form .row textarea.column,
-form .row textarea.columns,
-form .row #story textarea.bodytext,
-#story form .row textarea.bodytext,
-form .row #story textarea.inline-full,
-#story form .row textarea.inline-full,
-form .row #story textarea.inline-left,
-#story form .row textarea.inline-left,
-form .row #story textarea.inline-right,
-#story form .row textarea.inline-right,
-form .row textarea.panel-1,
-form .row textarea.panel-2,
-form .row textarea.panel-3 {
-  padding-left: 0.5rem; }
-
-/* Label Styles */
-label {
-  font-size: 0.875rem;
-  color: #4d4d4d;
-  cursor: pointer;
-  display: block;
-  font-weight: normal;
-  line-height: 1.5;
-  margin-bottom: 0;
-  /* Styles for required inputs */ }
-  label.right, #story label.inline-right {
-    float: none !important;
-    text-align: right; }
-  label.inline {
-    margin: 0 0 1rem 0;
-    padding: 0.5625rem 0; }
-  label small {
-    text-transform: capitalize;
-    color: #676767; }
-
-select::-ms-expand {
-  display: none; }
-
-/* Attach elements to the beginning or end of an input */
-.prefix,
-.postfix {
-  display: block;
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  width: 100%;
-  padding-top: 0;
-  padding-bottom: 0;
-  border-style: solid;
-  border-width: 1px;
-  overflow: hidden;
-  font-size: 0.875rem;
-  height: 2.3125rem;
-  line-height: 2.3125rem; }
-
-/* Adjust padding, alignment and radius if pre/post element is a button */
-.postfix.button {
-  padding-left: 0;
-  padding-right: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  text-align: center;
-  line-height: 2.125rem;
-  border: none; }
-
-.prefix.button {
-  padding-left: 0;
-  padding-right: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  text-align: center;
-  line-height: 2.125rem;
-  border: none; }
-
-.prefix.button.radius {
-  border-radius: 0;
-  border-bottom-left-radius: 3px;
-  border-top-left-radius: 3px; }
-
-.postfix.button.radius {
-  border-radius: 0;
-  border-bottom-right-radius: 3px;
-  border-top-right-radius: 3px; }
-
-.prefix.button.round {
-  border-radius: 0;
-  border-bottom-left-radius: 1000px;
-  border-top-left-radius: 1000px; }
-
-.postfix.button.round {
-  border-radius: 0;
-  border-bottom-right-radius: 1000px;
-  border-top-right-radius: 1000px; }
-
-/* Separate prefix and postfix styles when on span or label so buttons keep their own */
-span.prefix, label.prefix {
-  background: #f2f2f2;
-  border-right: none;
-  color: #333333;
-  border-color: #cccccc; }
-  span.prefix.radius, label.prefix.radius {
-    border-radius: 0;
-    border-bottom-left-radius: 3px;
-    border-top-left-radius: 3px; }
-
-span.postfix, label.postfix {
-  background: #f2f2f2;
-  border-left: none;
-  color: #333333;
-  border-color: #cccccc; }
-  span.postfix.radius, label.postfix.radius {
-    border-radius: 0;
-    border-bottom-right-radius: 3px;
-    border-top-right-radius: 3px; }
-
-/* We use this to get basic styling on all basic form elements */
-input[type="text"],
-input[type="password"],
-input[type="date"],
-input[type="datetime"],
-input[type="datetime-local"],
-input[type="month"],
-input[type="week"],
-input[type="email"],
-input[type="number"],
-input[type="search"],
-input[type="tel"],
-input[type="time"],
-input[type="url"],
-textarea {
-  -webkit-appearance: none;
-  -webkit-border-radius: 0px;
-  background-color: white;
-  font-family: inherit;
-  border: 1px solid #cccccc;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-  color: rgba(0, 0, 0, 0.75);
-  display: block;
-  font-size: 0.875rem;
-  margin: 0 0 1rem 0;
-  padding: 0.5rem;
-  height: 2.3125rem;
-  width: 100%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  transition: box-shadow 0.45s, border-color 0.45s ease-in-out; }
-  input[type="text"]:focus,
-  input[type="password"]:focus,
-  input[type="date"]:focus,
-  input[type="datetime"]:focus,
-  input[type="datetime-local"]:focus,
-  input[type="month"]:focus,
-  input[type="week"]:focus,
-  input[type="email"]:focus,
-  input[type="number"]:focus,
-  input[type="search"]:focus,
-  input[type="tel"]:focus,
-  input[type="time"]:focus,
-  input[type="url"]:focus,
-  textarea:focus {
-    box-shadow: 0 0 5px #999999;
-    border-color: #999999; }
-  input[type="text"]:focus,
-  input[type="password"]:focus,
-  input[type="date"]:focus,
-  input[type="datetime"]:focus,
-  input[type="datetime-local"]:focus,
-  input[type="month"]:focus,
-  input[type="week"]:focus,
-  input[type="email"]:focus,
-  input[type="number"]:focus,
-  input[type="search"]:focus,
-  input[type="tel"]:focus,
-  input[type="time"]:focus,
-  input[type="url"]:focus,
-  textarea:focus {
-    background: #fafafa;
-    border-color: #999999;
-    outline: none; }
-  input[type="text"]:disabled,
-  input[type="password"]:disabled,
-  input[type="date"]:disabled,
-  input[type="datetime"]:disabled,
-  input[type="datetime-local"]:disabled,
-  input[type="month"]:disabled,
-  input[type="week"]:disabled,
-  input[type="email"]:disabled,
-  input[type="number"]:disabled,
-  input[type="search"]:disabled,
-  input[type="tel"]:disabled,
-  input[type="time"]:disabled,
-  input[type="url"]:disabled,
-  textarea:disabled {
-    background-color: #dddddd;
-    cursor: default; }
-  input[type="text"][disabled], input[type="text"][readonly], fieldset[disabled] input[type="text"],
-  input[type="password"][disabled],
-  input[type="password"][readonly], fieldset[disabled]
-  input[type="password"],
-  input[type="date"][disabled],
-  input[type="date"][readonly], fieldset[disabled]
-  input[type="date"],
-  input[type="datetime"][disabled],
-  input[type="datetime"][readonly], fieldset[disabled]
-  input[type="datetime"],
-  input[type="datetime-local"][disabled],
-  input[type="datetime-local"][readonly], fieldset[disabled]
-  input[type="datetime-local"],
-  input[type="month"][disabled],
-  input[type="month"][readonly], fieldset[disabled]
-  input[type="month"],
-  input[type="week"][disabled],
-  input[type="week"][readonly], fieldset[disabled]
-  input[type="week"],
-  input[type="email"][disabled],
-  input[type="email"][readonly], fieldset[disabled]
-  input[type="email"],
-  input[type="number"][disabled],
-  input[type="number"][readonly], fieldset[disabled]
-  input[type="number"],
-  input[type="search"][disabled],
-  input[type="search"][readonly], fieldset[disabled]
-  input[type="search"],
-  input[type="tel"][disabled],
-  input[type="tel"][readonly], fieldset[disabled]
-  input[type="tel"],
-  input[type="time"][disabled],
-  input[type="time"][readonly], fieldset[disabled]
-  input[type="time"],
-  input[type="url"][disabled],
-  input[type="url"][readonly], fieldset[disabled]
-  input[type="url"],
-  textarea[disabled],
-  textarea[readonly], fieldset[disabled]
-  textarea {
-    background-color: #dddddd;
-    cursor: default; }
-  input[type="text"].radius,
-  input[type="password"].radius,
-  input[type="date"].radius,
-  input[type="datetime"].radius,
-  input[type="datetime-local"].radius,
-  input[type="month"].radius,
-  input[type="week"].radius,
-  input[type="email"].radius,
-  input[type="number"].radius,
-  input[type="search"].radius,
-  input[type="tel"].radius,
-  input[type="time"].radius,
-  input[type="url"].radius,
-  textarea.radius {
-    border-radius: 3px; }
-
-input[type="submit"] {
-  -webkit-appearance: none;
-  -webkit-border-radius: 0px; }
-
-/* Respect enforced amount of rows for textarea */
-textarea[rows] {
-  height: auto; }
-
-/* Add height value for select elements to match text input height */
-select {
-  -webkit-appearance: none !important;
-  -webkit-border-radius: 0px;
-  background-color: #fafafa;
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+);
-  background-position: 100% center;
-  background-repeat: no-repeat;
-  border: 1px solid #cccccc;
-  padding: 0.5rem;
-  font-size: 0.875rem;
-  color: rgba(0, 0, 0, 0.75);
-  line-height: normal;
-  border-radius: 0;
-  height: 2.3125rem; }
-  select.radius {
-    border-radius: 3px; }
-  select:hover {
-    background-color: #f3f3f3;
-    border-color: #999999; }
-  select:disabled {
-    background-color: #dddddd;
-    cursor: default; }
-
-/* Adjust margin for form elements below */
-input[type="file"],
-input[type="checkbox"],
-input[type="radio"],
-select {
-  margin: 0 0 1rem 0; }
-
-input[type="checkbox"] + label,
-input[type="radio"] + label {
-  display: inline-block;
-  margin-left: 0.5rem;
-  margin-right: 1rem;
-  margin-bottom: 0;
-  vertical-align: baseline; }
-
-/* Normalize file input width */
-input[type="file"] {
-  width: 100%; }
-
-/* HTML5 Number spinners settings */
-/* We add basic fieldset styling */
-fieldset {
-  border: 1px solid #dddddd;
-  padding: 1.25rem;
-  margin: 1.125rem 0; }
-  fieldset legend {
-    font-weight: bold;
-    background: white;
-    padding: 0 0.1875rem;
-    margin: 0;
-    margin-left: -0.1875rem; }
-
-/* Error Handling */
-[data-abide] .error small.error, [data-abide] .error span.error, [data-abide] span.error, [data-abide] small.error {
-  display: block;
-  padding: 0.375rem 0.5625rem 0.5625rem;
-  margin-top: -1px;
-  margin-bottom: 1rem;
-  font-size: 0.75rem;
-  font-weight: normal;
-  font-style: italic;
-  background: #f04124;
-  color: white; }
-[data-abide] span.error, [data-abide] small.error {
-  display: none; }
-
-span.error, small.error {
-  display: block;
-  padding: 0.375rem 0.5625rem 0.5625rem;
-  margin-top: -1px;
-  margin-bottom: 1rem;
-  font-size: 0.75rem;
-  font-weight: normal;
-  font-style: italic;
-  background: #f04124;
-  color: white; }
-
-.error input,
-.error textarea,
-.error select {
-  margin-bottom: 0; }
-.error input[type="checkbox"],
-.error input[type="radio"] {
-  margin-bottom: 1rem; }
-.error label,
-.error label.error {
-  color: #f04124; }
-.error small.error {
-  display: block;
-  padding: 0.375rem 0.5625rem 0.5625rem;
-  margin-top: -1px;
-  margin-bottom: 1rem;
-  font-size: 0.75rem;
-  font-weight: normal;
-  font-style: italic;
-  background: #f04124;
-  color: white; }
-.error > label > small {
-  color: #676767;
-  background: transparent;
-  padding: 0;
-  text-transform: capitalize;
-  font-style: normal;
-  font-size: 60%;
-  margin: 0;
-  display: inline; }
-.error span.error-message {
-  display: block; }
-
-input.error,
-textarea.error,
-select.error {
-  margin-bottom: 0; }
-
-label.error {
-  color: #f04124; }
-
 .text-left {
   text-align: left !important; }
 
@@ -1993,8 +1414,8 @@ p {
   font-family: inherit;
   font-weight: normal;
   font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 1.25rem;
+  line-height: 1.4;
+  margin-bottom: 0.625rem;
   text-rendering: optimizeLegibility; }
   p.lead {
     font-size: 1.21875rem;
@@ -2081,8 +1502,8 @@ ul,
 ol,
 dl {
   font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 1.25rem;
+  line-height: 1.4;
+  margin-bottom: 0.625rem;
   list-style-position: outside;
   font-family: inherit; }
 
@@ -2144,7 +1565,7 @@ abbr {
 
 /* Blockquotes */
 blockquote {
-  margin: 0 0 1.25rem;
+  margin: 0 0 0.625rem;
   padding: 0.5625rem 1.25rem 0 1.1875rem;
   border-left: 1px solid #dddddd; }
   blockquote cite {
@@ -2159,7 +1580,7 @@ blockquote {
 
 blockquote,
 blockquote p {
-  line-height: 1.6;
+  line-height: 1.4;
   color: #7a7a7a; }
 
 /* Microformats */
@@ -3810,11 +3231,12 @@ th.hide-for-touch {
     color: #444444; }
 #story .mellomtittel {
   color: #444444;
-  font-size: 1.3rem; }
+  font-size: 1.3rem;
+  margin: 1rem 0 0 0; }
 #story .tingo .inngangsord {
   font-weight: bolder; }
 #story .question {
-  font-weight: bold;
+  font-weight: 500;
   font-style: italic; }
 #story main .row {
   border-top: 1px solid #aaaaaa; }
@@ -3846,7 +3268,13 @@ th.hide-for-touch {
   font-size: 0.8rem;
   color: #aaaaaa; }
   #story .image-caption .inngangsord {
-    font-weight: bolder; }
+    font-weight: 500; }
+
+.slideshow.slick-slider {
+  margin-bottom: 20px; }
+  .slideshow.slick-slider .slick-dots {
+    bottom: -20px;
+    margin: 0; }
 
 .cols-1 .headline-s {
   font-size: 1.5em;

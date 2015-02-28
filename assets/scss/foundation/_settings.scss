@@ -66,7 +66,7 @@
 // $base-font-size: 80%;
 
 // The $base-font-size is 100% while $base-line-height is 150%
-$base-line-height: 140%;
+$base-line-height: 130%;
 
 // We use this to control whether or not CSS classes come through in the gem files.
 $include-html-classes: true;
@@ -215,9 +215,9 @@ $header-top-margin: .3rem;
 // We use these to style paragraphs
 // $paragraph-font-family: inherit;
 // $paragraph-font-weight: $font-weight-normal;
-// $paragraph-font-size: 1rem;
-// $paragraph-line-height: 1.6;
-// $paragraph-margin-bottom: rem-calc(20);
+$paragraph-font-size: 1rem;
+$paragraph-line-height: 1.4;
+$paragraph-margin-bottom: rem-calc(10);
 // $paragraph-aside-font-size: rem-calc(14);
 // $paragraph-aside-line-height: 1.35;
 // $paragraph-aside-font-style: italic;
