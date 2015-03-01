@@ -57,7 +57,7 @@ class Contributor(models.Model):
             return self.byline_photo
         imagefiles = glob.glob(BYLINE_PHOTO_FOLDER + '/*.jpg')
         name = self.name.lower()
-        name_last_first = re.sub(r'(.*) (\S+)$', '\2 \1', name)
+        name_last_first = re.sub(r'^(.*) (\S+)$', r'\2 \1', name)
         name_slug = slugify(name) + '.jpg'
         name_slug_reverse = slugify(name_last_first) + '.jpg'
         bestratio = 90
