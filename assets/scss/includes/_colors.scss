@@ -32,5 +32,34 @@ $medium-kultur: $kultur;
 $dark-kultur: #050;
 $contrast-kultur: #909;
 
-
 $medium-magasin: $magasin;
+
+%section-background-color {
+  &.kultur{
+    background-color: $medium-kultur;
+  }
+  &.nyheter{
+    background-color: $medium-nyheter;
+  }
+  &.magasin{
+    background-color: $medium-magasin;
+  }
+  &.debatt{
+    background-color: $medium-debatt;
+  }
+}
+
+%section-text-color {
+  &.kultur{
+    color: $medium-kultur;
+  }
+  &.nyheter{
+    color: $medium-nyheter;
+  }
+  &.magasin{
+    color: $medium-magasin;
+  }
+  &.debatt{
+    color: $medium-debatt;
+  }
+}

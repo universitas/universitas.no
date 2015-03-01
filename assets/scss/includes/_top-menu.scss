@@ -42,7 +42,7 @@ $fontsize: $menu-height - $menu-padding * 2;
     @extend %onscreen;
   }
 }
-main{
+body > main{
   margin-top: $menu-height + $menu-padding;
 }
 

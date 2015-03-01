@@ -186,7 +186,7 @@ $header-top-margin: .3rem;
 // $header-text-rendering: optimizeLegibility;
 
 // We use these to control header font sizes
-// $h1-font-size: rem-calc(44);
+$h1-font-size: rem-calc(60);
 // $h2-font-size: rem-calc(37);
 // $h3-font-size: rem-calc(27);
 // $h4-font-size: rem-calc(23);
@@ -194,7 +194,7 @@ $header-top-margin: .3rem;
 // $h6-font-size: 1rem;
 
 // We use these to control header size reduction on small screens
-// $h1-font-reduction: rem-calc(10) !default;
+$h1-font-reduction: rem-calc(15) !default;
 // $h2-font-reduction: rem-calc(10) !default;
 // $h3-font-reduction: rem-calc(5) !default;
 // $h4-font-reduction: rem-calc(5) !default;
@@ -215,8 +215,8 @@ $header-top-margin: .3rem;
 // We use these to style paragraphs
 // $paragraph-font-family: inherit;
 // $paragraph-font-weight: $font-weight-normal;
-$paragraph-font-size: 1rem;
-$paragraph-line-height: 1.4;
+$paragraph-font-size: .91rem;
+$paragraph-line-height: 1.5;
 $paragraph-margin-bottom: rem-calc(10);
 // $paragraph-aside-font-size: rem-calc(14);
 // $paragraph-aside-line-height: 1.35;
@@ -250,11 +250,11 @@ $paragraph-margin-bottom: rem-calc(10);
 // $list-font-size: $paragraph-font-size;
 // $list-line-height: $paragraph-line-height;
 // $list-margin-bottom: $paragraph-margin-bottom;
-// $list-style-position: outside;
-// $list-side-margin: 1.1rem;
-// $list-ordered-side-margin: 1.4rem;
+$list-style-position: inside;
+$list-side-margin: 0;
+$list-ordered-side-margin: 0;
 // $list-side-margin-no-bullet: 0;
-// $list-nested-margin: rem-calc(20);
+$list-nested-margin: rem-calc(10);
 // $definition-list-header-weight: $font-weight-bold;
 // $definition-list-header-margin-bottom: .3rem;
 // $definition-list-margin-bottom: rem-calc(12);

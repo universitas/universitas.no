@@ -1,5 +1,6 @@
 {% extends "base-template.html" %}
 {% load thumbnail %}
+{% load byline_image %}
 {% load inline_elements %}
 {% load advert_channel %}
 {% block title %}universitas.no – {{ story.title }}{% endblock title %}
@@ -24,18 +25,48 @@
           <p class="lede">{{ story.html.lede }}</p>
         {% endif %}
       </div>
-{# bylines #}
-      <ul id="bylines">
-        {% for byline in story.byline_set.all %}
-          <li class = "byline">
-            <span class="credit">{{ byline.get_credit_display }}: </span><span class="name">{{ byline.contributor }}</span>{% if byline.title %}<span class="title">, {{ byline.title }}</span>{% endif %}
-          </li>
-        {% endfor %}
-      </ul>
     </header>
-    <main class="medium-12 columns">
+   <div class="left-sidebar medium-2 columns">
+{# bylines #}
+
+    <div class="story-info">
+      <div class="artikkeltype {{ story.section.slug }}">
+        {{ story.story_type.name }}
+      </div>
+      <div class="temaord">
+        {{ story.theme_word }}
+      </div>
+    </div>
+    <div class="dateline">{{ story.publication_date | date:"D d. b Y" }}</div>
+    <div class="bylines">
+        {% for byline in story.byline_set.all %}
+        <div class="byline">
+        {# {% if byline.contributor.byline_image %} #}
+          <div class="byline-photo">
+            {% byline_image byline.contributor "100x100" %}
+          </div>
+        {# {% endif %} #}
+        <div class="byline-text">
+            <div class="credit">{{ byline.get_credit_display }}</div>
+            <div class="name">{{ byline.contributor }}</div>
+            {% if byline.title %}
+              <div class="title">{{ byline.title }}</div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+        <div class="social-share sticky">
+        {% with 'social-facebook social-twitter comments bookmark' as iconlist %}
+          {% for icon in iconlist.split %}
+            <div class="icon"><i class="fi-{{ icon }}"></i></div>
+          {% endfor %}
+        {% endwith %}
+      </div>
+   </div>
+ </div>
+  <main class="medium-10 columns">
      {{ story.get_html }}
-    </main>
+  </main>
   </article>
     <section id="after" class="row">
     {% advert "story after" %}
