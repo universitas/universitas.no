@@ -1,6 +1,7 @@
 import os
-from slugify import slugify
+from slugify import Slugify
 import glob
+import re
 
 from fuzzywuzzy import fuzz
 
@@ -51,15 +52,22 @@ class Contributor(models.Model):
         return self.byline_set.count()
 
     def get_byline_image(self, force_new=False):
+        slugify = Slugify(to_lower=True)
         if not force_new and self.byline_photo:
             return self.byline_photo
         imagefiles = glob.glob(BYLINE_PHOTO_FOLDER + '/*.jpg')
-        name_slug = slugify(self.name) + '.jpg'
+        name = self.name.lower()
+        name_last_first = re.sub(r'(.*) (\S+)$', '\2 \1', name)
+        name_slug = slugify(name) + '.jpg'
+        name_slug_reverse = slugify(name_last_first) + '.jpg'
         bestratio = 90
         bestmatch = None
         for path in imagefiles:
-            filename = os.path.split(path)[1]
-            ratio = fuzz.ratio(filename, name_slug)
+            filename = os.path.split(path)[1].lower()
+            ratio = max(
+                fuzz.ratio(filename, name_slug),
+                fuzz.ratio(filename, name_slug_reverse)
+                )
             if ratio > bestratio:
                 bestmatch = path
                 bestratio = ratio
