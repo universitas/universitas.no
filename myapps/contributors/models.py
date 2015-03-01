@@ -1,7 +1,22 @@
-import difflib
+import os
+from slugify import slugify
+import glob
+
+from fuzzywuzzy import fuzz
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+
+from myapps.photo.models import ImageFile
+import logging
+logger = logging.getLogger('universitas')
+
+
+BYLINE_PHOTO_FOLDER = os.path.normpath(
+    os.path.join(settings.MEDIA_ROOT, 'byline'))
+
 
 class Contributor(models.Model):
 
@@ -14,16 +29,55 @@ class Contributor(models.Model):
     display_name = models.CharField(blank=True, max_length=50)
     aliases = models.TextField(blank=True)
     initials = models.CharField(blank=True, null=True, max_length=5)
+    byline_photo = models.ForeignKey(
+        ImageFile,
+        related_name='person',
+        blank=True, null=True,
+        help_text=_('photo used for byline credit.'),
+    )
 
     class Meta:
         verbose_name = _('Contributor')
         verbose_name_plural = _('Contributors')
 
     def __str__(self):
+        return self.name
+
+    @property
+    def name(self):
         return self.display_name or self.initials or 'N. N.'
 
     def bylines_count(self):
         return self.byline_set.count()
+
+    def get_byline_image(self, force_new=False):
+        if not force_new and self.byline_photo:
+            return self.byline_photo
+        imagefiles = glob.glob(BYLINE_PHOTO_FOLDER + '/*.jpg')
+        name_slug = slugify(self.name) + '.jpg'
+        bestratio = 90
+        bestmatch = None
+        for path in imagefiles:
+            filename = os.path.split(path)[1]
+            ratio = fuzz.ratio(filename, name_slug)
+            if ratio > bestratio:
+                bestmatch = path
+                bestratio = ratio
+                if ratio == 100:
+                    break
+        if bestmatch:
+            msg = 'found match: name:{}, img:{}, ratio:{} '.format(
+                name_slug, bestmatch, ratio)
+            logger.debug(msg)
+            img, _ = ImageFile.objects.get_or_create(source_file=bestmatch)
+            img.autocrop()
+            self.byline_photo = img
+            self.save()
+            return img
+
+    # @cached(3600)
+    def has_byline_image(self):
+        return bool(self.find_byline_image())
 
     @classmethod
     def get_or_create(cls, full_name, initials=''):
@@ -77,7 +131,7 @@ class Contributor(models.Model):
             if initials:
                 contributors = base_query.filter(initials__iexact=initials)
                 for contributor in contributors:
-                    ratio = difflib.SequenceMatcher(None, contributor.display_name, full_name).ratio()
+                    ratio = fuzz.ratio(contributor.display_name, full_name)
                     if ratio >= 0.8:
                         # TODO: contributor addalias(newalias-maybe).
                         # TODO: contributor merge.

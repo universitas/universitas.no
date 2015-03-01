@@ -114,7 +114,7 @@ DATABASE_ROUTERS = ['myapps.legacy_db.router.ProdsysRouter']
 
 #SORL
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
-THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.convert_engine.Engine'
+THUMBNAIL_ENGINE = 'myapps.photo.thumbnail_engine.CloseCropEngine'
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
 FILE_UPLOAD_PERMISSIONS = 0o664
 

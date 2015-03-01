@@ -1,0 +1,12 @@
+{% load thumbnail %}
+<div class="byline_image">
+  {% with contributor.get_byline_image as img %}
+  {% if img %}
+    {% thumbnail img.source_file image_size crop=img.get_crop diameter=img.crop_diameter as thumb %}
+      <img src="{{ thumb.url }}" alt="{{ contributor.name }}">
+    {% endthumbnail %}
+  {% else %}
+    <p>No img</p>
+  {% endif %}
+  {% endwith %}
+</div>

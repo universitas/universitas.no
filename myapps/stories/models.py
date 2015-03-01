@@ -8,6 +8,8 @@ import json
 import logging
 logger = logging.getLogger('universitas')
 bylines_logger = logging.getLogger('bylines')
+from slugify import Slugify
+slugify = Slugify(max_length=50, to_lower=True)
 
 # Django core
 from django.utils.translation import ugettext_lazy as _
@@ -16,7 +18,6 @@ from django.utils import timezone
 from django.utils import translation
 from django.db import models
 from django.core.cache import cache
-from django.utils.text import slugify
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import URLValidator, ValidationError
 from django.utils.safestring import mark_safe
@@ -640,7 +641,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
                 1)
         self.parse_markup()
         self.bodytext_markup = self.reindex_inlines()
-        self.slug = slugify(self.title).replace('_', '').replace('–', '-')[:50]
+        self.slug = slugify(self.title)
         self.bylines_html = self.get_bylines_as_html()
         if (not self.publication_date
                 and self.publication_status == self.STATUS_PUBLISHED):

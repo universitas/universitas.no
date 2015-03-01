@@ -20,7 +20,6 @@ from utils.model_mixins import Edit_url_mixin
 from sorl.thumbnail import ImageField
 
 # Project apps
-from myapps.contributors.models import Contributor
 
 import logging
 logger = logging.getLogger('universitas')
@@ -36,13 +35,15 @@ Cropping = namedtuple('Cropping', ['top', 'left', 'diameter'])
 class ImageFile(TimeStampedModel, Edit_url_mixin):
     CROP_NONE = 0
     CROP_FEATURES = 5
+    CROP_PORTRAIT = 15
     CROP_FACES = 10
     CROP_MANUAL = 100
 
     CROP_CHOICES = (
         (CROP_NONE, _('center')),
-        (CROP_FEATURES, _('feature detection')),
-        (CROP_FACES, _('face detection')),
+        (CROP_FEATURES, _('corner detection')),
+        (CROP_FACES, _('multiple faces')),
+        (CROP_PORTRAIT, _('single face')),
         (CROP_MANUAL, _('manual crop')),
     )
 
@@ -93,7 +94,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
         blank=True, null=True,
         max_length=1000)
     contributor = models.ForeignKey(
-        Contributor,
+        'contributors.Contributor',
         help_text=_('who made this'),
         blank=True, null=True,
     )
@@ -149,25 +150,26 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
             self.autocrop()
         return '{h}% {v}%'.format(h=self.from_left, v=self.from_top)
 
-    def identify_photo_file_initials(self, contributors=(),):
-        """
-        If passed a file path that matches the Universitas format for photo credit.
-        Searches database or optional iterable of contributors for a person that
-        matches initials at end of jpg-file name
-        """
-        filename_pattern = re.compile(r'^.+[-_]([A-ZÆØÅ]{2,5})\.jp.?g$')
-        match = filename_pattern.match(self.source_file.name)
-        if match:
-            initials = match.groups()[0]
-            for contributor in contributors:
-                if contributor.initials == initials:
-                    return contributor
-            try:
-                return Contributor.objects.get(initials=initials)
-            except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
-                logger.warning(self, initials, e)
+    # def identify_photo_file_initials(self, contributors=(),):
+    #     """
+    #     If passed a file path that matches the Universitas format for photo credit.
+    #     Searches database or optional iterable of contributors for a person that
+    #     matches initials at end of jpg-file name
+    #     """
+    #     from myapps.contributors.models import Contributor
+    #     filename_pattern = re.compile(r'^.+[-_]([A-ZÆØÅ]{2,5})\.jp.?g$')
+    #     match = filename_pattern.match(self.source_file.name)
+    #     if match:
+    #         initials = match.groups()[0]
+    #         for contributor in contributors:
+    #             if contributor.initials == initials:
+    #                 return contributor
+    #         try:
+    #             return Contributor.objects.get(initials=initials)
+    #         except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
+    #             logger.warning(self, initials, e)
 
-        return None
+    #     return None
 
     def opencv_image(self, size=400, grayscale=True):
         """ Convert ImageFile into a cv2 image for image processing. """
@@ -199,8 +201,10 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
                 warning = 'Autocrop failed {} {}'.format(e, self)
                 logger.error(warning)
                 return
-            cropping = detect_faces(grayscale_image)
-            if cropping:
+            cropping, faces = detect_faces(grayscale_image)
+            if faces == 1:
+                self.cropping_method = self.CROP_PORTRAIT
+            elif faces > 1:
                 self.cropping_method = self.CROP_FACES
             else:
                 cropping = detect_features(grayscale_image)
@@ -282,10 +286,10 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
                     box['right'] - box['left'],
                     box['bottom'] - box['top']
                 )
-                return Cropping(left=left, top=top, diameter=diameter)
+                return Cropping(left=left, top=top, diameter=diameter) , len(faces)
             else:
                 # No faces found
-                return None
+                return None, len(faces)
 
         def detect_features(cv2img):
             """ Detect features in the image to determine cropping """
