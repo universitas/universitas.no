@@ -3601,7 +3601,7 @@ th.hide-for-touch {
     .edit-frontpage-story a:hover {
       opacity: 1; }
 
-.sections .section-title, #search {
+.sections .section-title, #search .search-icon {
   color: white;
   margin: 5px;
   font-size: 20px;
@@ -3615,7 +3615,7 @@ th.hide-for-touch {
   transition-delay: 0s; }
 
 .logo-panel, .section-panel {
-  transition-delay: .3s;
+  transition-delay: .1s;
   padding: 15px 0;
   position: absolute;
   width: 100%;
@@ -3701,8 +3701,34 @@ body > main {
         max-width: 120px;
         opacity: 1; } }
 
+.search-input:focus, .search-input:hover, #search:hover .search-input {
+  width: 150px;
+  padding: 3px 5px; }
+
+.search-input {
+  transition: all 0.2s ease-out;
+  width: 0;
+  padding: 0; }
+
 #search {
   float: right; }
+  #search .search-form {
+    float: right; }
+    #search .search-form .search-input {
+      color: #444444;
+      border: none;
+      border-radius: 3px;
+      font-size: .8rem;
+      height: 24px;
+      margin: 3px 0 3px 5px;
+      line-height: 1; }
+    #search .search-form .hidden-input {
+      position: absolute;
+      left: -9999px;
+      visibility: hidden; }
+  #search .search-icon {
+    float: left;
+    margin: 2px; }
 
 .section-item.nyheter {
   background-color: #c44530; }

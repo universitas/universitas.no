@@ -42,7 +42,13 @@
       {% endfor %}
     </nav>
     <div id="search">
-      <i class="fi-magnifying-glass"></i>
+      <div class="search-icon">
+        <i class="fi-magnifying-glass"></i>
+      </div>
+      <form class="search-form" action="{% url 'watson:search' %}">
+        <input placeholder="søk i universitas.no" class="search-input" type="text" name="q" value={{ request.GET.q }}>
+        <input class='hidden-input' type="submit">
+      </form>
     </div>
   </div>
 </div>

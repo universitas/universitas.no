@@ -12,6 +12,7 @@ from myapps.core.autocomplete_views import autocomplete_list
 from myapps.frontpage.views import frontpage_view
 from myapps.stories.views import article_view
 from autocomplete_light import urls as autocomplete_light_urls
+from watson import urls as watson_urls
 
 admin.autodiscover()
 
@@ -43,7 +44,12 @@ urlpatterns += patterns(
 urlpatterns += patterns(
     '',
     url(r'^autocomplete', include(autocomplete_light_urls)),
+    url(r'^autocomplete', include(autocomplete_light_urls)),
     url(r'^autocomplete/menu$', autocomplete_list, name='autocomplete_list'),
+)
+urlpatterns += patterns(
+    '',
+    url(r'^search/', include(watson_urls, namespace='watson')),
 )
 
 if settings.DEBUG:

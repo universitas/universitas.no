@@ -29,7 +29,7 @@ $fontsize: $menu-height - $menu-padding * 2;
 }
 
 %offscreen {
-  transition-delay: .3s;
+  transition-delay: .1s;
   padding: 15px 0;
   position: absolute;
   width: 100%;
@@ -142,9 +142,49 @@ body > main{
   }
 }
 
+%input-max {
+  width: 150px;
+  padding: 3px 5px;
+}
+
+%input-min {
+  transition: all 0.2s ease-out;
+  width: 0;
+  padding: 0;
+}
+
+.search-input {
+  @extend %input-min;
+  &:focus, &:hover, #search:hover & {
+    @extend %input-max;
+  }
+}
+
+
 #search {
-  @extend %menu-text;
   float: right;
+  .search-form {
+    float: right;
+    .search-input {
+      color: $dark-grey;
+      border: none;
+      border-radius: 3px;
+      font-size: .8rem;
+      height: 24px;
+      margin: 3px 0 3px 5px;
+      line-height: 1;
+    }
+    .hidden-input {
+      position: absolute;
+      left: -9999px;
+      visibility: hidden;
+    }
+  }
+  .search-icon {
+    @extend %menu-text;
+    float: left;
+    margin: 2px;
+  }
 }
 
 @each $section-name, $color in $section-map {
