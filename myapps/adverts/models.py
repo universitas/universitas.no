@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import logging
 import re
 import random
 from django.db import models
@@ -14,7 +13,7 @@ from sorl.thumbnail import ImageField, get_thumbnail
 
 from .dummy_image_advert import dummy_image_advert
 
-
+import logging
 logger = logging.getLogger('universitas')
 
 
@@ -206,11 +205,11 @@ class Advert(models.Model):
     DEFAULT = 4
     STATUS_CHOICES = [
         (DRAFT, _(
-            "Not ready to publish.")),
+            "Draft")),
         (PRIVATE, _(
-            "Private.")),
+            "Private")),
         (PUBLISHED, _(
-            "Served to visiting audience.")),
+            "Published")),
         (DEFAULT, _(
             "Fallback")),
     ]
