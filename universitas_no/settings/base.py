@@ -56,6 +56,7 @@ INSTALLED_APPS = (
     'compressor',
     'sekizai',
     'sorl.thumbnail',
+    'watson',
     ) + INSTALLED_APPS
 
 # CORE APPS
