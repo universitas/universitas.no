@@ -1,0 +1,1 @@
+default_app_config = 'myapps.legacy_db.apps.LegacyDbAppConfig'
