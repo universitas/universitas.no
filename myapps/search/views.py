@@ -90,6 +90,7 @@ class SearchView(SearchMixin, ListView):
 
     """View that performs a search and returns the search results."""
 
+    paginate_by = 10
     template_name = "search-results.html"
 
 

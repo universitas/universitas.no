@@ -6,7 +6,24 @@
         {# <h1>Search results{% if query %} for &ldquo;{{query}}&rdquo;{% endif %}</h1> #}
 {% block content %}
   <div class="row search-results">
-    <div class="summary small-12 columns">Søket "{{ query }}" ga {{ search_results.count }} treff:</div>
+    <div class="summary small-12 columns">
+      <div class="pagination">
+        Treff for søket "{{ query }}"
+        <span class="step-links">
+          {% if page_obj.has_previous %}
+            <a href="?q={{query}}&page={{ page_obj.previous_page_number }}">forrige</a>
+          {% endif %}
+
+          <span class="current">
+            Side {{ page_obj.number }} av {{ page_obj.paginator.num_pages }}.
+          </span>
+
+          {% if page_obj.has_next %}
+            <a href="?q={{query}}&page={{ page_obj.next_page_number }}">neste</a>
+          {% endif %}
+        </span>
+      </div>
+    </div>
     {% for result in  search_results %}
       {% include "_single-result.html" %}
     {% endfor %}
