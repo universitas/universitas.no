@@ -46,7 +46,7 @@
         <i class="fi-magnifying-glass"></i>
       </div>
       <form class="search-form" action="{% url 'watson:search' %}">
-        <input placeholder="søk i universitas.no" class="search-input" type="text" name="q" value={{ request.GET.q }}>
+        <input placeholder="Søk i universitas.no" class="search-input" type="text" name="q" value="{{ request.GET.q }}" >
         <input class='hidden-input' type="submit">
       </form>
     </div>

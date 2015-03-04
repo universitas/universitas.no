@@ -1,0 +1,23 @@
+{% load thumbnail %}
+{% with result.object as story %}
+<div class="wrapper">
+  <a href="{{result.url}}">
+    <article class="search-result">
+      {% with story.main_image as image %}
+        {% if image %}
+          <div class="image">
+            {% thumbnail image.imagefile.source_file "120x120" diameter=image.imagefile.crop_diameter crop=image.imagefile.get_crop as thumb %}
+              <img id="img_{{ image.pk }}" src="{{ thumb.url }}" ></img>
+            {% endthumbnail %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      <div class="text">
+        <h1>{{story.title}}</h1>
+        <div class="info">{{ story.publication_date | date:"DATE_FORMAT" }}</div>
+        <div class="lede"><span class="section {{ story.section.slug }}">{{ story.story_type }}:</span> {{ story.lede | truncatewords_html:15 }}</div>
+      </div>
+    </article>
+  </a>
+</div>
+{% endwith %}

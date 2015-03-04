@@ -8,11 +8,12 @@ from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 from django.contrib import admin
 from myapps.core.views import RobotsTxtView, HumansTxtView
+from myapps.search import urls as search_urls
 from myapps.core.autocomplete_views import autocomplete_list
 from myapps.frontpage.views import frontpage_view
 from myapps.stories.views import article_view
 from autocomplete_light import urls as autocomplete_light_urls
-from watson import urls as watson_urls
+# from watson import urls as watson_urls
 
 admin.autodiscover()
 
@@ -49,7 +50,7 @@ urlpatterns += patterns(
 )
 urlpatterns += patterns(
     '',
-    url(r'^search/', include(watson_urls, namespace='watson')),
+    url(r'^search/', include(search_urls, namespace='watson')),
 )
 
 if settings.DEBUG:

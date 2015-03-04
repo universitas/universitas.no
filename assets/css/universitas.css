@@ -120,7 +120,8 @@ select {
   #story .row.collapse > .inline-right,
   .row.collapse > .panel-1,
   .row.collapse > .panel-2,
-  .row.collapse > .panel-3 {
+  .row.collapse > .panel-3,
+  .search-results .row.collapse > .wrapper {
     padding-left: 0;
     padding-right: 0; }
   .row.collapse .row {
@@ -156,7 +157,8 @@ select {
 #story .inline-right,
 .panel-1,
 .panel-2,
-.panel-3 {
+.panel-3,
+.search-results .wrapper {
   padding-left: 0.625rem;
   padding-right: 0.625rem;
   width: 100%;
@@ -297,7 +299,8 @@ select {
   #story .inline-right,
   .panel-1,
   .panel-2,
-  .panel-3 {
+  .panel-3,
+  .search-results .wrapper {
     position: relative;
     padding-left: 0.625rem;
     padding-right: 0.625rem;
@@ -336,7 +339,7 @@ select {
   .small-11 {
     width: 91.66667%; }
 
-  .small-12, .cols-7, .cols-8, .cols-9, .cols-10, .cols-11, .cols-12, .panel-1 {
+  .small-12, .cols-7, .cols-8, .cols-9, .cols-10, .cols-11, .cols-12, .panel-1, .search-results .wrapper {
     width: 100%; }
 
   .small-offset-0 {
@@ -390,7 +393,8 @@ select {
   #story .small-centered.inline-right,
   .small-centered.panel-1,
   .small-centered.panel-2,
-  .small-centered.panel-3 {
+  .small-centered.panel-3,
+  .search-results .small-centered.wrapper {
     margin-left: auto;
     margin-right: auto;
     float: none; }
@@ -403,7 +407,8 @@ select {
   #story .small-uncentered.inline-right,
   .small-uncentered.panel-1,
   .small-uncentered.panel-2,
-  .small-uncentered.panel-3 {
+  .small-uncentered.panel-3,
+  .search-results .small-uncentered.wrapper {
     margin-left: 0;
     margin-right: 0;
     float: left; }
@@ -416,7 +421,8 @@ select {
   #story .small-centered.inline-right:last-child,
   .small-centered.panel-1:last-child,
   .small-centered.panel-2:last-child,
-  .small-centered.panel-3:last-child {
+  .small-centered.panel-3:last-child,
+  .search-results .small-centered.wrapper:last-child {
     float: none; }
 
   .column.small-uncentered:last-child,
@@ -427,7 +433,8 @@ select {
   #story .small-uncentered.inline-right:last-child,
   .small-uncentered.panel-1:last-child,
   .small-uncentered.panel-2:last-child,
-  .small-uncentered.panel-3:last-child {
+  .small-uncentered.panel-3:last-child,
+  .search-results .small-uncentered.wrapper:last-child {
     float: left; }
 
   .column.small-uncentered.opposite,
@@ -438,7 +445,8 @@ select {
   #story .small-uncentered.opposite.inline-right,
   .small-uncentered.opposite.panel-1,
   .small-uncentered.opposite.panel-2,
-  .small-uncentered.opposite.panel-3 {
+  .small-uncentered.opposite.panel-3,
+  .search-results .small-uncentered.opposite.wrapper {
     float: right; } }
 @media only screen and (min-width: 40.063em) {
   .medium-push-0 {
@@ -569,7 +577,8 @@ select {
   #story .inline-right,
   .panel-1,
   .panel-2,
-  .panel-3 {
+  .panel-3,
+  .search-results .wrapper {
     position: relative;
     padding-left: 0.625rem;
     padding-right: 0.625rem;
@@ -590,7 +599,7 @@ select {
   .medium-5, .cols-5 {
     width: 41.66667%; }
 
-  .medium-6, .cols-6 {
+  .medium-6, .cols-6, .search-results .wrapper {
     width: 50%; }
 
   .medium-7, .cols-7 {
@@ -662,7 +671,8 @@ select {
   #story .medium-centered.inline-right,
   .medium-centered.panel-1,
   .medium-centered.panel-2,
-  .medium-centered.panel-3 {
+  .medium-centered.panel-3,
+  .search-results .medium-centered.wrapper {
     margin-left: auto;
     margin-right: auto;
     float: none; }
@@ -675,7 +685,8 @@ select {
   #story .medium-uncentered.inline-right,
   .medium-uncentered.panel-1,
   .medium-uncentered.panel-2,
-  .medium-uncentered.panel-3 {
+  .medium-uncentered.panel-3,
+  .search-results .medium-uncentered.wrapper {
     margin-left: 0;
     margin-right: 0;
     float: left; }
@@ -688,7 +699,8 @@ select {
   #story .medium-centered.inline-right:last-child,
   .medium-centered.panel-1:last-child,
   .medium-centered.panel-2:last-child,
-  .medium-centered.panel-3:last-child {
+  .medium-centered.panel-3:last-child,
+  .search-results .medium-centered.wrapper:last-child {
     float: none; }
 
   .column.medium-uncentered:last-child,
@@ -699,7 +711,8 @@ select {
   #story .medium-uncentered.inline-right:last-child,
   .medium-uncentered.panel-1:last-child,
   .medium-uncentered.panel-2:last-child,
-  .medium-uncentered.panel-3:last-child {
+  .medium-uncentered.panel-3:last-child,
+  .search-results .medium-uncentered.wrapper:last-child {
     float: left; }
 
   .column.medium-uncentered.opposite,
@@ -710,7 +723,8 @@ select {
   #story .medium-uncentered.opposite.inline-right,
   .medium-uncentered.opposite.panel-1,
   .medium-uncentered.opposite.panel-2,
-  .medium-uncentered.opposite.panel-3 {
+  .medium-uncentered.opposite.panel-3,
+  .search-results .medium-uncentered.opposite.wrapper {
     float: right; }
 
   .push-0 {
@@ -961,7 +975,8 @@ select {
   #story .inline-right,
   .panel-1,
   .panel-2,
-  .panel-3 {
+  .panel-3,
+  .search-results .wrapper {
     position: relative;
     padding-left: 0.625rem;
     padding-right: 0.625rem;
@@ -1054,7 +1069,8 @@ select {
   #story .large-centered.inline-right,
   .large-centered.panel-1,
   .large-centered.panel-2,
-  .large-centered.panel-3 {
+  .large-centered.panel-3,
+  .search-results .large-centered.wrapper {
     margin-left: auto;
     margin-right: auto;
     float: none; }
@@ -1067,7 +1083,8 @@ select {
   #story .large-uncentered.inline-right,
   .large-uncentered.panel-1,
   .large-uncentered.panel-2,
-  .large-uncentered.panel-3 {
+  .large-uncentered.panel-3,
+  .search-results .large-uncentered.wrapper {
     margin-left: 0;
     margin-right: 0;
     float: left; }
@@ -1080,7 +1097,8 @@ select {
   #story .large-centered.inline-right:last-child,
   .large-centered.panel-1:last-child,
   .large-centered.panel-2:last-child,
-  .large-centered.panel-3:last-child {
+  .large-centered.panel-3:last-child,
+  .search-results .large-centered.wrapper:last-child {
     float: none; }
 
   .column.large-uncentered:last-child,
@@ -1091,7 +1109,8 @@ select {
   #story .large-uncentered.inline-right:last-child,
   .large-uncentered.panel-1:last-child,
   .large-uncentered.panel-2:last-child,
-  .large-uncentered.panel-3:last-child {
+  .large-uncentered.panel-3:last-child,
+  .search-results .large-uncentered.wrapper:last-child {
     float: left; }
 
   .column.large-uncentered.opposite,
@@ -1102,7 +1121,8 @@ select {
   #story .large-uncentered.opposite.inline-right,
   .large-uncentered.opposite.panel-1,
   .large-uncentered.opposite.panel-2,
-  .large-uncentered.opposite.panel-3 {
+  .large-uncentered.opposite.panel-3,
+  .search-results .large-uncentered.opposite.wrapper {
     float: right; }
 
   .push-0 {
@@ -3185,13 +3205,17 @@ th.hide-for-touch {
 .fi-zoom-out:before {
   content: "\f21a"; }
 
-#story .left-sidebar .story-info .kultur.artikkeltype {
+.search-results .wrapper .search-result .text .lede .section {
+  font-family: "Roboto Slab", serif;
+  font-weight: 700; }
+
+#story .left-sidebar .story-info .kultur.artikkeltype, .search-results .wrapper .search-result .text .lede .kultur.section {
   color: #6fab50; }
-#story .left-sidebar .story-info .nyheter.artikkeltype {
+#story .left-sidebar .story-info .nyheter.artikkeltype, .search-results .wrapper .search-result .text .lede .nyheter.section {
   color: #c44530; }
-#story .left-sidebar .story-info .magasin.artikkeltype {
+#story .left-sidebar .story-info .magasin.artikkeltype, .search-results .wrapper .search-result .text .lede .magasin.section {
   color: #ffb653; }
-#story .left-sidebar .story-info .debatt.artikkeltype {
+#story .left-sidebar .story-info .debatt.artikkeltype, .search-results .wrapper .search-result .text .lede .debatt.section {
   color: #3b7e9c; }
 
 .content-wrapper, .menu-wrapper {
@@ -3232,7 +3256,7 @@ th.hide-for-touch {
     top: 0;
     left: 0; }
 
-#story .left-sidebar, #story .inline-aside p, #story .inline-aside ul li, #story .image-caption {
+#story .left-sidebar, #story .inline-aside p, #story .inline-aside ul li, #story .image-caption, .search-results .wrapper .search-result .text {
   font-size: .8rem;
   line-height: 1.2;
   color: #777777;
@@ -3251,7 +3275,7 @@ th.hide-for-touch {
 #story .inline-pullquote {
   padding-left: 3.5rem;
   padding-right: .5rem;
-  margin: 10px; }
+  margin: 0.625rem; }
   #story .inline-pullquote:before {
     font-family: 'Roboto Slab';
     font-style: normal;
@@ -3276,9 +3300,9 @@ th.hide-for-touch {
     #story header .header-text .headline {
       color: #444444; }
 #story .left-sidebar .story-info, #story .left-sidebar .dateline, #story .left-sidebar .bylines .byline {
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
   border-bottom: 1px solid #eeeeee;
-  padding-bottom: 10px;
+  padding-bottom: 0.625rem;
   width: 100%; }
 #story .left-sidebar {
   padding: 0 20px 0 10px;
@@ -3702,13 +3726,18 @@ body > main {
         opacity: 1; } }
 
 .search-input:focus, .search-input:hover, #search:hover .search-input {
-  width: 150px;
+  width: 180px;
   padding: 3px 5px; }
 
 .search-input {
   transition: all 0.2s ease-out;
   width: 0;
+  margin-left: 0;
+  margin-right: 0;
   padding: 0; }
+
+.search-input:focus, .search-input:hover, #search:hover .search-input {
+  outline-style: none; }
 
 #search {
   float: right; }
@@ -3717,10 +3746,10 @@ body > main {
     #search .search-form .search-input {
       color: #444444;
       border: none;
-      border-radius: 3px;
-      font-size: .8rem;
-      height: 24px;
-      margin: 3px 0 3px 5px;
+      border-radius: 1px;
+      font-size: 14px;
+      height: 22px;
+      margin: 4px 0 4px 5px;
       line-height: 1; }
     #search .search-form .hidden-input {
       position: absolute;
@@ -3757,3 +3786,26 @@ body > main {
 
 .panel-1 {
   padding-left: 0; }
+
+.search-results .wrapper .search-result {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-top: 1px solid #eeeeee;
+  height: 130px;
+  overflow: hidden; }
+  .search-results .wrapper .search-result:hover {
+    background: #FFA; }
+  .search-results .wrapper .search-result .image {
+    float: left;
+    margin-right: 10px; }
+  .search-results .wrapper .search-result .text .info {
+    font-size: smaller; }
+  .search-results .wrapper .search-result .text h1 {
+    margin: 0 0 .2em 0;
+    font-size: 1rem;
+    color: #444444; }
+  .search-results .wrapper .search-result .text .lede {
+    color: #444444; }
+    .search-results .wrapper .search-result .text .lede .section {
+      color: #777777;
+      text-transform: uppercase; }

@@ -593,7 +593,15 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         return '\n'.join(all_bylines)
 
     def image_count(self):
+        """ Number of story images related to the story """
         return len(self.images())
+
+    def main_image(self):
+        """ Get the top image if there is any. """
+        # import ipdb; ipdb.set_trace()
+        top_image = self.images().order_by('-top', 'index').first()
+        if top_image:
+            return top_image.child
 
     @property
     def section(self):

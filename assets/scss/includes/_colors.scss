@@ -7,6 +7,9 @@ $header-font-color: #333;
 $header-line-height: 1.1;
 $header-top-margin: .3rem;
 
+$half-gutter: $column-gutter/2;
+$separator-line: 1px solid #EEE;
+
 $debatt: #3B7E9C;
 $nyheter: #C44530;
 $kultur: #6FAB50;
@@ -47,6 +50,11 @@ $medium-magasin: $magasin;
   &.debatt{
     background-color: $medium-debatt;
   }
+}
+
+%section-text {
+  font-family: $univ-serif;
+  font-weight: 700;
 }
 
 %section-text-color {

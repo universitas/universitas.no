@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'myapps.markup',
     'myapps.legacy_db',
     'myapps.adverts',
+    'myapps.search',
     'functional_tests',
     )
 

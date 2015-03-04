@@ -55,6 +55,7 @@ body > main{
   height: $menu-height;
   z-index: 1000;
 }
+
 .menu-wrapper {
   @extend .content-wrapper;
   padding: 0 $column-gutter/2;
@@ -143,13 +144,15 @@ body > main{
 }
 
 %input-max {
-  width: 150px;
+  width: 180px;
   padding: 3px 5px;
 }
 
 %input-min {
   transition: all 0.2s ease-out;
   width: 0;
+  margin-left: 0;
+  margin-right: 0;
   padding: 0;
 }
 
@@ -157,9 +160,11 @@ body > main{
   @extend %input-min;
   &:focus, &:hover, #search:hover & {
     @extend %input-max;
+    outline-style: none;
+  }
+  &:active {
   }
 }
-
 
 #search {
   float: right;
@@ -168,10 +173,10 @@ body > main{
     .search-input {
       color: $dark-grey;
       border: none;
-      border-radius: 3px;
-      font-size: .8rem;
-      height: 24px;
-      margin: 3px 0 3px 5px;
+      border-radius: 1px;
+      font-size: 14px;
+      height: 22px;
+      margin: 4px 0 4px 5px;
       line-height: 1;
     }
     .hidden-input {
