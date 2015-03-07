@@ -13,7 +13,6 @@ import logging
 logger = logging.getLogger('universitas')
 
 
-
 class FrontpageManager(models.Manager):
 
     def root(self):
@@ -81,7 +80,7 @@ class FrontPageModule(TimeStampedModel, Edit_url_mixin):
                     minvalue,
                     maxvalue))
 
-    def validate_height(value, minvalue=1, maxvalue=3):
+    def validate_height(value, minvalue=1, maxvalue=12):
         if not minvalue <= value <= maxvalue:
             raise ValidationError(
                 _('{} is not a number between {} and {}').format(
@@ -95,8 +94,8 @@ class FrontPageModule(TimeStampedModel, Edit_url_mixin):
     )
 
     height = models.PositiveSmallIntegerField(
-        help_text=_('height - minimum 1 maximum 3'),
-        default=1,
+        help_text=_('height - minimum 1 maximum 12'),
+        default=2,
         validators=[validate_height, ],
     )
 
@@ -132,7 +131,6 @@ class StoryModule(FrontPageModule):
     def save(self):
         if self.position is None:
             self.position = self.position_default()
-            self.randomsize()
         super().save()
 
     def __str__(self):
@@ -145,14 +143,6 @@ class StoryModule(FrontPageModule):
 
     def position_default(self):
         return self.frontpage.top_position() + self.ORDER_GAP
-
-    def randomsize(self):
-        widths = (3, 3, 3, 3, 4, 4, 4, 4, 6, 6, 8, 9, 12)
-        heights = (1, 1, 1, 1, 1, 2, 2, 2, 2, 3)
-        self.columns = random.choice(widths)
-        self.height = random.choice(heights)
-        self.save()
-        # logger.debug(self)
 
     @property
     def publication_date(self):
@@ -187,11 +177,62 @@ class StaticModule(FrontPageModule):
         super().save(*args, **kwargs)
 
 
+class FrontpageStoryManager(models.Manager):
+    SIZES = [(3, 1), (3, 1), (3, 1), (3, 2),
+             (3, 1), (3, 2), (3, 2), (4, 1),
+             (4, 2), (4, 2), (6, 1), (6, 2),
+             (9, 2), (9, 2), (12, 1), (12, 2), ]
+
+    def autocreate(self, story):
+        frontpage = Frontpage.objects.root()
+        html_class = story.section.slug + \
+            random.choice([' negative'] + [''] * 4)
+        lede = story.lede[:200]
+        kicker = story.kicker[:200]
+        headline = story.title[:200]
+        vignette = str(story.story_type)[:50]
+
+        try:
+            main_image = story.main_image().imagefile
+        except AttributeError:
+            main_image = None
+
+        frontpage_story = FrontpageStory(
+            story=story,
+            headline=headline,
+            lede=lede,
+            kicker=kicker,
+            vignette=vignette,
+            html_class=html_class,
+            imagefile=main_image,
+            )
+
+        frontpage_story.save()
+
+        priority = story.priority
+        size = self.SIZES[priority + random.randint(0, 4)]
+        msg = 'p:{} size:{}'.format(priority, size)
+        logger.debug(msg)
+
+        columns = size[0]
+        height = size[1] + bool(main_image)
+
+        content_block = StoryModule(
+            frontpage_story=frontpage_story,
+            frontpage=frontpage,
+            columns=columns,
+            height=height,
+        )
+        content_block.save()
+
+
 class FrontpageStory(TimeStampedModel, Edit_url_mixin):
 
     class Meta:
         verbose_name = _('Frontpage Story')
         verbose_name_plural = _('Frontpage Stories')
+
+    objects = FrontpageStoryManager()
 
     story = models.ForeignKey(
         'stories.Story'
@@ -236,30 +277,31 @@ class FrontpageStory(TimeStampedModel, Edit_url_mixin):
     def url(self):
         return self.story.get_absolute_url()
 
-    def save(self, *args, **kwargs):
-        if self.pk is None and self.story:
-            # default lede, kicker, headline and kicker is based on parent
-            # story.
-            section = '{}'.format(self.story.section).lower()
-            self.lede = self.lede or self.story.lede[:200]
-            self.kicker = self.kicker or self.story.kicker[:200]
-            self.headline = self.headline or self.story.title[:200]
-            self.vignette = self.vignette or section[:50]
-            self.html_class = self.html_class or section[:200].replace(' ', '-')
-            if random.randint(1, 4) == 1:
-                self.html_class += " negative"
+    # def save(self, *args, **kwargs):
+    #     if self.pk is None and self.story:
+    #         # default lede, kicker, headline and kicker is based on parent
+    #         # story.
+    #         section = '{}'.format(self.story.section).lower()
+    #         self.lede = self.lede or self.story.lede[:200]
+    #         self.kicker = self.kicker or self.story.kicker[:200]
+    #         self.headline = self.headline or self.story.title[:200]
+    #         self.vignette = self.vignette or section[:50]
+    #         self.html_class = self.html_class or section[:200].replace(' ', '-')
+    #         if random.randint(1, 4) == 1:
+    #             self.html_class += " negative"
 
-            if self.imagefile is None and self.story.images():
-                self.imagefile = self.story.images().first().child.imagefile
-            super().save()
-        if self.placements.count() == 0 and not self.imagefile is None:
-            # is automatically put on front page if it has an image.
-            content_block = StoryModule(
-                frontpage_story=self,
-                frontpage=Frontpage.objects.root(),
-            )
-            content_block.save()
-        super().save()
+    #         if self.imagefile is None and self.story.images():
+    #             self.imagefile = self.story.main_image().imagefile
+
+    #         super().save()
+    #     if self.placements.count() == 0 and not self.imagefile is None:
+    #         # is automatically put on front page if it has an image.
+    #         content_block = StoryModule(
+    #             frontpage_story=self,
+    #             frontpage=Frontpage.objects.root(),
+    #         )
+    #         content_block.save()
+    #     super().save()
 
     def __str__(self):
         return self.headline or self.story.title

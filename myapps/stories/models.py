@@ -6,6 +6,7 @@ import re
 import difflib
 import json
 import logging
+import random
 logger = logging.getLogger('universitas')
 bylines_logger = logging.getLogger('bylines')
 from slugify import Slugify
@@ -236,12 +237,13 @@ class TextContent(models.Model, MarkupModelMixin):
     def make_html(self, body=None):
         """ Create html body text from markup """
 
-        # TODO: Måten artikler blir rendret på er veldig rotete. Mest mulig bør flyttes fra model til template.
+        # TODO: Måten artikler blir rendret på er veldig rotete. Mest mulig bør
+        # flyttes fra model til template.
 
         if body is None:
             body = self.html.bodytext_markup
 
-        tag_template = ( # Used as django template to render inline stuff.
+        tag_template = (  # Used as django template to render inline stuff.
             '{{% load inline_elements %}}'
             '{{% inline_{classname} "\\1" %}}'
         )
@@ -260,9 +262,10 @@ class TextContent(models.Model, MarkupModelMixin):
                 # Regular paragraph.
                 paragraph = BlockTag.objects.make_html(paragraph)
                 main_body.append(paragraph)
-            else: # Inline element.
+            else:  # Inline element.
                 sections.append(main_body)
-                paragraph = Template(paragraph).render(Context({"story": self, "index": index,}))
+                paragraph = Template(paragraph).render(
+                    Context({"story": self, "index": index, }))
                 sections.append(paragraph)
                 main_body = []
 
@@ -326,8 +329,6 @@ class TextContent(models.Model, MarkupModelMixin):
         if target != self:
             # Cleanup
             target.save()
-
-
 
     def _block_append(self, tag, content, modelfield=None):
         """ Appends content(string) to a model field by string reference. """
@@ -530,9 +531,9 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             self.bodytext_markup = self.place_all_inline_elements()
             super().save(update_fields=['bodytext_markup'])
 
-            if self.images() and self.frontpagestory_set.count() == 0:
+            if self.frontpagestory_set.count() == 0:
                 # make random frontpage story
-                FrontpageStory.objects.create(story=self)
+                FrontpageStory.objects.autocreate(story=self)
 
     @property
     def parent_story(self):
@@ -543,6 +544,19 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     def disqus_enabled(self):
         # Is Disqus available here?
         return True
+
+    @property
+    def priority(self):
+        """ Calculate a number between 1 and 12 to determine initial
+        front page priority. """
+        # TODO: Placeholder priority for story.
+        pri = 0
+        pri += 1 * bool(self.lede)
+        pri += 2 * bool(self.main_image())
+        pri += 1 * bool(self.kicker)
+        pri += 3 * ('@tit' in self.bodytext_markup)
+        pri += len(self.bodytext_markup) // 1000
+        return min(12, pri)
 
     def visit_page(self, request):
         """ Check if visit looks like a human and update hit count """
@@ -620,7 +634,6 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             self.bodytext_html = ''
             self.save(update_fields=['bodytext_html'])
 
-
     def get_absolute_url(self):
         url = reverse(
             viewname='article',
@@ -630,7 +643,6 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
                 'slug': self.slug,
             },)
         return url
-
 
     def children_modified(self):
         """ check if any related objects have been
@@ -1662,7 +1674,9 @@ def clean_up_bylines(raw_bylines):
 
         # comma, and or "og" before two capitalised words probably means it's
         # a new person. Insert newline.
-        (r'\s*(&|#|,\s|\s[oO]g\s|\s[aA]nd\s)\s*([A-ZÆØÅ]\S+ [A-ZÆØÅ])', r'\n\2', 0),
+        (r'\s*(&|#|,\s|\s[oO]g\s|\s[aA]nd\s)\s*([A-ZÆØÅ]\S+ [A-ZÆØÅ])',
+         r'\n\2',
+         0),
         # TODO: Bytt ut byline regular expression med ny regex-modul som funker
         # med unicode
 
