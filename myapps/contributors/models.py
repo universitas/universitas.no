@@ -1,3 +1,5 @@
+""" Contributors to the thing """
+
 import os
 from slugify import Slugify
 import glob
@@ -85,7 +87,7 @@ class Contributor(models.Model):
 
     # @cached(3600)
     def has_byline_image(self):
-        return bool(self.find_byline_image())
+        return bool(self.get_byline_image())
 
     @classmethod
     def get_or_create(cls, full_name, initials=''):
@@ -140,11 +142,12 @@ class Contributor(models.Model):
                 contributors = base_query.filter(initials__iexact=initials)
                 for contributor in contributors:
                     ratio = fuzz.ratio(contributor.display_name, full_name)
-                    if ratio >= 0.8:
+                    if ratio >= 0.9:
                         # TODO: contributor addalias(newalias-maybe).
                         # TODO: contributor merge.
                         # TODO: two contributors with same name.
-                        contributor.aliases += full_name
+                        if full_name not in contributor.aliases:
+                            contributor.aliases += '\n' + full_name
                         contributor.save()
                         return contributor
             return None
@@ -152,9 +155,10 @@ class Contributor(models.Model):
         # Variuous queries to look for contributor in the database.
         contributor = (
             search_for_full_name() or
-            search_for_alias() or
-            search_for_initials() or
+            search_for_first_plus_last_name() or
             None
+            # search_for_alias() or
+            # search_for_initials() or
         )
 
         # Was not found with any of the methods.
