@@ -210,7 +210,7 @@ class FrontpageStoryManager(models.Manager):
         frontpage_story.save()
 
         priority = story.priority
-        size = self.SIZES[priority + random.randint(0, 4)]
+        size = self.SIZES[priority + random.randint(0, 3)]
         msg = 'p:{} size:{}'.format(priority, size)
         logger.debug(msg)
 
