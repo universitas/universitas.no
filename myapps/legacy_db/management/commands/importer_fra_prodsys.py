@@ -1,4 +1,4 @@
-""" Management commands for importing images, issues and stories from legacy website and production system. """
+""" Management commands for importing images and stories from legacy website and production system. """
 
 from optparse import make_option
 import logging
@@ -11,7 +11,6 @@ from django.core.management.base import BaseCommand  # ,CommandError
 from myapps.legacy_db.export_content_and_images import (
     import_legacy_website_content,
     import_prodsys_content,
-    import_issues_from_file_system,
     drop_model_tables,
     reset_db_autoincrement,
 )
@@ -19,7 +18,6 @@ from myapps.legacy_db.export_content_and_images import (
 from myapps.stories.models import Story
 from myapps.contributors.models import Contributor
 from myapps.photo.models import ImageFile
-from myapps.issues.models import PrintIssue
 
 
 class Command(BaseCommand):
@@ -63,13 +61,6 @@ class Command(BaseCommand):
             help='Drop old content from the database.'
         ),
         make_option(
-            '--issues', '-i',
-            action='store_true',
-            dest='issues',
-            default=False,
-            help='Import issues.'
-        ),
-        make_option(
             '--prodsys', '-p',
             action='store_true',
             dest='prodsys only',
@@ -90,12 +81,7 @@ class Command(BaseCommand):
         first = options['first']
         last = first + options['number'] if options['number'] else None
 
-        if options['issues']:
-            if options['drop']:
-                drop_model_tables(PrintIssue)
-            import_issues_from_file_system()
-
-        elif options['prodsys only']:
+        if options['prodsys only']:
 
             if options['drop'] and not options['replace existing']:
                 drop_model_tables(Story, Contributor, ImageFile)

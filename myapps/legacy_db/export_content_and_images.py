@@ -1,8 +1,10 @@
-""" Export content from old website and the production system to the new website. """
+"""
+Export content from old website and the
+production system to the new website.
+"""
 
 import os
 import re
-import subprocess
 from pytz import datetime
 # from html.parser import HTMLParser
 from html import unescape
@@ -18,8 +20,6 @@ from myapps.legacy_db.models import (
 from myapps.stories.models import (
     Story, StoryType, Section, StoryImage, InlineLink)
 from myapps.photo.models import ImageFile
-from myapps.frontpage.models import Frontpage
-from myapps.issues.models import PrintIssue, next_issue
 
 # from myapps.contributors.models import Contributor
 from django.core import serializers
@@ -33,47 +33,17 @@ logger = logging.getLogger('universitas')
 count = 0
 
 
-def import_issues_from_file_system():
-    """ Finds pdf files on disks and creates PrintIssue objects. """
-    pdf_files = set(
-        subprocess.check_output(
-            'cd %s; find -iname "universitas*.pdf" | sed "s,./,,"' % (PDFMAPPE,),
-            shell=True,
-        ).decode("utf-8").splitlines()
-    )
-    for filename in pdf_files:
-        fullpath = os.path.join(PDFMAPPE, filename)
-        # Finds creation date.
-        created = datetime.date.fromtimestamp(os.path.getmtime(fullpath))
-        # Sets creation date as a Wednesday, if needed.
-        created = created + datetime.timedelta(days=3 - created.isoweekday())
-
-        # Extracts year an issue number from the file name.
-        year, issue = re.match(r'universitas_(?P<year>\d{4})-(?P<issue>.*)\.pdf$', filename, ).groups()
-
-        logger.debug('issue found {filename} #{issue} {year} ({date})'.format(
-            filename=filename,
-            date=created.strftime('%c'),
-            year=year,
-            issue=issue,
-        ))
-
-        new_issue = PrintIssue(
-            pdf='pdf/' + filename,
-            publication_date=created,
-            issue_name=issue,
-            # pages=0,
-        )
-        new_issue.save()
-        new_issue.get_thumbnail()
-
-
 def reset_db_autoincrement():
-    """ updates the next autoincrement value for primary keys in tables that have been
-    populated using primary keys from legacy database."""
+    """
+    updates the next autoincrement value for primary keys in tables that
+    have been populated using primary keys from legacy database.
+    """
     cursor = connection.cursor()
     tables = ['photo_imagefile', 'stories_story', 'django_migrations']
-    sql_pattern = "SELECT setval('{table}_id_seq', (SELECT MAX(id) FROM {table})+1)"
+    sql_pattern = (
+        "SELECT setval('{table}_id_seq'"
+        ", (SELECT MAX(id) FROM {table})+1)"
+    )
 
     for table_name in tables:
         query = sql_pattern.format(table=table_name)
@@ -88,7 +58,12 @@ def drop_model_tables(*models):
         model.objects.all().delete()
 
 
-def import_legacy_website_content(first=0, last=None, reverse=False, replace_existing=False, autocrop=False):
+def import_legacy_website_content(
+        first=0,
+        last=None,
+        reverse=False,
+        replace_existing=False,
+        autocrop=False):
     """ Import old content from legacy website. """
     order_by = 'id_sak' if not reverse else '-id_sak'
     websaker = Sak.objects.exclude(publisert=0).order_by(order_by)[first:last]
@@ -106,11 +81,17 @@ def import_legacy_website_content(first=0, last=None, reverse=False, replace_exi
         new_story.save(new=True)
 
 
-def import_prodsys_content(first=0, last=None, reverse=False, replace_existing=False, autocrop=False):
+def import_prodsys_content(
+        first=0,
+        last=None,
+        reverse=False,
+        replace_existing=False,
+        autocrop=False):
     """ Import all new stories from prodsys. """
     # status = [Prodsak.READY_FOR_WEB]
     status = list(range(Prodsak.READY_FOR_WEB, Prodsak.ARCHIVED))
-    objects = Prodsak.objects.filter(produsert__in=status).order_by('prodsak_id').values('prodsak_id').distinct()
+    objects = Prodsak.objects.filter(produsert__in=status).order_by(
+        'prodsak_id').values('prodsak_id').distinct()
 
     if reverse:
         objects = objects[::-1]
@@ -128,7 +109,11 @@ def _importer_websak(websak):
     # check if story exists
     try:
         old_story = Story.objects.get(id=websak.id_sak)
-        logger.warn('{:>5} story already exists: {} {}'.format(count, old_story, old_story.pk))
+        logger.warn(
+            '{:>5} story already exists: {} {}'.format(
+                count,
+                old_story,
+                old_story.pk))
         return old_story
     except Story.DoesNotExist:
         pass
@@ -136,7 +121,11 @@ def _importer_websak(websak):
     # check whether this story has a parent story
     try:
         new_websak = Sak.objects.get(undersak=websak.pk)
-        logger.warn('{:>5} Has parent: {} {}'.format(count, new_websak.pk, websak.pk ))
+        logger.warn(
+            '{:>5} Has parent: {} {}'.format(
+                count,
+                new_websak.pk,
+                websak.pk))
         return _importer_websak(new_websak)
     except Sak.DoesNotExist:
         pass
@@ -154,7 +143,8 @@ def _importer_websak(websak):
 
     try:
         prodsak_id = int(websak.filnavn)
-    except (TypeError, ValueError):  # No integer prodsak_id means that this article does not exist in prodsys.
+    # No integer prodsak_id means that this article does not exist in prodsys.
+    except (TypeError, ValueError):
         prodsak_id = None
 
     new_story.prodsak_id = prodsak_id
@@ -162,8 +152,11 @@ def _importer_websak(websak):
     try:  # import this story from prodsys
         prodsak = _get_xtags_from_prodsys(
             prodsak_id=prodsak_id,
-            status_in=[Prodsak.READY_FOR_WEB, Prodsak.PUBLISHED_ON_WEB, Prodsak.ARCHIVED, ]
-        )
+            status_in=[
+                Prodsak.READY_FOR_WEB,
+                Prodsak.PUBLISHED_ON_WEB,
+                Prodsak.ARCHIVED,
+            ])
     except Prodsak.DoesNotExist:  # couldn't find the story in prodsys
         pass
     else:
@@ -180,21 +173,31 @@ def _importer_websak(websak):
         if websak.undersak:
             try:
                 undersak = Sak.objects.get(pk=websak.undersak)
-                xtags = _websak_til_xtags(undersak).replace('@tit:', '@undersaktit:')
+                xtags = _websak_til_xtags(undersak).replace(
+                    '@tit:',
+                    '@undersaktit:')
                 new_story.bodytext_markup += '\n' + xtags
-                logger.debug('undersak: {} len:{}'.format(websak.undersak, len(xtags)))
+                logger.debug(
+                    'undersak: {} len:{}'.format(
+                        websak.undersak,
+                        len(xtags)))
             except Sak.DoesNotExist:
                 # Dangling reference in database.
                 pass
 
     new_story.save()
-    logger.debug('{:>5} story saved: {} {}'.format(count, new_story, new_story.pk))
+    logger.debug(
+        '{:>5} story saved: {} {}'.format(
+            count,
+            new_story,
+            new_story.pk))
     return new_story
 
 
 def _importer_prodsak(prodsak_id, replace_existing):
-    """ Create a Story with images from a prodsak object in the prodsys database. """
-
+    """
+    Create a Story with images from a prodsak object in the prodsys database.
+    """
     # Check if this story has been imported already.
     exists = Story.objects.filter(prodsak_id=prodsak_id)
     if exists:
@@ -224,7 +227,8 @@ def _importer_prodsak(prodsak_id, replace_existing):
     # Update the prodsys object if needed.
     if prodsak.produsert == Prodsak.READY_FOR_WEB:
         prodsak.produsert = Prodsak.PUBLISHED_ON_WEB
-        prodsak.kommentar = (prodsak.kommentar or '') + '\n\n Importert til nettside'
+        prodsak.kommentar = (
+            prodsak.kommentar or '') + '\n\n Importert til nettside'
         prodsak.save()
         logger.debug('prodsak updated: {}'.format(prodsak))
 
@@ -236,12 +240,15 @@ def _get_xtags_from_prodsys(prodsak_id, status_in=None):
         filters.update(produsert__in=status_in)
 
     # Find the correct story in the database.
-    final_version = Prodsak.objects.filter(**filters).order_by('-version_no').first()
+    final_version = Prodsak.objects.filter(
+        **filters).order_by('-version_no').first()
     if not final_version:
         raise Prodsak.DoesNotExist
 
     # Check whether the story has been edited in InDesign.
-    if "Vellykket eksport fra InDesign!" in (final_version.kommentar or '') and '@tit' in (final_version.tekst or ''):
+    if "Vellykket eksport fra InDesign!" in (
+            final_version.kommentar or '') and '@tit' in (
+            final_version.tekst or ''):
         status = Story.STATUS_READY
     else:
         status = Story.STATUS_DRAFT
@@ -256,7 +263,6 @@ def _get_xtags_from_prodsys(prodsak_id, status_in=None):
 
 def _importer_bilder_fra_prodsys(prodsak, story, autocrop):
     """ Import all images connected to a single story. """
-
     prod_bilder = Prodbilde.objects.filter(prodsak_id=prodsak.prodsak_id)
 
     for bilde in prod_bilder:
@@ -289,7 +295,6 @@ def _importer_bilder_fra_prodsys(prodsak, story, autocrop):
 
 def _importer_bilder_fra_webside(websak, story, autocrop):
     """ Import all images connected to a single story. """
-
     for bilde in websak.bilde_set.all():
         # Prepare the caption.
         try:
@@ -339,20 +344,33 @@ def _create_image_file(filepath, publication_date=None, id=None, prodsys=False):
 
     # Check that the file exists on the harddrive.
     if prodsys:
-        year, issue = next_issue()
-        filepath = '{year}/{issue}/{filename}'.format(year=2014, issue=33, filename=filepath)
+        # year, issue = next_issue()
+        # TODO: Prodsysimport har hardkodet utgave og årstall.
+        filepath = '{year}/{issue}/{filename}'.format(
+            year=2014,
+            issue=33,
+            filename=filepath)
 
     fullpath = os.path.join(BILDEMAPPE, filepath)
     if os.path.isfile(fullpath):
 
         # Get create and modification dates from the file.
-        modified = datetime.datetime.fromtimestamp(os.path.getmtime(fullpath), TIMEZONE)
-        created = datetime.datetime.fromtimestamp(os.path.getctime(fullpath), TIMEZONE)
+        modified = datetime.datetime.fromtimestamp(
+            os.path.getmtime(fullpath),
+            TIMEZONE)
+        created = datetime.datetime.fromtimestamp(
+            os.path.getctime(fullpath),
+            TIMEZONE)
         dates = [modified, created, ]
         if publication_date:
-            dates.append(datetime.datetime.combine(publication_date, datetime.time(tzinfo=TIMEZONE)))
+            dates.append(
+                datetime.datetime.combine(
+                    publication_date,
+                    datetime.time(
+                        tzinfo=TIMEZONE)))
 
-        # Make sure that create date is no later than modification and publication date.
+        # Make sure that create date is no later than modification and
+        # publication date.
         created = min(dates)
 
         # Save ImageFile object in the database.
@@ -387,7 +405,8 @@ def _get_story_type(prodsys_mappe):
     try:
         story_type = StoryType.objects.filter(prodsys_mappe=prodsys_mappe)[0]
     except IndexError:
-        generic_section, exists = Section.objects.get_or_create(title='New Section')
+        generic_section, exists = Section.objects.get_or_create(
+            title='New Section')
         story_type = StoryType.objects.create(
             prodsys_mappe=prodsys_mappe,
             name="New Story Type ({label})".format(label=prodsys_mappe),
@@ -402,7 +421,7 @@ def _websak_til_xtags(websak):
     content_list = []
 
     def main(websak):
-        """ Construct an xtags string from relevant fields in the websak model. """
+        """Construct an xtags string from relevant fields in websak model. """
         # Add content to the content list.
         xtags_header_title_and_bylines()
         # TODO: HTML entiteter i bylines blir ikke fikset under import
@@ -426,8 +445,9 @@ def _websak_til_xtags(websak):
         for field_content, tag in header_fields:
             if field_content:
                 content_list.append(
-                    '@{tag}: {field_content}\n'.format(tag=tag, field_content=field_content)
-                )
+                    '@{tag}: {field_content}\n'.format(
+                        tag=tag,
+                        field_content=field_content))
 
     def xtags_body_text():
         content_list.append(
@@ -448,9 +468,15 @@ def _websak_til_xtags(websak):
     def xtags_review_aside():
         if websak.subtittel1:
             content_list.append('\n@fakta: Anmeldelse')
-            for item in (websak.subtittel1, websak.subtittel2, websak.subtittel3, websak.subtittel4):
+            for item in (
+                    websak.subtittel1,
+                    websak.subtittel2,
+                    websak.subtittel3,
+                    websak.subtittel4):
                 if item:
-                    content_list.append('# {text_content}'.format(text_content=item))
+                    content_list.append(
+                        '# {text_content}'.format(
+                            text_content=item))
 
     def xtags_fact_asides():
         for aside in websak.fakta_set.all():
@@ -481,7 +507,8 @@ def _clean_up_html(html):
     # Convert html entities into unicode.
     html = unescape(html)
 
-    # Convert <a href=''> links into InlineLink objects. Insert reference strings in source instead.
+    # Convert <a href=''> links into InlineLink objects. Insert reference
+    # strings in source instead.
     html = InlineLink.convert_html_links(html, return_html=True)
 
     # Search and replace regular expressions.
@@ -501,7 +528,10 @@ def _strip_xtags(text):
 
 
 def _clean_up_prodsys_encoding(text):
-    """ Changes some strange (win 1252 ?) characters in legacy data into proper unicode. """
+    """
+    Changes some strange (win 1252 ?) characters in
+    legacy data into proper unicode.
+    """
     text = text.replace('\x92', '\'')  # some fixes for win 1252
     text = text.replace('\x95', '•')  # bullet
     text = text.replace('\x96', '–')  # n-dash
