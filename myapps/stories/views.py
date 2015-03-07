@@ -12,10 +12,11 @@ logger = logging.getLogger('universitas')
 from django.contrib.auth.decorators import login_required
 
 @login_required
-def article_view(request, story_id, section, slug):
+def article_view(request, story_id, **section_and_slug):
     template = 'story.html'
     story = get_object_or_404(Story.objects.published(), pk=story_id,)
     correct_url = story.get_absolute_url()
+
     if request.path != correct_url:
         return HttpResponseRedirect(correct_url)
 

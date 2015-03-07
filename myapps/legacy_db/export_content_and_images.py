@@ -65,6 +65,7 @@ def import_issues_from_file_system():
             # pages=0,
         )
         new_issue.save()
+        new_issue.get_thumbnail()
 
 
 def reset_db_autoincrement():

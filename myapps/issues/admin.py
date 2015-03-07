@@ -8,30 +8,24 @@ from sorl.thumbnail.admin import AdminImageMixin
 from sorl.thumbnail import get_thumbnail
 import autocomplete_light
 from django.utils.safestring import mark_safe
-
+from django.utils.translation import ugettext_lazy as _
 
 class ThumbAdmin:
     exclude = ()
 
     def thumbnail(self, instance, width=200, height=200):
-        url = '/static/admin/img/icon-no.gif'
         try:
-            if hasattr(instance, 'cover_page'):
-                imagefile = instance.cover_page
-            else:
-                imagefile = instance
-            if imagefile:
-                source = imagefile.file
-                thumb = get_thumbnail(source, '%sx%s' % (width, height))
-                url = thumb.url
+            source = instance.get_thumbnail()
+            thumb = get_thumbnail(source, '%sx%s' % (width, height))
+            url = thumb.url
         except FileNotFoundError:
-            pass
+            url = '/static/admin/img/icon-no.gif'
         if instance.pdf:
             html = '<a href="{pdf}"><img src="{thumb}"></a>'.format(
                 thumb=url, pdf=instance.pdf.url,
             )
         else:
-            html = '<img src="{thumb}">'.format(thumb=url,)
+            html = _('<p>Not created</p>')
         return mark_safe(html)
 
     thumbnail.allow_tags = True
@@ -39,6 +33,7 @@ class ThumbAdmin:
 
 @admin.register(PrintIssue)
 class PrintIssueAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
+    date_hierarchy = 'publication_date'
     actions_on_top = True
     actions_on_bottom = True
     save_on_top = True
