@@ -80,7 +80,7 @@ def import_legacy_website_content(
         if not text_only:
             _importer_bilder_fra_webside(websak, new_story, autocrop)
         new_story.full_clean()
-        new_story.save(new=True)
+        new_story.save(new=not text_only)
 
 
 def import_prodsys_content(

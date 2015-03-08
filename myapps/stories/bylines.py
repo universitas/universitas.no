@@ -14,7 +14,7 @@ def clean_up_bylines(raw_bylines):
         (r'_', '', 0),
 
         # Symbols used to separate individual bylines.
-        (r'\r|;|•| – |\*|·|/', r'\n', re.I),
+        (r'[\r\n]+|[;♦•·*]| [–-] |/', r'\n', re.I),
 
         # Credit with colon must be at the beginning of a line.
         (r' +((?:foto|video|photo|text|tekst|illus|graf)\w+):', r'\n\1', re.I),
@@ -60,10 +60,10 @@ def clean_up_bylines(raw_bylines):
 
 
         # Any word containging "photo" is some kind of photo credit.
-        (r'^ *\w*(ph|f)oto\w*', '\nphoto', re.I | re.M),
+        (r'^ *\w*(ph|f)oto\w*:?', '\nphoto:', re.I | re.M),
 
         # Any word containing "text" is text credit.
-        (r'^ *\w*te(ks|x)t\w*', '\ntext', re.I | re.M),
+        (r'^ *\w*te(ks|x)t\w*:?', '\ntext:', re.I | re.M),
 
         # These words are stripped from end of line.
         (r' *(,| og| and) *$', '', re.M | re.I),
@@ -102,6 +102,7 @@ def clean_up_bylines(raw_bylines):
 
         # Two credits become one
         (r'^(\w+): (\w+):', r'\1 and \2:', re.M),
+        (r': ?and ', r' and ', 0),
 
         # Somewhere!
         (r': (i|på) (\S+): (.*)$', r': \3, \1 \2', re.M | re.I),

@@ -44,10 +44,11 @@ from myapps.frontpage.models import FrontpageStory
 from .status_codes import HTTP_STATUS_CODES
 from .bylines import clean_up_bylines
 
-
+# Hardcoded tags for special content
 PULLQUOTE_TAG = '@quote:'
 ASIDE_TAG = '@box:'
 IMAGE_TAG = '@image:'
+VIDEO_TAG = '@video:'
 
 
 class MarkupFieldMixin(object):
@@ -85,8 +86,10 @@ class MarkupFieldMixin(object):
 class MarkupTextField(MarkupFieldMixin, models.TextField):
     description = 'subclass of Textfield containing markup.'
 
+
 class MarkupCharField(MarkupFieldMixin, models.CharField, ):
     description = 'subclass of Charfield containing markup.'
+
 
 class MarkupModelMixin(object):
 
@@ -512,7 +515,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
     def __str__(self):
         if self.publication_date:
-            return '{} {:%Y-%m-%d}'.format(self.title, self.publication_date)
+            return '{:%Y-%m-%d}: {}'.format(self.publication_date, self.title, )
         else:
             return '{}'.format(self.title,)
 
@@ -658,7 +661,8 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
                 '@headline:',
                 1)
         self.parse_markup()
-        self.bodytext_markup = self.reindex_inlines()
+        # self.bodytext_markup = self.reindex_inlines()
+        # TODO: Fix redindeksering av placeholders for video og bilder.
         self.slug = slugify(self.title)
         self.bylines_html = self.get_bylines_as_html()
         if (not self.publication_date
@@ -1123,7 +1127,7 @@ class StoryVideo(StoryMedia):
 
     """ Video content connected to a story """
 
-    markup_tag = '@video:'
+    markup_tag = VIDEO_TAG
 
     VIDEO_HOSTS = (
         ('vimeo', _('vimeo'),),
@@ -1504,6 +1508,12 @@ class InlineLink(TimeStampedModel):
             return None
 
 
+class BylineManager(models.Manager):
+
+    def ordered(self):
+        return self.order_by('ordering', 'pk')
+
+
 class Byline(models.Model):
 
     """ Credits the people who created content for a story. """
@@ -1522,8 +1532,10 @@ class Byline(models.Model):
         ('???', _('Unknown')),
     ]
     DEFAULT_CREDIT = CREDIT_CHOICES[0][0]
+    objects = BylineManager()
     story = models.ForeignKey(Story)
     contributor = models.ForeignKey(Contributor)
+    ordering = models.IntegerField(default=1)
     credit = models.CharField(
         choices=CREDIT_CHOICES,
         default=DEFAULT_CREDIT,

@@ -4,6 +4,7 @@ import os
 from slugify import Slugify
 import glob
 import re
+import json
 
 from fuzzywuzzy import fuzz
 
@@ -32,6 +33,9 @@ class Contributor(models.Model):
     display_name = models.CharField(blank=True, max_length=50)
     aliases = models.TextField(blank=True)
     initials = models.CharField(blank=True, null=True, max_length=5)
+    verified = models.BooleanField(
+        help_text=_('Verified to be a correct name.'),
+        default=False)
     byline_photo = models.ForeignKey(
         ImageFile,
         related_name='person',
@@ -69,7 +73,7 @@ class Contributor(models.Model):
             ratio = max(
                 fuzz.ratio(filename, name_slug),
                 fuzz.ratio(filename, name_slug_reverse)
-                )
+            )
             if ratio > bestratio:
                 bestmatch = path
                 bestratio = ratio
@@ -88,6 +92,17 @@ class Contributor(models.Model):
     # @cached(3600)
     def has_byline_image(self):
         return bool(self.get_byline_image())
+
+    def legacy_data(self):
+        """ Finds original byline in imported data. """
+        data = []
+        for story in self.story_set.all():
+            web_source = story.legacy_html_source
+            if web_source:
+                byline = str(story) + ': '
+                byline += json.loads(web_source)[0]['fields']['byline']
+                data.append(byline)
+        return '\n'.join(data)
 
     @classmethod
     def get_or_create(cls, full_name, initials=''):
@@ -137,25 +152,20 @@ class Contributor(models.Model):
             return base_query.get(aliases__icontains=last_name)
 
         @find_single_item_or_none
-        def search_for_initials():
-            if initials:
-                contributors = base_query.filter(initials__iexact=initials)
-                for contributor in contributors:
-                    ratio = fuzz.ratio(contributor.display_name, full_name)
-                    if ratio >= 0.9:
-                        # TODO: contributor addalias(newalias-maybe).
-                        # TODO: contributor merge.
-                        # TODO: two contributors with same name.
-                        if full_name not in contributor.aliases:
-                            contributor.aliases += '\n' + full_name
-                        contributor.save()
-                        return contributor
+        def fuzzy_search():
+            MINIMUM_RATIO = 90
+            for contributor in base_query.all():
+                ratio = fuzz.ratio(contributor.display_name, full_name)
+                if ratio >= MINIMUM_RATIO:
+                    # TODO: two contributors with same name.
+                    return contributor
             return None
 
         # Variuous queries to look for contributor in the database.
         contributor = (
             search_for_full_name() or
             search_for_first_plus_last_name() or
+            fuzzy_search() or
             None
             # search_for_alias() or
             # search_for_initials() or
@@ -164,10 +174,17 @@ class Contributor(models.Model):
         # Was not found with any of the methods.
         if not contributor:
             contributor = cls(
-                display_name=full_name[:50],
-                initials=initials[:5],
+                display_name=full_name[:50].strip(),
+                initials=initials[:5].strip(),
             )
             contributor.save()
+
+        if contributor.display_name != full_name and full_name not in contributor.aliases:
+
+            # Misspelling or different combination of names.
+            contributor.aliases += '\n' + full_name
+            contributor.save()
+
         return contributor
 
 

@@ -27,9 +27,9 @@ def header_image(context):
 def inline_storyimage(context, argument_string):
     story = context['story']
     if '<' in argument_string or '>' in argument_string:
-        size = '400x400'
+        size = '300x400'
     else:
-        size = '1200x800'
+        size = '1200x700'
     images = story.images().inline()
     videos = story.videos().inline()
     context = get_items(images, argument_string)

@@ -68,7 +68,7 @@ def frontpage_view(request, frontpage=None):
                     if len(headline) < length:
                         headline_size = size
                         break
-                logger.debug('{} {}'.format(headline, headline_size))
+                # logger.debug('{} {}'.format(headline, headline_size))
 
                 item = {
                     'css_width': 'cols-{}'.format(columns),

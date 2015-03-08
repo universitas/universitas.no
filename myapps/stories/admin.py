@@ -29,7 +29,7 @@ class SmallTextArea:
 class BylineInline(admin.TabularInline):
     form = autocomplete_light.modelform_factory(Byline, exclude=())
     model = Byline
-    fields = ('story', 'credit', 'contributor', 'title', )
+    fields = ('ordering', 'credit', 'contributor', 'title', )
     extra = 0
     formfield_overrides = {models.CharField: {'widget': TextInput(attrs={'style': 'width:400px;'})}, }
 

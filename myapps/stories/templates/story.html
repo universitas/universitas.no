@@ -39,7 +39,7 @@
     </div>
     <div class="dateline">{{ story.publication_date | date:"D d. b Y" }}</div>
     <div class="bylines">
-        {% for byline in story.byline_set.all %}
+        {% for byline in story.byline_set.ordered %}
         <div class="byline">
         {# {% if byline.contributor.byline_image %} #}
           <div class="byline-photo">

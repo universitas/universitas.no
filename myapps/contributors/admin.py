@@ -24,11 +24,12 @@ class ContributorAdmin(admin.ModelAdmin):
     list_display = (
         'display_name',
         'bylines_count',
-        'initials',
+        'verified',
         byline_image,
     )
     list_editable = (
         'display_name',
+        'verified',
     )
     search_fields = (
         'display_name',
