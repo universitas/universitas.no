@@ -39,7 +39,7 @@ def reset_db_autoincrement():
     have been populated using primary keys from legacy database.
     """
     cursor = connection.cursor()
-    tables = ['photo_imagefile', 'stories_story', 'django_migrations']
+    tables = ['photo_imagefile', 'stories_story', 'stories_storytype', 'django_migrations']
     sql_pattern = (
         "SELECT setval('{table}_id_seq'"
         ", (SELECT MAX(id) FROM {table})+1)"
@@ -62,6 +62,7 @@ def import_legacy_website_content(
         first=0,
         last=None,
         reverse=False,
+        text_only=False,
         replace_existing=False,
         autocrop=False):
     """ Import old content from legacy website. """
@@ -76,7 +77,8 @@ def import_legacy_website_content(
                 this_story.delete()
 
         new_story = _importer_websak(websak)
-        _importer_bilder_fra_webside(websak, new_story, autocrop)
+        if not text_only:
+            _importer_bilder_fra_webside(websak, new_story, autocrop)
         new_story.full_clean()
         new_story.save(new=True)
 
@@ -86,6 +88,7 @@ def import_prodsys_content(
         last=None,
         reverse=False,
         replace_existing=False,
+        text_only=False,
         autocrop=False):
     """ Import all new stories from prodsys. """
     # status = [Prodsak.READY_FOR_WEB]
@@ -97,8 +100,11 @@ def import_prodsys_content(
         objects = objects[::-1]
     logger.info('Found {} stories to import'.format(len(objects)))
     prodsak_ids = [obj['prodsak_id'] for obj in objects[first:last]]
+
+    import_images = not text_only
+
     for prodsak_id in prodsak_ids:
-        _importer_prodsak(prodsak_id, replace_existing, autocrop)
+        _importer_prodsak(prodsak_id, replace_existing, autocrop, import_images)
 
 
 def _importer_websak(websak):
@@ -184,8 +190,10 @@ def _importer_websak(websak):
             except Sak.DoesNotExist:
                 # Dangling reference in database.
                 pass
-
     new_story.save()
+    new_story.clean()
+    new_story.save()
+    # import ipdb; ipdb.set_trace()
     logger.debug(
         '{:>5} story saved: {} {}'.format(
             count,
@@ -194,7 +202,7 @@ def _importer_websak(websak):
     return new_story
 
 
-def _importer_prodsak(prodsak_id, replace_existing):
+def _importer_prodsak(prodsak_id, replace_existing=False, autocrop=False, import_images=True):
     """
     Create a Story with images from a prodsak object in the prodsys database.
     """
@@ -220,7 +228,8 @@ def _importer_prodsak(prodsak_id, replace_existing):
     logger.debug('story saved: {} {}'.format(new_story, new_story.pk))
 
     # Import images from prodsys to the new Story.
-    _importer_bilder_fra_prodsys(prodsak, new_story)
+    if import_images:
+        _importer_bilder_fra_prodsys(prodsak, new_story, autocrop)
     new_story.full_clean()
     new_story.save(new=True)
 
@@ -439,15 +448,14 @@ def _websak_til_xtags(websak):
     def xtags_header_title_and_bylines():
         header_fields = (
             (websak.overskrift, "tit"),
+            (websak.temaord, "tema"),
             (websak.ingress, "ing"),
             (websak.byline, "bl"),
         )
         for field_content, tag in header_fields:
-            if field_content:
-                content_list.append(
-                    '@{tag}: {field_content}\n'.format(
-                        tag=tag,
-                        field_content=field_content))
+            if not field_content is None and field_content.strip():
+                field_content = re.sub(r'\s+', ' ', field_content)
+                content_list.append('@{}: {}\n'.format(tag, field_content))
 
     def xtags_body_text():
         content_list.append(

@@ -54,6 +54,13 @@ class Command(BaseCommand):
             help='Start with newest stories.'
         ),
         make_option(
+            '--textonly', '-t',
+            action='store_true',
+            dest='text only',
+            default=False,
+            help='Only import text.'
+        ),
+        make_option(
             '--drop', '-d',
             action='store_true',
             dest='drop',
@@ -87,6 +94,7 @@ class Command(BaseCommand):
                 drop_model_tables(Story, Contributor, ImageFile)
 
             import_prodsys_content(
+                text_only=options['text only'],
                 first=options['first'],
                 last=last,
                 reverse=options['reverse'],
@@ -104,6 +112,7 @@ class Command(BaseCommand):
                 drop_model_tables(Story, Contributor, ImageFile)
 
             import_legacy_website_content(
+                text_only=options['text only'],
                 first=first,
                 last=last,
                 reverse=options['reverse'],

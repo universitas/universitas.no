@@ -42,6 +42,7 @@ from myapps.frontpage.models import FrontpageStory
 # from myapps.issues.models import PrintIssue
 
 from .status_codes import HTTP_STATUS_CODES
+from .bylines import clean_up_bylines
 
 
 PULLQUOTE_TAG = '@quote:'
@@ -81,16 +82,11 @@ class MarkupFieldMixin(object):
         return text
 
 
-# class MarkupTextField(models.TextField, MarkupFieldMixin):
 class MarkupTextField(MarkupFieldMixin, models.TextField):
-    description = _('subclass of Textfield containing markup.')
-
-# class MarkupCharField(models.CharField, MarkupFieldMixin):
-
+    description = 'subclass of Textfield containing markup.'
 
 class MarkupCharField(MarkupFieldMixin, models.CharField, ):
-    description = _('subclass of Charfield containing markup.')
-
+    description = 'subclass of Charfield containing markup.'
 
 class MarkupModelMixin(object):
 
@@ -338,12 +334,14 @@ class TextContent(models.Model, MarkupModelMixin):
             # only body text needs block tags.
             tag = ''
         try:
-            assert isinstance(getattr(self, modelfield), str)
             new_content = '{old_content}\n{tag}{added_content}'.format(
                 old_content=getattr(self, modelfield),
                 tag=tag,
                 added_content=content,
             ).strip()
+            actual_field = self.__class__._meta.get_field_by_name(modelfield)[0]
+            if actual_field.max_length:
+                new_content = new_content[:actual_field.max_length]
             setattr(self, modelfield, new_content)
             return self
         except (AttributeError,):
@@ -1512,6 +1510,10 @@ class Byline(models.Model):
 
     CREDIT_CHOICES = [
         ('text', _('Text')),
+        ('video', _('Text')),
+        ('text and photo', _('TextPhoto')),
+        ('text and video', _('TextVideo')),
+        ('photo and video', _('PhotoVideo')),
         ('photo', _('Photo')),
         ('video', _('Video')),
         ('illus', _('Illustration')),
@@ -1560,7 +1562,7 @@ class Byline(models.Model):
             # or similiar description.
             # Example:
             # text: Jane Doe, Just a regular person
-            r'^(?P<credit>[^:, ]+): (?P<full_name>[^,]+)\s*(, (?P<title>.+))?$',
+            r'^(?P<credit>[^:]+): (?P<full_name>[^,]+)\s*(, (?P<title>.+))?$',
             flags=re.UNICODE,
         )
 
@@ -1618,7 +1620,7 @@ class Byline(models.Model):
             ratio = difflib.SequenceMatcher(
                 None,
                 choice[0],
-                credit[:5],
+                credit[:],
             ).ratio()
             if .4 > ratio > .8:
                 logger.debug(choice[0], credit, ratio)
@@ -1654,103 +1656,3 @@ def needle_in_haystack(needle, haystack):
         if value is not -1:
             return line
     return 'no match in %d lines' % (len(lines),)
-
-
-def clean_up_bylines(raw_bylines):
-    """
-    Normalise misformatting and idiosyncraticies of bylines in legacy data.
-    string -> string
-    """
-    replacements = (
-        # Symbols used to separate individual bylines.
-        (r'\r|;|•|\*|·|/', r'\n', re.I),
-
-        # No full stops
-        (r'\.', r' ', re.I),
-
-        # A word that ends with colon must be at the beginning of a line.
-        (r' +(\S*?:)', r'\n\1', 0),
-
-
-        # comma, and or "og" before two capitalised words probably means it's
-        # a new person. Insert newline.
-        (r'\s*(&|#|,\s|\s[oO]g\s|\s[aA]nd\s)\s*([A-ZÆØÅ]\S+ [A-ZÆØÅ])',
-         r'\n\2',
-         0),
-        # TODO: Bytt ut byline regular expression med ny regex-modul som funker
-        # med unicode
-
-        # parantheses shall have no spaces inside them, but after and before.
-        (r' *\( *(.*?) *\) *', r' (\1) ', 0),
-
-        # close parantheses.
-        (r'\([^)]+$', r'\0)', re.M),
-
-        # email addresses will die!
-        (r'\S+@\S+', '', 0),
-
-        # words in parantheses at end of line is probably some creditation.
-        # Put in front with colon instead.
-        (r'^(.*?) *\(([^)]*)\) *$', r'\2: \1', re.M),
-
-        # "Anmeldt av" is text credit.
-        (r'anmeldt av:?', 'text: ', re.I),
-
-        # Oversatt = translatrion
-        (r'oversatt av:?', 'translation: ', re.I),
-
-        # Any word containging "photo" is some kind of photo credit.
-        (r'\S*(ph|f)oto\S*?[\s:]*', '\nphoto: ', re.I),
-
-        # Any word containing "text" is text credit.
-        (r'\S*te(ks|x)t\S*?[\s:]*', '\ntext: ', re.I),
-
-        # These words are stripped from end of line.
-        (r' *(,| og| and) *$', '', re.M | re.I),
-
-        # These words are stripped from start of line
-        (r'^ *(,|og |and |av ) *', '', re.M | re.I),
-
-        # These words are stripped from after colon
-        (r': *(,|og |and |av ) *', ':', re.M | re.I),
-
-        # Creditline with empty space after it is deleted.
-        (r'^\S:\s*$', '', re.M),
-
-        # Multiple spaces.
-        (r' {2,}', ' ', 0),
-
-        # Remove lines containing only whitespace.
-        (r'\s*\n\s*', r'\n', 0),
-
-        # Bylines with no credit are assumed to be text credit.
-        (r'^([^:]+?)$', r'text:\1', re.M),
-
-        # Exactly one space after and no space before colon or comma.
-        (r'\s*([:,])+\s*', r'\1 ', 0),
-
-        # No multi colons
-        (r': *:', r':', 0),
-
-        # No random colons at the start or end of a line
-        (r'^\s*:', r'', re.M),
-        (r':\s*$', r'', re.M),
-    )
-
-    byline_words = []
-    for word in raw_bylines.split():
-        if word == word.upper():
-            word = word.title()
-        byline_words.append(word)
-
-    bylines = ' '.join(byline_words)
-    for pattern, replacement, flags in replacements:
-        bylines = re.sub(pattern, replacement, bylines, flags=flags)
-    bylines = bylines.strip()
-    from re import escape
-    bylines_logger.debug(
-        '(\n"{input}",\n"{out}"\n),'.format(
-            input=raw_bylines.replace('\n', r'\n'),
-            out=bylines.replace('\n', r'\n'),
-        ))
-    return bylines

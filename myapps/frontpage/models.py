@@ -168,7 +168,7 @@ class StaticModule(FrontPageModule):
     )
 
     render_template = models.BooleanField(
-        help_text=_('Use django rendering'),
+        help_text=_('Use django template rendering'),
         default=False)
 
     def save(self, *args, **kwargs):

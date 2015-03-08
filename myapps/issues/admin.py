@@ -25,7 +25,7 @@ class ThumbAdmin:
                 thumb=url, pdf=instance.pdf.url,
             )
         else:
-            html = _('<p>Not created</p>')
+            html = '<p>{}</p>'.format(_('PDF is not uploaded yet.'))
         return mark_safe(html)
 
     thumbnail.allow_tags = True
