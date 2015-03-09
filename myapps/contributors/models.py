@@ -111,7 +111,10 @@ class Contributor(models.Model):
         Tries to avoid creation of multiple contributor instances
         for a single real contributor.
         """
+        # import ipdb; ipdb.set_trace()
         full_name = re.sub('\(.*?\)', '', input_name)[:50].strip()
+        if not full_name:
+            return []
         names = full_name.split()
         last_name = names[-1]
         first_name = ' '.join(names[:-1][:1])
@@ -176,8 +179,11 @@ class Contributor(models.Model):
 
         if type(contributor) is list:
             combined_byline = ' '.join([c.display_name for c in contributor])
-            import ipdb; ipdb.set_trace()
-            if fuzz.token_sort_ratio(combined_byline, full_name) > 80:
+            ratio = fuzz.token_sort_ratio(combined_byline, full_name)
+            msg = 'ratio: {ratio} {combined} -> {full_name}'.format(
+                ratio=ratio, combined=combined_byline, full_name=full_name,)
+            logger.debug(msg)
+            if ratio >= 80:
                 return contributor
             else:
                 contributor = None
@@ -190,7 +196,7 @@ class Contributor(models.Model):
             )
             contributor.save()
 
-        if contributor.display_name != full_name and full_name not in contributor.aliases:
+        if contributor.display_name != full_name:
 
             # Misspelling or different combination of names.
             contributor.aliases += '\n' + input_name

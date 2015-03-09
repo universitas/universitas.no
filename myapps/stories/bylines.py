@@ -1,6 +1,7 @@
 """ Byline cleanup magic. """
 import re
 
+
 def clean_up_bylines(raw_bylines):
     """
     Normalise misformatting and idiosyncraticies of bylines in legacy data.
@@ -10,11 +11,14 @@ def clean_up_bylines(raw_bylines):
         # email addresses will die!
         (r'\S+@\S+', '', 0),
 
-        # remove underscores!
-        (r'_', '', 0),
+        # singular asterisk is byline separator.
+        (r' \* ', '\n', 0),
+
+        # remove underscores and asterisks.
+        (r'[_*]', '', 0),
 
         # Symbols used to separate individual bylines.
-        (r'[\r\n]+|[;♦•·*]| [–-] |/', r'\n', re.I),
+        (r'[\r\n]+|[;♦•·]| [–-] |/', r'\n', re.I),
 
         # Credit with colon must be at the beginning of a line.
         (r' +((?:foto|video|photo|text|tekst|illus|graf)\w+):', r'\n\1', re.I),
@@ -42,16 +46,19 @@ def clean_up_bylines(raw_bylines):
         # words in parantheses at end of line is probably some creditation.
         # Put in front with colon instead.
         # (r'^(.*?) *\(([^)]*)\) *$', r'\2: \1', re.M),
-        ( r'^(.*?) *\((\w*(?:fot|vid|pho|tex|tek|ill|gra)[^)]*)\) *$', r'\2: \1', re.M | re.I),
-
-        # "Anmeldt av" is text credit.
-        (r'^anmeldt av:?', 'text: ', re.I | re.M),
+        (
+            r'^(.*?) *\((\w*(?:fot|vid|pho|tex|tek|ill|gra)[^)]*)\) *$',
+            r'\2: \1',
+            re.M | re.I),
 
         # Oversatt = translation
-        (r'^oversatt av:?', 'translation: ', re.I | re.M),
+        (r'^(oversatt av|translated by):? ', 'translation: ', re.I | re.M),
+
+        # "Anmeldt av" is text credit.
+        (r'^anmeldt av:?', '', re.I | re.M),
 
         # skrevet av = text
-        (r'^(skrevet )?(av|by|ved):?', 'text: ', re.I | re.M),
+        (r'^(skrevet )?(av|by|ved):?', '', re.I | re.M),
 
         # ... og foto
         (r'og foto:?', 'and photo:', re.I),
