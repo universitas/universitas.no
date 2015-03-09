@@ -14,7 +14,7 @@ def clean_up_bylines(raw_bylines):
         (r'\S+@\S+', '', 0),
 
         # Symbols used to separate individual bylines.
-        (r'[\r\n]+|\s*[;♦∙•·]\s*| [-–*] |/', r'\n', re.I),
+        (r'[\r\n]+|\s*[;♦∙•Ï·]\s*| [-–*#] |/', r'\n', re.I),
 
         # remove underscores and asterisks.
         (r'[_*]', '', 0),

@@ -6,7 +6,7 @@ import re
 import difflib
 import json
 import logging
-import random
+# import random
 logger = logging.getLogger('universitas')
 from slugify import Slugify
 slugify = Slugify(max_length=50, to_lower=True)

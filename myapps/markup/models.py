@@ -114,13 +114,20 @@ class BlockTagManager(TagManager):
             # Found the empty tag, but there is a xtag in content.
             similar_tag = self.similar_tag(start_tag=start_tag)
             if similar_tag:
-                BlockTag(start_tag=start_tag).make_new_alias(change_to=similar_tag.start_tag)
-                paragraph = paragraph.replace(start_tag, similar_tag.start_tag, 1)
+                BlockTag(
+                    start_tag=start_tag).make_new_alias(
+                    change_to=similar_tag.start_tag)
+                paragraph = paragraph.replace(
+                    start_tag,
+                    similar_tag.start_tag,
+                    1)
                 blocktag = similar_tag
             else:
                 start_tag = start_tag.lower()
                 html_class = re.sub(r'\W', '', start_tag)
-                blocktag = self.create(start_tag=start_tag, html_class=html_class)
+                blocktag = self.create(
+                    start_tag=start_tag,
+                    html_class=html_class)
         return blocktag, paragraph
 
     def similar_tag(self, start_tag, cutoff=0.6):
@@ -129,13 +136,20 @@ class BlockTagManager(TagManager):
         best_diffratio = 0
         best_candidate = None
         for candidate in blocktags:
-            diffratio = difflib.SequenceMatcher(None, candidate.start_tag.lower(), start_tag.lower()).ratio()
+            diffratio = difflib.SequenceMatcher(
+                None,
+                candidate.start_tag.lower(),
+                start_tag.lower()).ratio()
             if best_diffratio < diffratio:
                 best_diffratio = diffratio
                 best_candidate = candidate
         if best_diffratio < cutoff and best_candidate:
             error_message = 'Looked for {} with cutoff {}. Best candidate is {} with ratio {}'.format(
-                start_tag, cutoff, best_candidate.start_tag, best_diffratio, )
+                start_tag,
+                cutoff,
+                best_candidate.start_tag,
+                best_diffratio,
+            )
             logger.warn(error_message)
             best_candidate = None
 
@@ -232,15 +246,21 @@ class BlockTag(MarkupTag):
 
     def make_new_alias(self, change_to=None):
         change_to = change_to or self.html_tag
+
         if not change_to or change_to == self.DEFAULT_HTML_TAG:
-            similar_blocktag = self.__class__.objects.similar_tag(self.start_tag)
+            similar_blocktag = self.__class__.objects.similar_tag(
+                self.start_tag)
             change_to = similar_blocktag.start_tag if similar_blocktag else self.start_tag
-        Alias.objects.create(
-            pattern='^' + re.escape(self.start_tag),
-            replacement=change_to,
-            timing=Alias.TIMING_EXTRA,
-            comment=_('Misspelling found during import.')
-        )
+
+        pattern = '^' + re.escape(self.start_tag),
+        if not Alias.objects.filter(pattern=pattern):
+
+            Alias.objects.create(
+                pattern=pattern,
+                replacement=change_to,
+                timing=Alias.TIMING_EXTRA,
+                comment=_('Misspelling found during import.')
+            )
 
 
 class InlineTagManager(BlockTagManager):
@@ -307,9 +327,13 @@ class InlineTag(MarkupTag):
             self.end_tag = self.start_tag
         if self.pk:
             saved_self = type(self).objects.get(pk=self.pk)
-            if (saved_self.start_tag, saved_self.end_tag) != (self.start_tag, self.end_tag):
+            if (saved_self.start_tag,
+                saved_self.end_tag) != (self.start_tag,
+                                        self.end_tag):
                 self.pattern = None
-            if (saved_self.html_tag, saved_self.html_class) != (self.html_tag, self.html_class):
+            if (saved_self.html_tag,
+                saved_self.html_class) != (self.html_tag,
+                                           self.html_class):
                 self.replacement = None
         if not self.pattern:
             self.pattern = self.make_pattern()
@@ -395,4 +419,8 @@ class Alias(CachedTag):
         super().save(*args, **kwargs)
 
     def replace(self, content):
-        return re.sub(self.pattern, self.replacement, content, flags=self.flags_sum)
+        return re.sub(
+            self.pattern,
+            self.replacement,
+            content,
+            flags=self.flags_sum)
