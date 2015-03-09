@@ -127,6 +127,8 @@ def clean_up_bylines(raw_bylines):
     for pattern, replacement, flags in replacements[:]:
         bylines = re.sub(pattern, replacement, bylines, flags=flags)
     bylines = bylines.strip()
+    if 'photo:' in bylines:
+        bylines = bylines.replace('by:', 'text:')
 
     msg = '("{}",\n"{}"),'.format(raw_bylines, bylines)
     bylines_logger.debug(msg)
