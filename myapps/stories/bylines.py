@@ -1,5 +1,7 @@
 """ Byline cleanup magic. """
 import re
+import logging
+bylines_logger = logging.getLogger('bylines')
 
 
 def clean_up_bylines(raw_bylines):
@@ -11,14 +13,11 @@ def clean_up_bylines(raw_bylines):
         # email addresses will die!
         (r'\S+@\S+', '', 0),
 
-        # singular asterisk is byline separator.
-        (r' \* ', '\n', 0),
+        # Symbols used to separate individual bylines.
+        (r'[\r\n]+|\s*[;♦∙•·]\s*| [-–*] |/', r'\n', re.I),
 
         # remove underscores and asterisks.
         (r'[_*]', '', 0),
-
-        # Symbols used to separate individual bylines.
-        (r'[\r\n]+|[;♦•·]| [–-] |/', r'\n', re.I),
 
         # Credit with colon must be at the beginning of a line.
         (r' +((?:foto|video|photo|text|tekst|illus|graf)\w+):', r'\n\1', re.I),
@@ -118,17 +117,17 @@ def clean_up_bylines(raw_bylines):
         (r' and ditto:', ':', re.I),
     )
 
-    # logger.debug('\n', bylines)
     byline_words = []
+
     for word in raw_bylines.split():
-        # if word == word.upper():
-        #    word = word.title()
         byline_words.append(word)
 
     bylines = ' '.join(byline_words)
-    # logger.debug(bylines)
+
     for pattern, replacement, flags in replacements[:]:
         bylines = re.sub(pattern, replacement, bylines, flags=flags)
-        #print(bylines, pattern)
     bylines = bylines.strip()
+
+    msg = '("{}",\n"{}"),'.format(raw_bylines, bylines)
+    bylines_logger.debug(msg)
     return bylines

@@ -8,7 +8,6 @@ import json
 import logging
 import random
 logger = logging.getLogger('universitas')
-bylines_logger = logging.getLogger('bylines')
 from slugify import Slugify
 slugify = Slugify(max_length=50, to_lower=True)
 
@@ -613,7 +612,6 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
     def main_image(self):
         """ Get the top image if there is any. """
-        # import ipdb; ipdb.set_trace()
         top_image = self.images().order_by('-top', 'index').first()
         if top_image:
             return top_image.child
