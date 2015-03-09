@@ -45,19 +45,18 @@ def clean_up_bylines(raw_bylines):
         ( r'^(.*?) *\((\w*(?:fot|vid|pho|tex|tek|ill|gra)[^)]*)\) *$', r'\2: \1', re.M | re.I),
 
         # "Anmeldt av" is text credit.
-        (r'anmeldt av:?', 'text: ', re.I),
+        (r'^anmeldt av:?', 'text: ', re.I | re.M),
 
         # Oversatt = translation
-        (r'oversatt av:?', 'translation: ', re.I),
+        (r'^oversatt av:?', 'translation: ', re.I | re.M),
 
         # skrevet av = text
-        (r'skrevet av:?', 'text: ', re.I),
+        (r'^(skrevet )?(av|by|ved):?', 'text: ', re.I | re.M),
 
         # ... og foto
         (r'og foto:?', 'and photo:', re.I),
         (r'og video:?', 'and video:', re.I),
         (r'og tekst:?', 'and text:', re.I),
-
 
         # Any word containging "photo" is some kind of photo credit.
         (r'^ *\w*(ph|f)oto\w*:?', '\nphoto:', re.I | re.M),
@@ -83,9 +82,9 @@ def clean_up_bylines(raw_bylines):
         # Remove lines containing only whitespace.
         (r'\s*\n\s*', r'\n', 0),
 
-        # Bylines with no credit are assumed to be text credit.
-        (r'^([^:\n]{5,20})$', r'text:\1', re.M),
-        (r'^([^:\n]{20})', r'text:\1', re.M),
+        # Bylines with no credit are generic.
+        (r'^([^:\n]{5,20})$', r'by:\1', re.M),
+        (r'^([^:\n]{20})', r'by:\1', re.M),
 
         # Exactly one space after and no space before colon or comma.
         (r'\s*([:,])+\s*', r'\1 ', 0),
@@ -109,7 +108,7 @@ def clean_up_bylines(raw_bylines):
 
         # Ditto credit
         (r'(^(.+?:).+\n)ditto:', r'\1\2', re.M | re.I),
-        (r' and ditto:', ':', 0),
+        (r' and ditto:', ':', re.I),
     )
 
     # logger.debug('\n', bylines)

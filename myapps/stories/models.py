@@ -1519,17 +1519,17 @@ class Byline(models.Model):
     """ Credits the people who created content for a story. """
 
     CREDIT_CHOICES = [
+        ('by', _('By')),
         ('text', _('Text')),
-        ('video', _('Text')),
+        ('video', _('Video')),
+        ('photo', _('Photo')),
+        ('video', _('Video')),
+        ('illustration', _('Illustration')),
+        ('graphics', _('Graphics')),
+        ('translation', _('Translation')),
         ('text and photo', _('TextPhoto')),
         ('text and video', _('TextVideo')),
         ('photo and video', _('PhotoVideo')),
-        ('photo', _('Photo')),
-        ('video', _('Video')),
-        ('illus', _('Illustration')),
-        ('graph', _('Graphics')),
-        ('trans', _('Translation')),
-        ('???', _('Unknown')),
     ]
     DEFAULT_CREDIT = CREDIT_CHOICES[0][0]
     objects = BylineManager()
@@ -1642,17 +1642,19 @@ class Byline(models.Model):
         else:
             credit = cls.DEFAULT_CREDIT
 
-        contributor = Contributor.get_or_create(full_name, initials)
+        contributors = Contributor.get_or_create(
+            full_name,
+            initials
+            )
 
-        new_byline = cls(
-            story=story,
-            credit=credit,
-            title=title[:200],
-            contributor=contributor,
-        )
-        new_byline.save()
-
-        return new_byline
+        for contributor in contributors:
+            new_byline = cls(
+                story=story,
+                credit=credit,
+                title=title[:200],
+                contributor=contributor,
+            )
+            new_byline.save()
 
 
 def needle_in_haystack(needle, haystack):

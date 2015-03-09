@@ -105,13 +105,13 @@ class Contributor(models.Model):
         return '\n'.join(data)
 
     @classmethod
-    def get_or_create(cls, full_name, initials=''):
+    def get_or_create(cls, input_name, initials=''):
         """
         Fancy lookup for low quality legacy imports.
         Tries to avoid creation of multiple contributor instances
         for a single real contributor.
         """
-        full_name = full_name[:50].strip()
+        full_name = re.sub('\(.*?\)', '', input_name)[:50].strip()
         names = full_name.split()
         last_name = names[-1]
         first_name = ' '.join(names[:-1][:1])
@@ -151,15 +151,18 @@ class Contributor(models.Model):
                 return None
             return base_query.get(aliases__icontains=last_name)
 
-        @find_single_item_or_none
         def fuzzy_search():
-            MINIMUM_RATIO = 90
+            MINIMUM_RATIO = 85
+            candidates = []
             for contributor in base_query.all():
                 ratio = fuzz.ratio(contributor.display_name, full_name)
                 if ratio >= MINIMUM_RATIO:
                     # TODO: two contributors with same name.
                     return contributor
-            return None
+                if contributor.display_name in full_name:
+                    candidates.append(contributor)
+            return candidates or None
+
 
         # Variuous queries to look for contributor in the database.
         contributor = (
@@ -170,6 +173,14 @@ class Contributor(models.Model):
             # search_for_alias() or
             # search_for_initials() or
         )
+
+        if type(contributor) is list:
+            combined_byline = ' '.join([c.display_name for c in contributor])
+            import ipdb; ipdb.set_trace()
+            if fuzz.token_sort_ratio(combined_byline, full_name) > 80:
+                return contributor
+            else:
+                contributor = None
 
         # Was not found with any of the methods.
         if not contributor:
@@ -182,10 +193,10 @@ class Contributor(models.Model):
         if contributor.display_name != full_name and full_name not in contributor.aliases:
 
             # Misspelling or different combination of names.
-            contributor.aliases += '\n' + full_name
+            contributor.aliases += '\n' + input_name
             contributor.save()
 
-        return contributor
+        return [contributor]
 
 
 class ContactInfo(models.Model):
