@@ -1,0 +1,10 @@
+{% extends "base-template.html" %}
+{% block title %}
+  Publication plan
+{% endblock title %}
+{% block content %}
+  <h1>Publication plan {{ year }}</h1>
+  {% for issue in  issues %}
+    <p>{{ issue }}</p>
+  {% endfor %}
+{% endblock content %}

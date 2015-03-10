@@ -5,12 +5,12 @@ Url config for universitas.no.
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import patterns, include, url
-from django.views.generic import TemplateView
 from django.contrib import admin
 from myapps.core.views import RobotsTxtView, HumansTxtView
 from myapps.search import urls as search_urls
 from myapps.core.autocomplete_views import autocomplete_list
 from myapps.frontpage.views import frontpage_view
+from myapps.issues.views import PdfArchiveView, PubPlanView
 from myapps.stories.views import article_view
 from autocomplete_light import urls as autocomplete_light_urls
 # from watson import urls as watson_urls
@@ -18,6 +18,7 @@ from autocomplete_light import urls as autocomplete_light_urls
 admin.autodiscover()
 
 
+# Content
 urlpatterns = patterns(
     '',
     # forside
@@ -33,26 +34,36 @@ urlpatterns = patterns(
     # personlig profil
 )
 
+# PDF and issues
+urlpatterns += patterns(
+    '',
+    url(r'^pdf/$', PdfArchiveView.as_view(), name='pdf_archive'),
+    url(r'^utgivelsesplan/(?P<year>\d{4})/$', PubPlanView.as_view(), name='pub_plan'),
+    url(r'^utgivelsesplan/$', PubPlanView.as_view(), name='pub_plan'),
+)
+
 urlpatterns += patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^foundation/$', TemplateView.as_view(template_name='foundation.html'),
-        name='foundation_demo',),
     url(r'^robots.txt$', RobotsTxtView.as_view(), name='robots.txt'),
     url(r'^humans.txt$', HumansTxtView.as_view(), name='humans.txt'),
 )
 
+# Autocomplete for admin forms
 urlpatterns += patterns(
     '',
     url(r'^autocomplete', include(autocomplete_light_urls)),
     url(r'^autocomplete', include(autocomplete_light_urls)),
     url(r'^autocomplete/menu$', autocomplete_list, name='autocomplete_list'),
 )
+
+# Main site search
 urlpatterns += patterns(
     '',
     url(r'^search/', include(search_urls, namespace='watson')),
 )
 
+# Django debug toolbar
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += patterns(

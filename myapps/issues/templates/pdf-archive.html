@@ -1,0 +1,15 @@
+{% extends "base-template.html" %}
+{% block title %}
+  PDF archive
+{% endblock title %}
+{% block content %}
+  <h1>PDF archive</h1>
+  {% for issue in  issues %}
+    <div>
+      <p>{{ issue }}</p>
+      {% for pdf in issue.pdf_set %}
+        {{ pdf }}
+      {% endfor %}
+    </div>
+  {% endfor %}
+{% endblock content %}

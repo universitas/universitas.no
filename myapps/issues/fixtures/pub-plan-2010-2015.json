@@ -1,0 +1,1507 @@
+[
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-09-04"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2013-02-06"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-09-10"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-11-17"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-02-29"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-10-26"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-04-18"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-08-27"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-04-02"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-10-29"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2012-09-05"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-08-29"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-05-02"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-01-18"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-03-21"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-10-20"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2013-05-08"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-05-11"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-09-11"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2011-06-01"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-09-24"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-09-19"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-03-02"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2011-08-24"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-09-17"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-10-23"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-11-07"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2010-11-03"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-02-15"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-10-16"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-03-14"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2011-02-09"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-10-10"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2013-08-28"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-01-29"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-01-19"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-08-22"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-09-29"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 3,
+    "publication_date": "2010-08-25"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2010-12-01"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-03-05"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-11-13"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-04-09"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-10-17"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-05-25"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-10-02"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-05-02"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-02-13"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-04-30"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-08-21"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-05-29"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-09-18"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-09-22"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-11-24"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 3,
+    "publication_date": "2011-08-17"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-02-16"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-05-22"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2010-10-06"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-05-28"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-02-27"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-10-09"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-11-12"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-11-20"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2012-03-28"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2012-05-30"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-04-17"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2011-10-05"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-03-26"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-11-21"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-05-04"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-10-08"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-08-13"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-09-14"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-11-27"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2012-03-07"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-11-30"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-05-16"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-04-25"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2012-10-31"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-09-03"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-08-14"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-05-14"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-11-19"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-08-31"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-10-22"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-10-15"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-05-18"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-03-20"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-11-16"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-04-13"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-02-23"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-02-19"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-03-16"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-02-26"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2011-03-09"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-09-21"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-03-30"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-11-09"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-01-23"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-04-10"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2011-11-02"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-01-15"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-03-13"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-02-02"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-02-01"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-11-23"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-09-25"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-10-13"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-02-20"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-01-26"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-11-06"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-11-05"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-05-21"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2012-05-09"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-01-22"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-11-10"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-03-12"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 3,
+    "publication_date": "2012-08-15"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2012-11-14"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-09-12"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2011-04-06"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-09-28"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-10-19"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2012-02-08"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-02-05"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-10-24"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-02-12"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-05-15"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2012-11-28"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-01-25"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2012-10-03"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-10-12"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-05-07"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-01-30"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-09-07"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-01-16"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-02-22"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-06-19"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-10-27"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-08-20"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2014-03-19"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-10-30"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-04-24"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-05-23"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2011-03-23"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2013-09-04"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-09-11"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-09-18"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-09-25"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-10-02"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-10-09"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-10-16"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-10-23"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-11-06"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-11-13"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-11-20"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2013-11-27"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-01-13"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-01-20"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-01-27"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2010-02-03"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-02-10"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-02-17"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-02-24"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-03-03"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-03-10"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-03-17"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2010-03-24"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-04-14"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-04-21"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-04-28"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-05-05"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-05-12"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-05-19"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2010-05-26"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-08-18"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-08-11"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-09-01"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-09-08"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2012-09-26"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-01-14"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-01-21"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-01-28"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2015-02-04"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-02-11"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-02-18"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-02-25"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2015-03-04"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-03-11"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-03-18"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2015-03-25"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-04-15"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-04-22"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-04-29"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2015-05-06"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-05-13"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-05-20"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2015-05-27"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2015-08-12"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-08-19"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-08-26"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2015-09-02"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-09-09"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-09-16"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2015-09-23"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-09-30"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-10-07"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2015-10-14"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-10-21"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-10-28"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2015-11-04"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-11-11"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2015-11-18"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 2,
+    "publication_date": "2015-11-25"
+  },
+  "model": "issues.issue"
+},
+{
+  "fields": {
+    "issue_type": 1,
+    "publication_date": "2010-01-19"
+  },
+  "model": "issues.issue"
+}
+]
