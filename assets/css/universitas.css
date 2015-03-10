@@ -3559,7 +3559,7 @@ th.hide-for-touch {
     top: 0;
     left: 0; }
 
-#story .left-sidebar, #story .inline-aside p, #story .inline-aside ul li, #story .image-caption, .pdf-date, .search-results .wrapper .search-result .text {
+#story .left-sidebar, #story .inline-aside p, #story .inline-aside ul li, #story .image-caption, .print-issue .label, .search-results .wrapper .search-result .text {
   font-size: .8rem;
   line-height: 1.2;
   color: #777777;
@@ -4090,11 +4090,24 @@ body > main {
 .panel-1 {
   padding-left: 0; }
 
-.pdf-faksimile {
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); }
-
-.pdf-date {
-  text-align: center; }
+.print-issue {
+  position: relative; }
+  .print-issue .frontpage {
+    transition: all .1s ease-in-out;
+    box-shadow: 1px 4px 8px -1px rgba(0, 0, 0, 0.3); }
+  .print-issue:hover .frontpage {
+    transform: scale(1.02); }
+  .print-issue:hover .label {
+    color: #444444; }
+  .print-issue .label {
+    color: #aaaaaa;
+    border-bottom: 1px solid #eeeeee;
+    padding: .2rem 0;
+    margin: .2rem 0; }
+    .print-issue .label .number {
+      font-weight: bold; }
+    .print-issue .label .date {
+      float: right; }
 
 .search-results .wrapper .search-result {
   padding-top: 5px;

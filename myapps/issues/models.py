@@ -76,24 +76,34 @@ class Issue(models.Model, Edit_url_mixin):
         return '{}'.format(self.publication_date)
 
     @property
+    def number(self):
+        # import ipdb
+        # ipdb.set_trace()
+
+        issue_list = Issue.objects.filter(
+            publication_date__year=self.year
+        ).order_by('publication_date').values_list(
+            'id',
+            flat=True,
+        )
+
+        return list(issue_list).index(self.id) + 1
+
+    @property
+    def year(self):
+        return self.publication_date.year
+
+    @property
     def issue_name(self):
-        year = self.publication_date.year
         if self.issue_type == Issue.REGULAR:
             description = ''
         else:
             description = ' ({})'.format(
                 self.get_issue_type_display()
             )
-        issue_list_for_year = Issue.objects.filter(
-            publication_date__year=year).order_by('publication_date')
-        issue_number = next(
-            number for number, issue in
-            enumerate(issue_list_for_year, 1)
-            if issue.pk == self.pk
-        )
         name = '{number}/{year}{desc} {pub_date:%d. %b}'.format(
-            year=year,
-            number=issue_number,
+            year=self.year,
+            number=self.number,
             desc=description,
             pub_date=self.publication_date,
         )
@@ -157,7 +167,6 @@ class PrintIssue(models.Model, Edit_url_mixin):
             )
 
         super().save(*args, **kwargs)
-
 
     def create_thumbnail(self):
         """ Create a jpg version of the pdf frontpage """

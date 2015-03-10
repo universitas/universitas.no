@@ -1,10 +1,34 @@
 @charset "UTF-8";
 
-.pdf-faksimile {
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-}
+.print-issue {
+  position: relative;
+  .frontpage {
+    transition: all .1s ease-in-out;
+    box-shadow: 1px 4px 8px -1px rgba(0, 0, 0, 0.3);
+    .faximile {
+    }
+  }
 
-.pdf-date {
-  @extend %small-text;
-  text-align: center;
+  &:hover {
+    .frontpage {
+      transform: scale(1.02);
+    }
+    .label {
+      color: $dark-grey;
+    }
+  }
+
+  .label {
+    @extend %small-text;
+    color: $light-grey;
+    border-bottom: $separator-line;
+    padding: .2rem 0;
+    margin: .2rem 0;
+    .number {
+      font-weight: bold;
+    }
+    .date {
+      float: right;
+    }
+  }
 }
