@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+.pdf-faksimile {
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+.pdf-date {
+  @extend %small-text;
+  text-align: center;
+}

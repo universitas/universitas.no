@@ -1,15 +1,27 @@
 {% extends "base-template.html" %}
+{% load thumbnail %}
 {% block title %}
   PDF archive
 {% endblock title %}
 {% block content %}
-  <h1>PDF archive</h1>
+<div class="row">
+<div class="small-12 columns">
+  <h1>PDF-arkiv</h1>
+  <ul class="small-block-grid-2 medium-block-grid-4 large-block-grid-6">
   {% for issue in  issues %}
-    <div>
-      <p>{{ issue }}</p>
-      {% for pdf in issue.pdf_set %}
-        {{ pdf }}
+    {% for pdf in issue.pdfs.all %}
+      <li>
+        {% thumbnail pdf.get_thumbnail '300' as thumb  %}
+        <a href="{{ pdf.pdf.url }}">
+        <img class="pdf-faksimile" src="{{ thumb.url }}" ></img>
+        </a>
+        {% endthumbnail %}
+      <div class="pdf-date">
+        {{ issue.publication_date | date:"DATE_FORMAT" }}
+      </div>
+      </li>
       {% endfor %}
-    </div>
   {% endfor %}
+  </ul>
+</div></div>
 {% endblock content %}

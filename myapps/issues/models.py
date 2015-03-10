@@ -67,7 +67,7 @@ class Issue(models.Model, Edit_url_mixin):
         default=REGULAR)
 
     class Meta:
-        ordering = ['publication_date']
+        ordering = ['-publication_date']
 
     def __str__(self):
         return self.issue_name

@@ -39,7 +39,7 @@ class ThumbAdmin:
 @admin.register(Issue)
 class IssueAdmin(admin.ModelAdmin):
 
-    list_per_page = 35
+    list_per_page = 40
     date_hierarchy = 'publication_date'
 
     def pdf_thumb(self, pdf, width=250, height=100):
@@ -87,7 +87,7 @@ class PrintIssueAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
     actions_on_top = True
     actions_on_bottom = True
     save_on_top = True
-    list_per_page = 35
+    list_per_page = 40
     list_display = (
         # 'publication_date',
         'pages',
