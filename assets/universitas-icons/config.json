@@ -1,0 +1,386 @@
+{
+  "name": "universitas-icons",
+  "css_prefix_text": "icon-",
+  "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
+  "glyphs": [
+    {
+      "uid": "94fcdc8b5e3c0b317ed766ecc76c72f3",
+      "css": "disqus",
+      "code": 59393,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M534.2 1001.1C411.7 1001.1 299.7 956.4 213.1 882.3L0 911.4 82.3 708.2C53.6 644.9 37.6 574.7 37.6 500.6 37.6 224.1 259.9 0 534.2 0 808.5 0 1030.8 224.1 1030.8 500.6 1030.8 777.1 808.5 1001.1 534.2 1001.1ZM805.4 499.1L805.4 497.7C805.4 353.3 703.5 250.3 527.9 250.3L338.2 250.3 338.2 750.9 525.1 750.9C702.1 750.9 805.4 643.6 805.4 499.1L805.4 499.1ZM530 627.9L474.5 627.9 474.5 373.3 530 373.3C611.5 373.3 665.5 419.8 665.5 499.9L665.5 501.3C665.5 582.1 611.5 627.9 530 627.9Z",
+        "width": 1033
+      },
+      "search": [
+        "discus"
+      ]
+    },
+    {
+      "uid": "2cfae644387433ab3226fa050d6dc9d1",
+      "css": "universitas",
+      "code": 42,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M289.2 820.2C289.2 820.2 289.2 820.2 289.2 820.2H160 159.9V-0.1H0V830.7C0 961.5 8.7 1000 108.9 1000H340.2C440.4 1000 449.1 961.5 449.1 830.7V-0.1H289.1L289.2 820.2 289.2 820.2ZM2681.3 419.6H2531.3V179.1H2681.3V419.6ZM2735.6 573C2830.7 573 2832 524.5 2832 420.2V179.7C2832 34.4 2821.2 0 2735.6 0H2373.4V1000H2531.3V599.9L2717.3 999.9H2889.2L2691.3 573H2735.6ZM5000 333.3V179.6C5000 51.7 4992.5-0.1 4906.3-0.1H4637.8C4543.1-0.1 4544.1 69.1 4544.1 173.5V405.3C4544.1 482.9 4595.1 505.9 4653.4 529.8 4716.2 555.5 4778.9 581.2 4841.7 607L4841.6 820.3H4703.9V666.9H4544V820.3C4544 940.7 4544 999.8 4634.9 999.8L4907.8 1000C5001.6 1000.6 5000 924.7 5000 820.3V562.1C5000 480.4 4933.8 460.9 4874.5 436.8 4817.7 413.6 4760.9 390.5 4703.9 367.5V179.7L4840 179.6V333.3H4999.9L5000 333.3 5000 333.3ZM3266-0.1H3002.3C2909.4-0.1 2910.3 69.1 2910.3 173.5V405.3C2910.3 482.9 2960.3 505.9 3017.7 529.8 3079.4 555.5 3140.9 581.2 3202.5 606.9L3202.5 820.3H3067.4V666.8H2910.4V820.3C2910.4 940.6 2910.4 1000 2999.7 1000H3267.6C3359.6 1000 3358 924.6 3358 820.3V562C3358 480.4 3293 460.9 3234.9 436.7 3179.1 413.5 3123.2 390.4 3067.4 367.4V179.6L3201.1 179.6V333.3H3358V179.6C3358 51.7 3350.6-0.1 3266-0.1M4065.5-0.1H3627.6V179.7H3771.6V1000H3931.4V179.7H4065.4V0H4065.5ZM3431.2 999.9H3591.1V-0.1H3431.2V999.9ZM2046.2 549.8H2210.1V397H2046.2V179.7H2307.3V0H1886.3V1000H2319.3V820.2H2046.2V549.8ZM4212.6 642.1L4260.4 299.4 4308.3 642.1H4212.6ZM4156.6-0.1L3995 1000H4154.9L4183.5 822.4H4337.2L4365.9 1000H4525.9L4364.3 0H4156.6ZM1578.6 699.8L1473-0.1H1313L1474.6 1000H1682.5L1844 0H1684.1L1578.6 699.8ZM854.9 518.8L717.2-0.1H533.3V1000H693.2V486.5L841.2 1000H1014.8V0H854.8V518.8ZM1111 999.9H1270.9V-0.1H1111V999.9Z",
+        "width": 5000
+      },
+      "search": [
+        "universitas logo"
+      ]
+    },
+    {
+      "uid": "72109d2fb3088d0e66ea6a9204297651",
+      "css": "spin",
+      "code": 59414,
+      "src": "fontelico"
+    },
+    {
+      "uid": "ccc2329632396dc096bb638d4b46fb98",
+      "css": "mail",
+      "code": 59394,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "12f4ece88e46abd864e40b35e05b11cd",
+      "css": "ok",
+      "code": 59417,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "5211af474d3a9848f67f945e2ccaf143",
+      "css": "cancel",
+      "code": 59416,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "c1f1975c885aa9f3dad7810c53b82074",
+      "css": "locked",
+      "code": 59403,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "05376be04a27d5a46e855a233d6e8508",
+      "css": "unlocked",
+      "code": 59408,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "a3f89e106175a5c5c4e9738870b12e55",
+      "css": "tags",
+      "code": 59418,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "d745d7c05b94e609decabade2cae12cb",
+      "css": "quote",
+      "code": 59412,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "7034e4d22866af82bef811f52fb1ba46",
+      "css": "code",
+      "code": 59419,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "41087bc74d4b20b55059c60a33bf4008",
+      "css": "edit",
+      "code": 59411,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "bbfb51903f40597f0b70fd75bc7b5cac",
+      "css": "trash",
+      "code": 38,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "c08a1cde48d96cba21d8c05fa7d7feb1",
+      "css": "doc",
+      "code": 59410,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "9f7e588c66cfd6891f6f507cf6f6596b",
+      "css": "phone",
+      "code": 37,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "6605ee6441bf499ffa3c63d3c7409471",
+      "css": "move",
+      "code": 59415,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "38575a803c4da31ce20d77e1e1236bcb",
+      "css": "share",
+      "code": 59392,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "48b87105bd38c20315f1b705b8c7b38c",
+      "css": "list",
+      "code": 59421,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "09bdae120f85e79f2db16145a9e1f6d8",
+      "css": "crop",
+      "code": 59422,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "9755f76110ae4d12ac5f9466c9152031",
+      "css": "book",
+      "code": 59423,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "554ee96588a6c9ee632624cd051fe6fc",
+      "css": "piechart",
+      "code": 59424,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "032bd8bbd70adf90ead98b6813bfe446",
+      "css": "newspaper",
+      "code": 59425,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "85017ab6ca074831a8de771b40e9640c",
+      "css": "camera",
+      "code": 59405,
+      "src": "entypo"
+    },
+    {
+      "uid": "63b86fedd4ee9ad2105f54f4888e7088",
+      "css": "info",
+      "code": 39,
+      "src": "entypo"
+    },
+    {
+      "uid": "97902f87200ce74d181044df02a0458d",
+      "css": "warning",
+      "code": 59400,
+      "src": "entypo"
+    },
+    {
+      "uid": "78944e4652d6f9b8b506eaef331308cd",
+      "css": "down",
+      "code": 59426,
+      "src": "entypo"
+    },
+    {
+      "uid": "0222089fb4194cc714dcc1ffd2525c11",
+      "css": "left",
+      "code": 59427,
+      "src": "entypo"
+    },
+    {
+      "uid": "1a90b06af8614b12d8c8a5b90cc19ab3",
+      "css": "right",
+      "code": 59428,
+      "src": "entypo"
+    },
+    {
+      "uid": "8c8f768607b8fc4c92c0f85b488e87e8",
+      "css": "up",
+      "code": 59429,
+      "src": "entypo"
+    },
+    {
+      "uid": "ddecf5ad7935e3fb1b70dac6ed00d06a",
+      "css": "language",
+      "code": 36,
+      "src": "entypo"
+    },
+    {
+      "uid": "191bcf63575a78def53c907c3d3bf7f0",
+      "css": "save",
+      "code": 59430,
+      "src": "entypo"
+    },
+    {
+      "uid": "6a7ed3214c9049148cbdb01825e5efc2",
+      "css": "picture",
+      "code": 59434,
+      "src": "typicons"
+    },
+    {
+      "uid": "w3nzesrlbezu6f30q7ytyq919p6gdlb6",
+      "css": "home",
+      "code": 35,
+      "src": "typicons"
+    },
+    {
+      "uid": "ec21fe3492bb04d9e29103c319556ed8",
+      "css": "search",
+      "code": 59420,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "05ef9b5e8742971aa85b23cfcbe71594",
+      "css": "users",
+      "code": 59433,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "348b04ea17f646fbc6a46e20ebe4fe12",
+      "css": "download",
+      "code": 40,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "77928c849ac2ae6e77d4eae9f2927c00",
+      "css": "flash",
+      "code": 59435,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "874694a9126e8193bca844356d1b6328",
+      "css": "at",
+      "code": 64,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "05417ae0104ab18a0fe454358579a987",
+      "css": "palette",
+      "code": 59436,
+      "src": "maki"
+    },
+    {
+      "uid": "b1ec8e90c2c85cf0035849980a3789b3",
+      "css": "twitter",
+      "code": 59396,
+      "src": "zocial"
+    },
+    {
+      "uid": "57a4f84c40a0c44d47387105f162a427",
+      "css": "youtube",
+      "code": 59395,
+      "src": "zocial"
+    },
+    {
+      "uid": "8045477f6a7ef0bd7caff130ad25b88d",
+      "css": "facebook",
+      "code": 59399,
+      "src": "brandico"
+    },
+    {
+      "uid": "31483d870b3f14ac12bdfe7331a6af99",
+      "css": "vimeo",
+      "code": 59397,
+      "src": "brandico"
+    },
+    {
+      "uid": "626fb97a7c0c0db53a1853fb9e96e223",
+      "css": "googleplus",
+      "code": 59398,
+      "src": "brandico"
+    },
+    {
+      "uid": "0be76e79cf83a68ecb961121c00b9f2d",
+      "css": "attach",
+      "code": 41,
+      "src": "elusive"
+    },
+    {
+      "uid": "e45a3da2ebde8bc8e30a873f3bd51f30",
+      "css": "show",
+      "code": 59401,
+      "src": "elusive"
+    },
+    {
+      "uid": "d218294e6f9f7191f6b0b3d1ff6239ff",
+      "css": "hide",
+      "code": 59402,
+      "src": "elusive"
+    },
+    {
+      "uid": "630529f03c319c01101aa167181b650e",
+      "css": "tag",
+      "code": 34,
+      "src": "elusive"
+    },
+    {
+      "uid": "62b0580ee8edc3a3edfbf68a47c852d5",
+      "css": "pencil",
+      "code": 59438,
+      "src": "elusive"
+    },
+    {
+      "uid": "6083c8aa5e3345476a24a28ac1afaa61",
+      "css": "cog",
+      "code": 59445,
+      "src": "elusive"
+    },
+    {
+      "uid": "cde79a37774e5817bc68fff2464aee28",
+      "css": "wrench",
+      "code": 59446,
+      "src": "elusive"
+    },
+    {
+      "uid": "64abb7c56aefca89046bb69f7251d2e2",
+      "css": "calendar",
+      "code": 59409,
+      "src": "elusive"
+    },
+    {
+      "uid": "599d6c088f4a1c64611b989459d65f6b",
+      "css": "lightbulb",
+      "code": 43,
+      "src": "elusive"
+    },
+    {
+      "uid": "361e7d7e271443ea2c48443142dbe404",
+      "css": "contacts",
+      "code": 97,
+      "src": "elusive"
+    },
+    {
+      "uid": "fd3128bf109153952b1b775ea574504b",
+      "css": "user",
+      "code": 59447,
+      "src": "websymbols"
+    },
+    {
+      "uid": "3c4a596e8ee3584c4c9e7002371db19f",
+      "css": "link",
+      "code": 46,
+      "src": "websymbols"
+    },
+    {
+      "uid": "889a8bd0b481e3523ede8a7d75164cd1",
+      "css": "comment",
+      "code": 45,
+      "src": "websymbols"
+    },
+    {
+      "uid": "69f76f7134f721d16c28ab23f84d4882",
+      "css": "location",
+      "code": 59443,
+      "src": "websymbols"
+    },
+    {
+      "uid": "26f5aa38f3889213334b3990b4ad483b",
+      "css": "rss",
+      "code": 44,
+      "src": "websymbols"
+    },
+    {
+      "uid": "41eeea14413f2539da21b4d1754bf4be",
+      "css": "reload",
+      "code": 33,
+      "src": "websymbols"
+    }
+  ]
+}

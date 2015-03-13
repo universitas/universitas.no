@@ -1,11 +1,15 @@
 @charset "UTF-8";
 
+// Fonts and icons
 @import "includes/googlefonts";
+@import "includes/universitas-icons";
+// @import "foundation-icons";
+
+// CSS Framework
 @import "foundation/settings";
 @import "foundation";
-@import "foundation-icons";
 
-
+// Local styles
 @import "includes/colors";
 @import "includes/adverts";
 @import "includes/story";

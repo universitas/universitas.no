@@ -56,9 +56,9 @@
         </div>
         {% endfor %}
         <div class="social-share sticky">
-        {% with 'social-facebook social-twitter comments bookmark' as iconlist %}
+        {% with 'facebook twitter disqus' as iconlist %}
           {% for icon in iconlist.split %}
-            <div class="icon"><i class="fi-{{ icon }}"></i></div>
+            <div class="icon"><i class="icon-{{ icon }}"></i></div>
           {% endfor %}
         {% endwith %}
       </div>
