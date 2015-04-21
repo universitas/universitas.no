@@ -58,6 +58,12 @@ def inline_aside(context, argument_string):
     context.update(get_items(queryset, argument_string))
     return context
 
+@register.inclusion_tag('_inline_html.html', takes_context=True)
+def inline_inlinehtml(context, argument_string):
+    queryset = context['story'].inline_html_blocks().published()
+    context.update(get_items(queryset, argument_string))
+    return context
+
 
 def get_items(queryset, argument_string):
     """ Turn arguments into classes and items from the queryset """

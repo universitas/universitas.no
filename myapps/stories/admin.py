@@ -17,7 +17,7 @@ import autocomplete_light
 from myapps.photo.admin import ThumbAdmin
 from myapps.frontpage.models import FrontpageStory
 
-from .models import Byline, Aside, Pullquote, Story, StoryType, Section, StoryImage, InlineLink, StoryVideo
+from .models import Byline, Aside, Pullquote, Story, StoryType, Section, StoryImage, InlineLink, StoryVideo, InlineHtml
 
 class SmallTextArea:
     formfield_overrides = {
@@ -47,12 +47,15 @@ class AsideInline(admin.TabularInline, ):
     formfield_overrides = {models.TextField: {'widget': Textarea(attrs={'rows': 6, 'cols': 80})}, }
     extra = 0
 
+class HtmlInline(admin.TabularInline, ):
+    model = InlineHtml
+    formfield_overrides = {models.TextField: {'widget': Textarea(attrs={'rows': 6, 'cols': 80})}, }
+    extra = 0
 
 class PullquoteInline(admin.TabularInline, ):
     model = Pullquote
     formfield_overrides = {models.TextField: {'widget': Textarea(attrs={'rows': 2, 'cols': 80})}, }
     extra = 0
-
 
 class LinkInline(admin.TabularInline):
     form = autocomplete_light.modelform_factory(InlineLink, exclude=())
@@ -66,7 +69,6 @@ class VideoInline(admin.TabularInline, ):
     formfield_overrides = {models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})}, }
     fields = ['top', 'index', 'caption', 'creditline', 'size', 'video_host', 'host_video_id', ]
     extra = 0
-
 
 class ImageInline(admin.TabularInline, ThumbAdmin, ):
     form = autocomplete_light.modelform_factory(StoryImage, exclude=())
@@ -140,6 +142,7 @@ class StoryAdmin(admin.ModelAdmin):
         PullquoteInline,
         AsideInline,
         LinkInline,
+        HtmlInline,
     ]
 
     search_fields = (

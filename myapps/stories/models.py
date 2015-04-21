@@ -48,7 +48,7 @@ PULLQUOTE_TAG = '@quote:'
 ASIDE_TAG = '@box:'
 IMAGE_TAG = '@image:'
 VIDEO_TAG = '@video:'
-
+INLINE_HTML_TAG = '@html:'
 
 class MarkupFieldMixin(object):
 
@@ -220,6 +220,9 @@ class TextContent(models.Model, MarkupModelMixin):
     def videos(self):
         return self.parent_story.storyelement_set.videos()
 
+    def inline_html_blocks(self):
+        return self.parent_story.storyelement_set.inline_html_blocks()
+
     def links(self):
         return self.parent_story.inline_links
 
@@ -252,7 +255,7 @@ class TextContent(models.Model, MarkupModelMixin):
         )
         regex = '^{markup_tag} *([^#\n]*) *$'
 
-        for cls in (StoryImage, Pullquote, Aside, StoryVideo):
+        for cls in (StoryImage, Pullquote, Aside, StoryVideo, InlineHtml):
             classname = cls.__name__.lower().replace(' ', '')
             find = regex.format(markup_tag=cls.markup_tag)
             replace = tag_template.format(classname=classname)
@@ -260,6 +263,7 @@ class TextContent(models.Model, MarkupModelMixin):
 
         paragraphs = body.splitlines() + ['']
         sections, main_body = [], []
+
         for index, paragraph in enumerate(paragraphs):
             if not paragraph.startswith('{'):
                 # Regular paragraph.
@@ -271,6 +275,7 @@ class TextContent(models.Model, MarkupModelMixin):
                     Context({"story": self, "index": index, }))
                 sections.append(paragraph)
                 main_body = []
+
 
         sections.append(main_body)
 
@@ -705,7 +710,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         def _main(self=self, body=self.bodytext_markup):
 
             # remove tags:
-            for cls in Aside, StoryImage, Pullquote, StoryVideo:
+            for cls in Aside, StoryImage, Pullquote, StoryVideo, InlineHtml:
                 find = r'^{tag}.*$'.format(tag=cls.markup_tag)
                 body = re.sub(find, '', body, flags=re.M)
 
@@ -855,7 +860,9 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             Aside,
             StoryImage,
             StoryVideo,
-            Pullquote]
+            Pullquote,
+            InlineHtml,
+        ]
 
         for element_class in element_classes:
 
@@ -951,6 +958,9 @@ class ElementQuerySet(models.QuerySet):
 
     def asides(self):
         return self.filter(_subclass='aside')
+
+    def inline_html_blocks(self):
+        return self.filter(_subclass='inlinehtml')
 
 
 class ElementManager(models.Manager):
@@ -1069,6 +1079,22 @@ class Aside(TextContent, StoryElement):
     class Meta:
         verbose_name = _('Aside')
         verbose_name_plural = _('Asides')
+
+class InlineHtml(StoryElement):
+
+    """ Inline html code """
+
+    markup_tag = INLINE_HTML_TAG
+
+    bodytext_html = models.TextField()
+
+    class Meta:
+        verbose_name = _('Inline HTML block')
+        verbose_name_plural = _('Inline HTML blocks')
+
+    def get_html(self):
+        """ Returns text content as html. """
+        return mark_safe(self.bodytext_html)
 
 
 class StoryMedia(StoryElement, MarkupModelMixin):

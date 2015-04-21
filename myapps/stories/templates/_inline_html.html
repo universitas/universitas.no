@@ -1,0 +1,5 @@
+{% for html_block in elements %}
+<div class="inline-html {{ css_classes }}">
+  {{ html_block.get_html }}
+</div>
+{% endfor %}
