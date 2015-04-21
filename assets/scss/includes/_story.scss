@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-
 %small-text {
   // @extend small;
   font-size: .8rem;
@@ -16,7 +15,7 @@
     font-family: 'foundation-icons';
     position: absolute;
     margin-left: -1.2em;
-    color: $magasin;
+    color: $medium-yellow;
     content: "\f1ef"
   }
 }
@@ -36,7 +35,7 @@
     position: absolute;
     margin-left: -$indent;
     top: .5rem;
-    color: $magasin;
+    color: $medium-yellow;
     font-size: 5em;
     content: "«"
   }
@@ -85,7 +84,7 @@
     // border-right: $separator-line;
     text-align: center;
     @extend %small-text;
-    .story-info{
+    @at-root .story-info{
       @extend %line-below;
       font-family: 'Roboto Slab';
       font-size: 1.2rem;
@@ -93,7 +92,7 @@
         font-weight: 200;
       }
       .artikkeltype {
-        @extend %section-text-color;
+        @include section-text-color;
         font-weight: 800;
       }
     }

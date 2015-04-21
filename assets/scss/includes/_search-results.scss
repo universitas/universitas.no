@@ -32,8 +32,7 @@
           color: $dark-grey;
           .section {
             color: $medium-grey;
-            @extend %section-text-color;
-            @extend %section-text;
+            @include section-text-color;
             text-transform: uppercase;
           }
         }

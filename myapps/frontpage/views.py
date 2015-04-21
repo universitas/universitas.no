@@ -11,41 +11,27 @@ logger = logging.getLogger('universitas')
 from django.contrib.auth.decorators import login_required
 
 
-@login_required
-def frontpage_view(request, frontpage=None):
-    """ Shows the newspaper frontpage. """
-    max_stories = 30
-    max_columns = 12
-    pix_c = 1000 / 12
-    pix_h = 150
-    min_h = -50
-    if frontpage is None:
-        frontpage = Frontpage.objects.root()
-    else:
-        frontpage = get_object_or_404(Frontpage.published, label=frontpage)
-    editor = True
-    context = {'editor': editor }
-    now = timezone.now()
-    blocks = StoryModule.objects.filter(
-        frontpage=frontpage,
-        # frontpage_story__story__publication_date__lt=now,
-    )[:max_stories]
-
-    floor = []
-    items = []
-    columns_used = 0
-    headline_sizes = [
+def frontpage_layout(blocks):
+    """ create layout grid from story modules """
+    MAX_COLUMNS = 12
+    PIX_C = 1000 / 12  # pixels per column for image sizing
+    PIX_H = 150  # pixels per row
+    MIN_H = -50
+    HEADLINE_SIZES = [
         (10, 's'),
         (20, 'm'),
         (30, 'l'),
     ]
 
+    floor = []
+    items = []
+    columns_used = 0
 
-    # TODO: Refaktorisere forsideplassering i etasjer - del opp i funksjoner.
     for block in blocks:
-        if block.columns + columns_used > max_columns:
+        if block.columns + columns_used >= MAX_COLUMNS:
+            # floor is filled. Finish it.
             floorheight = max(item.height for item in floor)
-            ratio = max_columns / columns_used
+            ratio = MAX_COLUMNS / columns_used + 0.1
             columns_used = 0
             for bb in floor:
                 story = bb.frontpage_story
@@ -64,7 +50,7 @@ def frontpage_view(request, frontpage=None):
 
                 headline_size = 'xl'
                 headline = story.headline
-                for length, size in headline_sizes:
+                for length, size in HEADLINE_SIZES:
                     if len(headline) < length:
                         headline_size = size
                         break
@@ -76,8 +62,8 @@ def frontpage_view(request, frontpage=None):
                     'headline_class': 'headline-{size}'.format(
                         size=headline_size),
                     'image_size': '{width:.0f}x{height:.0f}'.format(
-                        width=pix_c * columns,
-                        height=min_h + pix_h * floorheight,
+                        width=PIX_C * columns,
+                        height=MIN_H + PIX_H * floorheight,
                     ),
                     'image': source,
                     'crop': crop,
@@ -90,7 +76,27 @@ def frontpage_view(request, frontpage=None):
 
         floor.append(block)
         columns_used += block.columns
+    return items
 
-    context['frontpage_items'] = items
+
+@login_required
+def frontpage_view(request, frontpage=None):
+    """ Shows the newspaper frontpage. """
+    max_stories = 30
+
+    if frontpage is None:
+        frontpage = Frontpage.objects.root()
+    else:
+        frontpage = get_object_or_404(Frontpage.published, label=frontpage)
+
+    editor = True
+    context = {'editor': editor}
+
+    blocks = StoryModule.objects.filter(
+        frontpage=frontpage,
+        # frontpage_story__story__publication_date__lt=now,
+    )[:max_stories]
+
+    context['frontpage_items'] = frontpage_layout(blocks)
 
     return render(request, 'frontpage.html', context)

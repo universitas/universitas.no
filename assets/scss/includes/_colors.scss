@@ -10,64 +10,61 @@ $header-top-margin: .3rem;
 $half-gutter: $column-gutter/2;
 $separator-line: 1px solid #EEE;
 
-$debatt: #3B7E9C;
-$nyheter: #C44530;
-$kultur: #6FAB50;
-$magasin: #FFB653;
-$grey: #888888;
+$section-colors: (
+  nyheter: #C44530,
+  nett: #C44530,
+  kultur: #6FAB50,
+  anmeldelser: #6FAB50,
+  debatt: #3B7E9C,
+  side-2: #3B7E9C,
+  magasin: #FFB653,
+);
 
-$light-grey: #AAA;
+$light-grey: #999;
 $medium-grey: #777;
-$dark-grey: #444;
+$dark-grey: #333;
+$medium-yellow: yellow;
 
-$light-debatt: #449;
-$medium-debatt: $debatt;
-$dark-debatt: #225;
-$contrast-debatt: #883;
-
-$light-nyheter: #944;
-$medium-nyheter: $nyheter;
-$dark-nyheter: #500;
-$contrast-nyheter: #099;
-
-$light-kultur: #494;
-$medium-kultur: $kultur;
-$dark-kultur: #050;
-$contrast-kultur: #909;
-
-$medium-magasin: $magasin;
-
-%section-background-color {
-  &.kultur{
-    background-color: $medium-kultur;
+@function color-get($section, $change: none) {
+  $base-color: map-get($section-colors, $section);
+  $color: none;
+  @if $change == darker {
+    $color: scale-color( $base-color, $lightness: -25%, $saturation: -15%);
+  } @else if $change == lighter {
+    $color: scale-color( $base-color, $lightness: 25%, $saturation: 15%);
+  } @else {
+    $color: $base-color;
   }
-  &.nyheter{
-    background-color: $medium-nyheter;
-  }
-  &.magasin{
-    background-color: $medium-magasin;
-  }
-  &.debatt{
-    background-color: $medium-debatt;
+  @return $color
+}
+
+@mixin section-color( $section, $change: medium, $text: false) {
+  $color: color-get($section, $change);
+  @if $text {
+    color: $color;
+  } @else {
+    background-color: $color;
   }
 }
 
-%section-text {
+%section-vignette-text {
   font-family: $univ-serif;
   font-weight: 700;
 }
 
-%section-text-color {
-  &.kultur{
-    color: $medium-kultur;
+@mixin section-text-color {
+  @each $section, $color in $section-colors{
+    .#{$section} & {
+      @include section-color($section, $text: true);
+    }
   }
-  &.nyheter{
-    color: $medium-nyheter;
-  }
-  &.magasin{
-    color: $medium-magasin;
-  }
-  &.debatt{
-    color: $medium-debatt;
+}
+
+@mixin section-background-color {
+  @each $section, $color in $section-colors{
+    .#{$section} & {
+      // @debug "section-background-color " + $section;
+      @include section-color($section, $change: lighter, $text: false);
+    }
   }
 }

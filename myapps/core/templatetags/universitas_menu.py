@@ -1,4 +1,4 @@
-""" Template tags for inline story elements such as images, asides and pullquotes """
+""" Top megamenu for Universitas """
 
 import logging
 from django import template
@@ -7,16 +7,18 @@ from myapps.stories.models import Section, Story
 register = template.Library()
 logger = logging.getLogger('universitas')
 
+
 @register.inclusion_tag('universitas-menu.html')
 def universitas_menu(active_section):
 
     sections = [
-        Section.objects.get(
-            title__iexact=title) for title in [
+        Section.objects.get(title__iexact=title) for title in [
             'nyheter',
             'kultur',
             'debatt',
-            'magasin']]
+            'magasin',
+        ]
+    ]
 
     context = {
         'sections': sections,

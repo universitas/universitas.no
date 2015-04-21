@@ -10,7 +10,7 @@
 {% endblock columns %}
 {% block content %}
 <div class="main-content">
-  <article class="row" id="story">
+  <article class="row {{ story.section.slug }}" id="story">
     {% include '_story_menu.html' %}
     <header class="small-12 columns">
 {# Main image #}
@@ -56,11 +56,15 @@
         </div>
         {% endfor %}
         <div class="social-share sticky">
-        {% with 'facebook twitter disqus' as iconlist %}
-          {% for icon in iconlist.split %}
-            <div class="icon"><i class="icon-{{ icon }}"></i></div>
-          {% endfor %}
-        {% endwith %}
+          <div class="icon">
+             <a href="https://www.facebook.com/sharer/sharer.php?u={{ story.get_share_link }}"><i class="icon-facebook"></i></a>
+          </div>
+          <div class="icon">
+             <a href="https://twitter.com/home?status={{ story.get_share_link }}"><i class="icon-twitter"></i></a>
+          </div>
+          <div class="icon">
+             <a href="#comments"><i class="icon-disqus"></i></a>
+          </div>
       </div>
    </div>
  </div>

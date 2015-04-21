@@ -232,6 +232,11 @@ class TextContent(models.Model, MarkupModelMixin):
         else:
             return mark_safe(self.make_html())
 
+    def get_plaintext(self):
+        """ Returns text content as plain text. """
+        soup = BeautifulSoup(self.get_html())
+        return soup.get_text()
+
     def make_html(self, body=None):
         """ Create html body text from markup """
 
@@ -642,6 +647,9 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
                 'slug': self.slug,
             },)
         return url
+
+    def get_share_link(self):
+        return 'http://universitas.no' + self.get_absolute_url()
 
     def children_modified(self):
         """ check if any related objects have been

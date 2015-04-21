@@ -1,6 +1,11 @@
 @charset "UTF-8";
 
-$section-map: $section-colors;
+$section-map: (
+  nyheter: $nyheter,
+  kultur: $kultur,
+  debatt: $debatt,
+  magasin: $magasin,
+);
 
 $menu-height: 30px;
 $panel-height: 300px;

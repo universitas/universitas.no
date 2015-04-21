@@ -187,7 +187,7 @@ class FrontpageStoryManager(models.Manager):
         frontpage = Frontpage.objects.root()
         html_class = story.section.slug + \
             random.choice([' negative'] + [''] * 4)
-        lede = story.lede[:200]
+        lede = (story.lede or story.get_plaintext())[:200]
         kicker = story.kicker[:200]
         headline = story.title[:200]
         vignette = str(story.story_type)[:50]

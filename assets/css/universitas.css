@@ -2635,19 +2635,6 @@ th.hide-for-touch {
 
   th.show-for-print {
     display: table-cell !important; } }
-.search-results .wrapper .search-result .text .lede .section {
-  font-family: "Roboto Slab", serif;
-  font-weight: 700; }
-
-#story .left-sidebar .story-info .kultur.artikkeltype, .search-results .wrapper .search-result .text .lede .kultur.section {
-  color: #6fab50; }
-#story .left-sidebar .story-info .nyheter.artikkeltype, .search-results .wrapper .search-result .text .lede .nyheter.section {
-  color: #c44530; }
-#story .left-sidebar .story-info .magasin.artikkeltype, .search-results .wrapper .search-result .text .lede .magasin.section {
-  color: #ffb653; }
-#story .left-sidebar .story-info .debatt.artikkeltype, .search-results .wrapper .search-result .text .lede .debatt.section {
-  color: #3b7e9c; }
-
 .content-wrapper, .menu-wrapper {
   max-width: 73.75rem;
   margin-left: auto;
@@ -2681,7 +2668,7 @@ th.hide-for-touch {
     content: 'annonse';
     font-size: 10px;
     line-height: 10px;
-    color: #aaaaaa;
+    color: #999999;
     position: absolute;
     top: 0;
     left: 0; }
@@ -2699,7 +2686,7 @@ th.hide-for-touch {
     font-family: 'foundation-icons';
     position: absolute;
     margin-left: -1.2em;
-    color: #ffb653;
+    color: yellow;
     content: "\f1ef"; }
 
 #story .inline-pullquote {
@@ -2713,7 +2700,7 @@ th.hide-for-touch {
     position: absolute;
     margin-left: -3rem;
     top: .5rem;
-    color: #ffb653;
+    color: yellow;
     font-size: 5em;
     content: "«"; }
 
@@ -2728,8 +2715,8 @@ th.hide-for-touch {
       font-weight: lighter;
       color: #777777; }
     #story header .header-text .headline {
-      color: #444444; }
-#story .left-sidebar .story-info, #story .left-sidebar .dateline, #story .left-sidebar .bylines .byline {
+      color: #333333; }
+#story .left-sidebar .dateline, #story .left-sidebar .bylines .byline, #story .story-info {
   margin-bottom: 0.625rem;
   border-bottom: 1px solid #eeeeee;
   padding-bottom: 0.625rem;
@@ -2737,15 +2724,29 @@ th.hide-for-touch {
 #story .left-sidebar {
   padding: 0 20px 0 10px;
   text-align: center; }
-  #story .left-sidebar .story-info {
+  .story-info {
     font-family: 'Roboto Slab';
     font-size: 1.2rem; }
-    #story .left-sidebar .story-info .temaord {
+    .story-info .temaord {
       font-weight: 200; }
-    #story .left-sidebar .story-info .artikkeltype {
+    .story-info .artikkeltype {
       font-weight: 800; }
+      .nyheter .story-info .artikkeltype {
+        color: #c44530; }
+      .nett .story-info .artikkeltype {
+        color: #c44530; }
+      .kultur .story-info .artikkeltype {
+        color: #6fab50; }
+      .anmeldelser .story-info .artikkeltype {
+        color: #6fab50; }
+      .debatt .story-info .artikkeltype {
+        color: #3b7e9c; }
+      .side-2 .story-info .artikkeltype {
+        color: #3b7e9c; }
+      .magasin .story-info .artikkeltype {
+        color: #ffb653; }
   #story .left-sidebar .dateline {
-    color: #aaaaaa; }
+    color: #999999; }
   #story .left-sidebar .bylines {
     display: inline-block; }
     #story .left-sidebar .bylines .byline .byline-photo img {
@@ -2762,7 +2763,7 @@ th.hide-for-touch {
     #story .left-sidebar .social-share .icon {
       display: inline-block;
       font-size: 30px;
-      color: #aaaaaa;
+      color: #999999;
       opacity: .6;
       margin: 3px;
       width: 30px;
@@ -2770,7 +2771,7 @@ th.hide-for-touch {
       #story .left-sidebar .social-share .icon:hover {
         opacity: 1; }
 #story .mellomtittel {
-  color: #444444;
+  color: #333333;
   font-size: 1.3rem;
   margin: 1rem 0 0 0; }
 #story .tingo .inngangsord {
@@ -2985,7 +2986,7 @@ th.hide-for-touch {
     padding: 4px 8px;
     margin: 0;
     width: 100%;
-    background: #444444;
+    background: #333333;
     color: white;
     text-transform: uppercase;
     font-size: 1rem;
@@ -2998,14 +2999,14 @@ th.hide-for-touch {
     width: 100%;
     z-index: 10; }
     .story-block .text-block .lede {
-      color: #444444;
+      color: #333333;
       line-height: 1.4em;
       margin: 0; }
   .story-block .image-block {
     position: relative; }
 
 .negative .text-block {
-  background: #444444;
+  background: #333333;
   padding: 5px 10px; }
   .negative .text-block .lede, .negative .text-block .frontpage-headline {
     color: white; }
@@ -3019,7 +3020,7 @@ th.hide-for-touch {
 
 .vignette {
   padding: .2rem;
-  background: #444444;
+  background: #333333;
   color: white;
   position: absolute;
   top: 5px;
@@ -3029,14 +3030,20 @@ th.hide-for-touch {
   font-size: 1rem;
   line-height: 1rem;
   font-weight: bold; }
-  .anmeldelser .vignette {
-    background: #449944; }
-  .kultur .vignette {
-    background: #6fab50; }
-  .debatt .vignette {
-    background: #3b7e9c; }
   .nyheter .vignette {
-    background: #c44530; }
+    background-color: #de6c59; }
+  .nett .vignette {
+    background-color: #de6c59; }
+  .kultur .vignette {
+    background-color: #90ca71; }
+  .anmeldelser .vignette {
+    background-color: #90ca71; }
+  .debatt .vignette {
+    background-color: #55a7cb; }
+  .side-2 .vignette {
+    background-color: #55a7cb; }
+  .magasin .vignette {
+    background-color: #ffc87e; }
 
 .edit-frontpage-story {
   display: none;
@@ -3174,7 +3181,7 @@ body > main {
   #search .search-form {
     float: right; }
     #search .search-form .search-input {
-      color: #444444;
+      color: #333333;
       border: none;
       border-radius: 1px;
       font-size: 14px;
@@ -3194,14 +3201,29 @@ body > main {
   .section-item.nyheter + .section-panel {
     background-color: #c44530; }
 
+.section-item.nett {
+  background-color: #c44530; }
+  .section-item.nett + .section-panel {
+    background-color: #c44530; }
+
 .section-item.kultur {
   background-color: #6fab50; }
   .section-item.kultur + .section-panel {
     background-color: #6fab50; }
 
+.section-item.anmeldelser {
+  background-color: #6fab50; }
+  .section-item.anmeldelser + .section-panel {
+    background-color: #6fab50; }
+
 .section-item.debatt {
   background-color: #3b7e9c; }
   .section-item.debatt + .section-panel {
+    background-color: #3b7e9c; }
+
+.section-item.side-2 {
+  background-color: #3b7e9c; }
+  .section-item.side-2 + .section-panel {
     background-color: #3b7e9c; }
 
 .section-item.magasin {
@@ -3225,9 +3247,9 @@ body > main {
   .print-issue:hover .frontpage {
     transform: scale(1.02); }
   .print-issue:hover .label {
-    color: #444444; }
+    color: #333333; }
   .print-issue .label {
-    color: #aaaaaa;
+    color: #999999;
     border-bottom: 1px solid #eeeeee;
     padding: .2rem 0;
     margin: .2rem 0; }
@@ -3252,9 +3274,23 @@ body > main {
   .search-results .wrapper .search-result .text h1 {
     margin: 0 0 .2em 0;
     font-size: 1rem;
-    color: #444444; }
+    color: #333333; }
   .search-results .wrapper .search-result .text .lede {
-    color: #444444; }
+    color: #333333; }
     .search-results .wrapper .search-result .text .lede .section {
       color: #777777;
       text-transform: uppercase; }
+      .nyheter .search-results .wrapper .search-result .text .lede .section {
+        color: #c44530; }
+      .nett .search-results .wrapper .search-result .text .lede .section {
+        color: #c44530; }
+      .kultur .search-results .wrapper .search-result .text .lede .section {
+        color: #6fab50; }
+      .anmeldelser .search-results .wrapper .search-result .text .lede .section {
+        color: #6fab50; }
+      .debatt .search-results .wrapper .search-result .text .lede .section {
+        color: #3b7e9c; }
+      .side-2 .search-results .wrapper .search-result .text .lede .section {
+        color: #3b7e9c; }
+      .magasin .search-results .wrapper .search-result .text .lede .section {
+        color: #ffb653; }

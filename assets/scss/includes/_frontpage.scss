@@ -98,6 +98,7 @@ $minimum-headline: 1.5em;
 }
 
 .vignette {
+  @include section-background-color;
   padding: .2rem;
   background: $dark-grey;
   color: white;
@@ -111,20 +112,6 @@ $minimum-headline: 1.5em;
   font-size: 1rem;
   line-height: 1rem;
   font-weight: bold;
-
-  .anmeldelser & {
-    background: $light-kultur;
-  }
-
-  .kultur & {
-    background: $medium-kultur;
-  }
-  .debatt & {
-    background: $medium-debatt;
-  }
-  .nyheter & {
-    background: $medium-nyheter;
-  }
 }
 
 .edit-frontpage-story {
