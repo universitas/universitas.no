@@ -123,21 +123,22 @@
       }
     }
     .social-share{
+      margin: 0 auto;
       padding: 0 10px;
-      .icon{
+      .icon {
         display: inline-block;
         font-size: 30px;
-        color: $light-grey;
-        opacity: .6;
-        &:hover{
-          opacity: 1;
+        a {
+          color: $light-grey;
+          opacity: .6;
+          &:hover{
+            color: $light-grey;
+            opacity: 1;
+          }
         }
-        // background: $light-grey;
-        // padding: 2px;
-        margin: 3px;
-        width: 30px;
-        height: 30px;
-        // border-radius: 25px;
+        margin: 5px 0;
+        // width: 30px;
+        // height: 30px;
       }
     }
 

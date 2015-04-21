@@ -55,12 +55,15 @@
           </div>
         </div>
         {% endfor %}
-        <div class="social-share sticky">
+        <div class="social-share">
           <div class="icon">
              <a href="https://www.facebook.com/sharer/sharer.php?u={{ story.get_share_link }}"><i class="icon-facebook"></i></a>
           </div>
           <div class="icon">
              <a href="https://twitter.com/home?status={{ story.get_share_link }}"><i class="icon-twitter"></i></a>
+          </div>
+          <div class="icon">
+             <a href="https://plus.google.com/share?url={{ story.get_share_link }}"><i class="icon-googleplus"></i></a>
           </div>
           <div class="icon">
              <a href="#comments"><i class="icon-disqus"></i></a>

@@ -2759,17 +2759,18 @@ th.hide-for-touch {
     #story .left-sidebar .bylines .byline .byline-text .name {
       font-weight: bold; }
   #story .left-sidebar .social-share {
+    margin: 0 auto;
     padding: 0 10px; }
     #story .left-sidebar .social-share .icon {
       display: inline-block;
       font-size: 30px;
-      color: #999999;
-      opacity: .6;
-      margin: 3px;
-      width: 30px;
-      height: 30px; }
-      #story .left-sidebar .social-share .icon:hover {
-        opacity: 1; }
+      margin: 5px 0; }
+      #story .left-sidebar .social-share .icon a {
+        color: #999999;
+        opacity: .6; }
+        #story .left-sidebar .social-share .icon a:hover {
+          color: #999999;
+          opacity: 1; }
 #story .mellomtittel {
   color: #333333;
   font-size: 1.3rem;
