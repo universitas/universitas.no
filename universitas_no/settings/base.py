@@ -107,8 +107,8 @@ DATABASES = {
         'NAME': environ["DJANGO_PRODSYS_DB_NAME"],
         'USER': environ["DJANGO_PRODSYS_DB_USER"],
         'PASSWORD': environ["DJANGO_PRODSYS_DB_PASSWORD"],
-        # 'HOST': environ["DJANGO_PRODSYS_DB_HOST"],
-        'HOST': 'localhost', # TODO: Endre dette tilbake det er bare et eksperiment.
+        'HOST': environ["DJANGO_PRODSYS_DB_HOST"],
+        # 'HOST': 'localhost', # TODO: Endre dette tilbake det er bare et eksperiment.
         'PORT': '',       # Set to empty string for default.
     }
 }
