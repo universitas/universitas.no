@@ -38,3 +38,4 @@ diff-match-patch
 awesome-slugify
 fuzzywuzzy
 python-Levenshtein
+Wand
