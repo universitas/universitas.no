@@ -67,6 +67,15 @@ body > main{
     color: white;
     font-size: .8rem;
   }
+  .follow-us {
+    font-size: 1.2rem;
+    a {
+      color: #EEE;
+      &:hover {
+        color: #FFF;
+      }
+    }
+  }
   .menu-right, .menu-left {
     position: relative;
   }

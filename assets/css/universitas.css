@@ -3116,6 +3116,12 @@ body > main {
   .menu-wrapper p {
     color: white;
     font-size: .8rem; }
+  .menu-wrapper .follow-us {
+    font-size: 1.2rem; }
+    .menu-wrapper .follow-us a {
+      color: #EEE; }
+      .menu-wrapper .follow-us a:hover {
+        color: #FFF; }
   .menu-wrapper .menu-right, .menu-wrapper .menu-left {
     position: relative; }
 

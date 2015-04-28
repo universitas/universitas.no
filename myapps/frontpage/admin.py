@@ -4,6 +4,7 @@ Admin for frontpage app.
 """
 
 from django.contrib import admin
+from django.forms import Textarea
 from .models import StoryModule, FrontpageStory, StaticModule
 from myapps.photo.admin import ThumbAdmin
 import autocomplete_light
@@ -19,6 +20,9 @@ class StoryModuleInline(admin.TabularInline):
 @admin.register(FrontpageStory)
 class FrontpageStoryAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin):
     form = autocomplete_light.modelform_factory(FrontpageStory, exclude=())
+    form.Meta.widgets = {
+        'lede': admin.widgets.AdminTextareaWidget(attrs={'rows':3})
+    }
     save_on_top = True
     list_per_page = 25
     list_display = (
@@ -69,6 +73,7 @@ class StoryModuleAdmin(admin.ModelAdmin):
     # inlines = (
     #     FrontpageStoryInline,
     # )
+
 
 @admin.register(StaticModule)
 class StaticModuleAdmin(admin.ModelAdmin):
