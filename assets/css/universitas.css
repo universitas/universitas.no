@@ -2635,6 +2635,16 @@ th.hide-for-touch {
 
   th.show-for-print {
     display: table-cell !important; } }
+.story-edit-menu, .frontpage-edit-menu {
+  text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.8);
+  font-size: 1.5rem;
+  line-height: 1rem; }
+  .story-edit-menu a, .frontpage-edit-menu a {
+    opacity: .6;
+    color: white; }
+    .story-edit-menu a:hover, .frontpage-edit-menu a:hover {
+      opacity: 1; }
+
 .content-wrapper, .menu-wrapper {
   max-width: 73.75rem;
   margin-left: auto;
@@ -2703,6 +2713,9 @@ th.hide-for-touch {
     color: yellow;
     font-size: 5em;
     content: "«"; }
+
+.story-edit-menu {
+  display: inline-block; }
 
 #story header {
   margin-bottom: 1rem; }
@@ -3046,22 +3059,14 @@ th.hide-for-touch {
   .magasin .vignette {
     background-color: #ffc87e; }
 
-.edit-frontpage-story {
-  display: none;
-  text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.8);
+.frontpage-edit-menu {
   position: absolute;
   top: 5px;
   right: 5px;
   z-index: 12;
-  font-size: 1.5rem;
-  line-height: 1rem; }
-  .story-block:hover .edit-frontpage-story {
+  display: none; }
+  .story-block:hover .frontpage-edit-menu {
     display: block; }
-  .edit-frontpage-story a {
-    opacity: .6;
-    color: white; }
-    .edit-frontpage-story a:hover {
-      opacity: 1; }
 
 .sections .section-title, #search .search-icon {
   color: white;

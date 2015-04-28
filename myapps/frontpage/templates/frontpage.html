@@ -19,15 +19,15 @@
           {% endif %}
           {% if item.image %}
             <div class="image-block">
-            {% if item.story.vignette %}
-              <div class="vignette">{{ item.story.vignette }}</div>
-            {% endif %}
-            {% if editor %}
-                {% include "_frontpage-module-edit-menu.html" with item=item %}
-            {% endif %}
               {% thumbnail item.image item.image_size crop=item.crop as image %}
                 <a href="{{ item.story.url }}"><img src="{{ image.url }}" alt="{{ item.story.headline|strip_tags }}"></img></a>
               {% endthumbnail %}
+            {% if item.story.vignette %}
+              <div class="vignette">{{ item.story.vignette }}</div>
+            {% endif %}
+            {% if perms.stories %}
+                {% include "_frontpage-module-edit-menu.html" with item=item %}
+            {% endif %}
             </div>
           {% endif %}
           <div class="text-block">

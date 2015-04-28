@@ -53,7 +53,12 @@
   // }
 }
 
- #story{
+.story-edit-menu {
+  @extend %edit-menu;
+  display: inline-block;
+}
+
+#story{
   header{
     margin-bottom: 1rem;
     .header-text{

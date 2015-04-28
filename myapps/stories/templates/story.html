@@ -11,7 +11,6 @@
 {% block content %}
 <div class="main-content">
   <article class="row {{ story.section.slug }}" id="story">
-    {% include '_story_menu.html' %}
     <header class="small-12 columns">
 {# Main image #}
       {% header_image %}
@@ -20,7 +19,11 @@
           <h2 id="kicker">{{ story.html.kicker }}</h2>
         {% endif %}
 {# Main headline and lede #}
-        <h1 class="headline">{{ story.html.title }}</h1>
+        <h1 class="headline">{{ story.html.title }}
+        {% if perms.stories %}
+        {% include "_story-edit-menu.html" with story=story %}
+        {% endif %}
+        </h1>
         {% if story.lede %}
           <p class="lede">{{ story.html.lede }}</p>
         {% endif %}

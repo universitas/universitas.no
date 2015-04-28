@@ -79,7 +79,7 @@ def frontpage_layout(blocks):
     return items
 
 
-@login_required
+# @login_required
 def frontpage_view(request, frontpage=None):
     """ Shows the newspaper frontpage. """
     max_stories = 30
