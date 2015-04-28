@@ -119,6 +119,7 @@ THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
 THUMBNAIL_ENGINE = 'myapps.photo.thumbnail_engine.CloseCropEngine'
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
 FILE_UPLOAD_PERMISSIONS = 0o664
+THUMBNAIL_DEBUG = True
 
 # CACHE
 CACHES = {
