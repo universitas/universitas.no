@@ -215,7 +215,7 @@ def _get_latest_source(source_folder):
 def _create_virtualenv(venv_folder, global_venv_folder):
     """ Create or update python virtual environment with the required python packages. """
     if not exists(venv_folder + '/bin/pip'):
-        run('%s %s' % (PYVENV, venv_folder,))
+        run('%s %s --system-site-packages' % (PYVENV, venv_folder,))
         run('ln -fs %s %s' % (venv_folder, global_venv_folder))
         # run('%s/bin/pip install %s' % (venv_folder, GIT_DJANGO_PACKAGE,))
 
