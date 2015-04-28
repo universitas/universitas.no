@@ -2,6 +2,7 @@
 import re
 import random
 from django.db import models
+from slugify import Slugify
 
 # from model_utils.models import TimeStampedModel
 from django.utils.translation import ugettext_lazy as _
@@ -172,7 +173,8 @@ class AdvertManager(models.Manager):
 
 
 def upload_folder(instance, filename):
-    customer_name = re.sub(r'\s+', '', instance.customer.name)[:15].lower()
+    slugify = Slugify(to_lower=True)
+    customer_name = re.sub(r'\s+', '', slugify(instance.customer.name))[:15].lower()
     path = '/'.join(['adverts', customer_name, filename])
     logger.debug(path)
     return path
