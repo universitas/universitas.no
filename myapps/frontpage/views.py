@@ -94,7 +94,7 @@ def frontpage_view(request, frontpage=None):
 
     blocks = StoryModule.objects.filter(
         frontpage=frontpage,
-        # frontpage_story__story__publication_date__lt=now,
+        frontpage_story__story__publication_status=Story.STATUS_PUBLISHED,
     )[:max_stories]
 
     context['frontpage_items'] = frontpage_layout(blocks)

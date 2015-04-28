@@ -6,7 +6,6 @@ from django.utils.translation import ugettext_lazy as _
 # from django.core.exceptions import ObjectDesNotExist
 
 # Project apps
-# from myapps.stories.models import Story
 from utils.model_mixins import Edit_url_mixin
 from myapps.photo.models import ImageFile
 import logging
@@ -183,11 +182,18 @@ class FrontpageStoryManager(models.Manager):
              (4, 2), (4, 2), (6, 1), (6, 2),
              (9, 2), (9, 2), (12, 1), (12, 2), ]
 
+    def published(self):
+
+        from myapps.stories.models import Story
+        return super().get_queryset().filter(
+            story__publication_status=Story.STATUS_PUBLISHED
+        )
+
     def autocreate(self, story):
         frontpage = Frontpage.objects.root()
         html_class = story.section.slug + \
             random.choice([' negative'] + [''] * 4)
-        lede = (story.lede or story.get_plaintext())[:200]
+        lede = (story.lede or story.get_plaintext().strip())[:200]
         kicker = story.kicker[:200]
         headline = story.title[:200]
         vignette = str(story.story_type)[:50]
@@ -205,7 +211,7 @@ class FrontpageStoryManager(models.Manager):
             vignette=vignette,
             html_class=html_class,
             imagefile=main_image,
-            )
+        )
 
         frontpage_story.save()
 
@@ -279,8 +285,8 @@ class FrontpageStory(TimeStampedModel, Edit_url_mixin):
 
     # def save(self, *args, **kwargs):
     #     if self.pk is None and self.story:
-    #         # default lede, kicker, headline and kicker is based on parent
-    #         # story.
+    # default lede, kicker, headline and kicker is based on parent
+    # story.
     #         section = '{}'.format(self.story.section).lower()
     #         self.lede = self.lede or self.story.lede[:200]
     #         self.kicker = self.kicker or self.story.kicker[:200]
@@ -295,7 +301,7 @@ class FrontpageStory(TimeStampedModel, Edit_url_mixin):
 
     #         super().save()
     #     if self.placements.count() == 0 and not self.imagefile is None:
-    #         # is automatically put on front page if it has an image.
+    # is automatically put on front page if it has an image.
     #         content_block = StoryModule(
     #             frontpage_story=self,
     #             frontpage=Frontpage.objects.root(),

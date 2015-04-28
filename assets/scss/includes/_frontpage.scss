@@ -56,21 +56,23 @@ $minimum-headline: 1.5em;
   }
 
   .text-block {
-    margin: .5rem 0 .5rem 0;
-    position: absolute;
-    bottom: 0;
     background: white;
     width: 100%;
-    z-index: 10;
+    margin: 0 0 .5rem 0;
     .lede {
       color: $dark-grey;
       line-height: 1.4em;
       margin: 0;
     }
   }
-
   .image-block {
     position: relative;
+    & + .text-block {
+      margin: .5rem 0 .5rem 0;
+      position: absolute;
+      bottom: 0;
+      z-index: 10;
+    }
   }
 }
 
@@ -103,10 +105,15 @@ $minimum-headline: 1.5em;
   background: $dark-grey;
   color: white;
 
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  z-index: 12;
+  .image-block > & {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    z-index: 12;
+  }
+  .no-image-block > & {
+    width: 100%;
+  }
 
   font-family: $univ-serif;
   font-size: 1rem;

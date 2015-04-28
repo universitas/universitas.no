@@ -3006,18 +3006,20 @@ th.hide-for-touch {
     font-size: 1rem;
     line-height: 1rem; }
   .story-block .text-block {
-    margin: .5rem 0 .5rem 0;
-    position: absolute;
-    bottom: 0;
     background: white;
     width: 100%;
-    z-index: 10; }
+    margin: 0 0 .5rem 0; }
     .story-block .text-block .lede {
       color: #333333;
       line-height: 1.4em;
       margin: 0; }
   .story-block .image-block {
     position: relative; }
+    .story-block .image-block + .text-block {
+      margin: .5rem 0 .5rem 0;
+      position: absolute;
+      bottom: 0;
+      z-index: 10; }
 
 .negative .text-block {
   background: #333333;
@@ -3036,10 +3038,6 @@ th.hide-for-touch {
   padding: .2rem;
   background: #333333;
   color: white;
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  z-index: 12;
   font-family: "Roboto Slab", serif;
   font-size: 1rem;
   line-height: 1rem;
@@ -3058,6 +3056,13 @@ th.hide-for-touch {
     background-color: #55a7cb; }
   .magasin .vignette {
     background-color: #ffc87e; }
+  .image-block > .vignette {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    z-index: 12; }
+  .no-image-block > .vignette {
+    width: 100%; }
 
 .frontpage-edit-menu {
   position: absolute;

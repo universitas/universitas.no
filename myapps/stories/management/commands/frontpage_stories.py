@@ -43,5 +43,5 @@ class Command(BaseCommand):
             else:
                 counter += 1
             if story.frontpagestory_set.count() == 0:
-                FrontpageStory.objects.create(story=story)
+                FrontpageStory.objects.autocreate(story=story)
                 self.stdout.write(story.title)

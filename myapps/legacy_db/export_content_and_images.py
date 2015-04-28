@@ -91,7 +91,7 @@ def import_prodsys_content(
         text_only=False,
         autocrop=False):
     """ Import all new stories from prodsys. """
-    status = [Prodsak.READY_FOR_WEB]
+    status = [Prodsak.READY_FOR_WEB,]
     # status = list(range(Prodsak.READY_FOR_WEB, Prodsak.ARCHIVED))
     objects = Prodsak.objects.filter(produsert__in=status).order_by(
         'prodsak_id').values('prodsak_id').distinct()

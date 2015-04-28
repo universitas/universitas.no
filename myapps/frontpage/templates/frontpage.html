@@ -22,14 +22,16 @@
               {% thumbnail item.image item.image_size crop=item.crop as image %}
                 <a href="{{ item.story.url }}"><img src="{{ image.url }}" alt="{{ item.story.headline|strip_tags }}"></img></a>
               {% endthumbnail %}
+          {% else %}
+            <div class="no-image-block">
+          {% endif %}
             {% if item.story.vignette %}
               <div class="vignette">{{ item.story.vignette }}</div>
             {% endif %}
             {% if perms.stories %}
                 {% include "_frontpage-module-edit-menu.html" with item=item %}
             {% endif %}
-            </div>
-          {% endif %}
+          </div>
           <div class="text-block">
             {% if item.story.headline %}
               <a href="{{ item.story.url }}">
