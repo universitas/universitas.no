@@ -7,6 +7,7 @@ from django.contrib import admin
 from .models import Sak, Prodsak, DiskSvar, Bilde
 from django.utils.translation import ugettext_lazy as _
 
+
 @admin.register(Sak)
 class SakAdmin(admin.ModelAdmin):
     save_on_top = True
@@ -29,6 +30,22 @@ class SakAdmin(admin.ModelAdmin):
     search_fields = (
         'byline',
         'overskrift',
+    )
+    fieldsets = (
+        ('header', {
+            'fields': (
+                ('dato', 'publisert', 'diskusjon'),
+                ('overskrift', 'stikktittel', 'byline'),
+            ),
+        }),
+
+        ('content', {
+            'fields': (
+                ('brodtekst',),
+                ('sitat', 'undersak', ),
+            ),
+        })
+
     )
 
 
@@ -66,7 +83,10 @@ class ProdusertFilter(admin.SimpleListFilter):
                 ]).order_by('produsert', '-dato')
 
         if self.value() == 'archive':
-            return queryset.filter(produsert=Prodsak.ARCHIVED).order_by('-prodsak_id', '-version_no')
+            return queryset.filter(
+                produsert=Prodsak.ARCHIVED).order_by(
+                '-prodsak_id',
+                '-version_no')
 
 
 @admin.register(Prodsak)
