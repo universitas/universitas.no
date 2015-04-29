@@ -1182,7 +1182,7 @@ class StoryVideo(StoryMedia):
         help_text=_('the part of the url that identifies this particular video')
     )
 
-    def embed(self, width=1200, height=400):
+    def embed(self, width="100%", height="auto"):
         """ Returns html embed code """
         if self.video_host == 'vimeo':
             # <iframe src="//player.vimeo.com/video/105149174?
