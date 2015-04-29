@@ -28,7 +28,7 @@ def frontpage_layout(blocks):
     columns_used = 0
 
     for block in blocks:
-        if block.columns + columns_used >= MAX_COLUMNS:
+        if block.columns + columns_used > MAX_COLUMNS:
             # floor is filled. Finish it.
             floorheight = max(item.height for item in floor)
             ratio = MAX_COLUMNS / columns_used + 0.1
