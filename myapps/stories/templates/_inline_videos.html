@@ -3,7 +3,9 @@
 {% for video in elements %}
 <div class="inline-video {{ css_classes }}">
     <div class="image-container">
-      {{ video.embed | safe }}
+      <div class="flex-video">
+        {{ video.embed | safe }}
+      </div>
       {% include '_caption.html' with caption=video.caption %}
     </div>
 </div>

@@ -1194,7 +1194,7 @@ class StoryVideo(StoryMedia):
                 '<iframe src="//player.vimeo.com/'
                 'video/{host_video_id}?title=0&amp;'
                 'byline=0&amp;portrait=0&amp;color=f00008" '
-                'width="{width}" height="{height}" frameborder="0" '
+                'width="{width}" frameborder="0" '
                 'webkitallowfullscreen mozallowfullscreen allowfullscreen>'
                 '</iframe>')
         elif self.video_host == 'youtu':
