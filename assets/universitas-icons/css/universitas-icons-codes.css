@@ -13,6 +13,8 @@
 .icon-rss:before { content: '\2c'; } /* ',' */
 .icon-comment:before { content: '\2d'; } /* '-' */
 .icon-link:before { content: '\2e'; } /* '.' */
+.icon-circle:before { content: '\2f'; } /* '/' */
+.icon-square:before { content: '\30'; } /* '0' */
 .icon-at:before { content: '\40'; } /* '@' */
 .icon-contacts:before { content: '\61'; } /* 'a' */
 .icon-share:before { content: '\e800'; } /* '' */

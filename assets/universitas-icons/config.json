@@ -119,6 +119,12 @@
       "src": "fontawesome"
     },
     {
+      "uid": "b624a1e512819d410ddbee84e6918b9d",
+      "css": "square",
+      "code": 48,
+      "src": "fontawesome"
+    },
+    {
       "uid": "38575a803c4da31ce20d77e1e1236bcb",
       "css": "share",
       "code": 59392,
@@ -140,6 +146,12 @@
       "uid": "9755f76110ae4d12ac5f9466c9152031",
       "css": "book",
       "code": 59423,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "130380e481a7defc690dfb24123a1f0c",
+      "css": "circle",
+      "code": 47,
       "src": "fontawesome"
     },
     {

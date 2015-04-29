@@ -23,7 +23,7 @@ $section-colors: (
 $light-grey: #999;
 $medium-grey: #777;
 $dark-grey: #333;
-$medium-yellow: yellow;
+$medium-yellow: #FFB653;
 
 @function color-get($section, $change: none) {
   $base-color: map-get($section-colors, $section);

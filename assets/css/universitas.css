@@ -2693,11 +2693,11 @@ th.hide-for-touch {
   list-style: none;
   margin-left: 1.2em; }
   #story .inline-aside ul li:before {
-    font-family: 'foundation-icons';
+    font-family: 'universitas-icons';
     position: absolute;
     margin-left: -1.2em;
-    color: yellow;
-    content: "\f1ef"; }
+    color: #ffb653;
+    content: "\0030"; }
 
 #story .inline-pullquote {
   padding-left: 3.5rem;
@@ -2710,7 +2710,7 @@ th.hide-for-touch {
     position: absolute;
     margin-left: -3rem;
     top: .5rem;
-    color: yellow;
+    color: #ffb653;
     font-size: 5em;
     content: "«"; }
 
