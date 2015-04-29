@@ -283,6 +283,10 @@ class FrontpageStory(TimeStampedModel, Edit_url_mixin):
     def url(self):
         return self.story.get_absolute_url()
 
+    @property
+    def story_type_url(self):
+        return self.story.story_type.get_absolute_url()
+
     # def save(self, *args, **kwargs):
     #     if self.pk is None and self.story:
     # default lede, kicker, headline and kicker is based on parent

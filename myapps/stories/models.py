@@ -161,7 +161,12 @@ class Section(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('')
+        url = reverse(
+            viewname='section',
+            kwargs={
+                'pk': str(self.pk),
+            },)
+        return url
 
 
 class StoryType(models.Model):
@@ -182,9 +187,13 @@ class StoryType(models.Model):
     def __str__(self):
         return self.name
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('')
+        url = reverse(
+            viewname='storytype',
+            kwargs={
+                'pk': str(self.pk),
+            },)
+        return url
 
 
 class TextContent(models.Model, MarkupModelMixin):

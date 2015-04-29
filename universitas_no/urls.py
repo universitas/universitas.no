@@ -9,7 +9,7 @@ from django.contrib import admin
 from myapps.core.views import RobotsTxtView, HumansTxtView
 from myapps.search import urls as search_urls
 from myapps.core.autocomplete_views import autocomplete_list
-from myapps.frontpage.views import frontpage_view
+from myapps.frontpage.views import frontpage_view, section_frontpage, storytype_frontpage
 from myapps.issues.views import PdfArchiveView, PubPlanView
 from myapps.stories.views import article_view
 from autocomplete_light import urls as autocomplete_light_urls
@@ -23,6 +23,8 @@ urlpatterns = patterns(
     '',
     # forside
     url(r'^$', frontpage_view, name='frontpage'),
+    url(r'^section/(?P<pk>[0-9]+)/$', section_frontpage, name='section'),
+    url(r'^storytype/(?P<pk>[0-9]+)/$', storytype_frontpage, name='storytype'),
     # artikkelvisning
     url(r'^(?P<story_id>\d+)/(?P<section>[a-z0-9\-]+)/(?P<slug>[a-z0-9\-]*)/$',
         article_view, name='article'),

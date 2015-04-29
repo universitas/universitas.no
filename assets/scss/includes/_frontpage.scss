@@ -114,6 +114,10 @@ $minimum-headline: 1.5em;
   background: $dark-grey;
   color: white;
 
+  a {
+    color: white;
+  }
+
   .image-block > & {
     position: absolute;
     top: 5px;

@@ -23,7 +23,11 @@
             <div class="no-image-block">
           {% endif %}
             {% if item.story.vignette %}
-              <div class="vignette">{{ item.story.vignette }}</div>
+              <div class="vignette">
+              <a href="{{ item.story.story_type_url }}">
+                {{ item.story.vignette }}
+              </a>
+              </div>
             {% endif %}
             {% if perms.stories %}
                 {% include "_frontpage-module-edit-menu.html" with item=item %}

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from myapps.stories.models import Story
+from myapps.stories.models import Story, Section, StoryType
 from myapps.photo.models import ImageFile
 from myapps.frontpage.models import Frontpage, StoryModule
 from django.http import HttpResponseRedirect, Http404
@@ -86,7 +86,7 @@ def get_frontpage_stories(story_queryset, frontpage=None):
         frontpage = Frontpage.objects.root()
 
     stories = story_queryset.is_on_frontpage(frontpage)
-    result = StoryModule.objects.filter(frontpage=frontpage, frontpage_story__story__in=stories )
+    result = StoryModule.objects.filter(frontpage=frontpage, frontpage_story__story=stories )
     return result
 
 
@@ -103,7 +103,13 @@ def frontpage_view(request, stories=None, frontpage=None):
 
     return render(request, 'frontpage.html', context)
 
-def section_frontpage(request, slug):
+def section_frontpage(request, pk):
+    section = get_object_or_404(Section, pk=pk)
+    stories = Story.objects.filter(story_type__section=section)
+    return frontpage_view(request, stories=stories)
 
-    section = get_object_or_404(Section.objects.all(), slug=slug )
 
+def storytype_frontpage(request, pk):
+    story_type = get_object_or_404(StoryType, pk=pk)
+    stories = Story.objects.filter(story_type=story_type)
+    return frontpage_view(request, stories=stories)

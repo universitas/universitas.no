@@ -3034,6 +3034,8 @@ th.hide-for-touch {
     background-color: #55a7cb; }
   .magasin .vignette {
     background-color: #ffc87e; }
+  .vignette a {
+    color: white; }
   .image-block > .vignette {
     position: absolute;
     top: 5px;
