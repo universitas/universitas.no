@@ -79,13 +79,13 @@ def frontpage_layout(blocks):
     return items
 
 
-def get_frontpage_stories(story_queryset, frontpage=None, max_stories=30):
+def get_frontpage_stories(story_queryset, frontpage=None):
     """ Find frontpage stories connected to queryset """
 
     if frontpage is None:
         frontpage = Frontpage.objects.root()
 
-    stories = story_queryset.is_on_frontpage(frontpage).order_by("-publication_date")[:max_stories]
+    stories = story_queryset.is_on_frontpage(frontpage)
     result = StoryModule.objects.filter(frontpage=frontpage, frontpage_story__story__in=stories )
     return result
 
@@ -95,10 +95,15 @@ def frontpage_view(request, stories=None, frontpage=None):
 
     context = {}
     if stories is None:
-        stories = Story.objects.published().order_by("-publication_date")
+        stories = Story.objects.published()
 
-    blocks = get_frontpage_stories(stories)
+    blocks = get_frontpage_stories(stories).order_by('-position')[:30]
 
     context['frontpage_items'] = frontpage_layout(blocks)
 
     return render(request, 'frontpage.html', context)
+
+def section_frontpage(request, slug):
+
+    section = get_object_or_404(Section.objects.all(), slug=slug )
+
