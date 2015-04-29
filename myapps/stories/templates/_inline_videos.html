@@ -3,7 +3,7 @@
 {% for video in elements %}
 <div class="inline-video {{ css_classes }}">
     <div class="image-container">
-      {{ self.embed }}
+      {{ video.embed }}
       {% include '_caption.html' with caption=video.caption %}
     </div>
 </div>
