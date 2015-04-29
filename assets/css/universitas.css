@@ -2793,6 +2793,8 @@ th.hide-for-touch {
 #story .question {
   font-weight: 500;
   font-style: italic; }
+#story .feit {
+  font-weight: 500; }
 #story .inline-right {
   border-left: 1px solid #eeeeee; }
 #story .inline-aside h2 {
