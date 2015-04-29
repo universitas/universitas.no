@@ -87,8 +87,8 @@ def get_items(queryset, argument_string):
             error_message = 'Unknown argument: {} in {}'.format(
                 arg,
                 argument_string)
-            # logger.warn(error_message)
-            raise template.TemplateSyntaxError(error_message)
+            logger.warn(error_message)
+            # raise template.TemplateSyntaxError(error_message)
 
     for index in indexes:
         context['elements'].extend(

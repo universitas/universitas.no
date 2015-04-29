@@ -79,23 +79,25 @@ def frontpage_layout(blocks):
     return items
 
 
-# @login_required
-def frontpage_view(request, frontpage=None):
-    """ Shows the newspaper frontpage. """
-    max_stories = 30
+def get_frontpage_stories(story_queryset, frontpage=None, max_stories=30):
+    """ Find frontpage stories connected to queryset """
 
     if frontpage is None:
         frontpage = Frontpage.objects.root()
-    else:
-        frontpage = get_object_or_404(Frontpage.published, label=frontpage)
 
-    editor = True
-    context = {'editor': editor}
+    stories = story_queryset.is_on_frontpage(frontpage).order_by("-publication_date")[:max_stories]
+    result = StoryModule.objects.filter(frontpage=frontpage, frontpage_story__story__in=stories )
+    return result
 
-    blocks = StoryModule.objects.filter(
-        frontpage=frontpage,
-        frontpage_story__story__publication_status=Story.STATUS_PUBLISHED,
-    )[:max_stories]
+
+def frontpage_view(request, stories=None, frontpage=None):
+    """ Shows the newspaper frontpage. """
+
+    context = {}
+    if stories is None:
+        stories = Story.objects.published().order_by("-publication_date")
+
+    blocks = get_frontpage_stories(stories)
 
     context['frontpage_items'] = frontpage_layout(blocks)
 

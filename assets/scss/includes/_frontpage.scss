@@ -21,11 +21,11 @@ $minimum-headline: 1.5em;
   .#{$cols-slug}-#{$columns} {
     @extend #{$medium-cols};
     @extend #{$small-cols};
-    .headline-s { font-size: $s; line-height: 1; }
-    .headline-m { font-size: $m; line-height: 1; }
-    .headline-l { font-size: $l; line-height: 1; }
-    .headline-xl { font-size: $xl; line-height: 1; }
-
+    .headline-s  h1 { font-size: $s; }
+    .headline-m  h1 { font-size: $m; }
+    .headline-l  h1 { font-size: $l; }
+    .headline-xl  h1 { font-size: $xl; }
+     h2 { font-size: $xl*.6; }
   }
 }
 
@@ -43,15 +43,18 @@ $minimum-headline: 1.5em;
   position: relative;
   margin-bottom: 10px;
 
+  .frontpage-headline {
+    line-height: 1em;
+  }
 
-  .kicker-block {
-    padding: 4px 8px;
-    margin: 0;
-    width: 100%;
-    background: $dark-grey;
-    color: white;
+  .frontpage-kicker {
+    // padding: 4px 8px;
+    // margin: 0;
+    // width: 100%;
+    // background: $dark-grey;
+    // color: white;
     text-transform: uppercase;
-    font-size: 1rem;
+    // font-size: 1rem;
     line-height: 1rem;
   }
 
@@ -75,8 +78,14 @@ $minimum-headline: 1.5em;
     }
   }
 }
+.grey {
+  .text-block{
+    background: #EEE;
+    padding: 5px 10px;
+  }
+}
 
-.negative {
+.negativ .negative {
   .text-block {
     background: $dark-grey;
     padding: 5px 10px;

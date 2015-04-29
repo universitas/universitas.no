@@ -50,6 +50,7 @@ IMAGE_TAG = '@image:'
 VIDEO_TAG = '@video:'
 INLINE_HTML_TAG = '@html:'
 
+
 class MarkupFieldMixin(object):
 
     def __init__(self, *args, **kwargs):
@@ -276,7 +277,6 @@ class TextContent(models.Model, MarkupModelMixin):
                 sections.append(paragraph)
                 main_body = []
 
-
         sections.append(main_body)
 
         blocks = []
@@ -379,14 +379,27 @@ class TextContent(models.Model, MarkupModelMixin):
         """ Returns self and ignores any arguments """
         return self
 
-
-class PublishedStoryManager(models.Manager):
+class StoryQuerySet(models.QuerySet):
 
     def published(self):
         now = timezone.now()
-        return super().get_queryset().filter(
+        return self.filter(
             publication_status=Story.STATUS_PUBLISHED).filter(
             publication_date__lt=now)
+
+    def is_on_frontpage(self, frontpage):
+        return self.filter(frontpagestory__placements=frontpage)
+
+class PublishedStoryManager(models.Manager):
+
+    def get_queryset(self):
+        return StoryQuerySet(self.model, using=self._db)
+
+    def published(self):
+        return self.get_queryset().published()
+
+    def is_on_frontpage(self, frontpage):
+        return self.get_queryset().is_on_frontpage(frontpage)
 
     def populate_frontpage(self, **kwargs):
         """ create some random frontpage stories """
@@ -1080,6 +1093,7 @@ class Aside(TextContent, StoryElement):
         verbose_name = _('Aside')
         verbose_name_plural = _('Asides')
 
+
 class InlineHtml(StoryElement):
 
     """ Inline html code """
@@ -1677,7 +1691,7 @@ class Byline(models.Model):
         contributors = Contributor.get_or_create(
             full_name,
             initials
-            )
+        )
 
         for contributor in contributors:
             new_byline = cls(
