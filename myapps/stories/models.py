@@ -8,8 +8,8 @@ import json
 import logging
 # import random
 logger = logging.getLogger('universitas')
-from slugify import Slugify
-slugify = Slugify(max_length=50, to_lower=True)
+# from slugify import Slugify
+# slugify = Slugify(max_length=50, to_lower=True)
 
 # Django core
 from django.utils.translation import ugettext_lazy as _
@@ -26,12 +26,17 @@ from django.template import Context, Template
 from django.template.loader import get_template
 
 # Installed apps
+from django_extensions.db.fields import AutoSlugField
+
 from bs4 import BeautifulSoup
 from diff_match_patch import diff_match_patch
 from requests import request
 from requests.exceptions import Timeout, MissingSchema, ConnectionError
 from model_utils.models import TimeStampedModel
 from utils.model_mixins import Edit_url_mixin
+from slugify import Slugify
+
+slugify = Slugify(max_length=50, to_lower=True)
 
 # Project apps
 from myapps.contributors.models import Contributor
@@ -152,19 +157,23 @@ class Section(models.Model):
         verbose_name=_('section title'),
     )
 
+    slug = AutoSlugField(
+        _('slug'),
+        populate_from=('title',),
+        null=True,
+        max_length=50,
+        overwrite=True,
+        slugify_function=slugify,
+    )
+
     def __str__(self):
         return self.title
 
-    @property
-    def slug(self):
-        return slugify(self.title)
-
-    @models.permalink
     def get_absolute_url(self):
         url = reverse(
             viewname='section',
             kwargs={
-                'pk': str(self.pk),
+                'section': self.section.slug,
             },)
         return url
 
@@ -180,6 +189,15 @@ class StoryType(models.Model):
         blank=True, null=True,
         max_length=20)
 
+    slug = AutoSlugField(
+        _('slug'),
+        null=True,
+        populate_from=('name',),
+        max_length=50,
+        overwrite=True,
+        slugify_function=slugify,
+    )
+
     class Meta:
         verbose_name = _('StoryType')
         verbose_name_plural = _('StoryTypes')
@@ -191,7 +209,8 @@ class StoryType(models.Model):
         url = reverse(
             viewname='storytype',
             kwargs={
-                'pk': str(self.pk),
+                'storytype': self.slug,
+                'section': self.section.slug,
             },)
         return url
 
@@ -388,6 +407,7 @@ class TextContent(models.Model, MarkupModelMixin):
         """ Returns self and ignores any arguments """
         return self
 
+
 class StoryQuerySet(models.QuerySet):
 
     def published(self):
@@ -398,6 +418,7 @@ class StoryQuerySet(models.QuerySet):
 
     def is_on_frontpage(self, frontpage):
         return self.filter(frontpagestory__placements=frontpage)
+
 
 class PublishedStoryManager(models.Manager):
 
@@ -459,6 +480,15 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         help_text=_('main headline or title'),
         verbose_name=_('title'),
     )
+    slug = AutoSlugField(
+        _('slug'),
+        default='slug-here',
+        allow_duplicates=True,
+        populate_from=('title',),
+        max_length=50,
+        overwrite=True,
+        slugify_function=slugify,
+    )
     kicker = MarkupCharField(
         max_length=1000,
         blank=True,
@@ -501,11 +531,6 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         default=STATUS_DRAFT, choices=STATUS_CHOICES,
         help_text=_('publication status.'),
         verbose_name=_('status'),
-    )
-    slug = models.SlugField(
-        default='slug-here', editable=False,
-        help_text=_('human readable url.'),
-        verbose_name=_('slug'),
     )
     issue = models.ForeignKey(
         'issues.PrintIssue', blank=True, null=True,
@@ -696,7 +721,6 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         self.parse_markup()
         # self.bodytext_markup = self.reindex_inlines()
         # TODO: Fix redindeksering av placeholders for video og bilder.
-        self.slug = slugify(self.title)
         self.bylines_html = self.get_bylines_as_html()
         if (not self.publication_date
                 and self.publication_status == self.STATUS_PUBLISHED):

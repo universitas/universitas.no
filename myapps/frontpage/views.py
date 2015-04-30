@@ -103,13 +103,13 @@ def frontpage_view(request, stories=None, frontpage=None):
 
     return render(request, 'frontpage.html', context)
 
-def section_frontpage(request, pk):
-    section = get_object_or_404(Section, pk=pk)
+def section_frontpage(request, section):
+    section = get_object_or_404(Section, slug=section)
     stories = Story.objects.filter(story_type__section=section).published()
     return frontpage_view(request, stories=stories)
 
 
-def storytype_frontpage(request, pk):
-    story_type = get_object_or_404(StoryType, pk=pk)
+def storytype_frontpage(request, section, storytype):
+    story_type = get_object_or_404(StoryType, slug=storytype)
     stories = Story.objects.filter(story_type=story_type).published()
     return frontpage_view(request, stories=stories)

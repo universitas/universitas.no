@@ -23,17 +23,14 @@ urlpatterns = patterns(
     '',
     # forside
     url(r'^$', frontpage_view, name='frontpage'),
-    url(r'^section/(?P<pk>[0-9]+)/$', section_frontpage, name='section'),
-    url(r'^storytype/(?P<pk>[0-9]+)/$', storytype_frontpage, name='storytype'),
+    url(r'^(?P<section>[a-z0-9-]+)/$', section_frontpage, name='section'),
     # artikkelvisning
-    url(r'^(?P<story_id>\d+)/(?P<section>[a-z0-9\-]+)/(?P<slug>[a-z0-9\-]*)/$',
-        article_view, name='article'),
-    url(r'^(?P<story_id>\d+?)/.*$',
+    url(r'^(?P<section>[a-z0-9-]+)/(?P<storytype>[a-z0-9-]+)/$', storytype_frontpage, name='storytype'),
+    url(r'^(?P<section>[a-z0-9-]+)/(?P<story_id>\d+)/(?P<slug>[a-z0-9-]*)/?$',
         article_view, name='article'),
     # så lenge id er med, så er det greit.
-    # seksjonsforside
-    # personlig forside
-    # personlig profil
+    url(r'^(?P<story_id>\d+?)/.*$',
+        article_view, name='article_short'),
 )
 
 # PDF and issues
