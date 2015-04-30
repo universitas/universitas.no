@@ -2872,149 +2872,213 @@ th.hide-for-touch {
     bottom: -20px;
     margin: 0; }
 
-.cols-1 .headline-s h1 {
+.cols-1 h1 {
   font-size: 1.5em; }
-.cols-1 .headline-m h1 {
-  font-size: 1.5em; }
-.cols-1 .headline-l h1 {
-  font-size: 1.5em; }
-.cols-1 .headline-xl h1 {
-  font-size: 1.5em; }
-.cols-1 h2 {
-  font-size: 0.9em; }
+@media only screen and (min-width: 40.063em) {
+  .cols-1 h2 {
+    font-size: 0.9em; }
+  .cols-1 .headline-s h1 {
+    font-size: 1.5em; }
+  .cols-1 .headline-m h1 {
+    font-size: 1.5em; }
+  .cols-1 .headline-l h1 {
+    font-size: 1.5em; }
+  .cols-1 .headline-xl h1 {
+    font-size: 1.5em; } }
 
-.cols-2 .headline-s h1 {
+.cols-2 h1 {
   font-size: 1.5em; }
-.cols-2 .headline-m h1 {
+@media only screen and (min-width: 40.063em) {
+  .cols-2 h2 {
+    font-size: 0.9em; }
+  .cols-2 .headline-s h1 {
+    font-size: 1.5em; }
+  .cols-2 .headline-m h1 {
+    font-size: 1.5em; }
+  .cols-2 .headline-l h1 {
+    font-size: 1.5em; }
+  .cols-2 .headline-xl h1 {
+    font-size: 1.5em; } }
+
+.cols-3 h1 {
   font-size: 1.5em; }
-.cols-2 .headline-l h1 {
+@media only screen and (min-width: 40.063em) {
+  .cols-3 h2 {
+    font-size: 0.9em; }
+  .cols-3 .headline-s h1 {
+    font-size: 2.25em; }
+  .cols-3 .headline-m h1 {
+    font-size: 1.5em; }
+  .cols-3 .headline-l h1 {
+    font-size: 1.5em; }
+  .cols-3 .headline-xl h1 {
+    font-size: 1.5em; } }
+
+.cols-4 h1 {
   font-size: 1.5em; }
-.cols-2 .headline-xl h1 {
+@media only screen and (min-width: 40.063em) {
+  .cols-4 h2 {
+    font-size: 0.9em; }
+  .cols-4 .headline-s h1 {
+    font-size: 3em; }
+  .cols-4 .headline-m h1 {
+    font-size: 2em; }
+  .cols-4 .headline-l h1 {
+    font-size: 1.5em; }
+  .cols-4 .headline-xl h1 {
+    font-size: 1.5em; } }
+
+.cols-5 h1 {
   font-size: 1.5em; }
-.cols-2 h2 {
-  font-size: 0.9em; }
+@media only screen and (min-width: 40.063em) {
+  .cols-5 h2 {
+    font-size: 0.9em; }
+  .cols-5 .headline-s h1 {
+    font-size: 3.75em; }
+  .cols-5 .headline-m h1 {
+    font-size: 2.5em; }
+  .cols-5 .headline-l h1 {
+    font-size: 1.875em; }
+  .cols-5 .headline-xl h1 {
+    font-size: 1.5em; } }
 
-.cols-3 .headline-s h1 {
-  font-size: 2.25em; }
-.cols-3 .headline-m h1 {
+.cols-6 h1 {
   font-size: 1.5em; }
-.cols-3 .headline-l h1 {
+@media only screen and (min-width: 40.063em) {
+  .cols-6 h2 {
+    font-size: 0.9em; }
+  .cols-6 .headline-s h1 {
+    font-size: 4.5em; }
+  .cols-6 .headline-m h1 {
+    font-size: 3em; }
+  .cols-6 .headline-l h1 {
+    font-size: 2.25em; }
+  .cols-6 .headline-xl h1 {
+    font-size: 1.5em; } }
+
+.cols-7 h1 {
   font-size: 1.5em; }
-.cols-3 .headline-xl h1 {
+@media only screen and (min-width: 40.063em) {
+  .cols-7 h2 {
+    font-size: 1.05em; }
+  .cols-7 .headline-s h1 {
+    font-size: 5.25em; }
+  .cols-7 .headline-m h1 {
+    font-size: 3.5em; }
+  .cols-7 .headline-l h1 {
+    font-size: 2.625em; }
+  .cols-7 .headline-xl h1 {
+    font-size: 1.75em; } }
+
+.cols-8 h1 {
   font-size: 1.5em; }
-.cols-3 h2 {
-  font-size: 0.9em; }
+@media only screen and (min-width: 40.063em) {
+  .cols-8 h2 {
+    font-size: 1.2em; }
+  .cols-8 .headline-s h1 {
+    font-size: 6em; }
+  .cols-8 .headline-m h1 {
+    font-size: 4em; }
+  .cols-8 .headline-l h1 {
+    font-size: 3em; }
+  .cols-8 .headline-xl h1 {
+    font-size: 2em; } }
 
-.cols-4 .headline-s h1 {
-  font-size: 3em; }
-.cols-4 .headline-m h1 {
-  font-size: 2em; }
-.cols-4 .headline-l h1 {
+.cols-9 h1 {
   font-size: 1.5em; }
-.cols-4 .headline-xl h1 {
+@media only screen and (min-width: 40.063em) {
+  .cols-9 h2 {
+    font-size: 1.35em; }
+  .cols-9 .headline-s h1 {
+    font-size: 6.75em; }
+  .cols-9 .headline-m h1 {
+    font-size: 4.5em; }
+  .cols-9 .headline-l h1 {
+    font-size: 3.375em; }
+  .cols-9 .headline-xl h1 {
+    font-size: 2.25em; } }
+
+.cols-10 h1 {
   font-size: 1.5em; }
-.cols-4 h2 {
-  font-size: 0.9em; }
+@media only screen and (min-width: 40.063em) {
+  .cols-10 h2 {
+    font-size: 1.5em; }
+  .cols-10 .headline-s h1 {
+    font-size: 7.5em; }
+  .cols-10 .headline-m h1 {
+    font-size: 5em; }
+  .cols-10 .headline-l h1 {
+    font-size: 3.75em; }
+  .cols-10 .headline-xl h1 {
+    font-size: 2.5em; } }
 
-.cols-5 .headline-s h1 {
-  font-size: 3.75em; }
-.cols-5 .headline-m h1 {
-  font-size: 2.5em; }
-.cols-5 .headline-l h1 {
-  font-size: 1.875em; }
-.cols-5 .headline-xl h1 {
+.cols-11 h1 {
   font-size: 1.5em; }
-.cols-5 h2 {
-  font-size: 0.9em; }
+@media only screen and (min-width: 40.063em) {
+  .cols-11 h2 {
+    font-size: 1.65em; }
+  .cols-11 .headline-s h1 {
+    font-size: 8.25em; }
+  .cols-11 .headline-m h1 {
+    font-size: 5.5em; }
+  .cols-11 .headline-l h1 {
+    font-size: 4.125em; }
+  .cols-11 .headline-xl h1 {
+    font-size: 2.75em; } }
 
-.cols-6 .headline-s h1 {
-  font-size: 4.5em; }
-.cols-6 .headline-m h1 {
-  font-size: 3em; }
-.cols-6 .headline-l h1 {
-  font-size: 2.25em; }
-.cols-6 .headline-xl h1 {
+.cols-12 h1 {
   font-size: 1.5em; }
-.cols-6 h2 {
-  font-size: 0.9em; }
+@media only screen and (min-width: 40.063em) {
+  .cols-12 h2 {
+    font-size: 1.8em; }
+  .cols-12 .headline-s h1 {
+    font-size: 9em; }
+  .cols-12 .headline-m h1 {
+    font-size: 6em; }
+  .cols-12 .headline-l h1 {
+    font-size: 4.5em; }
+  .cols-12 .headline-xl h1 {
+    font-size: 3em; } }
 
-.cols-7 .headline-s h1 {
-  font-size: 5.25em; }
-.cols-7 .headline-m h1 {
-  font-size: 3.5em; }
-.cols-7 .headline-l h1 {
-  font-size: 2.625em; }
-.cols-7 .headline-xl h1 {
-  font-size: 1.75em; }
-.cols-7 h2 {
-  font-size: 1.05em; }
+@media only screen {
+  .rows-1 {
+    min-height: 80px; } }
+@media only screen and (min-width: 40.063em) {
+  .rows-1 {
+    min-height: 120px; } }
+@media only screen and (min-width: 64.063em) {
+  .rows-1 {
+    min-height: 150px; } }
 
-.cols-8 .headline-s h1 {
-  font-size: 6em; }
-.cols-8 .headline-m h1 {
-  font-size: 4em; }
-.cols-8 .headline-l h1 {
-  font-size: 3em; }
-.cols-8 .headline-xl h1 {
-  font-size: 2em; }
-.cols-8 h2 {
-  font-size: 1.2em; }
+@media only screen {
+  .rows-2 {
+    min-height: 160px; } }
+@media only screen and (min-width: 40.063em) {
+  .rows-2 {
+    min-height: 240px; } }
+@media only screen and (min-width: 64.063em) {
+  .rows-2 {
+    min-height: 300px; } }
 
-.cols-9 .headline-s h1 {
-  font-size: 6.75em; }
-.cols-9 .headline-m h1 {
-  font-size: 4.5em; }
-.cols-9 .headline-l h1 {
-  font-size: 3.375em; }
-.cols-9 .headline-xl h1 {
-  font-size: 2.25em; }
-.cols-9 h2 {
-  font-size: 1.35em; }
+@media only screen {
+  .rows-3 {
+    min-height: 240px; } }
+@media only screen and (min-width: 40.063em) {
+  .rows-3 {
+    min-height: 360px; } }
+@media only screen and (min-width: 64.063em) {
+  .rows-3 {
+    min-height: 450px; } }
 
-.cols-10 .headline-s h1 {
-  font-size: 7.5em; }
-.cols-10 .headline-m h1 {
-  font-size: 5em; }
-.cols-10 .headline-l h1 {
-  font-size: 3.75em; }
-.cols-10 .headline-xl h1 {
-  font-size: 2.5em; }
-.cols-10 h2 {
-  font-size: 1.5em; }
-
-.cols-11 .headline-s h1 {
-  font-size: 8.25em; }
-.cols-11 .headline-m h1 {
-  font-size: 5.5em; }
-.cols-11 .headline-l h1 {
-  font-size: 4.125em; }
-.cols-11 .headline-xl h1 {
-  font-size: 2.75em; }
-.cols-11 h2 {
-  font-size: 1.65em; }
-
-.cols-12 .headline-s h1 {
-  font-size: 9em; }
-.cols-12 .headline-m h1 {
-  font-size: 6em; }
-.cols-12 .headline-l h1 {
-  font-size: 4.5em; }
-.cols-12 .headline-xl h1 {
-  font-size: 3em; }
-.cols-12 h2 {
-  font-size: 1.8em; }
-
-.rows-1 {
-  height: 150px; }
-
-.rows-2 {
-  height: 300px; }
-
-.rows-3 {
-  height: 450px; }
-
-.rows-4 {
-  height: 600px; }
+@media only screen {
+  .rows-4 {
+    min-height: 320px; } }
+@media only screen and (min-width: 40.063em) {
+  .rows-4 {
+    min-height: 480px; } }
+@media only screen and (min-width: 64.063em) {
+  .rows-4 {
+    min-height: 600px; } }
 
 #frontpage {
   padding-top: 10px; }

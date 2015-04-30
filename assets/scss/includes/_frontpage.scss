@@ -3,7 +3,9 @@
 $cols-slug: cols;
 $rows-slug: rows;
 $base-headline: 3em;
-$block-height: 150px;
+$block-height-l: 150px;
+$block-height-m: 120px;
+$block-height-s: 80px;
 $minimum-height: 00px;
 $minimum-headline: 1.5em;
 
@@ -19,19 +21,30 @@ $minimum-headline: 1.5em;
   $xl: max($minimum-headline, $headline-size * 0.5);
 
   .#{$cols-slug}-#{$columns} {
+    h1 { font-size: $base-headline / 2; }
     @extend #{$medium-cols};
     @extend #{$small-cols};
+    @media #{$medium-up} {
+    h2 { font-size: $xl*.6; }
     .headline-s  h1 { font-size: $s; }
     .headline-m  h1 { font-size: $m; }
     .headline-l  h1 { font-size: $l; }
     .headline-xl  h1 { font-size: $xl; }
-     h2 { font-size: $xl*.6; }
+    }
   }
 }
 
 @for $height from 1 through 4 {
   .#{$rows-slug}-#{$height} {
-    height: $minimum-height + $block-height * $height;
+    @media #{$small-up} {
+      min-height: $block-height-s * $height;
+    }
+    @media #{$medium-up} {
+      min-height: $block-height-m * $height;
+    }
+    @media #{$large-up} {
+      min-height: $block-height-l * $height;
+    }
   }
 }
 
