@@ -19,22 +19,21 @@ $fontsize: $menu-height - $menu-padding * 2;
 
 %onscreen {
   top: $menu-height;
-  z-index: -10;
-  transition-delay: 0s;
 }
 
 %offscreen {
-  transition-delay: .1s;
+  transition: top .2s ease-in .1s;
   padding: 15px 0;
   position: absolute;
   width: 100%;
   background: #BBB;
-  overflow: hidden;
+  // overflow: hidden;
   z-index: -100;
   top: ($panel-height + $menu-height) * -1;
   height: $panel-height;
   &:hover{
     @extend %onscreen;
+    z-index: -10;
   }
 }
 body > main{
@@ -46,7 +45,6 @@ body > main{
   top: 0;
   left: 0;
   right: 0;
-  background: $menu-color;
   height: $menu-height;
   z-index: 1000;
   a {
@@ -56,10 +54,9 @@ body > main{
 
 .menu-wrapper {
   @extend .content-wrapper;
-  height: $menu-height;
-  z-index: 1000;
   padding: 0 $column-gutter/2;
   line-height: 1.1;
+  height: $menu-height;
   h2 {
     color: white;
     font-size: 1rem;
@@ -71,6 +68,14 @@ body > main{
   p {
     color: white;
     font-size: .8rem;
+  }
+  .menu-background {
+    position: fixed;
+    height: $menu-height;
+    top:0;
+    left:0;
+    right:0;
+    background: $menu-color;
   }
   .follow-us {
     font-size: 1.2rem;
@@ -85,7 +90,7 @@ body > main{
     position: relative;
   }
   &:hover{
-    .logo-panel, .default-panel {
+    .section-panel, .logo-panel, .default-panel {
       @extend %onscreen;
     }
   }
@@ -122,16 +127,15 @@ body > main{
 .sections {
   float: left;
   background: white;
-  padding-right: $menu-padding;
+  border-left: $menu-padding solid #FFF;
   .section-item {
     display: inline-block;
     float: left;
     background: #333;
-    margin-left: $menu-padding;
-    min-width: $menu-height;
+    border-right: $menu-padding solid #FFF;
+    min-width: $menu-height + $menu-padding;
     height: $menu-height;
     &:hover + .section-panel {
-      @extend %onscreen;
       z-index:-5;
     }
   }
@@ -140,7 +144,7 @@ body > main{
     font-family: $univ-serif;
     opacity: 0;
     display: block;
-    transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in .1s;
     max-width: 0;
     overflow: hidden;
     .menu-wrapper:hover & {
@@ -210,11 +214,16 @@ body > main{
   }
 }
 
-.default-panel, .section-panel{
+.section-panel{
   @extend %offscreen;
   padding-right: 100%;
   right: -100%;
   width: 200%;
+  z-index: -30;
+}
+.default-panel {
+  @extend .section-panel;
+  z-index: -20;
   .faximile {
     @extend %faximile;
   }
