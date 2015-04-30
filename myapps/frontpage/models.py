@@ -89,6 +89,7 @@ class FrontPageModule(TimeStampedModel, Edit_url_mixin):
 
     frontpage = models.ForeignKey(
         Frontpage,
+        default=Frontpage.objects.root,
         editable=True,
     )
 
@@ -128,7 +129,7 @@ class StoryModule(FrontPageModule):
     )
 
     def save(self):
-        if self.position is None:
+        if not self.position:
             self.position = self.position_default()
         super().save()
 

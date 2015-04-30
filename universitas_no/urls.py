@@ -23,9 +23,6 @@ urlpatterns = patterns(
     '',
     # forside
     url(r'^$', frontpage_view, name='frontpage'),
-    url(r'^(?P<section>[a-z0-9-]+)/$', section_frontpage, name='section'),
-    # artikkelvisning
-    url(r'^(?P<section>[a-z0-9-]+)/(?P<storytype>[a-z0-9-]+)/$', storytype_frontpage, name='storytype'),
     url(r'^(?P<section>[a-z0-9-]+)/(?P<story_id>\d+)/(?P<slug>[a-z0-9-]*)/?$',
         article_view, name='article'),
     # så lenge id er med, så er det greit.
@@ -34,12 +31,17 @@ urlpatterns = patterns(
 )
 
 # PDF and issues
-urlpatterns += patterns(
-    '',
-    url(r'^pdf/$', PdfArchiveView.as_view(), name='pdf_archive'),
-    url(r'^utgivelsesplan/(?P<year>\d{4})/$', PubPlanView.as_view(), name='pub_plan'),
-    url(r'^utgivelsesplan/$', PubPlanView.as_view(), name='pub_plan'),
-)
+urlpatterns += patterns('',
+                        url(r'^pdf/$',
+                            PdfArchiveView.as_view(),
+                            name='pdf_archive'),
+                        url(r'^utgivelsesplan/(?P<year>\d{4})/$',
+                            PubPlanView.as_view(),
+                            name='pub_plan'),
+                        url(r'^utgivelsesplan/$',
+                            PubPlanView.as_view(),
+                            name='pub_plan'),
+                        )
 
 urlpatterns += patterns(
     '',
@@ -70,3 +72,13 @@ if settings.DEBUG:
         url(r'^__debug__/', include(debug_toolbar.urls)),
     )
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+urlpatterns += patterns(
+    '',
+    url(r'^(?P<section>[a-z0-9-]+)/$', section_frontpage, name='section'),
+    # artikkelvisning
+    url(r'^(?P<section>[a-z0-9-]+)/(?P<storytype>[a-z0-9-]+)/$',
+        storytype_frontpage,
+        name='storytype'),
+)
