@@ -89,7 +89,7 @@ class FrontPageModule(TimeStampedModel, Edit_url_mixin):
 
     frontpage = models.ForeignKey(
         Frontpage,
-        default=Frontpage.objects.root,
+        default=1,
         editable=True,
     )
 
