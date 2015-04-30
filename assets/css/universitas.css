@@ -3114,7 +3114,7 @@ th.hide-for-touch {
 .negativ .text-block, .negative .text-block {
   background: #333333;
   padding: 5px 10px; }
-  .negativ .text-block .kicker, .negativ .text-block .lede, .negativ .text-block .frontpage-headline, .negative .text-block .kicker, .negative .text-block .lede, .negative .text-block .frontpage-headline {
+  .negativ .text-block .frontpage-kicker, .negativ .text-block .lede, .negativ .text-block .frontpage-headline, .negative .text-block .frontpage-kicker, .negative .text-block .lede, .negative .text-block .frontpage-headline {
     color: white; }
 
 .debatt .frontpage-headline {
