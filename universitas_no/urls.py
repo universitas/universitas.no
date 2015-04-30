@@ -15,6 +15,8 @@ from myapps.stories.views import article_view
 from autocomplete_light import urls as autocomplete_light_urls
 # from watson import urls as watson_urls
 
+from django.views.generic import TemplateView
+
 admin.autodiscover()
 
 
@@ -28,20 +30,25 @@ urlpatterns = patterns(
     # så lenge id er med, så er det greit.
     url(r'^(?P<story_id>\d+?)/.*$',
         article_view, name='article_short'),
+    url(r'^annonser/',
+        TemplateView.as_view(template_name='annonse-info.html'),
+        name='ad_info',
+        ),
 )
 
 # PDF and issues
-urlpatterns += patterns('',
-                        url(r'^pdf/$',
-                            PdfArchiveView.as_view(),
-                            name='pdf_archive'),
-                        url(r'^utgivelsesplan/(?P<year>\d{4})/$',
-                            PubPlanView.as_view(),
-                            name='pub_plan'),
-                        url(r'^utgivelsesplan/$',
-                            PubPlanView.as_view(),
-                            name='pub_plan'),
-                        )
+urlpatterns += patterns(
+    '',
+    url(r'^pdf/$',
+        PdfArchiveView.as_view(),
+        name='pdf_archive'),
+    url(r'^utgivelsesplan/(?P<year>\d{4})/$',
+        PubPlanView.as_view(),
+        name='pub_plan'),
+    url(r'^utgivelsesplan/$',
+        PubPlanView.as_view(),
+        name='pub_plan'),
+)
 
 urlpatterns += patterns(
     '',

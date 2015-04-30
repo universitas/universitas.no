@@ -1,4 +1,5 @@
 {% load universitas_menu %}
+{% load thumbnail %}
 <div class="menu-wrapper">
   <div class="menu-left">
     <div id="logo">
@@ -11,7 +12,7 @@
           <p>Telefon: 22 85 33 36</p>
           <p>Postadresse: Boks 89 Blindern, 0314 Oslo</p>
           <p>Besøksadresse: Moltke Moes vei 33</p>
-          <p style="font-size: 1.5rem;">
+          <div class="follow-us">
             <a href="https://www.facebook.com/UniversitasOslo">
               <i class="icon-facebook"></i>
             </a>
@@ -22,28 +23,55 @@
               <i class="icon-mail"></i>
             </a>
             <a href="tel:+4722853336" title="22 85 33 36">
-              <i class="icon-telephone"></i>
+              <i class="icon-phone"></i>
             </a>
-          </p>
+          </div>
         </div>
       </div>
     </div>
   </div>
   <div class="menu-right">
+    <div class="default-panel">
+      <div class="row">
+        <div class="panel-2">
+          <h2>Annonser i Universitas</h2>
+          <p>
+            <a href="{% url 'ad_info' %}">Informasjon for annonsører</a>
+          </p>
+          <p>
+            <a href="{% url 'pub_plan' %}">Utgivelsesplan</a>
+          </p>
+        </div>
+        <div class="panel-3">
+          <h2>PDF-arkiv</h2>
+          <div>
+            <a href="{% url 'pdf_archive' %}" >
+              {% thumbnail latest_issue.get_thumbnail '150' as thumb  %}
+              <img class="faximile" src="{{ thumb.url }}" ></img>
+              {% endthumbnail %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
     <nav class="sections">
       {% for section in sections %}
         <div class="section-item {{ section.slug }}">
-          <span class="section-title">{{ section.title }}</span>
+          <a href="{{ section.get_absolute_url }}">
+          <span class="section-title">
+            {{ section.title }}
+          </span>
+          </a>
         </div>
         <div class="section-panel">
           <div class="row">
             <div class="panel-2">
               <h2>Nyeste i {{ section.title }}</h2>
-              {% top_stories section 5 "-publication_date" %}
+              {% top_stories section 3 "-publication_date" %}
             </div>
             <div class="panel-3">
               <h2>Mest lest i {{ section.title }}</h2>
-              {% top_stories section 5 "-hot_count" %}
+              {% top_stories section 3 "-hot_count" %}
             </div>
           </div>
         </div>

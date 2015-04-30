@@ -29,26 +29,22 @@
         {% endif %}
       </div>
     </header>
-   <div class="left-sidebar medium-2 columns">
-{# bylines #}
-
-    <div class="story-info">
-      <div class="artikkeltype {{ story.section.slug }}">
-        {{ story.story_type.name }}
+    <div class="left-sidebar medium-2 columns">
+      <div class="story-info">
+        <div class="artikkeltype {{ story.section.slug }}">
+          {{ story.story_type.name }}
+        </div>
+        <div class="temaord">
+          {{ story.theme_word }}
+        </div>
       </div>
-      <div class="temaord">
-        {{ story.theme_word }}
-      </div>
-    </div>
-    <div class="dateline">{{ story.publication_date | date:"D d. b Y" }}</div>
-    <div class="bylines">
+      <div class="dateline">{{ story.publication_date | date:"D d. b Y" }}</div>
+      <div class="bylines">
         {% for byline in story.byline_set.ordered %}
         <div class="byline">
-        {# {% if byline.contributor.byline_image %} #}
           <div class="byline-photo">
             {% byline_image byline.contributor "100x100" %}
           </div>
-        {# {% endif %} #}
         <div class="byline-text">
             <div class="credit">{{ byline.get_credit_display }}</div>
             <div class="name">{{ byline.contributor }}</div>
@@ -71,42 +67,21 @@
           <div class="icon">
              <a href="#comments"><i class="icon-disqus"></i></a>
           </div>
-      </div>
-   </div>
- </div>
-  <main class="medium-10 columns">
-     {{ story.get_html }}
-  </main>
-  </article>
-    <section id="after" class="row">
-    {% advert "story after" %}
-      <div class="row">
-        {% for related_group in story.related_items %}
-          <div class="related large-6 columns">
-          <h2>{{ related_group.title }}</h2>
-          {% for related_item in related_group.items %}
-          <article class="row">
-            {% thumbnail related_item.image "{{ related_item.image.heigth }}x{{ related_item.image.width }}" as image %}
-            <div class"related-image large-4 columns">
-              <a href="{{ related_item.link }}">
-                <img src="{{ image.url }}" alt="{{ related_item.image_alt }}">
-              </a>
-            </div>
-            {% endthumbnail %}
-          <div class="related-text large-8 columns">
-            <h2 class="headline"> <a href="{{ related_item.link }}">{{ related_story.html.title }}</a> </h2>
-            <p class="lede"> {{ related_story.html.lede }} </p>
-          </div>
-          </article>
-        {% endfor %}
         </div>
-      {% endfor %}
+      </div>
     </div>
-  {% if story.disqus_enabled %}
-    <div id="comments" class="large-8 columns">
-      {% include '_disqus.html' %}
-    </div>
-  {% endif %}
+    <main class="medium-10 columns">
+     {{ story.get_html }}
+    </main>
+  </article>
+  <section id="after-story" class="row">
+    {% advert "story after" %}
+    {% if story.disqus_enabled %}
+      <div id="comments-left" class="show-for-large-up large-2 columns"></div>
+      <div id="comments" class="large-10 columns">
+        {% include '_disqus.html' %}
+      </div>
+    {% endif %}
   </section>
 </div>
 {% endblock content %}

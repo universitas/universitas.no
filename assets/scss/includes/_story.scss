@@ -59,6 +59,8 @@
 }
 
 #story{
+  border-bottom: $separator-line;
+
   header{
     margin-bottom: 1rem;
     .header-text{

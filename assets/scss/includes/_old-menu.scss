@@ -1,11 +1,6 @@
 @charset "UTF-8";
 
-$section-map: (
-  nyheter: $nyheter,
-  kultur: $kultur,
-  debatt: $debatt,
-  magasin: $magasin,
-);
+$section-map: $section-colors;
 
 $menu-height: 30px;
 $panel-height: 300px;
@@ -54,10 +49,15 @@ body > main{
   background: $menu-color;
   height: $menu-height;
   z-index: 1000;
+  a {
+    color: white;
+  }
 }
 
 .menu-wrapper {
   @extend .content-wrapper;
+  height: $menu-height;
+  z-index: 1000;
   padding: 0 $column-gutter/2;
   line-height: 1.1;
   h2 {
@@ -72,11 +72,20 @@ body > main{
     color: white;
     font-size: .8rem;
   }
+  .follow-us {
+    font-size: 1.2rem;
+    a {
+      color: #EEE;
+      &:hover {
+        color: #FFF;
+      }
+    }
+  }
   .menu-right, .menu-left {
     position: relative;
   }
   &:hover{
-    .logo-panel{
+    .logo-panel, .default-panel {
       @extend %onscreen;
     }
   }
@@ -201,12 +210,16 @@ body > main{
   }
 }
 
-.section-panel{
+.default-panel, .section-panel{
   @extend %offscreen;
   padding-right: 100%;
   right: -100%;
   width: 200%;
+  .faximile {
+    @extend %faximile;
+  }
 }
+
 
 .panel-1 {
   padding-left: 0;

@@ -7,7 +7,6 @@
 <div class="row">
 <div class="small-12 columns">
   <h1>PDF-arkiv</h1>
-  <p>Her finner du hele avisa i PDF-format. PDF-ene veier normalt under 20MB.</p>
   {% for issue in issues %}
     {% ifchanged issue.publication_date.year %}
       {% if not forloop.first %}

@@ -11,3 +11,8 @@
     }
   }
 }
+
+.foundation-table {
+  @include table;
+  width: 100%;
+}

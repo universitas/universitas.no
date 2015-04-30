@@ -3,12 +3,14 @@
 import logging
 from django import template
 from myapps.stories.models import Section, Story
+from myapps.issues.models import PrintIssue
 
 register = template.Library()
 logger = logging.getLogger('universitas')
 
 
-@register.inclusion_tag('universitas-menu.html')
+# @register.inclusion_tag('universitas-menu.html')
+@register.inclusion_tag('old-menu.html')
 def universitas_menu(active_section):
 
     sections = [
@@ -20,9 +22,13 @@ def universitas_menu(active_section):
         ]
     ]
 
+    latest_issue = PrintIssue.objects.exclude(pdf=None).order_by(
+        'issue__publication_date').last()
+
     context = {
         'sections': sections,
         'active_section': active_section,
+        'latest_issue': latest_issue,
     }
     return context
 

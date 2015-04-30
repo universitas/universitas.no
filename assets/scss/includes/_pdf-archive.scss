@@ -3,8 +3,8 @@
 .print-issue {
   position: relative;
   .frontpage {
+    @extend %faximile;
     transition: all .1s ease-in-out;
-    box-shadow: 1px 4px 8px -1px rgba(0, 0, 0, 0.3);
     .faximile {
     }
   }

@@ -173,7 +173,7 @@ class Section(models.Model):
         url = reverse(
             viewname='section',
             kwargs={
-                'section': self.section.slug,
+                'section': self.slug,
             },)
         return url
 
@@ -701,7 +701,12 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         return url
 
     def get_share_link(self):
-        return 'http://universitas.no' + self.get_absolute_url()
+        url = reverse(
+            viewname='article_short',
+            kwargs={
+                'story_id': str(self.id),
+            },)
+        return 'http://universitas.no' + url
 
     def children_modified(self):
         """ check if any related objects have been

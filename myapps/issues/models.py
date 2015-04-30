@@ -23,10 +23,10 @@ import os.path
 from utils.model_mixins import Edit_url_mixin
 
 
-def next_issue():
-    name = 33
-    year = 2014
-    return (year, name)
+# def next_issue():
+#     name = 33
+#     year = 2014
+#     return (year, name)
     # TODO: issues.models.next_issue() er fake. Må finne neste utgave fra
     # databasen i stedet.
 
@@ -43,6 +43,9 @@ class IssueQueryset(models.QuerySet):
 
     def next_issue(self):
         return self.unpublished().first()
+
+    def latest_issue(self):
+        return self.published().last()
 
 
 class Issue(models.Model, Edit_url_mixin):
@@ -88,6 +91,11 @@ class Issue(models.Model, Edit_url_mixin):
         )
 
         return list(issue_list).index(self.id) + 1
+
+    @property
+    def advert_deadline(self):
+        two_days = datetime.timedelta(days=2)
+        return self.publication_date - two_days
 
     @property
     def year(self):
