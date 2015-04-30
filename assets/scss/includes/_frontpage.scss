@@ -98,7 +98,7 @@ $minimum-headline: 1.5em;
   }
 }
 
-.negativ .negative {
+.negativ, .negative {
   .text-block {
     background: $dark-grey;
     padding: 5px 10px;
