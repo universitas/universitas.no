@@ -4,7 +4,7 @@
 """
 
 from django.views.generic.base import TemplateView
-# from django.conf import settings
+from django.conf import settings
 
 
 class TextTemplateView(TemplateView):
@@ -31,8 +31,7 @@ class RobotsTxtView(TextTemplateView):
 
     """ robots.txt contains instructions for webcrawler bots. """
 
-    # if self.request.get_host() == 'production':
-    #     template_name = 'robots-production.txt'
-    # else:
-    #     template_name = 'robots-staging.txt'
-    template_name = 'robots-staging.txt'
+    if settings.DEBUG:
+        template_name = 'robots-staging.txt'
+    else:
+        template_name = 'robots-production.txt'
