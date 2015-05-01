@@ -3352,7 +3352,8 @@ body > main {
   padding-right: 100%;
   right: -100%;
   width: 200%;
-  z-index: -30; }
+  z-index: -30;
+  overflow: hidden; }
 
 .default-panel {
   z-index: -20; }
