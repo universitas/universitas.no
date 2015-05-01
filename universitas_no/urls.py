@@ -15,7 +15,7 @@ from myapps.stories.views import article_view
 from autocomplete_light import urls as autocomplete_light_urls
 # from watson import urls as watson_urls
 
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 
 admin.autodiscover()
 
@@ -55,6 +55,7 @@ urlpatterns += patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^robots.txt$', RobotsTxtView.as_view(), name='robots.txt'),
     url(r'^humans.txt$', HumansTxtView.as_view(), name='humans.txt'),
+    url(r'^favicon.ico$', RedirectView.as_view(url='/static/images/favicon.ico'), name='favicon.ico'),
 )
 
 # Autocomplete for admin forms
