@@ -18,6 +18,15 @@
     {% endaddtoblock %}
     {% render_block "css" postprocessor "compressor.contrib.sekizai.compress" %}
     <script src="{% static 'js/vendor/modernizr.js' %}"></script>
+
+    <!-- Google Analytics -->
+    <script async src='//www.google-analytics.com/analytics.js'></script>
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-1579944-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics -->
   </head>
 
   <body>
