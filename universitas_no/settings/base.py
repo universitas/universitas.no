@@ -36,16 +36,16 @@ TEMPLATE_DEBUG = DEBUG
 
 # CUSTOM APPS
 INSTALLED_APPS = (
-    'myapps.issues',
-    'myapps.stories',
-    'myapps.core',
-    'myapps.photo',
-    'myapps.frontpage',
-    'myapps.contributors',
-    'myapps.markup',
-    'myapps.legacy_db',
-    'myapps.adverts',
-    'myapps.search',
+    'apps.issues',
+    'apps.stories',
+    'apps.core',
+    'apps.photo',
+    'apps.frontpage',
+    'apps.contributors',
+    'apps.markup',
+    'apps.legacy_db',
+    'apps.adverts',
+    'apps.search',
     'functional_tests',
     )
 
@@ -112,11 +112,11 @@ DATABASES = {
         'PORT': '',       # Set to empty string for default.
     }
 }
-DATABASE_ROUTERS = ['myapps.legacy_db.router.ProdsysRouter']
+DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
 
 #SORL
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
-THUMBNAIL_ENGINE = 'myapps.photo.thumbnail_engine.CloseCropEngine'
+THUMBNAIL_ENGINE = 'apps.photo.thumbnail_engine.CloseCropEngine'
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
 FILE_UPLOAD_PERMISSIONS = 0o664
 

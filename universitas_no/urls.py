@@ -6,12 +6,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from myapps.core.views import RobotsTxtView, HumansTxtView
-from myapps.search import urls as search_urls
-from myapps.core.autocomplete_views import autocomplete_list
-from myapps.frontpage.views import frontpage_view, section_frontpage, storytype_frontpage
-from myapps.issues.views import PdfArchiveView, PubPlanView
-from myapps.stories.views import article_view
+from apps.core.views import RobotsTxtView, HumansTxtView
+from apps.search import urls as search_urls
+from apps.core.autocomplete_views import autocomplete_list
+from apps.frontpage.views import frontpage_view, section_frontpage, storytype_frontpage
+from apps.issues.views import PdfArchiveView, PubPlanView
+from apps.stories.views import article_view
 from autocomplete_light import urls as autocomplete_light_urls
 # from watson import urls as watson_urls
 
