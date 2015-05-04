@@ -16,7 +16,7 @@
    </tr>
    </thead>
    <tbody>
-  {% for issue in  issues %}
+  {% for issue in issue_list %}
     <tr>
       <td>{{ issue.number }}</td>
       <td>{{ issue.get_issue_type_display }}</td>

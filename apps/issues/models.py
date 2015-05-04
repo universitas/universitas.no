@@ -42,10 +42,10 @@ class IssueQueryset(models.QuerySet):
         return query
 
     def next_issue(self):
-        return self.unpublished().first()
+        return self.unpublished().last()
 
     def latest_issue(self):
-        return self.published().last()
+        return self.published().first()
 
 
 class Issue(models.Model, Edit_url_mixin):
@@ -80,8 +80,6 @@ class Issue(models.Model, Edit_url_mixin):
 
     @property
     def number(self):
-        # import ipdb
-        # ipdb.set_trace()
 
         issue_list = Issue.objects.filter(
             publication_date__year=self.year

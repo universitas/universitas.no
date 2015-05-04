@@ -2,7 +2,15 @@
 {% load thumbnail %}
 {% load advert_channel %}
 {% load parse_markup %}
-{% block title %}universitas.no – Norges største studentavis.{% endblock title %}
+{% load staticfiles %}
+{% block title %}Universitas – Norges største studentavis{% endblock title %}
+{% block head %}
+  <meta property="og:title" content="Forsiden universitas.no" />
+  <meta property="og:description" content="Norges største studentavis" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="nb_NO" />
+  <meta property="og:image" content="{% static 'images/favicon-128.png' %}" />
+{% endblock head %}
 {% block columns %}
   {% advert "frontpage column left" %}
   {% advert "frontpage column right" %}

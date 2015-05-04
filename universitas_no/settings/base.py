@@ -199,6 +199,8 @@ TEMPLATE_DIRS = (
 TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
     'sekizai.context_processors.sekizai',
     'django.core.context_processors.request',
+    'apps.issues.context_processors.issues',
+    'apps.contributors.context_processors.staff',
 )
 # END TEMPLATES AND FIXTURES CONFIGURATION
 

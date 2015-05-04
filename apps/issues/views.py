@@ -43,6 +43,6 @@ class PubPlanView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['issues'] = self.get_queryset().reverse()
+        context['issue_list'] = self.get_queryset().reverse()
         context['year'] = self.year
         return context

@@ -17,7 +17,7 @@ from collections import namedtuple
 
 from model_utils.models import TimeStampedModel
 from utils.model_mixins import Edit_url_mixin
-from sorl.thumbnail import ImageField
+from sorl.thumbnail import ImageField, get_thumbnail
 
 # Project apps
 
@@ -123,6 +123,10 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
             except ImageFile.DoesNotExist:
                 pass
         super().save(*args, **kwargs)
+
+    def thumb(self, size=500):
+        geometry = '{}x{}'.format(size, size)
+        return get_thumbnail(self.source_file, geometry).url
 
     @property
     def cropping(self):

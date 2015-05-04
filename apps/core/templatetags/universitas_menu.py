@@ -22,13 +22,13 @@ def universitas_menu(active_section):
         ]
     ]
 
-    latest_issue = PrintIssue.objects.exclude(pdf=None).order_by(
+    latest_pdf = PrintIssue.objects.exclude(pdf=None).order_by(
         'issue__publication_date').last()
 
     context = {
         'sections': sections,
         'active_section': active_section,
-        'latest_issue': latest_issue,
+        'latest_pdf': latest_pdf,
     }
     return context
 

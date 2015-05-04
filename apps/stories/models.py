@@ -6,10 +6,7 @@ import re
 import difflib
 import json
 import logging
-# import random
 logger = logging.getLogger('universitas')
-# from slugify import Slugify
-# slugify = Slugify(max_length=50, to_lower=True)
 
 # Django core
 from django.utils.translation import ugettext_lazy as _
@@ -663,6 +660,20 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         all_bylines.append('</table>')
         return '\n'.join(all_bylines)
 
+    def get_bylines(self):
+        translation.activate(settings.LANGUAGE_CODE)
+        authors = []
+        for bl in self.byline_set.select_related('contributor'):
+            authors.append(
+                '{}: {}{}'.format(
+                    bl.get_credit_display(),
+                    bl.contributor.display_name,
+                    ' ({})'.format(bl.title) if bl.title else '',
+                    )
+                )
+        translation.deactivate()
+        return ', '.join(authors)
+
     def image_count(self):
         """ Number of story images related to the story """
         return len(self.images())
@@ -672,6 +683,11 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         top_image = self.images().order_by('-top', 'index').first()
         if top_image:
             return top_image.child
+
+    def thumb(self):
+        image = self.main_image()
+        if image:
+            return image.imagefile.thumb()
 
     @property
     def section(self):
@@ -700,7 +716,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             },)
         return url
 
-    def get_share_link(self):
+    def get_shortlink(self):
         url = reverse(
             viewname='article_short',
             kwargs={
@@ -1205,6 +1221,7 @@ class StoryImage(StoryMedia):
         if name:
             needle = name.group(0)
         return needle.strip()[:60] or str(self.imagefile)
+
 
 
 class StoryVideo(StoryMedia):

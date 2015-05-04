@@ -3,7 +3,19 @@
 {% load byline_image %}
 {% load inline_elements %}
 {% load advert_channel %}
-{% block title %}universitas.no – {{ story.title }}{% endblock title %}
+{% block title %}{{ story.title }} | universitas.no{% endblock title %}
+{% block head %}
+  <meta name="description" content="{{ story.lede }}" />
+  <meta name="author" content="{{ story.get_bylines }}" />
+  <meta property="og:title" content="{{ story.title }}" />
+  <meta property="og:description" content="{{ story.lede }}" />
+  <meta property="og:type" content="article" />
+  <meta property="og:section" content="{{ story.section }}" />
+  <meta property="og:locale" content="nb_NO" />
+  <meta property="og:image" content="{{ story.thumb }}" />
+  <link rel="canonical" href="{{ story.get_absolute_url }}">
+  <link rel="shortlink" href="{{ story.get_shortlink }}">
+{% endblock head %}
 {% block columns %}
   {% advert "story column left" %}
   {% advert "story column right" %}
@@ -56,13 +68,13 @@
         {% endfor %}
         <div class="social-share">
           <div class="icon">
-             <a href="https://www.facebook.com/sharer/sharer.php?u={{ story.get_share_link }}"><i class="icon-facebook"></i></a>
+             <a href="https://www.facebook.com/sharer/sharer.php?u={{ story.get_absolute_url }}"><i class="icon-facebook"></i></a>
           </div>
           <div class="icon">
-             <a href="https://twitter.com/home?status={{ story.get_share_link }}"><i class="icon-twitter"></i></a>
+             <a href="https://twitter.com/home?status={{ story.get_shortlink }}"><i class="icon-twitter"></i></a>
           </div>
           <div class="icon">
-             <a href="https://plus.google.com/share?url={{ story.get_share_link }}"><i class="icon-googleplus"></i></a>
+             <a href="https://plus.google.com/share?url={{ story.get_absolute_url }}"><i class="icon-googleplus"></i></a>
           </div>
           <div class="icon">
              <a href="#comments"><i class="icon-disqus"></i></a>

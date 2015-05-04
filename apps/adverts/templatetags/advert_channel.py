@@ -10,7 +10,6 @@ logger = logging.getLogger('universitas')
 
 @register.inclusion_tag('_advert-channel.html', takes_context=True)
 def advert(context, channel_name):
-    logger.debug('args = {}'.format(channel_name))
     channel, new = AdChannel.objects.get_or_create(name=channel_name)
     if new:
         adformat = AdFormat.objects.order_by('?').first()

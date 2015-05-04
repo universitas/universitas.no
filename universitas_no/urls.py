@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Url config for universitas.no.
-"""
-from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
@@ -16,6 +11,7 @@ from autocomplete_light import urls as autocomplete_light_urls
 # from watson import urls as watson_urls
 
 from django.views.generic import TemplateView, RedirectView
+from django.conf import settings
 
 admin.autodiscover()
 
@@ -30,10 +26,19 @@ urlpatterns = patterns(
     # så lenge id er med, så er det greit.
     url(r'^(?P<story_id>\d+?)/.*$',
         article_view, name='article_short'),
-    url(r'^annonser/',
-        TemplateView.as_view(template_name='annonse-info.html'),
-        name='ad_info',
-        ),
+)
+# Static content
+urlpatterns += patterns(
+    '',
+    url(r'^om_universitas/$',
+        TemplateView.as_view(template_name='general-info.html'),
+        name='general_info',),
+    url(r'^kontakt/$',
+        TemplateView.as_view(template_name='contact-info.html'),
+        name='contact_info',),
+    url(r'^annonser/$',
+        TemplateView.as_view(template_name='advert-info.html'),
+        name='ad_info',),
 )
 
 # PDF and issues

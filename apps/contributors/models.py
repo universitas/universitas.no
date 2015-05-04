@@ -239,7 +239,7 @@ class ContactInfo(models.Model):
 
 class Position(models.Model):
 
-    """ A postion og job in the publication. """
+    """ A postion or job in the publication. """
 
     title = models.CharField(
         help_text=_('Job title at the publication.'),

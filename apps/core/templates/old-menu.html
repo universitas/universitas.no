@@ -34,20 +34,25 @@
   <div class="menu-right">
     <div class="default-panel">
       <div class="row">
-        <div class="panel-2">
-          <h2>Annonser i Universitas</h2>
-          <p>
-            <a href="{% url 'ad_info' %}">Informasjon for annonsører</a>
-          </p>
-          <p>
-            <a href="{% url 'pub_plan' %}">Utgivelsesplan</a>
-          </p>
+        <div class="medium-4 columns">
+          <h2>Om Universitas</h2>
+          <p>Universitas er Norges største studentavis.
+          <p>Avisen har et opplag på 14 000, og kommer ut 35 ganger i året.
+
+          <p>Universitas mottar støtte fra Studentsamskipnaden i Oslo og Akershus (SiO), og alle studenter som betaler semesteravgift er dermed med på å støtte Universitas økonomisk. Papirutgaven av Universitas distribueres rundt på læresteder tilknyttet SiO.
+
+          <p><a href="{% url 'general_info' %}">Les mer</a>
         </div>
-        <div class="panel-3">
+        <div class="medium-4 columns">
+          <h2>Annonser i Universitas</h2>
+          <p><a href="{% url 'ad_info' %}">Informasjon for annonsører <i class="icon-right"></i></a>
+          <p><a href="{% url 'pub_plan' %}">Utgivelsesplan <i class="icon-right"></i></a>
+        </div>
+        <div class="medium-4 columns">
           <h2>PDF-arkiv</h2>
           <div>
             <a href="{% url 'pdf_archive' %}" >
-              {% thumbnail latest_issue.get_thumbnail '150' as thumb  %}
+              {% thumbnail latest_pdf.get_thumbnail '150' as thumb  %}
               <img class="faximile" src="{{ thumb.url }}" ></img>
               {% endthumbnail %}
             </a>

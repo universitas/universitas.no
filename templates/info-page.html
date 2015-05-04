@@ -1,0 +1,31 @@
+{% extends "base-template.html" %}
+{% block content %}
+{% block main_content %}
+{% endblock main_content %}
+  <div class="medium-6 columns">
+    <h3>Generell kontaktinfo</h3>
+    <table>
+    <tr><td>Telefon:<td>22 85 33 36
+    <tr><td>Faks:<td>22 85 32 74
+    <tr><td>Postadresse:<td>Boks 89 Blindern, 0314 Oslo
+    <tr><td>Besøksadresse:<td>Moltke Moes vei 33
+    </table>
+    <h3>Utgivelsesplan</h3>
+    <p>Neste avis er nr {{ issues.next.number }} og kommer ut {{ issues.next.publication_date }}.</p>
+    <p><a href="{% url 'pub_plan' %}">Se hele planen.</a>
+
+    <h3>Annonsering</h3>
+    <p>Kontakt Geir Dorp, eller <a href="{% url 'ad_info' %}">les mer om annonsering.</a>
+
+  </div>
+  <div class="medium-6 columns">
+    <h3>Redaksjonen</h3>
+    <table>
+    {% for person in staff %}
+      <tr>
+        <td>{{ person.position }}:
+        <td><a href="mailto:{{ person.email }}">{{ person.name }}</a>
+    {% endfor %}
+    </table>
+  </div>
+{% endblock content %}
