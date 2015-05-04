@@ -665,10 +665,10 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         authors = []
         for bl in self.byline_set.select_related('contributor'):
             authors.append(
-                '{}: {}{}'.format(
-                    bl.get_credit_display(),
-                    bl.contributor.display_name,
-                    ' ({})'.format(bl.title) if bl.title else '',
+                '{name}{title}'.format(
+                    name=bl.contributor.display_name,
+                    title=', {}'.format(bl.title) if bl.title else '',
+                    credit=bl.get_credit_display(),
                     )
                 )
         translation.deactivate()

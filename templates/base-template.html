@@ -6,6 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block head %}{% endblock head %}
     <title>{% block title %}universitas.no{% endblock %}</title>
     <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
     <link rel="icon" type="image/png" href="{% static 'images/favicon_128.png' %}" />
@@ -17,7 +18,6 @@
     {% endaddtoblock %}
     {% render_block "css" postprocessor "compressor.contrib.sekizai.compress" %}
     <script src="{% static 'js/vendor/modernizr.js' %}"></script>
-    {% block head %}{% endblock head %}
   </head>
 
   <body>
