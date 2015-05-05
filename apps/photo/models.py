@@ -20,6 +20,7 @@ from utils.model_mixins import Edit_url_mixin
 from sorl.thumbnail import ImageField, get_thumbnail
 
 # Project apps
+from apps.issues.models import current_issue
 
 import logging
 logger = logging.getLogger('universitas')
@@ -30,6 +31,14 @@ CASCADE_FILE = os.path.join(
 )
 
 Cropping = namedtuple('Cropping', ['top', 'left', 'diameter'])
+
+
+def image_upload_folder():
+    year, issue = current_issue()
+    return '{}/{}/'.format(year, issue)
+
+def upload_image_to(instance, filename):
+    return image_upload_folder() + filename
 
 
 class ImageFile(TimeStampedModel, Edit_url_mixin):
@@ -52,7 +61,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
         verbose_name_plural = _('ImageFiles')
 
     source_file = ImageField(
-        upload_to='',
+        upload_to=upload_image_to,
         height_field='full_height',
         width_field='full_width',
         max_length=1024,
@@ -290,7 +299,8 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
                     box['right'] - box['left'],
                     box['bottom'] - box['top']
                 )
-                return Cropping(left=left, top=top, diameter=diameter) , len(faces)
+                return Cropping(
+                    left=left, top=top, diameter=diameter), len(faces)
             else:
                 # No faces found
                 return None, len(faces)

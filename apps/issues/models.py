@@ -23,13 +23,16 @@ import os.path
 from utils.model_mixins import Edit_url_mixin
 
 
-# def next_issue():
-#     name = 33
-#     year = 2014
-#     return (year, name)
-    # TODO: issues.models.next_issue() er fake. Må finne neste utgave fra
-    # databasen i stedet.
+def current_issue():
+    """ Return a tuple of year and number for the current issue. """
+    today = timezone.now().date()
+    last_issue = Issue.objects.latest_issue()
+    if last_issue.publication_date == today:
+        current_issue = last_issue
+    else:
+        current_issue = Issue.objects.next_issue()
 
+    return (current_issue.year, current_issue.number)
 
 class IssueQueryset(models.QuerySet):
 

@@ -21,8 +21,7 @@ from apps.legacy_db.models import (
     Sak, Prodsak, Bildetekst, Prodbilde)
 from apps.stories.models import (
     Story, StoryType, Section, StoryImage, InlineLink)
-from apps.photo.models import ImageFile
-from apps.issues.models import Issue
+from apps.photo.models import ImageFile, image_upload_folder
 
 # from apps.contributors.models import Contributor
 from django.core import serializers
@@ -363,13 +362,7 @@ def _create_image_file(filepath, publication_date=None, id=None, prodsys=False):
     # Check that the file exists on the harddrive.
     if prodsys:
 
-        next_issue = Issue.objects.next_issue()
-        year, issue = next_issue.year, next_issue.number
-
-        issue_image_folder = '{year}/{issue}'.format(
-            year=year,
-            issue=issue,
-        )
+        issue_image_folder = image_upload_folder()
 
         staging_image = '{stagingfolder}/{filename}'.format(
             stagingfolder=STAGING_FOLDER,
