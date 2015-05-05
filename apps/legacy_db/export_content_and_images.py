@@ -4,7 +4,9 @@ production system to the new website.
 """
 
 import os
+import errno
 import re
+import shutil
 from pytz import datetime
 # from html.parser import HTMLParser
 from html import unescape
@@ -20,18 +22,26 @@ from apps.legacy_db.models import (
 from apps.stories.models import (
     Story, StoryType, Section, StoryImage, InlineLink)
 from apps.photo.models import ImageFile
+from apps.issues.models import Issue
 
 # from apps.contributors.models import Contributor
 from django.core import serializers
 
 BILDEMAPPE = os.path.join(settings.MEDIA_ROOT, '')
 PDFMAPPE = os.path.join(settings.MEDIA_ROOT, 'pdf')
+STAGING_FOLDER = os.path.join(settings.MEDIA_ROOT, 'STAGING/IMAGES')
 TIMEZONE = timezone.get_current_timezone()
 
 import logging
 logger = logging.getLogger('universitas')
 count = 0
 
+def make_sure_path_exists(path):
+    try:
+        os.makedirs(path)
+    except OSError as exception:
+        if exception.errno != errno.EEXIST:
+            raise
 
 def reset_db_autoincrement():
     """
@@ -91,7 +101,7 @@ def import_prodsys_content(
         text_only=False,
         autocrop=False):
     """ Import all new stories from prodsys. """
-    status = [Prodsak.READY_FOR_WEB,]
+    status = [Prodsak.READY_FOR_WEB, ]
     # status = list(range(Prodsak.READY_FOR_WEB, Prodsak.ARCHIVED))
     objects = Prodsak.objects.filter(produsert__in=status).order_by(
         'prodsak_id').values('prodsak_id').distinct()
@@ -230,6 +240,7 @@ def _importer_prodsak(prodsak_id, replace_existing=False, autocrop=False, import
     # Import images from prodsys to the new Story.
     if import_images:
         _importer_bilder_fra_prodsys(prodsak, new_story, autocrop)
+
     new_story.full_clean()
     new_story.save(new=True)
 
@@ -353,22 +364,43 @@ def _create_image_file(filepath, publication_date=None, id=None, prodsys=False):
 
     # Check that the file exists on the harddrive.
     if prodsys:
-        # year, issue = next_issue()
-        # TODO: Prodsysimport har hardkodet utgave og årstall.
-        filepath = '{year}/{issue}/{filename}'.format(
-            year=2014,
-            issue=33,
-            filename=filepath)
 
-    fullpath = os.path.join(BILDEMAPPE, filepath)
-    if os.path.isfile(fullpath):
+        next_issue = Issue.objects.next_issue()
+        year, issue = next_issue.year, next_issue.number
+
+        image_path = '{imagefolder}{year}/{issue}/{filename}'.format(
+            imagefolder=BILDEMAPPE,
+            year=year,
+            issue=issue,
+            filename=filepath,
+        )
+
+        staging_path = '{stagingfolder}/{filename}'.format(
+            stagingfolder=STAGING_FOLDER,
+            filename=filepath,
+        )
+
+        import ipdb; ipdb.set_trace()
+
+        if os.path.isfile(staging_path):
+            destination_folder = os.path.dirname(image_path)
+            make_sure_path_exists(destination_folder)
+            shutil.copy2(staging_path, destination_folder)
+            msg = 'copied {} from staging to folder {}'.format(filepath, image_path)
+            logger.debug(msg)
+
+    else:
+        # not prodsys
+        image_path = filepath
+
+    if os.path.isfile(image_path):
 
         # Get create and modification dates from the file.
         modified = datetime.datetime.fromtimestamp(
-            os.path.getmtime(fullpath),
+            os.path.getmtime(image_path),
             TIMEZONE)
         created = datetime.datetime.fromtimestamp(
-            os.path.getctime(fullpath),
+            os.path.getctime(image_path),
             TIMEZONE)
         dates = [modified, created, ]
         if publication_date:
@@ -386,8 +418,8 @@ def _create_image_file(filepath, publication_date=None, id=None, prodsys=False):
         try:
             image_file = ImageFile(
                 id=id,
-                old_file_path=filepath,
-                source_file=filepath,
+                old_file_path=image_path,
+                source_file=image_path,
                 created=created,
                 modified=modified,
             )
