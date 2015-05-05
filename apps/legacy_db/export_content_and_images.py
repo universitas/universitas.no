@@ -344,7 +344,7 @@ def _importer_bilder_fra_webside(websak, story, autocrop):
                 image_file.autocrop()
 
 
-def _create_image_file(filepath, publication_date=None, id=None, prodsys=False):
+def _create_image_file(filepath, publication_date=None, pk=None, prodsys=False):
     """ Create an ImageFile object from a filepath. """
     # Check if this ImageFile is registered in the database already.
     try:
@@ -403,7 +403,7 @@ def _create_image_file(filepath, publication_date=None, id=None, prodsys=False):
         # Save ImageFile object in the database.
         try:
             image_file = ImageFile(
-                id=id,
+                pk=pk,
                 old_file_path=filepath,
                 source_file=filepath,
                 created=created,
