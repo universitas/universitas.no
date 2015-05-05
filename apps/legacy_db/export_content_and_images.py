@@ -203,7 +203,6 @@ def _importer_websak(websak):
     new_story.save()
     new_story.clean()
     new_story.save()
-    # import ipdb; ipdb.set_trace()
     logger.debug(
         '{:>5} story saved: {} {}'.format(
             count,
@@ -286,7 +285,6 @@ def _importer_bilder_fra_prodsys(prodsak, story, autocrop):
     prod_bilder = Prodbilde.objects.filter(prodsak_id=prodsak.prodsak_id)
 
     for bilde in prod_bilder:
-        # import ipdb; ipdb.set_trace()
         story_image = None
         # Prepare the image caption.
         caption = bilde.bildetekst or ''
@@ -380,7 +378,6 @@ def _create_image_file(filepath, publication_date=None, id=None, prodsys=False):
             filename=filepath,
         )
 
-        import ipdb; ipdb.set_trace()
 
         if os.path.isfile(staging_path):
             destination_folder = os.path.dirname(image_path)
