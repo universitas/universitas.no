@@ -25,10 +25,10 @@ from utils.model_mixins import Edit_url_mixin
 
 def current_issue():
     """ Return a tuple of year and number for the current issue. """
-    today = timezone.now().date()
-    last_issue = Issue.objects.latest_issue()
-    if last_issue.publication_date == today:
-        current_issue = last_issue
+    today = timezone.now().astimezone().date()
+    latest_issue = Issue.objects.latest_issue()
+    if latest_issue.publication_date == today:
+        current_issue = latest_issue
     else:
         current_issue = Issue.objects.next_issue()
 
