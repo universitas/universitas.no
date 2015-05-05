@@ -193,6 +193,9 @@ class StoryTypeAdmin(admin.ModelAdmin):
         # 'prodsys_mappe',
     )
 
+    raw_id_fields = (
+        'template',
+    )
 
 @admin.register(Byline)
 class BylineAdmin(admin.ModelAdmin):
