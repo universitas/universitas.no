@@ -366,38 +366,34 @@ def _create_image_file(filepath, publication_date=None, id=None, prodsys=False):
         next_issue = Issue.objects.next_issue()
         year, issue = next_issue.year, next_issue.number
 
-        image_path = '{imagefolder}{year}/{issue}/{filename}'.format(
-            imagefolder=BILDEMAPPE,
+        issue_image_folder = '{year}/{issue}'.format(
             year=year,
             issue=issue,
-            filename=filepath,
         )
 
-        staging_path = '{stagingfolder}/{filename}'.format(
+        staging_image = '{stagingfolder}/{filename}'.format(
             stagingfolder=STAGING_FOLDER,
             filename=filepath,
         )
 
-
-        if os.path.isfile(staging_path):
-            destination_folder = os.path.dirname(image_path)
+        if os.path.isfile(staging_image):
+            destination_folder = os.path.join(BILDEMAPPE, issue_image_folder)
             make_sure_path_exists(destination_folder)
-            shutil.copy2(staging_path, destination_folder)
-            msg = 'copied {} from staging to folder {}'.format(filepath, image_path)
+            shutil.copy2(staging_image, destination_folder)
+            msg = 'copied {} from staging to folder {}'.format(filepath, destination_folder)
+            filepath = os.path.join(issue_image_folder, filepath)
             logger.debug(msg)
 
-    else:
-        # not prodsys
-        image_path = filepath
+    full_path = os.path.join(BILDEMAPPE, filepath)
 
-    if os.path.isfile(image_path):
+    if os.path.isfile(full_path):
 
         # Get create and modification dates from the file.
         modified = datetime.datetime.fromtimestamp(
-            os.path.getmtime(image_path),
+            os.path.getmtime(full_path),
             TIMEZONE)
         created = datetime.datetime.fromtimestamp(
-            os.path.getctime(image_path),
+            os.path.getctime(full_path),
             TIMEZONE)
         dates = [modified, created, ]
         if publication_date:
@@ -415,8 +411,8 @@ def _create_image_file(filepath, publication_date=None, id=None, prodsys=False):
         try:
             image_file = ImageFile(
                 id=id,
-                old_file_path=image_path,
-                source_file=image_path,
+                old_file_path=filepath,
+                source_file=filepath,
                 created=created,
                 modified=modified,
             )
