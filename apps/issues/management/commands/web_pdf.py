@@ -20,7 +20,7 @@ PDF_FOLDER = os.path.join(settings.MEDIA_ROOT, 'pdf')
 
 PDF_MERGE = os.path.join(settings.BASE_DIR, 'bin', 'pdf_merge.sh')
 
-FILENAME_PATTERN = 'tassen_{year}-{number}{suffix}.pdf'
+FILENAME_PATTERN = 'universitas_{year}-{number}{suffix}.pdf'
 
 
 class Command(BaseCommand):
