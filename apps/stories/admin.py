@@ -87,7 +87,7 @@ class StoryTypeInline(admin.TabularInline):
 def make_frontpage_story(modeladmin, request, queryset):
     make_frontpage_story.short_description = _('make frontpage story')
     for story in queryset:
-        FrontpageStory.objects.create(story=story)
+        FrontpageStory.objects.autocreate(story=story)
 
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
