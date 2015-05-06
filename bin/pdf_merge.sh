@@ -18,6 +18,7 @@ rgb_profile="$SCRIPT_FOLDER/sRGB.icc"
 /usr/bin/gs \
   -sDefaultCMYKProfile=$cmyk_profile \
   -sDefaultRGBProfile=$rgb_profile \
+  -dProcessColorModel=/DeviceRGB \
   -dColorConversionStrategyForImages=/DeviceRGB \
   -dCompatibilityLevel=1.4 \
   -dBATCH  \
