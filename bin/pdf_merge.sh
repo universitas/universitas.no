@@ -13,14 +13,13 @@ fi
 cmyk_profile="$SCRIPT_FOLDER/ISOnewspaper26v4.icc"
 rgb_profile="$SCRIPT_FOLDER/sRGB.icc"
 
-  # -dProcessColorModel=/DeviceRGB \
 
 # Compile pdf files into multipage document.
 /usr/bin/gs \
   -sDefaultCMYKProfile=$cmyk_profile \
   -sDefaultRGBProfile=$rgb_profile \
-  -dColorConversionStrategy=/DeviceRGB \
   -dColorConversionStrategyForImages=/DeviceRGB \
+  -dCompatibilityLevel=1.4 \
   -dBATCH  \
   -dNOPAUSE  \
   -sDEVICE=pdfwrite  \

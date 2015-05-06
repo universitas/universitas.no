@@ -601,7 +601,7 @@ select {
   .small-5 {
     width: 41.66667%; }
 
-  .small-6, .cols-1, .cols-2, .cols-3, .cols-4, .cols-5, .cols-6, .panel-2, .panel-3 {
+  .small-6, .panel-2, .panel-3 {
     width: 50%; }
 
   .small-7 {
@@ -619,7 +619,7 @@ select {
   .small-11 {
     width: 91.66667%; }
 
-  .small-12, .cols-7, .cols-8, .cols-9, .cols-10, .cols-11, .cols-12, .panel-1, .search-results .wrapper {
+  .small-12, .cols-1, .cols-2, .cols-3, .cols-4, .cols-5, .cols-6, .cols-7, .cols-8, .cols-9, .cols-10, .cols-11, .cols-12, .panel-1, .search-results .wrapper {
     width: 100%; }
 
   .small-offset-0 {
@@ -2873,209 +2873,231 @@ th.hide-for-touch {
     margin: 0; }
 
 .cols-1 h1 {
-  font-size: 1.5em; }
+  font-size: 1.5rem; }
+@media only screen and (max-width: 40em) {
+  .cols-1 .image-block {
+    display: none; } }
 @media only screen and (min-width: 40.063em) {
   .cols-1 h2 {
-    font-size: 0.9em; }
+    font-size: 0.9rem; }
   .cols-1 .headline-s h1 {
-    font-size: 1.5em; }
+    font-size: 1.5rem; }
   .cols-1 .headline-m h1 {
-    font-size: 1.5em; }
+    font-size: 1.5rem; }
   .cols-1 .headline-l h1 {
-    font-size: 1.5em; }
+    font-size: 1.5rem; }
   .cols-1 .headline-xl h1 {
-    font-size: 1.5em; } }
+    font-size: 1.5rem; } }
 
 .cols-2 h1 {
-  font-size: 1.5em; }
+  font-size: 1.5rem; }
+@media only screen and (max-width: 40em) {
+  .cols-2 .image-block {
+    display: none; } }
 @media only screen and (min-width: 40.063em) {
   .cols-2 h2 {
-    font-size: 0.9em; }
+    font-size: 0.9rem; }
   .cols-2 .headline-s h1 {
-    font-size: 1.5em; }
+    font-size: 1.5rem; }
   .cols-2 .headline-m h1 {
-    font-size: 1.5em; }
+    font-size: 1.5rem; }
   .cols-2 .headline-l h1 {
-    font-size: 1.5em; }
+    font-size: 1.5rem; }
   .cols-2 .headline-xl h1 {
-    font-size: 1.5em; } }
+    font-size: 1.5rem; } }
 
 .cols-3 h1 {
-  font-size: 1.5em; }
+  font-size: 1.5rem; }
+@media only screen and (max-width: 40em) {
+  .cols-3 .image-block {
+    display: none; } }
 @media only screen and (min-width: 40.063em) {
   .cols-3 h2 {
-    font-size: 0.9em; }
+    font-size: 0.9rem; }
   .cols-3 .headline-s h1 {
-    font-size: 2.25em; }
+    font-size: 2.25rem; }
   .cols-3 .headline-m h1 {
-    font-size: 1.5em; }
+    font-size: 1.5rem; }
   .cols-3 .headline-l h1 {
-    font-size: 1.5em; }
+    font-size: 1.5rem; }
   .cols-3 .headline-xl h1 {
-    font-size: 1.5em; } }
+    font-size: 1.5rem; } }
 
 .cols-4 h1 {
-  font-size: 1.5em; }
+  font-size: 1.5rem; }
+@media only screen and (max-width: 40em) {
+  .cols-4 .image-block {
+    display: none; } }
 @media only screen and (min-width: 40.063em) {
   .cols-4 h2 {
-    font-size: 0.9em; }
+    font-size: 0.9rem; }
   .cols-4 .headline-s h1 {
-    font-size: 3em; }
+    font-size: 3rem; }
   .cols-4 .headline-m h1 {
-    font-size: 2em; }
+    font-size: 2rem; }
   .cols-4 .headline-l h1 {
-    font-size: 1.5em; }
+    font-size: 1.5rem; }
   .cols-4 .headline-xl h1 {
-    font-size: 1.5em; } }
+    font-size: 1.5rem; } }
 
 .cols-5 h1 {
-  font-size: 1.5em; }
+  font-size: 1.5rem; }
+@media only screen and (max-width: 40em) {
+  .cols-5 .image-block {
+    display: none; } }
 @media only screen and (min-width: 40.063em) {
   .cols-5 h2 {
-    font-size: 0.9em; }
+    font-size: 0.9rem; }
   .cols-5 .headline-s h1 {
-    font-size: 3.75em; }
+    font-size: 3.75rem; }
   .cols-5 .headline-m h1 {
-    font-size: 2.5em; }
+    font-size: 2.5rem; }
   .cols-5 .headline-l h1 {
-    font-size: 1.875em; }
+    font-size: 1.875rem; }
   .cols-5 .headline-xl h1 {
-    font-size: 1.5em; } }
+    font-size: 1.5rem; } }
 
 .cols-6 h1 {
-  font-size: 1.5em; }
+  font-size: 1.5rem; }
+@media only screen and (max-width: 40em) {
+  .cols-6 .image-block {
+    display: none; } }
 @media only screen and (min-width: 40.063em) {
   .cols-6 h2 {
-    font-size: 0.9em; }
+    font-size: 0.9rem; }
   .cols-6 .headline-s h1 {
-    font-size: 4.5em; }
+    font-size: 4.5rem; }
   .cols-6 .headline-m h1 {
-    font-size: 3em; }
+    font-size: 3rem; }
   .cols-6 .headline-l h1 {
-    font-size: 2.25em; }
+    font-size: 2.25rem; }
   .cols-6 .headline-xl h1 {
-    font-size: 1.5em; } }
+    font-size: 1.5rem; } }
 
 .cols-7 h1 {
-  font-size: 1.5em; }
+  font-size: 1.5rem; }
 @media only screen and (min-width: 40.063em) {
   .cols-7 h2 {
-    font-size: 1.05em; }
+    font-size: 1.05rem; }
   .cols-7 .headline-s h1 {
-    font-size: 5.25em; }
+    font-size: 5.25rem; }
   .cols-7 .headline-m h1 {
-    font-size: 3.5em; }
+    font-size: 3.5rem; }
   .cols-7 .headline-l h1 {
-    font-size: 2.625em; }
+    font-size: 2.625rem; }
   .cols-7 .headline-xl h1 {
-    font-size: 1.75em; } }
+    font-size: 1.75rem; } }
 
 .cols-8 h1 {
-  font-size: 1.5em; }
+  font-size: 1.5rem; }
 @media only screen and (min-width: 40.063em) {
   .cols-8 h2 {
-    font-size: 1.2em; }
+    font-size: 1.2rem; }
   .cols-8 .headline-s h1 {
-    font-size: 6em; }
+    font-size: 6rem; }
   .cols-8 .headline-m h1 {
-    font-size: 4em; }
+    font-size: 4rem; }
   .cols-8 .headline-l h1 {
-    font-size: 3em; }
+    font-size: 3rem; }
   .cols-8 .headline-xl h1 {
-    font-size: 2em; } }
+    font-size: 2rem; } }
 
 .cols-9 h1 {
-  font-size: 1.5em; }
+  font-size: 1.5rem; }
 @media only screen and (min-width: 40.063em) {
   .cols-9 h2 {
-    font-size: 1.35em; }
+    font-size: 1.35rem; }
   .cols-9 .headline-s h1 {
-    font-size: 6.75em; }
+    font-size: 6.75rem; }
   .cols-9 .headline-m h1 {
-    font-size: 4.5em; }
+    font-size: 4.5rem; }
   .cols-9 .headline-l h1 {
-    font-size: 3.375em; }
+    font-size: 3.375rem; }
   .cols-9 .headline-xl h1 {
-    font-size: 2.25em; } }
+    font-size: 2.25rem; } }
 
 .cols-10 h1 {
-  font-size: 1.5em; }
+  font-size: 1.5rem; }
 @media only screen and (min-width: 40.063em) {
   .cols-10 h2 {
-    font-size: 1.5em; }
+    font-size: 1.5rem; }
   .cols-10 .headline-s h1 {
-    font-size: 7.5em; }
+    font-size: 7.5rem; }
   .cols-10 .headline-m h1 {
-    font-size: 5em; }
+    font-size: 5rem; }
   .cols-10 .headline-l h1 {
-    font-size: 3.75em; }
+    font-size: 3.75rem; }
   .cols-10 .headline-xl h1 {
-    font-size: 2.5em; } }
+    font-size: 2.5rem; } }
 
 .cols-11 h1 {
-  font-size: 1.5em; }
+  font-size: 1.5rem; }
 @media only screen and (min-width: 40.063em) {
   .cols-11 h2 {
-    font-size: 1.65em; }
+    font-size: 1.65rem; }
   .cols-11 .headline-s h1 {
-    font-size: 8.25em; }
+    font-size: 8.25rem; }
   .cols-11 .headline-m h1 {
-    font-size: 5.5em; }
+    font-size: 5.5rem; }
   .cols-11 .headline-l h1 {
-    font-size: 4.125em; }
+    font-size: 4.125rem; }
   .cols-11 .headline-xl h1 {
-    font-size: 2.75em; } }
+    font-size: 2.75rem; } }
 
 .cols-12 h1 {
-  font-size: 1.5em; }
+  font-size: 1.5rem; }
 @media only screen and (min-width: 40.063em) {
   .cols-12 h2 {
-    font-size: 1.8em; }
+    font-size: 1.8rem; }
   .cols-12 .headline-s h1 {
-    font-size: 9em; }
+    font-size: 9rem; }
   .cols-12 .headline-m h1 {
-    font-size: 6em; }
+    font-size: 6rem; }
   .cols-12 .headline-l h1 {
-    font-size: 4.5em; }
+    font-size: 4.5rem; }
   .cols-12 .headline-xl h1 {
-    font-size: 3em; } }
+    font-size: 3rem; } }
 
-@media only screen {
+@media only screen and (max-width: 40em) {
   .rows-1 {
-    min-height: 80px; } }
+    border-top: 1px solid #eeeeee;
+    min-height: auto; } }
 @media only screen and (min-width: 40.063em) {
   .rows-1 {
-    min-height: 100px; } }
+    min-height: 120px; } }
 @media only screen and (min-width: 64.063em) {
   .rows-1 {
     min-height: 150px; } }
 
-@media only screen {
+@media only screen and (max-width: 40em) {
   .rows-2 {
-    min-height: 160px; } }
+    border-top: 1px solid #eeeeee;
+    min-height: auto; } }
 @media only screen and (min-width: 40.063em) {
   .rows-2 {
-    min-height: 200px; } }
+    min-height: 240px; } }
 @media only screen and (min-width: 64.063em) {
   .rows-2 {
     min-height: 300px; } }
 
-@media only screen {
+@media only screen and (max-width: 40em) {
   .rows-3 {
-    min-height: 240px; } }
+    border-top: 1px solid #eeeeee;
+    min-height: auto; } }
 @media only screen and (min-width: 40.063em) {
   .rows-3 {
-    min-height: 300px; } }
+    min-height: 360px; } }
 @media only screen and (min-width: 64.063em) {
   .rows-3 {
     min-height: 450px; } }
 
-@media only screen {
+@media only screen and (max-width: 40em) {
   .rows-4 {
-    min-height: 320px; } }
+    border-top: 1px solid #eeeeee;
+    min-height: auto; } }
 @media only screen and (min-width: 40.063em) {
   .rows-4 {
-    min-height: 400px; } }
+    min-height: 480px; } }
 @media only screen and (min-width: 64.063em) {
   .rows-4 {
     min-height: 600px; } }
@@ -3090,7 +3112,9 @@ th.hide-for-touch {
     line-height: 1em; }
   .story-block .frontpage-kicker {
     text-transform: uppercase;
-    line-height: 1rem; }
+    font-weight: 400;
+    font-size: 1em;
+    line-height: 1em; }
   .story-block .text-block {
     background: white;
     width: 100%;
@@ -3099,13 +3123,14 @@ th.hide-for-touch {
       color: #333333;
       line-height: 1.4em;
       margin: 0; }
-  .story-block .image-block {
-    position: relative; }
-    .story-block .image-block + .text-block {
-      margin: .5rem 0 .5rem 0;
-      position: absolute;
-      bottom: 0;
-      z-index: 10; }
+  @media only screen and (min-width: 40.063em) {
+    .story-block .image-block {
+      position: relative; }
+      .story-block .image-block + .text-block {
+        margin: .5rem 0 .5rem 0;
+        position: absolute;
+        bottom: 0;
+        z-index: 10; } }
 
 .grey .text-block {
   background: #EEE;

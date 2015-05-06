@@ -2,15 +2,16 @@
 
 $cols-slug: cols;
 $rows-slug: rows;
-$base-headline: 3em;
+$base-headline: 3rem;
 $block-height-l: 150px;
-$block-height-m: 100px;
+$block-height-m: 120px;
 $block-height-s: 80px;
 $minimum-height: 00px;
-$minimum-headline: 1.5em;
+$minimum-headline: 1.5rem;
 
 @for $columns from 1 through 12 {
-  $small-cols: ".small-" + ceil($columns/6) * 6;
+  // $small-cols: ".small-" + ceil($columns/6) * 6;
+  $small-cols: ".small-" + 12;
   $medium-cols: ".medium-" + $columns;
 
   $headline-size: $base-headline * $columns / 6;
@@ -24,6 +25,13 @@ $minimum-headline: 1.5em;
     h1 { font-size: $base-headline / 2; }
     @extend #{$medium-cols};
     @extend #{$small-cols};
+    @if $columns <= 6 {
+      @media #{$small-only} {
+        .image-block {
+          display: none;
+        }
+      }
+    }
     @media #{$medium-up} {
     h2 { font-size: $xl*.6; }
     .headline-s  h1 { font-size: $s; }
@@ -36,8 +44,9 @@ $minimum-headline: 1.5em;
 
 @for $height from 1 through 4 {
   .#{$rows-slug}-#{$height} {
-    @media #{$small-up} {
-      min-height: $block-height-s * $height;
+    @media #{$small-only} {
+      border-top: $separator-line;
+      min-height: auto;
     }
     @media #{$medium-up} {
       min-height: $block-height-m * $height;
@@ -67,8 +76,9 @@ $minimum-headline: 1.5em;
     // background: $dark-grey;
     // color: white;
     text-transform: uppercase;
-    // font-size: 1rem;
-    line-height: 1rem;
+    font-weight: 400;
+    font-size: 1em;
+    line-height: 1em;
   }
 
   .text-block {
@@ -82,12 +92,14 @@ $minimum-headline: 1.5em;
     }
   }
   .image-block {
-    position: relative;
-    & + .text-block {
-      margin: .5rem 0 .5rem 0;
-      position: absolute;
-      bottom: 0;
-      z-index: 10;
+    @media #{$medium-up} {
+      position: relative;
+      & + .text-block {
+        margin: .5rem 0 .5rem 0;
+        position: absolute;
+        bottom: 0;
+        z-index: 10;
+      }
     }
   }
 }

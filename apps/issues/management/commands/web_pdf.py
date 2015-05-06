@@ -79,4 +79,3 @@ class Command(BaseCommand):
             if new:
                 name = '{number}/{year}{suffix}'.format(**locals())
                 issue.issue_name = name
-                issue.get_thumbnail()
