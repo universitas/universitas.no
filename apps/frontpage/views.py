@@ -18,8 +18,9 @@ def frontpage_layout(blocks):
     PIX_H = 150  # pixels per row
     MIN_H = -50
     HEADLINE_SIZES = [
-        (10, 's'),
-        (20, 'm'),
+        (12, 'xs'),
+        (16, 's'),
+        (22, 'm'),
         (30, 'l'),
     ]
 
