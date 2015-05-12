@@ -10,8 +10,10 @@ from fuzzywuzzy import fuzz
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.contrib.auth.models import Group
 
 from apps.photo.models import ImageFile
 import logging
@@ -22,20 +24,40 @@ BYLINE_PHOTO_FOLDER = os.path.normpath(
     os.path.join(settings.MEDIA_ROOT, 'byline'))
 
 
+def today():
+    return timezone.now().date()
+
+
 class Contributor(models.Model):
 
     """ Someone who contributes content to the newspaper or other staff. """
 
-    # TODO: Implement foreignkeys to positions, user and contact_info
+    UNKNOWN = 0
+    ACTIVE = 1
+    RETIRED = 2
+    EXTERNAL = 3
+
+    STATUS_CHOICES = [
+        (UNKNOWN, _('Unknown')),
+        (ACTIVE, _('Active')),
+        (RETIRED, _('Retired')),
+        (EXTERNAL, _('External')),
+    ]
+
     # user = models.ForeignKey(User, blank=True, null=True)
-    # position = models.ForeignKey('Position')
-    # contact_info = models.ForeignKey('ContactInfo')
+    status = models.PositiveSmallIntegerField(
+        choices=STATUS_CHOICES,
+        default=UNKNOWN,
+    )
     display_name = models.CharField(blank=True, max_length=50)
     aliases = models.TextField(blank=True)
     initials = models.CharField(blank=True, null=True, max_length=5)
+    phone = models.CharField(blank=True, null=True, max_length=20)
+    email = models.EmailField(blank=True, null=True)
     verified = models.BooleanField(
         help_text=_('Verified to be a correct name.'),
-        default=False)
+        default=False,
+    )
     byline_photo = models.ForeignKey(
         ImageFile,
         related_name='person',
@@ -111,7 +133,6 @@ class Contributor(models.Model):
         Tries to avoid creation of multiple contributor instances
         for a single real contributor.
         """
-        # import ipdb; ipdb.set_trace()
         full_name = re.sub('\(.*?\)', '', input_name)[:50].strip()
         if not full_name:
             return []
@@ -166,7 +187,6 @@ class Contributor(models.Model):
                     candidates.append(contributor)
             return candidates or None
 
-
         # Variuous queries to look for contributor in the database.
         contributor = (
             search_for_full_name() or
@@ -177,7 +197,7 @@ class Contributor(models.Model):
             # search_for_initials() or
         )
 
-        if type(contributor) is list:
+        if isinstance(contributor, list):
             combined_byline = ' '.join([c.display_name for c in contributor])
             ratio = fuzz.token_sort_ratio(combined_byline, full_name)
             msg = 'ratio: {ratio} {combined} -> {full_name}'.format(
@@ -205,36 +225,34 @@ class Contributor(models.Model):
         return [contributor]
 
 
-class ContactInfo(models.Model):
+# class ContactInfo(models.Model):
 
-    """
-    Contact information for contributors and others.
-    """
+#     """
+#     Contact information for contributors and others.
+#     """
 
-    PERSON = _('Person')
-    INSTITUTION = _('Institution')
-    POSITION = _('Position')
-    CONTACT_TYPES = (
-        ("Person", PERSON),
-        ("Institution", INSTITUTION),
-        ("Position", POSITION),
-    )
+#     PERSON = _('Person')
+#     INSTITUTION = _('Institution')
+#     POSITION = _('Position')
+#     CONTACT_TYPES = (
+#         ("Person", PERSON),
+#         ("Institution", INSTITUTION),
+#         ("Position", POSITION),
+#     )
 
-    name = models.CharField(blank=True, null=True, max_length=200)
-    title = models.CharField(blank=True, null=True, max_length=200)
-    phone = models.CharField(blank=True, null=True, max_length=20)
-    email = models.EmailField(blank=True, null=True)
-    postal_address = models.CharField(blank=True, null=True, max_length=200)
-    street_address = models.CharField(blank=True, null=True, max_length=200)
-    webpage = models.URLField()
-    contact_type = models.CharField(choices=CONTACT_TYPES, max_length=50)
+#     name = models.CharField(blank=True, null=True, max_length=200)
+#     title = models.CharField(blank=True, null=True, max_length=200)
+#     postal_address = models.CharField(blank=True, null=True, max_length=200)
+#     street_address = models.CharField(blank=True, null=True, max_length=200)
+#     webpage = models.URLField()
+#     contact_type = models.CharField(choices=CONTACT_TYPES, max_length=50)
 
-    class Meta:
-        verbose_name = _('ContactInfo')
-        verbose_name_plural = _('ContactInfo')
+#     class Meta:
+#         verbose_name = _('ContactInfo')
+#         verbose_name_plural = _('ContactInfo')
 
-    def __str__(self):
-        return self.name
+#     def __unicode__(self):
+#         return self.name
 
 
 class Position(models.Model):
@@ -245,16 +263,39 @@ class Position(models.Model):
         help_text=_('Job title at the publication.'),
         unique=True, max_length=50)
 
+    groups = models.ManyToManyField(
+        Group,
+        help_text=_('Group membership'),
+    )
+
     class Meta:
         verbose_name = _('Position')
         verbose_name_plural = _('Positions')
 
     def __str__(self):
-        pass
+        return '{}'.format(self.title)
 
-    def save(self):
-        pass
+    def active(self, when=None):
+        if when is None:
+            when = today()
+        results = Stint.objects.filter(
+            position=self, start_date__gte=when
+        ).exclude(end_date__lt=when)
+        return results
 
-    @models.permalink
-    def get_absolute_url(self):
-        return ('')
+
+class Stint(models.Model):
+
+    """ The period a Contributor serves in a Position. """
+
+    position = models.ForeignKey(Position)
+    contributor = models.ForeignKey(Contributor)
+    start_date = models.DateField(
+        default=today,
+    )
+    end_date = models.DateField(
+        blank=True, null=True
+    )
+
+    def __str__(self):
+        return '{} {}'.format(self.position, self.contributor)

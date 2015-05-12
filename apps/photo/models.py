@@ -98,15 +98,18 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
         default=CROP_CHOICES[0][0],
         help_text=_('How this image has been cropped.'),
     )
+
     old_file_path = models.CharField(
         help_text=_('previous path if the image has been moved.'),
         blank=True, null=True,
         max_length=1000)
+
     contributor = models.ForeignKey(
         'contributors.Contributor',
         help_text=_('who made this'),
         blank=True, null=True,
     )
+
     copyright_information = models.CharField(
         help_text=_('extra information about license and attribution if needed.'),
         blank=True,

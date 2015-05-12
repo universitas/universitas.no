@@ -35,6 +35,7 @@ import logging
 logger = logging.getLogger('universitas')
 count = 0
 
+
 def make_sure_path_exists(path):
     try:
         os.makedirs(path)
@@ -42,13 +43,18 @@ def make_sure_path_exists(path):
         if exception.errno != errno.EEXIST:
             raise
 
+
 def reset_db_autoincrement():
     """
     updates the next autoincrement value for primary keys in tables that
     have been populated using primary keys from legacy database.
     """
     cursor = connection.cursor()
-    tables = ['photo_imagefile', 'stories_story', 'stories_storytype', 'django_migrations']
+    tables = [
+        'photo_imagefile',
+        'stories_story',
+        'stories_storytype',
+        'django_migrations']
     sql_pattern = (
         "SELECT setval('{table}_id_seq'"
         ", (SELECT MAX(id) FROM {table})+1)"
@@ -114,6 +120,9 @@ def import_prodsys_content(
 
     for prodsak_id in prodsak_ids:
         _importer_prodsak(prodsak_id, replace_existing, autocrop, import_images)
+        Prodsak.objects.filter(
+            prodsak_id=prodsak_id, produsert__in=status
+        ).update(produsert=Prodsak.PUBLISHED_ON_WEB)
 
 
 def _importer_websak(websak):
@@ -210,7 +219,11 @@ def _importer_websak(websak):
     return new_story
 
 
-def _importer_prodsak(prodsak_id, replace_existing=False, autocrop=False, import_images=True):
+def _importer_prodsak(
+        prodsak_id,
+        replace_existing=False,
+        autocrop=False,
+        import_images=True):
     """
     Create a Story with images from a prodsak object in the prodsys database.
     """
@@ -243,12 +256,12 @@ def _importer_prodsak(prodsak_id, replace_existing=False, autocrop=False, import
     new_story.save(new=True)
 
     # Update the prodsys object if needed.
-    if prodsak.produsert == Prodsak.READY_FOR_WEB:
-        prodsak.produsert = Prodsak.PUBLISHED_ON_WEB
-        prodsak.kommentar = (
-            prodsak.kommentar or '') + '\n\n Importert til nettside'
-        prodsak.save()
-        logger.debug('prodsak updated: {}'.format(prodsak))
+    # if prodsak.produsert == Prodsak.READY_FOR_WEB:
+    #     prodsak.produsert = Prodsak.PUBLISHED_ON_WEB
+    #     prodsak.kommentar = (
+    #         prodsak.kommentar or '') + '\n\n Importert til nettside'
+    #     prodsak.save()
+    #     logger.debug('prodsak updated: {}'.format(prodsak))
 
 
 def _get_xtags_from_prodsys(prodsak_id, status_in=None):
@@ -348,7 +361,7 @@ def _create_image_file(filepath, publication_date=None, pk=None, prodsys=False):
     """ Create an ImageFile object from a filepath. """
     # Check if this ImageFile is registered in the database already.
     try:
-        return ImageFile.objects.get(id=id)
+        return ImageFile.objects.get(pk=pk)
     except ImageFile.DoesNotExist:
         pass
     try:
@@ -373,7 +386,9 @@ def _create_image_file(filepath, publication_date=None, pk=None, prodsys=False):
             destination_folder = os.path.join(BILDEMAPPE, issue_image_folder)
             make_sure_path_exists(destination_folder)
             shutil.copy2(staging_image, destination_folder)
-            msg = 'copied {} from staging to folder {}'.format(filepath, destination_folder)
+            msg = 'copied {} from staging to folder {}'.format(
+                filepath,
+                destination_folder)
             filepath = os.path.join(issue_image_folder, filepath)
             logger.debug(msg)
 
