@@ -7,6 +7,7 @@ from django.core.management.base import BaseCommand  # ,CommandError
 from django.conf import settings
 
 import os
+from datetime import datetime
 import subprocess
 # import re
 from glob import glob
@@ -40,9 +41,15 @@ class Command(BaseCommand):
             folder=PDF_STAGING,
             version=magazine,
         )
-        print(globpattern)
-        files = glob(globpattern)
-        return sorted(files)
+        all_files = glob(globpattern)
+        new_files = []
+        for pdf_file in all_files:
+            age = datetime.now() - datetime.fromtimestamp(os.path.getctime(pdf_file))
+            if age.days > 4:
+                os.remove(pdf_file)
+            else:
+                new_files.append(pdf_file)
+        return sorted(new_files)
 
     def handle(self, *args, **options):
         """ Finds pdf files on disks and creates PrintIssue objects. """
