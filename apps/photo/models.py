@@ -136,9 +136,9 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
                 pass
         super().save(*args, **kwargs)
 
-    def thumb(self, size=500):
-        geometry = '{}x{}'.format(size, size)
-        return get_thumbnail(self.source_file, geometry).url
+    def thumb(self, height=315, width=600):
+        geometry = '{}x{}'.format(width, height)
+        return get_thumbnail(self.source_file, geometry, crop=self.get_crop()).url
 
     @property
     def cropping(self):

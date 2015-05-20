@@ -44,7 +44,8 @@ class Command(BaseCommand):
         all_files = glob(globpattern)
         new_files = []
         for pdf_file in all_files:
-            age = datetime.now() - datetime.fromtimestamp(os.path.getctime(pdf_file))
+            age = datetime.now() - \
+                datetime.fromtimestamp(os.path.getctime(pdf_file))
             if age.days > 4:
                 os.remove(pdf_file)
             else:
@@ -52,6 +53,7 @@ class Command(BaseCommand):
         return sorted(new_files)
 
     def handle(self, *args, **options):
+
         """ Finds pdf files on disks and creates PrintIssue objects. """
 
         for code, suffix in (1, ''), (2, '_mag'):
@@ -60,7 +62,7 @@ class Command(BaseCommand):
                 year=year,
                 number=number,
                 suffix=suffix,
-                )
+            )
             files = self.get_staging_pdf_files(code)
 
             if len(files) == 0:
@@ -82,7 +84,7 @@ class Command(BaseCommand):
             logger.debug(msg)
             subprocess.call(args)
 
-            issue, new = PrintIssue.objects.get_or_create(pdf='pdf/'+filename)
+            issue, new = PrintIssue.objects.get_or_create(pdf='pdf/' + filename)
             if new:
                 name = '{number}/{year}{suffix}'.format(**locals())
                 issue.issue_name = name
