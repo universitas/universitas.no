@@ -47,7 +47,7 @@ INSTALLED_APPS = (
     'apps.adverts',
     'apps.search',
     'functional_tests',
-    )
+)
 
 # THIRD PARTY APPS
 INSTALLED_APPS = (
@@ -58,7 +58,7 @@ INSTALLED_APPS = (
     'sekizai',
     'sorl.thumbnail',
     'watson',
-    ) + INSTALLED_APPS
+) + INSTALLED_APPS
 
 # CORE APPS
 INSTALLED_APPS = (
@@ -68,7 +68,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    ) + INSTALLED_APPS
+) + INSTALLED_APPS
 
 
 MIDDLEWARE_CLASSES = (
@@ -82,7 +82,6 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'universitas_no.urls'
 WSGI_APPLICATION = 'universitas_no.wsgi.application'
-
 
 
 LOGIN_REDIRECT_URL = '/'
@@ -114,9 +113,10 @@ DATABASES = {
 }
 DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
 
-#SORL
+# SORL
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
-THUMBNAIL_ENGINE = 'apps.photo.thumbnail_engine.CloseCropEngine'
+THUMBNAIL_ENGINE = 'apps.photo.custom_thumbnail_classes.CloseCropEngine'
+THUMBNAIL_BACKEND = 'apps.photo.custom_thumbnail_classes.KeepNameThumbnailBackend'
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
 FILE_UPLOAD_PERMISSIONS = 0o664
 
@@ -139,9 +139,9 @@ CACHES = {
 }
 
 
-# # When using unix domain sockets with Redis
-# # Note: ``LOCATION`` needs to be the same as the ``unixsocket`` setting
-# # in your redis.conf
+# When using unix domain sockets with Redis
+# Note: ``LOCATION`` needs to be the same as the ``unixsocket`` setting
+# in your redis.conf
 # CACHES = {
 #     'default': {
 #         'BACKEND': 'redis_cache.RedisCache',
@@ -170,13 +170,12 @@ USE_L10N = True  # Localisation (numbers and stuff)
 USE_TZ = True  # Use timezone
 LOCALE_PATHS = (
     normpath(join(BASE_DIR, 'translation')),
-    )
+)
 
 DATE_FORMAT = 'j. F, Y'
 DATETIME_FORMAT = 'Y-m-d H:i'
 SHORT_DATE_FORMAT = 'Y-m-d'
 SHORT_DATETIME_FORMAT = 'y-m-d H:i'
-
 
 
 # MEDIA_ROOT = normpath(join(PHOTO_ARCHIVE, 'upload'))
@@ -208,62 +207,26 @@ LOG_FOLDER = normpath(join(PROJECT_ROOT_FOLDER, 'logs'))
 
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
+    'version': 1, 'disable_existing_loggers': False, 'formatters': {
         'verbose': {
-            'format': '%(name)s%(levelname)6s %(filename)25s:%(lineno)-4d (%(funcName)s) - %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
-        'minimal': {
-            'format': '%(message)s'
-        },
-    },
-    'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler',
-        },
-        'stream_to_console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-        'file': {
-            'level': 'WARNING',
-            'class': 'logging.FileHandler',
-            'filename':   normpath(join(LOG_FOLDER, 'django.log')),
-            'formatter': 'verbose',
-        },
-        'bylines_file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename':   normpath(join(LOG_FOLDER, 'bylines.log')),
-            'formatter': 'minimal',
-        },
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins', 'stream_to_console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'universitas': {
-            'handlers': ['stream_to_console', 'file',],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-        'bylines': {
-            'handlers': ['bylines_file',],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-        'sorl.thumbnail': {
-            'handlers': ['file',],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-    }
-}
+            'format': '%(name)s%(levelname)6s %(filename)25s:%(lineno)-4d (%(funcName)s) - %(message)s'}, 'simple': {
+                'format': '%(levelname)s %(message)s'}, 'minimal': {
+                    'format': '%(message)s'}, }, 'handlers': {
+                        'mail_admins': {
+                            'level': 'ERROR', 'class': 'django.utils.log.AdminEmailHandler', }, 'stream_to_console': {
+                                'level': 'DEBUG', 'class': 'logging.StreamHandler', 'formatter': 'verbose', }, 'file': {
+                                    'level': 'WARNING', 'class': 'logging.FileHandler', 'filename': normpath(
+                                        join(
+                                            LOG_FOLDER, 'django.log')), 'formatter': 'verbose', }, 'bylines_file': {
+                                                'level': 'DEBUG', 'class': 'logging.FileHandler', 'filename': normpath(
+                                                    join(
+                                                        LOG_FOLDER, 'bylines.log')), 'formatter': 'minimal', }, }, 'loggers': {
+                                                            'django.request': {
+                                                                'handlers': [
+                                                                    'mail_admins', 'stream_to_console'], 'level': 'DEBUG', 'propagate': True, }, 'universitas': {
+                                                                        'handlers': [
+                                                                            'stream_to_console', 'file', ], 'level': 'DEBUG', 'propagate': False, }, 'bylines': {
+                                                                                'handlers': [
+                                                                                    'bylines_file', ], 'level': 'DEBUG', 'propagate': False, }, 'sorl.thumbnail': {
+                                                                                        'handlers': [
+                                                                                            'file', ], 'level': 'ERROR', 'propagate': False, }, }}
