@@ -36,7 +36,7 @@ def inline_storyimage(context, argument_string):
     # context['elements'] += [i.child for i in videos]
     images = context['elements']
     if images:
-        first_image = images['elements'][0]
+        first_image = images[0]
     height = first_image.get_height(width, height)
     size = '{}x{}'.format(width, height)
     if len(images) > 1:
