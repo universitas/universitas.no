@@ -34,10 +34,12 @@ def inline_storyimage(context, argument_string):
     # videos = story.videos().inline()
     context = get_items(images, argument_string)
     # context['elements'] += [i.child for i in videos]
-    first_image = context['elements'][0]
+    images = context['elements']
+    if images:
+        first_image = images['elements'][0]
     height = first_image.get_height(width, height)
     size = '{}x{}'.format(width, height)
-    if len(context['elements']) > 1:
+    if len(images) > 1:
         context['slideshow'] = True
     context['img_size'] = size
     return context

@@ -1222,14 +1222,10 @@ class StoryMedia(StoryElement, MarkupModelMixin):
 
         if self.aspect_ratio == self.DEFAULT_RATIO:
             height = height
-            msg = 'default'
         elif self.aspect_ratio == self.ORIGINAL_RATIO:
             height = width * self.original_ratio()
-            msg = 'original {}'.format(self.original_ratio())
         else:
             height = width * self.aspect_ratio
-            msg = self.get_aspect_ratio_display()
-        logger.debug('{} {}'.format(self, msg))
         return int(height)
 
     def save(self, *args, **kwargs):
