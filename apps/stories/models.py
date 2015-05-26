@@ -1213,7 +1213,6 @@ class StoryMedia(StoryElement, MarkupModelMixin):
         default=DEFAULT_RATIO,
     )
 
-
     def original_ratio(self):
         """ Width:Height ratio of the original media file. """
         return 2 / 1
