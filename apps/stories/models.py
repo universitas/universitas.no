@@ -1174,13 +1174,14 @@ class StoryMedia(StoryElement, MarkupModelMixin):
 
     ASPECT_RATIO_CHOICES = [
         (DEFAULT_RATIO, _('auto')),
-        (1 / 2, _('1:2 landscape')),
-        (2 / 3, _('2:3 landscape')),
-        (3 / 4, _('3:4 landscape')),
+        (2 / 5, _('5:2 landscape')),
+        (1 / 2, _('2:1 landscape')),
+        (2 / 3, _('3:2 landscape')),
+        (3 / 4, _('4:3 landscape')),
         (1 / 1, _('square')),
-        (4 / 3, _('4:3 portrait')),
-        (3 / 2, _('3:2 portrait')),
-        (2 / 1, _('2:1 portrait')),
+        (4 / 3, _('3:4 portrait')),
+        (3 / 2, _('2:3 portrait')),
+        (2 / 1, _('1:2 portrait')),
         (ORIGINAL_RATIO, _('original')),
     ]
 

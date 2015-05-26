@@ -12,14 +12,21 @@ def header_image(context):
     story = context['story']
     images = story.images().top()
     videos = story.videos().top()
+    height, width = 600, 1200
     # images = context['story'].images().top()
     context = {
         'elements': [i.child for i in images] + [i.child for i in videos],
         'css_classes': 'main_image',
     }
+    images = context['elements']
+
+    if images:
+        first_image = images[0]
+        height = first_image.get_height(width, height)
+
     if len(context['elements']) > 1:
         context['css_classes'] += ' slideshow'
-    context['img_size'] = '1200x600'
+    context['img_size'] = '{}x{}'.format(width, height)
     return context
 
 
@@ -62,6 +69,7 @@ def inline_aside(context, argument_string):
     queryset = context['story'].asides().published()
     context.update(get_items(queryset, argument_string))
     return context
+
 
 @register.inclusion_tag('_inline_html.html', takes_context=True)
 def inline_inlinehtml(context, argument_string):
