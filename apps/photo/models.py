@@ -19,6 +19,7 @@ from model_utils.models import TimeStampedModel
 from utils.model_mixins import Edit_url_mixin
 from sorl.thumbnail import ImageField, get_thumbnail
 from slugify import Slugify
+from PIL import Image
 
 # Project apps
 from apps.issues.models import current_issue
