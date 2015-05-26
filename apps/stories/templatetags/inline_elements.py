@@ -27,13 +27,16 @@ def header_image(context):
 def inline_storyimage(context, argument_string):
     story = context['story']
     if '<' in argument_string or '>' in argument_string:
-        size = '300x400'
+        height, width = 400, 300
     else:
-        size = '1200x700'
+        height, width = 700, 1200
     images = story.images().inline()
     # videos = story.videos().inline()
     context = get_items(images, argument_string)
     # context['elements'] += [i.child for i in videos]
+    first_image = context['elements'][0]
+    height = first_image.get_height(width, height)
+    size = '{}x{}'.format(width, height)
     if len(context['elements']) > 1:
         context['slideshow'] = True
     context['img_size'] = size
@@ -94,5 +97,6 @@ def get_items(queryset, argument_string):
         context['elements'].extend(
             [i.child for i in queryset.filter(index=index)])
 
-    context['css_classes'] = ' '.join(classes) or FLAGS['=']
+    # context['css_classes'] = ' '.join(classes) or FLAGS['=']
+    context['css_classes'] = ' '.join(classes) or 'inline-regular'
     return context

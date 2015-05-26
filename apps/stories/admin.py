@@ -74,7 +74,7 @@ class ImageInline(admin.TabularInline, ThumbAdmin, ):
     form = autocomplete_light.modelform_factory(StoryImage, exclude=())
     formfield_overrides = {models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})}, }
     model = StoryImage
-    fields = ['top', 'index', 'caption', 'creditline', 'size', 'imagefile', 'thumbnail', ]
+    fields = ['top', 'index', 'caption', 'creditline', 'size', 'aspect_ratio', 'imagefile', 'thumbnail', ]
     readonly_fields = ('thumbnail', )
     extra = 0
 

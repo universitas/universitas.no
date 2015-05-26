@@ -669,8 +669,8 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
                     name=bl.contributor.display_name,
                     title=', {}'.format(bl.title) if bl.title else '',
                     credit=bl.get_credit_display(),
-                    )
                 )
+            )
         translation.deactivate()
         return ', '.join(authors)
 
@@ -1169,6 +1169,19 @@ class StoryMedia(StoryElement, MarkupModelMixin):
 
     """ Video, photo or illustration connected to a story """
 
+    ORIGINAL_RATIO = 100.0
+    DEFAULT_RATIO = 0.0
+
+    ASPECT_RATIO_CHOICES = [
+        (DEFAULT_RATIO, _('auto')),
+        (1 / 2, _('1:2 landscape')),
+        (3 / 4, _('3:4 landscape')),
+        (1 / 1, _('square')),
+        (4 / 3, _('4:3 portrait')),
+        (2 / 1, _('2:1 portrait')),
+        (ORIGINAL_RATIO, _('original')),
+    ]
+
     class Meta:
         abstract = True
 
@@ -1189,6 +1202,33 @@ class StoryMedia(StoryElement, MarkupModelMixin):
         help_text=_('Relative image size.'),
         verbose_name=_('image size'),
     )
+
+    aspect_ratio = models.FloatField(
+        verbose_name=_('aspect ratio'),
+        help_text=_('height / width'),
+        choices=ASPECT_RATIO_CHOICES,
+        default=DEFAULT_RATIO,
+    )
+
+
+    def original_ratio(self):
+        """ Width:Height ratio of the original media file. """
+        return 2 / 1
+
+    def get_height(self, width, height):
+        """ Calculate pixel height based on builtin ratio """
+
+        if self.aspect_ratio == self.DEFAULT_RATIO:
+            height = height
+            msg = 'default'
+        elif self.aspect_ratio == self.ORIGINAL_RATIO:
+            height = width * self.original_ratio()
+            msg = 'original {}'.format(self.original_ratio())
+        else:
+            height = width * self.aspect_ratio
+            msg = self.get_aspect_ratio_display()
+        logger.debug('{} {}'.format(self, msg))
+        return int(height)
 
     def save(self, *args, **kwargs):
         self.caption = self.caption.replace('*', '')
@@ -1214,6 +1254,12 @@ class StoryImage(StoryMedia):
         verbose_name=('image file'),
     )
 
+    def __str__(self):
+        return str(self.imagefile)
+
+    def original_ratio(self):
+        return self.imagefile.full_height / self.imagefile.full_width
+
     def needle(self):
         """ Look for a name in the text """
         needle = re.sub(r'^.+:', '', self.caption)
@@ -1221,7 +1267,6 @@ class StoryImage(StoryMedia):
         if name:
             needle = name.group(0)
         return needle.strip()[:60] or str(self.imagefile)
-
 
 
 class StoryVideo(StoryMedia):

@@ -396,6 +396,7 @@ select {
   .row.collapse > .columns,
   #story .row.collapse > .bodytext,
   #story .row.collapse > .inline-full,
+  #story .row.collapse > .inline-regular,
   #story .row.collapse > .inline-left,
   #story .row.collapse > .inline-right,
   .row.collapse > .panel-1,
@@ -433,6 +434,7 @@ select {
 .columns,
 #story .bodytext,
 #story .inline-full,
+#story .inline-regular,
 #story .inline-left,
 #story .inline-right,
 .panel-1,
@@ -575,6 +577,7 @@ select {
   .columns,
   #story .bodytext,
   #story .inline-full,
+  #story .inline-regular,
   #story .inline-left,
   #story .inline-right,
   .panel-1,
@@ -669,6 +672,7 @@ select {
   .columns.small-centered,
   #story .small-centered.bodytext,
   #story .small-centered.inline-full,
+  #story .small-centered.inline-regular,
   #story .small-centered.inline-left,
   #story .small-centered.inline-right,
   .small-centered.panel-1,
@@ -683,6 +687,7 @@ select {
   .columns.small-uncentered,
   #story .small-uncentered.bodytext,
   #story .small-uncentered.inline-full,
+  #story .small-uncentered.inline-regular,
   #story .small-uncentered.inline-left,
   #story .small-uncentered.inline-right,
   .small-uncentered.panel-1,
@@ -697,6 +702,7 @@ select {
   .columns.small-centered:last-child,
   #story .small-centered.bodytext:last-child,
   #story .small-centered.inline-full:last-child,
+  #story .small-centered.inline-regular:last-child,
   #story .small-centered.inline-left:last-child,
   #story .small-centered.inline-right:last-child,
   .small-centered.panel-1:last-child,
@@ -709,6 +715,7 @@ select {
   .columns.small-uncentered:last-child,
   #story .small-uncentered.bodytext:last-child,
   #story .small-uncentered.inline-full:last-child,
+  #story .small-uncentered.inline-regular:last-child,
   #story .small-uncentered.inline-left:last-child,
   #story .small-uncentered.inline-right:last-child,
   .small-uncentered.panel-1:last-child,
@@ -721,6 +728,7 @@ select {
   .columns.small-uncentered.opposite,
   #story .small-uncentered.opposite.bodytext,
   #story .small-uncentered.opposite.inline-full,
+  #story .small-uncentered.opposite.inline-regular,
   #story .small-uncentered.opposite.inline-left,
   #story .small-uncentered.opposite.inline-right,
   .small-uncentered.opposite.panel-1,
@@ -853,6 +861,7 @@ select {
   .columns,
   #story .bodytext,
   #story .inline-full,
+  #story .inline-regular,
   #story .inline-left,
   #story .inline-right,
   .panel-1,
@@ -888,7 +897,7 @@ select {
   .medium-8, .cols-8 {
     width: 66.66667%; }
 
-  .medium-9, #story .bodytext, #story .inline-full, .cols-9 {
+  .medium-9, #story .bodytext, #story .inline-regular, .cols-9 {
     width: 75%; }
 
   .medium-10, .cols-10 {
@@ -897,7 +906,7 @@ select {
   .medium-11, .cols-11 {
     width: 91.66667%; }
 
-  .medium-12, .cols-12 {
+  .medium-12, #story .inline-full, .cols-12 {
     width: 100%; }
 
   .medium-offset-0 {
@@ -947,6 +956,7 @@ select {
   .columns.medium-centered,
   #story .medium-centered.bodytext,
   #story .medium-centered.inline-full,
+  #story .medium-centered.inline-regular,
   #story .medium-centered.inline-left,
   #story .medium-centered.inline-right,
   .medium-centered.panel-1,
@@ -961,6 +971,7 @@ select {
   .columns.medium-uncentered,
   #story .medium-uncentered.bodytext,
   #story .medium-uncentered.inline-full,
+  #story .medium-uncentered.inline-regular,
   #story .medium-uncentered.inline-left,
   #story .medium-uncentered.inline-right,
   .medium-uncentered.panel-1,
@@ -975,6 +986,7 @@ select {
   .columns.medium-centered:last-child,
   #story .medium-centered.bodytext:last-child,
   #story .medium-centered.inline-full:last-child,
+  #story .medium-centered.inline-regular:last-child,
   #story .medium-centered.inline-left:last-child,
   #story .medium-centered.inline-right:last-child,
   .medium-centered.panel-1:last-child,
@@ -987,6 +999,7 @@ select {
   .columns.medium-uncentered:last-child,
   #story .medium-uncentered.bodytext:last-child,
   #story .medium-uncentered.inline-full:last-child,
+  #story .medium-uncentered.inline-regular:last-child,
   #story .medium-uncentered.inline-left:last-child,
   #story .medium-uncentered.inline-right:last-child,
   .medium-uncentered.panel-1:last-child,
@@ -999,6 +1012,7 @@ select {
   .columns.medium-uncentered.opposite,
   #story .medium-uncentered.opposite.bodytext,
   #story .medium-uncentered.opposite.inline-full,
+  #story .medium-uncentered.opposite.inline-regular,
   #story .medium-uncentered.opposite.inline-left,
   #story .medium-uncentered.opposite.inline-right,
   .medium-uncentered.opposite.panel-1,
@@ -1251,6 +1265,7 @@ select {
   .columns,
   #story .bodytext,
   #story .inline-full,
+  #story .inline-regular,
   #story .inline-left,
   #story .inline-right,
   .panel-1,
@@ -1345,6 +1360,7 @@ select {
   .columns.large-centered,
   #story .large-centered.bodytext,
   #story .large-centered.inline-full,
+  #story .large-centered.inline-regular,
   #story .large-centered.inline-left,
   #story .large-centered.inline-right,
   .large-centered.panel-1,
@@ -1359,6 +1375,7 @@ select {
   .columns.large-uncentered,
   #story .large-uncentered.bodytext,
   #story .large-uncentered.inline-full,
+  #story .large-uncentered.inline-regular,
   #story .large-uncentered.inline-left,
   #story .large-uncentered.inline-right,
   .large-uncentered.panel-1,
@@ -1373,6 +1390,7 @@ select {
   .columns.large-centered:last-child,
   #story .large-centered.bodytext:last-child,
   #story .large-centered.inline-full:last-child,
+  #story .large-centered.inline-regular:last-child,
   #story .large-centered.inline-left:last-child,
   #story .large-centered.inline-right:last-child,
   .large-centered.panel-1:last-child,
@@ -1385,6 +1403,7 @@ select {
   .columns.large-uncentered:last-child,
   #story .large-uncentered.bodytext:last-child,
   #story .large-uncentered.inline-full:last-child,
+  #story .large-uncentered.inline-regular:last-child,
   #story .large-uncentered.inline-left:last-child,
   #story .large-uncentered.inline-right:last-child,
   .large-uncentered.panel-1:last-child,
@@ -1397,6 +1416,7 @@ select {
   .columns.large-uncentered.opposite,
   #story .large-uncentered.opposite.bodytext,
   #story .large-uncentered.opposite.inline-full,
+  #story .large-uncentered.opposite.inline-regular,
   #story .large-uncentered.opposite.inline-left,
   #story .large-uncentered.opposite.inline-right,
   .large-uncentered.opposite.panel-1,

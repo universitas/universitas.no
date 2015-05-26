@@ -178,6 +178,11 @@
   }
 
   .inline-full {
+    @extend .medium-12;
+    @extend .columns;
+  }
+
+  .inline-regular {
     @extend .medium-9;
     @extend .columns;
   }
