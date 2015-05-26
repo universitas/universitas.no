@@ -138,7 +138,12 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
 
     def thumb(self, height=315, width=600):
         geometry = '{}x{}'.format(width, height)
-        return get_thumbnail(self.source_file, geometry, crop=self.get_crop()).url
+        try:
+            return get_thumbnail(self.source_file, geometry, crop=self.get_crop()).url
+        except Exception as e:
+            msg = 'Thumbnail failed: {} {}'.format(e, self.source_file)
+            logger.warn(msg)
+            return self.source_file
 
     @property
     def cropping(self):
@@ -215,7 +220,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
                 grayscale_image = self.opencv_image()
             except AttributeError as e:  # No file access?
                 warning = 'Autocrop failed {} {}'.format(e, self)
-                logger.error(warning)
+                logger.warn(warning)
                 return
             cropping, faces = detect_faces(grayscale_image)
             if faces == 1:
