@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*FIELDNAME = forms.SlugField()-
 """ Photography and image files in the publication  """
 # Python standard library
 # import os
@@ -18,6 +18,7 @@ from collections import namedtuple
 from model_utils.models import TimeStampedModel
 from utils.model_mixins import Edit_url_mixin
 from sorl.thumbnail import ImageField, get_thumbnail
+from slugify import Slugify
 
 # Project apps
 from apps.issues.models import current_issue
@@ -36,6 +37,7 @@ Cropping = namedtuple('Cropping', ['top', 'left', 'diameter'])
 def image_upload_folder():
     year, issue = current_issue()
     return '{}/{}/'.format(year, issue)
+
 
 def upload_image_to(instance, filename):
     return image_upload_folder() + filename
@@ -139,11 +141,43 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
     def thumb(self, height=315, width=600):
         geometry = '{}x{}'.format(width, height)
         try:
-            return get_thumbnail(self.source_file, geometry, crop=self.get_crop()).url
+            return get_thumbnail(
+                self.source_file,
+                geometry,
+                crop=self.get_crop()).url
         except Exception as e:
             msg = 'Thumbnail failed: {} {}'.format(e, self.source_file)
             logger.warn(msg)
             return self.source_file
+
+    def slugify_filename(self):
+        """ rename source file if needed. Also convert gif to png """
+        slugify = Slugify(safe_chars='.')
+        try:
+            old_path = self.source_file.path
+
+        except FileNotFoundError as e:
+            old_path = os.path.join(
+                self.source_file.storage.location, self.old_file_path)
+
+        folder, filename = os.path.split(old_path)
+        new_filename = slugify(filename).replace('-.', '.')
+        new_path = os.path.join(folder, new_filename)
+        if new_path.endswith('.gif'):
+            new_path = new_path.replace('.gif', '.png')
+            im = Image.open(old_path)
+            #transparency = im.info['transparency']
+            im.save(new_path)
+            self.source_file = new_path.replace(self.source_file.storage.location,'').strip('/')
+            self.save()
+
+
+        elif old_path != new_path:
+            if not os.path.exists(new_path):
+                os.rename(old_path, new_path)
+            self.source_file = new_path.replace(self.source_file.storage.location,'').strip('/')
+            # logger.debug('changed file name to {}'.format(new_filename))
+            self.save()
 
     @property
     def cropping(self):
