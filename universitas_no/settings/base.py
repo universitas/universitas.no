@@ -208,28 +208,65 @@ TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
 
 LOG_FOLDER = normpath(join(PROJECT_ROOT_FOLDER, 'logs'))
 
-
 LOGGING = {
-    'version': 1, 'disable_existing_loggers': False, 'formatters': {
-        'verbose': {
-            'format': '%(name)s%(levelname)6s %(filename)25s:%(lineno)-4d (%(funcName)s) - %(message)s'}, 'simple': {
-                'format': '%(levelname)s %(message)s'}, 'minimal': {
-                    'format': '%(message)s'}, }, 'handlers': {
-                        'mail_admins': {
-                            'level': 'ERROR', 'class': 'django.utils.log.AdminEmailHandler', }, 'stream_to_console': {
-                                'level': 'DEBUG', 'class': 'logging.StreamHandler', 'formatter': 'verbose', }, 'file': {
-                                    'level': 'WARNING', 'class': 'logging.FileHandler', 'filename': normpath(
-                                        join(
-                                            LOG_FOLDER, 'django.log')), 'formatter': 'verbose', }, 'bylines_file': {
-                                                'level': 'DEBUG', 'class': 'logging.FileHandler', 'filename': normpath(
-                                                    join(
-                                                        LOG_FOLDER, 'bylines.log')), 'formatter': 'minimal', }, }, 'loggers': {
-                                                            'django.request': {
-                                                                'handlers': [
-                                                                    'mail_admins', 'stream_to_console'], 'level': 'DEBUG', 'propagate': True, }, 'universitas': {
-                                                                        'handlers': [
-                                                                            'stream_to_console', 'file', ], 'level': 'DEBUG', 'propagate': False, }, 'bylines': {
-                                                                                'handlers': [
-                                                                                    'bylines_file', ], 'level': 'DEBUG', 'propagate': False, }, 'sorl.thumbnail': {
-                                                                                        'handlers': [
-                                                                                            'file', ], 'level': 'ERROR', 'propagate': False, }, }}
+    'version': 1,
+    'disable_existing_loggers': False,
+}
+LOGGING['formatters'] = {
+    'verbose': {
+        'format': '%(name)s%(levelname)6s %(filename)25s:%(lineno)-4d (%(funcName)s) - %(message)s'
+    },
+    'simple': {
+        'format': '%(levelname)s %(message)s'
+    },
+    'minimal': {
+        'format': '%(message)s'
+    },
+}
+LOGGING['handlers'] = {
+    'mail_admins': {
+        'level': 'ERROR',
+        'class': 'django.utils.log.AdminEmailHandler',
+    },
+    'stream_to_console': {
+        'level': 'DEBUG',
+        'class': 'logging.StreamHandler',
+        'formatter': 'verbose',
+    },
+    'file': {
+        'level': 'WARNING',
+        'class': 'logging.FileHandler',
+        'filename': normpath(
+            join(
+                LOG_FOLDER,
+                'django.log')),
+        'formatter': 'verbose',
+    },
+    'bylines_file': {
+        'level': 'DEBUG',
+        'class': 'logging.FileHandler',
+        'filename': normpath(
+            join(
+                LOG_FOLDER,
+                'bylines.log')),
+        'formatter': 'minimal',
+    },
+}
+LOGGING['loggers'] = {
+    'django.request': {
+        'level': 'DEBUG', 'propagate': True,
+        'handlers': ['mail_admins', 'stream_to_console'],
+    },
+    'universitas': {
+        'level': 'DEBUG', 'propagate': False,
+        'handlers': ['stream_to_console', 'file', ],
+    },
+    'bylines': {
+        'level': 'DEBUG', 'propagate': False,
+        'handlers': ['bylines_file'],
+    },
+    'sorl.thumbnail': {
+        'level': 'ERROR', 'propagate': False,
+        'handlers': ['file'],
+    },
+}
