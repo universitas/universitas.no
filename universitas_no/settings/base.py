@@ -116,6 +116,7 @@ DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
 # SORL
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
 THUMBNAIL_ENGINE = 'apps.photo.custom_thumbnail_classes.CloseCropEngine'
+THUMBNAIL_QUALITY = 50
 
 # Uncomment to enable original file names for resized images.
 # THUMBNAIL_BACKEND = 'apps.photo.custom_thumbnail_classes.KeepNameThumbnailBackend'
