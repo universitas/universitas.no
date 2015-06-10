@@ -1,4 +1,4 @@
-from sorl.thumbnail.engines.convert_engine import Engine
+from sorl.thumbnail.engines.convert_engine import Engine as GraphicsMagickConvertEngine
 import re
 import logging
 from PIL import Image
@@ -39,7 +39,7 @@ class KeepNameThumbnailBackend(ThumbnailBackend):
         return filename
 
 
-class CloseCropEngine(Engine):
+class CloseCropEngine(GraphicsMagickConvertEngine):
 
     def create(self, image, geometry, options):
         if options.get('diameter'):
@@ -47,6 +47,11 @@ class CloseCropEngine(Engine):
 
         image = super().create(image, geometry, options)
         return image
+
+    def write(self, image, options, thumbnail):
+        # remove all metadata from thumbnail.
+        image['options']['strip'] = None
+        return super().write(image, options, thumbnail)
 
     def close_crop(self, image, geometry, options):
         """ crop it close """

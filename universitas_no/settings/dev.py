@@ -5,8 +5,9 @@ from os import environ
 
 ########## DEBUG CONFIGURATION
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-ALLOWED_HOSTS= ['.universitas.no']
+TEMPLATE_DEBUG = True
+THUMBNAIL_DEBUG = True
+# ALLOWED_HOSTS= ['.universitas.no']
 ########## END DEBUG CONFIGURATION
 
 # EMAIL CONFIGURATION
