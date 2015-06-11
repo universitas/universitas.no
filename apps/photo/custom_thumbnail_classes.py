@@ -23,7 +23,6 @@ class KeepNameThumbnailBackend(ThumbnailBackend):
             serialize(options)
         )
 
-
         filename, _ext = os.path.splitext(
             os.path.basename(source.name)
         )
@@ -71,22 +70,21 @@ class CloseCropEngine(GraphicsMagickConvertEngine):
                 # portrait
                 width, height = diameter, diameter / new_ratio
 
+            # If the orinal image file is too small, it will not be close
+            # cropped.
             if org_width > width and org_height > height:
                 left, top = [int(match) for match in re.findall(r'\d+', crop)]
                 left = left * org_width / 100
                 top = top * org_height / 100
-                print(top, left)
+
                 crop_top = min(org_height - height, max(0, top - height / 2))
                 crop_left = min(org_width - width, max(0, left - width / 2))
                 crop_right = crop_left + width
                 crop_bottom = crop_top + height
 
-                new_geometry = [
-                    int(value) for value in (
-                        crop_left,
-                        crop_top,
-                        crop_right,
-                        crop_bottom)]
+                new_geometry = [int(value) for value in (
+                    crop_left, crop_top, crop_right, crop_bottom
+                )]
 
                 original = Image.open(filename)
                 cropped = original.crop(new_geometry)

@@ -1,4 +1,7 @@
-BYLINE_CASES = [
+# -*- coding: utf-8 -*-
+""" Contains test data for byline import """
+
+BYLINE_CASES = [  # List of cases: ( "Input string", "Expected output" )
     (
         "Mike Fürstenberg, Kulturkonsulent i Studentliv, Studentsamskipnaden i Oslo og Akershus",
         "text: Mike Fürstenberg, Kulturkonsulent i Studentliv, Studentsamskipnaden i Oslo og Akershus"
