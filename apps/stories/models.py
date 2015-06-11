@@ -1539,7 +1539,8 @@ class InlineLink(TimeStampedModel):
             self.status_code = status_code
             self.save()
 
-        logger.debug('{code}: {url}'.format(url=url, code=status_code))
+        msg = '{code}: {url}'.format(url=url, code=status_code)
+        logger.debug(msg)
         return status_code
 
     @classmethod
@@ -1574,16 +1575,14 @@ class InlineLink(TimeStampedModel):
                     if link.text != text:
                         link.text = text
                         link.save()
-                    # other_links = links.exclude(pk=link.pk)
+
                     for otherlink in links[1:]:
                         otherlink.number = number
                         otherlink.save()
                         number += 1
-                        logger.warn(
-                            'multiple links with same ref: ({}) {} {}'.format(
-                                ref,
-                                link,
-                                otherlink))
+                        msg = 'multiple links with same ref: ({0}) {1} {2}'
+                        msg = msg.format(ref, link, otherlink)
+                        logger.warn(msg)
                         new_markup.append(otherlink.get_tag())
 
             else:

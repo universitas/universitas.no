@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=logging-format-interpolation
 
 import re
 
@@ -7,6 +8,7 @@ from django.utils.timezone import datetime
 
 import logging
 logger = logging.getLogger('universitas')
+
 
 class ImageFile(object):
 
@@ -33,21 +35,23 @@ class ImageFile(object):
         extension = extension.lower()
         if extension == "jpeg":
             extension = "jpg"
-        better_filename = '{}-{:0>2}-{}.{}'.format(year, issue, filename, extension,)
+        better_filename = '{}-{:0>2}-{}.{}'.format(
+            year,
+            issue,
+            filename,
+            extension,
+        )
         return better_filename
 
     def _add_path(self, newpath):
         if newpath not in self.paths:
             self.paths.append(newpath)
 
-    # 385875 bytes 2012 02 08 1328691645  ./04_MAG_magasinkontr_06_SBV.jpg
-
 
 def main():
     with open('bildeliste2') as f:
         images = f.readlines()
-    from random import shuffle
-    matchvalue = None
+    # matchvalue = None
     # shuffle(images)
     # images = images[:100]
     imagedict = {}
@@ -64,41 +68,48 @@ def main():
         filename = filepath.split('/')[-1]
         # logger.debug("{} {} {}".format(size, unix_timestamp, path))
         year_issue_match = (
-            re.match(r'\./(?P<year>\d{4})/(?P<issue>\d{1,2})/(?P=issue)\D', filepath) or
-            re.match(r'\./(?P<year>\d{4})/(?P<issue>\d{1,2})/', filepath) or
-            re.match(r'\./(?P<year>\d{4})/(?P<issue>\d{2})[^\d/]', filepath) or
-            None
-        )
+            re.match(
+                r'\./(?P<year>\d{4})/(?P<issue>\d{1,2})/(?P=issue)\D',
+                filepath) or re.match(
+                r'\./(?P<year>\d{4})/(?P<issue>\d{1,2})/',
+                filepath) or re.match(
+                r'\./(?P<year>\d{4})/(?P<issue>\d{2})[^\d/]',
+                filepath) or None)
         if year_issue_match:
-            matchvalue = 1
+            # matchvalue = 1
             year = year_issue_match.group('year')
             issue = year_issue_match.group('issue')
         else:
             issue_match = re.search(r'\/(?P<issue>\d{2})[^/\d]', filepath)
             if issue_match:
-                matchvalue = 2
+                # matchvalue = 2
                 issue = issue_match.group('issue')
                 year = filedate.year
             else:
-                matchvalue = 3
+                # matchvalue = 3
                 year = filedate.year
                 issue = '00'
 
         # logger.debug('year: {}, issue: {}, file: {}'.format(issuematch.group('year'), issuematch.group('issue'), filename))
         if year and issue:
-            image_file = ImageFile(filepath, filesize_in_bytes, filedate, issue, year)
+            image_file = ImageFile(
+                filepath,
+                filesize_in_bytes,
+                filedate,
+                issue,
+                year)
             if filename in imagedict:
-                old_filepath = imagedict[filename]
+                # old_filepath = imagedict[filename]
                 duplicates += 1
-                # logger.debug('old: {}\nnew: {}'.format(old_filepath, filepath))
             else:
                 imagedict[filename] = image_file
         else:
-            logger.debug('No match {}'.format(filepath))
-            pass
+            msg = 'No match {}'.format(filepath)
+            logger.debug(msg)
 
-    logger.debug('all: {} placed: {} duplicates: {}'.format(len(images), len(imagedict), duplicates))
-
+    msg = 'all: {0} placed: {1} duplicates: {2}'.format(
+        len(images), len(imagedict), duplicates)
+    logger.debug(msg)
 
 if __name__ == '__main__':
     main()

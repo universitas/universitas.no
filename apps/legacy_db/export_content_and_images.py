@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=logging-format-interpolation
 """
 Export content from old website and the
 production system to the new website.
@@ -98,6 +99,8 @@ def import_legacy_website_content(
         new_story.full_clean()
         new_story.save(new=not text_only)
 
+    return len(websaker)
+
 
 def import_prodsys_content(
         first=0,
@@ -109,21 +112,23 @@ def import_prodsys_content(
     """ Import all new stories from prodsys. """
     status = [Prodsak.READY_FOR_WEB, ]
     # status = list(range(Prodsak.READY_FOR_WEB, Prodsak.ARCHIVED))
-    objects = Prodsak.objects.filter(produsert__in=status).order_by(
-        'prodsak_id').values('prodsak_id').distinct()
 
-    if reverse:
-        objects = objects[::-1]
-    logger.info('Found {} stories to import'.format(len(objects)))
-    prodsak_ids = [obj['prodsak_id'] for obj in objects[first:last]]
+    prodsak_ids = Prodsak.objects.filter(
+        produsert__in=status).values_list(
+        'prodsak_id', flat=True)
+    prodsak_ids = sorted(set(prodsak_ids), reverse=reverse)
+
+    logger.info('Found {} stories to import'.format(len(prodsak_ids)))
 
     import_images = not text_only
-
     for prodsak_id in prodsak_ids:
         _importer_prodsak(prodsak_id, replace_existing, autocrop, import_images)
         Prodsak.objects.filter(
-            prodsak_id=prodsak_id, produsert__in=status
+            prodsak_id=prodsak_id,
+            # produsert__in=status
         ).update(produsert=Prodsak.PUBLISHED_ON_WEB)
+
+    return len(prodsak_ids)
 
 
 def _importer_websak(websak):
@@ -272,13 +277,8 @@ def _get_xtags_from_prodsys(prodsak_id, status_in=None):
         filters.update(produsert__in=status_in)
 
     # Find the correct story in the database.
-    story_versions = Prodsak.objects.filter(
-        **filters).order_by('-version_no')
-    if story_versions.count() == 0:
-        raise Prodsak.DoesNotExist('No valid prodsak matching that prodsak_id')
-        # This will raise Prodsak.DoesNotExist
-        # story_versions.get(prodsak_id=prodsak_id)
-    final_version = story_versions.last()
+    story_versions = Prodsak.objects.filter(**filters)
+    final_version = story_versions.latest('version_no')
 
     # Check whether the story has been edited in InDesign.
     if "Vellykket eksport fra InDesign!" in (

@@ -294,7 +294,7 @@ class Advert(models.Model):
         try:
             return self.description or '{s.customer}: {s.start_time}'.format(
                 s=self)
-        except:
+        except Exception:
             return 'New Advert'
 
     def save(self, *args, **kwargs):

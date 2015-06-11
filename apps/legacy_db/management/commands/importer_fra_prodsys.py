@@ -93,7 +93,7 @@ class Command(BaseCommand):
             if options['drop'] and not options['replace existing']:
                 drop_model_tables(Story, Contributor, ImageFile)
 
-            import_prodsys_content(
+            status = import_prodsys_content(
                 text_only=options['text only'],
                 first=options['first'],
                 last=last,
@@ -101,7 +101,10 @@ class Command(BaseCommand):
                 replace_existing=options['replace existing'],
                 autocrop=options['autocrop'],
             )
-            self.stdout.write('Successfully imported content from prodsys.')
+            if status:
+                self.stdout.write('Successfully imported content from prodsys.')
+            else:
+                self.stdout.write('No content to import.')
 
         else:
             # Import from website
@@ -111,7 +114,7 @@ class Command(BaseCommand):
             if options['drop'] and not options['replace existing']:
                 drop_model_tables(Story, Contributor, ImageFile)
 
-            import_legacy_website_content(
+            status = import_legacy_website_content(
                 text_only=options['text only'],
                 first=first,
                 last=last,
@@ -121,4 +124,7 @@ class Command(BaseCommand):
             )
 
             reset_db_autoincrement()
-            self.stdout.write('Successfully imported content from website.')
+            if status:
+                self.stdout.write('Successfully imported content from website.')
+            else:
+                self.stdout.write('No content to import.')

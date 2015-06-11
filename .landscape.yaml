@@ -10,6 +10,8 @@ pylint:
     - dangerous-default-value
     - missing-super-argument
     - super-on-old-class
+    - protected-access
+    - old-style-class
 max-line-length: 120
 uses:
   - django
@@ -19,3 +21,4 @@ uses:
 # ignore-paths:
 ignore-patterns:
   - /migrations/
+  - ^/watson/
