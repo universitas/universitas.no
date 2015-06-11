@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Export content from old website and the
 production system to the new website.

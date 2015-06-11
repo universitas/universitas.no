@@ -88,9 +88,9 @@ class AdChannel(models.Model):
 
     def css_classes(self):
         return '{name} {extra}'.format(
-            name = self.name.lower().replace(' ', '-'),
-            extra = self.extra_classes,
-            )
+            name=self.name.lower().replace(' ', '-'),
+            extra=self.extra_classes,
+        )
 
     def current_ads(self, at_time=None, publication_status=None):
         """ All ads in current position at current time """
@@ -174,7 +174,12 @@ class AdvertManager(models.Manager):
 
 def upload_folder(instance, filename):
     slugify = Slugify(to_lower=True)
-    customer_name = re.sub(r'\s+', '', slugify(instance.customer.name))[:15].lower()
+    customer_name = re.sub(
+        r'\s+',
+        '',
+        slugify(
+            instance.customer.name))[
+        :15].lower()
     path = '/'.join(['adverts', customer_name, filename])
     logger.debug(path)
     return path
@@ -278,7 +283,7 @@ class Advert(models.Model):
     extra_classes = models.CharField(
         blank=True,
         max_length=200,
-        )
+    )
     objects = AdvertManager()
 
     class Meta:
@@ -287,8 +292,8 @@ class Advert(models.Model):
 
     def __str__(self):
         try:
-            return self.description or '{self.customer}: {self.start_time}'.format(
-                self=self)
+            return self.description or '{s.customer}: {s.start_time}'.format(
+                s=self)
         except:
             return 'New Advert'
 
@@ -365,8 +370,8 @@ class Advert(models.Model):
     def get_html(self):
         html_class = 'annonse ' + self.extra_classes
         img_template = (
-            '<a href="{self.link}" '
-            'alt="{self.alt_text}" >'
+            '<a href="{this.link}" '
+            'alt="{this.alt_text}" >'
             '<img src="{src}">'
             '</a>'
         )
@@ -379,14 +384,15 @@ class Advert(models.Model):
             thumb = get_thumbnail(
                 self.imagefile, '%sx%s' %
                 (self.width, self.height))
-            content = img_template.format(self=self, src=thumb.url)
+            content = img_template.format(this=self, src=thumb.url)
         elif self.ad_type == self.DUMMY_AD:
             content = str(self)
         html_source = div_template.format(
             html_class=html_class,
-            self=self,
+            this=self,
             content=content)
         return mark_safe(html_source)
 
     def channels(self):
-        return ','.join(channel.name for channel in self.ad_channels.all()) or '-'
+        return ','.join(
+            channel.name for channel in self.ad_channels.all()) or '-'

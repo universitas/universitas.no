@@ -50,11 +50,8 @@ def detect_corners(cv2img):
 
     return from_left, from_top
 
-imgfile.from_left = round(100 * from_left / cv2img.shape[0])
-imgfile.from_top = round(100 * from_top / cv2img.shape[1])
-
-
-import numpy
+# imgfile.from_left = round(100 * from_left / cv2img.shape[0])
+# imgfile.from_top = round(100 * from_top / cv2img.shape[1])
 
 
 def fastsieve(limit):
