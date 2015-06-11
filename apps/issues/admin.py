@@ -20,9 +20,7 @@ class ThumbAdmin:
             source = instance.get_thumbnail()
             thumb = get_thumbnail(source, '%sx%s' % (width, height))
             url = thumb.url
-        # FileNotFoundError is not builtin in python2, causing a linting warning.
-        # pylint: disable=undefined-variable
-        except FileNotFoundError:
+        except FileNotFoundError:  # noqa
             url = '/static/admin/img/icon-no.gif'
         if instance.pdf:
             html = '<a href="{pdf}"><img src="{thumb}"></a>'.format(
@@ -54,8 +52,7 @@ class IssueAdmin(admin.ModelAdmin):
                 crop='top',
             )
             url = thumb.url
-        # pylint: disable=undefined-variable
-        except FileNotFoundError:
+        except FileNotFoundError:  # noqa
             url = '/static/admin/img/icon-no.gif'
         return url
 

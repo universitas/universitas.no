@@ -1,1 +1,1 @@
-default_app_config = 'apps.issues.apps.IssuesAppConfig'
+default_app_config = 'apps.issues.appconf.IssuesAppConfig'

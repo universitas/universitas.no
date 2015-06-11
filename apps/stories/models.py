@@ -668,7 +668,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
                 '{name}{title}'.format(
                     name=bl.contributor.display_name,
                     title=', {}'.format(bl.title) if bl.title else '',
-                    credit=bl.get_credit_display(),
+                    # credit=bl.get_credit_display(),
                 )
             )
         translation.deactivate()

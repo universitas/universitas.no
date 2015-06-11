@@ -1,1 +1,1 @@
-default_app_config = 'apps.photo.apps.PhotoAppConfig'
+default_app_config = 'apps.photo.appconf.PhotoAppConfig'

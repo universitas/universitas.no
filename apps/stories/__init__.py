@@ -1,1 +1,1 @@
-default_app_config = 'apps.stories.apps.StoriesAppConfig'
+default_app_config = 'apps.stories.appconf.StoriesAppConfig'

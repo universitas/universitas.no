@@ -1,1 +1,1 @@
-default_app_config = 'apps.frontpage.apps.FrontpageAppConfig'
+default_app_config = 'apps.frontpage.appconf.FrontpageAppConfig'

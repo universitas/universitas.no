@@ -2,7 +2,7 @@
 """ Photography and image files in the publication  """
 # Python standard library
 # import os
-import re
+# import re
 import numpy
 import cv2
 import os
@@ -10,7 +10,7 @@ import os
 # Django core
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+# from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.validators import MaxValueValidator, MinValueValidator
 from collections import namedtuple
 # Installed apps
@@ -157,9 +157,10 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
         try:
             old_path = self.source_file.path
 
-        except FileNotFoundError as e:
+        except FileNotFoundError:  # noqa
             old_path = os.path.join(
-                self.source_file.storage.location, self.old_file_path)
+                self.source_file.storage.location,
+                self.old_file_path)
 
         folder, filename = os.path.split(old_path)
         new_filename = slugify(filename).replace('-.', '.')
@@ -169,14 +170,17 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
             im = Image.open(old_path)
             #transparency = im.info['transparency']
             im.save(new_path)
-            self.source_file = new_path.replace(self.source_file.storage.location,'').strip('/')
+            self.source_file = new_path.replace(
+                self.source_file.storage.location,
+                '').strip('/')
             self.save()
-
 
         elif old_path != new_path:
             if not os.path.exists(new_path):
                 os.rename(old_path, new_path)
-            self.source_file = new_path.replace(self.source_file.storage.location,'').strip('/')
+            self.source_file = new_path.replace(
+                self.source_file.storage.location,
+                '').strip('/')
             # logger.debug('changed file name to {}'.format(new_filename))
             self.save()
 
@@ -201,7 +205,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
             setattr(self, field.name, field.default)
 
     def get_crop(self):
-        """ return a string representing the visual center point of the image in the form used by sorl thumbnail. """
+        """ return center point of image in percent from top and left. """
         if self.cropping_method == self.CROP_NONE:
             self.autocrop()
         return '{h}% {v}%'.format(h=self.from_left, v=self.from_top)
@@ -248,7 +252,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
 
     def autocrop(self):
         """ Calculates best crop using a clever algorithm, and saves Image with new data. """
-
         def main():
             """ Try different algorithms, change crop and save model. """
             try:
@@ -286,12 +289,12 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
 
             self.cropping = Cropping(left=left, top=top, diameter=diameter)
             self.save(autocrop=True)
-            msg = 'Autocrop  ({left:2.0f}, {top:2.0f})  {method:18} {pk} {file}'.format(
+            msg = 'Autocrop ({x:2.0f}, {y:2.0f}) {met:18} {pk} {file}'.format(
                 file=self,
-                method=self.get_cropping_method_display(),
+                meth=self.get_cropping_method_display(),
                 pk=self.pk,
-                left=self.from_left,
-                top=self.from_top,
+                x=self.from_left,
+                y=self.from_top,
                 # diameter=self.crop_diameter
             )
             logger.debug(msg)

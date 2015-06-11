@@ -1,1 +1,1 @@
-default_app_config = 'apps.markup.apps.MarkupAppConfig'
+default_app_config = 'apps.markup.appconf.MarkupAppConfig'
