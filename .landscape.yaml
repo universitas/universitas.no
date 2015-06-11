@@ -21,4 +21,4 @@ uses:
 # ignore-paths:
 ignore-patterns:
   - /migrations/
-  - ^/watson/
+  - ^watson/
