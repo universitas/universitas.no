@@ -291,7 +291,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
             self.save(autocrop=True)
             msg = 'Autocrop ({x:2.0f}, {y:2.0f}) {met:18} {pk} {file}'.format(
                 file=self,
-                meth=self.get_cropping_method_display(),
+                met=self.get_cropping_method_display(),
                 pk=self.pk,
                 x=self.from_left,
                 y=self.from_top,

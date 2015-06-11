@@ -272,10 +272,13 @@ def _get_xtags_from_prodsys(prodsak_id, status_in=None):
         filters.update(produsert__in=status_in)
 
     # Find the correct story in the database.
-    final_version = Prodsak.objects.filter(
-        **filters).order_by('-version_no').first()
-    if not final_version:
-        raise Prodsak.DoesNotExist
+    story_versions = Prodsak.objects.filter(
+        **filters).order_by('-version_no')
+    if story_versions.count() == 0:
+        raise Prodsak.DoesNotExist('No valid prodsak matching that prodsak_id')
+        # This will raise Prodsak.DoesNotExist
+        # story_versions.get(prodsak_id=prodsak_id)
+    final_version = story_versions.last()
 
     # Check whether the story has been edited in InDesign.
     if "Vellykket eksport fra InDesign!" in (
