@@ -1,0 +1,14 @@
+# doc-warnings: true
+# test-warnings: false
+strictness: medium
+pep8:
+  full: true
+max-line-length: 120
+uses:
+  - django
+# autodetect: yes
+# requirements:
+  # - requirements.txt
+# ignore-paths:
+ignore-patterns:
+  - /migrations/
