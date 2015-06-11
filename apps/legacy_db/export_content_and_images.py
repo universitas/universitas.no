@@ -275,7 +275,7 @@ def _get_xtags_from_prodsys(prodsak_id, status_in=None):
     final_version = Prodsak.objects.filter(
         **filters).order_by('-version_no').first()
     if not final_version:
-        raise Prodsak.DoesNotExist
+        raise Prodsak.DoesNotExist()
 
     # Check whether the story has been edited in InDesign.
     if "Vellykket eksport fra InDesign!" in (
@@ -339,7 +339,7 @@ def _importer_bilder_fra_webside(websak, story, autocrop):
         image_file = _create_image_file(
             filepath=bilde.path,
             publication_date=websak.dato,
-            id=bilde.id_bilde,
+            pk=bilde.id_bilde,
         )
 
         # Make the StoryImage object.

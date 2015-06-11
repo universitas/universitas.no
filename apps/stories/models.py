@@ -1756,7 +1756,7 @@ class Byline(models.Model):
                 ' p_id: {p_id}\n{p_org} | {w_org} ').format(
                 id=story.id,
                 p_id=story.prodsak_id,
-                story=story,
+                # story=story,
                 byline=full_byline,
                 error=e,
                 p_org=p_org,

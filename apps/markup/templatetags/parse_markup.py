@@ -36,6 +36,6 @@ def insert_tingo(value, marker=':'):
     """ tingo filter """
     html_class = 'inngangsord'
     find = r'^(.{10}\S*)'
-    replace = r'<span class="{}">\1{}</span>'.format(html_class)
+    replace = r'<span class="{0}">\1{0}</span>'.format(html_class)
     value = re.sub(find, replace, value, re.M)
     return mark_safe(value)

@@ -9,6 +9,7 @@ pylint:
   disable:
     - dangerous-default-value
     - missing-super-argument
+    - super-on-old-class
 max-line-length: 120
 uses:
   - django

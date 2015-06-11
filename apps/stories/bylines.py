@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """ Byline cleanup magic. """
 import re
 import logging

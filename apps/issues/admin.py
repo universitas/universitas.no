@@ -15,10 +15,13 @@ class ThumbAdmin:
     exclude = ()
 
     def thumbnail(self, instance, width=200, height=200):
+        """ Show thumbnail of pdf frontpage """
         try:
             source = instance.get_thumbnail()
             thumb = get_thumbnail(source, '%sx%s' % (width, height))
             url = thumb.url
+        # FileNotFoundError is not builtin in python2, causing a linting warning.
+        # pylint: disable=undefined-variable
         except FileNotFoundError:
             url = '/static/admin/img/icon-no.gif'
         if instance.pdf:
@@ -51,14 +54,16 @@ class IssueAdmin(admin.ModelAdmin):
                 crop='top',
             )
             url = thumb.url
+        # pylint: disable=undefined-variable
         except FileNotFoundError:
             url = '/static/admin/img/icon-no.gif'
         return url
 
     def pdf_links(self, instance):
         html = ''
+        a_template = '<a href="{url}"><img src="{thumb}"><p>{filename}</p></a>'
         for pdf in instance.pdfs.all():
-            html += '<a href="{url}"><img src="{thumb}"><p>{filename}</p></a>'.format(
+            html += a_template.format(
                 url=pdf.get_edit_url(),
                 filename=pdf.pdf.name,
                 thumb=self.pdf_thumb(pdf),

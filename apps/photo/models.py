@@ -292,7 +292,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
                 pk=self.pk,
                 left=self.from_left,
                 top=self.from_top,
-                diameter=self.crop_diameter
+                # diameter=self.crop_diameter
             )
             logger.debug(msg)
             del(grayscale_image)  # Might save some memory?

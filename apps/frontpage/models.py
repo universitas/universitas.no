@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Django core
 from django.db import models
 import random

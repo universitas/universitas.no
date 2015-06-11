@@ -586,7 +586,7 @@ _backends_cache = {}
 
 def get_backend(backend_name=None):
     """Initializes and returns the search backend."""
-    global _backends_cache
+    # global _backends_cache
     # Try to use the cached backend.
     if backend_name in _backends_cache:
         return _backends_cache[backend_name]
