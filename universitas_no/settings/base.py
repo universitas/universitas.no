@@ -117,7 +117,7 @@ DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
 # Compressor
 COMPRESS_CSS_FILTERS = [
     'compressor.filters.css_default.CssAbsoluteFilter',
-    'compressor.filters.csstidy.CSSTidyFilter',
+    # 'compressor.filters.csstidy.CSSTidyFilter',
 ]
 
 
