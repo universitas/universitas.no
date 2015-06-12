@@ -5,6 +5,8 @@ from apps.frontpage.models import Frontpage, StoryModule
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
 import logging
 logger = logging.getLogger('universitas')
 
@@ -87,11 +89,13 @@ def get_frontpage_stories(story_queryset, frontpage=None):
         frontpage = Frontpage.objects.root()
 
     stories = story_queryset.is_on_frontpage(frontpage)
-    result = StoryModule.objects.filter(frontpage=frontpage, frontpage_story__story=stories )
+    result = StoryModule.objects.filter(
+        frontpage=frontpage,
+        frontpage_story__story=stories).prefetch_related('frontpage_story__imagefile')
     return result
 
 
-def frontpage_view(request, stories=None, frontpage=None):
+def actual_frontpage(request, stories=None, frontpage=None):
     """ Shows the newspaper frontpage. """
 
     context = {}
@@ -103,6 +107,21 @@ def frontpage_view(request, stories=None, frontpage=None):
     context['frontpage_items'] = frontpage_layout(blocks)
 
     return render(request, 'frontpage.html', context)
+
+
+@cache_page(10 * 60)
+def cached_frontpage(request, *args, **kwargs):
+    return actual_frontpage(request, *args, **kwargs)
+
+
+def frontpage_view(request, *args, **kwargs):
+    # Very hacky way of only caching for anauthenticated visitors.
+    if request.user.is_authenticated():
+        func = actual_frontpage
+    else:
+        func = cached_frontpage
+    return func(request, *args, **kwargs)
+
 
 def section_frontpage(request, section):
     section = get_object_or_404(Section, slug=section)
