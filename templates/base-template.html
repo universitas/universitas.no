@@ -1,5 +1,6 @@
 {% load cache %}
 {% load sekizai_tags %}
+{% load compress %}
 {% load staticfiles %}
 {% load universitas_menu %}
 {% load cache %}
@@ -13,12 +14,15 @@
     <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
     <link rel="icon" type="image/png" href="{% static 'images/favicon_128.png' %}" />
     <link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon.png' %}" />
+    {% compress css %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}">
+    {% endcompress %}
     {% addtoblock "css" %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/universitas.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/slick.css' %}">
     {% endaddtoblock %}
     {% render_block "css" postprocessor "compressor.contrib.sekizai.compress" %}
+    {% compress js inline %}
     <script src="{% static 'js/vendor/modernizr.js' %}"></script>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -29,6 +33,7 @@
       ga('create', 'UA-1579944-2', 'auto');
       ga('send', 'pageview');
     </script>
+    {% endcompress %}
   </head>
 
   <body>
