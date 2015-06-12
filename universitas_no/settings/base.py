@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     'autocomplete_light',
     'django_extensions',
     'compressor',
+
     'sekizai',
     'sorl.thumbnail',
     'watson',
@@ -112,6 +113,13 @@ DATABASES = {
     }
 }
 DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
+
+# Compressor
+COMPRESS_CSS_FILTERS = [
+    'compressor.filters.css_default.CssAbsoluteFilter',
+    'compressor.filters.csstidy.CSSTidyFilter',
+]
+
 
 # SORL
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
@@ -189,6 +197,8 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'compressor.finders.CompressorFinder',
+
+
 )
 # END STATIC FILE CONFIGURATION
 
