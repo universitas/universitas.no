@@ -115,7 +115,7 @@ def cached_frontpage(request, *args, **kwargs):
 
 
 def frontpage_view(request, *args, **kwargs):
-    # Very hacky way of only caching for anauthenticated visitors.
+    # Very hacky way of only caching for unauthenticated visitors.
     if request.user.is_authenticated():
         func = actual_frontpage
     else:
