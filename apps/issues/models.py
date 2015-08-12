@@ -10,6 +10,8 @@ from django.utils import timezone
 # Django core
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch.dispatcher import receiver
 # from django.utils.text import slugify
 
 # Installed apps
@@ -33,6 +35,7 @@ def current_issue():
         current_issue = Issue.objects.next_issue()
 
     return (current_issue.year, current_issue.number)
+
 
 class IssueQueryset(models.QuerySet):
 
@@ -240,3 +243,9 @@ class PrintIssue(models.Model, Edit_url_mixin):
     # @models.permalink
     def get_absolute_url(self):
         return self.pdf.url
+
+
+@receiver(pre_delete, sender=PrintIssue)
+def delete_pdf_and_cover_page(sender, instance, **kwargs):
+    instance.cover_page.delete(False)
+    instance.pdf.delete(False)
