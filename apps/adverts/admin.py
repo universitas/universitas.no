@@ -20,6 +20,8 @@ class CustomerAdmin(admin.ModelAdmin):
 @admin.register(Advert)
 class AdvertAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
     form = autocomplete_light.modelform_factory(Advert, exclude=())
+    save_as = True
+    save_on_top = True
     list_display = [
         '__str__',
         'customer',

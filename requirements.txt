@@ -33,9 +33,11 @@ six
 sqlparse
 tornado
 sorl-thumbnail
--e git+git@github.com:Haakenlid/django-autocomplete-light.git@v2#egg=autocomplete-light
+# -e git+git@github.com:Haakenlid/django-autocomplete-light.git@v2#egg=autocomplete-light
+django-autocomplete-light
 diff-match-patch
 awesome-slugify
 fuzzywuzzy
 python-Levenshtein
 Wand
+django-admin-bootstrapped
