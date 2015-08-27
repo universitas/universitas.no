@@ -4,7 +4,7 @@ from .models import Story
 
 
 class LatestStories(Feed):
-    title = "nyeste saker"
+    title = "Universitas: Nyeste saker"
     link = "/rss/"
     description = "Nyeste publiserte saker fra universitas.no"
 
