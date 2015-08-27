@@ -8,6 +8,7 @@ from apps.core.autocomplete_views import autocomplete_list
 from apps.frontpage.views import frontpage_view, section_frontpage, storytype_frontpage
 from apps.issues.views import PdfArchiveView, PubPlanView
 from apps.stories.views import article_view
+from apps.stories.feeds import LatestStories
 from autocomplete_light import urls as autocomplete_light_urls
 from .redirect_urls import urlpatterns as redirect_urls
 # from watson import urls as watson_urls
@@ -20,6 +21,9 @@ admin.autodiscover()
 
 # Content
 urlpatterns = [
+    # RSS
+    url(r'^rss/$', LatestStories(), name='rss'),
+
     url(r'^$', frontpage_view, name='frontpage'),
 
     url(r'^(?P<story_id>\d+?)/.*$',
@@ -30,6 +34,7 @@ urlpatterns = [
         section_frontpage, name='section'),
     url(r'^(?P<section>[a-z0-9-]+)/(?P<storytype>[a-z0-9-]+)/$',
         storytype_frontpage, name='storytype'),
+
 
     # Flat pages
     url(r'^om_universitas/$',
