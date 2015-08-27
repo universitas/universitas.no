@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^arkivet/', RedirectView.as_view(url=None)),
     # Rebranded pages
     url(r'^nyhet/$', RedirectView.as_view(url=r'/nyheter/')),
+    url(r'^nyheter/omverden/$', RedirectView.as_view(url=r'/nyheter/utenriks/')),
 ]
