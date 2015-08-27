@@ -34,6 +34,12 @@ PRODSYS_URL = environ["DJANGO_PRODSYS_URL"]
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
+# Set your DSN value
+RAVEN_CONFIG = {
+    'dsn': environ["DJANGO_RAVEN_DSN"],
+}
+
+
 # CUSTOM APPS
 INSTALLED_APPS = (
     'apps.issues',
@@ -59,6 +65,7 @@ INSTALLED_APPS = (
     'sekizai',
     'sorl.thumbnail',
     'watson',
+    'raven.contrib.django.raven_compat',
 ) + INSTALLED_APPS
 
 # CORE APPS

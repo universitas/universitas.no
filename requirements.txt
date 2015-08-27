@@ -41,3 +41,4 @@ fuzzywuzzy
 python-Levenshtein
 Wand
 django-admin-bootstrapped
+raven
