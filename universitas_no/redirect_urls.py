@@ -2,6 +2,7 @@
 """Urls to redirect"""
 from django.conf.urls import url
 from django.views.generic.base import RedirectView
+
 urlpatterns = [
     # PHP utils from old website
     url(r'^(?P<base>.+)/hl:.+$', RedirectView.as_view(url=r'/%(base)s/')),
@@ -11,6 +12,7 @@ urlpatterns = [
     url(r'^arkivet/', RedirectView.as_view(url=None)),
     # Rebranded pages
     url(r'^nyhet/$', RedirectView.as_view(url=r'/nyheter/')),
+    url(r'^vispor/$', RedirectView.as_view(url=r'/baksiden/vi-spor/')),
     url(r'^nyheter/omverden/$', RedirectView.as_view(url=r'/nyheter/utenriks/')),
     url(r'^omverden/$', RedirectView.as_view(url=r'/nyheter/utenriks/')),
 ]
