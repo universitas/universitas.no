@@ -1,16 +1,16 @@
 from django.shortcuts import render
 from apps.stories.models import Story, Section, StoryType
-from apps.photo.models import ImageFile
+# from apps.photo.models import ImageFile
 from apps.frontpage.models import Frontpage, StoryModule
-from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import get_object_or_404
-from django.utils import timezone
+from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, Http404
+# from django.shortcuts import get_object_or_404
+# from django.utils import timezone
 from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_headers
+# from django.views.decorators.vary import vary_on_headers
 import logging
 logger = logging.getLogger('universitas')
 
-from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.decorators import login_required
 
 
 def frontpage_layout(blocks):
@@ -128,11 +128,17 @@ def section_frontpage(request, section):
     try:
         section = Section.objects.get(slug=section)
     except Section.DoesNotExist:
+        # TODO: Clean up url fallbacks for single segment urls
         try:
             story_type = StoryType.objects.get(slug=section)
             return HttpResponseRedirect(story_type.get_absolute_url())
         except StoryType.DoesNotExist:
-            raise Http404('No such section')
+            try:
+                story = Story.objects.get(pk=int(section, 36))
+                return HttpResponsePermanentRedirect(story.get_absolute_url())
+            except Story.DoesNotExist:
+                raise Http404('Section not found.')
+
     stories = Story.objects.filter(story_type__section=section).published()
     return frontpage_view(request, stories=stories)
 
