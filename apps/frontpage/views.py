@@ -125,12 +125,22 @@ def frontpage_view(request, *args, **kwargs):
 
 
 def section_frontpage(request, section):
-    section = get_object_or_404(Section, slug=section)
+    try:
+        section = Section.objects.get(slug=section)
+    except Section.DoesNotExist:
+        try:
+            story_type = StoryType.objects.get(slug=section)
+            return HttpResponseRedirect(story_type.get_absolute_url())
+        except StoryType.DoesNotExist:
+            raise Http404('No such section')
     stories = Story.objects.filter(story_type__section=section).published()
     return frontpage_view(request, stories=stories)
 
 
 def storytype_frontpage(request, section, storytype):
-    story_type = get_object_or_404(StoryType, slug=storytype)
+    try:
+        story_type = StoryType.objects.get(slug=storytype)
+    except StoryType.DoesNotExist:
+        raise Http404('No such section and story type')
     stories = Story.objects.filter(story_type=story_type).published()
     return frontpage_view(request, stories=stories)

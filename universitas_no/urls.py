@@ -65,10 +65,10 @@ urlpatterns = [
         article_view, name='article'),
     url(r'^(?P<story_id>\d+?)/.*$',
         article_view, name='article_short'),
-    url(r'^(?P<section>[a-z0-9-]+)/$',
-        section_frontpage, name='section'),
     url(r'^(?P<section>[a-z0-9-]+)/(?P<storytype>[a-z0-9-]+)/$',
         storytype_frontpage, name='storytype'),
+    url(r'^(?P<section>[a-z0-9-]+)/$',
+        section_frontpage, name='section'),
 ]
 
 # Django debug toolbar
