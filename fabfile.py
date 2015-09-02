@@ -14,7 +14,7 @@ from deployment_tools.generate_postactivate import make_postactivate_file
 REPO_URL = 'git@github.com:universitas/tassen.git'
 
 PYVENV = 'virtualenv'  # using python 3.4 for virtual environments
-LINUXGROUP = 'www'  # linux user group on the webserver
+LINUXGROUP = 'universitas'  # linux user group on the webserver
 WEBSERVER_ROOT = '/srv'  # root folder for all websites on the webserver
 SITE_NAME = 'universitas.no'
 env.site_url = 'vagrant.' + SITE_NAME
@@ -183,12 +183,9 @@ def deploy():
     # Folders are named something like www.example.com
     # or www.staging.example.com for production or staging
     folders = _get_folders()
-
     postactivate_file, project_settings = make_postactivate_file(env.site_url, )
-
     _create_postgres_db(project_settings)
     _create_linux_user(project_settings['user'], LINUXGROUP)
-
     _folders_and_permissions(folders)
     _create_virtualenv(folders)
     _upload_postactivate(postactivate_file, folders['venv'], folders['bin'])

@@ -16,11 +16,13 @@ OVERRIDES = {  # Change some settings from the defaults in named deployments.
     },
 }
 
+
 def make_postactivate_file(site_url, file_path=None):
     """ Make a postactivate file and return settings as a dictionary. """
+
     if file_path is None:
         file_path = '{this_folder}/postactivate.{url}'.format(
-            this_folder=path.dirname(__file__),
+            this_folder=path.dirname(path.abspath(__file__)),
             url=site_url,
         )
     contents, settings = make_postactivate_text(site_url)
@@ -38,13 +40,12 @@ def _make_random_sequence(length=50):
 
 def _find_my_ip_address():
     """ find public ip of local computer """
-    try:
-        return request('get', 'http://ipecho.net/plain').text
-    except:
-        pass
-    try:
-        return request('get', 'http://canihazip.com/s').text
-    except:
+    for url in ['http://ipecho.net/plain', 'http://canihazip.com/s']:
+        try:
+            return request('get', url, timeout=0.5).text
+        except:
+            pass
+    else:
         return '127.0.0.1'
 
 
@@ -56,7 +57,13 @@ def make_postactivate_text(site_url):
     settings = {}
     for key in environ.keys():
         if key.startswith(PREFIX):
-            new_item = {key.replace(PREFIX, '', 1).lower().replace('_', ' '): environ.get(key)}
+            new_item = {
+                key.replace(
+                    PREFIX,
+                    '',
+                    1).lower().replace(
+                    '_',
+                    ' '): environ.get(key)}
             settings.update(new_item)
 
     settings.update({
@@ -87,16 +94,14 @@ def make_postactivate_text(site_url):
             key=key.replace(' ', '_').upper(),
             value=settings[key],
         )
-    postactivate += (
-        '\n'
-        'export PYTHONPATH="$DJANGO_SOURCE_FOLDER:$PYTHONPATH"\n'
-        'export PATH="$(dirname $DJANGO_SOURCE_FOLDER)/node_modules/.bin:$PATH"\n'
-        'export PYTHONWARNINGS=ignore\n'
-        'cd $DJANGO_SOURCE_FOLDER\n'
-    )
+    postactivate += ('\n'
+                     'export PYTHONPATH="$DJANGO_SOURCE_FOLDER:$PYTHONPATH"\n'
+                     'export PATH="$(dirname $DJANGO_SOURCE_FOLDER)/node_modules/.bin:$PATH"\n'
+                     'export PYTHONWARNINGS=ignore\n'
+                     'cd $DJANGO_SOURCE_FOLDER\n')
     return postactivate, settings
 
 
 if (__name__) == '__main__':
     # make a postactivate file for local dev server.
-    make_postactivate_file(site_url='local.{}'.format(SITE_DOMAIN),)
+    make_postactivate_file(site_url='local.{}'.format('site'),)
