@@ -4,6 +4,7 @@
   "description": "Newspaper for students in Oslo",
   "homepage": "http://universitas.no",
   "dependencies": {
+    "bower": "^1.4.1",
     "browserify": "^9.0.8",
     "browserify-shim": "^3.8.2",
     "gulp": "^3.9.0",
@@ -20,18 +21,16 @@
     "jquery": "^2.1.4",
     "lodash": "^3.3.1",
     "merge-stream": "^0.1.8",
+    "node-sass": "~3.2.0",
     "pretty-hrtime": "^1.0.0",
     "require-dir": "^0.1.0",
     "vinyl-source-stream": "^1.0.0",
-    "watchify": "^2.6.2",
-    "bower": "^1.4.1",
-    "node-sass": "~3.2.0"
+    "watchify": "^2.6.2"
   },
   "devDependencies": {
     "browser-sync": "^2.2.5"
   },
-  "scripts": {
-  },
+  "scripts": {},
   "browser": {
     "modernizr": "../bower_components/modernizr/modernizr.js",
     "jquery": "../bower_components/jquery/dist/jquery.js",
