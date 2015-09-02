@@ -11,7 +11,4 @@ INSTALLED_APPS += ['debug_toolbar', ]
 MIDDLEWARE_CLASSES += ['debug_toolbar.middleware.DebugToolbarMiddleware', ]
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
-if env_var('DEBUG_TOOLBAR_INTERNAL_IPS'):
-    INTERNAL_IPS = env_var(
-        'DEBUG_TOOLBAR_INTERNAL_IPS'
-    ).split(' ')
+INTERNAL_IPS = environment_variable('DEBUG_TOOLBAR_INTERNAL_IPS').split(' ')

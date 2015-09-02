@@ -19,5 +19,5 @@ NOTEBOOK_ARGUMENTS = [
     '--no-browser',
     '--port=8888',
     '--notebook-dir',
-    os.path.join(SITE_ROOT, 'notebooks')
+    join_path(BASE_DIR, 'notebooks')
 ]

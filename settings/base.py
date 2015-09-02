@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 Django settings for universitas_no project.
-"""
+'''
 
 from os.path import dirname
 import django.conf.global_settings as DEFAULT_SETTINGS
@@ -9,7 +9,7 @@ from .setting_helpers import environment_variable, join_path
 
 DEBUG = TEMPLATE_DEBUG = False
 # Set your DSN value for Raven/Sentry error logging.
-RAVEN_CONFIG = {'dsn': environment_variable("RAVEN_DSN"), }
+RAVEN_CONFIG = {'dsn': environment_variable('RAVEN_DSN'), }
 
 INSTALLED_APPS = [  # CUSTOM APPS
     'apps.issues',
@@ -26,6 +26,8 @@ INSTALLED_APPS = [  # CUSTOM APPS
 ]
 
 INSTALLED_APPS = [  # THIRD PARTY APPS
+    'sekizai',
+    'copressor',
     'autocomplete_light',
     'django_extensions',
     'sorl.thumbnail',
@@ -54,13 +56,13 @@ MIDDLEWARE_CLASSES = [
 ]
 
 # Prodsys for universitas.
-PRODSYS_USER = environment_variable("PRODSYS_USER")
-PRODSYS_PASSWORD = environment_variable("PRODSYS_PASSWORD")
-PRODSYS_URL = environment_variable("PRODSYS_URL")
+PRODSYS_USER = environment_variable('PRODSYS_USER')
+PRODSYS_PASSWORD = environment_variable('PRODSYS_PASSWORD')
+PRODSYS_URL = environment_variable('PRODSYS_URL')
 
 ROOT_URLCONF = 'core.urls'
-SECRET_KEY = environment_variable("SECRET_KEY")
-SITE_URL = environment_variable("SITE_URL")
+SECRET_KEY = environment_variable('SECRET_KEY')
+SITE_URL = environment_variable('SITE_URL')
 WSGI_APPLICATION = 'core.wsgi.application'
 
 LOGIN_URL = '/admin/login/'
@@ -81,18 +83,18 @@ DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': environment_variable("DB_NAME"),
-        'USER': environment_variable("DB_USER"),
-        'PASSWORD': environment_variable("DB_PASSWORD"),
+        'NAME': environment_variable('DB_NAME'),
+        'USER': environment_variable('DB_USER'),
+        'PASSWORD': environment_variable('DB_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '5432',       # Set to empty string for default.
     },
     'prodsys': {
         'ENGINE': 'mysql.connector.django',
-        'NAME': environment_variable("PRODSYS_DB_NAME"),
-        'USER': environment_variable("PRODSYS_DB_USER"),
-        'PASSWORD': environment_variable("PRODSYS_DB_PASSWORD"),
-        'HOST': environment_variable("PRODSYS_DB_HOST"),
+        'NAME': environment_variable('PRODSYS_DB_NAME'),
+        'USER': environment_variable('PRODSYS_DB_USER'),
+        'PASSWORD': environment_variable('PRODSYS_DB_PASSWORD'),
+        'HOST': environment_variable('PRODSYS_DB_HOST'),
         'PORT': '',       # Set to empty string for default.
     }
 }
@@ -116,7 +118,7 @@ CACHES = {
 
 # FOLDERS
 # source code folder
-BASE_DIR = environment_variable("SOURCE_FOLDER")
+BASE_DIR = environment_variable('SOURCE_FOLDER')
 # outside of repo
 PROJECT_DIR = dirname(BASE_DIR)
 # collectstatic to here
@@ -146,12 +148,12 @@ SHORT_DATE_FORMAT = 'Y-m-d'
 SHORT_DATETIME_FORMAT = 'y-m-d H:i'
 TIME_INPUT_FORMATS = ('%H:%M', '%H', '%H:%M:%S', '%H.%M')
 
-TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + [
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
     'sekizai.context_processors.sekizai',
     'django.core.context_processors.request',
     'apps.issues.context_processors.issues',
     'apps.contributors.context_processors.staff',
-]
+)
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
