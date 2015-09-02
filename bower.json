@@ -1,0 +1,21 @@
+{
+  "name": "universitas.no",
+  "version": "0.0.1",
+  "dependencies": {
+    "foundation": "~5.5.2",
+    "jquery": "~2.1.4",
+    "modernizr": "~2.8.3"
+  },
+  "ignore": [
+    "*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/universitas/tassen.git"
+  },
+  "contributors": [
+    "Håken Lid <haakenlid@gmail.com> (https://github.com/haakenlid)"
+  ],
+  "private": true,
+  "license": "UNLICENCED"
+}

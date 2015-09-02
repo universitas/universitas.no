@@ -1,0 +1,53 @@
+{
+  "name": "universitas.no",
+  "version": "1.0.1",
+  "description": "Newspaper for students in Oslo",
+  "homepage": "http://universitas.no",
+  "dependencies": {
+    "browserify": "^9.0.8",
+    "browserify-shim": "^3.8.2",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^2.3.1",
+    "gulp-changed": "^1.3.0",
+    "gulp-filesize": "^0.0.6",
+    "gulp-minify-css": "^0.5.1",
+    "gulp-notify": "^2.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^1.3.3",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-uglify": "^1.2.0",
+    "gulp-util": "^3.0.6",
+    "jquery": "^2.1.4",
+    "lodash": "^3.3.1",
+    "merge-stream": "^0.1.8",
+    "pretty-hrtime": "^1.0.0",
+    "require-dir": "^0.1.0",
+    "vinyl-source-stream": "^1.0.0",
+    "watchify": "^2.6.2",
+    "bower": "~1.4.1",
+    "node-sass": "~3.2.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.2.5"
+  },
+  "scripts": {
+  },
+  "browser": {
+    "modernizr": "../bower_components/modernizr/modernizr.js",
+    "jquery": "../bower_components/jquery/dist/jquery.js"
+  },
+  "browserify-shim": {
+    "modernizr": "modernizr",
+    "jquery": "jquery"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "contributors": [
+    "Håken Lid <haakenlid@gmail.com> (https://github.com/haakenlid)"
+  ],
+  "private": true,
+  "license": "UNLICENCED"
+}
