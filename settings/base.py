@@ -1,47 +1,17 @@
 # -*- coding: utf-8 -*-
 """
 Django settings for universitas_no project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
-# Build paths inside the project like this: path.join(SITE_ROOT, ...)
-from os import environ
-from os.path import abspath, dirname, join, normpath
+from os.path import dirname
 import django.conf.global_settings as DEFAULT_SETTINGS
+from .setting_helpers import environment_variable, join_path
 
-# PATH CONFIGURATION
-# Absolute filesystem path to the Django project directory:
-BASE_DIR = environ["DJANGO_SOURCE_FOLDER"]
+DEBUG = TEMPLATE_DEBUG = False
+# Set your DSN value for Raven/Sentry error logging.
+RAVEN_CONFIG = {'dsn': environment_variable("RAVEN_DSN"), }
 
-# Absolute filesystem path to the top-level project folder:
-PROJECT_ROOT_FOLDER = dirname(BASE_DIR)
-# These values are set in the virtualenv postactivate bash file
-
-SECRET_KEY = environ["DJANGO_SECRET_KEY"]
-SITE_URL = environ["DJANGO_SITE_URL"]
-
-# Prodsys for universitas.
-PRODSYS_USER = environ["DJANGO_PRODSYS_USER"]
-PRODSYS_PASSWORD = environ["DJANGO_PRODSYS_PASSWORD"]
-PRODSYS_URL = environ["DJANGO_PRODSYS_URL"]
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-TEMPLATE_DEBUG = DEBUG
-
-# Set your DSN value
-RAVEN_CONFIG = {
-    'dsn': environ["DJANGO_RAVEN_DSN"],
-}
-
-
-# CUSTOM APPS
-INSTALLED_APPS = (
+INSTALLED_APPS = [  # CUSTOM APPS
     'apps.issues',
     'apps.stories',
     'apps.core',
@@ -53,33 +23,27 @@ INSTALLED_APPS = (
     'apps.adverts',
     'apps.search',
     'functional_tests',
-)
+]
 
-# THIRD PARTY APPS
-INSTALLED_APPS = (
-    # 'django_nose',
+INSTALLED_APPS = [  # THIRD PARTY APPS
     'autocomplete_light',
     'django_extensions',
-    'compressor',
-
-    'sekizai',
     'sorl.thumbnail',
     'watson',
     'raven.contrib.django.raven_compat',
-) + INSTALLED_APPS
+] + INSTALLED_APPS
 
-# CORE APPS
-INSTALLED_APPS = (
+INSTALLED_APPS = [  # CORE APPS
+    'django_admin_bootstrapped',  # must be before .admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-) + INSTALLED_APPS
+] + INSTALLED_APPS
 
-
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES = [
     'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -87,59 +51,51 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
-
-ROOT_URLCONF = 'universitas_no.urls'
-WSGI_APPLICATION = 'universitas_no.wsgi.application'
-
-
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_URL = '/'
-LOGIN_URL = '/admin/login/'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': environ["DJANGO_DB_NAME"],
-        'USER': environ["DJANGO_DB_USER"],
-        'PASSWORD': environ["DJANGO_DB_PASSWORD"],
-        'HOST': 'localhost',
-        'PORT': '5432',       # Set to empty string for default.
-    },
-    'prodsys': {
-        'ENGINE': 'mysql.connector.django',
-        'NAME': environ["DJANGO_PRODSYS_DB_NAME"],
-        'USER': environ["DJANGO_PRODSYS_DB_USER"],
-        'PASSWORD': environ["DJANGO_PRODSYS_DB_PASSWORD"],
-        'HOST': environ["DJANGO_PRODSYS_DB_HOST"],
-        # 'HOST': 'localhost', # TODO: Endre dette tilbake det er bare et eksperiment.
-        'PORT': '',       # Set to empty string for default.
-    }
-}
-DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
-
-# Compressor
-COMPRESS_CSS_FILTERS = [
-    'compressor.filters.css_default.CssAbsoluteFilter',
-    # 'compressor.filters.csstidy.CSSTidyFilter',
 ]
 
+# Prodsys for universitas.
+PRODSYS_USER = environment_variable("PRODSYS_USER")
+PRODSYS_PASSWORD = environment_variable("PRODSYS_PASSWORD")
+PRODSYS_URL = environment_variable("PRODSYS_URL")
+
+ROOT_URLCONF = 'core.urls'
+SECRET_KEY = environment_variable("SECRET_KEY")
+SITE_URL = environment_variable("SITE_URL")
+WSGI_APPLICATION = 'core.wsgi.application'
+
+LOGIN_URL = '/admin/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = '/'
 
 # SORL
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
 THUMBNAIL_ENGINE = 'apps.photo.custom_thumbnail_classes.CloseCropEngine'
 THUMBNAIL_QUALITY = 50
-
+FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
+FILE_UPLOAD_PERMISSIONS = 0o664
 # Uncomment to enable original file names for resized images.
 # THUMBNAIL_BACKEND = 'apps.photo.custom_thumbnail_classes.KeepNameThumbnailBackend'
 
-FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
-FILE_UPLOAD_PERMISSIONS = 0o664
-
+# DATABASE
+DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': environment_variable("DB_NAME"),
+        'USER': environment_variable("DB_USER"),
+        'PASSWORD': environment_variable("DB_PASSWORD"),
+        'HOST': 'localhost',
+        'PORT': '5432',       # Set to empty string for default.
+    },
+    'prodsys': {
+        'ENGINE': 'mysql.connector.django',
+        'NAME': environment_variable("PRODSYS_DB_NAME"),
+        'USER': environment_variable("PRODSYS_DB_USER"),
+        'PASSWORD': environment_variable("PRODSYS_DB_PASSWORD"),
+        'HOST': environment_variable("PRODSYS_DB_HOST"),
+        'PORT': '',       # Set to empty string for default.
+    }
+}
 # CACHE
 CACHES = {
     'default': {
@@ -158,74 +114,52 @@ CACHES = {
     },
 }
 
-
-# When using unix domain sockets with Redis
-# Note: ``LOCATION`` needs to be the same as the ``unixsocket`` setting
-# in your redis.conf
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'redis_cache.RedisCache',
-#         'LOCATION': '/path/to/socket/file',
-#         'OPTIONS': {
-#             'DB': 1,
-#             'PASSWORD': 'yadayada',
-#             'PARSER_CLASS': 'redis.connection.HiredisParser'
-#         },
-#     },
-
-
-# STATIC FILE CONFIGURATION
-STATIC_ROOT = normpath(join(PROJECT_ROOT_FOLDER, 'static'))
-STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    normpath(join(BASE_DIR, 'assets')),
-)
+# FOLDERS
+# source code folder
+BASE_DIR = environment_variable("SOURCE_FOLDER")
+# outside of repo
+PROJECT_DIR = dirname(BASE_DIR)
+# collectstatic to here
+STATIC_ROOT = join_path(PROJECT_DIR, 'static')
+# User uploaded files
+MEDIA_ROOT = '/srv/fotoarkiv_universitas'
+# Django puts generated translation files here.
+LOCALE_PATHS = [join_path(BASE_DIR, 'translation'), ]
+# Extra path to collect static assest such as javascript and css
+STATICFILES_DIRS = [join_path(PROJECT_DIR, 'build'), ]
+# Project wide fixtures to be loaded into database.
+FIXTURE_DIRS = [join_path(BASE_DIR, 'fixtures'), ]
+# Project wide django template files
+TEMPLATE_DIRS = [join_path(BASE_DIR, 'templates'), ]
+# Log files here
+LOG_FOLDER = join_path(PROJECT_DIR, 'logs')
 
 # INTERNATIONALIZATION
-# LANGUAGE_CODE = 'en'
 LANGUAGE_CODE = 'NB_no'
 TIME_ZONE = 'Europe/Oslo'
 USE_I18N = True  # Internationalisation (string translation)
 USE_L10N = True  # Localisation (numbers and stuff)
 USE_TZ = True  # Use timezone
-LOCALE_PATHS = (
-    normpath(join(BASE_DIR, 'translation')),
-)
-
 DATE_FORMAT = 'j. F, Y'
 DATETIME_FORMAT = 'Y-m-d H:i'
 SHORT_DATE_FORMAT = 'Y-m-d'
 SHORT_DATETIME_FORMAT = 'y-m-d H:i'
+TIME_INPUT_FORMATS = ('%H:%M', '%H', '%H:%M:%S', '%H.%M')
 
-
-# MEDIA_ROOT = normpath(join(PHOTO_ARCHIVE, 'upload'))
-MEDIA_ROOT = '/srv/fotoarkiv_universitas'
-MEDIA_URL = '/foto/'
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'compressor.finders.CompressorFinder',
-
-
-)
-# END STATIC FILE CONFIGURATION
-
-# TEMPLATES AND FIXTURES CONFIGURATION
-FIXTURE_DIRS = (
-    normpath(join(BASE_DIR, 'fixtures')),
-)
-TEMPLATE_DIRS = (
-    normpath(join(BASE_DIR, 'templates')),
-)
-TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + [
     'sekizai.context_processors.sekizai',
     'django.core.context_processors.request',
     'apps.issues.context_processors.issues',
     'apps.contributors.context_processors.staff',
-)
-# END TEMPLATES AND FIXTURES CONFIGURATION
+]
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'compressor.finders.CompressorFinder',
+]
 
-LOG_FOLDER = normpath(join(PROJECT_ROOT_FOLDER, 'logs'))
+STATIC_URL = '/static/'
+MEDIA_URL = '/foto/'
 
 LOGGING = {
     'version': 1,
@@ -255,19 +189,13 @@ LOGGING['handlers'] = {
     'file': {
         'level': 'WARNING',
         'class': 'logging.FileHandler',
-        'filename': normpath(
-            join(
-                LOG_FOLDER,
-                'django.log')),
+        'filename': join_path(LOG_FOLDER, 'django.log'),
         'formatter': 'verbose',
     },
     'bylines_file': {
         'level': 'DEBUG',
         'class': 'logging.FileHandler',
-        'filename': normpath(
-            join(
-                LOG_FOLDER,
-                'bylines.log')),
+        'filename': join_path(LOG_FOLDER, 'bylines.log'),
         'formatter': 'minimal',
     },
 }
