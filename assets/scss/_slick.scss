@@ -1,0 +1,33 @@
+$slick-font-path:         "../fonts/"         ;// Directory path for the slick icon font
+$slick-font-family:       "universitas-icons"           ;// Font-family for slick icon font
+$slick-loader-path:       "../images/"        ;// Directory path for the loader image
+// $slick-arrow-color:       red             ;// Color of the left/right arrow icons
+// $slick-dot-color:         red             ;// Color of the navigation dots
+// $slick-dot-color-active:  $slick-dot-color  ;// Color of the active navigation dot
+$slick-prev-character:    '\e823'           ;// Unicode character code for the previous arrow icon
+$slick-next-character:    '\e824'           ;// Unicode character code for the next arrow icon
+$slick-dot-character:     '\2f'           ;// Unicode character code for the navigation dot icon
+$slick-dot-size:          .5rem               ;// Size of the navigation dots
+
+@import "slick-carousel/slick/slick-theme";
+@import "slick-carousel/slick/slick";
+
+.slideshow.slick-slider {
+  margin-bottom: 20px;
+
+  .slick-active {
+    outline: none;
+  }
+  .slick-dots {
+      bottom: -20px;
+      margin: 0;
+  }
+  .slick-next {
+    right: 0;
+    z-index: 10;
+  }
+  .slick-prev {
+    left: 0;
+    z-index: 10;
+  }
+}

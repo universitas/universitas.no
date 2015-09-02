@@ -11,11 +11,11 @@ module.exports = {
     watch: src + "/scss/**/*.*",
     dest: dest + "/css",
     options: {
-      noCache: true,
+      noCache: false,
       compass: false,
       bundleExec: true,
       sourcemap: true,
-      includePaths: ['../bower_components/foundation/scss/'],
+      includePaths: ['../bower_components/'],
       sourcemapPath: './'
     }
   },
@@ -43,6 +43,11 @@ module.exports = {
       entries: src + '/javascript/site.js',
       dest: dest + '/javascript/',
       outputName: 'universitas.js',
+    }, {
+      // Vendor javascript
+      entries: src + '/javascript/vendor.js',
+      dest: dest + '/javascript/',
+      outputName: 'vendor.js',
     }, {
       // Modernizr must be loaded in html head to work best.
       entries: src + '/javascript/head.js',

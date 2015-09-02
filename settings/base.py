@@ -36,7 +36,7 @@ INSTALLED_APPS = [  # THIRD PARTY APPS
 ] + INSTALLED_APPS
 
 INSTALLED_APPS = [  # CORE APPS
-    'django_admin_bootstrapped',  # must be before .admin
+    # 'django_admin_bootstrapped',  # must be before .admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -2,12 +2,16 @@
 
 // Fonts and icons
 @import "includes/googlefonts";
-@import "includes/universitas-icons";
-// @import "foundation-icons";
 
 // CSS Framework
-@import "foundation/settings";
-@import "foundation";
+@import "foundation_settings";
+@import "foundation_components";
+
+// Carousel
+@import "slick";
+
+// Icon fonts
+@import "../universitas-icons/css/universitas-icons.css";
 
 // Local styles
 @import "includes/colors";
@@ -18,3 +22,4 @@
 @import "includes/old-menu";
 @import "includes/pdf-archive";
 @import "includes/search-results";
+
