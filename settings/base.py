@@ -26,8 +26,8 @@ INSTALLED_APPS = [  # CUSTOM APPS
 ]
 
 INSTALLED_APPS = [  # THIRD PARTY APPS
+    'compressor',
     'sekizai',
-    'copressor',
     'autocomplete_light',
     'django_extensions',
     'sorl.thumbnail',
