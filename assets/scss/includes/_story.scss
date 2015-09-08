@@ -88,10 +88,9 @@
   }
   .left-sidebar{
     padding: 0 20px 0 10px;
-    // border-right: $separator-line;
     text-align: center;
     @extend %small-text;
-    @at-root .story-info{
+    .story-info{
       @extend %line-below;
       font-family: 'Roboto Slab';
       font-size: 1.2rem;
@@ -175,6 +174,7 @@
   .bodytext {
     @extend .medium-9;
     @extend .columns;
+    @extend .left;
   }
 
   .inline-full {

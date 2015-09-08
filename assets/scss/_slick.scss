@@ -52,7 +52,7 @@ $slick-dot-size:          1rem               ;// Size of the navigation dots
     @extend %icon;
     transform: translate(0,-40px);
     bottom: inherit;
-    li.slick-active button:before{
+    li.active button:before{
       opacity: 1;
     }
     li button:before {
