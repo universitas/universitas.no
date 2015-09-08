@@ -1,4 +1,4 @@
-# Place nginx config files in /etc/nginx/sites-available, and make a symbolic 
+# Place nginx config files in /etc/nginx/sites-available, and make a symbolic
 # link to /etc/nginx/sites-enabled to activate the site.
 
 
@@ -27,7 +27,7 @@ server {
     }
 
     location / {
-        proxy_set_header Host $host;
+        proxy_set_header Host $http_host;
         proxy_pass       http://USERNAME;
     }
 

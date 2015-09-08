@@ -9,7 +9,7 @@ user="USERNAME"
 group="USERGROUP"
 num_workers="3"
 max_requests="0"
-wsgi="universitas_no.wsgi"
+wsgi="core.wsgi"
 
 source  $virtualenvfolder/bin/activate
 # Activate the virtual environment.
