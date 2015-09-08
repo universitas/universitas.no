@@ -20,6 +20,7 @@ ipython
 --allow-external mysql-connector-python
 mysql-connector-python==1.2.2
 nose
+numpy
 pypdf2
 psycopg2
 pyparsing
