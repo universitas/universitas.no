@@ -1,15 +1,12 @@
-import re
 from django.shortcuts import render
+from apps.stories.models import Story, Section, StoryType
+# from apps.photo.models import ImageFile
+from apps.frontpage.models import Frontpage, StoryModule
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, Http404
-from django.utils.http import urlencode, base36_to_int
-from django.core.urlresolvers import reverse
 # from django.shortcuts import get_object_or_404
 # from django.utils import timezone
 from django.views.decorators.cache import cache_page
 # from django.views.decorators.vary import vary_on_headers
-# from apps.photo.models import ImageFile
-from apps.stories.models import Story, Section, StoryType
-from apps.frontpage.models import Frontpage, StoryModule
 import logging
 logger = logging.getLogger('universitas')
 
@@ -129,33 +126,22 @@ def frontpage_view(request, *args, **kwargs):
 
 def section_frontpage(request, section):
     try:
-        # is the slug a section name?
         section = Section.objects.get(slug=section)
-        stories = Story.objects.filter(story_type__section=section).published()
-        return frontpage_view(request, stories=stories)
     except Section.DoesNotExist:
-        return fallback_view(request, slug=section)
-
-def fallback_view(request, slug):
-    try:
-        # is the slug a story type?
-        story_type = StoryType.objects.get(slug=slug)
-        return HttpResponseRedirect(story_type.get_absolute_url())
-    except StoryType.DoesNotExist:
+        # TODO: Clean up url fallbacks for single segment urls
         try:
-            # is the slug a legacy base36 short url
-            story = Story.objects.get(pk=base36_to_int(slug))
-            return HttpResponsePermanentRedirect(story.get_absolute_url())
-        except (ValueError, Story.DoesNotExist):
-            return search_404_view(request, slug)
+            story_type = StoryType.objects.get(slug=section)
+            return HttpResponseRedirect(story_type.get_absolute_url())
+        except StoryType.DoesNotExist:
+            try:
+                story = Story.objects.get(pk=int(section, 36))
+                return HttpResponsePermanentRedirect(story.get_absolute_url())
+            except Story.DoesNotExist:
+                raise Http404('Section not found.')
 
-def search_404_view(request, slug):
-    search_terms = re.split(r'\W|_', slug)
-    redirect_to = '{search}?q={terms}'.format(
-        search=reverse('watson:search'),
-        terms='+'.join(search_terms),
-    )
-    return HttpResponseRedirect(redirect_to)
+    stories = Story.objects.filter(story_type__section=section).published()
+    return frontpage_view(request, stories=stories)
+
 
 def storytype_frontpage(request, section, storytype):
     try:

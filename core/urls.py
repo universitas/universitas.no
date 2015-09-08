@@ -5,7 +5,7 @@ from django.contrib import admin
 from apps.core.views import RobotsTxtView, HumansTxtView
 from apps.search import urls as search_urls
 from apps.core.autocomplete_views import autocomplete_list
-from apps.frontpage.views import frontpage_view, section_frontpage, storytype_frontpage, search_404_view
+from apps.frontpage.views import frontpage_view, section_frontpage, storytype_frontpage
 from apps.issues.views import PdfArchiveView, PubPlanView
 from apps.stories.views import article_view
 from apps.stories.feeds import LatestStories
@@ -52,9 +52,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^robots.txt$', RobotsTxtView.as_view(), name='robots.txt'),
     url(r'^humans.txt$', HumansTxtView.as_view(), name='humans.txt'),
-    url(r'^favicon.ico$',
-        RedirectView.as_view(url='/static/images/favicon.ico'),
-        name='favicon.ico'),
+    url(r'^favicon.ico$', RedirectView.as_view(url='/static/images/favicon.ico'), name='favicon.ico'),
 
     url(r'^autocomplete', include(autocomplete_light_urls)),
     url(r'^autocomplete', include(autocomplete_light_urls)),
@@ -82,7 +80,4 @@ if settings.DEBUG:
     )
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-urlpatterns += [
-    url(r'^(?P<slug>.+)$',
-        search_404_view, name='not_found'),
-]
+
