@@ -15,6 +15,8 @@
 .icon-link:before { content: '\2e'; } /* '.' */
 .icon-circle:before { content: '\2f'; } /* '/' */
 .icon-square:before { content: '\30'; } /* '0' */
+.icon-previous:before { content: '\31'; } /* '1' */
+.icon-next:before { content: '\32'; } /* '2' */
 .icon-at:before { content: '\40'; } /* '@' */
 .icon-contacts:before { content: '\61'; } /* 'a' */
 .icon-share:before { content: '\e800'; } /* '' */

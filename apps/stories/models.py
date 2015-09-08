@@ -614,8 +614,8 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
     def visit_page(self, request):
         """ Check if visit looks like a human and update hit count """
-        if not self.status == self.STATUS_PUBLISHED:
-            # Must be a member of staff.
+        if not self.publication_status == self.STATUS_PUBLISHED:
+            # Only count hits on published pages.
             return False
         user_agent = request.META.get('HTTP_USER_AGENT', '').lower()
         if not user_agent:

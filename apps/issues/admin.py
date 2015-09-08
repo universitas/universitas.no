@@ -20,7 +20,7 @@ class ThumbAdmin:
             source = instance.get_thumbnail()
             thumb = get_thumbnail(source, '%sx%s' % (width, height))
             url = thumb.url
-        except FileNotFoundError:  # noqa
+        except (AttributeError, FileNotFoundError):  # noqa
             url = '/static/admin/img/icon-no.gif'
         if instance.pdf:
             html = '<a href="{pdf}"><img src="{thumb}"></a>'.format(

@@ -220,7 +220,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
         """ Get or create a jpg version of the pdf frontpage """
         pdf = self.pdf
         cover = self.cover_page
-        if not pdf:
+        if not pdf or not os.path.isfile(pdf.path):
             return None
         if cover and os.path.isfile(cover.path):
             # There is a cover thumb

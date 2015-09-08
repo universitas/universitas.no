@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'universitas-icons';
-  src: url('../fonts/universitas-icons.eot?29790489');
-  src: url('../fonts/universitas-icons.eot?29790489#iefix') format('embedded-opentype'),
-       url('../fonts/universitas-icons.woff?29790489') format('woff'),
-       url('../fonts/universitas-icons.ttf?29790489') format('truetype'),
-       url('../fonts/universitas-icons.svg?29790489#universitas-icons') format('svg');
+  src: url('/static/fonts/universitas-icons.eot?31676379');
+  src: url('/static/fonts/universitas-icons.eot?31676379#iefix') format('embedded-opentype'),
+       url('/static/fonts/universitas-icons.woff?31676379') format('woff'),
+       url('/static/fonts/universitas-icons.ttf?31676379') format('truetype'),
+       url('/static/fonts/universitas-icons.svg?31676379#universitas-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'universitas-icons';
-    src: url('../font/universitas-icons.svg?29790489#universitas-icons') format('svg');
+    src: url('../font/universitas-icons.svg?31676379#universitas-icons') format('svg');
   }
 }
 */
@@ -70,6 +70,8 @@
 .icon-link:before { content: '\2e'; } /* '.' */
 .icon-circle:before { content: '\2f'; } /* '/' */
 .icon-square:before { content: '\30'; } /* '0' */
+.icon-previous:before { content: '\31'; } /* '1' */
+.icon-next:before { content: '\32'; } /* '2' */
 .icon-at:before { content: '\40'; } /* '@' */
 .icon-contacts:before { content: '\61'; } /* 'a' */
 .icon-share:before { content: '\e800'; } /* '' */

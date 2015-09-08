@@ -119,6 +119,18 @@
       "src": "fontawesome"
     },
     {
+      "uid": "d870630ff8f81e6de3958ecaeac532f2",
+      "css": "previous",
+      "code": 49,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "399ef63b1e23ab1b761dfbb5591fa4da",
+      "css": "next",
+      "code": 50,
+      "src": "fontawesome"
+    },
+    {
       "uid": "b624a1e512819d410ddbee84e6918b9d",
       "css": "square",
       "code": 48,

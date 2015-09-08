@@ -1,33 +1,71 @@
 $slick-font-path:         "../fonts/"         ;// Directory path for the slick icon font
 $slick-font-family:       "universitas-icons"           ;// Font-family for slick icon font
 $slick-loader-path:       "../images/"        ;// Directory path for the loader image
-// $slick-arrow-color:       red             ;// Color of the left/right arrow icons
-// $slick-dot-color:         red             ;// Color of the navigation dots
-// $slick-dot-color-active:  $slick-dot-color  ;// Color of the active navigation dot
-$slick-prev-character:    '\e823'           ;// Unicode character code for the previous arrow icon
-$slick-next-character:    '\e824'           ;// Unicode character code for the next arrow icon
+$slick-arrow-color:       #FFF             ;// Color of the left/right arrow icons
+$slick-dot-color:         #FFF             ;// Color of the navigation dots
+$slick-dot-color-active:  $slick-dot-color  ;// Color of the active navigation dot
+$slick-prev-character:    '\31'           ;// Unicode character code for the previous arrow icon
+$slick-next-character:    '\32'           ;// Unicode character code for the next arrow icon
 $slick-dot-character:     '\2f'           ;// Unicode character code for the navigation dot icon
-$slick-dot-size:          .5rem               ;// Size of the navigation dots
+$slick-dot-size:          1rem               ;// Size of the navigation dots
 
 @import "slick-carousel/slick/slick-theme";
 @import "slick-carousel/slick/slick";
 
-.slideshow.slick-slider {
-  margin-bottom: 20px;
+%icon {
+    transition: 500ms;
+    margin: 0;
+    top: 0;
+    z-index: 10;
+    .slideshow:hover & {
+      transform: translate(0,0);
+    }
+}
 
-  .slick-active {
-    outline: none;
-  }
-  .slick-dots {
-      bottom: -20px;
-      margin: 0;
-  }
-  .slick-next {
-    right: 0;
-    z-index: 10;
-  }
-  .slick-prev {
-    left: 0;
-    z-index: 10;
-  }
+%symbol {
+    text-shadow: 1px 1px 5px #000;
+    opacity: .5;
+    &:hover{
+      opacity: 1;
+    }
+}
+
+%arrow {
+    @extend %icon;
+    // font-size: 1.5rem;
+    height: 100%;
+    &:before{
+      @extend %symbol;
+      font-size: 1.5rem;
+    }
+}
+
+.slick-slider {
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+.slick-active {
+  outline: none;
+}
+.slick-dots {
+    @extend %icon;
+    transform: translate(0,-40px);
+    bottom: inherit;
+    li.slick-active button:before{
+      opacity: 1;
+    }
+    li button:before {
+      @extend %symbol;
+    }
+}
+.slick-next {
+  @extend %arrow;
+  // transform: translate(40px,0);
+  right: 0;
+}
+.slick-prev {
+  @extend %arrow;
+  // transform: translate(-40px,0);
+  left: 0;
 }
