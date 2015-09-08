@@ -9,12 +9,17 @@ fixture_filename = 'sections_and_story_types.json'
 
 
 def load_fixture(apps, schema_editor):
-    fixture_file = os.path.join(fixture_dir, fixture_filename)
-    fixture = open(fixture_file, 'rb')
-    objects = serializers.deserialize('json', fixture, ignorenonexistent=True)
-    for obj in objects:
-        obj.save()
-    fixture.close()
+    from django.core.management import call_command
+
+    def load_fixture(apps, schema_editor):
+        call_command('loaddata', fixture_filename, app_label='stories')
+    # fixture_file = os.path.join(fixture_dir, fixture_filename)
+
+    # fixture = open(fixture_file, 'rb')
+    # objects = serializers.deserialize('json', fixture, ignorenonexistent=True)
+    # for obj in objects:
+    #     obj.save()
+    # fixture.close()
 
 
 def unload_fixture(apps, schema_editor):
