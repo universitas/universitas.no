@@ -19,11 +19,28 @@ from PyPDF2 import PdfFileReader
 from sorl.thumbnail import ImageField
 from wand.image import Image as WandImage
 from wand.color import Color
+from wand.exceptions import BlobError
+from wand.drawing import Drawing
 import os.path
 # Project apps
 
 from utils.model_mixins import Edit_url_mixin
 
+
+def pdf_not_found(pdf_name):
+    """Creates an error frontpage"""
+    img = WandImage(
+        width=300,
+        height=500,
+                   )
+    msg = 'ERROR:\n{}\nnot found on disk'.format(pdf_name)
+    with Drawing() as draw:
+        #draw.font = 'wandtests/assets/League_Gothic.otf'
+        #draw.font_size = 40
+        draw.text_alignment='center'
+        draw.text(img.width // 2, img.height // 3, msg)
+        draw(img)
+    return img
 
 def current_issue():
     """ Return a tuple of year and number for the current issue. """
@@ -186,7 +203,10 @@ class PrintIssue(models.Model, Edit_url_mixin):
         cover_page = pdf_name.replace(
             '.pdf', '.jpg').replace(
             'pdf/', 'pdf/covers/')
-        img = WandImage(filename=pdf_name + '[0]', resolution=60)
+        try:
+            img = WandImage(filename=pdf_name + '[0]', resolution=60)
+        except BlobError:
+            img = pdf_not_found(self.pdf)
         bg = WandImage(
             width=img.width,
             height=img.height,
