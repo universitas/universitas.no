@@ -2,7 +2,7 @@
 
 # load environmental variables.
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-source $DIR/../../venv/**/bin/activate
+source $DIR/../../pyvenv/**/bin/activate
 LATEST_DUMP=$(ls -t /srv/*dump*.json | head -n1)
 
 # dump database in json format

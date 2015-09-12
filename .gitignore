@@ -1,0 +1,9 @@
+/bower_components/
+/node_modules/
+/static/*
+/build/*
+/bin/*gunicorn.sh
+/logs/*
+/pyvenv/*
+/bin/postactivate
+
