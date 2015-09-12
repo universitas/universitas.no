@@ -88,7 +88,7 @@ def _get_folders(site_url=None):
         # static files served by nginx
         'static': '{site_folder}/static',
         'media': '{site_folder}/static/media',     # user uploaded files
-        'venv': '{site_folder}/venv/{venv_name}',  # python virtual environment
+        'venv': '{site_folder}/pyvenv/{venv_name}',  # python virtual environment
         'logs': '{site_folder}/logs',              # contains logfiles
         # global folder with symlinks to all virtual environments
         'venvs': '/home/{user}/.virtualenvs',
