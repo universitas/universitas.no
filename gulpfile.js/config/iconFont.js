@@ -1,8 +1,8 @@
-var config = require('./')
-var fontConfig = require('./fonts')
+var config = require('./');
+var fontConfig = require('./fonts');
 
 module.exports = {
-  name: 'Gulp Starter Icons',
+  name: 'Universitas icons',
   src: config.sourceAssets + '/icons/*.svg',
   dest: fontConfig.dest,
   sassDest: config.sourceAssets + '/stylesheets/generated',
@@ -13,8 +13,8 @@ module.exports = {
   options: {
     svg: true,
     timestamp: 0, // see https://github.com/fontello/svg2ttf/issues/33
-    fontName: 'icons',
+    fontName: 'universitas-icons',
     appendUnicode: true,
     normalize: false
   }
-}
+};
