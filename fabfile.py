@@ -22,6 +22,7 @@ env.site_url = 'vagrant.' + SITE_NAME
 # Stops annoying linting error. "vagrant" is a command line task
 vagrant = vagrant
 
+
 @task(name='local')
 def localhost():
     """ run task on localhost """
@@ -63,11 +64,13 @@ def start_runserver_plus():
     with cd(folders['venv']):
         run('source bin/activate && django-admin runserver_plus')
 
+
 @task(name='gulp')
 def gulp_watch():
     folders = _get_folders(env.site_url)
-    with cd(folders['source']):
+    with cd(folders['django']):
         run('../node_modules/.bin/gulp')
+
 
 @task(name='admin')
 def django_admin(*args):
@@ -83,12 +86,12 @@ def _get_folders(site_url=None):
     site_url = site_url or env.site_url
     folders = {
         'site': '{site_folder}',                   # project root folder
-        'source': '{site_folder}/django',          # django source code
+        'django': '{site_folder}/django',          # django source code
         'bin': '{site_folder}/bin',                # bash scripts
         # static files served by nginx
         'static': '{site_folder}/static',
         'media': '{site_folder}/static/media',     # user uploaded files
-        'venv': '{site_folder}/pyvenv/{venv_name}',  # python virtual environment
+        'venv': '{site_folder}/pyvenv/{venv_name}',  # virtual environment
         'logs': '{site_folder}/logs',              # contains logfiles
         # global folder with symlinks to all virtual environments
         'venvs': '/home/{user}/.virtualenvs',
@@ -188,6 +191,7 @@ def deploy():
     _create_linux_user(project_settings['user'], LINUXGROUP)
     _folders_and_permissions(folders)
     _create_virtualenv(folders)
+    _get_latest_source(folders)
     _upload_postactivate(postactivate_file, folders['venv'], folders['bin'])
     _deploy_configs()
     update()
@@ -197,12 +201,12 @@ def deploy():
 def update():
     """ update repo from github, install pip reqirements, collect staticfiles and run database migrations. """
     folders = _get_folders()
-    _get_latest_source(folders['source'])
+    _get_latest_source(folders)
     _update_npm(folders)
-    _gulp_build(folders['source'])
-    _update_virtualenv(folders['source'], folders['venv'],)
-    _update_static_files(folders['venv'])
-    _update_database(folders['venv'])
+    _gulp_build(folders)
+    _update_virtualenv(folders)
+    _update_static_files()
+    _update_database()
     stop()
     start()
 
@@ -412,16 +416,17 @@ def _create_postgres_db(project_settings):
         ))
 
 
-def _get_latest_source(source_folder):
+def _get_latest_source(folders):
     """ Updates files on staging server with current git commit on dev branch. """
     current_commit = local('git log -n 1 --format=%H', capture=True)
     git_status = local('git status', capture=True)
+    site_folder = folders['site']
 
-    if not exists(source_folder + '/.git'):
-        run('git clone {} {}'.format(REPO_URL, source_folder))
+    if not exists(site_folder + '/.git'):
+        run('git clone {} {}'.format(REPO_URL, site_folder))
 
     if 'branch is up-to-date' in git_status and 'nothing to commit' in git_status:
-        with cd(source_folder):
+        with cd(site_folder):
             run('git fetch && git reset --hard {}'.format(current_commit))
     elif not 'vagrant' in env.site_url and not 'local' in env.site_url:
         abort('Local source code changes has not been pushed to repo.')
@@ -429,7 +434,6 @@ def _get_latest_source(source_folder):
 
 def _create_virtualenv(folders):
     """ Create python virtual environment. """
-
     # This file will exist if the virtual env is already created.
     venv_python_bin = os.path.join(folders['venv'], 'bin', 'python')
 
@@ -437,7 +441,7 @@ def _create_virtualenv(folders):
         commands = [
             '{virtualenv_binary} {venv}',  # create venv
             'ln -fs {venv} {venvs}',  # symlink to $WORKON_HOME folder
-            'echo {source} > {venv}/.project',  # create .project file
+            'echo {django} > {venv}/.project',  # create .project file
         ]
         kwargs = folders.copy()
         kwargs['virtualenv_binary'] = PYVENV
@@ -446,10 +450,9 @@ def _create_virtualenv(folders):
             run(command.format(**kwargs))
 
 
-def _update_virtualenv(source_folder, venv_folder):
+def _update_virtualenv(folders):
     """ Install required python packages from pip requirements file. """
-    run('{venv}/bin/pip install -vr {source}/requirements.txt'.format(
-        venv=venv_folder, source=source_folder, ))
+    run('{venv}/bin/pip install -vr {site}/requirements.txt'.format(**folders))
 
 
 def _update_npm(folders):
@@ -458,18 +461,18 @@ def _update_npm(folders):
         run('npm install')
 
 
-def _gulp_build(source_folder):
+def _gulp_build(folders):
     """ Build with gulp """
-    with cd(source_folder):
-        run('../node_modules/.bin/gulp production')
+    with cd(folders['site']):
+        run('node_modules/.bin/gulp production')
 
 
-def _update_static_files(venv_folder):
+def _update_static_files():
     """ Move images, js and css to staticfolder to be served directly by nginx. """
     django_admin('collectstatic', '--noinput')
 
 
-def _update_database(venv_folder):
+def _update_database():
     """ Run database migrations if required by changed apps. """
     django_admin('migrate', '--noinput')
 
@@ -477,6 +480,7 @@ def _update_database(venv_folder):
 def _fix_permissions(folder):
     """ Fix folder permissions """
     sudo('')
+
 
 def run_bg(cmd, before=None, sockname="dtach", use_sudo=False):
     """Run a command in the background using dtach
