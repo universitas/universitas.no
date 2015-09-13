@@ -464,7 +464,7 @@ def _update_npm(folders):
 def _gulp_build(folders):
     """ Build with gulp """
     with cd(folders['site']):
-        run('node_modules/.bin/gulp production')
+        run('node_modules/.bin/gulp build:production')
 
 
 def _update_static_files():
