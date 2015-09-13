@@ -83,7 +83,7 @@ def _get_folders(site_url=None):
     site_url = site_url or env.site_url
     folders = {
         'site': '{site_folder}',                   # project root folder
-        'source': '{site_folder}/source',          # django source code
+        'source': '{site_folder}/django',          # django source code
         'bin': '{site_folder}/bin',                # bash scripts
         # static files served by nginx
         'static': '{site_folder}/static',
@@ -113,7 +113,7 @@ def _get_configs(
     site_url=None,
     user_name=None,
     bin_folder=None,
-    config_folder=None,
+    fabric_folder=None,
 ):
     """ Return a dictionary containing configuration for webserver programs and services. """
     # user name for database and linux
@@ -125,7 +125,7 @@ def _get_configs(
         url=site_url)
     bin_folder = bin_folder or project_folder + 'bin'
     # parent folder of config file templates.
-    config_folder = config_folder or dirname(__file__) + '/deployment_tools'
+    fabric_folder = fabric_folder or dirname(__file__) + '/deployment_tools'
 
     configs = {
         # 'service': { # name of program or service that need configuration files.
@@ -137,7 +137,7 @@ def _get_configs(
         # 'stop': # bash command to stop the service
         # },
         'gunicorn': {  # python wsgi runner for django
-            'template': '{config}/gunicorn/template'.format(config=config_folder,),
+            'template': '{fabric}/gunicorn/template'.format(fabric=fabric_folder,),
             'filename': '{user}_gunicorn.sh'.format(user=user_name,),
             'target folder': bin_folder,
             # make bash file executable by the supervisor user.
@@ -146,7 +146,7 @@ def _get_configs(
             'stop': ':',
         },
         'supervisor': {  # keeps gunicorn running
-            'template': '{config}/supervisor/template'.format(config=config_folder,),
+            'template': '{fabric}/supervisor/template'.format(fabric=fabric_folder,),
             'filename': '{user}.conf'.format(user=user_name,),
             'target folder': '/etc/supervisor/conf.d',
             # read all config files in conf.d folder
@@ -155,7 +155,7 @@ def _get_configs(
             'stop': 'sudo supervisorctl stop {url}'.format(url=site_url,),
         },
         'nginx': {  # webserver
-            'template': '{config}/nginx/template'.format(config=config_folder,),
+            'template': '{fabric}/nginx/template'.format(fabric=fabric_folder,),
             'filename': '{url}'.format(url=site_url,),
             'target folder': '/etc/nginx/sites-available',
             'install': ':',
@@ -334,8 +334,8 @@ def _folders_and_permissions(folders):
     """ Ensure basic file structure in project. """
     site_folder = folders['site']
 
-    run('mkdir -p {folder_paths}'.format(
-        folder_paths=' '.join(folders.values())))
+    # run('mkdir -p {folder_paths}'.format(
+    #     folder_paths=' '.join(folders.values())))
         # set linux user group.
     sudo('find {site_folder} -type d -exec chmod 6775 "{{}}" \;'.format(
         site_folder=site_folder))

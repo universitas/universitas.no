@@ -67,7 +67,8 @@ def make_postactivate_text(site_url):
             settings.update(new_item)
 
     settings.update({
-        'source folder': '{root}/{url}/source'.format(root=WEBSERVER_ROOT, url=site_url, ),
+        'source folder': '{root}/{url}/django'.format(
+            root=WEBSERVER_ROOT, url=site_url, ),
         'site url': site_url,
         'settings module': '{module}.{version}'.format(
             module=SETTINGS_MODULE, version=site_url.split('.')[0],
@@ -95,7 +96,7 @@ def make_postactivate_text(site_url):
             value=settings[key],
         )
     postactivate += ('\n'
-                     'export PYTHONPATH="$DJANGO_SOURCE_FOLDER:$PYTHONPATH"\n'
+                     'export PYTHONPATH="$DJANGO_SOURCE_FOLDER"\n'
                      'export PATH="$(dirname $DJANGO_SOURCE_FOLDER)/node_modules/.bin:$PATH"\n'
                      'export PYTHONWARNINGS=ignore\n'
                      'cd $DJANGO_SOURCE_FOLDER\n')
