@@ -194,18 +194,11 @@ def deploy():
 
 
 @task
-def npmtest():
-    """npm and bower install"""
-    folders = _get_folders()
-    _update_npm_and_bower(folders)
-
-
-@task
 def update():
     """ update repo from github, install pip reqirements, collect staticfiles and run database migrations. """
     folders = _get_folders()
     _get_latest_source(folders['source'])
-    _update_npm_and_bower(folders)
+    _update_npm(folders)
     _gulp_build(folders['source'])
     _update_virtualenv(folders['source'], folders['venv'],)
     _update_static_files(folders['venv'])
@@ -459,20 +452,10 @@ def _update_virtualenv(source_folder, venv_folder):
         venv=venv_folder, source=source_folder, ))
 
 
-def _update_npm_and_bower(folders):
-    """ Install npm and bower dependencies """
+def _update_npm(folders):
+    """ Install npm dependencies """
     with cd(folders['site']):
-        # NPM only wants to install bower_modules into the same folder that package.json is in.
-        # To avoid putting all the node packages into the source folder, the json files
-        # are symlinked to the parent folder before installing bower and npm dependencies.
-        run('ln -sf source/package.json .')
-        run('ln -sf source/bower.json .')
-        # Install node and bower dependencies
         run('npm install')
-        run('node_modules/.bin/bower install')
-        # Clean up symlinks.
-        # run('rm package.json')
-        # run('rm bower.json')
 
 
 def _gulp_build(source_folder):
