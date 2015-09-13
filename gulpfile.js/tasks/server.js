@@ -13,7 +13,7 @@ gulp.task('server', function() {
     .use(compress())
     .use(logger(config.logLevel))
     .use('/', express.static(config.root, config.staticOptions))
-    .listen(config.port)
+    .listen(config.port);
 
   gutil.log('production server started on ' + gutil.colors.green(url));
   open(url);

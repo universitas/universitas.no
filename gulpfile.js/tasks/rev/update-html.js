@@ -1,6 +1,6 @@
 var gulp         = require('gulp');
 var config       = require('../../config');
-var revReplace = require('gulp-rev-replace')
+var revReplace = require('gulp-rev-replace');
 
 // 5) Update asset references in HTML
 gulp.task('update-html', function(){

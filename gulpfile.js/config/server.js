@@ -1,4 +1,4 @@
-var config = require('./')
+var config = require('./');
 
 module.exports = {
   root: process.cwd() + config.publicDirectory.substr(1),
@@ -8,4 +8,4 @@ module.exports = {
     extensions: ['html'],
     maxAge: '31556926'
   }
-}
+};

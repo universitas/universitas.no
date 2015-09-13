@@ -14,6 +14,6 @@ gulp.task('rev-css', function(){
     .pipe(minify())
     .pipe(gulp.dest(config.publicDirectory))
     .pipe(revNapkin({verbose: false}))
-    .pipe(rev.manifest('public/rev-manifest.json', {merge: true}))
+    .pipe(rev.manifest(config.publicDirectory + '/rev-manifest.json', {merge: true}))
     .pipe(gulp.dest(''));
 });

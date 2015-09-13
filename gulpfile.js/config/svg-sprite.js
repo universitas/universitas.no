@@ -1,4 +1,4 @@
-var config = require('./')
+var config = require('./');
 
 module.exports = {
   src: config.sourceAssets + '/sprites/*.svg',
@@ -8,4 +8,4 @@ module.exports = {
       parserOptions: { xmlMode: true }
     }
   }
-}
+};

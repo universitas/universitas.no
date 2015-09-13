@@ -20,9 +20,11 @@
     "test": "gulp build:production && karma start --single-run"
   },
   "dependencies": {
-    "foundation": "^4.2.1",
     "jquery": "^2.1.4",
-    "slick-carousel": "^1.5.8"
+    "modernizr": "^3.0.0",
+    "script-loader": "^0.6.1",
+    "slick-carousel": "^1.5.8",
+    "zurb-foundation-5": "^5.4.7"
   },
   "devDependencies": {
     "babel-core": "^5.8.3",
