@@ -95,8 +95,14 @@ class AdChannel(models.Model):
         """ All ads in current position at current time """
         if publication_status is None:
             publication_status = [Advert.PUBLISHED, Advert.DEFAULT]
+        if at_time is None:
+            at_time = timezone.now()
+
         ads = self.advert_set.filter(
-            status__in=publication_status)
+            status__in=publication_status,
+            start_time__lte=at_time,
+            end_time__gte=at_time,
+        )
         return ads
 
     @property
@@ -380,8 +386,10 @@ class Advert(models.Model):
             content = self.html_source
         elif self.ad_type == self.IMAGE_AD:
             thumb = get_thumbnail(
-                self.imagefile, '%sx%s' %
-                (self.width, self.height))
+                self.imagefile,
+                '%sx%s' % (self.width, self.height),
+                quality=90,
+            )
             content = img_template.format(this=self, src=thumb.url)
         elif self.ad_type == self.DUMMY_AD:
             content = str(self)
