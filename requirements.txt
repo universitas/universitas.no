@@ -17,8 +17,7 @@ gunicorn
 hiredis
 ipdb
 ipython
---allow-external mysql-connector-python
-mysql-connector-python==1.2.2
+mysqlclient
 nose
 numpy
 pypdf2
