@@ -4,9 +4,9 @@ $slick-loader-path:       "../images/"        ;// Directory path for the loader 
 $slick-arrow-color:       #FFF             ;// Color of the left/right arrow icons
 $slick-dot-color:         #FFF             ;// Color of the navigation dots
 $slick-dot-color-active:  $slick-dot-color  ;// Color of the active navigation dot
-$slick-prev-character:    '\31'           ;// Unicode character code for the previous arrow icon
-$slick-next-character:    '\32'           ;// Unicode character code for the next arrow icon
-$slick-dot-character:     '\2f'           ;// Unicode character code for the navigation dot icon
+$slick-prev-character:    $icon-previous    ;// Unicode character code for the previous arrow icon
+$slick-next-character:    $icon-next        ;// Unicode character code for the next arrow icon
+$slick-dot-character:     $icon-circle      ;// Unicode character code for the navigation dot icon
 $slick-dot-size:          1rem               ;// Size of the navigation dots
 
 @import "slick/slick-theme";

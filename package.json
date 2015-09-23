@@ -20,6 +20,7 @@
     "test": "gulp build:production && karma start --single-run"
   },
   "dependencies": {
+    "expose-loader": "^0.7.0",
     "jquery": "^2.1.4",
     "modernizr": "^3.0.0",
     "script-loader": "^0.6.1",
@@ -31,11 +32,12 @@
     "babel-loader": "^5.3.2",
     "browser-sync": "^2.8.0",
     "compression": "^1.5.1",
-    "del": "^1.2.0",
+    "del": "^2.0.2",
     "express": "^4.13.1",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^2.3.1",
     "gulp-changed": "^1.2.1",
+    "gulp-data": "^1.2.0",
     "gulp-filesize": "0.0.6",
     "gulp-filter": "^2.0.2",
     "gulp-gh-pages": "^0.5.2",

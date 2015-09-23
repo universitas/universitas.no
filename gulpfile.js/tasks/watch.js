@@ -1,17 +1,16 @@
-var gulp      = require('gulp');
-var html      = require('../config/html');
-var iconFont  = require('../config/iconFont');
-var svgSprite = require('../config/svg-sprite');
-var images    = require('../config/images');
-var sass      = require('../config/sass');
-var fonts     = require('../config/fonts');
-var watch     = require('gulp-watch');
+var config = require('../config')
+var gulp   = require('gulp')
+var path   = require('path')
+var watch  = require('gulp-watch')
 
 gulp.task('watch', ['browserSync'], function() {
-  watch(images.src, function() { gulp.start('images'); });
-  watch(sass.src, function() { gulp.start('sass'); });
-  watch(iconFont.src, function() { gulp.start('iconFont'); });
-  watch(svgSprite.src, function() { gulp.start('svg-sprite'); });
-  watch(fonts.src, function() { gulp.start('fonts'); });
-  watch(html.watch, function() { gulp.start('html'); });
-});
+  var watchableTasks = ['fonts', 'iconFont', 'images', 'svgSprite','html', 'css']
+
+  watchableTasks.forEach(function(taskName) {
+    var task = config.tasks[taskName]
+    if(task) {
+      var filePattern = path.join(config.root.src, task.src, '**/*.{' + task.extensions.join(',') + '}')
+      watch(filePattern, function() { gulp.start(taskName) })
+    }
+  })
+})
