@@ -63,7 +63,6 @@ class AdChannel(models.Model):
     )
     ad_formats = models.ManyToManyField(
         AdFormat,
-        null=True,
         help_text=_('size and shape of ad'),
     )
     extra_classes = models.CharField(
@@ -232,7 +231,6 @@ class Advert(models.Model):
     )
     ad_channels = models.ManyToManyField(
         AdChannel,
-        null=True,
         blank=True,
         help_text=_('Where to show the ad'),
     )
