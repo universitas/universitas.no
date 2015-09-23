@@ -15,16 +15,16 @@
           <p>Besøksadresse: Moltke Moes vei 33</p>
           <div class="follow-us">
             <a href="https://www.facebook.com/UniversitasOslo">
-              <i class="icon-facebook"></i>
+              <i class="icon -facebook"></i>
             </a>
             <a href="https://twitter.com/universitas_no">
-              <i class="icon-twitter"></i>
+              <i class="icon -twitter"></i>
             </a>
             <a href="mailto:universitas@universitas.no" title="universitas@universitas.no">
-              <i class="icon-mail"></i>
+              <i class="icon -mail"></i>
             </a>
             <a href="tel:+4722853336" title="22 85 33 36">
-              <i class="icon-phone"></i>
+              <i class="icon -phone"></i>
             </a>
           </div>
         </div>
@@ -45,8 +45,8 @@
         </div>
         <div class="medium-4 columns">
           <h2>Annonser i Universitas</h2>
-          <p><a href="{% url 'ad_info' %}">Informasjon for annonsører <i class="icon-right"></i></a>
-          <p><a href="{% url 'pub_plan' %}">Utgivelsesplan <i class="icon-right"></i></a>
+          <p><a href="{% url 'ad_info' %}">Informasjon for annonsører <i class="icon -right"></i></a>
+          <p><a href="{% url 'pub_plan' %}">Utgivelsesplan <i class="icon -right"></i></a>
         </div>
         <div class="medium-4 columns">
           <h2>PDF-arkiv</h2>
@@ -85,7 +85,7 @@
     </nav>
     <div id="search">
       <div class="search-icon">
-        <i class="icon-search"></i>
+        <i class="icon -search"></i>
       </div>
       <form class="search-form" action="{% url 'watson:search' %}">
         <input placeholder="Søk i universitas.no" class="search-input" type="text" name="q" value="{{ request.GET.q }}" >

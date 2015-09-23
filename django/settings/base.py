@@ -73,7 +73,7 @@ LOGOUT_URL = '/'
 # SORL
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
 THUMBNAIL_ENGINE = 'apps.photo.custom_thumbnail_classes.CloseCropEngine'
-THUMBNAIL_QUALITY = 50
+THUMBNAIL_QUALITY = 70
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
 FILE_UPLOAD_PERMISSIONS = 0o664
 # Uncomment to enable original file names for resized images.
