@@ -33,7 +33,7 @@ def localhost():
 @task(name='prod')
 def production_server():
     """ run task on development server """
-    env.site_url = SITE_NAME
+    env.site_url = 'www.' + SITE_NAME
     env.hosts = [env.site_url]
 
 
