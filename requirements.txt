@@ -1,4 +1,4 @@
-Django==1.7
+Django
 Jinja2
 MarkupSafe
 Pillow
