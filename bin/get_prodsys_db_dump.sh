@@ -1,6 +1,6 @@
 #!/bin/bash
 DUMPFILE='prodsys_dump_new.mysql'
-source "/srv/local.universitas.no/bin/postactivate"
+source "postactivate"
 
 cd "$DJANGO_SOURCE_FOLDER/.."
 

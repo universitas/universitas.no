@@ -1,14 +1,11 @@
 #!/bin/bash
 
-# load environmental variables.
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-source $DIR/cron_environment_variables.sh
-
 size=1000
-thumbs_folder="$PDF_FOLDER/thumbs"
+pdf_folder="/srv/fotoarkiv_universitas/pdf"
+thumbs_folder="$pdf_folder/thumbs"
 mkdir -p "$thumbs_folder"
 
-cd "$PDF_FOLDER"
+cd "$pdf_folder"
 
 for pdf_file in UNI11VER*000.pdf; do
   thumbfile="$thumbs_folder"/$(echo "$pdf_file"\

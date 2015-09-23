@@ -11,7 +11,12 @@ module.exports = function(env) {
   var webpackConfig = {
     context: jsSrc,
 
-    plugins: [],
+    plugins: [
+      new webpack.ProvidePlugin({
+        $: "jquery",
+        jQuery: "jquery"
+      })
+    ],
 
     resolve: {
       extensions: ['', '.js']
@@ -43,12 +48,12 @@ module.exports = function(env) {
     };
 
     // Factor out common dependencies into a shared.js
-    webpackConfig.plugins.push(
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'shared',
-        filename: env === 'production' ? '[name]-[hash].js' : '[name].js',
-      })
-    );
+    // webpackConfig.plugins.push(
+    //   new webpack.optimize.CommonsChunkPlugin({
+    //     name: 'shared',
+    //     filename: env === 'production' ? '[name]-[hash].js' : '[name].js',
+    //   })
+    // );
   }
 
   if(env === 'development') {
