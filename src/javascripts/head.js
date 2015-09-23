@@ -1,2 +1,2 @@
-require('script!modernizr');
+// require('script!modernizr');
 require('./_google-analytics.js');

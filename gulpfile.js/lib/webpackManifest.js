@@ -10,7 +10,8 @@ module.exports = function(publicPath, dest, filename) {
       var chunks = stats.assetsByChunkName;
       var manifest = {};
       for (var key in chunks) {
-        manifest[publicPath + key + '.js'] = publicPath + chunks[key];
+        var originalFilename = key + '.js';
+        manifest[path.join(publicPath, originalFilename)] = path.join(publicPath, chunks[key]);
       }
 
       fs.writeFileSync(

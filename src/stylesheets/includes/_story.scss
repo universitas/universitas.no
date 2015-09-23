@@ -129,11 +129,13 @@
       }
     }
     .social-share{
-      margin: 0 auto;
-      padding: 0 10px;
-      .icon {
+      .share-icon {
+        border: 1px solid grey;
+        text-align: left;
         display: inline-block;
-        font-size: 30px;
+        font-size: 20px;
+        // width: 45px!important;
+        // margin: 10px;
         a {
           color: $light-grey;
           opacity: .6;
@@ -142,9 +144,6 @@
             opacity: 1;
           }
         }
-        margin: 5px 0;
-        // width: 30px;
-        // height: 30px;
       }
     }
 
