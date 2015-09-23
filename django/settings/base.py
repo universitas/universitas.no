@@ -91,7 +91,7 @@ DATABASES = {
         'PORT': '5432',       # Set to empty string for default.
     },
     'prodsys': {
-        'ENGINE': 'mysql.connector.django',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': environment_variable('PRODSYS_DB_NAME'),
         'USER': environment_variable('PRODSYS_DB_USER'),
         'PASSWORD': environment_variable('PRODSYS_DB_PASSWORD'),
