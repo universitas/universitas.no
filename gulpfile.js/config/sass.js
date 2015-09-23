@@ -5,7 +5,7 @@ module.exports = {
     browsers: ['last 2 version'],
     cascade: true
   },
-  src: config.sourceAssets + "/stylesheets/*.{sass,scss}",
+  src: config.sourceAssets + "/stylesheets/**/*.{sass,scss}",
   dest: config.publicAssets + '/stylesheets',
   settings: {
     // noCache: false,

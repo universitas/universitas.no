@@ -17,8 +17,10 @@ module.exports = function(env) {
         jQuery: "jquery"
       })
     ],
-
     resolve: {
+      alias: {
+        jquery: "jquery/src/jquery"
+      },
       extensions: ['', '.js']
     },
 
@@ -58,7 +60,7 @@ module.exports = function(env) {
 
   if(env === 'development') {
     webpackConfig.devtool = 'source-map';
-    webpack.debug = true;
+    webpack.debug = false;
   }
 
   if(env === 'production') {
