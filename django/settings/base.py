@@ -11,7 +11,6 @@ DEBUG = TEMPLATE_DEBUG = False
 # Set your DSN value for Raven/Sentry error logging.
 RAVEN_CONFIG = {'dsn': environment_variable('RAVEN_DSN'), }
 
-GULP_FILEREVS_PATH = join_path( 'server-assets', 'filerevs.json')
 
 INSTALLED_APPS = [  # CUSTOM APPS
     'apps.issues',
@@ -126,7 +125,8 @@ PROJECT_DIR = dirname(BASE_DIR)
 # collectstatic to here
 STATIC_ROOT = join_path(PROJECT_DIR, 'static')
 # gulp file revisions
-GULP_FILEREVS_DIR = join_path(PROJECT_DIR, 'build', 'rev-manifest.json')
+GULP_FILEREVS_PATH = join_path(PROJECT_DIR, 'build', 'rev-manifest.json')
+# GULP_FILEREVS_PATH = join_path(STATIC_ROOT, 'rev-manifest.json')
 # User uploaded files
 MEDIA_ROOT = '/srv/fotoarkiv_universitas'
 # Django puts generated translation files here.

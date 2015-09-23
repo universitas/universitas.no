@@ -19,7 +19,7 @@ class FileRevNode(StaticFilesNode):
     try:
         with open(settings.GULP_FILEREVS_PATH) as filerevs_fh:
             FILEREVS = json.load(filerevs_fh)
-    except IOError as AttributeError:
+    except IOError:
         # No file revisions found, continuing without
         FILEREVS = {}
 
