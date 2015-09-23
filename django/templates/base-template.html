@@ -1,5 +1,5 @@
 {% load cache %}
-{% load staticfiles %}
+{% load gulp_rev_staticfiles %}
 {% load universitas_menu %}
 <!DOCTYPE html>
 <html class="no-js" lang="no">
@@ -11,8 +11,8 @@
     <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
     <link rel="icon" type="image/png" href="{% static 'images/favicon_128.png' %}" />
     <link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon.png' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/universitas.css' %}">
-    <script src="{% static 'javascript/universitas_head.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'stylesheets/universitas.css' %}">
+    <script src="{% static 'javascripts/head.js' %}"></script>
   </head>
 
   <body>
@@ -37,9 +37,8 @@
     </footer>
     {% endblock footer %}
 
-    <script src="{% static 'javascript/vendor.js' %}"></script>
-    {# // <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.slick/1.5.7/slick.min.js"></script> #}
-    <script src="{% static 'javascript/universitas.js' %}"></script>
+    <script src="{% static 'javascripts/vendor.js' %}"></script>
+    <script src="{% static 'javascripts/site.js' %}"></script>
     {# {% include 'autocomplete_light/static.html' %} #}
   </body>
 </html>

@@ -3,7 +3,7 @@
 # Put in project bin/ folder and keep running with supervisor.
 
 name="SITEURL"
-virtualenvfolder="/srv/SITEURL/venv/SITEURL"
+virtualenvfolder="/srv/SITEURL/pyvenv/SITEURL"
 socket="/tmp/SITEURL.socket"
 user="USERNAME"
 group="USERGROUP"
