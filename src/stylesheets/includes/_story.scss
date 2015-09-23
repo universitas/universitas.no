@@ -130,12 +130,11 @@
     }
     .social-share{
       .share-icon {
-        border: 1px solid grey;
-        text-align: left;
+        // border: 1px solid grey;
         display: inline-block;
-        font-size: 20px;
-        // width: 45px!important;
-        // margin: 10px;
+        font-size: 2.2rem;
+        width: 1.2em;
+        margin: .1em;
         a {
           color: $light-grey;
           opacity: .6;
@@ -146,7 +145,6 @@
         }
       }
     }
-
   }
   .mellomtittel {
     color: $dark-grey;
