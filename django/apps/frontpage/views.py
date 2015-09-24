@@ -1,13 +1,15 @@
-import re
+# -*- coding: utf-8 -*-
+"""Frontpage views"""
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, Http404
-from django.utils.http import urlencode, base36_to_int
-from django.core.urlresolvers import reverse
-# from django.shortcuts import get_object_or_404
-# from django.utils import timezone
+from django.http import (
+    HttpResponseRedirect,
+    HttpResponsePermanentRedirect,
+    Http404
+)
+from django.utils.http import base36_to_int
 from django.views.decorators.cache import cache_page
-# from django.views.decorators.vary import vary_on_headers
-# from apps.photo.models import ImageFile
+
+from apps.core.views import search_404_view
 from apps.stories.models import Story, Section, StoryType
 from apps.frontpage.models import Frontpage, StoryModule
 import logging
@@ -87,20 +89,19 @@ def frontpage_layout(blocks):
 
 def get_frontpage_stories(story_queryset, frontpage=None):
     """ Find frontpage stories connected to queryset """
-
     if frontpage is None:
         frontpage = Frontpage.objects.root()
 
     stories = story_queryset.is_on_frontpage(frontpage)
     result = StoryModule.objects.filter(
         frontpage=frontpage,
-        frontpage_story__story=stories).prefetch_related('frontpage_story__imagefile')
+        frontpage_story__story=stories
+    ).prefetch_related('frontpage_story__imagefile')
     return result
 
 
 def actual_frontpage(request, stories=None, frontpage=None):
     """ Shows the newspaper frontpage. """
-
     context = {}
     if stories is None:
         stories = Story.objects.published()
@@ -136,6 +137,7 @@ def section_frontpage(request, section):
     except Section.DoesNotExist:
         return fallback_view(request, slug=section)
 
+
 def fallback_view(request, slug):
     try:
         # is the slug a story type?
@@ -149,13 +151,6 @@ def fallback_view(request, slug):
         except (ValueError, Story.DoesNotExist):
             return search_404_view(request, slug)
 
-def search_404_view(request, slug):
-    search_terms = re.split(r'\W|_', slug)
-    redirect_to = '{search}?q={terms}'.format(
-        search=reverse('watson:search'),
-        terms='+'.join(search_terms),
-    )
-    return HttpResponseRedirect(redirect_to)
 
 def storytype_frontpage(request, section, storytype):
     try:

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-"""
-    Core views for webpage.
-"""
+"""Core views for webpage."""
 
-from django.views.generic.base import TemplateView
+import re
+
+from django.http import HttpResponseRedirect
 from django.conf import settings
+from django.views.generic.base import TemplateView
+from django.core.urlresolvers import reverse
 
 
 class TextTemplateView(TemplateView):
@@ -31,3 +33,12 @@ class RobotsTxtView(TextTemplateView):
         template_name = 'robots-staging.txt'
     else:
         template_name = 'robots-production.txt'
+
+
+def search_404_view(request, slug):
+    search_terms = re.split(r'\W|_', slug)
+    redirect_to = '{search}?q={terms}'.format(
+        search=reverse('watson:search'),
+        terms='+'.join(search_terms),
+    )
+    return HttpResponseRedirect(redirect_to)
