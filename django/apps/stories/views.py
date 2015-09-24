@@ -2,17 +2,26 @@
 """
 Views for articles
 """
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404
-from .models import Story
-from django.http import HttpResponseRedirect
 import logging
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, Http404
+from apps.core.views import search_404_view
+from .models import Story
+
 logger = logging.getLogger('universitas')
 
 
 def article_view(request, story_id, **section_and_slug):
     template = 'story.html'
-    story = get_object_or_404(Story.objects.published(), pk=story_id,)
+    try:
+        story = Story.objects.get(pk=story_id)
+    except Story.DoesNotExist:
+        slug = section_and_slug.get('slug')
+        return search_404_view(request, slug)
+
+    if story.publication_status != Story.STATUS_PUBLISHED:
+        raise Http404('You are not supposed to visit this page')
+
     correct_url = story.get_absolute_url()
 
     if request.path != correct_url:
