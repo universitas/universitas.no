@@ -19,5 +19,5 @@ NOTEBOOK_ARGUMENTS = [
     '--no-browser',
     '--port=8888',
     '--notebook-dir',
-    join_path(BASE_DIR, 'notebooks')
+    join_path(PROJECT_DIR, 'notebooks')
 ]

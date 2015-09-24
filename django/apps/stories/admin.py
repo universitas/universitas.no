@@ -241,6 +241,7 @@ class SectionAdmin(admin.ModelAdmin):
 
 @admin.register(StoryType)
 class StoryTypeAdmin(admin.ModelAdmin):
+    form = autocomplete_light.modelform_factory(StoryType, exclude=[])
     list_display = (
         'id',
         'name',
@@ -256,7 +257,7 @@ class StoryTypeAdmin(admin.ModelAdmin):
     )
 
     raw_id_fields = (
-        'template',
+        # 'template',
     )
 
 
