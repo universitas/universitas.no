@@ -19,6 +19,7 @@ from apps.frontpage.models import FrontpageStory
 
 from .models import Byline, Aside, Pullquote, Story, StoryType, Section, StoryImage, InlineLink, StoryVideo, InlineHtml
 
+
 class SmallTextArea:
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})},
@@ -31,7 +32,12 @@ class BylineInline(admin.TabularInline):
     model = Byline
     fields = ('ordering', 'credit', 'contributor', 'title', )
     extra = 0
-    formfield_overrides = {models.CharField: {'widget': TextInput(attrs={'style': 'width:400px;'})}, }
+    formfield_overrides = {
+        models.CharField: {
+            'widget': TextInput(
+                attrs={
+                    'style': 'width:400px;'})},
+    }
 
 
 class FrontpageStoryInline(SmallTextArea, admin.TabularInline, ThumbAdmin):
@@ -44,18 +50,39 @@ class FrontpageStoryInline(SmallTextArea, admin.TabularInline, ThumbAdmin):
 
 class AsideInline(admin.TabularInline, ):
     model = Aside
-    formfield_overrides = {models.TextField: {'widget': Textarea(attrs={'rows': 6, 'cols': 80})}, }
+    formfield_overrides = {
+        models.TextField: {
+            'widget': Textarea(
+                attrs={
+                    'rows': 6,
+                    'cols': 80})},
+    }
     extra = 0
+
 
 class HtmlInline(admin.TabularInline, ):
     model = InlineHtml
-    formfield_overrides = {models.TextField: {'widget': Textarea(attrs={'rows': 6, 'cols': 80})}, }
+    formfield_overrides = {
+        models.TextField: {
+            'widget': Textarea(
+                attrs={
+                    'rows': 6,
+                    'cols': 80})},
+    }
     extra = 0
+
 
 class PullquoteInline(admin.TabularInline, ):
     model = Pullquote
-    formfield_overrides = {models.TextField: {'widget': Textarea(attrs={'rows': 2, 'cols': 80})}, }
+    formfield_overrides = {
+        models.TextField: {
+            'widget': Textarea(
+                attrs={
+                    'rows': 2,
+                    'cols': 80})},
+    }
     extra = 0
+
 
 class LinkInline(admin.TabularInline):
     form = autocomplete_light.modelform_factory(InlineLink, exclude=())
@@ -66,15 +93,45 @@ class LinkInline(admin.TabularInline):
 
 class VideoInline(admin.TabularInline, ):
     model = StoryVideo
-    formfield_overrides = {models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})}, }
-    fields = ['top', 'index', 'caption', 'creditline', 'size', 'video_host', 'host_video_id', ]
+    formfield_overrides = {
+        models.CharField: {
+            'widget': Textarea(
+                attrs={
+                    'rows': 5,
+                    'cols': 30})},
+    }
+    fields = [
+        'top',
+        'index',
+        'caption',
+        'creditline',
+        'size',
+        'video_host',
+        'host_video_id',
+    ]
     extra = 0
+
 
 class ImageInline(admin.TabularInline, ThumbAdmin, ):
     form = autocomplete_light.modelform_factory(StoryImage, exclude=())
-    formfield_overrides = {models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})}, }
+    formfield_overrides = {
+        models.CharField: {
+            'widget': Textarea(
+                attrs={
+                    'rows': 5,
+                    'cols': 30})},
+    }
     model = StoryImage
-    fields = ['top', 'index', 'caption', 'creditline', 'size', 'aspect_ratio', 'imagefile', 'thumbnail', ]
+    fields = [
+        'top',
+        'index',
+        'caption',
+        'creditline',
+        'size',
+        'aspect_ratio',
+        'imagefile',
+        'thumbnail',
+    ]
     readonly_fields = ('thumbnail', )
     extra = 0
 
@@ -89,24 +146,29 @@ def make_frontpage_story(modeladmin, request, queryset):
     for story in queryset:
         FrontpageStory.objects.autocreate(story=story)
 
+
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
-    actions=[make_frontpage_story,]
+    actions = [make_frontpage_story, ]
     date_hierarchy = 'publication_date'
     actions_on_top = True
     actions_on_bottom = True
     save_on_top = True
     list_per_page = 25
-    list_display = (
-        'id', 'title', 'kicker', 'lede', 'theme_word', 'story_type', 'publication_date',
-        'publication_status', 'display_bylines', 'image_count', 'hit_count',
-    )
+    list_display = [
+        'id', 'title', 'kicker', 'lede',
+        'theme_word', 'hot_count', 'story_type', 'publication_date',
+        'publication_status', 'display_bylines', 'image_count'
+    ]
 
-    list_editable = (
+    list_editable = [
         'publication_status',
-    )
+    ]
 
-    readonly_fields = ('legacy_html_source', 'legacy_prodsys_source', 'get_html')
+    readonly_fields = [
+        'legacy_html_source',
+        'legacy_prodsys_source',
+        'get_html']
 
     formfield_overrides = {
         models.CharField: {'widget': Textarea(attrs={'rows': 2, 'cols': 30})},
@@ -116,7 +178,7 @@ class StoryAdmin(admin.ModelAdmin):
     fieldsets = (
         ('header', {
             'fields': (
-                ('title', 'kicker', 'theme_word',),
+                ('title', 'kicker', 'theme_word', ),
                 ('story_type', 'publication_date', 'publication_status',),
             ),
         }),
@@ -196,6 +258,7 @@ class StoryTypeAdmin(admin.ModelAdmin):
     raw_id_fields = (
         'template',
     )
+
 
 @admin.register(Byline)
 class BylineAdmin(admin.ModelAdmin):
