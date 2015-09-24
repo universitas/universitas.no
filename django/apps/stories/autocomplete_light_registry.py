@@ -2,8 +2,8 @@ import autocomplete_light
 from .models import Story
 from django.utils.translation import ugettext_lazy as _
 
-autocomplete_light.register(Story,
-    # Just like in ModelAdmin.search_fields
+autocomplete_light.register(
+    Story,
     search_fields=['title', 'lede', ],
     order_by=['-publication_date'],
     attrs={
