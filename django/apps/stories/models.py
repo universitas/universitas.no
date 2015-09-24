@@ -438,6 +438,14 @@ class PublishedStoryManager(models.Manager):
             story.frontpagestory_set.all().delete()
             story.save(new=True)
 
+    def devalue_hotness(self, factor=0.9):
+        """ Devalue hot count for all stories. Run this as a scheduled task. """
+        hot_stories = self.exclude(hot_count=0)
+        for story in hot_stories:
+            story.hot_count = int(story.hot_count * factor)
+            # logger.debug('%s %s' % (story, story.hot_count))
+            story.save(update_fields=['hot_count'])
+
 
 class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
@@ -546,7 +554,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         verbose_name=_('total page views')
     )
     hot_count = models.PositiveIntegerField(
-        default=0,
+        default=30,
         editable=False,
         help_text=_('calculated value representing recent page views.'),
         verbose_name=_('recent page views')

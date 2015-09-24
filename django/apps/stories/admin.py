@@ -157,7 +157,7 @@ class StoryAdmin(admin.ModelAdmin):
     list_per_page = 25
     list_display = [
         'id', 'title', 'kicker', 'lede',
-        'theme_word', 'hot_count', 'story_type', 'publication_date',
+        'theme_word', 'hot_count', 'hit_count', 'story_type', 'publication_date',
         'publication_status', 'display_bylines', 'image_count'
     ]
 
