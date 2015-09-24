@@ -8,6 +8,12 @@ module.exports = {
     proxy: 'localhost:8000'
   },
   tasks: {
+    favicon: {
+      src: 'images/favicon.svg',
+      dest: 'favicon',
+      html: './django/templates/_favicon.html',
+      extensions: ['png', 'html', 'xml', 'json', 'ico']
+    },
     js: {
       src: 'javascripts',
       dest: 'javascripts',
@@ -19,7 +25,6 @@ module.exports = {
       },
       extensions: ['js']
     },
-
     css: {
       src: 'stylesheets',
       dest: 'stylesheets',
