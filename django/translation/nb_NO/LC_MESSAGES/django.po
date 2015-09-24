@@ -780,7 +780,7 @@ msgstr "hvor mange ganger denne artikkelen har blitt lest"
 
 #: apps/stories/models.py:546
 msgid "total page views"
-msgstr "totalt antall sidevisninger"
+msgstr "hits"
 
 #: apps/stories/models.py:551
 msgid "calculated value representing recent page views."
@@ -788,7 +788,7 @@ msgstr "beregnet ut fra nylige besøk"
 
 #: apps/stories/models.py:552
 msgid "recent page views"
-msgstr "nylige sidevisninger"
+msgstr "hotness"
 
 #: apps/stories/models.py:556
 msgid "all bylines as html."
