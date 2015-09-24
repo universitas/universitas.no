@@ -4,13 +4,11 @@
 <!DOCTYPE html>
 <html class="no-js" lang="no">
   <head>
+    <title>{% block title %}universitas.no{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% include "_favicon.html" %}
     {% block head %}{% endblock head %}
-    <title>{% block title %}universitas.no{% endblock %}</title>
-    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
-    <link rel="icon" type="image/png" href="{% static 'images/favicon_128.png' %}" />
-    <link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon.png' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'stylesheets/universitas.css' %}">
     <script src="{% static 'javascripts/head.js' %}"></script>
   </head>

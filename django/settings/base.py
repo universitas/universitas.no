@@ -126,7 +126,6 @@ PROJECT_DIR = dirname(BASE_DIR)
 STATIC_ROOT = join_path(PROJECT_DIR, 'static')
 # gulp file revisions
 GULP_FILEREVS_PATH = join_path(PROJECT_DIR, 'build', 'rev-manifest.json')
-# GULP_FILEREVS_PATH = join_path(STATIC_ROOT, 'rev-manifest.json')
 # User uploaded files
 MEDIA_ROOT = '/srv/fotoarkiv_universitas'
 # Django puts generated translation files here.
