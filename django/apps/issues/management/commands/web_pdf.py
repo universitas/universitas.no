@@ -19,7 +19,7 @@ logger = logging.getLogger('universitas')
 PDF_STAGING = os.path.join(settings.MEDIA_ROOT, 'STAGING', 'PDF')
 PDF_FOLDER = os.path.join(settings.MEDIA_ROOT, 'pdf')
 
-PDF_MERGE = os.path.join(settings.BASE_DIR, 'bin', 'pdf_merge.sh')
+PDF_MERGE = os.path.join(settings.PROJECT_DIR, 'bin', 'pdf_merge.sh')
 
 FILENAME_PATTERN = 'universitas_{year}-{number}{suffix}.pdf'
 

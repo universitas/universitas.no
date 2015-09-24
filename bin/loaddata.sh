@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# load environmental variables.
 source $(find_activate_script.sh)
 
 LATEST_DUMP=$(ls -t /srv/*dump*.json | head -n1)
