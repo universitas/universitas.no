@@ -1,3 +1,3 @@
 #!/bin/bash
-source $(find_activate_script.sh)
+source "$($(dirname "$0")/find_activate_script.sh)"
 django-admin importer_fra_prodsys -p &> /dev/null
