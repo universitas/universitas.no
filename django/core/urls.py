@@ -52,9 +52,6 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^robots.txt$', RobotsTxtView.as_view(), name='robots.txt'),
     url(r'^humans.txt$', HumansTxtView.as_view(), name='humans.txt'),
-    url(r'^favicon.ico$',
-        RedirectView.as_view(url='/static/images/favicon.ico'),
-        name='favicon.ico'),
 
     url(r'^autocomplete', include(autocomplete_light_urls)),
     url(r'^autocomplete', include(autocomplete_light_urls)),

@@ -438,13 +438,10 @@ class PublishedStoryManager(models.Manager):
             story.frontpagestory_set.all().delete()
             story.save(new=True)
 
-    def devalue_hotness(self, factor=0.95):
+    def devalue_hotness(self, factor=0.99):
         """ Devalue hot count for all stories. Run this as a scheduled task. """
-        hot_stories = self.exclude(hot_count=0)
-        for story in hot_stories:
-            story.hot_count = int(story.hot_count * factor)
-            # logger.debug('%s %s' % (story, story.hot_count))
-            story.save(update_fields=['hot_count'])
+        hot_stories = self.exclude(hot_count__lt=1)
+        hot_stories.update(hot_count=(models.F('hot_count') - 1) * factor)
 
 
 class Story(TextContent, TimeStampedModel, Edit_url_mixin):
@@ -554,7 +551,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         verbose_name=_('total page views')
     )
     hot_count = models.PositiveIntegerField(
-        default=50,
+        default=1000,  # All stories are hot when first published!
         editable=False,
         help_text=_('calculated value representing recent page views.'),
         verbose_name=_('recent page views')
@@ -582,9 +579,6 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
     def save(self, *args, **kwargs):
         new = self.pk is None or kwargs.pop('new', None)
-        # if not new and self.bodytext_markup != Story.objects.get(
-                # pk=self.pk).bodytext_markup:
-            # self.bodytext_html = ''
 
         super().save(*args, **kwargs)
 
@@ -648,7 +642,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         cache.set(cache_key, 1, 600)  # time to live in seconds is 600
 
         self.hit_count = models.F('hit_count') + 1
-        self.hot_count = models.F('hot_count') + 1
+        self.hot_count = models.F('hot_count') + 100
         self.save(update_fields=['hit_count', 'hot_count'])
         return True
 
