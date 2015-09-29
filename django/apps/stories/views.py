@@ -17,7 +17,10 @@ def article_view(request, story_id, **section_and_slug):
         story = Story.objects.get(pk=story_id)
     except Story.DoesNotExist:
         slug = section_and_slug.get('slug')
-        return search_404_view(request, slug)
+        if slug:
+            return search_404_view(request, slug)
+        else:
+            raise Http404('This page does not exist')
 
     if story.publication_status != Story.STATUS_PUBLISHED:
         raise Http404('You are not supposed to visit this page')
