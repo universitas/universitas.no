@@ -42,3 +42,5 @@ python-Levenshtein
 Wand
 django-admin-bootstrapped
 raven
+awscli
+django-storages-redux
