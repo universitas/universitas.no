@@ -56,7 +56,7 @@ INSTALLED_APPS = [  # THIRD PARTY APPS
     'django_extensions',
     'sorl.thumbnail',
     'watson',
-    # 'raven.contrib.django.raven_compat',
+    'raven.contrib.django.raven_compat',
     'storages',
 ] + INSTALLED_APPS
 
@@ -71,7 +71,7 @@ INSTALLED_APPS = [  # CORE APPS
 ] + INSTALLED_APPS
 
 MIDDLEWARE_CLASSES = [
-    # 'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
+    'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
