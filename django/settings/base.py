@@ -8,9 +8,9 @@ import django.conf.global_settings as DEFAULT_SETTINGS
 from .setting_helpers import environment_variable, join_path
 
 DEBUG = TEMPLATE_DEBUG = False
-# Set your DSN value for Raven/Sentry error logging.
-RAVEN_CONFIG = {'dsn': environment_variable('RAVEN_DSN'), }
 
+RAVEN_CONFIG = {'dsn': environment_variable('RAVEN_DSN'), }
+SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
 
 INSTALLED_APPS = [  # CUSTOM APPS
     'apps.issues',
