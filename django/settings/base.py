@@ -16,20 +16,25 @@ SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
 AWS_STORAGE_BUCKET_NAME = environment_variable('AWS_STORAGE_BUCKET_NAME')
 AWS_ACCESS_KEY_ID = environment_variable('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = environment_variable('AWS_SECRET_ACCESS_KEY')
+AWS_S3_SECURE_URLS = False
 AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
 AWS_S3_CUSTOM_DOMAIN = '{bucket}.{host}'.format(
     bucket=AWS_STORAGE_BUCKET_NAME,
     host=AWS_S3_HOST
 )
+AWS_S3_URL_PROTOCOL = 'http:'
+AWS_S3_USE_SSL = False
 STATICFILES_LOCATION = 'static'
 MEDIAFILES_LOCATION = 'media'
 STATICFILES_STORAGE = 'utils.aws_custom_storage.StaticStorage'
 DEFAULT_FILE_STORAGE = 'utils.aws_custom_storage.MediaStorage'
+THUMBNAIL_STORAGE = 'utils.aws_custom_storage.ThumbStorage'
 
 STATIC_URL = "http://{host}/{folder}/".format(
     host=AWS_S3_CUSTOM_DOMAIN,
     folder=STATICFILES_LOCATION,
 )
+
 MEDIA_URL = "http://{host}/{folder}/".format(
     host=AWS_S3_CUSTOM_DOMAIN,
     folder=MEDIAFILES_LOCATION,
@@ -50,8 +55,6 @@ INSTALLED_APPS = [  # CUSTOM APPS
 ]
 
 INSTALLED_APPS = [  # THIRD PARTY APPS
-    # 'compressor',
-    # 'sekizai',
     'autocomplete_light',
     'django_extensions',
     'sorl.thumbnail',
@@ -105,6 +108,9 @@ THUMBNAIL_BACKEND = 'apps.photo.thumb_utils.KeepNameThumbnailBackend'
 # With boto and aman s3, we don't check if file exist.
 # Automatic overwrite if not found in cache key
 THUMBNAIL_FORCE_OVERWRITE = True
+THUMBNAIL_PREFIX = 'thumb-cache/'
+THUMBNAIL_REDIS_DB = 1
+THUMBNAIL_URL_TIMEOUT = 3
 
 # DATABASE
 DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
@@ -133,7 +139,6 @@ CACHES = {
         'LOCATION': 'localhost:6379',
         'OPTIONS': {
             'DB': 0,
-            # 'PASSWORD': 'yadayada',
             'PARSER_CLASS': 'redis.connection.HiredisParser',
             'CONNECTION_POOL_CLASS': 'redis.BlockingConnectionPool',
             'CONNECTION_POOL_CLASS_KWARGS': {
