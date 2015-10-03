@@ -8,9 +8,7 @@ For more information on this file, see
 https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 """
 
-# This is set by the virtualenv instead
-# import os
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "universitas_no.settings")
-
+from raven.contrib.django.raven_compat.middleware.wsgi import Sentry
 from django.core.wsgi import get_wsgi_application
-application = get_wsgi_application()
+
+application = Sentry(get_wsgi_application())

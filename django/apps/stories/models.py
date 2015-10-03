@@ -6,7 +6,6 @@ import re
 import difflib
 import json
 import logging
-logger = logging.getLogger('universitas')
 
 # Django core
 from django.utils.translation import ugettext_lazy as _
@@ -33,7 +32,6 @@ from model_utils.models import TimeStampedModel
 from utils.model_mixins import Edit_url_mixin
 from slugify import Slugify
 
-slugify = Slugify(max_length=50, to_lower=True)
 
 # Project apps
 from apps.contributors.models import Contributor
@@ -52,6 +50,8 @@ IMAGE_TAG = '@image:'
 VIDEO_TAG = '@video:'
 INLINE_HTML_TAG = '@html:'
 
+slugify = Slugify(max_length=50, to_lower=True)
+logger = logging.getLogger('universitas')
 
 class MarkupFieldMixin(object):
 
@@ -440,7 +440,7 @@ class PublishedStoryManager(models.Manager):
 
     def devalue_hotness(self, factor=0.99):
         """ Devalue hot count for all stories. Run this as a scheduled task. """
-        hot_stories = self.exclude(hot_count__lt=1)
+        hot_stories = self.exclude(hot1)
         hot_stories.update(hot_count=(models.F('hot_count') - 1) * factor)
 
 
