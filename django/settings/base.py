@@ -96,12 +96,15 @@ LOGOUT_URL = '/'
 
 # SORL
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
-THUMBNAIL_ENGINE = 'apps.photo.custom_thumbnail_classes.CloseCropEngine'
-THUMBNAIL_QUALITY = 70
+THUMBNAIL_ENGINE = 'apps.photo.thumb_utils.CloseCropEngine'
+THUMBNAIL_QUALITY = 75
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
 FILE_UPLOAD_PERMISSIONS = 0o664
-# Uncomment to enable original file names for resized images.
-THUMBNAIL_BACKEND = 'apps.photo.custom_thumbnail_classes.KeepNameThumbnailBackend'
+# Enable original file names for resized images.
+THUMBNAIL_BACKEND = 'apps.photo.thumb_utils.KeepNameThumbnailBackend'
+# With boto and aman s3, we don't check if file exist.
+# Automatic overwrite if not found in cache key
+THUMBNAIL_FORCE_OVERWRITE = True
 
 # DATABASE
 DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
