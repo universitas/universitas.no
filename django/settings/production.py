@@ -6,7 +6,6 @@ from .base import *
 DEBUG = False
 TEMPLATE_DEBUG = False
 THUMBNAIL_DEBUG = False
-ALLOWED_HOSTS = environment_variable('ALLOWED_HOSTS').split()
 
 # EMAIL CONFIGURATION
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
