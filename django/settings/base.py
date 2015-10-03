@@ -8,6 +8,11 @@ from .logging import LOGGING
 
 LOGGING
 DEBUG = TEMPLATE_DEBUG = False
+<<<<<<< HEAD
+=======
+ALLOWED_HOSTS = environment_variable('ALLOWED_HOSTS').split()
+
+>>>>>>> master
 RAVEN_CONFIG = {'dsn': environment_variable('RAVEN_DSN'), }
 SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
 
