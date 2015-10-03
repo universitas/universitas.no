@@ -1,16 +1,38 @@
 # -*- coding: utf-8 -*-
-'''
-Django settings for universitas_no project.
-'''
+""" Django settings for universitas_no project. """
 
 from os.path import dirname
 import django.conf.global_settings as DEFAULT_SETTINGS
 from .setting_helpers import environment_variable, join_path
+from .logging import LOGGING
 
+LOGGING
 DEBUG = TEMPLATE_DEBUG = False
-
 RAVEN_CONFIG = {'dsn': environment_variable('RAVEN_DSN'), }
 SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
+
+
+AWS_STORAGE_BUCKET_NAME = environment_variable('AWS_STORAGE_BUCKET_NAME')
+AWS_ACCESS_KEY_ID = environment_variable('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = environment_variable('AWS_SECRET_ACCESS_KEY')
+AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
+AWS_S3_CUSTOM_DOMAIN = '{bucket}.{host}'.format(
+    bucket=AWS_STORAGE_BUCKET_NAME,
+    host=AWS_S3_HOST
+)
+STATICFILES_LOCATION = 'static'
+MEDIAFILES_LOCATION = 'media'
+STATICFILES_STORAGE = 'utils.aws_custom_storage.StaticStorage'
+DEFAULT_FILE_STORAGE = 'utils.aws_custom_storage.MediaStorage'
+
+STATIC_URL = "http://{host}/{folder}/".format(
+    host=AWS_S3_CUSTOM_DOMAIN,
+    folder=STATICFILES_LOCATION,
+)
+MEDIA_URL = "http://{host}/{folder}/".format(
+    host=AWS_S3_CUSTOM_DOMAIN,
+    folder=MEDIAFILES_LOCATION,
+)
 
 INSTALLED_APPS = [  # CUSTOM APPS
     'apps.issues',
@@ -27,13 +49,14 @@ INSTALLED_APPS = [  # CUSTOM APPS
 ]
 
 INSTALLED_APPS = [  # THIRD PARTY APPS
-    'compressor',
-    'sekizai',
+    # 'compressor',
+    # 'sekizai',
     'autocomplete_light',
     'django_extensions',
     'sorl.thumbnail',
     'watson',
-    'raven.contrib.django.raven_compat',
+    # 'raven.contrib.django.raven_compat',
+    'storages',
 ] + INSTALLED_APPS
 
 INSTALLED_APPS = [  # CORE APPS
@@ -47,7 +70,7 @@ INSTALLED_APPS = [  # CORE APPS
 ] + INSTALLED_APPS
 
 MIDDLEWARE_CLASSES = [
-    'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
+    # 'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -77,7 +100,7 @@ THUMBNAIL_QUALITY = 70
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
 FILE_UPLOAD_PERMISSIONS = 0o664
 # Uncomment to enable original file names for resized images.
-# THUMBNAIL_BACKEND = 'apps.photo.custom_thumbnail_classes.KeepNameThumbnailBackend'
+THUMBNAIL_BACKEND = 'apps.photo.custom_thumbnail_classes.KeepNameThumbnailBackend'
 
 # DATABASE
 DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
@@ -122,12 +145,8 @@ CACHES = {
 BASE_DIR = environment_variable('SOURCE_FOLDER')
 # outside of repo
 PROJECT_DIR = dirname(BASE_DIR)
-# collectstatic to here
-STATIC_ROOT = join_path(PROJECT_DIR, 'static')
 # gulp file revisions
 GULP_FILEREVS_PATH = join_path(PROJECT_DIR, 'build', 'rev-manifest.json')
-# User uploaded files
-MEDIA_ROOT = '/srv/fotoarkiv_universitas'
 # Django puts generated translation files here.
 LOCALE_PATHS = [join_path(BASE_DIR, 'translation'), ]
 # Extra path to collect static assest such as javascript and css
@@ -136,8 +155,7 @@ STATICFILES_DIRS = [join_path(PROJECT_DIR, 'build'), ]
 FIXTURE_DIRS = [join_path(BASE_DIR, 'fixtures'), ]
 # Project wide django template files
 TEMPLATE_DIRS = [join_path(BASE_DIR, 'templates'), ]
-# Log files here
-LOG_FOLDER = join_path(PROJECT_DIR, 'logs')
+
 
 # INTERNATIONALIZATION
 LANGUAGE_CODE = 'NB_no'
@@ -160,65 +178,5 @@ TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
-    'compressor.finders.CompressorFinder',
+    # 'compressor.finders.CompressorFinder',
 ]
-
-STATIC_URL = '/static/'
-MEDIA_URL = '/foto/'
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-}
-LOGGING['formatters'] = {
-    'verbose': {
-        'format': '%(name)s%(levelname)6s %(filename)25s:%(lineno)-4d (%(funcName)s) - %(message)s'
-    },
-    'simple': {
-        'format': '%(levelname)s %(message)s'
-    },
-    'minimal': {
-        'format': '%(message)s'
-    },
-}
-LOGGING['handlers'] = {
-    'mail_admins': {
-        'level': 'ERROR',
-        'class': 'django.utils.log.AdminEmailHandler',
-    },
-    'stream_to_console': {
-        'level': 'DEBUG',
-        'class': 'logging.StreamHandler',
-        'formatter': 'verbose',
-    },
-    'file': {
-        'level': 'WARNING',
-        'class': 'logging.FileHandler',
-        'filename': join_path(LOG_FOLDER, 'django.log'),
-        'formatter': 'verbose',
-    },
-    'bylines_file': {
-        'level': 'DEBUG',
-        'class': 'logging.FileHandler',
-        'filename': join_path(LOG_FOLDER, 'bylines.log'),
-        'formatter': 'minimal',
-    },
-}
-LOGGING['loggers'] = {
-    'django.request': {
-        'level': 'DEBUG', 'propagate': True,
-        'handlers': ['mail_admins', 'stream_to_console'],
-    },
-    'universitas': {
-        'level': 'DEBUG', 'propagate': False,
-        'handlers': ['stream_to_console', 'file', ],
-    },
-    'bylines': {
-        'level': 'DEBUG', 'propagate': False,
-        'handlers': ['bylines_file'],
-    },
-    'sorl.thumbnail': {
-        'level': 'ERROR', 'propagate': False,
-        'handlers': ['file'],
-    },
-}
