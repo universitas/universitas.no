@@ -14,7 +14,7 @@ from glob import glob
 from apps.issues.models import PrintIssue, current_issue
 
 import logging
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 PDF_STAGING = os.path.join(settings.MEDIA_ROOT, 'STAGING', 'PDF')
 PDF_FOLDER = os.path.join(settings.MEDIA_ROOT, 'pdf')

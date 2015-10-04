@@ -34,7 +34,7 @@ STAGING_FOLDER = os.path.join(settings.MEDIA_ROOT, 'STAGING/IMAGES')
 TIMEZONE = timezone.get_current_timezone()
 
 import logging
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 count = 0
 
 

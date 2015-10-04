@@ -6,7 +6,7 @@ import re
 from diff_match_patch import diff_match_patch
 import difflib
 import logging
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 # import html
 
