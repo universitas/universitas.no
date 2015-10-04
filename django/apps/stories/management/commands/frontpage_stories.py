@@ -1,6 +1,6 @@
 from optparse import make_option
 import logging
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 from django.core.management.base import BaseCommand  # , CommandError
 # from django.db.models import Count

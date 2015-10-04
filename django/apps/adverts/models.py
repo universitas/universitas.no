@@ -15,7 +15,7 @@ from sorl.thumbnail import ImageField, get_thumbnail
 from .dummy_image_advert import dummy_image_advert
 
 import logging
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 
 class AdFormat(models.Model):

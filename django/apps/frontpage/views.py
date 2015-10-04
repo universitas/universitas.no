@@ -13,7 +13,7 @@ from apps.core.views import search_404_view
 from apps.stories.models import Story, Section, StoryType
 from apps.frontpage.models import Frontpage, StoryModule
 import logging
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 # from django.contrib.auth.decorators import login_required
 
