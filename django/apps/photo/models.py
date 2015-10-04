@@ -25,7 +25,7 @@ from PIL import Image
 from apps.issues.models import current_issue
 
 import logging
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 CASCADE_FILE = os.path.join(
     os.path.dirname(__file__),

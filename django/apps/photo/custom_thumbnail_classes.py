@@ -2,7 +2,7 @@ from sorl.thumbnail.engines.convert_engine import Engine as GraphicsMagickConver
 import re
 import logging
 from PIL import Image
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 
 from sorl.thumbnail.base import ThumbnailBackend, EXTENSIONS
