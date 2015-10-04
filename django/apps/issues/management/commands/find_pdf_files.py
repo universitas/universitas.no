@@ -12,7 +12,7 @@ from glob import glob
 from apps.issues.models import PrintIssue
 
 import logging
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):

@@ -4,7 +4,7 @@ import logging
 from django import template
 
 register = template.Library()
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 DEFAULT_SIZE = "300x300"
 
 @register.inclusion_tag('_byline_image.html')

@@ -5,7 +5,7 @@ from django import template
 from ..models import AdChannel, Advert, AdFormat
 
 register = template.Library()
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 
 @register.inclusion_tag('_advert-channel.html', takes_context=True)
