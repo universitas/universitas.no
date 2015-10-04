@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from utils.model_mixins import Edit_url_mixin
 from apps.photo.models import ImageFile
 import logging
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 
 class FrontpageManager(models.Manager):

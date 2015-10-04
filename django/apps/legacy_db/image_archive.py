@@ -7,7 +7,7 @@ from django.utils.text import slugify
 from django.utils.timezone import datetime
 
 import logging
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 
 class ImageFile(object):
