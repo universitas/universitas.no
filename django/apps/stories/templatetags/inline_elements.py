@@ -4,7 +4,7 @@ import logging
 from django import template
 
 register = template.Library()
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 
 @register.inclusion_tag('_header_images.html', takes_context=True)

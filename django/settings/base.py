@@ -6,6 +6,7 @@ Django settings for universitas_no project.
 from os.path import dirname
 import django.conf.global_settings as DEFAULT_SETTINGS
 from .setting_helpers import environment_variable, join_path
+from .logging import *
 
 DEBUG = TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = environment_variable('ALLOWED_HOSTS').split()
@@ -38,7 +39,6 @@ INSTALLED_APPS = [  # THIRD PARTY APPS
 ] + INSTALLED_APPS
 
 INSTALLED_APPS = [  # CORE APPS
-    # 'django_admin_bootstrapped',  # must be before .admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,7 +48,6 @@ INSTALLED_APPS = [  # CORE APPS
 ] + INSTALLED_APPS
 
 MIDDLEWARE_CLASSES = [
-    'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -166,60 +165,3 @@ STATICFILES_FINDERS = [
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/foto/'
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-}
-LOGGING['formatters'] = {
-    'verbose': {
-        'format': '%(name)s%(levelname)6s %(filename)25s:%(lineno)-4d (%(funcName)s) - %(message)s'
-    },
-    'simple': {
-        'format': '%(levelname)s %(message)s'
-    },
-    'minimal': {
-        'format': '%(message)s'
-    },
-}
-LOGGING['handlers'] = {
-    'mail_admins': {
-        'level': 'ERROR',
-        'class': 'django.utils.log.AdminEmailHandler',
-    },
-    'stream_to_console': {
-        'level': 'DEBUG',
-        'class': 'logging.StreamHandler',
-        'formatter': 'verbose',
-    },
-    'file': {
-        'level': 'WARNING',
-        'class': 'logging.FileHandler',
-        'filename': join_path(LOG_FOLDER, 'django.log'),
-        'formatter': 'verbose',
-    },
-    'bylines_file': {
-        'level': 'DEBUG',
-        'class': 'logging.FileHandler',
-        'filename': join_path(LOG_FOLDER, 'bylines.log'),
-        'formatter': 'minimal',
-    },
-}
-LOGGING['loggers'] = {
-    'django.request': {
-        'level': 'DEBUG', 'propagate': True,
-        'handlers': ['mail_admins', 'stream_to_console'],
-    },
-    'universitas': {
-        'level': 'DEBUG', 'propagate': False,
-        'handlers': ['stream_to_console', 'file', ],
-    },
-    'bylines': {
-        'level': 'DEBUG', 'propagate': False,
-        'handlers': ['bylines_file'],
-    },
-    'sorl.thumbnail': {
-        'level': 'ERROR', 'propagate': False,
-        'handlers': ['file'],
-    },
-}
