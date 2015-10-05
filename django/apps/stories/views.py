@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect, Http404
 from apps.core.views import search_404_view
 from .models import Story
 
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 
 def article_view(request, story_id, **section_and_slug):

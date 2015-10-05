@@ -1,59 +1,89 @@
 from .setting_helpers import environment_variable, join_path
+__all__ = ['LOGGING']
+
 LOG_FOLDER = join_path(environment_variable('SOURCE_FOLDER'), '..', 'logs')
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
+}
+LOGGING['filters'] = {
+    'require_debug_false': {
+        '()': 'django.utils.log.RequireDebugFalse'
+    },
+    'require_debug_true': {
+        '()': 'django.utils.log.RequireDebugTrue'
+    }
 }
 LOGGING['formatters'] = {
     'verbose': {
-        'format': '%(name)s%(levelname)6s %(filename)25s:%(lineno)-4d (%(funcName)s) - %(message)s'
+        'format': (
+            '%(asctime)s [%(levelname)5s] %(name)12s '
+            '%(filename)12s:%(lineno)-4d '
+            '(%(funcName)s)\n\t%(message)s\n'
+        ),
+        'datefmt': '%H:%M:%S %Y-%m-%d'
     },
     'simple': {
-        'format': '%(levelname)s %(message)s'
+        'format': '%(name)s %(levelname)3s: %(message)s'
     },
     'minimal': {
         'format': '%(message)s'
     },
 }
 LOGGING['handlers'] = {
-    'mail_admins': {
-        'level': 'ERROR',
-        'class': 'django.utils.log.AdminEmailHandler',
-    },
-    'stream_to_console': {
+    'console': {
+        'filters': ['require_debug_true'],
         'level': 'DEBUG',
         'class': 'logging.StreamHandler',
         'formatter': 'verbose',
     },
-    'file': {
-        'level': 'WARNING',
-        'class': 'logging.FileHandler',
-        'filename': join_path(LOG_FOLDER, 'django.log'),
+    'errorlog': {
+        'filters': ['require_debug_false'],
+        'filename': join_path(LOG_FOLDER, 'error_django.log'),
+        'maxBytes': 1e6,  # 1 MB
+        'backupCount': 10,
+        'level': 'ERROR',
+        'class': 'logging.handlers.RotatingFileHandler',
         'formatter': 'verbose',
     },
-    'bylines_file': {
+    'debuglog': {
+        'filters': ['require_debug_true'],
+        'filename': join_path(LOG_FOLDER, 'debug_django.log'),
+        'maxBytes': 1e6,  # 1 MB
+        'backupCount': 10,
+        'level': 'DEBUG',
+        'class': 'logging.handlers.RotatingFileHandler',
+        'formatter': 'verbose',
+    },
+    'bylineslog': {
+        'filename': join_path(LOG_FOLDER, 'bylines.log'),
         'level': 'DEBUG',
         'class': 'logging.FileHandler',
-        'filename': join_path(LOG_FOLDER, 'bylines.log'),
         'formatter': 'minimal',
+    },
+    'sentry': {
+        'level': 'ERROR',
+        # 'filters': ['require_debug_false'],
+        'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
     },
 }
 LOGGING['loggers'] = {
-    'django.request': {
-        'level': 'DEBUG', 'propagate': True,
-        'handlers': ['mail_admins', 'stream_to_console'],
-    },
-    'universitas': {
-        'level': 'DEBUG', 'propagate': False,
-        'handlers': ['stream_to_console', 'file', ],
-    },
     'bylines': {
         'level': 'DEBUG', 'propagate': False,
-        'handlers': ['bylines_file'],
+        'handlers': ['bylineslog'],
     },
     'sorl.thumbnail': {
-        'level': 'ERROR', 'propagate': False,
-        'handlers': ['file'],
+        'level': 'WARNING', 'propagate': False,
+        'handlers': ['errorlog', 'debuglog'],
     },
+}
+LOGGING['root'] = {
+    'level': "DEBUG",
+    'handlers': [
+        'console',
+        'errorlog',
+        'debuglog',
+        'sentry'
+    ],
 }

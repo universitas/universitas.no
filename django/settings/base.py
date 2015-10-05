@@ -4,9 +4,8 @@
 from os.path import dirname
 import django.conf.global_settings as DEFAULT_SETTINGS
 from .setting_helpers import environment_variable, join_path
-from .logging import LOGGING
+from .logging import *
 
-LOGGING
 DEBUG = TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = environment_variable('ALLOWED_HOSTS').split()
 RAVEN_CONFIG = {'dsn': environment_variable('RAVEN_DSN'), }
@@ -64,7 +63,6 @@ INSTALLED_APPS = [  # THIRD PARTY APPS
 ] + INSTALLED_APPS
 
 INSTALLED_APPS = [  # CORE APPS
-    # 'django_admin_bootstrapped',  # must be before .admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -74,7 +72,6 @@ INSTALLED_APPS = [  # CORE APPS
 ] + INSTALLED_APPS
 
 MIDDLEWARE_CLASSES = [
-    'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

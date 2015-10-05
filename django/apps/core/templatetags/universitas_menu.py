@@ -6,7 +6,7 @@ from apps.stories.models import Section, Story
 from apps.issues.models import PrintIssue
 
 register = template.Library()
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 
 # @register.inclusion_tag('universitas-menu.html')
