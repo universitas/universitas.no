@@ -5,26 +5,30 @@
 # import subprocess
 import re
 import datetime
-from django.utils import timezone
+from io import BytesIO
+import logging
 
 # Django core
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
+from django.core.files.base import ContentFile
 # from django.utils.text import slugify
 
 # Installed apps
-from PyPDF2 import PdfFileReader
+import PyPDF2
 from sorl.thumbnail import ImageField
 from wand.image import Image as WandImage
 from wand.color import Color
-from wand.exceptions import BlobError
+# from wand.exceptions import BlobError
 from wand.drawing import Drawing
 import os.path
 # Project apps
 
 from utils.model_mixins import Edit_url_mixin
+logger = logging.getLogger('universitas')
 
 
 def pdf_not_found(pdf_name):
@@ -32,15 +36,16 @@ def pdf_not_found(pdf_name):
     img = WandImage(
         width=300,
         height=500,
-                   )
+    )
     msg = 'ERROR:\n{}\nnot found on disk'.format(pdf_name)
     with Drawing() as draw:
         #draw.font = 'wandtests/assets/League_Gothic.otf'
         #draw.font_size = 40
-        draw.text_alignment='center'
+        draw.text_alignment = 'center'
         draw.text(img.width // 2, img.height // 3, msg)
         draw(img)
     return img
+
 
 def current_issue():
     """ Return a tuple of year and number for the current issue. """
@@ -183,7 +188,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
         else:
             old_self = PrintIssue()
         if self.pdf and old_self.pdf != self.pdf:
-            reader = PdfFileReader(self.pdf)
+            reader = PyPDF2.PdfFileReader(self.pdf)
             self.pages = reader.numPages
             self.text = reader.getPage(0).extractText()[:200]
             self.cover_page.delete()
@@ -197,44 +202,110 @@ class PrintIssue(models.Model, Edit_url_mixin):
 
         super().save(*args, **kwargs)
 
+        def cover_as_image(self):
+
+            def pdf_frontpage_to_image():
+                reader = PyPDF2.PdfFileReader(self.pdf.file)
+                writer = PyPDF2.PdfFileWriter()
+                writer.addPage(reader.getPage(0))
+                outputStream = BytesIO()
+                writer.write(outputStream)
+                outputStream.seek(0)
+                img = WandImage(
+                    blob=outputStream,
+                    format='pdf',
+                    resolution=60)
+                return img
+
+            def pdf_not_found():
+                """Creates an error frontpage"""
+                img = WandImage(width=400, height=600,)
+                msg = 'ERROR:\n{}\nnot found on disk'.format(self.pdf.name)
+                with Drawing() as draw:
+                    #draw.font = 'wandtests/assets/League_Gothic.otf'
+                    #draw.font_size = 40
+                    draw.text_alignment = 'center'
+                    draw.text(img.width // 2, img.height // 3, msg)
+                    draw(img)
+                return img
+
+            try:
+                return pdf_frontpage_to_image()
+            except Exception as e:
+                raise
+
     def create_thumbnail(self):
         """ Create a jpg version of the pdf frontpage """
-        pdf_name = self.pdf.path
-        cover_page = pdf_name.replace(
+
+        def pdf_frontpage_to_image():
+            reader = PyPDF2.PdfFileReader(self.pdf.file)
+            writer = PyPDF2.PdfFileWriter()
+            writer.addPage(reader.getPage(0))
+            outputStream = BytesIO()
+            writer.write(outputStream)
+            outputStream.seek(0)
+            img = WandImage(
+                blob=outputStream,
+                format='pdf',
+                resolution=60)
+            return img
+
+        def pdf_not_found():
+            """Creates an error frontpage"""
+            img = WandImage(width=400, height=600,)
+            msg = 'ERROR:\n{}\nnot found on disk'.format(self.pdf.name)
+            with Drawing() as draw:
+                #draw.font = 'wandtests/assets/League_Gothic.otf'
+                #draw.font_size = 40
+                draw.text_alignment = 'center'
+                draw.text(img.width // 2, img.height // 3, msg)
+                draw(img)
+            return img
+
+        filename = self.pdf.name.replace(
             '.pdf', '.jpg').replace(
             'pdf/', 'pdf/covers/')
+
         try:
-            img = WandImage(filename=pdf_name + '[0]', resolution=60)
-        except BlobError:
-            img = pdf_not_found(self.pdf)
-        bg = WandImage(
-            width=img.width,
-            height=img.height,
+            cover = pdf_frontpage_to_image()
+        except Exception as ex:
+            cover = pdf_not_found()
+            filename = filename.replace('.jpg', '_not_found.jpg')
+            logger.warn('pdf not found: %s' % self.pdf.name )
+
+        background = WandImage(
+            width=cover.width,
+            height=cover.height,
             background=Color('white'))
-        bg.composite(img, 0, 0)
-        bg.save(filename=cover_page)
-        self.cover_page = cover_page
-        self.save()
+        background.format = 'jpeg'
+        background.composite(cover, 0, 0)
+        blob = BytesIO()
+        background.save(blob)
+        imagefile = ContentFile(blob.getvalue())
+
+        self.cover_page.save(filename, imagefile, save=True)
 
     def get_thumbnail(self):
         """ Get or create a jpg version of the pdf frontpage """
         pdf = self.pdf
-        cover = self.cover_page
-        if not pdf or not os.path.isfile(pdf.path):
+        if not pdf:
             return None
-        if cover and os.path.isfile(cover.path):
+        if self.cover_page:
+            return self.cover_page
             # There is a cover thumb
-            timestamp = os.path.getmtime
-            if timestamp(cover.path) > timestamp(pdf.path):
-                # Pdf has not changed
-                return self.cover_page
+            # timestamp = os.path.getmtime
+            # if timestamp(cover.path) > timestamp(pdf.path):
+            # Pdf has not changed
+            #     return self.cover_page
+            # else:
+            #     self.cover_page.delete()
 
         self.create_thumbnail()
         return self.cover_page
 
     def extract_page_text(self, page_number):
         """ Extracts text from a page in the pdf """
-        pdf_file = PdfFileReader(self.pdf, strict=True)
+        pdf_file = PyPDF2.PdfFileReader(self.pdf, strict=True)
         text = pdf_file.getPage(page_number - 1).extractText()
         return text
 

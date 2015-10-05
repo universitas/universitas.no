@@ -4,15 +4,12 @@ MarkupSafe
 Pillow
 Werkzeug
 beautifulsoup4
-certifi
 django-appconf
 django-classy-tags
-django-compressor
 django-debug-toolbar
 django-extensions
 django-model-utils
 django-redis-cache
-django-sekizai
 gunicorn
 hiredis
 ipdb
@@ -33,7 +30,6 @@ six
 sqlparse
 tornado
 sorl-thumbnail
-# -e git+git@github.com:Haakenlid/django-autocomplete-light.git@v2#egg=autocomplete-light
 django-autocomplete-light
 diff-match-patch
 awesome-slugify
@@ -42,3 +38,7 @@ python-Levenshtein
 Wand
 django-admin-bootstrapped
 raven
+awscli
+django-storages-redux
+boto
+certifi==2015.04.28
