@@ -1,18 +1,44 @@
 # -*- coding: utf-8 -*-
-'''
-Django settings for universitas_no project.
-'''
+""" Django settings for universitas_no project. """
 
 from os.path import dirname
 import django.conf.global_settings as DEFAULT_SETTINGS
 from .setting_helpers import environment_variable, join_path
 from .logging import *
 
+SITE_URL = environment_variable('SITE_URL')
 DEBUG = TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = environment_variable('ALLOWED_HOSTS').split()
-
 RAVEN_CONFIG = {'dsn': environment_variable('RAVEN_DSN'), }
 SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
+
+AWS_STORAGE_BUCKET_NAME = environment_variable('AWS_STORAGE_BUCKET_NAME')
+AWS_ACCESS_KEY_ID = environment_variable('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = environment_variable('AWS_SECRET_ACCESS_KEY')
+AWS_S3_SECURE_URLS = False
+AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
+# AWS_S3_CUSTOM_DOMAIN = '{bucket}.{host}'.format(
+#     bucket=AWS_STORAGE_BUCKET_NAME,
+#     host=AWS_S3_HOST
+# )
+AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME
+AWS_S3_URL_PROTOCOL = 'http:'
+AWS_S3_USE_SSL = False
+STATICFILES_LOCATION = 'static'
+MEDIAFILES_LOCATION = 'media'
+STATICFILES_STORAGE = 'utils.aws_custom_storage.StaticStorage'
+DEFAULT_FILE_STORAGE = 'utils.aws_custom_storage.MediaStorage'
+THUMBNAIL_STORAGE = 'utils.aws_custom_storage.ThumbStorage'
+
+STATIC_URL = "http://{host}/{folder}/".format(
+    host=AWS_S3_CUSTOM_DOMAIN,
+    folder=STATICFILES_LOCATION,
+)
+
+MEDIA_URL = "http://{host}/{folder}/".format(
+    host=AWS_S3_CUSTOM_DOMAIN,
+    folder=MEDIAFILES_LOCATION,
+)
 
 INSTALLED_APPS = [  # CUSTOM APPS
     'apps.issues',
@@ -29,13 +55,12 @@ INSTALLED_APPS = [  # CUSTOM APPS
 ]
 
 INSTALLED_APPS = [  # THIRD PARTY APPS
-    'compressor',
-    'sekizai',
     'autocomplete_light',
     'django_extensions',
     'sorl.thumbnail',
     'watson',
     'raven.contrib.django.raven_compat',
+    'storages',
 ] + INSTALLED_APPS
 
 INSTALLED_APPS = [  # CORE APPS
@@ -72,12 +97,18 @@ LOGOUT_URL = '/'
 
 # SORL
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
-THUMBNAIL_ENGINE = 'apps.photo.custom_thumbnail_classes.CloseCropEngine'
-THUMBNAIL_QUALITY = 70
+THUMBNAIL_ENGINE = 'apps.photo.thumb_utils.CloseCropEngine'
+THUMBNAIL_QUALITY = 75
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
 FILE_UPLOAD_PERMISSIONS = 0o664
-# Uncomment to enable original file names for resized images.
-# THUMBNAIL_BACKEND = 'apps.photo.custom_thumbnail_classes.KeepNameThumbnailBackend'
+# Enable original file names for resized images.
+THUMBNAIL_BACKEND = 'apps.photo.thumb_utils.KeepNameThumbnailBackend'
+# With boto and aman s3, we don't check if file exist.
+# Automatic overwrite if not found in cache key
+THUMBNAIL_FORCE_OVERWRITE = True
+THUMBNAIL_PREFIX = 'thumb-cache/'
+THUMBNAIL_REDIS_DB = 1
+THUMBNAIL_URL_TIMEOUT = 3
 
 # DATABASE
 DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
@@ -106,7 +137,6 @@ CACHES = {
         'LOCATION': 'localhost:6379',
         'OPTIONS': {
             'DB': 0,
-            # 'PASSWORD': 'yadayada',
             'PARSER_CLASS': 'redis.connection.HiredisParser',
             'CONNECTION_POOL_CLASS': 'redis.BlockingConnectionPool',
             'CONNECTION_POOL_CLASS_KWARGS': {
@@ -122,12 +152,8 @@ CACHES = {
 BASE_DIR = environment_variable('SOURCE_FOLDER')
 # outside of repo
 PROJECT_DIR = dirname(BASE_DIR)
-# collectstatic to here
-STATIC_ROOT = join_path(PROJECT_DIR, 'static')
 # gulp file revisions
 GULP_FILEREVS_PATH = join_path(PROJECT_DIR, 'build', 'rev-manifest.json')
-# User uploaded files
-MEDIA_ROOT = '/srv/fotoarkiv_universitas'
 # Django puts generated translation files here.
 LOCALE_PATHS = [join_path(BASE_DIR, 'translation'), ]
 # Extra path to collect static assest such as javascript and css
@@ -136,8 +162,7 @@ STATICFILES_DIRS = [join_path(PROJECT_DIR, 'build'), ]
 FIXTURE_DIRS = [join_path(BASE_DIR, 'fixtures'), ]
 # Project wide django template files
 TEMPLATE_DIRS = [join_path(BASE_DIR, 'templates'), ]
-# Log files here
-LOG_FOLDER = join_path(PROJECT_DIR, 'logs')
+
 
 # INTERNATIONALIZATION
 LANGUAGE_CODE = 'NB_no'
@@ -160,8 +185,5 @@ TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
-    'compressor.finders.CompressorFinder',
+    # 'compressor.finders.CompressorFinder',
 ]
-
-STATIC_URL = '/static/'
-MEDIA_URL = '/foto/'

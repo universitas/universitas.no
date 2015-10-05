@@ -1,4 +1,5 @@
 """Static file loader to use with gulp file revisions"""
+
 from django import template
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -34,8 +35,10 @@ class FileRevNode(StaticFilesNode):
 
 @register.tag
 def static(parser, token):
+    """
+    Use gulp revision static file names for versioning of js and css etc.
+    usage:
+    {% load revved_static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    """
     return FileRevNode.handle_token(parser, token)
-
-      # {% load revved_static %}
-
-# <link rel="stylesheet" href="{% static 'css/styles.css' %}">
