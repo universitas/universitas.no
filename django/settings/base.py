@@ -6,21 +6,22 @@ import django.conf.global_settings as DEFAULT_SETTINGS
 from .setting_helpers import environment_variable, join_path
 from .logging import *
 
+SITE_URL = environment_variable('SITE_URL')
 DEBUG = TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = environment_variable('ALLOWED_HOSTS').split()
 RAVEN_CONFIG = {'dsn': environment_variable('RAVEN_DSN'), }
 SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
-
 
 AWS_STORAGE_BUCKET_NAME = environment_variable('AWS_STORAGE_BUCKET_NAME')
 AWS_ACCESS_KEY_ID = environment_variable('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = environment_variable('AWS_SECRET_ACCESS_KEY')
 AWS_S3_SECURE_URLS = False
 AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
-AWS_S3_CUSTOM_DOMAIN = '{bucket}.{host}'.format(
-    bucket=AWS_STORAGE_BUCKET_NAME,
-    host=AWS_S3_HOST
-)
+# AWS_S3_CUSTOM_DOMAIN = '{bucket}.{host}'.format(
+#     bucket=AWS_STORAGE_BUCKET_NAME,
+#     host=AWS_S3_HOST
+# )
+AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME
 AWS_S3_URL_PROTOCOL = 'http:'
 AWS_S3_USE_SSL = False
 STATICFILES_LOCATION = 'static'
