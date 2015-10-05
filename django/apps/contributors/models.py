@@ -17,7 +17,7 @@ from django.contrib.auth.models import Group
 
 from apps.photo.models import ImageFile
 import logging
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 
 BYLINE_PHOTO_FOLDER = os.path.normpath(

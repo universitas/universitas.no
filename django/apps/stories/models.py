@@ -51,7 +51,7 @@ VIDEO_TAG = '@video:'
 INLINE_HTML_TAG = '@html:'
 
 slugify = Slugify(max_length=50, to_lower=True)
-logger = logging.getLogger('universitas')
+logger = logging.getLogger(__name__)
 
 class MarkupFieldMixin(object):
 
@@ -440,7 +440,7 @@ class PublishedStoryManager(models.Manager):
 
     def devalue_hotness(self, factor=0.99):
         """ Devalue hot count for all stories. Run this as a scheduled task. """
-        hot_stories = self.exclude(hot1)
+        hot_stories = self.exclude(hot_count__lt=1)
         hot_stories.update(hot_count=(models.F('hot_count') - 1) * factor)
 
 
