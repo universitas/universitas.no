@@ -40,7 +40,7 @@ LOGGING['handlers'] = {
     },
     'errorlog': {
         'filters': ['require_debug_false'],
-        'filename': join_path(LOG_FOLDER, 'error_django.log'),
+        'filename': join_path(LOG_FOLDER, 'error-django.log'),
         'maxBytes': 1e6,  # 1 MB
         'backupCount': 10,
         'level': 'ERROR',
@@ -49,7 +49,7 @@ LOGGING['handlers'] = {
     },
     'debuglog': {
         'filters': ['require_debug_true'],
-        'filename': join_path(LOG_FOLDER, 'debug_django.log'),
+        'filename': join_path(LOG_FOLDER, 'debug-django.log'),
         'maxBytes': 1e6,  # 1 MB
         'backupCount': 10,
         'level': 'DEBUG',
