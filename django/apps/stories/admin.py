@@ -17,7 +17,17 @@ import autocomplete_light
 from apps.photo.admin import ThumbAdmin
 from apps.frontpage.models import FrontpageStory
 
-from .models import Byline, Aside, Pullquote, Story, StoryType, Section, StoryImage, InlineLink, StoryVideo, InlineHtml
+from .models import (
+    Byline,
+    Aside,
+    Pullquote,
+    Story,
+    StoryType,
+    Section,
+    StoryImage,
+    InlineLink,
+    StoryVideo,
+    InlineHtml)
 
 
 class SmallTextArea:
@@ -155,10 +165,12 @@ class StoryAdmin(admin.ModelAdmin):
     actions_on_bottom = True
     save_on_top = True
     list_per_page = 25
+    list_filter = ['language', 'publication_status']
     list_display = [
         'id', 'title', 'kicker', 'lede',
-        'theme_word', 'hot_count', 'hit_count', 'story_type', 'publication_date',
-        'publication_status', 'display_bylines', 'image_count'
+        'theme_word', 'hot_count', 'hit_count', 'language',
+        'story_type', 'publication_date', 'publication_status',
+        'display_bylines', 'image_count'
     ]
 
     list_editable = [

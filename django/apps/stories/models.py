@@ -53,6 +53,7 @@ INLINE_HTML_TAG = '@html:'
 slugify = Slugify(max_length=50, to_lower=True)
 logger = logging.getLogger(__name__)
 
+
 class MarkupFieldMixin(object):
 
     def __init__(self, *args, **kwargs):
@@ -476,6 +477,13 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         blank=True, null=True, editable=False,
         help_text=_('primary id in the legacy prodsys database.'),
         verbose_name=_('prodsak id')
+    )
+    language = models.CharField(
+        max_length=10,
+        help_text=_('language'),
+        verbose_name=_('language'),
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGES[0][0],
     )
     title = MarkupCharField(
         max_length=1000,

@@ -77,13 +77,16 @@ LOGGING['loggers'] = {
         'level': 'WARNING', 'propagate': False,
         'handlers': ['errorlog', 'debuglog'],
     },
+    'apps': {
+        'level': 'DEBUG', 'propagate': False,
+        'handlers': ['console', 'errorlog', 'debuglog', 'sentry'],
+    },
+    'core': {
+        'level': 'DEBUG', 'propagate': False,
+        'handlers': ['console', 'errorlog', 'debuglog', 'sentry'],
+    },
 }
 LOGGING['root'] = {
-    'level': "DEBUG",
-    'handlers': [
-        'console',
-        'errorlog',
-        'debuglog',
-        'sentry'
-    ],
+    'level': "WARNING",
+    'handlers': ['console', 'errorlog', 'debuglog', 'sentry'],
 }

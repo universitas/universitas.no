@@ -3,6 +3,7 @@
 
 from os.path import dirname
 import django.conf.global_settings as DEFAULT_SETTINGS
+from django.utils.translation import ugettext_lazy as _
 from .setting_helpers import environment_variable, join_path
 from .logging import *
 
@@ -166,6 +167,12 @@ TEMPLATE_DIRS = [join_path(BASE_DIR, 'templates'), ]
 
 # INTERNATIONALIZATION
 LANGUAGE_CODE = 'NB_no'
+LANGUAGES = [
+    ('nb', _('Norwegian Bokmal')),
+    ('nn', _('Norwegian Nynorsk')),
+    ('en', _('English')),
+]
+
 TIME_ZONE = 'Europe/Oslo'
 USE_I18N = True  # Internationalisation (string translation)
 USE_L10N = True  # Localisation (numbers and stuff)
