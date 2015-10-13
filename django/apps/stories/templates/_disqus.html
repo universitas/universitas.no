@@ -4,6 +4,7 @@
     var disqus_identifier = '{{ story.id }}';
     var disqus_title = '{{ story.title }}';
     var disqus_url = 'http://universitas.no{{ story.get_absolute_url }}';
+    var disqus_config = function () { this.language = "{{ story.language }}"; };
     // var disqus_category_id = '{{ story.section.id }}';
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

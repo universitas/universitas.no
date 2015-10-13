@@ -1,0 +1,1246 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-12 23:49+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: apps/adverts/admin.py:48
+msgid "Create dummy adverts."
+msgstr ""
+
+#: apps/adverts/appconf.py:6 apps/adverts/models.py:295
+msgid "Adverts"
+msgstr ""
+
+#: apps/adverts/autocomplete_light_registry.py:8
+#: apps/adverts/autocomplete_light_registry.py:20
+msgid "add more"
+msgstr ""
+
+#: apps/adverts/autocomplete_light_registry.py:32
+msgid "choose customer"
+msgstr ""
+
+#: apps/adverts/models.py:26
+msgid "print"
+msgstr ""
+
+#: apps/adverts/models.py:26
+msgid "web"
+msgstr ""
+
+#: apps/adverts/models.py:32
+msgid "display price"
+msgstr ""
+
+#: apps/adverts/models.py:41
+msgid "AdFormat"
+msgstr ""
+
+#: apps/adverts/models.py:42
+msgid "AdFormats"
+msgstr ""
+
+#: apps/adverts/models.py:66
+msgid "size and shape of ad"
+msgstr ""
+
+#: apps/adverts/models.py:69
+msgid "comma separated list of extra css classes to apply."
+msgstr ""
+
+#: apps/adverts/models.py:74
+msgid "Maximum ads to show at once."
+msgstr ""
+
+#: apps/adverts/models.py:79
+msgid "Location"
+msgstr ""
+
+#: apps/adverts/models.py:80
+msgid "Locations"
+msgstr ""
+
+#: apps/adverts/models.py:140
+msgid "Customer"
+msgstr ""
+
+#: apps/adverts/models.py:141
+msgid "Customers"
+msgstr ""
+
+#: apps/adverts/models.py:209
+msgid "Image advert"
+msgstr ""
+
+#: apps/adverts/models.py:210
+msgid "HTML advert"
+msgstr ""
+
+#: apps/adverts/models.py:211
+msgid "Dummy or unfinished advert"
+msgstr ""
+
+#: apps/adverts/models.py:220 apps/stories/models.py:467
+msgid "Draft"
+msgstr ""
+
+#: apps/adverts/models.py:222
+msgid "Private"
+msgstr ""
+
+#: apps/adverts/models.py:224
+msgid "Published"
+msgstr ""
+
+#: apps/adverts/models.py:226
+msgid "Fallback"
+msgstr ""
+
+#: apps/adverts/models.py:229
+msgid "Short description of this ad."
+msgstr ""
+
+#: apps/adverts/models.py:236
+msgid "Who bought this ad?"
+msgstr ""
+
+#: apps/adverts/models.py:241
+msgid "Where to show the ad"
+msgstr ""
+
+#: apps/adverts/models.py:244
+msgid "Ordering of the ad within the channel"
+msgstr ""
+
+#: apps/adverts/models.py:248
+msgid "Publication status"
+msgstr ""
+
+#: apps/adverts/models.py:253
+msgid "Advert type."
+msgstr ""
+
+#: apps/adverts/models.py:259
+msgid "When to start serving this ad"
+msgstr ""
+
+#: apps/adverts/models.py:264
+msgid "When to stop serving this ad"
+msgstr ""
+
+#: apps/adverts/models.py:268
+msgid "Image Ad: image file in jpg or png format"
+msgstr ""
+
+#: apps/adverts/models.py:274
+msgid "Image Ad: url that ad links to"
+msgstr ""
+
+#: apps/adverts/models.py:278
+msgid "Image ad: alternative text for image"
+msgstr ""
+
+#: apps/adverts/models.py:284
+msgid "HTML to use for ad instead of serving an image ad."
+msgstr ""
+
+#: apps/adverts/models.py:294
+msgid "Advert"
+msgstr ""
+
+#: apps/adverts/models.py:319
+msgid "Choose one or more ad channels before publishing."
+msgstr ""
+
+#: apps/adverts/models.py:322
+msgid "Published ad must contain an image or html code."
+msgstr ""
+
+#: apps/adverts/models.py:327
+msgid "Image ads must have a link."
+msgstr ""
+
+#: apps/adverts/models.py:331
+msgid "Image ads must have alternative text."
+msgstr ""
+
+#: apps/adverts/models.py:336
+msgid "End time must be after start time."
+msgstr ""
+
+#: apps/contributors/appconf.py:6 apps/contributors/models.py:70
+msgid "Contributors"
+msgstr ""
+
+#: apps/contributors/autocomplete_light_registry.py:11
+msgid "Name of person."
+msgstr ""
+
+#: apps/contributors/models.py:41
+msgid "Unknown"
+msgstr ""
+
+#: apps/contributors/models.py:42
+msgid "Active"
+msgstr ""
+
+#: apps/contributors/models.py:43
+msgid "Retired"
+msgstr ""
+
+#: apps/contributors/models.py:44
+msgid "External"
+msgstr ""
+
+#: apps/contributors/models.py:58
+msgid "Verified to be a correct name."
+msgstr ""
+
+#: apps/contributors/models.py:65
+msgid "photo used for byline credit."
+msgstr ""
+
+#: apps/contributors/models.py:69
+msgid "Contributor"
+msgstr ""
+
+#: apps/contributors/models.py:263
+msgid "Job title at the publication."
+msgstr ""
+
+#: apps/contributors/models.py:268
+msgid "Group membership"
+msgstr ""
+
+#: apps/contributors/models.py:272
+msgid "Position"
+msgstr ""
+
+#: apps/contributors/models.py:273
+msgid "Positions"
+msgstr ""
+
+#: apps/frontpage/appconf.py:6 apps/frontpage/models.py:59
+msgid "Frontpage"
+msgstr ""
+
+#: apps/frontpage/models.py:31
+msgid "Unique label used in url"
+msgstr ""
+
+#: apps/frontpage/models.py:37
+msgid "This page is published."
+msgstr ""
+
+#: apps/frontpage/models.py:60
+msgid "Frontpages"
+msgstr ""
+
+#: apps/frontpage/models.py:78 apps/frontpage/models.py:86
+msgid "{} is not a number between {} and {}"
+msgstr ""
+
+#: apps/frontpage/models.py:98
+msgid "height - minimum 1 maximum 12"
+msgstr ""
+
+#: apps/frontpage/models.py:104
+msgid "width - minimum 1 maximum 12"
+msgstr ""
+
+#: apps/frontpage/models.py:119 apps/frontpage/models.py:120
+msgid "Story module"
+msgstr ""
+
+#: apps/frontpage/models.py:129
+msgid "larger numbers come first"
+msgstr ""
+
+#: apps/frontpage/models.py:160
+msgid "Static module"
+msgstr ""
+
+#: apps/frontpage/models.py:161
+msgid "Static modules"
+msgstr ""
+
+#: apps/frontpage/models.py:168
+msgid "Placement on front page"
+msgstr ""
+
+#: apps/frontpage/models.py:172
+msgid "Use django template rendering"
+msgstr ""
+
+#: apps/frontpage/models.py:240
+msgid "Frontpage Story"
+msgstr ""
+
+#: apps/frontpage/models.py:241
+msgid "Frontpage Stories"
+msgstr ""
+
+#: apps/frontpage/models.py:251
+msgid "position and size of story element."
+msgstr ""
+
+#: apps/frontpage/models.py:256
+msgid "image"
+msgstr ""
+
+#: apps/frontpage/models.py:261
+msgid "headline"
+msgstr ""
+
+#: apps/frontpage/models.py:266 apps/markup/models.py:174
+#: apps/stories/models.py:507
+msgid "kicker"
+msgstr ""
+
+#: apps/frontpage/models.py:271
+msgid "vignette"
+msgstr ""
+
+#: apps/frontpage/models.py:276 apps/markup/models.py:175
+#: apps/stories/models.py:512
+msgid "lede"
+msgstr ""
+
+#: apps/frontpage/models.py:281
+msgid "html_class"
+msgstr ""
+
+#: apps/issues/admin.py:31
+msgid "PDF is not uploaded yet."
+msgstr ""
+
+#: apps/issues/appconf.py:6
+msgid "Issues"
+msgstr ""
+
+#: apps/issues/models.py:90
+msgid "Regular"
+msgstr ""
+
+#: apps/issues/models.py:91
+msgid "Magazine"
+msgstr ""
+
+#: apps/issues/models.py:92
+msgid "Welcome special"
+msgstr ""
+
+#: apps/issues/models.py:153
+msgid "Pdf issue"
+msgstr ""
+
+#: apps/issues/models.py:154
+msgid "Pdf issues"
+msgstr ""
+
+#: apps/issues/models.py:165
+msgid "Pdf file for this issue."
+msgstr ""
+
+#: apps/issues/models.py:171
+msgid "An image file of the front page"
+msgstr ""
+
+#: apps/issues/models.py:178
+msgid "Extracted from file."
+msgstr ""
+
+#: apps/legacy_db/admin.py:57
+msgid "Move story to archive."
+msgstr ""
+
+#: apps/legacy_db/admin.py:63 apps/stories/models.py:543
+msgid "status"
+msgstr ""
+
+#: apps/legacy_db/admin.py:70
+msgid "active"
+msgstr ""
+
+#: apps/legacy_db/admin.py:71
+msgid "archived"
+msgstr ""
+
+#: apps/legacy_db/appconf.py:6
+msgid "Legacy Website"
+msgstr ""
+
+#: apps/legacy_db/models.py:57
+msgid "websak"
+msgstr ""
+
+#: apps/legacy_db/models.py:58
+msgid "websaker"
+msgstr ""
+
+#: apps/legacy_db/models.py:73
+msgid "bildetekst"
+msgstr ""
+
+#: apps/legacy_db/models.py:74
+msgid "bildetekster"
+msgstr ""
+
+#: apps/legacy_db/models.py:94
+msgid "bilde"
+msgstr ""
+
+#: apps/legacy_db/models.py:95
+msgid "bilder"
+msgstr ""
+
+#: apps/legacy_db/models.py:122 apps/legacy_db/models.py:123
+msgid "diskusjon innlegg"
+msgstr ""
+
+#: apps/legacy_db/models.py:135 apps/legacy_db/models.py:136
+msgid "diskusjon svar"
+msgstr ""
+
+#: apps/legacy_db/models.py:150
+msgid "eposttinging"
+msgstr ""
+
+#: apps/legacy_db/models.py:151
+msgid "eposttingingar"
+msgstr ""
+
+#: apps/legacy_db/models.py:164
+msgid "faktaboks"
+msgstr ""
+
+#: apps/legacy_db/models.py:165
+msgid "faktabokser"
+msgstr ""
+
+#: apps/legacy_db/models.py:233
+msgid "prodsys sak"
+msgstr ""
+
+#: apps/legacy_db/models.py:234
+msgid "prodsys saker"
+msgstr ""
+
+#: apps/legacy_db/models.py:254
+msgid "prodsys bilde"
+msgstr ""
+
+#: apps/legacy_db/models.py:255
+msgid "prodsys bilder"
+msgstr ""
+
+#: apps/markup/appconf.py:6
+msgid "Markup"
+msgstr ""
+
+#: apps/markup/models.py:166
+msgid "block tag"
+msgstr ""
+
+#: apps/markup/models.py:167
+msgid "block tags"
+msgstr ""
+
+#: apps/markup/models.py:170
+msgid "add"
+msgstr ""
+
+#: apps/markup/models.py:171
+msgid "alias"
+msgstr ""
+
+#: apps/markup/models.py:172
+msgid "body text"
+msgstr ""
+
+#: apps/markup/models.py:173 apps/stories/models.py:491
+msgid "title"
+msgstr ""
+
+#: apps/markup/models.py:176 apps/stories/models.py:523
+msgid "theme word"
+msgstr ""
+
+#: apps/markup/models.py:177
+msgid "byline"
+msgstr ""
+
+#: apps/markup/models.py:178
+msgid "create aside"
+msgstr ""
+
+#: apps/markup/models.py:179
+msgid "create pullquote"
+msgstr ""
+
+#: apps/markup/models.py:180
+msgid "delete"
+msgstr ""
+
+#: apps/markup/models.py:262
+msgid "Misspelling found during import."
+msgstr ""
+
+#: apps/markup/models.py:280
+msgid "inline tag"
+msgstr ""
+
+#: apps/markup/models.py:281
+msgid "inline tags"
+msgstr ""
+
+#: apps/markup/models.py:366
+msgid "import"
+msgstr ""
+
+#: apps/markup/models.py:367
+msgid "extra"
+msgstr ""
+
+#: apps/markup/models.py:368 apps/stories/models.py:528
+msgid "bylines"
+msgstr ""
+
+#: apps/markup/models.py:369
+msgid "clean"
+msgstr ""
+
+#: apps/markup/models.py:374
+msgid "Alias"
+msgstr ""
+
+#: apps/markup/models.py:375
+msgid "Aliases"
+msgstr ""
+
+#: apps/markup/models.py:404
+msgid "explain this pattern"
+msgstr ""
+
+#: apps/photo/appconf.py:6 apps/stories/models.py:1678
+msgid "Photo"
+msgstr ""
+
+#: apps/photo/autocomplete_light_registry.py:13
+msgid "Filename"
+msgstr ""
+
+#: apps/photo/models.py:55
+msgid "center"
+msgstr ""
+
+#: apps/photo/models.py:56
+msgid "corner detection"
+msgstr ""
+
+#: apps/photo/models.py:57
+msgid "multiple faces"
+msgstr ""
+
+#: apps/photo/models.py:58
+msgid "single face"
+msgstr ""
+
+#: apps/photo/models.py:59
+msgid "manual crop"
+msgstr ""
+
+#: apps/photo/models.py:63
+msgid "ImageFile"
+msgstr ""
+
+#: apps/photo/models.py:64
+msgid "ImageFiles"
+msgstr ""
+
+#: apps/photo/models.py:73 apps/photo/models.py:78
+msgid "full height in pixels"
+msgstr ""
+
+#: apps/photo/models.py:74 apps/photo/models.py:79
+msgid "full height"
+msgstr ""
+
+#: apps/photo/models.py:84
+msgid "image crop vertical. Between 0% and 100%."
+msgstr ""
+
+#: apps/photo/models.py:89
+msgid "image crop horizontal. Between 0% and 100%."
+msgstr ""
+
+#: apps/photo/models.py:94
+msgid ""
+"area containing most relevant content. Area is considered a circle with "
+"center x,y and diameter d where x and y are the values \"from_left\" and "
+"\"from_right\" and d is a percentage of the shortest axis. This is used for "
+"close cropping of some images, for instance byline photos."
+msgstr ""
+
+#: apps/photo/models.py:102
+msgid "How this image has been cropped."
+msgstr ""
+
+#: apps/photo/models.py:106
+msgid "previous path if the image has been moved."
+msgstr ""
+
+#: apps/photo/models.py:112
+msgid "who made this"
+msgstr ""
+
+#: apps/photo/models.py:117
+msgid "extra information about license and attribution if needed."
+msgstr ""
+
+#: apps/stories/admin.py:155
+msgid "make frontpage story"
+msgstr ""
+
+#: apps/stories/admin.py:298 apps/stories/admin.py:305
+msgid "find linked stories"
+msgstr ""
+
+#: apps/stories/appconf.py:7 apps/stories/models.py:454
+msgid "Stories"
+msgstr ""
+
+#: apps/stories/autocomplete_light_registry.py:11
+msgid "Story headline or lede."
+msgstr ""
+
+#: apps/stories/models.py:73
+msgid "HTML tags found in text: "
+msgstr ""
+
+#: apps/stories/models.py:148
+msgid "Section"
+msgstr ""
+
+#: apps/stories/models.py:149
+msgid "Sections"
+msgstr ""
+
+#: apps/stories/models.py:154
+msgid "Section title"
+msgstr ""
+
+#: apps/stories/models.py:155
+msgid "section title"
+msgstr ""
+
+#: apps/stories/models.py:159 apps/stories/models.py:191
+#: apps/stories/models.py:494
+msgid "slug"
+msgstr ""
+
+#: apps/stories/models.py:200
+msgid "StoryType"
+msgstr ""
+
+#: apps/stories/models.py:201
+msgid "StoryTypes"
+msgstr ""
+
+#: apps/stories/models.py:226
+msgid "Content with xtags markup."
+msgstr ""
+
+#: apps/stories/models.py:227
+msgid "bodytext tagged text"
+msgstr ""
+
+#: apps/stories/models.py:234
+msgid "HTML tagged content"
+msgstr ""
+
+#: apps/stories/models.py:235
+msgid "bodytext html tagged"
+msgstr ""
+
+#: apps/stories/models.py:453
+msgid "Story"
+msgstr ""
+
+#: apps/stories/models.py:468
+msgid "Ready to edit"
+msgstr ""
+
+#: apps/stories/models.py:469
+msgid "Ready to publish on website"
+msgstr ""
+
+#: apps/stories/models.py:470
+msgid "Published on website"
+msgstr ""
+
+#: apps/stories/models.py:471
+msgid "Will not be published"
+msgstr ""
+
+#: apps/stories/models.py:472
+msgid "Used as template for new articles"
+msgstr ""
+
+#: apps/stories/models.py:473
+msgid "Technical error"
+msgstr ""
+
+#: apps/stories/models.py:478
+msgid "primary id in the legacy prodsys database."
+msgstr ""
+
+#: apps/stories/models.py:479
+msgid "prodsak id"
+msgstr ""
+
+#: apps/stories/models.py:483 apps/stories/models.py:484
+msgid "language"
+msgstr ""
+
+#: apps/stories/models.py:490
+msgid "main headline or title"
+msgstr ""
+
+#: apps/stories/models.py:506
+msgid "secondary headline, usually displayed above main headline"
+msgstr ""
+
+#: apps/stories/models.py:511
+msgid "brief introduction or summary of the story"
+msgstr ""
+
+#: apps/stories/models.py:516
+msgid "for internal use only"
+msgstr ""
+
+#: apps/stories/models.py:517
+msgid "comment"
+msgstr ""
+
+#: apps/stories/models.py:522
+msgid "theme, topic, main keyword"
+msgstr ""
+
+#: apps/stories/models.py:527
+msgid "the people who created this content."
+msgstr ""
+
+#: apps/stories/models.py:532
+msgid "the type of story."
+msgstr ""
+
+#: apps/stories/models.py:533
+msgid "article type"
+msgstr ""
+
+#: apps/stories/models.py:537
+msgid "when this story will be published on the web."
+msgstr ""
+
+#: apps/stories/models.py:538
+msgid "publication date"
+msgstr ""
+
+#: apps/stories/models.py:542
+msgid "publication status."
+msgstr ""
+
+#: apps/stories/models.py:547
+msgid "which issue this story was printed in."
+msgstr ""
+
+#: apps/stories/models.py:548
+msgid "issue"
+msgstr ""
+
+#: apps/stories/models.py:552
+msgid "which page the story was printed on."
+msgstr ""
+
+#: apps/stories/models.py:553
+msgid "page"
+msgstr ""
+
+#: apps/stories/models.py:558
+msgid "how many time the article has been viewed."
+msgstr ""
+
+#: apps/stories/models.py:559
+msgid "total page views"
+msgstr ""
+
+#: apps/stories/models.py:564
+msgid "calculated value representing recent page views."
+msgstr ""
+
+#: apps/stories/models.py:565
+msgid "recent page views"
+msgstr ""
+
+#: apps/stories/models.py:569
+msgid "all bylines as html."
+msgstr ""
+
+#: apps/stories/models.py:573
+msgid "From old web page. For reference only."
+msgstr ""
+
+#: apps/stories/models.py:574
+msgid "Imported html source."
+msgstr ""
+
+#: apps/stories/models.py:578
+msgid "From prodsys. For reference only."
+msgstr ""
+
+#: apps/stories/models.py:579
+msgid "Imported xtagged source."
+msgstr ""
+
+#: apps/stories/models.py:934
+msgid "No such element. Valid indexes: "
+msgstr ""
+
+#: apps/stories/models.py:1094
+msgid "Leave blank to unpublish"
+msgstr ""
+
+#: apps/stories/models.py:1095
+msgid "index"
+msgstr ""
+
+#: apps/stories/models.py:1100
+msgid "Is this element placed on top?"
+msgstr ""
+
+#: apps/stories/models.py:1129
+msgid "story element"
+msgstr ""
+
+#: apps/stories/models.py:1130
+msgid "story elements"
+msgstr ""
+
+#: apps/stories/models.py:1146
+msgid "Pullquote"
+msgstr ""
+
+#: apps/stories/models.py:1147
+msgid "Pullquotes"
+msgstr ""
+
+#: apps/stories/models.py:1157
+msgid "Aside"
+msgstr ""
+
+#: apps/stories/models.py:1158
+msgid "Asides"
+msgstr ""
+
+#: apps/stories/models.py:1170
+msgid "Inline HTML block"
+msgstr ""
+
+#: apps/stories/models.py:1171
+msgid "Inline HTML blocks"
+msgstr ""
+
+#: apps/stories/models.py:1186
+msgid "auto"
+msgstr ""
+
+#: apps/stories/models.py:1187
+msgid "5:2 landscape"
+msgstr ""
+
+#: apps/stories/models.py:1188
+msgid "2:1 landscape"
+msgstr ""
+
+#: apps/stories/models.py:1189
+msgid "3:2 landscape"
+msgstr ""
+
+#: apps/stories/models.py:1190
+msgid "4:3 landscape"
+msgstr ""
+
+#: apps/stories/models.py:1191
+msgid "square"
+msgstr ""
+
+#: apps/stories/models.py:1192
+msgid "3:4 portrait"
+msgstr ""
+
+#: apps/stories/models.py:1193
+msgid "2:3 portrait"
+msgstr ""
+
+#: apps/stories/models.py:1194
+msgid "1:2 portrait"
+msgstr ""
+
+#: apps/stories/models.py:1195
+msgid "original"
+msgstr ""
+
+#: apps/stories/models.py:1203
+msgid "Text explaining the media."
+msgstr ""
+
+#: apps/stories/models.py:1204
+msgid "caption"
+msgstr ""
+
+#: apps/stories/models.py:1209
+msgid "Extra information about media attribution and license."
+msgstr ""
+
+#: apps/stories/models.py:1210
+msgid "credit line"
+msgstr ""
+
+#: apps/stories/models.py:1215
+msgid "Relative image size."
+msgstr ""
+
+#: apps/stories/models.py:1216
+msgid "image size"
+msgstr ""
+
+#: apps/stories/models.py:1220
+msgid "aspect ratio"
+msgstr ""
+
+#: apps/stories/models.py:1221
+msgid "height / width"
+msgstr ""
+
+#: apps/stories/models.py:1256
+msgid "Image"
+msgstr ""
+
+#: apps/stories/models.py:1257
+msgid "Images"
+msgstr ""
+
+#: apps/stories/models.py:1261
+msgid "Choose an image by name or upload a new one."
+msgstr ""
+
+#: apps/stories/models.py:1287
+msgid "vimeo"
+msgstr ""
+
+#: apps/stories/models.py:1288
+msgid "youtube"
+msgstr ""
+
+#: apps/stories/models.py:1292 apps/stories/models.py:1677
+#: apps/stories/models.py:1679
+msgid "Video"
+msgstr ""
+
+#: apps/stories/models.py:1293
+msgid "Videos"
+msgstr ""
+
+#: apps/stories/models.py:1303
+msgid "id for video file."
+msgstr ""
+
+#: apps/stories/models.py:1304
+msgid "the part of the url that identifies this particular video"
+msgstr ""
+
+#: apps/stories/models.py:1418
+msgid "inline link"
+msgstr ""
+
+#: apps/stories/models.py:1419
+msgid "inline links"
+msgstr ""
+
+#: apps/stories/models.py:1427
+msgid "link label"
+msgstr ""
+
+#: apps/stories/models.py:1432 apps/stories/models.py:1433
+msgid "link target"
+msgstr ""
+
+#: apps/stories/models.py:1438
+msgid "link to story on this website."
+msgstr ""
+
+#: apps/stories/models.py:1439
+msgid "linked story"
+msgstr ""
+
+#: apps/stories/models.py:1445
+msgid "alternate link text"
+msgstr ""
+
+#: apps/stories/models.py:1446
+msgid "alt text"
+msgstr ""
+
+#: apps/stories/models.py:1451 apps/stories/models.py:1452
+msgid "link text"
+msgstr ""
+
+#: apps/stories/models.py:1459
+msgid "Status code returned from automatic check."
+msgstr ""
+
+#: apps/stories/models.py:1460
+msgid "http status code"
+msgstr ""
+
+#: apps/stories/models.py:1675
+msgid "By"
+msgstr ""
+
+#: apps/stories/models.py:1676
+msgid "Text"
+msgstr ""
+
+#: apps/stories/models.py:1680
+msgid "Illustration"
+msgstr ""
+
+#: apps/stories/models.py:1681
+msgid "Graphics"
+msgstr ""
+
+#: apps/stories/models.py:1682
+msgid "Translation"
+msgstr ""
+
+#: apps/stories/models.py:1683
+msgid "TextPhoto"
+msgstr ""
+
+#: apps/stories/models.py:1684
+msgid "TextVideo"
+msgstr ""
+
+#: apps/stories/models.py:1685
+msgid "PhotoVideo"
+msgstr ""
+
+#: apps/stories/models.py:1704
+msgid "Byline"
+msgstr ""
+
+#: apps/stories/models.py:1705
+msgid "Bylines"
+msgstr ""
+
+#: settings/base.py:171
+msgid "Norwegian Bokmal"
+msgstr ""
+
+#: settings/base.py:172
+msgid "Norwegian Nynorsk"
+msgstr ""
+
+#: settings/base.py:173
+msgid "English"
+msgstr ""
+
+#: templates/admin/base_site.html:59
+msgid "Django site admin"
+msgstr ""
+
+#: templates/admin/base_site.html:62
+msgid "Django administration"
+msgstr ""
+
+#: templates/registration/password_change_done.html:4
+#: templates/registration/password_change_form.html:5
+msgid "Documentation"
+msgstr ""
+
+#: templates/registration/password_change_done.html:4
+#: templates/registration/password_change_form.html:5
+msgid "Change password"
+msgstr ""
+
+#: templates/registration/password_change_done.html:4
+#: templates/registration/password_change_form.html:5
+msgid "Log out"
+msgstr ""
+
+#: templates/registration/password_change_done.html:7
+#: templates/registration/password_change_form.html:8
+#: templates/registration/password_reset_complete.html:7
+#: templates/registration/password_reset_done.html:7
+#: templates/registration/password_reset_form.html:7
+msgid "Home"
+msgstr ""
+
+#: templates/registration/password_change_done.html:8
+#: templates/registration/password_change_form.html:9
+#: templates/registration/password_change_form.html:13
+#: templates/registration/password_change_form.html:25
+msgid "Password change"
+msgstr ""
+
+#: templates/registration/password_change_done.html:12
+#: templates/registration/password_change_done.html:16
+msgid "Password change successful"
+msgstr ""
+
+#: templates/registration/password_change_done.html:18
+msgid "Your password was changed."
+msgstr ""
+
+#: templates/registration/password_change_form.html:21
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/registration/password_change_form.html:27
+msgid ""
+"Please enter your old password, for security's sake, and then enter your new "
+"password twice so we can verify you typed it in correctly."
+msgstr ""
+
+#: templates/registration/password_change_form.html:31
+msgid "Old password"
+msgstr ""
+
+#: templates/registration/password_change_form.html:37
+msgid "New password"
+msgstr ""
+
+#: templates/registration/password_change_form.html:43
+msgid "Password (again)"
+msgstr ""
+
+#: templates/registration/password_change_form.html:49
+#: templates/registration/password_reset_confirm.html:20
+msgid "Change my password"
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:8
+#: templates/registration/password_reset_confirm.html:5
+#: templates/registration/password_reset_done.html:8
+#: templates/registration/password_reset_form.html:8
+#: templates/registration/password_reset_form.html:12
+#: templates/registration/password_reset_form.html:16
+msgid "Password reset"
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:12
+#: templates/registration/password_reset_complete.html:16
+msgid "Password reset complete"
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:18
+msgid "Your password has been set.  You may go ahead and log in now."
+msgstr ""
+
+#: templates/registration/password_reset_complete.html:20
+msgid "Log in"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:11
+msgid "Enter new password"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:13
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:17
+msgid "New password:"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:19
+msgid "Confirm password:"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:25
+msgid "Password reset unsuccessful"
+msgstr ""
+
+#: templates/registration/password_reset_confirm.html:27
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
+msgstr ""
+
+#: templates/registration/password_reset_done.html:12
+#: templates/registration/password_reset_done.html:16
+msgid "Password reset successful"
+msgstr ""
+
+#: templates/registration/password_reset_done.html:18
+msgid ""
+"We've e-mailed you instructions for setting your password to the e-mail "
+"address you submitted. You should be receiving it shortly."
+msgstr ""
+
+#: templates/registration/password_reset_email.html:2
+#, python-format
+msgid ""
+"You're receiving this e-mail because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+
+#: templates/registration/password_reset_email.html:4
+msgid "Please go to the following page and choose a new password:"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:8
+msgid "Your username, in case you've forgotten:"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:10
+msgid "Thanks for using our site!"
+msgstr ""
+
+#: templates/registration/password_reset_email.html:12
+#, python-format
+msgid "The %(site_name)s team"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:18
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
+"instructions for setting a new one."
+msgstr ""
+
+#: templates/registration/password_reset_form.html:22
+msgid "E-mail address:"
+msgstr ""
+
+#: templates/registration/password_reset_form.html:22
+msgid "Reset my password"
+msgstr ""

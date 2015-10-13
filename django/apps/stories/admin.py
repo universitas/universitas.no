@@ -190,7 +190,7 @@ class StoryAdmin(admin.ModelAdmin):
     fieldsets = (
         ('header', {
             'fields': (
-                ('title', 'kicker', 'theme_word', ),
+                ('title', 'kicker', 'theme_word', 'language', ),
                 ('story_type', 'publication_date', 'publication_status',),
             ),
         }),

@@ -7,42 +7,9 @@ from django.core.management.base import BaseCommand  # , CommandError
 from apps.stories.models import Story
 
 LANGUAGE_CORPUS = {
-    'nb': [
-        'en',
-        'et',
-        'han',
-        'hun',
-        'ikke',
-        'fra',
-        'bare',
-        'noe',
-        'selv',
-        'mer',
-        'sier'],
-    'nn': [
-        'ein',
-        'eit',
-        'han',
-        'ho',
-        'ikkje',
-        'frå',
-        'berre',
-        'noko',
-        'sjølv',
-        'meir',
-        'seier'],
-    'en': [
-        'a',
-        'an',
-        'he',
-        'she',
-        'not',
-        'from',
-        'only',
-        'something',
-        'self',
-        'more',
-        'says'],
+    'nb': ['en', 'et', 'han', 'hun', 'ikke', 'fra', 'bare', 'noe', ],
+    'nn': ['ein', 'eit', 'han', 'ho', 'ikkje', 'frå', 'berre', 'noko', ],
+    'en': ['a', 'an', 'he', 'she', 'not', 'from', 'only', 'something', ],
 }
 
 

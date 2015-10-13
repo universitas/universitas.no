@@ -6,13 +6,17 @@ import logging
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404
 from apps.core.views import search_404_view
+from django.utils import translation
 from .models import Story
+from django.template import Context
+from django.template.loader import get_template
 
 logger = logging.getLogger(__name__)
 
 
 def article_view(request, story_id, **section_and_slug):
     template = 'story.html'
+    # template = 'dateline.html'
     try:
         story = Story.objects.get(pk=story_id)
     except Story.DoesNotExist:
@@ -30,6 +34,11 @@ def article_view(request, story_id, **section_and_slug):
     if request.path != correct_url:
         return HttpResponseRedirect(correct_url)
 
+    translation.activate(story.language)
+    # context = Context({'story': story, })
+    # template = get_template('story.html')
+    # response = template.render(context)
+
     context = {'story': story, }
-    story.visit_page(request)
-    return render(request, template, context,)
+    response = render(request, template, context,)
+    return response

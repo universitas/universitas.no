@@ -75,6 +75,7 @@ INSTALLED_APPS = [  # CORE APPS
 
 MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -166,12 +167,12 @@ TEMPLATE_DIRS = [join_path(BASE_DIR, 'templates'), ]
 
 
 # INTERNATIONALIZATION
-LANGUAGE_CODE = 'NB_no'
-LANGUAGES = [
-    ('nb', _('Norwegian Bokmal')),
-    ('nn', _('Norwegian Nynorsk')),
-    ('en', _('English')),
-]
+LANGUAGE_CODE = 'nb'
+# LANGUAGES = [
+#     ('nb', _('Norwegian Bokmal')),
+#     ('nn', _('Norwegian Nynorsk')),
+#     ('en', _('English')),
+# ]
 
 TIME_ZONE = 'Europe/Oslo'
 USE_I18N = True  # Internationalisation (string translation)
