@@ -14,8 +14,9 @@ from django.utils import timezone
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.contrib.auth.models import Group
+from django.core.files import File
 
-from apps.photo.models import ImageFile
+from apps.photo.models import ProfileImage
 import logging
 logger = logging.getLogger(__name__)
 
@@ -59,10 +60,11 @@ class Contributor(models.Model):
         default=False,
     )
     byline_photo = models.ForeignKey(
-        ImageFile,
+        ProfileImage,
         related_name='person',
         blank=True, null=True,
         help_text=_('photo used for byline credit.'),
+        on_delete=models.SET_NULL,
     )
 
     class Meta:
@@ -80,13 +82,14 @@ class Contributor(models.Model):
         return self.byline_set.count()
 
     def get_byline_image(self, force_new=False):
-        slugify = Slugify(to_lower=True)
+        slugify = Slugify()
         if not force_new and self.byline_photo:
             return self.byline_photo
-        imagefiles = glob.glob(BYLINE_PHOTO_FOLDER + '/*.jpg')
-        name = self.name.lower()
+        imagefiles = glob.glob(settings.BYLINE_PHOTO_FOLDER + '/*.jpg')
+        name = self.name
         name_last_first = re.sub(r'^(.*) (\S+)$', r'\2 \1', name)
-        name_slug = slugify(name) + '.jpg'
+        name_slug_upper = slugify(name) + '.jpg'
+        name_slug = name_slug_upper.lower()
         name_slug_reverse = slugify(name_last_first) + '.jpg'
         bestratio = 90
         bestmatch = None
@@ -105,8 +108,10 @@ class Contributor(models.Model):
             msg = 'found match: name:{}, img:{}, ratio:{} '.format(
                 name_slug, bestmatch, ratio)
             logger.debug(msg)
-            img, _ = ImageFile.objects.get_or_create(source_file=bestmatch)
-            img.autocrop()
+            with open(bestmatch, 'rb') as source:
+                content = File(source)
+                img = ProfileImage()
+                img.source_file.save(name_slug_upper, content)
             self.byline_photo = img
             self.save()
             return img

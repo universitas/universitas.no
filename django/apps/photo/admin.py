@@ -4,7 +4,7 @@ Admin for photo app.
 """
 
 from django.contrib import admin
-from .models import ImageFile
+from .models import ImageFile, ProfileImage
 from sorl.thumbnail.admin import AdminImageMixin
 from sorl.thumbnail import get_thumbnail
 import autocomplete_light
@@ -12,7 +12,8 @@ from django.utils.safestring import mark_safe
 
 
 class ThumbAdmin:
-    exclude=()
+    exclude = ()
+
     def thumbnail(self, instance, width=200, height=100):
         url = '/static/admin/img/icon-no.gif'
         if hasattr(instance, 'imagefile'):
@@ -30,7 +31,7 @@ class ThumbAdmin:
 
 @admin.register(ImageFile)
 class ImageFileAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin, ):
-    # form = autocomplete_light.modelform_factory(ImageFile, exclude=())
+    form = autocomplete_light.modelform_factory(ImageFile, exclude=())
 
     date_hierarchy = 'created'
     actions_on_top = True
@@ -55,4 +56,12 @@ class ImageFileAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin, ):
         'source_file',
         'storyimage__caption',
         'frontpagestory__headline',
-        )
+    )
+
+
+@admin.register(ProfileImage)
+class ProfileImageAdmin(ImageFileAdmin):
+
+    def get_queryset(self, request):
+        qs = super(ProfileImageAdmin, self).get_queryset(request)
+        return qs.filter(source_file__startswith=ProfileImage.UPLOAD_FOLDER)

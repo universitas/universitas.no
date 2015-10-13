@@ -42,6 +42,7 @@ class BylineInline(admin.TabularInline):
     model = Byline
     fields = ('ordering', 'credit', 'contributor', 'title', )
     extra = 0
+    max_num = 20
     formfield_overrides = {
         models.CharField: {
             'widget': TextInput(

@@ -2,30 +2,31 @@
 """ Photography and image files in the publication  """
 # Python standard library
 # import os
-# import re
+import re
 import numpy
 import cv2
 import os
+from collections import namedtuple
 
 # Django core
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 # from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.validators import MaxValueValidator, MinValueValidator
-from collections import namedtuple
+from django.db.models.signals import pre_delete
 # Installed apps
 
 from model_utils.models import TimeStampedModel
 from utils.model_mixins import Edit_url_mixin
 from sorl.thumbnail import ImageField, get_thumbnail
 from slugify import Slugify
-from PIL import Image
 
 # Project apps
 from apps.issues.models import current_issue
 
 import logging
 logger = logging.getLogger(__name__)
+slugify_filename = Slugify(safe_chars='.-', separator='-')
 
 CASCADE_FILE = os.path.join(
     os.path.dirname(__file__),
@@ -35,13 +36,10 @@ CASCADE_FILE = os.path.join(
 Cropping = namedtuple('Cropping', ['top', 'left', 'diameter'])
 
 
-def image_upload_folder():
-    year, issue = current_issue()
-    return '{}/{}/'.format(year, issue)
-
-
 def upload_image_to(instance, filename):
-    return image_upload_folder() + filename
+    filename = slugify_filename(filename)
+    filename = re.sub(r'\.(jpg|jpeg)$', '.jpg', filename, flags=re.IGNORECASE)
+    return os.path.join(instance.image_upload_folder(), filename)
 
 
 class ImageFile(TimeStampedModel, Edit_url_mixin):
@@ -72,12 +70,12 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
     full_height = models.PositiveIntegerField(
         help_text=_('full height in pixels'),
         verbose_name=_('full height'),
-        editable=False,
+        null=True, editable=False,
     )
     full_width = models.PositiveIntegerField(
         help_text=_('full height in pixels'),
         verbose_name=_('full height'),
-        editable=False,
+        null=True, editable=False,
     )
     from_top = models.PositiveSmallIntegerField(
         default=50,
@@ -91,7 +89,13 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
     )
     crop_diameter = models.PositiveSmallIntegerField(
         default=100,
-        help_text=_('area containing most relevant content. Area is considered a circle with center x,y and diameter d where x and y are the values "from_left" and "from_right" and d is a percentage of the shortest axis. This is used for close cropping of some images, for instance byline photos.'),
+        help_text=_(
+            'area containing most relevant content. Area is considered a '
+            'circle with center x,y and diameter d where x and y are the '
+            'values "from_left" and "from_right" and d is a percentage of '
+            'the shortest axis. This is used for close cropping of some '
+            'images, for instance byline photos.'
+        ),
         validators=[
             MaxValueValidator(100),
             MinValueValidator(0)],
@@ -114,7 +118,8 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
     )
 
     copyright_information = models.CharField(
-        help_text=_('extra information about license and attribution if needed.'),
+        help_text=_(
+            'extra information about license and attribution if needed.'),
         blank=True,
         null=True,
         max_length=1000,
@@ -125,10 +130,11 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
         return self.source_file.name.rpartition('/')[-1]
 
     def save(self, *args, **kwargs):
+        pk = self.pk
         if self.contributor is None:
             pass
             # self.contributor = self.identify_photo_file_initials()
-        if self.pk and not kwargs.pop('autocrop', False):
+        if pk and not kwargs.pop('autocrop', False):
             try:
                 saved = type(self).objects.get(id=self.pk)
                 if (self.from_left,
@@ -138,6 +144,13 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
             except ImageFile.DoesNotExist:
                 pass
         super().save(*args, **kwargs)
+        if not pk and self.cropping == self.CROP_NONE:
+            self.autocrop()
+
+    @classmethod
+    def image_upload_folder(cls):
+        year, issue = [str(number) for number in current_issue()]
+        return os.path.join(year, issue)
 
     def thumb(self, height=315, width=600):
         geometry = '{}x{}'.format(width, height)
@@ -150,39 +163,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
             msg = 'Thumbnail failed: {} {}'.format(e, self.source_file)
             logger.warn(msg)
             return self.source_file
-
-    def slugify_filename(self):
-        """ rename source file if needed. Also convert gif to png """
-        slugify = Slugify(safe_chars='.')
-        try:
-            old_path = self.source_file.path
-
-        except FileNotFoundError:  # noqa
-            old_path = os.path.join(
-                self.source_file.storage.location,
-                self.old_file_path)
-
-        folder, filename = os.path.split(old_path)
-        new_filename = slugify(filename).replace('-.', '.')
-        new_path = os.path.join(folder, new_filename)
-        if new_path.endswith('.gif'):
-            new_path = new_path.replace('.gif', '.png')
-            im = Image.open(old_path)
-            #transparency = im.info['transparency']
-            im.save(new_path)
-            self.source_file = new_path.replace(
-                self.source_file.storage.location,
-                '').strip('/')
-            self.save()
-
-        elif old_path != new_path:
-            if not os.path.exists(new_path):
-                os.rename(old_path, new_path)
-            self.source_file = new_path.replace(
-                self.source_file.storage.location,
-                '').strip('/')
-            # logger.debug('changed file name to {}'.format(new_filename))
-            self.save()
 
     @property
     def cropping(self):
@@ -199,7 +179,8 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
 
     @cropping.deleter
     def cropping(self):
-        field_names = 'from_top', 'from_left', 'crop_diameter', 'cropping_method'
+        field_names = (
+            'from_top', 'from_left', 'crop_diameter', 'cropping_method')
         for field_name in field_names:
             field = self._meta.get_field(field_name)
             setattr(self, field.name, field.default)
@@ -251,7 +232,10 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
         return cv2img
 
     def autocrop(self):
-        """ Calculates best crop using a clever algorithm, and saves Image with new data. """
+        """
+        Calculates best crop using a clever algorithm,
+        and saves Image with new data.
+        """
         def main():
             """ Try different algorithms, change crop and save model. """
             try:
@@ -304,17 +288,17 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
             """ Detects faces in image and adjust cropping. """
             # http://docs.opencv.org/trunk/modules/objdetect/doc/cascade_classification.html
             # cv2.CascadeClassifier.detectMultiScale(image[, scaleFactor[, minNeighbors[, flags[, minSize[, maxSize]]]]])
-                # cascade – Haar classifier cascade (OpenCV 1.x API only). It can be loaded from XML or YAML file using Load(). When the cascade is not needed anymore, release it using cvReleaseHaarClassifierCascade(&cascade).
-                # image – Matrix of the type CV_8U containing an image where objects are detected.
-                # objects – Vector of rectangles where each rectangle contains the detected object, the rectangles may be partially outside the original image.
-                # numDetections – Vector of detection numbers for the corresponding objects. An object’s number of detections is the number of neighboring positively classified rectangles that were joined together to form the object.
-                # scaleFactor – Parameter specifying how much the image size is reduced at each image scale.
-                # minNeighbors – Parameter specifying how many neighbors each candidate rectangle should have to retain it.
-                # flags – Parameter with the same meaning for an old cascade as in the function cvHaarDetectObjects. It is not used for a new cascade.
-                # minSize – Minimum possible object size. Objects smaller than that are ignored.
-                # maxSize – Maximum possible object size. Objects larger than that are ignored.
-                # outputRejectLevels – Boolean. If True, it returns the
-                # rejectLevels and levelWeights. Default value is False.
+            # cascade – Haar classifier cascade (OpenCV 1.x API only). It can be loaded from XML or YAML file using Load(). When the cascade is not needed anymore, release it using cvReleaseHaarClassifierCascade(&cascade).
+            # image – Matrix of the type CV_8U containing an image where objects are detected.
+            # objects – Vector of rectangles where each rectangle contains the detected object, the rectangles may be partially outside the original image.
+            # numDetections – Vector of detection numbers for the corresponding objects. An object’s number of detections is the number of neighboring positively classified rectangles that were joined together to form the object.
+            # scaleFactor – Parameter specifying how much the image size is reduced at each image scale.
+            # minNeighbors – Parameter specifying how many neighbors each candidate rectangle should have to retain it.
+            # flags – Parameter with the same meaning for an old cascade as in the function cvHaarDetectObjects. It is not used for a new cascade.
+            # minSize – Minimum possible object size. Objects smaller than that are ignored.
+            # maxSize – Maximum possible object size. Objects larger than that are ignored.
+            # outputRejectLevels – Boolean. If True, it returns the
+            # rejectLevels and levelWeights. Default value is False.
 
             face_cascade = cv2.CascadeClassifier(CASCADE_FILE)
             faces = face_cascade.detectMultiScale(cv2img,)
@@ -377,3 +361,23 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
             return Cropping(left=x, top=y, diameter=d)
 
         main()
+
+
+class ProfileImage(ImageFile):
+
+    class Meta:
+        proxy = True
+        verbose_name = _('Profile Image')
+        verbose_name_plural = _('Profile Images')
+
+    UPLOAD_FOLDER = 'byline-photo'
+    @classmethod
+    def image_upload_folder(cls):
+        return cls.UPLOAD_FOLDER
+
+def remove_image_file(sender, instance, **kwargs):
+    """Remove image file"""
+    instance.source_file.delete()
+
+pre_delete.connect(remove_image_file, sender=ImageFile)
+pre_delete.connect(remove_image_file, sender=ProfileImage)
