@@ -656,7 +656,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
     def get_bylines_as_html(self):
         """ create html table of bylines in db for search and admin display """
-        translation.activate(settings.LANGUAGE_CODE)
+        # translation.activate(settings.LANGUAGE_CODE)
         all_bylines = ['<table class="admin-bylines">']
         for bl in self.byline_set.select_related('contributor'):
             all_bylines.append(
@@ -666,12 +666,13 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
                     bl.title,
                 )
             )
-        translation.deactivate()
+        # translation.deactivate()
         all_bylines.append('</table>')
         return '\n'.join(all_bylines)
 
     def get_bylines(self):
-        translation.activate(settings.LANGUAGE_CODE)
+        # with translation.override()
+        # translation.activate(settings.LANGUAGE_CODE)
         authors = []
         for bl in self.byline_set.select_related('contributor'):
             authors.append(
@@ -681,7 +682,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
                     # credit=bl.get_credit_display(),
                 )
             )
-        translation.deactivate()
+        # translation.deactivate()
         return ', '.join(authors)
 
     def image_count(self):
