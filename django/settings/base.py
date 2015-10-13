@@ -18,7 +18,9 @@ AWS_ACCESS_KEY_ID = environment_variable('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = environment_variable('AWS_SECRET_ACCESS_KEY')
 AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
 AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME  # cname
+# AWS_S3_URL_PROTOCOL = 'http:'
 AWS_S3_SECURE_URLS = False
+AWS_S3_USE_SSL = False
 STATICFILES_LOCATION = 'static'
 MEDIAFILES_LOCATION = 'media'
 STATICFILES_STORAGE = 'utils.aws_custom_storage.StaticStorage'
@@ -27,6 +29,7 @@ THUMBNAIL_STORAGE = 'utils.aws_custom_storage.ThumbStorage'
 
 STATIC_URL = "http://{host}/{folder}/".format(
     host=AWS_S3_CUSTOM_DOMAIN, folder=STATICFILES_LOCATION, )
+
 MEDIA_URL = "http://{host}/{folder}/".format(
     host=AWS_S3_CUSTOM_DOMAIN, folder=MEDIAFILES_LOCATION, )
 
