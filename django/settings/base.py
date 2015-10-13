@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 """ Django settings for universitas_no project. """
+# -*- coding: utf-8 -*-
 
 from os.path import dirname
 import django.conf.global_settings as DEFAULT_SETTINGS
