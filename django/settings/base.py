@@ -16,15 +16,9 @@ SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
 AWS_STORAGE_BUCKET_NAME = environment_variable('AWS_STORAGE_BUCKET_NAME')
 AWS_ACCESS_KEY_ID = environment_variable('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = environment_variable('AWS_SECRET_ACCESS_KEY')
-AWS_S3_SECURE_URLS = False
 AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
-# AWS_S3_CUSTOM_DOMAIN = '{bucket}.{host}'.format(
-#     bucket=AWS_STORAGE_BUCKET_NAME,
-#     host=AWS_S3_HOST
-# )
-AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME
-AWS_S3_URL_PROTOCOL = 'http:'
-AWS_S3_USE_SSL = False
+AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME  # cname
+AWS_S3_SECURE_URLS = False
 STATICFILES_LOCATION = 'static'
 MEDIAFILES_LOCATION = 'media'
 STATICFILES_STORAGE = 'utils.aws_custom_storage.StaticStorage'
@@ -32,14 +26,9 @@ DEFAULT_FILE_STORAGE = 'utils.aws_custom_storage.MediaStorage'
 THUMBNAIL_STORAGE = 'utils.aws_custom_storage.ThumbStorage'
 
 STATIC_URL = "http://{host}/{folder}/".format(
-    host=AWS_S3_CUSTOM_DOMAIN,
-    folder=STATICFILES_LOCATION,
-)
-
+    host=AWS_S3_CUSTOM_DOMAIN, folder=STATICFILES_LOCATION, )
 MEDIA_URL = "http://{host}/{folder}/".format(
-    host=AWS_S3_CUSTOM_DOMAIN,
-    folder=MEDIAFILES_LOCATION,
-)
+    host=AWS_S3_CUSTOM_DOMAIN, folder=MEDIAFILES_LOCATION, )
 
 INSTALLED_APPS = [  # CUSTOM APPS
     'apps.issues',
@@ -75,7 +64,7 @@ INSTALLED_APPS = [  # CORE APPS
 
 MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
+    # 'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -168,11 +157,11 @@ TEMPLATE_DIRS = [join_path(BASE_DIR, 'templates'), ]
 
 # INTERNATIONALIZATION
 LANGUAGE_CODE = 'nb'
-# LANGUAGES = [
-#     ('nb', _('Norwegian Bokmal')),
-#     ('nn', _('Norwegian Nynorsk')),
-#     ('en', _('English')),
-# ]
+LANGUAGES = [
+    ('nb', _('Norwegian Bokmal')),
+    ('nn', _('Norwegian Nynorsk')),
+    ('en', _('English')),
+]
 
 TIME_ZONE = 'Europe/Oslo'
 USE_I18N = True  # Internationalisation (string translation)
@@ -193,5 +182,4 @@ TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
-    # 'compressor.finders.CompressorFinder',
 ]
