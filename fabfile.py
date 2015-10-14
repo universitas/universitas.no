@@ -113,12 +113,10 @@ def _get_folders(site_url=None):
 
 
 def _get_configs(
-    site_url=None,
-    user_name=None,
-    bin_folder=None,
-    fabric_folder=None,
-):
-    """ Return a dictionary containing configuration for webserver programs and services. """
+        site_url=None, user_name=None, bin_folder=None, config_folder=None):
+    """
+    Return a dictionary containing configuration for webserver programs and services.
+    """
     # user name for database and linux
     site_url = site_url or env.site_url
     user_name = user_name or site_url.replace('.', '_')
@@ -128,7 +126,7 @@ def _get_configs(
         url=site_url)
     bin_folder = bin_folder or project_folder + 'bin'
     # parent folder of config file templates.
-    fabric_folder = fabric_folder or dirname(__file__) + '/deployment_tools'
+    config_folder = config_folder or dirname(__file__) + '/deployment_tools'
 
     configs = {
         # 'service': { # name of program or service that need configuration files.
@@ -139,9 +137,9 @@ def _get_configs(
         # 'start': # bash command to start the service
         # 'stop': # bash command to stop the service
         # },
-        'gunicorn': {  # python wsgi runner for django
-            'template': '{fabric}/gunicorn/template'.format(fabric=fabric_folder,),
-            'filename': '{user}_gunicorn.sh'.format(user=user_name,),
+        'site': {  # python wsgi runner for django
+            'template': '{config}/site/template'.format(config=config_folder,),
+            'filename': '{user}.sh'.format(user=user_name,),
             'target folder': bin_folder,
             # make bash file executable by the supervisor user.
             'install': 'sudo chmod 774 $FILENAME && sudo chown {user} $FILENAME'.format(user=user_name,),
@@ -149,16 +147,16 @@ def _get_configs(
             'stop': ':',
         },
         'supervisor': {  # keeps gunicorn running
-            'template': '{fabric}/supervisor/template'.format(fabric=fabric_folder,),
+            'template': '{config}/supervisor/template'.format(config=config_folder,),
             'filename': '{user}.conf'.format(user=user_name,),
             'target folder': '/etc/supervisor/conf.d',
             # read all config files in conf.d folder
             'install': 'sudo supervisorctl reread && sudo supervisorctl update',
-            'start': 'sudo supervisorctl start {url}'.format(url=site_url,),
-            'stop': 'sudo supervisorctl stop {url}'.format(url=site_url,),
+            'start': 'sudo supervisorctl start {url}:*'.format(url=site_url,),
+            'stop': 'sudo supervisorctl stop {url}:*'.format(url=site_url,),
         },
         'nginx': {  # webserver
-            'template': '{fabric}/nginx/template'.format(fabric=fabric_folder,),
+            'template': '{config}/nginx/template'.format(config=config_folder,),
             'filename': '{url}'.format(url=site_url,),
             'target folder': '/etc/nginx/sites-available',
             'install': ':',
@@ -175,7 +173,7 @@ def _get_configs(
 
 
 @task
-def fix_permissions():
+def fix_permissions()
     folders = _get_folders()
     _folders_and_permissions(folders)
 
@@ -331,23 +329,12 @@ def _folders_and_permissions(folders):
     """ Ensure basic file structure in project. """
     site_folder = folders['site']
 
-    # run('mkdir -p {folder_paths}'.format(
-    #     folder_paths=' '.join(folders.values())))
-        # set linux user group.
     sudo('find {site_folder} -type d -exec chmod 6775 "{{}}" \;'.format(
         site_folder=site_folder))
+    # set linux user group.
     sudo('chown -R :{group} {site_folder}'.format(
         group=LINUXGROUP,
         site_folder=site_folder))
-    # set folder priveleges - 6*** means group and user sticky bits are set,
-    # and subfolders and files. will inherit parent
-    # folder's group and user.
-    # 770 means read, write and execute for folder is enabled for owner and
-    # group.
-
-    # Make folders for static files, virtual environment and so on.
-    # -p flag means that folder is only created if it doesn't exist,
-    # and parent directories are also created if needed.
 
 
 def _create_linux_user(username, group):
