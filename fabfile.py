@@ -197,14 +197,17 @@ def deploy():
 
 @task
 def update():
-    """ update repo from github, install pip reqirements, collect staticfiles and run database migrations. """
+    """
+    Update repo from github, install pip reqirements,
+    collect staticfiles and run database migrations.
+    """
     folders = _get_folders()
     _get_latest_source(folders)
+    _update_virtualenv(folders)
+    _update_database()
+    _update_static_files()
     _update_npm(folders)
     _gulp_build(folders)
-    _update_virtualenv(folders)
-    _update_static_files()
-    _update_database()
     stop()
     start()
 
@@ -329,8 +332,8 @@ def _folders_and_permissions(folders):
     """ Ensure basic file structure in project. """
     site_folder = folders['site']
 
-    sudo('find {site_folder} -type d -exec chmod 6775 "{{}}" \;'.format(
-        site_folder=site_folder))
+    # sudo('find {site_folder} -type d -exec chmod 6775 "{{}}" \;'.format(
+    #     site_folder=site_folder))
     # set linux user group.
     sudo('chown -R :{group} {site_folder}'.format(
         group=LINUXGROUP,

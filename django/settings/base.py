@@ -10,15 +10,25 @@ from .logging import *
 SITE_URL = environment_variable('SITE_URL')
 DEBUG = TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = environment_variable('ALLOWED_HOSTS').split()
+
+# SENTRY
 RAVEN_CONFIG = {'dsn': environment_variable('RAVEN_DSN'), }
 SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
 
+# CELERY TASK RUNNER
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/5'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+BROKER_URL = 'redis://localhost:6379/5'
+BROKER_TRANSPORT_OPTIONS = {'fanout_prefix': True}
+
+# AMAZON WEB SERVICES
 AWS_STORAGE_BUCKET_NAME = environment_variable('AWS_STORAGE_BUCKET_NAME')
 AWS_ACCESS_KEY_ID = environment_variable('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = environment_variable('AWS_SECRET_ACCESS_KEY')
 AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
 AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME  # cname
-# AWS_S3_URL_PROTOCOL = 'http:'
 AWS_S3_SECURE_URLS = False
 AWS_S3_USE_SSL = False
 STATICFILES_LOCATION = 'static'
