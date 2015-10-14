@@ -1,18 +1,20 @@
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 """ Create postactivate shell script file """
 import random
 from requests import request
 from os import environ, path
+import sys
 
 PREFIX = 'DJANGO_'  # Environment variable prefix
 SETTINGS_MODULE = 'settings'  # Python module path to settings folder
 WEBSERVER_ROOT = '/srv'  # Location of each django project
 OVERRIDES = {  # Change some settings from the defaults in named deployments.
     'www': {
-        'settings module': '{}.production'.format(SETTINGS_MODULE,),
+        'settings_module': '{}.production'.format(SETTINGS_MODULE,),
     },
     'staging': {
-        'settings module': '{}.production'.format(SETTINGS_MODULE,),
+        'settings_module': '{}.production'.format(SETTINGS_MODULE,),
     },
 }
 
@@ -54,35 +56,31 @@ def make_postactivate_text(site_url):
     Generate the text of a shell script to run on virtualenv activation.
     Returns the contents as a tuple containing a string and a dictionary.
     """
+    prefix = site_url.split('.')[0]
     settings = {}
     for key in environ.keys():
         if key.startswith(PREFIX):
-            new_item = {
-                key.replace(
-                    PREFIX,
-                    '',
-                    1).lower().replace(
-                    '_',
-                    ' '): environ.get(key)}
-            settings.update(new_item)
+            new_key = key.replace(PREFIX, '', 1).lower()
+            settings[new_key] = environ.get(key)
 
     settings.update({
-        'source folder': '{root}/{url}/django'.format(
+        'source_folder': '{root}/{url}/django'.format(
             root=WEBSERVER_ROOT, url=site_url, ),
-        'site url': site_url,
-        'settings module': '{module}.{version}'.format(
-            module=SETTINGS_MODULE, version=site_url.split('.')[0],
+        'site_url': site_url,
+        'allowed_hosts': '[{},]'.format(site_url,),
+        'settings_module': '{module}.{prefix}'.format(
+            module=SETTINGS_MODULE, prefix=prefix,
         ),
-        'secret key': _make_random_sequence(50),
-        'db password': _make_random_sequence(50),
-        'db user': site_url.replace('.', '_'),
-        'db name': site_url.replace('.', '_'),
+        'secret_key': _make_random_sequence(50),
+        'db_password': _make_random_sequence(50),
+        'db_user': site_url.replace('.', '_'),
+        'db_name': site_url.replace('.', '_'),
         'user': site_url.replace('.', '_'),
-        'debug toolbar internal ips': _find_my_ip_address(),
+        'debug_toolbar_internal_ips': _find_my_ip_address(),
     })
 
-    if site_url in OVERRIDES:
-        settings.update(OVERRIDES[site_url])
+    if prefix in OVERRIDES:
+        settings.update(OVERRIDES[prefix])
 
     postactivate = (
         '#!/bin/bash\n'
@@ -105,4 +103,15 @@ def make_postactivate_text(site_url):
 
 if (__name__) == '__main__':
     # make a postactivate file for local dev server.
-    make_postactivate_file(site_url='local.{}'.format('site'),)
+    try:
+        site_url = sys.argv[1]
+    except IndexError:
+        try:
+            site_url = environ['DJANGO_SITE_URL']
+        except KeyError:
+            exit('ABORTING: no site url given')
+
+    import ipdb
+    ipdb.set_trace()
+    # site_url='local.{}'.format('site')
+    make_postactivate_file(site_url)
