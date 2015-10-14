@@ -67,7 +67,7 @@ def make_postactivate_text(site_url):
         'source_folder': '{root}/{url}/django'.format(
             root=WEBSERVER_ROOT, url=site_url, ),
         'site_url': site_url,
-        'allowed_hosts': '[{},]'.format(site_url,),
+        'allowed_hosts': '{}'.format(site_url,),
         'settings_module': '{module}.{prefix}'.format(
             module=SETTINGS_MODULE, prefix=prefix,
         ),

@@ -2,7 +2,7 @@
 # Bash script that starts gunicorn worker processes.
 # Put in project bin/ folder and keep running with supervisor.
 
-virtualenvfolder="/srv/SITEURL/venv/SITEURL"
+virtualenvfolder="/srv/SITEURL/pyvenv/SITEURL"
 
 source  $virtualenvfolder/bin/activate
 # Activate the virtual environment.
