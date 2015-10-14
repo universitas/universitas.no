@@ -127,7 +127,10 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
 
     def __str__(self):
         # file name only
-        return self.source_file.name.rpartition('/')[-1]
+        if self.source_file:
+            return self.source_file.name.rpartition('/')[-1]
+        else:
+            return super(ImageFile, self).__str__()
 
     def save(self, *args, **kwargs):
         pk = self.pk
