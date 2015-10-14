@@ -173,7 +173,7 @@ def _get_configs(
 
 
 @task
-def fix_permissions()
+def fix_permissions():
     folders = _get_folders()
     _folders_and_permissions(folders)
 
