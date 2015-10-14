@@ -42,5 +42,4 @@ django-storages-redux
 boto
 certifi==2015.04.28
 ptpython
-pgcli
 celery
