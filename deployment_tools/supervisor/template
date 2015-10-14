@@ -1,56 +1,43 @@
-; ==================================
-;  Supervisord configuration
+; ====================================================================
+;  Supervisor configuration
 ;  symlink this to this location:
 ;  /etc/supervisor/conf.d/USERNAME.conf
-; ==================================
-
+; ====================================================================
 
 [group:SITEURL]
-programs=SITEURL-gunicorn, SITEURL-celery-worker, SITEURL-celery-beat
+programs       = SITEURL-gunicorn, SITEURL-celery-worker, SITEURL-celery-beat
 
-; ==================================
+; ====================================================================
 [program:SITEURL-gunicorn]
-command = /srv/SITEURL/bin/USERNAME_gunicorn.sh
-user = USERNAME
-autostart=true
-startsecs=5
+command        = /srv/SITEURL/bin/USERNAME.sh gunicorn
+user           = USERNAME
+autostart      = true
+stopasgroup    = true
+startsecs      = 5
 stdout_logfile = /srv/SITEURL/logs/gunicorn.log
 stderr_logfile = /srv/SITEURL/logs/gunicorn.log
-stopasgroup=true
+priority       = 999
 
-; ==================================
+; ====================================================================
 [program:SITEURL-celery-worker]
-command=/srv/SITEURL/venv/SITEURL/bin/celery worker -A core --loglevel=INFO
-user = USERNAME
-autostart=true
-startsecs=5
+command        = /srv/SITEURL/bin/USERNAME.sh celery-worker
+user           = USERNAME
+autostart      = true
+stopasgroup    = true
+startsecs      = 5
 stdout_logfile = /srv/SITEURL/logs/celery.log
 stderr_logfile = /srv/SITEURL/logs/celery.log
+stopwaitsecs   = 60
+priority       = 998
 
-; The directory to your Django project
-directory = /srv/SITEURL/source/
-
-; Need to wait for currently executing tasks to finish at shutdown.
-; Increase this if you have very long running tasks.
-
-stopwaitsecs = 60
-stopasgroup=true
-priority=998
-
-; ==================================
+; ====================================================================
 [program:SITEURL-celery-beat]
-command=/srv/SITEURL/venv/SITEURL/bin/celery celerybeat -A core --loglevel=INFO
-user = USERNAME
-autostart=true
-startsecs=5
+command        = /srv/SITEURL/bin/USERNAME.sh celery-beat
+user           = USERNAME
+autostart      = true
+stopasgroup    = true
+startsecs      = 5
 stdout_logfile = /srv/SITEURL/logs/celery.log
 stderr_logfile = /srv/SITEURL/logs/celery.log
-
-; The directory to your Django project
-directory = /srv/SITEURL/source/
-
-; Need to wait for currently executing tasks to finish at shutdown.
-; Increase this if you have very long running tasks.
-
-stopasgroup=true
-priority=999
+directory      = /srv/SITEURL/source/
+priority       = 999
