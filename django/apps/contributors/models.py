@@ -21,10 +21,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-BYLINE_PHOTO_FOLDER = os.path.normpath(
-    os.path.join(settings.MEDIA_ROOT, 'byline'))
-
-
 def today():
     return timezone.now().date()
 
@@ -85,7 +81,8 @@ class Contributor(models.Model):
         slugify = Slugify()
         if not force_new and self.byline_photo:
             return self.byline_photo
-        imagefiles = glob.glob(settings.BYLINE_PHOTO_FOLDER + '/*.jpg')
+        imagefiles = glob.glob(
+            os.path.join(settings.BYLINE_PHOTO_DIR, '*.jpg'))
         name = self.name
         name_last_first = re.sub(r'^(.*) (\S+)$', r'\2 \1', name)
         name_slug_upper = slugify(name) + '.jpg'

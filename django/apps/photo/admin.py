@@ -4,11 +4,12 @@ Admin for photo app.
 """
 
 from django.contrib import admin
-from .models import ImageFile, ProfileImage
+from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail.admin import AdminImageMixin
 from sorl.thumbnail import get_thumbnail
 import autocomplete_light
-from django.utils.safestring import mark_safe
+from .models import ImageFile, ProfileImage
 
 
 class ThumbAdmin:
@@ -29,10 +30,17 @@ class ThumbAdmin:
     thumbnail.allow_tags = True
 
 
+def autocrop(modeladmin, request, queryset):
+    for image in queryset.all():
+        image.autocrop()
+
+autocrop.short_description = _('Autocrop')
+
+
 @admin.register(ImageFile)
 class ImageFileAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin, ):
     form = autocomplete_light.modelform_factory(ImageFile, exclude=())
-
+    actions = [autocrop]
     date_hierarchy = 'created'
     actions_on_top = True
     actions_on_bottom = True
