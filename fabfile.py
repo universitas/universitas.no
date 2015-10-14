@@ -395,8 +395,8 @@ def _drop_postgres_db(db_name, backup=True):
 def _create_postgres_db(project_settings):
     """ Create postgres database and user for the django deployment. Will also change that user's postgres password. """
     username = project_settings['user']
-    password = project_settings['db password']
-    db_name = project_settings['db name']
+    password = project_settings['db_password']
+    db_name = project_settings['db_name']
     databases = run(r'psql -l | grep --color=never -o "^ \w\+"').split()
     if db_name not in databases:
         print(db_name, databases)
