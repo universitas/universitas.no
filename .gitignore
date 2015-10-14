@@ -1,5 +1,5 @@
 /node_modules/
 /build/
-/bin/*gunicorn.sh
+/bin/*universitas.no.sh
 /bin/postactivate
 

@@ -39,5 +39,4 @@ stopasgroup    = true
 startsecs      = 5
 stdout_logfile = /srv/SITEURL/logs/celery.log
 stderr_logfile = /srv/SITEURL/logs/celery.log
-directory      = /srv/SITEURL/source/
 priority       = 999

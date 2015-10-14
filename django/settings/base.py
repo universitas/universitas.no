@@ -140,8 +140,10 @@ CACHES = {
     'default': {
         'BACKEND': 'redis_cache.RedisCache',
         'LOCATION': 'localhost:6379',
+        'KEY_PREFIX': SITE_URL,
         'OPTIONS': {
             'DB': 0,
+            'MAX_ENTRIES': 1000,
             'PARSER_CLASS': 'redis.connection.HiredisParser',
             'CONNECTION_POOL_CLASS': 'redis.BlockingConnectionPool',
             'CONNECTION_POOL_CLASS_KWARGS': {
