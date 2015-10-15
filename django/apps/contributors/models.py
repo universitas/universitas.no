@@ -85,9 +85,9 @@ class Contributor(models.Model):
             os.path.join(settings.BYLINE_PHOTO_DIR, '*.jpg'))
         name = self.name
         name_last_first = re.sub(r'^(.*) (\S+)$', r'\2 \1', name)
-        name_slug_upper = slugify(name) + '.jpg'
-        name_slug = name_slug_upper.lower()
-        name_slug_reverse = slugify(name_last_first) + '.jpg'
+        name_slug_title = slugify(name) + '.jpg'
+        name_slug = name_slug_title.lower()
+        name_slug_reverse = slugify(name_last_first).lower() + '.jpg'
         bestratio = 90
         bestmatch = None
         for path in imagefiles:
@@ -108,7 +108,7 @@ class Contributor(models.Model):
             with open(bestmatch, 'rb') as source:
                 content = File(source)
                 img = ProfileImage()
-                img.source_file.save(name_slug_upper, content)
+                img.source_file.save(name_slug_title, content)
             self.byline_photo = img
             self.save()
             return img
