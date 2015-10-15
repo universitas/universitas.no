@@ -203,11 +203,11 @@ def update():
     """
     folders = _get_folders()
     _get_latest_source(folders)
-    _update_virtualenv(folders)
-    _update_database()
-    _update_static_files()
-    _update_npm(folders)
+    _pip_install(folders)
+    _database_migrations()
+    _npm_install(folders)
     _gulp_build(folders)
+    _collect_static()
     stop()
     start()
 
@@ -440,12 +440,12 @@ def _create_virtualenv(folders):
             run(command.format(**kwargs))
 
 
-def _update_virtualenv(folders):
+def _pip_install(folders):
     """ Install required python packages from pip requirements file. """
     run('{venv}/bin/pip install -vr {site}/requirements.txt'.format(**folders))
 
 
-def _update_npm(folders):
+def _npm_install(folders):
     """ Install npm dependencies """
     with cd(folders['site']):
         run('npm install')
@@ -457,12 +457,12 @@ def _gulp_build(folders):
         run('node_modules/.bin/gulp build:production')
 
 
-def _update_static_files():
-    """ Move images, js and css to staticfolder to be served directly by nginx. """
+def _collect_static():
+    """Move images, js and css to staticfolder or CDN."""
     django_admin('collectstatic', '--noinput')
 
 
-def _update_database():
+def _database_migrations():
     """ Run database migrations if required by changed apps. """
     django_admin('migrate', '--noinput')
 
