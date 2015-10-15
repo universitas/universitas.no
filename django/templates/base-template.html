@@ -1,13 +1,13 @@
 {% load cache %}
-{% load gulp_rev_staticfiles %}
 {% load universitas_menu %}
+{% load gulp_rev_staticfiles %}
 <!DOCTYPE html>
 <html class="no-js" lang="{{ LANGUAGE_CODE }}">
   <head>
     <title>{% block title %}universitas.no{% endblock %}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    {% include "_favicon.html" %}
+    {% include "_favicons.html" %}
     {% block head %}{% endblock head %}
     <link rel="stylesheet" type="text/css" href="{% static 'stylesheets/universitas.css' %}">
     <script src="{% static 'javascripts/head.js' %}"></script>
@@ -15,7 +15,7 @@
 
   <body>
     <header id="sticky-top-menu" class="fixedsticky">
-      {% cache 600 top-menu %}
+      {% cache 60 top-menu %}
       {% universitas_menu "" %}
       {% endcache %}
     </header>
