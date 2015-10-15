@@ -12,6 +12,11 @@ WEBSERVER_ROOT = '/srv'  # Location of each django project
 OVERRIDES = {  # Change some settings from the defaults in named deployments.
     'www': {
         'settings_module': '{}.production'.format(SETTINGS_MODULE,),
+        'raven_dsn': (
+            'http://31adff29503e473bb00f41832958fb80:'
+            'eef12d718965495abaf83131d95a921e'
+            '@sentry.haken.no/1'
+            ),
     },
     'staging': {
         'settings_module': '{}.production'.format(SETTINGS_MODULE,),

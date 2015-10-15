@@ -125,10 +125,10 @@ def import_prodsys_content(
     import_images = not text_only
     for prodsak_id in prodsak_ids:
         _importer_prodsak(prodsak_id, replace_existing, autocrop, import_images)
-        # Prodsak.objects.filter(
-        #     prodsak_id=prodsak_id,
-        #     # produsert__in=status
-        # ).update(produsert=Prodsak.PUBLISHED_ON_WEB)
+        Prodsak.objects.filter(
+            prodsak_id=prodsak_id,
+            # produsert__in=status
+        ).update(produsert=Prodsak.PUBLISHED_ON_WEB)
 
     return len(prodsak_ids)
 
