@@ -415,7 +415,7 @@ def _get_latest_source(folders):
     if not exists(site_folder + '/.git'):
         run('git clone {} {}'.format(REPO_URL, site_folder))
 
-    if 'branch is up-to-date' in git_status and 'nothing to commit' in git_status:
+    if not 'branch is ahead' in git_status and 'nothing to commit' in git_status:
         with cd(site_folder):
             run('git fetch && git reset --hard {}'.format(current_commit))
     elif not 'vagrant' in env.site_url and not 'local' in env.site_url:
