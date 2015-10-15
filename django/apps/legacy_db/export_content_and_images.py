@@ -8,7 +8,6 @@ production system to the new website.
 import os
 import errno
 import re
-import shutil
 from pytz import datetime
 # from html.parser import HTMLParser
 from html import unescape
@@ -18,15 +17,16 @@ from bs4 import BeautifulSoup
 from django.utils import timezone
 from django.conf import settings
 from django.db import connection
+from django.core.files import File
+from django.core import serializers
 
 from apps.legacy_db.models import (
     Sak, Prodsak, Bildetekst, Prodbilde)
 from apps.stories.models import (
     Story, StoryType, Section, StoryImage, InlineLink)
-from apps.photo.models import ImageFile, image_upload_folder
+from apps.photo.models import ImageFile
 
 # from apps.contributors.models import Contributor
-from django.core import serializers
 
 BILDEMAPPE = os.path.join(settings.MEDIA_ROOT, '')
 PDFMAPPE = os.path.join(settings.MEDIA_ROOT, 'pdf')
@@ -123,10 +123,10 @@ def import_prodsys_content(
     import_images = not text_only
     for prodsak_id in prodsak_ids:
         _importer_prodsak(prodsak_id, replace_existing, autocrop, import_images)
-        Prodsak.objects.filter(
-            prodsak_id=prodsak_id,
-            # produsert__in=status
-        ).update(produsert=Prodsak.PUBLISHED_ON_WEB)
+        # Prodsak.objects.filter(
+        #     prodsak_id=prodsak_id,
+        #     # produsert__in=status
+        # ).update(produsert=Prodsak.PUBLISHED_ON_WEB)
 
     return len(prodsak_ids)
 
@@ -379,33 +379,21 @@ def _create_image_file(filepath, publication_date=None, pk=None, prodsys=False):
     # Check that the file exists on the harddrive.
     if prodsys:
 
-        issue_image_folder = image_upload_folder()
+        # issue_image_folder = image_upload_folder()
 
         staging_image = '{stagingfolder}/{filename}'.format(
             stagingfolder=STAGING_FOLDER,
             filename=filepath,
         )
 
-        if os.path.isfile(staging_image):
-            destination_folder = os.path.join(BILDEMAPPE, issue_image_folder)
-            make_sure_path_exists(destination_folder)
-            shutil.copy2(staging_image, destination_folder)
-            msg = 'copied {} from staging to folder {}'.format(
-                filepath,
-                destination_folder)
-            filepath = os.path.join(issue_image_folder, filepath)
-            logger.debug(msg)
+        if not os.path.isfile(staging_image):
+            raise Exception('WAT')
 
-    full_path = os.path.join(BILDEMAPPE, filepath)
-
-    if os.path.isfile(full_path):
-
-        # Get create and modification dates from the file.
         modified = datetime.datetime.fromtimestamp(
-            os.path.getmtime(full_path),
+            os.path.getmtime(staging_image),
             TIMEZONE)
         created = datetime.datetime.fromtimestamp(
-            os.path.getctime(full_path),
+            os.path.getctime(staging_image),
             TIMEZONE)
         dates = [modified, created, ]
         if publication_date:
@@ -419,21 +407,25 @@ def _create_image_file(filepath, publication_date=None, pk=None, prodsys=False):
         # publication date.
         created = min(dates)
 
-        # Save ImageFile object in the database.
+        filename = os.path.split(staging_image)[1]
+
         try:
-            image_file = ImageFile(
-                pk=pk,
-                old_file_path=filepath,
-                source_file=filepath,
-                created=created,
-                modified=modified,
-            )
-            image_file.save()
+            with open(staging_image, 'rb') as source:
+                content = File(source)
+                image_file = ImageFile(
+                    pk=pk,
+                    created=created,
+                    modified=modified,
+                )
+                image_file.source_file.save(filename, content)
+
             logger.debug('    new image: {}'.format(image_file.source_file))
             return image_file
-        except TypeError:
+
+        except TypeError as err:
+            logger.error('%s' % err)
             # Possibly a currupt imagefile, or wrong file extension.
-            return None
+    return None
 
 
 def _make_aware(time_input):
