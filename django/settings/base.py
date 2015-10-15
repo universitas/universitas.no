@@ -172,6 +172,7 @@ FIXTURE_DIRS = [join_path(BASE_DIR, 'fixtures'), ]
 TEMPLATE_DIRS = [join_path(BASE_DIR, 'templates'), ]
 # Look for byline images here
 BYLINE_PHOTO_DIR = '/srv/fotoarkiv_universitas/byline/'
+STAGING_ROOT = '/srv/fotoarkiv_universitas/'
 
 
 # INTERNATIONALIZATION
