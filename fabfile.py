@@ -204,11 +204,11 @@ def update():
     folders = _get_folders()
     _get_latest_source(folders)
     _pip_install(folders)
+    stop()
     _database_migrations()
     _npm_install(folders)
     _gulp_build(folders)
     _collect_static()
-    stop()
     start()
 
 
