@@ -25,12 +25,14 @@ from apps.legacy_db.models import (
 from apps.stories.models import (
     Story, StoryType, Section, StoryImage, InlineLink)
 from apps.photo.models import ImageFile
+from slugify import Slugify
+slugify_filename = Slugify(safe_chars='.-', separator='-')
 
 # from apps.contributors.models import Contributor
-
-BILDEMAPPE = os.path.join(settings.MEDIA_ROOT, '')
-PDFMAPPE = os.path.join(settings.MEDIA_ROOT, 'pdf')
-STAGING_FOLDER = os.path.join(settings.MEDIA_ROOT, 'STAGING/IMAGES')
+MEDIA_ROOT = '/srv/fotoarkiv_universitas/'
+BILDEMAPPE = os.path.join(MEDIA_ROOT, '')
+PDFMAPPE = os.path.join(MEDIA_ROOT, 'pdf')
+STAGING_FOLDER = os.path.join(MEDIA_ROOT, 'STAGING/IMAGES')
 TIMEZONE = timezone.get_current_timezone()
 
 import logging
@@ -364,6 +366,7 @@ def _importer_bilder_fra_webside(websak, story, autocrop):
 def _create_image_file(filepath, publication_date=None, pk=None, prodsys=False):
     """ Create an ImageFile object from a filepath. """
     # Check if this ImageFile is registered in the database already.
+    filepath = slugify_filename(filepath)
     try:
         return ImageFile.objects.get(pk=pk)
     except ImageFile.DoesNotExist:
@@ -387,7 +390,9 @@ def _create_image_file(filepath, publication_date=None, pk=None, prodsys=False):
         )
 
         if not os.path.isfile(staging_image):
-            raise Exception('WAT')
+            import ipdb
+            ipdb.set_trace()
+            return None
 
         modified = datetime.datetime.fromtimestamp(
             os.path.getmtime(staging_image),
