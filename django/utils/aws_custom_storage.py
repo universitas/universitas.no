@@ -3,7 +3,6 @@ from django.conf import settings
 
 
 class CustomS3BotoStorage(S3BotoStorage):
-
     pass
     # @property
     # def connection(self):
@@ -20,9 +19,10 @@ class StaticStorage(CustomS3BotoStorage):
 
     """Storage for static assets such as icons, fonts, css and js"""
 
+    duration = 60 * 60 * 24
     location = settings.STATICFILES_LOCATION
     headers = {
-        'Cache-Control': 'max-age=604800,public',
+        'Cache-Control': 'max-age={},public'.format(duration)
     }
 
 class MediaStorage(CustomS3BotoStorage):
@@ -36,7 +36,8 @@ class ThumbStorage(CustomS3BotoStorage):
 
     """Storage for thumbnails"""
 
+    duration = 60 * 60 * 24 * 10000
     location = settings.MEDIAFILES_LOCATION
     headers = {
-        'Cache-Control': 'max-age=604800,public',
+        'Cache-Control': 'max-age={},public'.format(duration)
     }
