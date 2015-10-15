@@ -22,7 +22,7 @@ class StaticStorage(CustomS3BotoStorage):
     duration = 60 * 60 * 24
     location = settings.STATICFILES_LOCATION
     headers = {
-        'Cache-Control': 'max-age={},public'.format(duration)
+        'Cache-Control': 'max-age={}'.format(duration)
     }
 
 class MediaStorage(CustomS3BotoStorage):
@@ -39,5 +39,5 @@ class ThumbStorage(CustomS3BotoStorage):
     duration = 60 * 60 * 24 * 10000
     location = settings.MEDIAFILES_LOCATION
     headers = {
-        'Cache-Control': 'max-age={},public'.format(duration)
+        'Cache-Control': 'max-age={}'.format(duration)
     }
