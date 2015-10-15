@@ -11,7 +11,7 @@ gulp.task('rev', function(cb) {
     // 3) Rev and compress CSS and JS files (this is done after assets, so that if a referenced asset hash changes, the parent hash will change as well
     'rev-css',
     // 4) Update asset references in HTML
-    'update-html',
+    'update-templates',
     // 5) Report filesizes
     'size-report',
   cb);

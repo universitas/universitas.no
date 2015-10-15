@@ -22,6 +22,7 @@
   "dependencies": {
     "expose-loader": "^0.7.0",
     "gulp-favicons": "^1.0.9",
+    "gulp-replace": "^0.5.4",
     "jquery": "^2.1.4",
     "modernizr": "^3.0.0",
     "script-loader": "^0.6.1",

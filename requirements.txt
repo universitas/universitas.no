@@ -43,3 +43,4 @@ boto
 certifi==2015.04.28
 ptpython
 celery
+django-memoize

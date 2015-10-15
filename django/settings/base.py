@@ -64,6 +64,7 @@ INSTALLED_APPS = [  # THIRD PARTY APPS
     'watson',
     'raven.contrib.django.raven_compat',
     'storages',
+    'memoize',
 ] + INSTALLED_APPS
 
 INSTALLED_APPS = [  # CORE APPS

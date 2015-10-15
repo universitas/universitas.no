@@ -11,7 +11,6 @@ module.exports = {
     favicon: {
       src: 'images/favicon.svg',
       dest: 'favicon',
-      html: './django/templates/_favicon.html',
       extensions: ['png', 'html', 'xml', 'json', 'ico']
     },
     js: {
@@ -42,17 +41,17 @@ module.exports = {
       extensions: ['sass', 'scss', 'css']
     },
 
-    html: {
-      src: 'html',
-      dest: './',
-      dataFile: 'data/global.json',
-      htmlmin: {
-        collapseWhitespace: true
-      },
-      extensions: ['html', 'json'],
-      excludeFolders: ['layouts', 'shared', 'macros', 'data']
-      // watchOther: './app/views/*/**.html'
-    },
+    // html: {
+    //   src: 'html',
+    //   dest: './',
+    //   dataFile: 'data/global.json',
+    //   htmlmin: {
+    //     collapseWhitespace: true
+    //   },
+    //   extensions: ['html', 'json'],
+    //   excludeFolders: ['layouts', 'shared', 'macros', 'data']
+    //   // watchOther: './app/views/*/**.html'
+    // },
 
     images: {
       src: 'images',
@@ -73,10 +72,10 @@ module.exports = {
       extensions: ['woff2', 'woff', 'eot', 'ttf', 'svg']
     },
 
-    svgSprite: {
-      src: 'sprites',
-      dest: 'images',
-      extensions: ['svg']
-    }
+    // svgSprite: {
+    //   src: 'sprites',
+    //   dest: 'images',
+    //   extensions: ['svg']
+    // }
   }
 };
