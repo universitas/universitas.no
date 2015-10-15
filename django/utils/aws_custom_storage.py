@@ -22,7 +22,7 @@ class StaticStorage(CustomS3BotoStorage):
 
     location = settings.STATICFILES_LOCATION
     headers = {
-        'Cache-Control': 'public, max-age=2592000',
+        'Cache-Control': 'max-age=604800,public',
     }
 
 class MediaStorage(CustomS3BotoStorage):
@@ -38,5 +38,5 @@ class ThumbStorage(CustomS3BotoStorage):
 
     location = settings.MEDIAFILES_LOCATION
     headers = {
-        'Cache-Control': 'public, max-age=2592000',
+        'Cache-Control': 'max-age=604800,public',
     }
