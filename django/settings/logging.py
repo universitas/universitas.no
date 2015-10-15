@@ -41,19 +41,15 @@ LOGGING['handlers'] = {
     'errorlog': {
         'filters': ['require_debug_false'],
         'filename': join_path(LOG_FOLDER, 'error-django.log'),
-        'maxBytes': 1e6,  # 1 MB
-        'backupCount': 10,
         'level': 'ERROR',
-        'class': 'logging.handlers.RotatingFileHandler',
+        'class': 'logging.FileHandler',
         'formatter': 'verbose',
     },
     'debuglog': {
         'filters': ['require_debug_true'],
         'filename': join_path(LOG_FOLDER, 'debug-django.log'),
-        'maxBytes': 1e6,  # 1 MB
-        'backupCount': 10,
         'level': 'DEBUG',
-        'class': 'logging.handlers.RotatingFileHandler',
+        'class': 'logging.FileHandler',
         'formatter': 'verbose',
     },
     'bylineslog': {

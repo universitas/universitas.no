@@ -52,11 +52,13 @@ class ImageFileAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin, ):
         'source_file',
         'contributor',
         'cropping_method',
+        'crop_diameter',
         'from_left',
         'from_top',
         'thumbnail',
     )
     list_editable = (
+        'crop_diameter',
         'from_left',
         'from_top',
     )

@@ -169,19 +169,21 @@ class StoryAdmin(admin.ModelAdmin):
     list_filter = ['language', 'publication_status']
     list_display = [
         'id', 'title', 'kicker', 'lede',
-        'theme_word', 'hot_count', 'hit_count', 'language',
+        # 'theme_word',
+        'hot_count', 'hit_count', 'language',
         'story_type', 'publication_date', 'publication_status',
-        'display_bylines', 'image_count'
+        # 'display_bylines', 'image_count'
     ]
 
     list_editable = [
-        'publication_status',
+        # 'publication_status',
     ]
 
     readonly_fields = [
         'legacy_html_source',
         'legacy_prodsys_source',
-        'get_html']
+        'get_html'
+        ]
 
     formfield_overrides = {
         models.CharField: {'widget': Textarea(attrs={'rows': 2, 'cols': 30})},
