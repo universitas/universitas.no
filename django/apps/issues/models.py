@@ -7,6 +7,7 @@ import re
 import datetime
 from io import BytesIO
 import logging
+import collections
 
 # Django core
 from django.utils import timezone
@@ -24,7 +25,6 @@ from wand.image import Image as WandImage
 from wand.color import Color
 from wand.drawing import Drawing
 import os.path
-from memoize import memoize
 # Project apps
 
 from utils.model_mixins import Edit_url_mixin
@@ -46,10 +46,11 @@ def pdf_not_found(pdf_name):
         draw(img)
     return img
 
+IssueTuple = collections.namedtuple('IssueTuple', ['number', 'date'])
 
-@memoize
+
 def current_issue():
-    """ Return a tuple of year and number for the current issue. """
+    """Return an IssueTuple for the current issue."""
     today = timezone.now().astimezone().date()
     latest_issue = Issue.objects.latest_issue()
     if latest_issue.publication_date == today:
@@ -57,7 +58,7 @@ def current_issue():
     else:
         current_issue = Issue.objects.next_issue()
 
-    return (current_issue.year, current_issue.number)
+    return current_issue.issue_tuple()
 
 
 class IssueQueryset(models.QuerySet):
@@ -124,16 +125,17 @@ class Issue(models.Model, Edit_url_mixin):
         return '{}'.format(self.publication_date)
 
     def save(self, *args, **kwargs):
-        self.issue_name = self.make_issue_name()
+        self.issue_name = '{number}/{date.year}'.format(
+            **vars(self.issue_tuple()))
         return super(Issue, self).save(*args, **kwargs)
 
-    def make_issue_name(self):
+    def issue_tuple(self):
         number = self.__class__.objects.filter(
             publication_date__year=self.publication_date.year,
             publication_date__lte=self.publication_date
         ).count()
-        return '{number}/{year}'.format(
-            year=self.publication_date.year,
+        return IssueTuple(
+            date=self.publication_date,
             number=number)
 
     @property
@@ -144,7 +146,6 @@ class Issue(models.Model, Edit_url_mixin):
     @property
     def formatted_date(self):
         return _('{date:%d. %b}').format(date=self.publication_date)
-
 
 
 class PrintIssue(models.Model, Edit_url_mixin):
@@ -219,7 +220,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
                 blob=outputStream,
                 format='pdf',
                 resolution=60,
-                )
+            )
             # filename = '/tmp/cover.png'
             # pdfimg.save(filename=filename)
             # pngimg = WandImage(filename=filename)

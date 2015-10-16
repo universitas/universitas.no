@@ -153,8 +153,8 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
 
     @classmethod
     def image_upload_folder(cls):
-        year, issue = [str(number) for number in current_issue()]
-        return os.path.join(year, issue)
+        issue = current_issue()
+        return os.path.join(str(issue.date.year), str(issue.number))
 
     def thumb(self, height=315, width=600):
         geometry = '{}x{}'.format(width, height)
