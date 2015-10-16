@@ -4,6 +4,7 @@ Admin for photo app.
 """
 
 from django.contrib import admin
+from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail.admin import AdminImageMixin
@@ -16,7 +17,7 @@ class ThumbAdmin:
     exclude = ()
 
     def thumbnail(self, instance, width=200, height=100):
-        url = '/static/admin/img/icon-no.gif'
+        url = settings.STATIC_URL + 'admin/img/icon-no.gif'
         if hasattr(instance, 'imagefile'):
             imagefile = instance.imagefile
         else:
