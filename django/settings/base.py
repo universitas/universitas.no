@@ -4,7 +4,7 @@
 from os.path import dirname
 import django.conf.global_settings as DEFAULT_SETTINGS
 from django.utils.translation import ugettext_lazy as _
-from .setting_helpers import environment_variable, join_path
+from .setting_helpers import environment_variable, join_path, load_json_file
 from .logging import *
 
 SITE_URL = environment_variable('SITE_URL')
@@ -64,7 +64,6 @@ INSTALLED_APPS = [  # THIRD PARTY APPS
     'watson',
     'raven.contrib.django.raven_compat',
     'storages',
-    'memoize',
 ] + INSTALLED_APPS
 
 INSTALLED_APPS = [  # CORE APPS
@@ -78,7 +77,6 @@ INSTALLED_APPS = [  # CORE APPS
 
 MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # 'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -160,8 +158,10 @@ CACHES = {
 BASE_DIR = environment_variable('SOURCE_FOLDER')
 # outside of repo
 PROJECT_DIR = dirname(BASE_DIR)
-# gulp file revisions
-GULP_FILEREVS_PATH = join_path(PROJECT_DIR, 'build', 'rev-manifest.json')
+
+# GULP FILE REVISIONS
+GULP_FILEREVS = load_json_file(join_path(PROJECT_DIR, 'build', 'rev-manifest.json'))
+
 # Django puts generated translation files here.
 LOCALE_PATHS = [join_path(BASE_DIR, 'translation'), ]
 # Extra path to collect static assest such as javascript and css
