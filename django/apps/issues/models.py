@@ -15,7 +15,6 @@ from django.db import models
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch.dispatcher import receiver
 from django.core.files.base import ContentFile
-from django.utils.functional import cached_property
 # from django.utils.text import slugify
 
 # Installed apps
@@ -115,23 +114,18 @@ class Issue(models.Model, Edit_url_mixin):
         else:
             description = ''
 
-        return '{issue_name}{issue_type} {date:%d. %b}'.format(
+        return '{issue_name}{issue_type} {date}'.format(
             issue_name=self.issue_name,
             issue_type=description,
-            date=self.publication_date,
+            date=self.formatted_date,
         )
-
-    def save(self, *args, **kwargs):
-        self.issue_name = self.make_issue_name()
-        return super(Issue, self).save(*args, **kwargs)
 
     def natural_key(self):
         return '{}'.format(self.publication_date)
 
-    @property
-    def advert_deadline(self):
-        two_days = datetime.timedelta(days=2)
-        return self.publication_date - two_days
+    def save(self, *args, **kwargs):
+        self.issue_name = self.make_issue_name()
+        return super(Issue, self).save(*args, **kwargs)
 
     def make_issue_name(self):
         number = self.__class__.objects.filter(
@@ -141,6 +135,16 @@ class Issue(models.Model, Edit_url_mixin):
         return '{number}/{year}'.format(
             year=self.publication_date.year,
             number=number)
+
+    @property
+    def advert_deadline(self):
+        two_days = datetime.timedelta(days=2)
+        return self.publication_date - two_days
+
+    @property
+    def formatted_date(self):
+        return _('{date:%d. %b}').format(date=self.publication_date)
+
 
 
 class PrintIssue(models.Model, Edit_url_mixin):
@@ -201,52 +205,25 @@ class PrintIssue(models.Model, Edit_url_mixin):
 
         super().save(*args, **kwargs)
 
-    def cover_as_image(self):
-        def pdf_frontpage_to_image():
-            reader = PyPDF2.PdfFileReader(self.pdf.file)
-            writer = PyPDF2.PdfFileWriter()
-            writer.addPage(reader.getPage(0))
-            outputStream = BytesIO()
-            writer.write(outputStream)
-            outputStream.seek(0)
-            img = WandImage(
-                blob=outputStream,
-                format='pdf',
-                resolution=60)
-            return img
-
-        def pdf_not_found():
-            """Creates an error frontpage"""
-            img = WandImage(width=400, height=600,)
-            msg = 'ERROR:\n{}\nnot found on disk'.format(self.pdf.name)
-            with Drawing() as draw:
-                #draw.font = 'wandtests/assets/League_Gothic.otf'
-                #draw.font_size = 40
-                draw.text_alignment = 'center'
-                draw.text(img.width // 2, img.height // 3, msg)
-                draw(img)
-            return img
-
-        try:
-            return pdf_frontpage_to_image()
-        except Exception as err:
-            logger.error('%s' % err)
-            return None
-
     def create_thumbnail(self):
         """ Create a jpg version of the pdf frontpage """
         def pdf_frontpage_to_image():
             reader = PyPDF2.PdfFileReader(self.pdf.file)
             writer = PyPDF2.PdfFileWriter()
-            writer.addPage(reader.getPage(0))
+            first_page = reader.getPage(0)
+            writer.addPage(first_page)
             outputStream = BytesIO()
             writer.write(outputStream)
             outputStream.seek(0)
-            img = WandImage(
+            pdfimg = WandImage(
                 blob=outputStream,
                 format='pdf',
-                resolution=60)
-            return img
+                resolution=60,
+                )
+            # filename = '/tmp/cover.png'
+            # pdfimg.save(filename=filename)
+            # pngimg = WandImage(filename=filename)
+            return pdfimg
 
         def pdf_not_found():
             """Creates an error frontpage"""
@@ -258,7 +235,13 @@ class PrintIssue(models.Model, Edit_url_mixin):
                 draw.text_alignment = 'center'
                 draw.text(img.width // 2, img.height // 3, msg)
                 draw(img)
-            return img
+            background = WandImage(
+                width=img.width,
+                height=img.height,
+                background=Color('white'))
+            background.format = 'jpeg'
+            background.composite(img, 0, 0)
+            return background
 
         filename = self.pdf.name.replace(
             '.pdf', '.jpg').replace(
@@ -266,21 +249,14 @@ class PrintIssue(models.Model, Edit_url_mixin):
 
         try:
             cover = pdf_frontpage_to_image()
-        except Exception as ex:
+        except Exception as err:
             cover = pdf_not_found()
             filename = filename.replace('.jpg', '_not_found.jpg')
-            logger.warn('Error: %s pdf not found: %s ' % (ex, self.pdf.name))
+            logger.error('Error: %s pdf not found: %s ' % (err, self.pdf))
 
-        background = WandImage(
-            width=cover.width,
-            height=cover.height,
-            background=Color('white'))
-        background.format = 'jpeg'
-        background.composite(cover, 0, 0)
         blob = BytesIO()
-        background.save(blob)
+        cover.save(blob)
         imagefile = ContentFile(blob.getvalue())
-
         self.cover_page.save(filename, imagefile, save=True)
 
     def get_thumbnail(self):
