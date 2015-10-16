@@ -8,8 +8,6 @@ from django.http import HttpResponseRedirect, Http404
 from apps.core.views import search_404_view
 from django.utils import translation
 from .models import Story
-from django.template import Context
-from django.template.loader import get_template
 
 logger = logging.getLogger(__name__)
 
@@ -26,8 +24,9 @@ def article_view(request, story_id, **section_and_slug):
         else:
             raise Http404('This page does not exist')
 
-    if story.publication_status != Story.STATUS_PUBLISHED:
-        raise Http404('You are not supposed to visit this page')
+    if not request.user.is_staff:
+        if story.publication_status != Story.STATUS_PUBLISHED:
+            raise Http404('You are not supposed to visit this page')
 
     correct_url = story.get_absolute_url()
 
