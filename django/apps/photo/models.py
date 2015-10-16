@@ -13,12 +13,13 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 # from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, post_save
 # Installed apps
 
 from model_utils.models import TimeStampedModel
 from utils.model_mixins import Edit_url_mixin
-from sorl.thumbnail import ImageField, get_thumbnail
+from sorl import thumbnail
+
 from slugify import Slugify
 
 # Project apps
@@ -61,7 +62,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
         verbose_name = _('ImageFile')
         verbose_name_plural = _('ImageFiles')
 
-    source_file = ImageField(
+    source_file = thumbnail.ImageField(
         upload_to=upload_image_to,
         height_field='full_height',
         width_field='full_width',
@@ -158,7 +159,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin):
     def thumb(self, height=315, width=600):
         geometry = '{}x{}'.format(width, height)
         try:
-            return get_thumbnail(
+            return thumbnail.get_thumbnail(
                 self.source_file,
                 geometry,
                 crop=self.get_crop()).url
@@ -374,13 +375,21 @@ class ProfileImage(ImageFile):
         verbose_name_plural = _('Profile Images')
 
     UPLOAD_FOLDER = 'byline-photo'
+
     @classmethod
     def image_upload_folder(cls):
         return cls.UPLOAD_FOLDER
 
-def remove_image_file(sender, instance, **kwargs):
-    """Remove image file"""
-    instance.source_file.delete()
 
-pre_delete.connect(remove_image_file, sender=ImageFile)
-pre_delete.connect(remove_image_file, sender=ProfileImage)
+def remove_imagefile_and_thumbnail(sender, instance, **kwargs):
+    """Remove image file"""
+    thumbnail.delete(instance.source_file, delete_file=True)
+    # instance.source_file.delete()
+
+def remove_thumbnail(sender, instance, **kwargs):
+    thumbnail.delete(instance.source_file, delete_file=False)
+
+pre_delete.connect(remove_imagefile_and_thumbnail, sender=ImageFile)
+pre_delete.connect(remove_imagefile_and_thumbnail, sender=ProfileImage)
+post_save.connect(remove_thumbnail, sender=ProfileImage)
+post_save.connect(remove_thumbnail, sender=ProfileImage)
