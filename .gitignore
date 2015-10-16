@@ -1,5 +1,7 @@
-/node_modules/
-/build/
-/bin/*universitas_no.sh
-/bin/postactivate
+node_modules/
+build/
+bin/*universitas_no.sh
+bin/postactivate
+media
+static
 

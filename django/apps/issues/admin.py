@@ -72,7 +72,7 @@ class IssueAdmin(admin.ModelAdmin):
         return mark_safe(html)
 
     list_display = (
-        'issue_name',
+        '__str__',
         'publication_date',
         'issue_type',
         'pdf_links',
