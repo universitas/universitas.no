@@ -131,6 +131,7 @@ def clean_up_bylines(raw_bylines):
     if 'photo:' in bylines:
         bylines = bylines.replace('by:', 'text:')
 
-    msg = '("{}",\n"{}"),'.format(raw_bylines, bylines)
-    bylines_logger.debug(msg)
+    bylines_logger.info(
+        '("%s",\n"%s"),' % (raw_bylines, bylines)
+    )
     return bylines

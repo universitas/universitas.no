@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+"""Celery tasks"""
 from celery.decorators import periodic_task
 from celery.utils.log import get_task_logger
 from datetime import timedelta

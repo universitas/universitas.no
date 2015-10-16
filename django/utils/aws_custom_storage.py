@@ -1,43 +1,46 @@
-from storages.backends.s3boto import S3BotoStorage
-from django.conf import settings
+# -*- coding: utf-8 -*-
+"""Custom overrides for the Amazon storage"""
+from storages.backends.s3boto import S3BotoStorage, setting
 
 
 class CustomS3BotoStorage(S3BotoStorage):
-    pass
-    # @property
-    # def connection(self):
-    #     if self._connection is None:
-    #         self._connection = self.connection_class(
-    #             self.access_key,
-    #             self.secret_key,
-    #             calling_format=self.calling_format,
-    #             host=settings.AWS_S3_HOST)
-    #     return self._connection
+    cache_max_age = 0
+    gzip = setting('AWS_IS_GZIPPED', True)
+    # preload_metadata = setting('AWS_PRELOAD_METADATA', False)
+    # gzip_content_types = setting('GZIP_CONTENT_TYPES', (
+    #     'text/css',
+    #     'text/javascript',
+    #     'application/javascript',
+    #     'application/x-javascript',
+    # ))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.cache_max_age:
+            self.headers.update({
+                'Cache-Control': 'max-age={seconds}'.format(
+                    seconds=self.cache_max_age)
+            })
 
 
 class StaticStorage(CustomS3BotoStorage):
 
     """Storage for static assets such as icons, fonts, css and js"""
 
-    duration = 60 * 60 * 24
-    location = settings.STATICFILES_LOCATION
-    headers = {
-        'Cache-Control': 'max-age={}'.format(duration)
-    }
+    cache_max_age = 60 * 60 * 24 * 2
+    location = setting('STATIC_ROOT', 'static')
+
 
 class MediaStorage(CustomS3BotoStorage):
 
     """Storage for user uploaded images and files"""
 
-    location = settings.MEDIAFILES_LOCATION
+    location = setting('MEDIA_ROOT', 'media')
 
 
 class ThumbStorage(CustomS3BotoStorage):
 
     """Storage for thumbnails"""
 
-    duration = 60 * 60 * 24 * 10000
-    location = settings.MEDIAFILES_LOCATION
-    headers = {
-        'Cache-Control': 'max-age={}'.format(duration)
-    }
+    cache_max_age = 60 * 60 * 24 * 10000
+    location = setting('MEDIA_ROOT', 'media')
