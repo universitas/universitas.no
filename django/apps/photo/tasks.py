@@ -9,11 +9,13 @@ import glob
 
 logger = get_task_logger(__name__)
 
-IMAGE_STAGING = os.path.join(settings.STAGING_ROOT 'STAGING', 'IMAGES')
-PDF_STAGING = os.path.join(settings.STAGING_ROOT 'STAGING', 'IMAGES')
+IMAGE_STAGING = os.path.join(settings.STAGING_ROOT, 'STAGING', 'IMAGES')
+PDF_STAGING = os.path.join(settings.STAGING_ROOT, 'STAGING', 'IMAGES')
 
 # @periodic_task(run_every=timedelta(hours=6))
 # @periodic_task(run_every=timedelta(minutes=1))
+
+
 def new_photos_in_staging():
     """Registers new photos in staging"""
 
