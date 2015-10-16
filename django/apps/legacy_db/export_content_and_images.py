@@ -428,7 +428,7 @@ def _create_image_file(filepath, publication_date=None, pk=None, prodsys=False):
             return image_file
 
         except TypeError as err:
-            logger.error('%s' % err)
+            logger.exception('%s' % err)
             # Possibly a currupt imagefile, or wrong file extension.
     return None
 

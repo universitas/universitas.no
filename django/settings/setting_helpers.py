@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """Utility functions for settings"""
 import os
+import json
+import logging
+logger = logging.getLogger(__name__)
 
 
 def environment_variable(keyname):
@@ -17,3 +20,15 @@ def environment_variable(keyname):
 def join_path(*paths):
     """ shortcut for joining paths. cross os compatible """
     return os.path.normpath(os.path.join(*paths))
+
+
+def load_json_file(filepath):
+    """Load json file -> dictionary"""
+    try:
+        with open(filepath) as filerevs_fh:
+            jsondict = json.load(filerevs_fh)
+    except IOError as err:
+        # No file revisions found, continuing without
+        logger.exception('%s' % err)
+        jsondict = {}
+    return jsondict

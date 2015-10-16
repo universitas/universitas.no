@@ -4,25 +4,11 @@ from django import template
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.contrib.staticfiles.templatetags.staticfiles import StaticFilesNode
-from memoize import memoize
-import json
 import logging
 logger = logging.getLogger(__name__)
 
 register = template.Library()
 
-@memoize(timeout=60)
-def get_filerefs():
-    try:
-        with open(settings.GULP_FILEREVS_PATH) as filerevs_fh:
-            revs = json.load(filerevs_fh)
-        logger.debug('found gulp filerevs %s' % len(revs))
-    except IOError as err:
-        # No file revisions found, continuing without
-        logger.error('%s' % err)
-        revs = {}
-
-    return revs
 
 
 class FileRevNode(StaticFilesNode):
@@ -35,7 +21,7 @@ class FileRevNode(StaticFilesNode):
 
     def url(self, context):
         path = self.path.resolve(context)
-        revved_path = get_filerefs().get(path)
+        revved_path = settings.GULP_FILEREVS.get(path)
         # logger.debug('%s :: %s' % (path, revved_path))
         if revved_path is not None:
             return staticfiles_storage.url(revved_path)
