@@ -4,4 +4,5 @@ bin/*universitas_no.sh
 bin/postactivate
 media
 static
+celerybeat-schedule
 
