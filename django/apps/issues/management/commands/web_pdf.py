@@ -16,8 +16,8 @@ from apps.issues.models import PrintIssue, current_issue
 import logging
 logger = logging.getLogger(__name__)
 
-PDF_STAGING = os.path.join(settings.MEDIA_ROOT, 'STAGING', 'PDF')
-PDF_FOLDER = os.path.join(settings.MEDIA_ROOT, 'pdf')
+PDF_STAGING = os.path.join(settings.STAGING_ROOT, 'STAGING', 'PDF')
+PDF_FOLDER = os.path.join(settings.STAGING_ROOT, 'pdf')
 
 PDF_MERGE = os.path.join(settings.PROJECT_DIR, 'bin', 'pdf_merge.sh')
 
@@ -53,8 +53,9 @@ class Command(BaseCommand):
         return sorted(new_files)
 
     def handle(self, *args, **options):
-
         """ Finds pdf files on disks and creates PrintIssue objects. """
+        log = self.stdout.write
+        # log = logger.debug
 
         for code, suffix in (1, ''), (2, '_mag'):
             year, number = current_issue()
@@ -66,25 +67,24 @@ class Command(BaseCommand):
             files = self.get_staging_pdf_files(code)
 
             if len(files) == 0:
-                msg = 'no files found, {}'.format(code)
-                logger.debug(msg)
+                log('no files found, %s' % code)
                 continue
 
             if len(files) % 4:
-                msg = 'Incorrect number of pages ({}), {}'.format(
-                    len(files),
-                    code)
-                logger.debug(msg)
+                log('Incorrect number of pages (%d), %s' % (len(files), code))
                 continue
 
             pdf_path = os.path.join(PDF_FOLDER, filename)
 
-            args = [PDF_MERGE, pdf_path] + files
-            msg = '\n'.join(args)
-            logger.debug(msg)
-            subprocess.call(args)
+            log('\n'.join([PDF_MERGE, pdf_path] + files))
 
-            issue, new = PrintIssue.objects.get_or_create(pdf='pdf/' + filename)
-            if new:
-                name = '{number}/{year}{suffix}'.format(**locals())
-                issue.issue_name = name
+            try:
+                issue = PrintIssue.objects.get(pdf__endswith=filename)
+            except PrintIssue.DoesNotExist:
+                issue = PrintIssue()
+
+            # issue, _ = PrintIssue.objects.get_or_create(pdf='pdf/' + filename)
+            name = '{number}/{year}{suffix}'.format(**locals())
+            issue.issue_name = name
+            issue.pdf.save(pdf_path, save=False)
+            issue.save()
