@@ -22,7 +22,6 @@ from slugify import Slugify
 # Project apps
 from apps.issues.models import current_issue
 from .autocrop import AutoCropImage, Cropping
-
 import logging
 logger = logging.getLogger(__name__)
 
@@ -123,17 +122,16 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
             self.autocrop()
 
     @classmethod
-    def image_upload_folder(cls):
+    def upload_folder(cls):
         issue = current_issue()
         return os.path.join(str(issue.date.year), str(issue.number))
 
     @staticmethod
     def slugify(filename):
         slugify = Slugify(safe_chars='.-', separator='-')
-        slug = slugify(filename)
-        repl = lambda m: str.lower(m.group(0))
-        slug = re.sub(r'\..*?$', repl, slug)
-        slug = re.sub(r'\.jpeg', '.jpg', slug)
+        slugs = slugify(filename).split('.')
+        slugs[-1] = slugs[-1].lower().replace('jpeg', 'jpg')
+        slug = '.'.join(segment.strip('-') for segment in slugs)
         return slug
 
     def thumb(self, height=315, width=600):
@@ -210,7 +208,7 @@ class ProfileImage(ImageFile):
 
     @staticmethod
     def slugify(filename):
-        return super(ProfileImage, self).slugify(filename.title())
+        return ImageFile.slugify(filename.title())
 
     @staticmethod
     def upload_folder():

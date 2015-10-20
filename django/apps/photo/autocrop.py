@@ -50,12 +50,14 @@ class AutoCropImage(models.Model):
             if (self.cropping != saved.cropping):
                 self.cropping_method = self.CROP_MANUAL
         super(AutoCropImage, self).save(*args, **kwargs)
+        self.source_file.close()
 
     def opencv_image(self, size=400):
         """ Convert ImageFile into a cv2 image for image processing. """
+        # self.source_file.open()
+        # with self.source_file as source:
         self.source_file.open()
-        with self.source_file as source:
-            nparr = numpy.fromstring(source.read(), numpy.uint8)
+        nparr = numpy.fromstring(self.source_file.read(), numpy.uint8)
 
         cv2img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         cv2img = cv2.cvtColor(cv2img, cv2.COLOR_BGR2RGB)
@@ -123,7 +125,7 @@ class AutoCropImage(models.Model):
                 )
                 logger.debug(msg)
 
-        def detect_faces(cv2img):
+        def detect_faces(cv2img,):
             """ Detects faces in image and adjust cropping. """
             # http://docs.opencv.org/trunk/modules/objdetect/doc/cascade_classification.html
             # cv2.CascadeClassifier.detectMultiScale(image[, scaleFactor[, minNeighbors[, flags[, minSize[, maxSize]]]]])
@@ -140,7 +142,10 @@ class AutoCropImage(models.Model):
             # rejectLevels and levelWeights. Default value is False.
 
             face_cascade = cv2.CascadeClassifier(CASCADE_FILE)
-            faces = face_cascade.detectMultiScale(cv2img,)
+            # faces = face_cascade.detectMultiScale(cv2img,)
+            faces = face_cascade.detectMultiScale(cv2img, minSize=(50,50), minNeighbors=10)
+
+            # faces = sorted(faces, reverse=True, key=lambda l, t, w, h: w*h)[:max_matches]
             horizontal_faces, vertical_faces = [], []
             box = {}
             for (face_left, face_top, face_width, face_height) in faces:
