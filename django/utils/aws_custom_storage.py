@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Custom overrides for the Amazon storage"""
 from storages.backends.s3boto import S3BotoStorage, setting
-
+import hashlib
 
 class CustomS3BotoStorage(S3BotoStorage):
     cache_max_age = 0

@@ -32,6 +32,9 @@ AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
 AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME  # cname
 AWS_S3_SECURE_URLS = False
 AWS_S3_USE_SSL = False
+# AWS_S3_FILE_BUFFER_SIZE = 5242880
+# Buffer size is used to calculate md5 hash for AWS mulitpart uploads
+# if changed, md5 hashes for large files might be wrong
 STATIC_ROOT = 'static'
 MEDIA_ROOT = 'media'
 STATICFILES_STORAGE = 'utils.aws_custom_storage.StaticStorage'
