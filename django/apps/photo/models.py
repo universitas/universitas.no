@@ -2,28 +2,45 @@
 """ Photography and image files in the publication  """
 # Python standard library
 # import os
-import re
 import os
+import hashlib
+import logging
 
 # Django core
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-# from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models.signals import pre_delete, post_save
+from django.utils import timezone
 # Installed apps
 
 from model_utils.models import TimeStampedModel
 from utils.model_mixins import Edit_url_mixin
 from sorl import thumbnail
-
 from slugify import Slugify
+# from boto.utils import parse_ts
+import boto
 
 # Project apps
 from apps.issues.models import current_issue
 from .autocrop import AutoCropImage, Cropping
-import logging
 logger = logging.getLogger(__name__)
+
+
+def local_md5(filepath, blocksize=65536):
+    """Hexadecimal md5 hash of a file stored on local disk"""
+    hasher = hashlib.md5()
+    with open(filepath, 'rb') as source:
+        buf = source.read(blocksize)
+        while len(buf) > 0:
+            hasher.update(buf)
+            buf = source.read(blocksize)
+    return hasher.hexdigest()
+
+
+def s3_md5(s3key, blocksize=65536):
+    """Hexadecimal md5 hash of a file stored in Amazon S3"""
+    return s3key.etag.strip('"').strip("'")
 
 
 def upload_image_to(instance, filename):
@@ -31,6 +48,7 @@ def upload_image_to(instance, filename):
         instance.upload_folder(),
         instance.slugify(filename)
     )
+
 
 class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
 
@@ -43,6 +61,22 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         height_field='full_height',
         width_field='full_width',
         max_length=1024,
+    )
+    _md5 = models.CharField(
+        verbose_name=_('md5 hash of source file'),
+        max_length=32,
+        editable=False,
+        null=True,
+    )
+    _size = models.PositiveIntegerField(
+        verbose_name=_('size of file in bytes'),
+        editable=False,
+        null=True,
+    )
+    _mtime = models.PositiveIntegerField(
+        verbose_name=_('mtime timestamp of source file'),
+        editable=False,
+        null=True,
     )
     full_height = models.PositiveIntegerField(
         help_text=_('full height in pixels'),
@@ -105,10 +139,10 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
 
     def save(self, *args, **kwargs):
         pk = self.pk
-        if self.contributor is None:
-            pass
-            # self.contributor = self.identify_photo_file_initials()
         if pk and not kwargs.pop('autocrop', False):
+            self.md5 = None
+            self.size = None
+            self.mtime = None
             try:
                 saved = type(self).objects.get(id=self.pk)
                 if (self.from_left,
@@ -117,9 +151,56 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
                     self.cropping_method = self.CROP_MANUAL
             except ImageFile.DoesNotExist:
                 pass
+        assert not self.size is None
+        assert not self.md5 is None
+        assert not self.mtime is None
         super().save(*args, **kwargs)
-        if not pk and self.cropping == self.CROP_NONE:
+        if pk is None and self.cropping == self.CROP_NONE:
             self.autocrop()
+
+    @property
+    def md5(self):
+        """Calculate or retrieve md5 value"""
+        if self._md5 is None:
+            try:  # Locally stored file
+                self._md5 = local_md5(self.source_file.path)
+            except NotImplementedError:  # AWS S3 storage
+                self._md5 = s3_md5(self.source_file.file.key)
+        return self._md5
+
+    @md5.setter
+    def md5(self, value):
+        self._md5 = value
+
+    @property
+    def size(self):
+        """Calculate or retrive filesize"""
+        if self._size is None:
+            self._size = self.source_file.size
+        return self._size
+
+    @size.setter
+    def size(self, value):
+        self._size = value
+
+    @property
+    def mtime(self):
+        """Modified time as unix timestamp"""
+        if self._mtime is None:
+            try:  # Locally stored file
+                mtime = os.stat(self.source_file.path).st_mtime
+                self._mtime = int(mtime)
+            except NotImplementedError:  # AWS S3 storage
+                key = self.source_file.file.key
+                modified = boto.utils.parse_ts(key.last_modified)
+                self._mtime = int(modified.strftime('%s'))
+        return self._mtime
+
+    @mtime.setter
+    def mtime(self, timestamp):
+        self._mtime = timestamp
+        # created = timezone.datetime.fromtimestamp(timestamp)
+        # self.created = timezone.make_aware(created)
 
     @classmethod
     def upload_folder(cls):
@@ -173,11 +254,17 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
             self.autocrop()
         return '{h}% {v}%'.format(h=self.from_left, v=self.from_top)
 
+    def compare_and_update(filepath):
+        """Check for changes and update stored source file if needed."""
+        stat = os.stat(filepath)
+
+
     # def identify_photo_file_initials(self, contributors=(),):
-    #     """
-    #     If passed a file path that matches the Universitas format for photo credit.
-    #     Searches database or optional iterable of contributors for a person that
-    #     matches initials at end of jpg-file name
+    #     """Assign contributor to photo
+    #
+    #     If passed a file path that matches the Universitas format for photo
+    #     credit. Searches database or optional iterable of contributors for a
+    #     person that matches initials at end of jpg-file name
     #     """
     #     from apps.contributors.models import Contributor
     #     filename_pattern = re.compile(r'^.+[-_]([A-ZÆØÅ]{2,5})\.jp.?g$')
@@ -193,8 +280,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     #             logger.warning(self, initials, e)
 
     #     return None
-
-
 
 
 class ProfileImage(ImageFile):
@@ -220,10 +305,11 @@ def remove_imagefile_and_thumbnail(sender, instance, **kwargs):
     thumbnail.delete(instance.source_file, delete_file=True)
     # instance.source_file.delete()
 
+
 def remove_thumbnail(sender, instance, **kwargs):
     thumbnail.delete(instance.source_file, delete_file=False)
 
 pre_delete.connect(remove_imagefile_and_thumbnail, sender=ImageFile)
 pre_delete.connect(remove_imagefile_and_thumbnail, sender=ProfileImage)
-post_save.connect(remove_thumbnail, sender=ProfileImage)
+post_save.connect(remove_thumbnail, sender=ImageFile)
 post_save.connect(remove_thumbnail, sender=ProfileImage)
