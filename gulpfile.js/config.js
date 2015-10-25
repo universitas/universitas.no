@@ -5,7 +5,7 @@ module.exports = {
   },
 
   browserSync: {
-    proxy: 'localhost:8000'
+    proxy: 'localhost:8010'
   },
   tasks: {
     favicon: {
