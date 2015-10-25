@@ -27,9 +27,9 @@ def load_json_file(file_path):
     try:
         with open(file_path) as jsonfile:
             jsondict = json.load(jsonfile)
-    except IOError:
+    except FileNotFoundError:
         # No file revisions found, continuing without
-        logger.exception('Could not load json file %s' % file_path)
+        # logger.exception('Could not load json file %s' % file_path)
         jsondict = {}
 
     return jsondict

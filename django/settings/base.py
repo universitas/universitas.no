@@ -45,7 +45,7 @@ STATIC_URL = "http://{host}/{static}/".format(
     host=AWS_S3_CUSTOM_DOMAIN, static=STATIC_ROOT, )
 
 MEDIA_URL = "http://{host}/{media}/".format(
-    host=AWS_S3_CUSTOM_DOMAIN, media=STATIC_ROOT, )
+    host=AWS_S3_CUSTOM_DOMAIN, media=MEDIA_ROOT, )
 
 INSTALLED_APPS = [  # CUSTOM APPS
     'apps.issues',
