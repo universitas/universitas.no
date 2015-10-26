@@ -3,7 +3,7 @@
 from .dev import *
 
 DEFAULT_FROM_EMAIL = 'localemail@localhost'
-DATABASES['prodsys'].update({'HOST': 'localhost', })
+# DATABASES['prodsys'].update({'HOST': 'localhost', })
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 RUNSERVERPLUS_SERVER_ADDRESS_PORT = 'localhost:8010'

@@ -8,7 +8,7 @@ production system to the new website.
 import os
 import errno
 import re
-from pytz import datetime
+from datetime import datetime, date, time
 # from html.parser import HTMLParser
 from html import unescape
 from bs4 import BeautifulSoup
@@ -17,23 +17,20 @@ from bs4 import BeautifulSoup
 from django.utils import timezone
 from django.conf import settings
 from django.db import connection
-from django.core.files import File
 from django.core import serializers
 
 from apps.legacy_db.models import (
     Sak, Prodsak, Bildetekst, Prodbilde)
 from apps.stories.models import (
     Story, StoryType, Section, StoryImage, InlineLink)
-from apps.photo.models import ImageFile
+from apps.photo.models import ImageFile, upload_image_to
 from slugify import Slugify
 slugify_filename = Slugify(safe_chars='.-', separator='-')
 
 # from apps.contributors.models import Contributor
-MEDIA_ROOT = settings.STAGING_ROOT
-BILDEMAPPE = os.path.join(MEDIA_ROOT, '')
-PDFMAPPE = os.path.join(MEDIA_ROOT, 'pdf')
-STAGING_FOLDER = os.path.join(MEDIA_ROOT, 'STAGING/IMAGES')
-TIMEZONE = timezone.get_current_timezone()
+# BILDEMAPPE = os.path.join(MEDIA_ROOT, '')
+# PDFMAPPE = os.path.join(MEDIA_ROOT, 'pdf')
+STAGING_FOLDER = os.path.join(settings.STAGING_ROOT, 'IMAGES')
 
 import logging
 logger = logging.getLogger(__name__)
@@ -365,82 +362,52 @@ def _importer_bilder_fra_webside(websak, story, autocrop):
 
 def _create_image_file(filepath, publication_date=None, pk=None, prodsys=False):
     """ Create an ImageFile object from a filepath. """
-    # Check if this ImageFile is registered in the database already.
-    filepath = slugify_filename(filepath)
+    current_filepath = upload_image_to(ImageFile, os.path.basename(filepath))
+
+    existing_image = (
+        ImageFile.objects.filter(pk=pk) |
+        ImageFile.objects.filter(source_file=filepath) |
+        ImageFile.objects.filter(source_file=current_filepath)
+    )
     try:
-        return ImageFile.objects.get(pk=pk)
-    except ImageFile.DoesNotExist:
-        pass
-    try:
-        return ImageFile.objects.get(source_file=filepath)
-    except ImageFile.MultipleObjectsReturned:
-        logger.warn('multiple images returned {file}'.format(file=filepath))
-        return ImageFile.objects.filter(source_file=filepath).first()
+        image = existing_image.get()
+        logger.debug('found image: %s' % image)
+        return image
     except ImageFile.DoesNotExist:
         pass
 
     # Check that the file exists on the harddrive.
     if prodsys:
-
-        # issue_image_folder = image_upload_folder()
-
-        staging_image = '{stagingfolder}/{filename}'.format(
-            stagingfolder=STAGING_FOLDER,
-            filename=filepath,
-        )
+        staging_image = os.path.join(STAGING_FOLDER, filepath)
 
         if not os.path.isfile(staging_image):
-            import ipdb
-            ipdb.set_trace()
+            logger.warn('image not found: %s' % staging_image)
             return None
 
-        modified = datetime.datetime.fromtimestamp(
-            os.path.getmtime(staging_image),
-            TIMEZONE)
-        created = datetime.datetime.fromtimestamp(
-            os.path.getctime(staging_image),
-            TIMEZONE)
-        dates = [modified, created, ]
+        creation_time = _make_aware(
+            datetime.fromtimestamp( os.path.getmtime( staging_image ) ) )
+
         if publication_date:
-            dates.append(
-                datetime.datetime.combine(
-                    publication_date,
-                    datetime.time(
-                        tzinfo=TIMEZONE)))
+            publication_datetime = _make_aware(publication_date)
+            creation_time = min(creation_time, publication_datetime)
 
-        # Make sure that create date is no later than modification and
-        # publication date.
-        created = min(dates)
+        image_file = ImageFile.objects.create_from_file(
+            pk=pk,
+            filepath=staging_image,
+            created=creation_time
+        )
+        logger.debug('New image file created: %s' % image_file)
+        return image_file
 
-        filename = os.path.split(staging_image)[1]
-
-        try:
-            with open(staging_image, 'rb') as source:
-                content = File(source)
-                image_file = ImageFile(
-                    pk=pk,
-                    created=created,
-                    modified=modified,
-                )
-                image_file.source_file.save(filename, content)
-
-            logger.debug('    new image: {}'.format(image_file.source_file))
-            return image_file
-
-        except TypeError as err:
-            logger.exception('%s' % err)
-            # Possibly a currupt imagefile, or wrong file extension.
     return None
 
 
 def _make_aware(time_input):
     """ Convert naive date object into timezone aware datetime. """
-    return datetime.datetime(
-        time_input.year,
-        time_input.month,
-        time_input.day,
-        tzinfo=TIMEZONE,
-    )
+    if type(time_input) == date:
+        time_input = datetime.combine(time_input, time())
+    return timezone.make_aware(
+        time_input, timezone=timezone.get_current_timezone())
 
 
 def _get_story_type(prodsys_mappe):

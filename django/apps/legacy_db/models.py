@@ -165,11 +165,9 @@ class Fakta(models.Model):
         verbose_name_plural = _('faktabokser')
 
 
-class ProdsakManager(models.Manager):
+class ProdsakQueryset(models.QuerySet):
 
-    """docstring for ProdsakManager"""
-
-    def latest_version(self):
+    def single(self):
         latest = self.extra(
             where=[
                 ''' (prodsak_id, version_no) IN (
@@ -180,6 +178,23 @@ class ProdsakManager(models.Manager):
             ]
         )
         return latest
+
+    def active(self):
+        return self.exclude(produsert=Prodsak.ARCHIVED)
+
+class ProdsakManager(models.Manager):
+
+    def get_queryset(self):
+        return ProdsakQueryset(self.model, using=self._db)
+
+    def single(self):
+        return self.get_queryset().latest_version()
+
+    def active(self):
+        return self.get_queryset(
+            ).active(
+            ).order_by('-prodsak_id'
+            ).single()
 
 
 class Prodsak(models.Model):
@@ -237,6 +252,9 @@ class Prodsak(models.Model):
         super().save(*args, **kwargs)
         versions = Prodsak.objects.filter(prodsak_id=self.prodsak_id)
         versions.update(produsert=self.produsert)
+
+    def __str__(self):
+        return '{s.prodsak_id}({s.version_no}) {s.arbeidstittel}'.format(s=self)
 
 
 class Prodbilde(models.Model):

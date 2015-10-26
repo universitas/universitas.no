@@ -11,7 +11,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models.signals import pre_delete, post_save
-from django.utils import timezone
+# from django.utils import timezone
+from django.core.files import File
 # Installed apps
 
 from model_utils.models import TimeStampedModel
@@ -50,11 +51,21 @@ def upload_image_to(instance, filename):
     )
 
 
+class ImageFileManager(models.Manager):
+
+    def create_from_file(self, filepath, **kwargs):
+        image = self.model(**kwargs)
+        image.save_local_image_as_source(filepath)
+        return image
+
+
 class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
 
     class Meta:
         verbose_name = _('ImageFile')
         verbose_name_plural = _('ImageFiles')
+
+    objects = ImageFileManager()
 
     source_file = thumbnail.ImageField(
         upload_to=upload_image_to,
@@ -158,9 +169,27 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         if pk is None and self.cropping == self.CROP_NONE:
             self.autocrop()
 
+    def save_local_image_as_source(self, filepath, save=True):
+        """Save file from local filesystem as source
+
+        Does not save if the file is identical to the one that is already there.
+        """
+        mtime = os.stat(filepath).st_mtime
+        size = os.stat(filepath).st_size
+        md5 = local_md5(filepath)
+        if self.pk and self.source_file:
+            if mtime <= self.mtime or (size, md5) == (self.size, self.md5):
+                return
+        filename = os.path.split(filepath)[1]
+        with open(filepath, 'rb') as source:
+            content = File(source)
+            self.source_file.save(filename, content, save)
+
     @property
     def md5(self):
         """Calculate or retrieve md5 value"""
+        if self.source_file is None:
+            return None
         if self._md5 is None:
             try:  # Locally stored file
                 self._md5 = local_md5(self.source_file.path)
@@ -175,6 +204,8 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     @property
     def size(self):
         """Calculate or retrive filesize"""
+        if self.source_file is None:
+            return None
         if self._size is None:
             self._size = self.source_file.size
         return self._size
@@ -186,9 +217,11 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     @property
     def mtime(self):
         """Modified time as unix timestamp"""
+        if self.source_file is None:
+            return None
         if self._mtime is None:
             try:  # Locally stored file
-                mtime = os.stat(self.source_file.path).st_mtime
+                mtime = os.path.getmtime(self.source_file.path)
                 self._mtime = int(mtime)
             except NotImplementedError:  # AWS S3 storage
                 key = self.source_file.file.key
@@ -199,8 +232,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     @mtime.setter
     def mtime(self, timestamp):
         self._mtime = timestamp
-        # created = timezone.datetime.fromtimestamp(timestamp)
-        # self.created = timezone.make_aware(created)
 
     @classmethod
     def upload_folder(cls):
@@ -254,9 +285,16 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
             self.autocrop()
         return '{h}% {v}%'.format(h=self.from_left, v=self.from_top)
 
-    def compare_and_update(filepath):
-        """Check for changes and update stored source file if needed."""
-        stat = os.stat(filepath)
+    # def compare_and_update(self, filepath):
+    #     """Check for changes and update stored source file if needed."""
+    #     mtime = os.stat(filepath).st_mtime
+    #     size = os.stat(filepath).st_size
+    #     md5 = local_md5(filepath)
+    #     if mtime > self.mtime and (size, md5) != (self.size, self.md5):
+    #         self.mtime = mtime
+    #         self.md5 = md5
+    #         self.size = size
+    #         self.source_file
 
 
     # def identify_photo_file_initials(self, contributors=(),):
@@ -278,10 +316,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     #             return Contributor.objects.get(initials=initials)
     #         except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
     #             logger.warning(self, initials, e)
-
     #     return None
-
-
 class ProfileImage(ImageFile):
 
     class Meta:
