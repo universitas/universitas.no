@@ -19,6 +19,7 @@ from django.core.files.base import ContentFile
 # from django.utils.text import slugify
 
 # Installed apps
+import boto
 import PyPDF2
 from sorl import thumbnail
 from wand.image import Image as WandImage
@@ -294,8 +295,12 @@ class PrintIssue(models.Model, Edit_url_mixin):
             created = datetime.date(day=day, month=month, year=year)
         else:
             # Finds creation date.
-            created = datetime.date.fromtimestamp(
+            try:
+                created = datetime.date.fromtimestamp(
                 os.path.getmtime(self.pdf.path))
+            except NotImplementedError:
+                key = self.source_file.file.key
+                created = boto.utils.parse_ts(key.last_modified)
             # Sets creation date as a Wednesday, if needed.
             created = created + datetime.timedelta(
                 days=3 - created.isoweekday())

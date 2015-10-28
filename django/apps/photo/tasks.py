@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 # @periodic_task(run_every=timedelta(minutes=1))
 
 
-
 @periodic_task(run_every=timedelta(minutes=1))
 def import_staging_images(max_age=timedelta(minutes=10)):
     directory, files = new_staging_images(max_age=max_age)
