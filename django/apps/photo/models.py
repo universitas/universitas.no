@@ -162,6 +162,8 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
                     self.cropping_method = self.CROP_MANUAL
             except ImageFile.DoesNotExist:
                 pass
+        if not pk:
+            super().save(*args, **kwargs)
         assert not self.size is None
         assert not self.md5 is None
         assert not self.mtime is None

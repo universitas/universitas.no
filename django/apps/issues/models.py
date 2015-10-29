@@ -4,6 +4,7 @@
 # Python standard library
 # import subprocess
 import re
+import os
 import datetime
 from io import BytesIO
 import logging
@@ -20,6 +21,7 @@ from django.core.files.base import ContentFile
 
 # Installed apps
 import PyPDF2
+import boto
 from sorl import thumbnail
 from wand.image import Image as WandImage
 from wand.color import Color
@@ -296,7 +298,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
             # Finds creation date.
             try:
                 created = datetime.date.fromtimestamp(
-                os.path.getmtime(self.pdf.path))
+                os.path.getmtime(self.pdf.path)
             except NotImplementedError:
                 key = self.source_file.file.key
                 created = boto.utils.parse_ts(key.last_modified)
