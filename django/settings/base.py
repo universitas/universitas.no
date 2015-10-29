@@ -176,8 +176,9 @@ FIXTURE_DIRS = [join_path(BASE_DIR, 'fixtures'), ]
 # Project wide django template files
 TEMPLATE_DIRS = [join_path(BASE_DIR, 'templates'), ]
 # Look for byline images here
-STAGING_ROOT = join_path('/srv/fotoarkiv_universitas','STAGING')
-BYLINE_PHOTO_DIR = join_path(STAGING_ROOT, 'BYLINE')
+BYLINE_PHOTO_DIR = '/srv/fotoarkiv_universitas/byline/'
+STAGING_ROOT = '/srv/fotoarkiv_universitas/'
+
 
 # INTERNATIONALIZATION
 LANGUAGE_CODE = 'nb'
