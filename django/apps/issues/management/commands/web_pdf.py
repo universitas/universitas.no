@@ -17,8 +17,8 @@ from django.core.files.base import ContentFile
 from apps.issues.models import PrintIssue, current_issue
 logger = logging.getLogger(__name__)
 
-PDF_STAGING = os.path.join(settings.STAGING_ROOT, 'STAGING', 'PDF')
-PDF_FOLDER = os.path.join(settings.STAGING_ROOT, 'pdf')
+PDF_STAGING = os.path.join(settings.STAGING_ROOT, 'PDF')
+PDF_FOLDER = os.path.join(settings.STAGING_ROOT, '..', 'pdf')
 
 PDF_MERGE = os.path.join(settings.PROJECT_DIR, 'bin', 'pdf_merge.sh')
 
@@ -53,9 +53,6 @@ class Command(BaseCommand):
                 new_files.append(pdf_file)
         return sorted(new_files)
 
-
-
-
     def handle(self, *args, **options):
         """ Finds pdf files on disks and creates PrintIssue objects. """
         for code, suffix in (1, ''), (2, '_mag'):
@@ -70,7 +67,9 @@ class Command(BaseCommand):
                 continue
 
             if len(files) % 4:
-                logger.info('Incorrect number of pages (%d), %s' % (len(files), code))
+                logger.info(
+                    'Incorrect number of pages (%d), %s' %
+                    (len(files), code))
                 continue
 
             pdf_path = os.path.join(PDF_FOLDER, filename)
@@ -85,7 +84,7 @@ class Command(BaseCommand):
                 issue = PrintIssue()
 
             name = '{issue.number}/{issue.date.year}{suffix}'.format(
-                    suffix = suffix, issue = current_issue())
+                suffix=suffix, issue=current_issue())
             with open(pdf_path, 'rb') as src:
                 content = ContentFile(src.read())
             issue.pdf.save(filename, content, save=False)

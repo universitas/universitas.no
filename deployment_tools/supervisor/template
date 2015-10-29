@@ -5,38 +5,43 @@
 ; ====================================================================
 
 [group:SITEURL]
-programs       = SITEURL-gunicorn, SITEURL-celery-worker, SITEURL-celery-beat
+programs        = SITEURL/gunicorn, 
+                  SITEURL/celery-worker, 
+                  SITEURL/celery-beat
+                
+; ====================================================================
+[program:SITEURL/gunicorn]
+priority        = 999
+user            = USERNAME
+command         = /srv/SITEURL/bin/USERNAME.sh gunicorn
+stdout_logfile  = /srv/SITEURL/logs/gunicorn.log
+stderr_logfile  = /srv/SITEURL/logs/gunicorn.log
+umask           = 002
+autostart       = true
+stopasgroup     = true
+startsecs       = 5
 
 ; ====================================================================
-[program:SITEURL-gunicorn]
-command        = /srv/SITEURL/bin/USERNAME.sh gunicorn
-user           = USERNAME
-autostart      = true
-stopasgroup    = true
-startsecs      = 5
-stdout_logfile = /srv/SITEURL/logs/gunicorn.log
-stderr_logfile = /srv/SITEURL/logs/gunicorn.log
-priority       = 999
+[program:SITEURL/celery-worker]
+priority        = 998
+user            = USERNAME
+command         = /srv/SITEURL/bin/USERNAME.sh celery-worker
+stdout_logfile  = /srv/SITEURL/logs/celery.log
+stderr_logfile  = /srv/SITEURL/logs/celery.log
+umask           = 002
+autostart       = true
+stopasgroup     = true
+startsecs       = 5
+stopwaitsecs    = 60
 
 ; ====================================================================
-[program:SITEURL-celery-worker]
-command        = /srv/SITEURL/bin/USERNAME.sh celery-worker
-user           = USERNAME
-autostart      = true
-stopasgroup    = true
-startsecs      = 5
-stdout_logfile = /srv/SITEURL/logs/celery.log
-stderr_logfile = /srv/SITEURL/logs/celery.log
-stopwaitsecs   = 60
-priority       = 998
-
-; ====================================================================
-[program:SITEURL-celery-beat]
-command        = /srv/SITEURL/bin/USERNAME.sh celery-beat
-user           = USERNAME
-autostart      = true
-stopasgroup    = true
-startsecs      = 5
-stdout_logfile = /srv/SITEURL/logs/celery.log
-stderr_logfile = /srv/SITEURL/logs/celery.log
-priority       = 999
+[program:SITEURL/celery-beat]
+priority        = 999
+user            = USERNAME
+command         = /srv/SITEURL/bin/USERNAME.sh celery-beat
+stdout_logfile  = /srv/SITEURL/logs/celery.log
+stderr_logfile  = /srv/SITEURL/logs/celery.log
+umask           = 002
+autostart       = true
+stopasgroup     = true
+startsecs       = 5

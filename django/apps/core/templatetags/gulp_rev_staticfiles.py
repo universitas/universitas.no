@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 register = template.Library()
 
 
-
 class FileRevNode(StaticFilesNode):
 
     """

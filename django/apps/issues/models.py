@@ -4,6 +4,7 @@
 # Python standard library
 # import subprocess
 import re
+import os
 import datetime
 from io import BytesIO
 import logging
@@ -20,6 +21,7 @@ from django.core.files.base import ContentFile
 
 # Installed apps
 import PyPDF2
+import boto
 from sorl import thumbnail
 from wand.image import Image as WandImage
 from wand.color import Color
@@ -125,8 +127,8 @@ class Issue(models.Model, Edit_url_mixin):
         return '{}'.format(self.publication_date)
 
     def save(self, *args, **kwargs):
-        self.issue_name = '{number}/{date.year}'.format(
-            **vars(self.issue_tuple()))
+        self.issue_name = '{issue.number}/{issue.date.year}'.format(
+            issue=self.issue_tuple())
         return super(Issue, self).save(*args, **kwargs)
 
     def issue_tuple(self):
@@ -294,8 +296,12 @@ class PrintIssue(models.Model, Edit_url_mixin):
             created = datetime.date(day=day, month=month, year=year)
         else:
             # Finds creation date.
-            created = datetime.date.fromtimestamp(
-                os.path.getmtime(self.pdf.path))
+            try:
+                created = datetime.date.fromtimestamp(
+                    os.path.getmtime(self.pdf.path))
+            except NotImplementedError:
+                key = self.source_file.file.key
+                created = boto.utils.parse_ts(key.last_modified)
             # Sets creation date as a Wednesday, if needed.
             created = created + datetime.timedelta(
                 days=3 - created.isoweekday())
