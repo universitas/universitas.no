@@ -298,7 +298,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
             # Finds creation date.
             try:
                 created = datetime.date.fromtimestamp(
-                os.path.getmtime(self.pdf.path)
+                    os.path.getmtime(self.pdf.path))
             except NotImplementedError:
                 key = self.source_file.file.key
                 created = boto.utils.parse_ts(key.last_modified)
