@@ -19,7 +19,6 @@ from django.core.files.base import ContentFile
 # from django.utils.text import slugify
 
 # Installed apps
-import boto
 import PyPDF2
 from sorl import thumbnail
 from wand.image import Image as WandImage
@@ -126,8 +125,8 @@ class Issue(models.Model, Edit_url_mixin):
         return '{}'.format(self.publication_date)
 
     def save(self, *args, **kwargs):
-        self.issue_name = '{number}/{date.year}'.format(
-            **vars(self.issue_tuple()))
+        self.issue_name = '{issue.number}/{issue.date.year}'.format(
+            issue=self.issue_tuple())
         return super(Issue, self).save(*args, **kwargs)
 
     def issue_tuple(self):
