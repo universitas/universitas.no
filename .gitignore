@@ -5,4 +5,5 @@ bin/postactivate
 media
 static
 celerybeat-schedule
+celerybeat.pid
 
