@@ -16,8 +16,8 @@ from apps.issues.models import PrintIssue, current_issue
 import logging
 logger = logging.getLogger(__name__)
 
-PDF_STAGING = os.path.join(settings.MEDIA_ROOT, 'STAGING', 'PDF')
-PDF_FOLDER = os.path.join(settings.MEDIA_ROOT, 'pdf')
+PDF_STAGING = os.path.join(settings.STAGING_ROOT, 'PDF')
+PDF_FOLDER = os.path.join(settings.STAGING_ROOT, '..', 'pdf')
 
 PDF_MERGE = os.path.join(settings.PROJECT_DIR, 'bin', 'pdf_merge.sh')
 
