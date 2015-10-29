@@ -4,8 +4,9 @@
 from os.path import dirname
 import django.conf.global_settings as DEFAULT_SETTINGS
 from django.utils.translation import ugettext_lazy as _
-from .setting_helpers import environment_variable, join_path, load_json_file
-from .logging import *
+from utils.setting_helpers import (
+    environment_variable, join_path, load_json_file)
+from .logging_settings import *
 
 SITE_URL = environment_variable('SITE_URL')
 DEBUG = TEMPLATE_DEBUG = False
@@ -31,17 +32,20 @@ AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
 AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME  # cname
 AWS_S3_SECURE_URLS = False
 AWS_S3_USE_SSL = False
-STATICFILES_LOCATION = 'static'
-MEDIAFILES_LOCATION = 'media'
+# AWS_S3_FILE_BUFFER_SIZE = 5242880
+# Buffer size is used to calculate md5 hash for AWS mulitpart uploads
+# if changed, md5 hashes for large files might be wrong
+STATIC_ROOT = 'static'
+MEDIA_ROOT = 'media'
 STATICFILES_STORAGE = 'utils.aws_custom_storage.StaticStorage'
 DEFAULT_FILE_STORAGE = 'utils.aws_custom_storage.MediaStorage'
 THUMBNAIL_STORAGE = 'utils.aws_custom_storage.ThumbStorage'
 
-STATIC_URL = "http://{host}/{folder}/".format(
-    host=AWS_S3_CUSTOM_DOMAIN, folder=STATICFILES_LOCATION, )
+STATIC_URL = "http://{host}/{static}/".format(
+    host=AWS_S3_CUSTOM_DOMAIN, static=STATIC_ROOT, )
 
-MEDIA_URL = "http://{host}/{folder}/".format(
-    host=AWS_S3_CUSTOM_DOMAIN, folder=MEDIAFILES_LOCATION, )
+MEDIA_URL = "http://{host}/{media}/".format(
+    host=AWS_S3_CUSTOM_DOMAIN, media=MEDIA_ROOT, )
 
 INSTALLED_APPS = [  # CUSTOM APPS
     'apps.issues',
@@ -135,11 +139,11 @@ DATABASES = {
     }
 }
 # CACHE
+CACHE_MIDDLEWARE_KEY_PREFIX = SITE_URL
 CACHES = {
     'default': {
         'BACKEND': 'redis_cache.RedisCache',
         'LOCATION': 'localhost:6379',
-        'KEY_PREFIX': SITE_URL,
         'OPTIONS': {
             'DB': 0,
             'MAX_ENTRIES': 1000,
@@ -160,7 +164,8 @@ BASE_DIR = environment_variable('SOURCE_FOLDER')
 PROJECT_DIR = dirname(BASE_DIR)
 
 # GULP FILE REVISIONS
-GULP_FILEREVS = load_json_file(join_path(PROJECT_DIR, 'build', 'rev-manifest.json'))
+GULP_FILEREVS = load_json_file(
+    join_path(PROJECT_DIR, 'build', 'rev-manifest.json'))
 
 # Django puts generated translation files here.
 LOCALE_PATHS = [join_path(BASE_DIR, 'translation'), ]

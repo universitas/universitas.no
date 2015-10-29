@@ -50,7 +50,11 @@ class CloseCropEngine(GraphicsMagickConvertEngine):
     def write(self, image, options, thumbnail):
         # remove all metadata from thumbnail.
         image['options']['strip'] = None
-        return super().write(image, options, thumbnail)
+        try:
+            return super().write(image, options, thumbnail)
+        except Exception:
+            logger.exception('could not write image: %s' % image)
+            raise
 
     def close_crop(self, image, geometry, options):
         """ crop it close """
