@@ -37,16 +37,15 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
-        print(options)
-        if options['verbosity'] > 1:
-            logger = logging.getLogger('console')
-        else:
-            logger = logging.getLogger(__name__)
-        issue = current_issue()
-        bundle_pdf(issue, logger)
+        # print(options)
+        # if int(options['verbosity']) > 1:
+        #     logger = logging.getLogger('console')
+        # else:
+        logger = logging.getLogger(__name__)
+        bundle_pdf(current_issue(), logger)
+
 
 def get_staging_pdf_files(magazine='1'):
-    # import ipdb; ipdb.set_trace()
     globpattern = '{folder}/UNI1{version}VER*.pdf'.format(
         folder=PDF_STAGING,
         version=magazine,
@@ -62,11 +61,12 @@ def get_staging_pdf_files(magazine='1'):
             new_files.append(pdf_file)
     return sorted(new_files)
 
-def bundle_pdf(issue, logger):
+
+def bundle_pdf(for_issue, logger):
     """ Finds pdf files on disks and creates PrintIssue objects. """
     for code, suffix in (1, ''), (2, '_mag'):
         filename = FILENAME_PATTERN.format(
-            issue=issue,
+            issue=for_issue,
             suffix=suffix,
         )
         files = get_staging_pdf_files(code)
@@ -93,7 +93,7 @@ def bundle_pdf(issue, logger):
             issue = PrintIssue()
 
         name = '{issue.number}/{issue.date.year}{suffix}'.format(
-            suffix=suffix, issue=current_issue())
+            suffix=suffix, issue=for_issue)
         with open(pdf_path, 'rb') as src:
             content = ContentFile(src.read())
         issue.pdf.save(filename, content, save=False)
