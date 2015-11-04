@@ -15,10 +15,9 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 
 from apps.issues.models import PrintIssue, current_issue
-logger = logging.getLogger(__name__)
 
-PDF_STAGING = os.path.join(settings.STAGING_ROOT, 'PDF')
-PDF_FOLDER = os.path.join(settings.STAGING_ROOT, '..', 'pdf')
+PDF_STAGING = os.path.join(settings.STAGING_ROOT, 'STAGING', 'PDF')
+PDF_FOLDER = os.path.join(settings.STAGING_ROOT, 'pdf')
 
 PDF_MERGE = os.path.join(settings.PROJECT_DIR, 'bin', 'pdf_merge.sh')
 
@@ -37,56 +36,66 @@ class Command(BaseCommand):
         ),
     )
 
-    def get_staging_pdf_files(self, magazine='1'):
-        globpattern = '{folder}/UNI1{version}VER*.pdf'.format(
-            folder=PDF_STAGING,
-            version=magazine,
-        )
-        all_files = glob(globpattern)
-        new_files = []
-        for pdf_file in all_files:
-            age = datetime.now() - \
-                datetime.fromtimestamp(os.path.getctime(pdf_file))
-            if age.days > 4:
-                os.remove(pdf_file)
-            else:
-                new_files.append(pdf_file)
-        return sorted(new_files)
-
     def handle(self, *args, **options):
-        """ Finds pdf files on disks and creates PrintIssue objects. """
-        for code, suffix in (1, ''), (2, '_mag'):
-            filename = FILENAME_PATTERN.format(
-                issue=current_issue(),
-                suffix=suffix,
-            )
-            files = self.get_staging_pdf_files(code)
+        print(options)
+        if options['verbosity'] > 1:
+            logger = logging.getLogger('console')
+        else:
+            logger = logging.getLogger(__name__)
+        issue = current_issue()
+        bundle_pdf(issue, logger)
 
-            if len(files) == 0:
-                logger.info('no files found, %s' % code)
-                continue
+def get_staging_pdf_files(magazine='1'):
+    # import ipdb; ipdb.set_trace()
+    globpattern = '{folder}/UNI1{version}VER*.pdf'.format(
+        folder=PDF_STAGING,
+        version=magazine,
+    )
+    all_files = glob(globpattern)
+    new_files = []
+    for pdf_file in all_files:
+        age = datetime.now() - \
+            datetime.fromtimestamp(os.path.getctime(pdf_file))
+        if age.days > 4:
+            os.remove(pdf_file)
+        else:
+            new_files.append(pdf_file)
+    return sorted(new_files)
 
-            if len(files) % 4:
-                logger.info(
-                    'Incorrect number of pages (%d), %s' %
-                    (len(files), code))
-                continue
+def bundle_pdf(issue, logger):
+    """ Finds pdf files on disks and creates PrintIssue objects. """
+    for code, suffix in (1, ''), (2, '_mag'):
+        filename = FILENAME_PATTERN.format(
+            issue=issue,
+            suffix=suffix,
+        )
+        files = get_staging_pdf_files(code)
 
-            pdf_path = os.path.join(PDF_FOLDER, filename)
+        if len(files) == 0:
+            logger.info('no files found, %s' % code)
+            continue
 
-            args = [PDF_MERGE, pdf_path] + files
-            logger.debug('\n'.join(args))
-            subprocess.call(args)
+        if len(files) % 4:
+            logger.info(
+                'Incorrect number of pages (%d), %s' %
+                (len(files), code))
+            continue
 
-            try:
-                issue = PrintIssue.objects.get(pdf__endswith=filename)
-            except PrintIssue.DoesNotExist:
-                issue = PrintIssue()
+        pdf_path = os.path.join(PDF_FOLDER, filename)
 
-            name = '{issue.number}/{issue.date.year}{suffix}'.format(
-                suffix=suffix, issue=current_issue())
-            with open(pdf_path, 'rb') as src:
-                content = ContentFile(src.read())
-            issue.pdf.save(filename, content, save=False)
-            issue.issue_name = name
-            issue.save()
+        args = [PDF_MERGE, pdf_path] + files
+        logger.debug('\n'.join(args))
+        subprocess.call(args)
+
+        try:
+            issue = PrintIssue.objects.get(pdf__endswith=filename)
+        except PrintIssue.DoesNotExist:
+            issue = PrintIssue()
+
+        name = '{issue.number}/{issue.date.year}{suffix}'.format(
+            suffix=suffix, issue=current_issue())
+        with open(pdf_path, 'rb') as src:
+            content = ContentFile(src.read())
+        issue.pdf.save(filename, content, save=False)
+        issue.issue_name = name
+        issue.save()
