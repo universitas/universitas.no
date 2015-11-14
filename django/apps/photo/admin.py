@@ -29,6 +29,7 @@ class ThumbAdmin:
         return mark_safe('<img src="{}">'.format(url))
 
     thumbnail.allow_tags = True
+    thumbnail.short_description = _('preview')
 
 
 def autocrop(modeladmin, request, queryset):
