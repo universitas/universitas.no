@@ -9,9 +9,9 @@ import logging
 # Django core
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models.signals import pre_delete, post_save
-# from django.utils import timezone
 from django.core.files import File
 # Installed apps
 
@@ -38,6 +38,15 @@ def local_md5(filepath, blocksize=65536):
             buf = source.read(blocksize)
     return hasher.hexdigest()
 
+def file_field_md5(source_file, blocksize=65536):
+    """Hexadecimal md5 hash of a django model.FileField"""
+    hasher = hashlib.md5()
+    buf = source_file.read(blocksize)
+    while len(buf) > 0:
+        hasher.update(buf)
+        buf = source_file.read(blocksize)
+    source_file.seek(0)
+    return hasher.hexdigest()
 
 def s3_md5(s3key, blocksize=65536):
     """Hexadecimal md5 hash of a file stored in Amazon S3"""
@@ -193,10 +202,11 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         if self.source_file is None:
             return None
         if self._md5 is None:
-            try:  # Locally stored file
-                self._md5 = local_md5(self.source_file.path)
-            except NotImplementedError:  # AWS S3 storage
-                self._md5 = s3_md5(self.source_file.file.key)
+            self._md5 = file_field_md5(self.source_file)
+            # try:  # Locally stored file
+            #     self._md5 = local_md5(self.source_file.path)
+            # except NotImplementedError:  # AWS S3 storage
+            #     self._md5 = s3_md5(self.source_file.file.key)
         return self._md5
 
     @md5.setter
@@ -222,13 +232,16 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         if self.source_file is None:
             return None
         if self._mtime is None:
-            try:  # Locally stored file
-                mtime = os.path.getmtime(self.source_file.path)
-                self._mtime = int(mtime)
-            except NotImplementedError:  # AWS S3 storage
-                key = self.source_file.file.key
-                modified = boto.utils.parse_ts(key.last_modified)
-                self._mtime = int(modified.strftime('%s'))
+            try:
+                try:  # Locally stored file
+                    mtime = os.path.getmtime(self.source_file.path)
+                    self._mtime = int(mtime)
+                except NotImplementedError:  # AWS S3 storage
+                    key = self.source_file.file.key
+                    modified = boto.utils.parse_ts(key.last_modified)
+                    self._mtime = int(modified.strftime('%s'))
+            except (FileNotFoundError, AttributeError):
+                self._mtime = int(timezone.now().strftime('%s'))
         return self._mtime
 
     @mtime.setter
