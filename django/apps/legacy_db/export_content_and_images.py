@@ -30,7 +30,7 @@ slugify_filename = Slugify(safe_chars='.-', separator='-')
 # from apps.contributors.models import Contributor
 # BILDEMAPPE = os.path.join(MEDIA_ROOT, '')
 # PDFMAPPE = os.path.join(MEDIA_ROOT, 'pdf')
-STAGING_FOLDER = os.path.join(settings.STAGING_ROOT, 'IMAGES')
+STAGING_FOLDER = os.path.join(settings.STAGING_ROOT, 'STAGING', 'IMAGES')
 
 import logging
 logger = logging.getLogger(__name__)

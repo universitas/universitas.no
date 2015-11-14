@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
+"""
+Utilities for synchronising staging files between home server, S3 and database
+"""
 from datetime import timedelta, datetime
 from django.conf import settings
 import os
 import glob
 import time
-import logging
+# import logging
+
 
 def timestamp(delta, fallback):
     """Calculates seconds since epoch of current time minus delta.
@@ -17,9 +21,15 @@ def timestamp(delta, fallback):
         dt = fallback
     return int(time.mktime(dt.timetuple()))
 
-def new_staging_files(staging_subdirectory, fileglob='*.*', min_age=timedelta.min, max_age=timedelta.max):
+
+def new_staging_files(
+        staging_subdirectory,
+        fileglob='*.*',
+        min_age=timedelta.min,
+        max_age=timedelta.max):
     """Check for new or updated files in staging area."""
-    directory = os.path.join(settings.STAGING_ROOT, staging_subdirectory)
+    directory = os.path.join(
+        settings.STAGING_ROOT, 'STAGING', staging_subdirectory)
     os.chdir(directory)
     all_files = glob.glob(fileglob)
     min_mtime = timestamp(min_age, fallback=datetime.max)
@@ -27,6 +37,7 @@ def new_staging_files(staging_subdirectory, fileglob='*.*', min_age=timedelta.mi
     files = [file for file in all_files
              if min_mtime > os.path.getmtime(file) > max_mtime]
     return directory, sorted(files)
+
 
 def new_staging_images(**kwargs):
     """Check for new or updated images in staging area"""
@@ -37,6 +48,7 @@ def new_staging_images(**kwargs):
     arguments.update(kwargs)
     return new_staging_files(**arguments)
 
+
 def new_staging_byline_images(**kwargs):
     """Check for new or updated byline images in staging area"""
     arguments = dict(
@@ -46,6 +58,7 @@ def new_staging_byline_images(**kwargs):
     )
     arguments.update(kwargs)
     return new_staging_files(**arguments)
+
 
 def new_staging_pdf_files(**kwargs):
     """Check for new or updated pdf files in staging area"""
