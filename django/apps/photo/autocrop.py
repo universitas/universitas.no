@@ -36,6 +36,7 @@ class AutoCropImage(models.Model):
         abstract = True
 
     cropping_method = models.PositiveSmallIntegerField(
+        verbose_name=_('cropping method'),
         choices=CROP_CHOICES,
         default=CROP_NONE,
         help_text=_('How this image has been cropped.'),

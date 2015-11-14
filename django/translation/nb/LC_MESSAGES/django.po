@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-14 17:30+0100\n"
+"POT-Creation-Date: 2015-11-14 19:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -191,21 +191,19 @@ msgstr "Navn på person"
 
 #: apps/contributors/models.py:38
 msgid "Unknown"
-msgstr ""
+msgstr "Ukjent"
 
 #: apps/contributors/models.py:39
-#, fuzzy
-#| msgid "active"
 msgid "Active"
-msgstr "aktiv"
+msgstr "Aktiv"
 
 #: apps/contributors/models.py:40
 msgid "Retired"
-msgstr ""
+msgstr "Slutta"
 
 #: apps/contributors/models.py:41
 msgid "External"
-msgstr ""
+msgstr "Ekstern"
 
 #: apps/contributors/models.py:55
 msgid "Verified to be a correct name."
@@ -225,7 +223,7 @@ msgstr "Stilling i redaksjonen"
 
 #: apps/contributors/models.py:270
 msgid "Group membership"
-msgstr ""
+msgstr "Gruppemedlemsskap"
 
 #: apps/contributors/models.py:274
 msgid "Position"
@@ -541,9 +539,13 @@ msgstr "aliaser"
 msgid "explain this pattern"
 msgstr "forklar dette mønsteret"
 
-#: apps/photo/admin.py:38
+#: apps/photo/admin.py:32
+msgid "preview"
+msgstr "visning"
+
+#: apps/photo/admin.py:39
 msgid "Autocrop"
-msgstr ""
+msgstr "Autobeskjær"
 
 #: apps/photo/appconf.py:6 apps/stories/models.py:1679
 msgid "Photo"
@@ -573,71 +575,117 @@ msgstr "portrett"
 msgid "manual crop"
 msgstr "manuell beskjæring"
 
-#: apps/photo/autocrop.py:41
+#: apps/photo/autocrop.py:39
+msgid "cropping method"
+msgstr "beskjæringsmetode"
+
+#: apps/photo/autocrop.py:42
 msgid "How this image has been cropped."
 msgstr "Metode for beskjæring"
 
-#: apps/photo/models.py:74
+#: apps/photo/models.py:78
 msgid "ImageFile"
 msgstr "Bildefil"
 
-#: apps/photo/models.py:75
+#: apps/photo/models.py:79
 msgid "ImageFiles"
 msgstr "Bildefiler"
 
-#: apps/photo/models.py:86
-msgid "md5 hash of source file"
-msgstr ""
+#: apps/photo/models.py:84
+msgid "source file"
+msgstr "kildefil"
+
+#: apps/photo/models.py:91
+msgid "md5"
+msgstr "md5"
 
 #: apps/photo/models.py:92
+msgid "md5 hash of source file"
+msgstr "md5-hash av kildefila"
+
+#: apps/photo/models.py:98
+msgid "file size"
+msgstr "filstørrelse"
+
+#: apps/photo/models.py:99
 msgid "size of file in bytes"
-msgstr ""
+msgstr "størrelse i bytes"
 
-#: apps/photo/models.py:97
+#: apps/photo/models.py:104
+msgid "timestamp"
+msgstr "timestamp"
+
+#: apps/photo/models.py:105
 msgid "mtime timestamp of source file"
-msgstr ""
+msgstr "mtime timestamp for kildefila"
 
-#: apps/photo/models.py:102 apps/photo/models.py:107
+#: apps/photo/models.py:110
+msgid "height"
+msgstr "full høyde"
+
+#: apps/photo/models.py:111 apps/photo/models.py:116
 msgid "full height in pixels"
 msgstr "full pikselhøyde"
 
-#: apps/photo/models.py:103 apps/photo/models.py:108
-msgid "full height"
-msgstr "full høyde"
+#: apps/photo/models.py:115
+msgid "width"
+msgstr "bredde"
 
-#: apps/photo/models.py:113
+#: apps/photo/models.py:120
+msgid "from top"
+msgstr "fra toppen"
+
+#: apps/photo/models.py:122
 msgid "image crop vertical. Between 0% and 100%."
 msgstr "vertikalt midtpunkt"
 
-#: apps/photo/models.py:118
+#: apps/photo/models.py:126
+msgid "from left"
+msgstr "fra venstre"
+
+#: apps/photo/models.py:128
 msgid "image crop horizontal. Between 0% and 100%."
 msgstr "horizontalt midtpunkt"
 
-#: apps/photo/models.py:124
+#: apps/photo/models.py:132
+msgid "crop diameter"
+msgstr "beskjæringsdiameter"
+
+#: apps/photo/models.py:135
 msgid "area containing most relevant content. Area is considered a circle with center x,y and diameter d where x and y are the values \"from_left\" and \"from_right\" and d is a percentage of the shortest axis. This is used for close cropping of some images, for instance byline photos."
 msgstr ""
 
-#: apps/photo/models.py:136
+#: apps/photo/models.py:147
+msgid "old file path"
+msgstr "gammel filplassering"
+
+#: apps/photo/models.py:148
 msgid "previous path if the image has been moved."
 msgstr "logg av tidligere filplasseringer"
 
-#: apps/photo/models.py:142
+#: apps/photo/models.py:154
+msgid "contributor"
+msgstr "opphavsperson"
+
+#: apps/photo/models.py:155
 msgid "who made this"
 msgstr "hvem har laget dette?"
 
-#: apps/photo/models.py:148
+#: apps/photo/models.py:160
+msgid "copyright information"
+msgstr "opphavsrett"
+
+#: apps/photo/models.py:162
 msgid "extra information about license and attribution if needed."
 msgstr "Supplerende informasjon om opphavsrett for bildet"
 
-#: apps/photo/models.py:339
+#: apps/photo/models.py:355
 msgid "Profile Image"
-msgstr ""
+msgstr "Profilbilde"
 
-#: apps/photo/models.py:340
-#, fuzzy
-#| msgid "Images"
+#: apps/photo/models.py:356
 msgid "Profile Images"
-msgstr "Bilder"
+msgstr "Profilbilder"
 
 #: apps/stories/admin.py:156
 msgid "make frontpage story"
@@ -742,7 +790,7 @@ msgstr "bilde i prodsys"
 
 #: apps/stories/models.py:483 apps/stories/models.py:484
 msgid "language"
-msgstr ""
+msgstr "språk"
 
 #: apps/stories/models.py:490
 msgid "main headline or title"
@@ -894,43 +942,43 @@ msgstr "html-avsnitt"
 
 #: apps/stories/models.py:1187
 msgid "auto"
-msgstr ""
+msgstr "auto"
 
 #: apps/stories/models.py:1188
 msgid "5:2 landscape"
-msgstr ""
+msgstr "5:2 bredde"
 
 #: apps/stories/models.py:1189
 msgid "2:1 landscape"
-msgstr ""
+msgstr "2:1 bredde"
 
 #: apps/stories/models.py:1190
 msgid "3:2 landscape"
-msgstr ""
+msgstr "3:2 bredde"
 
 #: apps/stories/models.py:1191
 msgid "4:3 landscape"
-msgstr ""
+msgstr "4:3 bredde"
 
 #: apps/stories/models.py:1192
 msgid "square"
-msgstr ""
+msgstr "kvadrat"
 
 #: apps/stories/models.py:1193
 msgid "3:4 portrait"
-msgstr ""
+msgstr "3:4 høyde"
 
 #: apps/stories/models.py:1194
 msgid "2:3 portrait"
-msgstr ""
+msgstr "2:3 høyde"
 
 #: apps/stories/models.py:1195
 msgid "1:2 portrait"
-msgstr ""
+msgstr "1:2 høyde"
 
 #: apps/stories/models.py:1196
-msgid "original"
-msgstr ""
+msgid "graph (force original ratio)"
+msgstr "grafikk (ingen bekjæring)"
 
 #: apps/stories/models.py:1204
 msgid "Text explaining the media."
@@ -958,11 +1006,11 @@ msgstr "bildestørrelse"
 
 #: apps/stories/models.py:1221
 msgid "aspect ratio"
-msgstr ""
+msgstr "bildeformat"
 
 #: apps/stories/models.py:1222
 msgid "height / width"
-msgstr ""
+msgstr "høyde / bredde"
 
 #: apps/stories/models.py:1257
 msgid "Image"
