@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Celery tasks for photos"""
 import os
-import logging
+# import logging
 from datetime import timedelta
 
 from celery.decorators import periodic_task
@@ -10,8 +10,8 @@ from celery.utils.log import get_task_logger
 from .models import upload_image_to, ImageFile
 from apps.core.staging import new_staging_images
 
-# logger = get_task_logger(__name__)
-logger = logging.getLogger(__name__)
+logger = get_task_logger(__name__)
+# logger = logging.getLogger(__name__)
 # @periodic_task(run_every=timedelta(hours=6))
 # @periodic_task(run_every=timedelta(minutes=1))
 
