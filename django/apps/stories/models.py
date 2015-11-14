@@ -1193,7 +1193,7 @@ class StoryMedia(StoryElement, MarkupModelMixin):
         (round(4 / 3, 3), _('3:4 portrait')),
         (round(3 / 2, 3), _('2:3 portrait')),
         (round(2 / 1, 3), _('1:2 portrait')),
-        (ORIGINAL_RATIO, _('original')),
+        (ORIGINAL_RATIO, _('graph (force original ratio)')),
     ]
 
     class Meta:

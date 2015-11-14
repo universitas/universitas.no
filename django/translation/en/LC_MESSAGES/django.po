@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-12 23:49+0200\n"
+"POT-Creation-Date: 2015-11-14 17:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -182,7 +182,7 @@ msgstr ""
 msgid "End time must be after start time."
 msgstr ""
 
-#: apps/contributors/appconf.py:6 apps/contributors/models.py:70
+#: apps/contributors/appconf.py:6 apps/contributors/models.py:68
 msgid "Contributors"
 msgstr ""
 
@@ -190,47 +190,47 @@ msgstr ""
 msgid "Name of person."
 msgstr ""
 
-#: apps/contributors/models.py:41
+#: apps/contributors/models.py:38
 msgid "Unknown"
 msgstr ""
 
-#: apps/contributors/models.py:42
+#: apps/contributors/models.py:39
 msgid "Active"
 msgstr ""
 
-#: apps/contributors/models.py:43
+#: apps/contributors/models.py:40
 msgid "Retired"
 msgstr ""
 
-#: apps/contributors/models.py:44
+#: apps/contributors/models.py:41
 msgid "External"
 msgstr ""
 
-#: apps/contributors/models.py:58
+#: apps/contributors/models.py:55
 msgid "Verified to be a correct name."
 msgstr ""
 
-#: apps/contributors/models.py:65
+#: apps/contributors/models.py:62
 msgid "photo used for byline credit."
 msgstr ""
 
-#: apps/contributors/models.py:69
+#: apps/contributors/models.py:67
 msgid "Contributor"
 msgstr ""
 
-#: apps/contributors/models.py:263
+#: apps/contributors/models.py:265
 msgid "Job title at the publication."
 msgstr ""
 
-#: apps/contributors/models.py:268
+#: apps/contributors/models.py:270
 msgid "Group membership"
 msgstr ""
 
-#: apps/contributors/models.py:272
+#: apps/contributors/models.py:274
 msgid "Position"
 msgstr ""
 
-#: apps/contributors/models.py:273
+#: apps/contributors/models.py:275
 msgid "Positions"
 msgstr ""
 
@@ -332,35 +332,39 @@ msgstr ""
 msgid "Issues"
 msgstr ""
 
-#: apps/issues/models.py:90
+#: apps/issues/models.py:94
 msgid "Regular"
 msgstr ""
 
-#: apps/issues/models.py:91
+#: apps/issues/models.py:95
 msgid "Magazine"
 msgstr ""
 
-#: apps/issues/models.py:92
+#: apps/issues/models.py:96
 msgid "Welcome special"
 msgstr ""
 
-#: apps/issues/models.py:153
+#: apps/issues/models.py:150
+msgid "{date:%d. %b}"
+msgstr ""
+
+#: apps/issues/models.py:159
 msgid "Pdf issue"
 msgstr ""
 
-#: apps/issues/models.py:154
+#: apps/issues/models.py:160
 msgid "Pdf issues"
 msgstr ""
 
-#: apps/issues/models.py:165
+#: apps/issues/models.py:171
 msgid "Pdf file for this issue."
 msgstr ""
 
-#: apps/issues/models.py:171
+#: apps/issues/models.py:177
 msgid "An image file of the front page"
 msgstr ""
 
-#: apps/issues/models.py:178
+#: apps/issues/models.py:184
 msgid "Extracted from file."
 msgstr ""
 
@@ -432,19 +436,19 @@ msgstr ""
 msgid "faktabokser"
 msgstr ""
 
-#: apps/legacy_db/models.py:233
+#: apps/legacy_db/models.py:248
 msgid "prodsys sak"
 msgstr ""
 
-#: apps/legacy_db/models.py:234
+#: apps/legacy_db/models.py:249
 msgid "prodsys saker"
 msgstr ""
 
-#: apps/legacy_db/models.py:254
+#: apps/legacy_db/models.py:272
 msgid "prodsys bilde"
 msgstr ""
 
-#: apps/legacy_db/models.py:255
+#: apps/legacy_db/models.py:273
 msgid "prodsys bilder"
 msgstr ""
 
@@ -536,87 +540,107 @@ msgstr ""
 msgid "explain this pattern"
 msgstr ""
 
-#: apps/photo/appconf.py:6 apps/stories/models.py:1678
+#: apps/photo/admin.py:38
+msgid "Autocrop"
+msgstr ""
+
+#: apps/photo/appconf.py:6 apps/stories/models.py:1679
 msgid "Photo"
 msgstr ""
 
-#: apps/photo/autocomplete_light_registry.py:13
+#: apps/photo/autocomplete_light_registry.py:11
 msgid "Filename"
 msgstr ""
 
-#: apps/photo/models.py:55
+#: apps/photo/autocrop.py:29
 msgid "center"
 msgstr ""
 
-#: apps/photo/models.py:56
+#: apps/photo/autocrop.py:30
 msgid "corner detection"
 msgstr ""
 
-#: apps/photo/models.py:57
+#: apps/photo/autocrop.py:31
 msgid "multiple faces"
 msgstr ""
 
-#: apps/photo/models.py:58
+#: apps/photo/autocrop.py:32
 msgid "single face"
 msgstr ""
 
-#: apps/photo/models.py:59
+#: apps/photo/autocrop.py:33
 msgid "manual crop"
 msgstr ""
 
-#: apps/photo/models.py:63
-msgid "ImageFile"
-msgstr ""
-
-#: apps/photo/models.py:64
-msgid "ImageFiles"
-msgstr ""
-
-#: apps/photo/models.py:73 apps/photo/models.py:78
-msgid "full height in pixels"
-msgstr ""
-
-#: apps/photo/models.py:74 apps/photo/models.py:79
-msgid "full height"
-msgstr ""
-
-#: apps/photo/models.py:84
-msgid "image crop vertical. Between 0% and 100%."
-msgstr ""
-
-#: apps/photo/models.py:89
-msgid "image crop horizontal. Between 0% and 100%."
-msgstr ""
-
-#: apps/photo/models.py:94
-msgid ""
-"area containing most relevant content. Area is considered a circle with "
-"center x,y and diameter d where x and y are the values \"from_left\" and "
-"\"from_right\" and d is a percentage of the shortest axis. This is used for "
-"close cropping of some images, for instance byline photos."
-msgstr ""
-
-#: apps/photo/models.py:102
+#: apps/photo/autocrop.py:41
 msgid "How this image has been cropped."
 msgstr ""
 
-#: apps/photo/models.py:106
+#: apps/photo/models.py:74
+msgid "ImageFile"
+msgstr ""
+
+#: apps/photo/models.py:75
+msgid "ImageFiles"
+msgstr ""
+
+#: apps/photo/models.py:86
+msgid "md5 hash of source file"
+msgstr ""
+
+#: apps/photo/models.py:92
+msgid "size of file in bytes"
+msgstr ""
+
+#: apps/photo/models.py:97
+msgid "mtime timestamp of source file"
+msgstr ""
+
+#: apps/photo/models.py:102 apps/photo/models.py:107
+msgid "full height in pixels"
+msgstr ""
+
+#: apps/photo/models.py:103 apps/photo/models.py:108
+msgid "full height"
+msgstr ""
+
+#: apps/photo/models.py:113
+msgid "image crop vertical. Between 0% and 100%."
+msgstr ""
+
+#: apps/photo/models.py:118
+msgid "image crop horizontal. Between 0% and 100%."
+msgstr ""
+
+#: apps/photo/models.py:124
+msgid "area containing most relevant content. Area is considered a circle with center x,y and diameter d where x and y are the values \"from_left\" and \"from_right\" and d is a percentage of the shortest axis. This is used for close cropping of some images, for instance byline photos."
+msgstr ""
+
+#: apps/photo/models.py:136
 msgid "previous path if the image has been moved."
 msgstr ""
 
-#: apps/photo/models.py:112
+#: apps/photo/models.py:142
 msgid "who made this"
 msgstr ""
 
-#: apps/photo/models.py:117
+#: apps/photo/models.py:148
 msgid "extra information about license and attribution if needed."
 msgstr ""
 
-#: apps/stories/admin.py:155
+#: apps/photo/models.py:339
+msgid "Profile Image"
+msgstr ""
+
+#: apps/photo/models.py:340
+msgid "Profile Images"
+msgstr ""
+
+#: apps/stories/admin.py:156
 msgid "make frontpage story"
 msgstr ""
 
-#: apps/stories/admin.py:298 apps/stories/admin.py:305
+#: apps/stories/admin.py:301 apps/stories/admin.py:308
 msgid "find linked stories"
 msgstr ""
 
@@ -817,256 +841,256 @@ msgstr ""
 msgid "Imported xtagged source."
 msgstr ""
 
-#: apps/stories/models.py:934
+#: apps/stories/models.py:935
 msgid "No such element. Valid indexes: "
 msgstr ""
 
-#: apps/stories/models.py:1094
+#: apps/stories/models.py:1095
 msgid "Leave blank to unpublish"
 msgstr ""
 
-#: apps/stories/models.py:1095
+#: apps/stories/models.py:1096
 msgid "index"
 msgstr ""
 
-#: apps/stories/models.py:1100
+#: apps/stories/models.py:1101
 msgid "Is this element placed on top?"
 msgstr ""
 
-#: apps/stories/models.py:1129
+#: apps/stories/models.py:1130
 msgid "story element"
 msgstr ""
 
-#: apps/stories/models.py:1130
+#: apps/stories/models.py:1131
 msgid "story elements"
 msgstr ""
 
-#: apps/stories/models.py:1146
+#: apps/stories/models.py:1147
 msgid "Pullquote"
 msgstr ""
 
-#: apps/stories/models.py:1147
+#: apps/stories/models.py:1148
 msgid "Pullquotes"
 msgstr ""
 
-#: apps/stories/models.py:1157
+#: apps/stories/models.py:1158
 msgid "Aside"
 msgstr ""
 
-#: apps/stories/models.py:1158
+#: apps/stories/models.py:1159
 msgid "Asides"
 msgstr ""
 
-#: apps/stories/models.py:1170
+#: apps/stories/models.py:1171
 msgid "Inline HTML block"
 msgstr ""
 
-#: apps/stories/models.py:1171
+#: apps/stories/models.py:1172
 msgid "Inline HTML blocks"
 msgstr ""
 
-#: apps/stories/models.py:1186
+#: apps/stories/models.py:1187
 msgid "auto"
 msgstr ""
 
-#: apps/stories/models.py:1187
+#: apps/stories/models.py:1188
 msgid "5:2 landscape"
 msgstr ""
 
-#: apps/stories/models.py:1188
+#: apps/stories/models.py:1189
 msgid "2:1 landscape"
 msgstr ""
 
-#: apps/stories/models.py:1189
+#: apps/stories/models.py:1190
 msgid "3:2 landscape"
 msgstr ""
 
-#: apps/stories/models.py:1190
+#: apps/stories/models.py:1191
 msgid "4:3 landscape"
 msgstr ""
 
-#: apps/stories/models.py:1191
+#: apps/stories/models.py:1192
 msgid "square"
 msgstr ""
 
-#: apps/stories/models.py:1192
+#: apps/stories/models.py:1193
 msgid "3:4 portrait"
 msgstr ""
 
-#: apps/stories/models.py:1193
+#: apps/stories/models.py:1194
 msgid "2:3 portrait"
 msgstr ""
 
-#: apps/stories/models.py:1194
+#: apps/stories/models.py:1195
 msgid "1:2 portrait"
 msgstr ""
 
-#: apps/stories/models.py:1195
+#: apps/stories/models.py:1196
 msgid "original"
 msgstr ""
 
-#: apps/stories/models.py:1203
+#: apps/stories/models.py:1204
 msgid "Text explaining the media."
 msgstr ""
 
-#: apps/stories/models.py:1204
+#: apps/stories/models.py:1205
 msgid "caption"
 msgstr ""
 
-#: apps/stories/models.py:1209
+#: apps/stories/models.py:1210
 msgid "Extra information about media attribution and license."
 msgstr ""
 
-#: apps/stories/models.py:1210
+#: apps/stories/models.py:1211
 msgid "credit line"
 msgstr ""
 
-#: apps/stories/models.py:1215
+#: apps/stories/models.py:1216
 msgid "Relative image size."
 msgstr ""
 
-#: apps/stories/models.py:1216
+#: apps/stories/models.py:1217
 msgid "image size"
 msgstr ""
 
-#: apps/stories/models.py:1220
+#: apps/stories/models.py:1221
 msgid "aspect ratio"
 msgstr ""
 
-#: apps/stories/models.py:1221
+#: apps/stories/models.py:1222
 msgid "height / width"
 msgstr ""
 
-#: apps/stories/models.py:1256
+#: apps/stories/models.py:1257
 msgid "Image"
 msgstr ""
 
-#: apps/stories/models.py:1257
+#: apps/stories/models.py:1258
 msgid "Images"
 msgstr ""
 
-#: apps/stories/models.py:1261
+#: apps/stories/models.py:1262
 msgid "Choose an image by name or upload a new one."
 msgstr ""
 
-#: apps/stories/models.py:1287
+#: apps/stories/models.py:1288
 msgid "vimeo"
 msgstr ""
 
-#: apps/stories/models.py:1288
+#: apps/stories/models.py:1289
 msgid "youtube"
 msgstr ""
 
-#: apps/stories/models.py:1292 apps/stories/models.py:1677
-#: apps/stories/models.py:1679
+#: apps/stories/models.py:1293 apps/stories/models.py:1678
+#: apps/stories/models.py:1680
 msgid "Video"
 msgstr ""
 
-#: apps/stories/models.py:1293
+#: apps/stories/models.py:1294
 msgid "Videos"
 msgstr ""
 
-#: apps/stories/models.py:1303
+#: apps/stories/models.py:1304
 msgid "id for video file."
 msgstr ""
 
-#: apps/stories/models.py:1304
+#: apps/stories/models.py:1305
 msgid "the part of the url that identifies this particular video"
 msgstr ""
 
-#: apps/stories/models.py:1418
+#: apps/stories/models.py:1419
 msgid "inline link"
 msgstr ""
 
-#: apps/stories/models.py:1419
+#: apps/stories/models.py:1420
 msgid "inline links"
 msgstr ""
 
-#: apps/stories/models.py:1427
+#: apps/stories/models.py:1428
 msgid "link label"
 msgstr ""
 
-#: apps/stories/models.py:1432 apps/stories/models.py:1433
+#: apps/stories/models.py:1433 apps/stories/models.py:1434
 msgid "link target"
 msgstr ""
 
-#: apps/stories/models.py:1438
+#: apps/stories/models.py:1439
 msgid "link to story on this website."
 msgstr ""
 
-#: apps/stories/models.py:1439
+#: apps/stories/models.py:1440
 msgid "linked story"
 msgstr ""
 
-#: apps/stories/models.py:1445
+#: apps/stories/models.py:1446
 msgid "alternate link text"
 msgstr ""
 
-#: apps/stories/models.py:1446
+#: apps/stories/models.py:1447
 msgid "alt text"
 msgstr ""
 
-#: apps/stories/models.py:1451 apps/stories/models.py:1452
+#: apps/stories/models.py:1452 apps/stories/models.py:1453
 msgid "link text"
 msgstr ""
 
-#: apps/stories/models.py:1459
+#: apps/stories/models.py:1460
 msgid "Status code returned from automatic check."
 msgstr ""
 
-#: apps/stories/models.py:1460
+#: apps/stories/models.py:1461
 msgid "http status code"
 msgstr ""
 
-#: apps/stories/models.py:1675
+#: apps/stories/models.py:1676
 msgid "By"
 msgstr ""
 
-#: apps/stories/models.py:1676
+#: apps/stories/models.py:1677
 msgid "Text"
 msgstr ""
 
-#: apps/stories/models.py:1680
+#: apps/stories/models.py:1681
 msgid "Illustration"
 msgstr ""
 
-#: apps/stories/models.py:1681
+#: apps/stories/models.py:1682
 msgid "Graphics"
 msgstr ""
 
-#: apps/stories/models.py:1682
+#: apps/stories/models.py:1683
 msgid "Translation"
 msgstr ""
 
-#: apps/stories/models.py:1683
+#: apps/stories/models.py:1684
 msgid "TextPhoto"
 msgstr ""
 
-#: apps/stories/models.py:1684
+#: apps/stories/models.py:1685
 msgid "TextVideo"
 msgstr ""
 
-#: apps/stories/models.py:1685
+#: apps/stories/models.py:1686
 msgid "PhotoVideo"
 msgstr ""
 
-#: apps/stories/models.py:1704
+#: apps/stories/models.py:1705
 msgid "Byline"
 msgstr ""
 
-#: apps/stories/models.py:1705
+#: apps/stories/models.py:1706
 msgid "Bylines"
 msgstr ""
 
-#: settings/base.py:171
+#: settings/base.py:186
 msgid "Norwegian Bokmal"
 msgstr ""
 
-#: settings/base.py:172
+#: settings/base.py:187
 msgid "Norwegian Nynorsk"
 msgstr ""
 
-#: settings/base.py:173
+#: settings/base.py:188
 msgid "English"
 msgstr ""
 
@@ -1124,9 +1148,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: templates/registration/password_change_form.html:27
-msgid ""
-"Please enter your old password, for security's sake, and then enter your new "
-"password twice so we can verify you typed it in correctly."
+msgid "Please enter your old password, for security's sake, and then enter your new password twice so we can verify you typed it in correctly."
 msgstr ""
 
 #: templates/registration/password_change_form.html:31
@@ -1173,9 +1195,7 @@ msgid "Enter new password"
 msgstr ""
 
 #: templates/registration/password_reset_confirm.html:13
-msgid ""
-"Please enter your new password twice so we can verify you typed it in "
-"correctly."
+msgid "Please enter your new password twice so we can verify you typed it in correctly."
 msgstr ""
 
 #: templates/registration/password_reset_confirm.html:17
@@ -1191,9 +1211,7 @@ msgid "Password reset unsuccessful"
 msgstr ""
 
 #: templates/registration/password_reset_confirm.html:27
-msgid ""
-"The password reset link was invalid, possibly because it has already been "
-"used.  Please request a new password reset."
+msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
 msgstr ""
 
 #: templates/registration/password_reset_done.html:12
@@ -1202,16 +1220,12 @@ msgid "Password reset successful"
 msgstr ""
 
 #: templates/registration/password_reset_done.html:18
-msgid ""
-"We've e-mailed you instructions for setting your password to the e-mail "
-"address you submitted. You should be receiving it shortly."
+msgid "We've e-mailed you instructions for setting your password to the e-mail address you submitted. You should be receiving it shortly."
 msgstr ""
 
 #: templates/registration/password_reset_email.html:2
 #, python-format
-msgid ""
-"You're receiving this e-mail because you requested a password reset for your "
-"user account at %(site_name)s."
+msgid "You're receiving this e-mail because you requested a password reset for your user account at %(site_name)s."
 msgstr ""
 
 #: templates/registration/password_reset_email.html:4
@@ -1232,9 +1246,7 @@ msgid "The %(site_name)s team"
 msgstr ""
 
 #: templates/registration/password_reset_form.html:18
-msgid ""
-"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
-"instructions for setting a new one."
+msgid "Forgotten your password? Enter your e-mail address below, and we'll e-mail instructions for setting a new one."
 msgstr ""
 
 #: templates/registration/password_reset_form.html:22
