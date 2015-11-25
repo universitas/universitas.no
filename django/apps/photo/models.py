@@ -38,15 +38,19 @@ def local_md5(filepath, blocksize=65536):
             buf = source.read(blocksize)
     return hasher.hexdigest()
 
+
 def file_field_md5(source_file, blocksize=65536):
     """Hexadecimal md5 hash of a django model.FileField"""
     hasher = hashlib.md5()
+    if source_file.closed:
+        source_file.open('rb')
     buf = source_file.read(blocksize)
     while len(buf) > 0:
         hasher.update(buf)
         buf = source_file.read(blocksize)
     source_file.seek(0)
     return hasher.hexdigest()
+
 
 def s3_md5(s3key, blocksize=65536):
     """Hexadecimal md5 hash of a file stored in Amazon S3"""
@@ -77,48 +81,55 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     objects = ImageFileManager()
 
     source_file = thumbnail.ImageField(
+        verbose_name=_('source file'),
         upload_to=upload_image_to,
         height_field='full_height',
         width_field='full_width',
         max_length=1024,
     )
     _md5 = models.CharField(
-        verbose_name=_('md5 hash of source file'),
+        verbose_name=_('md5'),
+        help_text=_('md5 hash of source file'),
         max_length=32,
         editable=False,
         null=True,
     )
     _size = models.PositiveIntegerField(
-        verbose_name=_('size of file in bytes'),
+        verbose_name=_('file size'),
+        help_text=_('size of file in bytes'),
         editable=False,
         null=True,
     )
     _mtime = models.PositiveIntegerField(
-        verbose_name=_('mtime timestamp of source file'),
+        verbose_name=_('timestamp'),
+        help_text=_('mtime timestamp of source file'),
         editable=False,
         null=True,
     )
     full_height = models.PositiveIntegerField(
+        verbose_name=_('height'),
         help_text=_('full height in pixels'),
-        verbose_name=_('full height'),
         null=True, editable=False,
     )
     full_width = models.PositiveIntegerField(
+        verbose_name=_('width'),
         help_text=_('full height in pixels'),
-        verbose_name=_('full height'),
         null=True, editable=False,
     )
     from_top = models.PositiveSmallIntegerField(
+        verbose_name=_('from top'),
         default=50,
         help_text=_('image crop vertical. Between 0% and 100%.'),
         validators=[MaxValueValidator(100), MinValueValidator(0)],
     )
     from_left = models.PositiveSmallIntegerField(
+        verbose_name=_('from left'),
         default=50,
         help_text=_('image crop horizontal. Between 0% and 100%.'),
         validators=[MaxValueValidator(100), MinValueValidator(0)],
     )
     crop_diameter = models.PositiveSmallIntegerField(
+        verbose_name=_('crop diameter'),
         default=100,
         help_text=_(
             'area containing most relevant content. Area is considered a '
@@ -133,17 +144,20 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     )
 
     old_file_path = models.CharField(
+        verbose_name=_('old file path'),
         help_text=_('previous path if the image has been moved.'),
         blank=True, null=True,
         max_length=1000)
 
     contributor = models.ForeignKey(
         'contributors.Contributor',
+        verbose_name=_('contributor'),
         help_text=_('who made this'),
         blank=True, null=True,
     )
 
     copyright_information = models.CharField(
+        verbose_name=_('copyright information'),
         help_text=_(
             'extra information about license and attribution if needed.'),
         blank=True,
@@ -173,9 +187,9 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
                 pass
         if not pk:
             super().save(*args, **kwargs)
-        assert not self.size is None
-        assert not self.md5 is None
-        assert not self.mtime is None
+        assert self.size is not None
+        assert self.md5 is not None
+        assert self.mtime is not None
         super().save(*args, **kwargs)
         if pk is None and self.cropping == self.CROP_NONE:
             self.autocrop()
@@ -190,11 +204,12 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         md5 = local_md5(filepath)
         if self.pk and self.source_file:
             if mtime <= self.mtime or (size, md5) == (self.size, self.md5):
-                return
+                return False
         filename = os.path.split(filepath)[1]
         with open(filepath, 'rb') as source:
             content = File(source)
             self.source_file.save(filename, content, save)
+        return True
 
     @property
     def md5(self):
@@ -311,7 +326,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     #         self.size = size
     #         self.source_file
 
-
     # def identify_photo_file_initials(self, contributors=(),):
     #     """Assign contributor to photo
     #
@@ -332,6 +346,8 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     #         except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
     #             logger.warning(self, initials, e)
     #     return None
+
+
 class ProfileImage(ImageFile):
 
     class Meta:
