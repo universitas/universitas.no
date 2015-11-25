@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-14 17:30+0100\n"
+"POT-Creation-Date: 2015-11-14 19:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -295,7 +295,7 @@ msgstr "Framsideoppslag"
 
 #: apps/frontpage/models.py:251
 msgid "position and size of story element."
-msgstr "plassering og størrelse på elementet"
+msgstr "plassering og storleik på elementet"
 
 #: apps/frontpage/models.py:256
 msgid "image"
@@ -539,7 +539,11 @@ msgstr "aliaser"
 msgid "explain this pattern"
 msgstr "forklar dette mønsteret"
 
-#: apps/photo/admin.py:38
+#: apps/photo/admin.py:32
+msgid "preview"
+msgstr "visning"
+
+#: apps/photo/admin.py:39
 msgid "Autocrop"
 msgstr "Automatisk beskjæring"
 
@@ -571,67 +575,116 @@ msgstr "portrett"
 msgid "manual crop"
 msgstr "manuell beskjæring"
 
-#: apps/photo/autocrop.py:41
+#: apps/photo/autocrop.py:39
+msgid "cropping method"
+msgstr "beskjæringsmetode"
+
+#: apps/photo/autocrop.py:42
 msgid "How this image has been cropped."
 msgstr "Metode for beskjæring"
 
-#: apps/photo/models.py:74
+#: apps/photo/models.py:78
 msgid "ImageFile"
 msgstr "Biletefil"
 
-#: apps/photo/models.py:75
+#: apps/photo/models.py:79
 msgid "ImageFiles"
 msgstr "Biletefiler"
 
-#: apps/photo/models.py:86
+#: apps/photo/models.py:84
+msgid "source file"
+msgstr "kildefil"
+
+#: apps/photo/models.py:91
+msgid "md5"
+msgstr "md5"
+
+#: apps/photo/models.py:92
 msgid "md5 hash of source file"
 msgstr "md5-hash av kildefila"
 
-#: apps/photo/models.py:92
-msgid "size of file in bytes"
-msgstr "størrelse på kildefila i bytes"
+#: apps/photo/models.py:98
+msgid "file size"
+msgstr "biletestorleik"
 
-#: apps/photo/models.py:97
+#: apps/photo/models.py:99
+msgid "size of file in bytes"
+msgstr "storleik på kildefila i bytes"
+
+#: apps/photo/models.py:104
+msgid "timestamp"
+msgstr "timestamp"
+
+#: apps/photo/models.py:105
 msgid "mtime timestamp of source file"
 msgstr "mtime timestamp for kildefila"
 
-#: apps/photo/models.py:102 apps/photo/models.py:107
+#: apps/photo/models.py:110
+msgid "height"
+msgstr "høgde"
+
+#: apps/photo/models.py:111 apps/photo/models.py:116
 msgid "full height in pixels"
 msgstr "full pikselhøgde"
 
-#: apps/photo/models.py:103 apps/photo/models.py:108
-msgid "full height"
-msgstr "full høgde"
+#: apps/photo/models.py:115
+msgid "width"
+msgstr "bredde"
 
-#: apps/photo/models.py:113
+#: apps/photo/models.py:120
+msgid "from top"
+msgstr "frå toppen"
+
+#: apps/photo/models.py:122
 msgid "image crop vertical. Between 0% and 100%."
 msgstr "vertikalt midtpunkt"
 
-#: apps/photo/models.py:118
+#: apps/photo/models.py:126
+msgid "from left"
+msgstr "frå venstre"
+
+#: apps/photo/models.py:128
 msgid "image crop horizontal. Between 0% and 100%."
 msgstr "horizontalt midtpunkt"
 
-#: apps/photo/models.py:124
+#: apps/photo/models.py:132
+msgid "crop diameter"
+msgstr "beskjæringsdiameter"
+
+#: apps/photo/models.py:135
 msgid "area containing most relevant content. Area is considered a circle with center x,y and diameter d where x and y are the values \"from_left\" and \"from_right\" and d is a percentage of the shortest axis. This is used for close cropping of some images, for instance byline photos."
 msgstr ""
 
-#: apps/photo/models.py:136
+#: apps/photo/models.py:147
+msgid "old file path"
+msgstr "gamal filplassering"
+
+#: apps/photo/models.py:148
 msgid "previous path if the image has been moved."
 msgstr "logg av tidligere filplasseringer"
 
-#: apps/photo/models.py:142
+#: apps/photo/models.py:154
+#| msgid "Contributor"
+msgid "contributor"
+msgstr "opphavsperson"
+
+#: apps/photo/models.py:155
 msgid "who made this"
 msgstr "hvem har laget dette?"
 
-#: apps/photo/models.py:148
+#: apps/photo/models.py:160
+msgid "copyright information"
+msgstr "opphavsrett"
+
+#: apps/photo/models.py:162
 msgid "extra information about license and attribution if needed."
 msgstr "Supplerende informasjon om opphavsrett for biletet"
 
-#: apps/photo/models.py:339
+#: apps/photo/models.py:355
 msgid "Profile Image"
 msgstr "Profilbilete"
 
-#: apps/photo/models.py:340
+#: apps/photo/models.py:356
 msgid "Profile Images"
 msgstr "Profilbileter"
 
@@ -925,8 +978,8 @@ msgid "1:2 portrait"
 msgstr "1:2 høgdeformat"
 
 #: apps/stories/models.py:1196
-msgid "original"
-msgstr "original"
+msgid "graph (force original ratio)"
+msgstr ""
 
 #: apps/stories/models.py:1204
 msgid "Text explaining the media."
@@ -946,11 +999,11 @@ msgstr "akreditering"
 
 #: apps/stories/models.py:1216
 msgid "Relative image size."
-msgstr "relativ biletestørrelse"
+msgstr "relativ biletestorleik"
 
 #: apps/stories/models.py:1217
 msgid "image size"
-msgstr "biletestørrelse"
+msgstr "biletestorleik"
 
 #: apps/stories/models.py:1221
 msgid "aspect ratio"
