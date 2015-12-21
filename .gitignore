@@ -1,9 +1,10 @@
 node_modules/
 build/
+.cache/
 bin/*universitas_no.sh
 bin/postactivate
 media
 static
 celerybeat-schedule
 celerybeat.pid
-
+tags
