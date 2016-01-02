@@ -74,7 +74,10 @@ class IssueQueryset(models.QuerySet):
         return query
 
     def next_issue(self):
-        return self.unpublished().last()
+        next_issue = self.unpublished().last()
+        if not next_issue:
+            next_issue = self.order_by('publication_date').last()
+        return next_issue
 
     def latest_issue(self):
         return self.published().first()
