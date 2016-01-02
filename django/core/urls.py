@@ -2,6 +2,7 @@
 """Base url router for universitas.no"""
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.conf import settings
 from apps.core.views import RobotsTxtView, HumansTxtView
 from apps.search import urls as search_urls
 from apps.core.autocomplete_views import autocomplete_list
@@ -67,7 +68,9 @@ urlpatterns = [
         section_frontpage, name='section'),
 ]
 
-urlpatterns += [
-    url(r'^(?P<slug>.+)/$',
-        search_404_view, name='not_found'),
-]
+# redirect 404 to search page
+if settings.DEBUG == False:
+    urlpatterns += [
+        url(r'^(?P<slug>.+)/$',
+            search_404_view, name='not_found'),
+    ]
