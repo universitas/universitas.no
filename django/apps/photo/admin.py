@@ -24,8 +24,11 @@ class ThumbAdmin:
             imagefile = instance
         if imagefile:
             source = imagefile.source_file
-            thumb = get_thumbnail(source, '%sx%s' % (width, height))
-            url = thumb.url
+            try:
+                thumb = get_thumbnail(source, '%sx%s' % (width, height))
+                url = thumb.url
+            except Exception:
+                pass
         return mark_safe('<img src="{}">'.format(url))
 
     thumbnail.allow_tags = True
