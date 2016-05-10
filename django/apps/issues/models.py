@@ -137,8 +137,8 @@ class Issue(models.Model, Edit_url_mixin):
     def issue_tuple(self):
         number = self.__class__.objects.filter(
             publication_date__year=self.publication_date.year,
-            publication_date__lte=self.publication_date
-        ).count()
+            publication_date__lt=self.publication_date
+        ).count() + 1
         return IssueTuple(
             date=self.publication_date,
             number=number)
