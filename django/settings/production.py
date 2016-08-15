@@ -4,7 +4,6 @@ from .base import *
 
 # DEBUG CONFIGURATION
 DEBUG = False
-TEMPLATE_DEBUG = False
 THUMBNAIL_DEBUG = False
 
 # EMAIL CONFIGURATION

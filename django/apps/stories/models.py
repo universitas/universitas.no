@@ -1051,7 +1051,7 @@ class ElementManager(models.Manager):
         try:
             return getattr(super(), attr, *args)
         except AttributeError:
-            if attr not in ('model', '_db'):
+            if attr not in ('model', '_db', 'name'):
                 return getattr(self.get_queryset(), attr, *args)
 
 
@@ -1088,7 +1088,7 @@ class StoryElement(TimeStampedModel, RemembersSubClass):
     needle = ''  # for fuzzy search
 
     objects = ElementManager()
-    parent_story = models.ForeignKey('Story')
+    parent_story = models.ForeignKey(Story)
     index = models.PositiveSmallIntegerField(
         default=0,
         blank=True, null=True,
