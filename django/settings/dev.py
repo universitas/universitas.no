@@ -1,9 +1,8 @@
 """Development settings and globals."""
 
-from .base import *
+from .base import *  # NOQA
 
 DEBUG = True
-TEMPLATE_DEBUG = True
 THUMBNAIL_DEBUG = True
 ROOT_URLCONF = 'core.dev_urls'
 

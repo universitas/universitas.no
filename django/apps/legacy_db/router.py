@@ -20,13 +20,14 @@ class ProdsysRouter(object):
             return 'prodsys'
         return None
 
-    def allow_migrate(self, db, model):
+    def allow_migrate(self, db, app_label, model_name=None, **hints):
+
         """
         Make sure the auth app only appears in the 'auth_db'
         database.
         """
         if db == 'prodsys':
-            return model._meta.app_label == 'legacy_db'
-        elif model._meta.app_label == 'legacy_db':
+            return app_label == 'legacy_db'
+        elif app_label == 'legacy_db':
             return False
         return None

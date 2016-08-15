@@ -3,14 +3,14 @@
 from django import template
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
-from django.contrib.staticfiles.templatetags.staticfiles import StaticFilesNode
+from django.templatetags.static import StaticNode
 import logging
 logger = logging.getLogger(__name__)
 
 register = template.Library()
 
 
-class FileRevNode(StaticFilesNode):
+class FileRevNode(StaticNode):
 
     """
     Overrides normal static file handling by first checking for file revisions
