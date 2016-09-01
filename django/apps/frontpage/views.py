@@ -95,7 +95,7 @@ def get_frontpage_stories(story_queryset, frontpage=None):
     stories = story_queryset.is_on_frontpage(frontpage)
     result = StoryModule.objects.filter(
         frontpage=frontpage,
-        frontpage_story__story=stories
+        frontpage_story__story__in=stories
     ).prefetch_related('frontpage_story__imagefile')
     return result
 

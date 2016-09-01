@@ -20,10 +20,12 @@ def byline_image(obj):
     html = t.render(Context(d))
     return mark_safe(html)
 
+
 class StintInline(admin.TabularInline,):
     model = Stint
     fields = ['position', 'start_date', 'end_date']
     extra = 1
+
 
 @admin.register(Contributor)
 class ContributorAdmin(admin.ModelAdmin):
@@ -42,7 +44,6 @@ class ContributorAdmin(admin.ModelAdmin):
     )
 
     list_editable = (
-        'display_name',
         'verified',
     )
 
@@ -66,7 +67,6 @@ class PositionAdmin(admin.ModelAdmin):
         else:
             return str(len(active))
 
-
     def groups_list(self, instance):
         return ', '.join(str(group) for group in instance.groups.all())
 
@@ -74,7 +74,7 @@ class PositionAdmin(admin.ModelAdmin):
         'title',
         'active_now',
         'groups_list',
-        ]
+    ]
 
 
 @admin.register(Stint)
@@ -90,10 +90,10 @@ class StintAdmin(admin.ModelAdmin):
         'position',
         'start_date',
         'end_date',
-        )
+    )
 
     list_editable = (
         'position',
         'start_date',
         'end_date',
-        )
+    )
