@@ -30,7 +30,7 @@ six
 sqlparse
 tornado
 sorl-thumbnail
-django-autocomplete-light
+django-autocomplete-light>=2.2,<3.0
 diff-match-patch
 awesome-slugify
 fuzzywuzzy

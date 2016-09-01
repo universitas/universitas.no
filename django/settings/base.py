@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from os.path import dirname
-import django.conf.global_settings as DEFAULT_SETTINGS
+# import django.conf.global_settings as DEFAULT_SETTINGS
 from django.utils.translation import ugettext_lazy as _
 from utils.setting_helpers import (
     environment_variable, join_path, load_json_file)
-from .logging_settings import *
+from .logging_settings import LOGGING  # NOQA
 
 SITE_URL = environment_variable('SITE_URL')
-DEBUG = TEMPLATE_DEBUG = False
+DEBUG = False
 ALLOWED_HOSTS = environment_variable('ALLOWED_HOSTS').split()
 
 # SENTRY
@@ -174,7 +174,6 @@ STATICFILES_DIRS = [join_path(PROJECT_DIR, 'build'), ]
 # Project wide fixtures to be loaded into database.
 FIXTURE_DIRS = [join_path(BASE_DIR, 'fixtures'), ]
 # Project wide django template files
-TEMPLATE_DIRS = [join_path(BASE_DIR, 'templates'), ]
 # Look for byline images here
 BYLINE_PHOTO_DIR = '/srv/fotoarkiv_universitas/byline/'
 STAGING_ROOT = '/srv/fotoarkiv_universitas/'
@@ -198,12 +197,27 @@ SHORT_DATE_FORMAT = 'Y-m-d'
 SHORT_DATETIME_FORMAT = 'y-m-d H:i'
 TIME_INPUT_FORMATS = ('%H:%M', '%H', '%H:%M:%S', '%H.%M')
 
-TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
-    'sekizai.context_processors.sekizai',
-    'django.core.context_processors.request',
-    'apps.issues.context_processors.issues',
-    'apps.contributors.context_processors.staff',
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [join_path(BASE_DIR, 'templates'), ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'apps.issues.context_processors.issues',
+                'apps.contributors.context_processors.staff',
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
