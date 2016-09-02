@@ -335,7 +335,7 @@ def _folders_and_permissions(folders):
     # sudo('find {site_folder} -type d -exec chmod 6775 "{{}}" \;'.format(
     #     site_folder=site_folder))
     # set linux user group.
-    sudo('mkdir {site_folder} &&'
+    sudo('mkdir -p {site_folder} &&'
          'chown -R :{group} {site_folder}'.format(
         group=LINUXGROUP,
         site_folder=site_folder))
