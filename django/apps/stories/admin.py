@@ -12,7 +12,7 @@ from django.utils.safestring import mark_safe
 # from apps.photo.models import ImageFile
 # from sorl.thumbnail.admin import AdminImageMixin
 
-import autocomplete_light
+from autocomplete_light.forms import modelform_factory
 
 from apps.photo.admin import ThumbAdmin
 from apps.frontpage.models import FrontpageStory
@@ -38,7 +38,7 @@ class SmallTextArea:
 
 
 class BylineInline(admin.TabularInline):
-    form = autocomplete_light.modelform_factory(Byline, exclude=())
+    form = modelform_factory(Byline, exclude=())
     model = Byline
     fields = ('ordering', 'credit', 'contributor', 'title', )
     extra = 0
@@ -52,7 +52,7 @@ class BylineInline(admin.TabularInline):
 
 
 class FrontpageStoryInline(SmallTextArea, admin.TabularInline, ThumbAdmin):
-    form = autocomplete_light.modelform_factory(FrontpageStory, exclude=())
+    form = modelform_factory(FrontpageStory, exclude=())
     model = FrontpageStory
     fields = ('headline', 'kicker', 'lede', 'imagefile', 'thumbnail',),
     readonly_fields = ('thumbnail', )
@@ -96,7 +96,7 @@ class PullquoteInline(admin.TabularInline, ):
 
 
 class LinkInline(admin.TabularInline):
-    form = autocomplete_light.modelform_factory(InlineLink, exclude=())
+    form = modelform_factory(InlineLink, exclude=())
     model = InlineLink
     fk_name = 'parent_story'
     extra = 0
@@ -124,7 +124,7 @@ class VideoInline(admin.TabularInline, ):
 
 
 class ImageInline(admin.TabularInline, ThumbAdmin, ):
-    form = autocomplete_light.modelform_factory(StoryImage, exclude=())
+    form = modelform_factory(StoryImage, exclude=())
     formfield_overrides = {
         models.CharField: {
             'widget': Textarea(
@@ -256,7 +256,7 @@ class SectionAdmin(admin.ModelAdmin):
 
 @admin.register(StoryType)
 class StoryTypeAdmin(admin.ModelAdmin):
-    form = autocomplete_light.modelform_factory(StoryType, exclude=[])
+    form = modelform_factory(StoryType, exclude=[])
     list_display = (
         'id',
         'name',
@@ -278,7 +278,7 @@ class StoryTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Byline)
 class BylineAdmin(admin.ModelAdmin):
-    form = autocomplete_light.modelform_factory(Byline, exclude=())
+    form = modelform_factory(Byline, exclude=())
     list_display = (
         'id',
         'story',
@@ -312,7 +312,7 @@ def check_link_status(modeladmin, request, queryset):
 
 @admin.register(InlineLink)
 class LinkAdmin(admin.ModelAdmin):
-    form = autocomplete_light.modelform_factory(InlineLink, exclude=())
+    form = modelform_factory(InlineLink, exclude=())
     actions_on_bottom = actions_on_top = True
     actions = [find_linked_story, check_link_status]
     list_display = (
