@@ -13,7 +13,7 @@ from deployment_tools.generate_postactivate import make_postactivate_file
 # github repo used for deploying the site
 REPO_URL = 'git@github.com:universitas/tassen.git'
 
-PYVENV = 'pyvenv-3.4'  # using python 3.4 for virtual environments
+PYVENV = 'python3 -m venv'  # using python 3 for virtual environments
 LINUXGROUP = 'universitas'  # linux user group on the webserver
 WEBSERVER_ROOT = '/srv'  # root folder for all websites on the webserver
 SITE_NAME = 'universitas.no'
