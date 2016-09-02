@@ -9,8 +9,8 @@ $slick-next-character:    $icon-next        ;// Unicode character code for the n
 $slick-dot-character:     $icon-circle      ;// Unicode character code for the navigation dot icon
 $slick-dot-size:          1rem               ;// Size of the navigation dots
 
-@import "slick/slick-theme";
-@import "slick/slick";
+@import "slick/slick-theme.scss";
+@import "slick/slick.scss";
 
 %icon {
     transition: 500ms;

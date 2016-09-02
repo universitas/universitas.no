@@ -1,5 +1,5 @@
 """
-Find PDF files.
+Create pdf issue from pages.
 """
 
 from optparse import make_option
