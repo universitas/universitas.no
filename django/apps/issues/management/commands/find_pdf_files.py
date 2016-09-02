@@ -1,5 +1,5 @@
 """
-Find PDF files.
+Find and add existing pdf issues to the database.
 """
 
 from optparse import make_option
