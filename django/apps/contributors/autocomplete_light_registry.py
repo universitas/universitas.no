@@ -1,4 +1,4 @@
-import autocomplete_light
+import autocomplete_light.shortcuts as autocomplete_light
 from .models import Contributor
 from django.utils.translation import ugettext_lazy as _
 

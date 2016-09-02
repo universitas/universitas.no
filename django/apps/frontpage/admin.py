@@ -7,7 +7,7 @@ from django.contrib import admin
 from django.forms import Textarea
 from .models import StoryModule, FrontpageStory, StaticModule
 from apps.photo.admin import ThumbAdmin
-import autocomplete_light
+from autocomplete_light.forms import modelform_factory
 from sorl.thumbnail.admin import AdminImageMixin
 
 
@@ -19,7 +19,7 @@ class StoryModuleInline(admin.TabularInline):
 
 @admin.register(FrontpageStory)
 class FrontpageStoryAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin):
-    form = autocomplete_light.modelform_factory(FrontpageStory, exclude=())
+    form = modelform_factory(FrontpageStory, exclude=())
     form.Meta.widgets = {
         'lede': admin.widgets.AdminTextareaWidget(attrs={'rows':3})
     }
