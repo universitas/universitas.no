@@ -8,7 +8,7 @@ from django.template import Context, Template
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-import autocomplete_light
+from autocomplete_light.forms import modelform_factory
 
 from .models import Contributor, Position, Stint
 from apps.stories.admin import BylineInline
@@ -30,7 +30,7 @@ class StintInline(admin.TabularInline,):
 @admin.register(Contributor)
 class ContributorAdmin(admin.ModelAdmin):
 
-    form = autocomplete_light.modelform_factory(
+    form = modelform_factory(
         Contributor,
         exclude=()
     )
@@ -80,7 +80,7 @@ class PositionAdmin(admin.ModelAdmin):
 @admin.register(Stint)
 class StintAdmin(admin.ModelAdmin):
 
-    form = autocomplete_light.modelform_factory(
+    form = modelform_factory(
         Stint,
         exclude=()
     )

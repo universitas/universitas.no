@@ -9,7 +9,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail.admin import AdminImageMixin
 from sorl.thumbnail import get_thumbnail
-import autocomplete_light
+from autocomplete_light.forms import modelform_factory
 from .models import ImageFile, ProfileImage
 
 
@@ -44,7 +44,7 @@ autocrop.short_description = _('Autocrop')
 
 @admin.register(ImageFile)
 class ImageFileAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin, ):
-    form = autocomplete_light.modelform_factory(ImageFile, exclude=())
+    form = modelform_factory(ImageFile, exclude=())
     actions = [autocrop]
     date_hierarchy = 'created'
     actions_on_top = True

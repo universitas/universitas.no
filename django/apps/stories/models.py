@@ -377,12 +377,12 @@ class TextContent(models.Model, MarkupModelMixin):
                 tag=tag,
                 added_content=content,
             ).strip()
-            actual_field = self.__class__._meta.get_field_by_name(modelfield)[0]
+            actual_field = self.__class__._meta.get_field(modelfield)
             if actual_field.max_length:
                 new_content = new_content[:actual_field.max_length]
             setattr(self, modelfield, new_content)
             return self
-        except (AttributeError,):
+        except (AttributeError):
             # No such field. Try the main story instead.
             return self.parent_story._block_append(tag, content, modelfield)
         except (AssertionError,) as errormsg:
