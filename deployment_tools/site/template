@@ -16,7 +16,7 @@ case "$1" in
 
   celery-beat)
     exec $virtualenvfolder/bin/celery \
-          beat -A beat --loglevel=INFO
+          beat -A core --loglevel=INFO
     ;;
 
   gunicorn)
