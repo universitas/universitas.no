@@ -1,32 +1,29 @@
-from optparse import make_option
 import logging
-logger = logging.getLogger(__name__)
-
-from django.core.management.base import BaseCommand  # , CommandError
-# from django.db.models import Count
+from django.core.management.base import BaseCommand
 
 from apps.stories.models import Story
 from apps.frontpage.models import FrontpageStory
+logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
     help = 'Populates frontpage'
-    option_list = BaseCommand.option_list + (
-        make_option(
+
+    def add_arguments(self, parser):
+        parser.add_argument(
             '--number', '-n',
-            type='int',
+            type=int,
             dest='number',
             default=0,
             help='Number of stories.'
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--delete', '-d',
             action='store_true',
             dest='delete',
             default=False,
             help='Delete old stories'
-        ),
-    )
+        )
 
     def handle(self, *args, **options):
 
