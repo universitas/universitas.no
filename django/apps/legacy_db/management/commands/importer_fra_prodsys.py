@@ -1,8 +1,7 @@
-""" Management commands for importing images and stories from legacy website and production system. """
+""" Management commands for importing images and stories from legacy website
+and production system. """
 
-from optparse import make_option
 import logging
-logger = logging.getLogger(__name__)
 
 from django.conf import settings
 from django.core.management.base import BaseCommand  # ,CommandError
@@ -19,69 +18,71 @@ from apps.stories.models import Story
 from apps.contributors.models import Contributor
 from apps.photo.models import ImageFile
 
+logger = logging.getLogger(__name__)
+
 
 class Command(BaseCommand):
     help = 'Imports content from legacy website.'
     leave_locale_alone = True,
     can_import_settings = True,
-    option_list = BaseCommand.option_list + (
-        make_option(
+
+    def add_arguments(self, parser):
+        parser.add_argument(
             '--replace_existing', '-x',
             action='store_true',
             dest='replace existing',
             default=False,
             help='Replace existing content from previous imports.'
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--first', '-f',
-            type='int',
+            type=int,
             dest='first',
             default=0,
             help='Number of stories to skip at beginning of import.'
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--number', '-n',
-            type='int',
+            type=int,
             dest='number',
             default=0,
             help='Number of stories to import'
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--reverse', '-r',
             action='store_true',
             dest='reverse',
             default=False,
             help='Start with newest stories.'
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--textonly', '-t',
             action='store_true',
             dest='text only',
             default=False,
             help='Only import text.'
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--drop', '-d',
             action='store_true',
             dest='drop',
             default=False,
             help='Drop old content from the database.'
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--prodsys', '-p',
             action='store_true',
             dest='prodsys only',
             default=False,
             help='Import articles from prodsys.'
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--crop', '-c',
             action='store_true',
             dest='autocrop',
             default=False,
             help='Autocrop images'
-        ),
-    )
+        )
 
     def handle(self, *args, **options):
 
@@ -102,14 +103,17 @@ class Command(BaseCommand):
                 autocrop=options['autocrop'],
             )
             if status:
-                self.stdout.write('Successfully imported content from prodsys.')
+                self.stdout.write(
+                    'Successfully imported content from prodsys.')
             else:
                 self.stdout.write('No content to import.')
 
         else:
             # Import from website
             if settings.DEBUG:
-                self.stderr.write('WARNING: Django running with in DEBUG mode.\nThis command might run out of memory.')
+                self.stderr.write(
+                    'WARNING: Django running with in DEBUG mode.\n'
+                    'This command might run out of memory.')
 
             if options['drop'] and not options['replace existing']:
                 drop_model_tables(Story, Contributor, ImageFile)
@@ -125,6 +129,7 @@ class Command(BaseCommand):
 
             reset_db_autoincrement()
             if status:
-                self.stdout.write('Successfully imported content from website.')
+                self.stdout.write(
+                    'Successfully imported content from website.')
             else:
                 self.stdout.write('No content to import.')

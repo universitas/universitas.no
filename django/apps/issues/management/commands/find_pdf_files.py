@@ -2,7 +2,6 @@
 Find and add existing pdf issues to the database.
 """
 
-from optparse import make_option
 from django.core.management.base import BaseCommand  # ,CommandError
 from django.conf import settings
 
@@ -17,15 +16,15 @@ logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     help = 'Create print issues from pdf files.'
-    option_list = BaseCommand.option_list + (
-        make_option(
+
+    def add_arguments(self, parser):
+        parser.add_argument(
             '--replace_existing', '-x',
             action='store_true',
             dest='replace existing',
             default=False,
             help='Replace existing content from previous imports.'
-        ),
-    )
+        )
 
     def handle(self, *args, **options):
 
@@ -34,13 +33,12 @@ class Command(BaseCommand):
 
         self.import_issues_from_file_system()
 
-
-
     def import_issues_from_file_system(self):
         """ Finds pdf files on disks and creates PrintIssue objects. """
         os.chdir(settings.MEDIA_ROOT)
         files = glob('pdf/uni*.pdf')
-        msg = 'found {} files in pdf folder {}/pdf'.format(len(files), os.curdir)
+        msg = 'found {} files in pdf folder {}/pdf'.format(
+            len(files), os.curdir)
         self.stdout.write(msg)
         counter = 0
 
@@ -48,7 +46,8 @@ class Command(BaseCommand):
             issue, new = PrintIssue.objects.get_or_create(pdf=path)
             if new:
                 counter += 1
-                match = re.match(r'^.*(?P<year>\d{4})-(?P<number>.*)\.pdf$', path)
+                match = re.match(
+                    r'^.*(?P<year>\d{4})-(?P<number>.*)\.pdf$', path)
                 if match:
                     name = '{number}/{year}'.format(**match.groupdict())
                 else:
