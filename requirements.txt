@@ -10,6 +10,9 @@ django-debug-toolbar
 django-extensions
 django-model-utils
 django-redis-cache
+pytest
+pytest-xdist
+django-pytest
 gunicorn
 hiredis
 ipdb
@@ -43,3 +46,4 @@ boto
 certifi==2015.04.28
 ptpython
 celery
+snakeviz

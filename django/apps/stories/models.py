@@ -6,12 +6,12 @@ import re
 import difflib
 import json
 import logging
+import unicodedata
 
 # Django core
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.utils import timezone
-from django.utils import translation
 from django.db import models
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
@@ -49,9 +49,18 @@ ASIDE_TAG = '@box:'
 IMAGE_TAG = '@image:'
 VIDEO_TAG = '@video:'
 INLINE_HTML_TAG = '@html:'
+NON_PRINTING_CHARS = re.compile('[{}]'.format(''.join(
+    c for c in (chr(o) for o in range(256))
+    if unicodedata.category(c) == 'Cc' and
+    c not in '\t\n'
+)))
 
 slugify = Slugify(max_length=50, to_lower=True)
 logger = logging.getLogger(__name__)
+
+
+def remove_control_chars(s):
+    return NON_PRINTING_CHARS.sub('', s)
 
 
 class MarkupFieldMixin(object):
@@ -65,6 +74,7 @@ class MarkupFieldMixin(object):
 
     def clean(self, value, model_instance):
         value = super().clean(value, model_instance)
+        value = remove_control_chars(value)
         value = re.sub(r'\r\n', '\n', value)
         value = self.clean_links(value, model_instance)
         soup = BeautifulSoup(value)
@@ -72,7 +82,8 @@ class MarkupFieldMixin(object):
             error_message = '{warning} {tags}'.format(
                 warning=_('HTML tags found in text: '), tags=soup.find_all())
             raise ValidationError(error_message)
-        value = Alias.objects.replace(content=value, timing=Alias.TIMING_IMPORT)
+        value = Alias.objects.replace(
+            content=value, timing=Alias.TIMING_IMPORT)
         value = Alias.objects.replace(content=value, timing=Alias.TIMING_EXTRA)
         return value
 
@@ -119,12 +130,12 @@ class MarkupModelMixin(object):
 
         def __getattr__(self, attr, *args):
             try:
-                field = type(
-                    self.parent)._meta.get_field(attr)
-                assert issubclass(
-                    type(field), MarkupFieldMixin), 'only MarkupFields can be html'
+                field = type(self.parent)._meta.get_field(attr)
             except models.fields.FieldDoesNotExist:
                 pass
+            else:
+                if not issubclass(type(field), MarkupFieldMixin):
+                    raise RuntimeError('only MarkupFields can be html')
 
             raw = getattr(self.parent, attr, *args)
             assert isinstance(raw, str), 'Only strings can be htmlized'
@@ -333,9 +344,9 @@ class TextContent(models.Model, MarkupModelMixin):
         paragraphs = self.bodytext_markup.splitlines()
         self.bodytext_markup = ''
         target = self
-        # Target is the model instance that will receive following line of text.
-        # It could be the main article, or some related element, such as multi
-        # paragraph aside.
+        # Target is the model instance that will receive following line of
+        # text.  It could be the main article, or some related element,
+        # such as multi paragraph aside.
         for paragraph in paragraphs:
             paragraph = paragraph.strip()
             # if paragraph == '':
@@ -351,7 +362,8 @@ class TextContent(models.Model, MarkupModelMixin):
             # various kinds of block (paragraph) level tags
             # that are in use. Actions are "_block_append", "_block_new" and
             # "_block_drop".
-            action = getattr(target, '_block_{func}'.format(func=function_name))
+            action = getattr(
+                target, '_block_{func}'.format(func=function_name))
             # do action on
             new_target = action(tag, text_content, target_field)
             # new target could be newly created object or a parent element.
@@ -383,6 +395,7 @@ class TextContent(models.Model, MarkupModelMixin):
             setattr(self, modelfield, new_content)
             return self
         except (AttributeError):
+            raise
             # No such field. Try the main story instead.
             return self.parent_story._block_append(tag, content, modelfield)
         except (AssertionError,) as errormsg:
@@ -412,7 +425,7 @@ class StoryQuerySet(models.QuerySet):
         now = timezone.now()
         return self.filter(
             publication_status=Story.STATUS_PUBLISHED).filter(
-            publication_date__lt=now)
+                publication_date__lt=now)
 
     def is_on_frontpage(self, frontpage):
         return self.filter(frontpagestory__placements=frontpage)
@@ -440,7 +453,7 @@ class PublishedStoryManager(models.Manager):
             story.save(new=True)
 
     def devalue_hotness(self, factor=0.99):
-        """ Devalue hot count for all stories. Run this as a scheduled task. """
+        """ Devalue hot count for all stories. Run as a scheduled task. """
         hot_stories = self.exclude(hot_count__lt=1)
         hot_stories.update(hot_count=(models.F('hot_count') - 1) * factor)
 
@@ -581,7 +594,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
     def __str__(self):
         if self.publication_date:
-            return '{:%Y-%m-%d}: {}'.format(self.publication_date, self.title, )
+            return '{:%Y-%m-%d}: {}'.format(self.publication_date, self.title)
         else:
             return '{}'.format(self.title,)
 
@@ -629,8 +642,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             return False
         user_agent = request.META.get('HTTP_USER_AGENT', '').lower()
         if not user_agent:
-            # Visitor is not using a web browser. Not sure if this ever happens,
-            # but it would not be a proper visit.
+            # Visitor is not using a web browser.
             return False
 
         bots = ['bot', 'spider', 'yahoo', 'crawler']
@@ -745,7 +757,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
     def clean(self):
         """ Clean user input and populate fields """
-        if not self.title and not '@headline:' in self.bodytext_markup:
+        if not self.title and '@headline:' not in self.bodytext_markup:
             self.bodytext_markup = self.bodytext_markup.replace(
                 '@tit:',
                 '@headline:',
@@ -754,8 +766,8 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         # self.bodytext_markup = self.reindex_inlines()
         # TODO: Fix redindeksering av placeholders for video og bilder.
         self.bylines_html = self.get_bylines_as_html()
-        if (not self.publication_date
-                and self.publication_status == self.STATUS_PUBLISHED):
+        if (not self.publication_date and
+                self.publication_status == self.STATUS_PUBLISHED):
             self.publication_date = timezone.now()
         self.bodytext_markup = Alias.objects.replace(
             content=self.bodytext_markup,
@@ -811,7 +823,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             return body
 
         def fifty_fifty(queryset, body):
-            """ Half of elements in header, rest spread evenly through body. """
+            """Half of elements in header, rest spread evenly through body"""
             # TODO: Bedre autoplassering av foto.
             addlines = []
             for item in queryset:
@@ -975,7 +987,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
                                 elements_changed = True
                                 element.index = this_index
                                 element.top = False
-                        if not this_index in replace:
+                        if this_index not in replace:
                             replace.append(this_index)
                         else:
                             pass
@@ -1043,16 +1055,17 @@ class ElementQuerySet(models.QuerySet):
 
 class ElementManager(models.Manager):
 
+    qs_methods = [attr for attr in dir(ElementQuerySet) if not
+                  attr.startswith('_')]
+
     def get_queryset(self):
         return ElementQuerySet(self.model, using=self._db)
 
-    def __getattr__(self, attr, *args):
+    def __getattr__(self, attr):
         """ Checks the queryset class for missing methods. """
-        try:
-            return getattr(super(), attr, *args)
-        except AttributeError:
-            if attr not in ('model', '_db', 'name'):
-                return getattr(self.get_queryset(), attr, *args)
+        if attr in self.qs_methods:
+            return getattr(self.get_queryset(), attr)
+        return self.__getattribute__(attr)
 
 
 class RemembersSubClass(models.Model):
@@ -1302,7 +1315,8 @@ class StoryVideo(StoryMedia):
     host_video_id = models.CharField(
         max_length=100,
         verbose_name=_('id for video file.'),
-        help_text=_('the part of the url that identifies this particular video')
+        help_text=_(
+            'the part of the url that identifies this particular video')
     )
 
     def embed(self, width="100%", height="auto"):
@@ -1342,7 +1356,7 @@ class StoryVideo(StoryMedia):
         # url formats:
         # https://www.youtube.com/watch?v=roHl3PJsZPk
         # http://youtu.be/roHl3PJsZPk
-            # http://vimeo.com/105149174
+        # http://vimeo.com/105149174
 
         def check_link(url, method='head', timeout=2):
             """ Does a http request to check the status of the url. """
@@ -1482,7 +1496,8 @@ class InlineLink(TimeStampedModel):
     def get_html(self):
         """ get <a> html tag for the link """
         pattern = self.html_pattern
-        html = pattern.format(text=self.text, href=self.link, alt=self.alt_text)
+        html = pattern.format(
+            text=self.text, href=self.link, alt=self.alt_text)
         return mark_safe(html)
 
     get_html.allow_tags = True
@@ -1505,7 +1520,8 @@ class InlineLink(TimeStampedModel):
 
         if not self.linked_story:
             try:
-                match = re.search(r'universitas.no/.+?/(?P<id>\d+)/', self.href)
+                match = re.search(
+                    r'universitas.no/.+?/(?P<id>\d+)/', self.href)
                 story_id = int(match.group('id'))
                 self.linked_story = Story.objects.get(pk=story_id)
             except (AttributeError, ObjectDoesNotExist):
@@ -1618,8 +1634,8 @@ class InlineLink(TimeStampedModel):
     def convert_html_links(cls, bodytext, return_html=False):
         """ convert <a href=""> to other tag """
         # if '&' in bodytext:
-            # find = re.findall(r'.{,20}&.{,20}', bodytext)
-            # logger.debug(find)
+        # find = re.findall(r'.{,20}&.{,20}', bodytext)
+        # logger.debug(find)
         soup = BeautifulSoup(bodytext)
         for link in soup.find_all('a'):
             href = link.get('href') or ''
