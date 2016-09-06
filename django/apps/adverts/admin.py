@@ -2,8 +2,6 @@
 
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from django.db import models
-from autocomplete_light.forms import modelform_factory
 
 from apps.photo.admin import ThumbAdmin
 from sorl.thumbnail.admin import AdminImageMixin
@@ -19,7 +17,6 @@ class CustomerAdmin(admin.ModelAdmin):
 
 @admin.register(Advert)
 class AdvertAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
-    form = modelform_factory(Advert, exclude=())
     save_as = True
     save_on_top = True
     list_display = [
@@ -54,7 +51,6 @@ def create_dummy_ads(modeladmin, request, queryset):
 
 @admin.register(AdChannel)
 class ChannelAdmin(admin.ModelAdmin):
-    form = modelform_factory(AdChannel, exclude=())
     list_display = [
         'id',
         'name',
