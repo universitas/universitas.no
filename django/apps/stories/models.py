@@ -6,6 +6,7 @@ import re
 import difflib
 import json
 import logging
+import unicodedata
 
 # Django core
 from django.utils.translation import ugettext_lazy as _
@@ -48,9 +49,18 @@ ASIDE_TAG = '@box:'
 IMAGE_TAG = '@image:'
 VIDEO_TAG = '@video:'
 INLINE_HTML_TAG = '@html:'
+NON_PRINTING_CHARS = re.compile('[{}]'.format(''.join(
+    c for c in (chr(o) for o in range(256))
+    if unicodedata.category(c) == 'Cc' and
+    c not in '\t\n'
+)))
 
 slugify = Slugify(max_length=50, to_lower=True)
 logger = logging.getLogger(__name__)
+
+
+def remove_control_chars(s):
+    return NON_PRINTING_CHARS.sub('', s)
 
 
 class MarkupFieldMixin(object):
@@ -64,6 +74,7 @@ class MarkupFieldMixin(object):
 
     def clean(self, value, model_instance):
         value = super().clean(value, model_instance)
+        value = remove_control_chars(value)
         value = re.sub(r'\r\n', '\n', value)
         value = self.clean_links(value, model_instance)
         soup = BeautifulSoup(value)
@@ -414,7 +425,7 @@ class StoryQuerySet(models.QuerySet):
         now = timezone.now()
         return self.filter(
             publication_status=Story.STATUS_PUBLISHED).filter(
-            publication_date__lt=now)
+                publication_date__lt=now)
 
     def is_on_frontpage(self, frontpage):
         return self.filter(frontpagestory__placements=frontpage)
