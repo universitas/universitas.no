@@ -2,7 +2,6 @@
 """ Content in the publication. """
 
 # Python standard library
-# import subprocess
 import re
 import os
 import datetime
@@ -17,7 +16,6 @@ from django.db import models
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch.dispatcher import receiver
 from django.core.files.base import ContentFile
-# from django.utils.text import slugify
 
 # Installed apps
 import PyPDF2
@@ -27,7 +25,6 @@ from wand.image import Image as WandImage
 from wand.color import Color
 from wand.drawing import Drawing
 import os.path
-# Project apps
 
 from utils.model_mixins import Edit_url_mixin
 logger = logging.getLogger('universitas')
@@ -35,14 +32,9 @@ logger = logging.getLogger('universitas')
 
 def pdf_not_found(pdf_name):
     """Creates an error frontpage"""
-    img = WandImage(
-        width=300,
-        height=500,
-    )
+    img = WandImage(width=300, height=500,)
     msg = 'ERROR:\n{}\nnot found on disk'.format(pdf_name)
     with Drawing() as draw:
-        #draw.font = 'wandtests/assets/League_Gothic.otf'
-        #draw.font_size = 40
         draw.text_alignment = 'center'
         draw.text(img.width // 2, img.height // 3, msg)
         draw(img)
@@ -162,9 +154,9 @@ class PrintIssue(models.Model, Edit_url_mixin):
         verbose_name = _('Pdf issue')
         verbose_name_plural = _('Pdf issues')
 
-    issue = models.ForeignKey(Issue, null=True, related_name='pdfs')
-
-    # publication_date = models.DateField(blank=True, null=True)
+    issue = models.ForeignKey(
+        Issue, related_name='pdfs'
+    )
 
     pages = models.IntegerField(
         help_text='Number of pages',
@@ -173,7 +165,6 @@ class PrintIssue(models.Model, Edit_url_mixin):
     pdf = models.FileField(
         help_text=_('Pdf file for this issue.'),
         upload_to='pdf/',
-        blank=True, null=True,
     )
 
     cover_page = thumbnail.ImageField(
@@ -189,7 +180,10 @@ class PrintIssue(models.Model, Edit_url_mixin):
     )
 
     def __str__(self):
-        return self.pdf.url
+        if self.pdf:
+            return self.pdf.url
+        else:
+            return super().__str__()
 
     def save(self, *args, **kwargs):
         if self.pk:
@@ -203,7 +197,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
             self.cover_page.delete()
         if not self.pdf and self.cover_page:
             self.cover_page.delete()
-        if self.pdf and not self.issue:
+        if self.pdf and not self.issue_id:
             publication_date = self.get_publication_date()
             self.issue, created = Issue.objects.get_or_create(
                 publication_date=publication_date,
@@ -214,7 +208,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
     def create_thumbnail(self):
         """ Create a jpg version of the pdf frontpage """
         def pdf_frontpage_to_image():
-            reader = PyPDF2.PdfFileReader(self.pdf.file)
+            reader = PyPDF2.PdfFileReader(self.pdf.file, strict=False)
             writer = PyPDF2.PdfFileWriter()
             first_page = reader.getPage(0)
             writer.addPage(first_page)
@@ -226,9 +220,6 @@ class PrintIssue(models.Model, Edit_url_mixin):
                 format='pdf',
                 resolution=60,
             )
-            # filename = '/tmp/cover.png'
-            # pdfimg.save(filename=filename)
-            # pngimg = WandImage(filename=filename)
             return pdfimg
 
         def pdf_not_found():
@@ -236,8 +227,6 @@ class PrintIssue(models.Model, Edit_url_mixin):
             img = WandImage(width=400, height=600,)
             msg = 'ERROR:\n{}\nnot found on disk'.format(self.pdf.name)
             with Drawing() as draw:
-                #draw.font = 'wandtests/assets/League_Gothic.otf'
-                #draw.font_size = 40
                 draw.text_alignment = 'center'
                 draw.text(img.width // 2, img.height // 3, msg)
                 draw(img)
@@ -250,12 +239,12 @@ class PrintIssue(models.Model, Edit_url_mixin):
             return background
 
         filename = self.pdf.name.replace(
-            '.pdf', '.jpg').replace(
-            'pdf/', 'pdf/covers/')
+            '.pdf', '.jpg').replace('pdf/', 'pdf/covers/')
 
         try:
             cover = pdf_frontpage_to_image()
         except Exception as err:
+            raise
             cover = pdf_not_found()
             filename = filename.replace('.jpg', '_not_found.jpg')
             logger.error('Error: %s pdf not found: %s ' % (err, self.pdf))
@@ -283,7 +272,6 @@ class PrintIssue(models.Model, Edit_url_mixin):
         return text
 
     def get_publication_date(self):
-        page_2_text = self.extract_page_text(2)
         dateline_regex = (
             r'^\d(?P<day>\w+) (?P<date>\d{1,2})\.'
             r' (?P<month>\w+) (?P<year>\d{4})')
@@ -291,6 +279,11 @@ class PrintIssue(models.Model, Edit_url_mixin):
             'januar', 'februar', 'mars', 'april', 'mai', 'juni',
             'juli', 'august', 'september', 'oktober', 'november', 'desember',
         ]
+        try:
+            page_2_text = self.extract_page_text(2)
+        except IndexError:
+            page_2_text = ''
+
         dateline = re.match(dateline_regex, page_2_text)
         if dateline:
             day = int(dateline.group('date'))
@@ -310,7 +303,6 @@ class PrintIssue(models.Model, Edit_url_mixin):
                 days=3 - created.isoweekday())
         return created
 
-    # @models.permalink
     def get_absolute_url(self):
         return self.pdf.url
 
@@ -318,7 +310,6 @@ class PrintIssue(models.Model, Edit_url_mixin):
 @receiver(pre_delete, sender=PrintIssue)
 def delete_pdf_and_cover_page(sender, instance, **kwargs):
     thumbnail.delete(instance.cover_page, delete_file=True)
-    # instance.cover_page.delete(False)
     instance.pdf.delete(False)
 
 
