@@ -7,10 +7,10 @@ def staff(request):
         'staff': [
             {'position': 'Redaktør', 'name': 'Torgeir Mortensen',
                 'email': 'torgeirm3b@gmail.com', },
-            {'position': 'Nettredaktør', 'name': 'Sondre Moen Myhre',
-                'email': 'sondre.myhre1@gmail.com', },
             {'position': 'Nyhetsredaktør', 'name': 'Birk Tjeldflaat Helle',
                 'email': 'birktjeldflaathelle@gmail.com', },
+            {'position': 'Nettredaktør', 'name': 'Sondre Moen Myhre',
+                'email': 'sondre.myhre1@gmail.com', },
             {'position': 'Daglig leder', 'name': 'Louise Faldalen Prytz',
                 'email': 'l.f.prytz@universitas.no', },
             {'position': 'Annonseselger', 'name': 'Geir Dorp',
