@@ -1,11 +1,8 @@
-from optparse import make_option
+import re
+from django.core.management.base import BaseCommand
+from apps.stories.models import Story
 import logging
 logger = logging.getLogger(__name__)
-import re
-
-from django.core.management.base import BaseCommand  # , CommandError
-
-from apps.stories.models import Story
 
 LANGUAGE_CORPUS = {
     'nb': [
@@ -54,15 +51,15 @@ LANGUAGE_CORPUS = {
 
 class Command(BaseCommand):
     help = 'Assign language to all stories'
-    option_list = BaseCommand.option_list + (
-        make_option(
+
+    def add_arguments(self, parser):
+        parser.add_argument(
             '--dry-run',
             action='store_true',
             dest='dry run',
             default=False,
             help='Dry run only'
-        ),
-    )
+        )
 
     def handle(self, *args, **options):
 
@@ -85,7 +82,8 @@ class Command(BaseCommand):
             self.stdout.write(msg)
 
         def guess_language(text):
-            """Guess language of input text by using a list of common words in candidate languages."""
+            """Guess language of input text by using a list of common words in
+            candidate languages."""
             score = {key: 0 for key in LANGUAGE_CORPUS.keys()}
             words = re.findall(r'[a-zøæå]+', text.lower())
 
