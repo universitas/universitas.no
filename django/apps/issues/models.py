@@ -8,6 +8,8 @@ import datetime
 from io import BytesIO
 import logging
 import collections
+import subprocess
+import unicodedata
 
 # Django core
 from django.utils import timezone
@@ -28,6 +30,20 @@ import os.path
 
 from utils.model_mixins import Edit_url_mixin
 logger = logging.getLogger('universitas')
+
+
+def extract_pdf_text(pdf, first_page, last_page=None):
+    """ Extracts text from a page in the pdf """
+    if last_page is None:
+        last_page = first_page
+    args = ['pdftotext', '-f', first_page, '-l', last_page, pdf, '-']
+    args = [str(a) for a in args]
+    text = subprocess.run(
+        args, check=True, stdout=subprocess.PIPE
+    ).stdout.decode()
+    text = unicodedata.normalize('NFKD', text).strip()
+    text = re.sub(r'\s*\n[\r\n \t]*', '\n', text)
+    return text
 
 
 def pdf_not_found(pdf_name):
@@ -265,12 +281,6 @@ class PrintIssue(models.Model, Edit_url_mixin):
         self.create_thumbnail()
         return self.cover_page
 
-    def extract_page_text(self, page_number):
-        """ Extracts text from a page in the pdf """
-        pdf_file = PyPDF2.PdfFileReader(self.pdf, strict=True)
-        text = pdf_file.getPage(page_number - 1).extractText()
-        return text
-
     def get_publication_date(self):
         dateline_regex = (
             r'^\d(?P<day>\w+) (?P<date>\d{1,2})\.'
@@ -280,7 +290,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
             'juli', 'august', 'september', 'oktober', 'november', 'desember',
         ]
         try:
-            page_2_text = self.extract_page_text(2)
+            page_2_text = extract_pdf_text(self.pdf.path, 2)
         except IndexError:
             page_2_text = ''
 
