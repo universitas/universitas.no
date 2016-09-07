@@ -3,9 +3,11 @@
 import pytest
 import tempfile
 import os
+from datetime import date
 from django.utils.timezone import datetime
 from django.core.files.base import ContentFile
 from apps.issues.models import (PrintIssue, Issue)
+from apps.issues.models import extract_pdf_text
 
 
 def get_contentfile(filepath):
@@ -17,15 +19,15 @@ def get_contentfile(filepath):
 
 @pytest.fixture
 def tempdir():
-    _dir = tempfile.TemporaryDirectory(prefix='django_test_')
-    return _dir
+    """A temporary directory that will be deleted from the file system
+    when the object is garbage collected."""
+    return tempfile.TemporaryDirectory()
 
 
 @pytest.fixture
 def fixture_pdf():
-    dir_path = os.path.dirname(
-        os.path.realpath(__file__))
-    return os.path.join(dir_path, 'blank_page.pdf')
+    this_dir = os.path.dirname(os.path.realpath(__file__))
+    return os.path.join(this_dir, 'fixture_universitas.pdf')
 
 
 @pytest.mark.django_db
@@ -33,24 +35,46 @@ def test_create_issue():
     new_issue = Issue.objects.create(
         publication_date=datetime(2020, 1, 1),
     )
+    new_issue.full_clean()
     assert str(new_issue) == '1/2020 01. Jan'
+
+
+def test_extract_page_text(fixture_pdf):
+    page_one_text = extract_pdf_text(fixture_pdf, 1)
+    assert page_one_text == 'Page 1'
+    all_text = extract_pdf_text(fixture_pdf, 1, 4)
+    assert 'Page 1' in all_text
+    assert 'Page 4' in all_text
 
 
 @pytest.mark.django_db
 def test_create_printissue(fixture_pdf, settings, tempdir):
-    settings.MEDIA_ROOT = tempdir.name
 
-    new_printissue = PrintIssue()
+    # use temporary directory for pdf and frontpage file
+    settings.MEDIA_ROOT = tempdir.name
+    settings.STATICFILES_STORAGE = \
+        'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+    print_issue = PrintIssue()
     content = get_contentfile(fixture_pdf)
     filename = os.path.basename(fixture_pdf)
-    new_printissue.pdf.save(filename, content, save=False)
-    # new_printissue.full_clean()
-    new_printissue.save()
-    assert filename in str(new_printissue)
-    assert new_printissue.pages == 1
 
-    new_printissue.get_thumbnail()
-    assert new_printissue.cover_page.path.endswith(
-        '/covers/blank_page.jpg')
-    year_zero = datetime.min.date()
-    assert new_printissue.issue.publication_date > year_zero
+    # Save content of fixture pdf as well as model
+    print_issue.pdf.save(filename, content)
+
+    assert filename in str(print_issue)
+    assert print_issue.pages == 4
+
+    # Assert that an Issue has been created and a publication
+    # date has been inferred from the pdf file content or file timestamp
+    issue = print_issue.issue
+    assert isinstance(issue, Issue)
+    assert issue.publication_date > date(2000, 9, 9)
+
+    # Assert that all fields are populated
+    print_issue.full_clean()
+
+    # Create thumbnail of cover page
+    print_issue.get_thumbnail()
+    assert print_issue.cover_page.path.endswith(
+        '/covers/fixture_universitas.jpg')
