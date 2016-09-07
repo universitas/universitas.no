@@ -1,47 +1,44 @@
 import re
-from optparse import make_option
+from django.core.management.base import BaseCommand
+from django.db.models import Count
+from apps.stories.models import InlineLink
 import logging
 logger = logging.getLogger(__name__)
-
-from django.core.management.base import BaseCommand  # , CommandError
-from django.db.models import Count
-
-from apps.stories.models import InlineLink
 
 
 class Command(BaseCommand):
     help = ''
-    option_list = BaseCommand.option_list + (
-        make_option(
+
+    def add_arguments(self, parser):
+        parser.add_argument(
             '--new', '-n',
             action='store_true',
             dest='new links',
             default=False,
             help='Only check new links'
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--fix', '-f',
             action='store_true',
             dest='fix broken',
             default=False,
             help='Fix broken legacy links'
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--status', '-s',
             action='append',
             dest='status in',
             default=[],
             help='Check links with these status codes'
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--timeout', '-t',
             type=float,
             action='store',
             dest='timeout',
             default=1,
             help='Seconds to wait for a http response'
-        ),
-    )
+        )
 
     def handle(self, *args, **options):
 
@@ -51,7 +48,8 @@ class Command(BaseCommand):
             status_in = ['']
 
         if status_in:
-            links_to_check = InlineLink.objects.filter(status_code__in=status_in)
+            links_to_check = InlineLink.objects.filter(
+                status_code__in=status_in)
         else:
             links_to_check = InlineLink.objects.all()
 
@@ -69,7 +67,8 @@ class Command(BaseCommand):
             link.check_link(save_if_changed=True, timeout=timeout)
 
         self.stdout.write('Checked {} links'.format(links_to_check.count()))
-        link_statuses = InlineLink.objects.values('status_code').annotate(count=Count('status_code'))
+        link_statuses = InlineLink.objects.values(
+            'status_code').annotate(count=Count('status_code'))
         for status in link_statuses:
             self.stdout.write('{count} - {status_code}'.format(**status))
 
@@ -79,4 +78,5 @@ class Command(BaseCommand):
             link.href = re.sub(r'/a$', '', link.href)
             link.save()
 
-        links_to_check.filter(href__endswith='kontakt.shtml').update(href='http://universitas.no/kontakt/')
+        links_to_check.filter(href__endswith='kontakt.shtml').update(
+            href='http://universitas.no/kontakt/')

@@ -2,7 +2,6 @@
 Create pdf issue from pages.
 """
 
-from optparse import make_option
 import os
 import logging
 from datetime import datetime
@@ -26,15 +25,15 @@ FILENAME_PATTERN = 'universitas_{issue.date.year}-{issue.number}{suffix}.pdf'
 
 class Command(BaseCommand):
     help = 'Make web pdf'
-    option_list = BaseCommand.option_list + (
-        make_option(
+
+    def add_arguments(self, parser):
+        parser.add_argument(
             '--replace_existing', '-x',
             action='store_true',
             dest='replace existing',
             default=False,
-            help='Replace existing content from previous imports.'
-        ),
-    )
+            help='Replace existing content from previous imports.',
+        )
 
     def handle(self, *args, **options):
         # print(options)
