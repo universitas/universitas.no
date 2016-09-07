@@ -24,6 +24,7 @@ rgb_profile="$SCRIPT_FOLDER/sRGB.icc"
   -dBATCH  \
   -dNOPAUSE  \
   -sDEVICE=pdfwrite  \
+  -dAutoRotatePages=/None \
   -dConvertCMYKImagesToRGB=true \
   -dDownsampleColorImages=true \
   -dDownsampleGrayImages=true \
