@@ -7,10 +7,10 @@ import os
 import glob
 import shutil
 import pathlib
-# from datetime import date
+from datetime import date
 # from django.utils.timezone import datetime
 from django.core.files.base import ContentFile
-# from apps.issues.models import (PrintIssue, Issue)
+from apps.issues.models import (PrintIssue, Issue)
 # from apps.issues.models import extract_pdf_text
 from apps.issues.tasks import (
     require_binary,
@@ -19,6 +19,7 @@ from apps.issues.tasks import (
     optimize_staging_pages,
     generate_pdf_preview,
     create_web_bundle,
+    create_print_issue_pdf,
 )
 
 
@@ -145,3 +146,15 @@ def test_require_binary_decorator():
     with pytest.raises(RuntimeError) as excinfo:
         impossible_fn()
     assert 'Required binary ' in str(excinfo.value)
+
+
+@pytest.mark.django_db
+def test_create_current_issue_web_bundle():
+    Issue.objects.create(
+        publication_date=date(2016, 1, 1))
+    result = create_print_issue_pdf()
+    assert result == ['universitas_2016-1.pdf', 'universitas_2016-1_mag.pdf']
+
+
+
+
