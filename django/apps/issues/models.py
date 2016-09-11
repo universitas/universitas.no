@@ -88,7 +88,10 @@ class IssueQueryset(models.QuerySet):
         return next_issue
 
     def latest_issue(self):
-        return self.published().first()
+        latest = self.published().first()
+        if not latest:
+            raise Issue.DoesNotExist('No published issues in database')
+        return latest
 
 
 class Issue(models.Model, Edit_url_mixin):

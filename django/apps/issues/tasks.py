@@ -7,9 +7,9 @@ from datetime import datetime
 # import re
 
 from django.conf import settings
-# from django.core.files.base import ContentFile
+from django.core.files.base import ContentFile
 
-# from apps.issues.models import PrintIssue, current_issue
+from apps.issues.models import current_issue, PrintIssue
 
 STAGING_ROOT = pathlib.Path(settings.STAGING_ROOT)
 
@@ -154,25 +154,49 @@ def generate_thumbnails(*args, **kwargs):
 
 
 def create_web_bundle(filename, *args, **kwargs):
+    """Creates a web bundle file"""
     output_file = pathlib.Path(filename)
     output_file.touch()
 
-    pages = optimize_staging_pages(*args, **kwargs)
+    pages = [str(p) for p in
+             optimize_staging_pages(*args, **kwargs)]
+
+    number_of_pages = len(pages)
+    if number_of_pages == 0:
+        raise RuntimeError('No pages found')
+
+    if number_of_pages % 4 != 0:
+        raise RuntimeError('Wrong number of pages %d' % number_of_pages)
 
     args = [
         GHOSTSCRIPT,
         '-q',
+        '-o', output_file,
+        '-dFirstPage=1',
         '-dBATCH',
         '-dNOPAUSE',
+        '-dAutoRotatePages=/None',
         '-sDEVICE=pdfwrite',
         '-dCompressFonts=true',
         '-dSubsetFonts=true',
         '-dCompatibilityLevel=1.6',
         '-dDetectDuplicateImages=true',
         '-sDEVICE=pdfwrite',
-        '-o', output_file,
-        ' '.join(map(str, pages,)),
-    ]
+    ] + pages
 
-    subprocess.run(map(str, args))
+    args = [str(a) for a in args]
+    result = subprocess.run(args)
+    print(result.args)
     return output_file
+
+
+def create_print_issue_pdf():
+    """Create or update pdf for the current issue"""
+
+    issue = current_issue()
+    editions = [('', PAGES_GLOB), ('_mag', MAG_PAGES_GLOB)]
+    result = []
+    for suffix, globpattern in editions:
+        filename = OUTPUT_PDF_FILENAME.format(issue=issue, suffix=suffix)
+        result.append(filename)
+    return result
