@@ -4,26 +4,29 @@ import shutil
 import subprocess
 import pathlib
 from datetime import datetime
+import tempfile
 # import re
 
 from django.conf import settings
 from django.core.files.base import ContentFile
-
 from apps.issues.models import current_issue, PrintIssue
 
-STAGING_ROOT = pathlib.Path(settings.STAGING_ROOT)
+import logging
+logger = logging.getLogger(__name__)
 
-STAGING_PDF_DIRECTORY = STAGING_ROOT / 'STAGING' / 'PDF'
+# Paths and glob pattersn
 PAGES_GLOB = 'UNI11VER*.pdf'
 MAG_PAGES_GLOB = 'UNI12VER*.pdf'
-
-OUTPUT_PDF_DIRECTORY = STAGING_ROOT / 'pdf'
-OUTPUT_PDF_FILENAME = \
-    'universitas_{issue.date.year}-{issue.number}{suffix}.pdf'
+# OUTPUT_PDF_DIRECTORY = STAGING_ROOT / 'pdf'
+OUTPUT_PDF_NAME = 'universitas_{issue.date.year}-{issue.number}{suffix}.pdf'
 
 # Binaries
 GHOSTSCRIPT = '/usr/bin/ghostscript'
 CONVERT = '/usr/bin/convert'
+
+
+class MissingBinary(RuntimeError):
+    pass
 
 
 def require_binary(binary):
@@ -34,20 +37,23 @@ def require_binary(binary):
             if shutil.which(binary):
                 return fn(*args, **kwargs)
             msg = 'Required binary "{}" is not installed'.format(binary)
-            raise RuntimeError(msg)
+            raise MissingBinary(msg)
         return fn_wrapper
     return binary_decorator
 
 
 def get_staging_pdf_files(
         globpattern='*.pdf',
-        directory=STAGING_PDF_DIRECTORY,
+        directory=None,
         expiration_days=4,
         delete_expired=False):
     """Find pages for latest issue in pdf staging directory."""
 
-    p = pathlib.Path(str(directory))
-    pages = p.glob(globpattern)
+    if directory is None:
+        staging_dir = pathlib.Path(settings.STAGING_ROOT) / 'STAGING' / 'PDF'
+    else:
+        staging_dir = pathlib.Path(str(directory))
+    pages = staging_dir.glob(globpattern)
     now = datetime.now()
     output = []
     for pdf_file in pages:
@@ -163,7 +169,7 @@ def create_web_bundle(filename, *args, **kwargs):
 
     number_of_pages = len(pages)
     if number_of_pages == 0:
-        raise RuntimeError('No pages found')
+        raise RuntimeWarning('No pages found')
 
     if number_of_pages % 4 != 0:
         raise RuntimeError('Wrong number of pages %d' % number_of_pages)
@@ -195,8 +201,27 @@ def create_print_issue_pdf():
 
     issue = current_issue()
     editions = [('', PAGES_GLOB), ('_mag', MAG_PAGES_GLOB)]
-    result = []
+    results = []
     for suffix, globpattern in editions:
-        filename = OUTPUT_PDF_FILENAME.format(issue=issue, suffix=suffix)
-        result.append(filename)
-    return result
+        pdf_name = OUTPUT_PDF_NAME.format(issue=issue, suffix=suffix)
+        issue_name = '{issue.number}/{issue.date.year}{suffix}'.format(
+            suffix=suffix, issue=issue)
+        tmp_bundle_file = tempfile.NamedTemporaryFile(suffix='.pdf')
+        try:
+            create_web_bundle(
+                filename=tmp_bundle_file.name, globpattern=globpattern)
+        except RuntimeWarning as warning:
+            logger.info(str(warning))
+            continue
+        try:
+            print_issue = current_issue.print_issue_set.get(
+                pdf__endswith=pdf_name)
+        except PrintIssue.DoesNotExist:
+            print_issue = PrintIssue()
+        with open(tmp_bundle_file.name, 'rb') as src:
+            pdf_content = ContentFile(src.read())
+        print_issue.pdf.save(pdf_name, pdf_content, save=False)
+        print_issue.issue_name = issue_name
+        print_issue.save()
+        results.append(pdf_name)
+    return results
