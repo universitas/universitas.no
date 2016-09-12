@@ -10,9 +10,10 @@ import pathlib
 from datetime import date
 # from django.utils.timezone import datetime
 from django.core.files.base import ContentFile
-from apps.issues.models import (PrintIssue, Issue)
+from apps.issues.models import Issue
 # from apps.issues.models import extract_pdf_text
 from apps.issues.tasks import (
+    MissingBinary,
     require_binary,
     convert_pdf_to_web,
     get_staging_pdf_files,
@@ -31,31 +32,31 @@ def get_contentfile(filepath):
 
 
 @pytest.fixture
-def tmp_fixture_dir():
+def tmp_fixture_dir(settings):
     """A temporary directory that will be deleted from the file system
     when the object is garbage collected."""
-    thisdir = os.path.dirname(__file__)
-    fixture_files = glob.glob(os.path.join(thisdir, '*.pdf'))
     tmpdir = tempfile.TemporaryDirectory()
-    for pdf in fixture_files:
-        shutil.copy(pdf, tmpdir.name)
+    settings.STAGING_ROOT = tmpdir.name
+
+    src = pathlib.Path(__file__).parent / 'STAGING'
+    dst = pathlib.Path(tmpdir.name) / 'STAGING'
+    shutil.copytree(str(src), str(dst))
     return tmpdir
 
 
 def test_get_staging_pdf_files(tmp_fixture_dir):
     fixture_dir = tmp_fixture_dir.name
-    pages = get_staging_pdf_files('pg*.pdf', fixture_dir)
+    globpattern='UNI11VER*.pdf'
+    pages = get_staging_pdf_files(globpattern)
     assert len(pages) == 4
 
     # Exclude pages that are older than tomorrow
-    future_pages = get_staging_pdf_files(
-        'pg*.pdf', fixture_dir, expiration_days=-1)
+    future_pages = get_staging_pdf_files(globpattern, expiration_days=-1)
     assert len(future_pages) == 0
     # Files should exist
     assert all(os.path.exists(pdf) for pdf in pages)
     future_pages = get_staging_pdf_files(
-        'pg*.pdf', fixture_dir, expiration_days=-1,
-        delete_expired=True)
+        globpattern, expiration_days=-1, delete_expired=True)
     assert len(future_pages) == 0
     # Files should be deleted
     assert all(not os.path.exists(pdf) for pdf in pages)
@@ -64,7 +65,7 @@ def test_get_staging_pdf_files(tmp_fixture_dir):
 def test_convert_pdf_page_to_web(tmp_fixture_dir):
     """Convert single page pdf to web version"""
 
-    pdf = pathlib.Path(tmp_fixture_dir.name) / 'pg1.pdf'
+    pdf = pathlib.Path(tmp_fixture_dir.name) / 'STAGING' / 'PDF' / 'pg1.pdf'
 
     # Make new file
     opt = convert_pdf_to_web(pdf)
@@ -94,8 +95,7 @@ def test_convert_pdf_page_to_web(tmp_fixture_dir):
 
 
 def test_optimize_all_pages(tmp_fixture_dir):
-    fixture_dir = tmp_fixture_dir.name
-    pages = optimize_staging_pages('pg*.pdf', fixture_dir)
+    pages = optimize_staging_pages('pg*.pdf')
     assert len(pages) == 4
 
 
@@ -104,7 +104,7 @@ def test_create_bundle(tmp_fixture_dir):
     bundle_file = pathlib.Path(fixture_dir) / 'bundle.pdf'
     assert not bundle_file.exists()
 
-    bundle = create_web_bundle(bundle_file, 'pg*.pdf', fixture_dir)
+    bundle = create_web_bundle(bundle_file, 'pg*.pdf')
     assert bundle.exists()
     assert bundle.stat().st_size > 1000
 
@@ -112,7 +112,7 @@ def test_create_bundle(tmp_fixture_dir):
 def test_convert_pdf_page_to_image(tmp_fixture_dir):
     """Convert single page pdf to image"""
 
-    pdf = pathlib.Path(tmp_fixture_dir.name) / 'pg1.pdf'
+    pdf = pathlib.Path(tmp_fixture_dir.name) / 'STAGING' / 'PDF' / 'pg1.pdf'
 
     # Make new file
     png_file = generate_pdf_preview(pdf)
@@ -143,18 +143,14 @@ def test_require_binary_decorator():
     assert not shutil.which(doesnt_exist)
 
     impossible_fn = require_binary(doesnt_exist)(fn)
-    with pytest.raises(RuntimeError) as excinfo:
+    with pytest.raises(MissingBinary) as excinfo:
         impossible_fn()
     assert 'Required binary ' in str(excinfo.value)
 
 
 @pytest.mark.django_db
-def test_create_current_issue_web_bundle():
+def test_create_current_issue_web_bundle(tmp_fixture_dir):
     Issue.objects.create(
         publication_date=date(2016, 1, 1))
     result = create_print_issue_pdf()
-    assert result == ['universitas_2016-1.pdf', 'universitas_2016-1_mag.pdf']
-
-
-
-
+    assert result == []
