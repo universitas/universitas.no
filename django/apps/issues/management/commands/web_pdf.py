@@ -95,6 +95,6 @@ def bundle_pdf(for_issue, logger):
             suffix=suffix, issue=for_issue)
         with open(pdf_path, 'rb') as src:
             content = ContentFile(src.read())
-        issue.pdf.save(filename, content, save=False)
-        issue.issue_name = name
-        issue.save()
+        issue.pdf.save(filename, content)
+        # issue.issue_name = name
+        # issue.save()
