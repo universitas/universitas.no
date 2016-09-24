@@ -42,7 +42,8 @@ def tmp_fixture_dir(settings):
     src = pathlib.Path(__file__).parent / 'STAGING'
     dst = pathlib.Path(tmpdir.name) / 'STAGING'
     shutil.copytree(str(src), str(dst))
-    return tmpdir
+    # Yield will keep the TemporaryDirectory from being garbage collected.
+    yield pathlib.Path(tmpdir.name)
 
 
 def test_get_staging_pdf_files(tmp_fixture_dir):
@@ -65,7 +66,7 @@ def test_get_staging_pdf_files(tmp_fixture_dir):
 def test_convert_pdf_page_to_web(tmp_fixture_dir):
     """Convert single page pdf to web version"""
 
-    pdf = pathlib.Path(tmp_fixture_dir.name) / 'STAGING' / 'PDF' / PAGE_ONE
+    pdf = pathlib.Path(tmp_fixture_dir) / 'STAGING' / 'PDF' / PAGE_ONE
 
     # Make new file
     opt = convert_pdf_to_web(pdf)
@@ -100,8 +101,7 @@ def test_optimize_all_pages(tmp_fixture_dir):
 
 
 def test_create_bundle(tmp_fixture_dir):
-    fixture_dir = tmp_fixture_dir.name
-    bundle_file = pathlib.Path(fixture_dir) / 'bundle.pdf'
+    bundle_file = tmp_fixture_dir / 'bundle.pdf'
     assert not bundle_file.exists()
 
     bundle = create_web_bundle(bundle_file)
@@ -112,7 +112,7 @@ def test_create_bundle(tmp_fixture_dir):
 def test_convert_pdf_page_to_image(tmp_fixture_dir):
     """Convert single page pdf to image"""
 
-    pdf = pathlib.Path(tmp_fixture_dir.name) / 'STAGING' / 'PDF' / PAGE_ONE
+    pdf = tmp_fixture_dir / 'STAGING' / 'PDF' / PAGE_ONE
 
     # Make new file
     png_file = generate_pdf_preview(pdf)
@@ -155,7 +155,7 @@ def test_create_current_issue_web_bundle(tmp_fixture_dir):
     create_print_issue_pdf()
     assert PrintIssue.objects.count() == 2
     assert Issue.objects.count() == 1
-    staging_dir = pathlib.Path(tmp_fixture_dir.name) / 'STAGING' / 'PDF'
+    staging_dir = tmp_fixture_dir / 'STAGING' / 'PDF'
     mag_pages = list(staging_dir.glob('UNI12*.pdf'))
     assert len(mag_pages) == 4
     mag_pages[0].unlink()
