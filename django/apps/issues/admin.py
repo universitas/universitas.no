@@ -4,11 +4,18 @@ Admin for printissues app
 """
 from django.contrib import admin
 from .models import PrintIssue, Issue
+from .tasks import create_print_issue_pdf
 from sorl.thumbnail.admin import AdminImageMixin
 from sorl.thumbnail import get_thumbnail
 # import autocomplete_light
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from django.contrib import messages
+
+
+def create_pdf(modeladmin, request, queryset):
+    messages.add_message(request, messages.INFO, 'started creating pdf')
+    create_print_issue_pdf.delay()
 
 
 class ThumbAdmin:
@@ -86,6 +93,7 @@ class IssueAdmin(admin.ModelAdmin):
 @admin.register(PrintIssue)
 class PrintIssueAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
     # date_hierarchy = 'publication_date'
+    actions = [create_pdf]
     actions_on_top = True
     actions_on_bottom = True
     save_on_top = True

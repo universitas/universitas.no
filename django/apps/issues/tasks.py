@@ -10,6 +10,7 @@ import tempfile
 from django.conf import settings
 from django.core.files.base import ContentFile
 from apps.issues.models import current_issue, PrintIssue
+from celery import shared_task
 
 import logging
 logger = logging.getLogger(__name__)
@@ -197,6 +198,7 @@ def create_web_bundle(filename, *args, **kwargs):
     return output_file
 
 
+@shared_task
 def create_print_issue_pdf():
     """Create or update pdf for the current issue"""
 

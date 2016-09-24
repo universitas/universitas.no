@@ -17,14 +17,14 @@ def get_contentfile(filepath):
     return content
 
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def tempdir():
     """A temporary directory that will be deleted from the file system
     when the object is garbage collected."""
     return tempfile.TemporaryDirectory()
 
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def fixture_pdf():
     this_dir = os.path.dirname(os.path.realpath(__file__))
     return os.path.join(this_dir, 'fixture_universitas.pdf')
@@ -78,4 +78,3 @@ def test_create_printissue(fixture_pdf, settings, tempdir):
     print_issue.get_thumbnail()
     assert print_issue.cover_page.path.endswith(
         '/covers/fixture_universitas.jpg')
-

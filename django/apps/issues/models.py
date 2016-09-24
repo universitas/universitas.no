@@ -250,12 +250,18 @@ class PrintIssue(models.Model, Edit_url_mixin):
             outputStream = BytesIO()
             writer.write(outputStream)
             outputStream.seek(0)
-            pdfimg = WandImage(
+            img = WandImage(
                 blob=outputStream,
                 format='pdf',
                 resolution=60,
             )
-            return pdfimg
+            background = WandImage(
+                width=img.width,
+                height=img.height,
+                background=Color('white'))
+            background.format = 'jpeg'
+            background.composite(img, 0, 0)
+            return background
 
         def pdf_not_found():
             """Creates an error frontpage"""
@@ -278,7 +284,6 @@ class PrintIssue(models.Model, Edit_url_mixin):
         try:
             cover = pdf_frontpage_to_image()
         except Exception as err:
-            raise
             cover = pdf_not_found()
             filename = filename.replace('.jpg', '_not_found.jpg')
             logger.error('Error: %s pdf not found: %s ' % (err, self.pdf))
