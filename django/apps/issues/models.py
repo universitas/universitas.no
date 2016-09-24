@@ -39,14 +39,15 @@ def upload_pdf_to(instance, filename):
     return os.path.join('pdf', dirname, filename)
 
 
-def extract_pdf_text(pdf, first_page, last_page=None):
+def extract_pdf_text(pdf_data, first_page, last_page=None):
     """ Extracts text from a page in the pdf """
     if last_page is None:
         last_page = first_page
-    args = ['pdftotext', '-f', first_page, '-l', last_page, pdf, '-']
+    # pdftotext stdin and stdout
+    args = ['pdftotext', '-f', first_page, '-l', last_page, '-', '-']
     args = [str(a) for a in args]
     text = subprocess.run(
-        args, check=True, stdout=subprocess.PIPE
+        args, check=True, stdout=subprocess.PIPE, input=pdf_data,
     ).stdout.decode()
     text = unicodedata.normalize('NFKD', text).strip()
     text = re.sub(r'\s*\n[\r\n \t]*', '\n', text)
@@ -312,9 +313,10 @@ class PrintIssue(models.Model, Edit_url_mixin):
             'januar', 'februar', 'mars', 'april', 'mai', 'juni',
             'juli', 'august', 'september', 'oktober', 'november', 'desember',
         ]
+        pdf_data = self.pdf.file.read()
         try:
-            page_2_text = extract_pdf_text(self.pdf.path, 2)
-        except IndexError:
+            page_2_text = extract_pdf_text(pdf_data, 2)
+        except subprocess.CalledProcessError:
             page_2_text = ''
 
         dateline = re.match(dateline_regex, page_2_text)
