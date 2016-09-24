@@ -52,8 +52,8 @@ def test_create_printissue(fixture_pdf, settings, tempdir):
 
     # use temporary directory for pdf and frontpage file
     settings.MEDIA_ROOT = tempdir.name
-    settings.STATICFILES_STORAGE = \
-        'django.contrib.staticfiles.storage.StaticFilesStorage'
+    settings.DEFAULT_FILE_STORAGE = \
+        'django.core.files.storage.FileSystemStorage'
 
     print_issue = PrintIssue()
     content = get_contentfile(fixture_pdf)
@@ -62,7 +62,7 @@ def test_create_printissue(fixture_pdf, settings, tempdir):
     # Save content of fixture pdf as well as model
     print_issue.pdf.save(filename, content)
 
-    assert filename in str(print_issue)
+    assert 'fixture_universitas' in str(print_issue)
     assert print_issue.pages == 4
 
     # Assert that an Issue has been created and a publication
@@ -78,3 +78,4 @@ def test_create_printissue(fixture_pdf, settings, tempdir):
     print_issue.get_thumbnail()
     assert print_issue.cover_page.path.endswith(
         '/covers/fixture_universitas.jpg')
+

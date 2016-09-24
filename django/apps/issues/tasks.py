@@ -45,7 +45,7 @@ def require_binary(binary):
 def get_staging_pdf_files(
         globpattern='*.pdf',
         directory=None,
-        expiration_days=4,
+        expiration_days=0,
         delete_expired=False):
     """Find pages for latest issue in pdf staging directory."""
 
@@ -174,6 +174,8 @@ def create_web_bundle(filename, *args, **kwargs):
     if number_of_pages % 4 != 0:
         raise RuntimeError('Wrong number of pages %d' % number_of_pages)
 
+    logger.info('{} pages found'.format(number_of_pages))
+
     args = [
         GHOSTSCRIPT,
         '-q',
@@ -191,8 +193,7 @@ def create_web_bundle(filename, *args, **kwargs):
     ] + pages
 
     args = [str(a) for a in args]
-    result = subprocess.run(args)
-    print(result.args)
+    subprocess.run(args)
     return output_file
 
 
@@ -203,9 +204,11 @@ def create_print_issue_pdf():
     editions = [('', PAGES_GLOB), ('_mag', MAG_PAGES_GLOB)]
     results = []
     for suffix, globpattern in editions:
+
         pdf_name = OUTPUT_PDF_NAME.format(issue=issue, suffix=suffix)
         issue_name = '{issue.number}/{issue.date.year}{suffix}'.format(
             suffix=suffix, issue=issue)
+        logger.info('Creating pdf: {}'.format(issue_name))
         tmp_bundle_file = tempfile.NamedTemporaryFile(suffix='.pdf')
         try:
             create_web_bundle(
@@ -214,14 +217,16 @@ def create_print_issue_pdf():
             logger.info(str(warning))
             continue
         try:
-            print_issue = current_issue.print_issue_set.get(
-                pdf__endswith=pdf_name)
+            # pdf_lookfor = pdf_name.split('.')[0]
+            # print(pdf_name, pdf_lookfor)
+            print_issue = PrintIssue.objects.get(pdf__endswith=pdf_name)
         except PrintIssue.DoesNotExist:
             print_issue = PrintIssue()
         with open(tmp_bundle_file.name, 'rb') as src:
             pdf_content = ContentFile(src.read())
         print_issue.pdf.save(pdf_name, pdf_content, save=False)
-        print_issue.issue_name = issue_name
+        # print_issue.issue_name = issue_name
         print_issue.save()
+        logger.info('New bundle file: {}'.format(pdf_name))
         results.append(pdf_name)
     return results

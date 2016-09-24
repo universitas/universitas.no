@@ -10,6 +10,8 @@ import logging
 import collections
 import subprocess
 import unicodedata
+import uuid
+import pathlib
 
 # Django core
 from django.utils import timezone
@@ -30,6 +32,11 @@ import os.path
 
 from utils.model_mixins import Edit_url_mixin
 logger = logging.getLogger('universitas')
+
+
+def upload_pdf_to(instance, filename):
+    dirname = uuid.uuid1().hex
+    return os.path.join('pdf', dirname, filename)
 
 
 def extract_pdf_text(pdf, first_page, last_page=None):
@@ -62,13 +69,21 @@ IssueTuple = collections.namedtuple('IssueTuple', ['number', 'date'])
 def current_issue():
     """Return an IssueTuple for the current issue."""
     today = timezone.now().astimezone().date()
-    latest_issue = Issue.objects.latest_issue()
-    if latest_issue.publication_date == today:
-        current_issue = latest_issue
+    try:
+        latest_issue = Issue.objects.latest_issue()
+    except Issue.DoesNotExist:
+        current_issue = Issue()
     else:
-        current_issue = Issue.objects.next_issue()
+        if latest_issue.publication_date == today:
+            current_issue = latest_issue
+        else:
+            current_issue = Issue.objects.next_issue()
 
     return current_issue.issue_tuple()
+
+
+def today():
+    return timezone.now().astimezone().date()
 
 
 class IssueQueryset(models.QuerySet):
@@ -111,6 +126,7 @@ class Issue(models.Model, Edit_url_mixin):
     ]
 
     publication_date = models.DateField(
+        default=today,
         blank=True,
         null=True)
     issue_name = models.CharField(
@@ -183,7 +199,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
 
     pdf = models.FileField(
         help_text=_('Pdf file for this issue.'),
-        upload_to='pdf/',
+        upload_to=upload_pdf_to,
     )
 
     cover_page = thumbnail.ImageField(
@@ -257,8 +273,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
             background.composite(img, 0, 0)
             return background
 
-        filename = self.pdf.name.replace(
-            '.pdf', '.jpg').replace('pdf/', 'pdf/covers/')
+        filename = pathlib.Path(self.pdf.name).with_suffix('.jpg').name
 
         try:
             cover = pdf_frontpage_to_image()
