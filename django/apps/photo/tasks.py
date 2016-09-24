@@ -11,9 +11,6 @@ from .models import upload_image_to, ImageFile
 from apps.core.staging import new_staging_images
 
 logger = get_task_logger(__name__)
-# logger = logging.getLogger(__name__)
-# @periodic_task(run_every=timedelta(hours=6))
-# @periodic_task(run_every=timedelta(minutes=1))
 
 
 @periodic_task(run_every=timedelta(minutes=1))

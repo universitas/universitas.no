@@ -2,13 +2,16 @@
 """ Content in the publication. """
 
 # Python standard library
-# import subprocess
 import re
 import os
 import datetime
 from io import BytesIO
 import logging
 import collections
+import subprocess
+import unicodedata
+import uuid
+import pathlib
 
 # Django core
 from django.utils import timezone
@@ -17,7 +20,6 @@ from django.db import models
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch.dispatcher import receiver
 from django.core.files.base import ContentFile
-# from django.utils.text import slugify
 
 # Installed apps
 import PyPDF2
@@ -27,22 +29,35 @@ from wand.image import Image as WandImage
 from wand.color import Color
 from wand.drawing import Drawing
 import os.path
-# Project apps
 
 from utils.model_mixins import Edit_url_mixin
 logger = logging.getLogger('universitas')
 
 
+def upload_pdf_to(instance, filename):
+    dirname = uuid.uuid1().hex
+    return os.path.join('pdf', dirname, filename)
+
+
+def extract_pdf_text(pdf, first_page, last_page=None):
+    """ Extracts text from a page in the pdf """
+    if last_page is None:
+        last_page = first_page
+    args = ['pdftotext', '-f', first_page, '-l', last_page, pdf, '-']
+    args = [str(a) for a in args]
+    text = subprocess.run(
+        args, check=True, stdout=subprocess.PIPE
+    ).stdout.decode()
+    text = unicodedata.normalize('NFKD', text).strip()
+    text = re.sub(r'\s*\n[\r\n \t]*', '\n', text)
+    return text
+
+
 def pdf_not_found(pdf_name):
     """Creates an error frontpage"""
-    img = WandImage(
-        width=300,
-        height=500,
-    )
+    img = WandImage(width=300, height=500,)
     msg = 'ERROR:\n{}\nnot found on disk'.format(pdf_name)
     with Drawing() as draw:
-        #draw.font = 'wandtests/assets/League_Gothic.otf'
-        #draw.font_size = 40
         draw.text_alignment = 'center'
         draw.text(img.width // 2, img.height // 3, msg)
         draw(img)
@@ -54,13 +69,21 @@ IssueTuple = collections.namedtuple('IssueTuple', ['number', 'date'])
 def current_issue():
     """Return an IssueTuple for the current issue."""
     today = timezone.now().astimezone().date()
-    latest_issue = Issue.objects.latest_issue()
-    if latest_issue.publication_date == today:
-        current_issue = latest_issue
+    try:
+        latest_issue = Issue.objects.latest_issue()
+    except Issue.DoesNotExist:
+        current_issue = Issue()
     else:
-        current_issue = Issue.objects.next_issue()
+        if latest_issue.publication_date == today:
+            current_issue = latest_issue
+        else:
+            current_issue = Issue.objects.next_issue()
 
     return current_issue.issue_tuple()
+
+
+def today():
+    return timezone.now().astimezone().date()
 
 
 class IssueQueryset(models.QuerySet):
@@ -80,7 +103,10 @@ class IssueQueryset(models.QuerySet):
         return next_issue
 
     def latest_issue(self):
-        return self.published().first()
+        latest = self.published().first()
+        if not latest:
+            raise Issue.DoesNotExist('No published issues in database')
+        return latest
 
 
 class Issue(models.Model, Edit_url_mixin):
@@ -100,6 +126,7 @@ class Issue(models.Model, Edit_url_mixin):
     ]
 
     publication_date = models.DateField(
+        default=today,
         blank=True,
         null=True)
     issue_name = models.CharField(
@@ -162,9 +189,9 @@ class PrintIssue(models.Model, Edit_url_mixin):
         verbose_name = _('Pdf issue')
         verbose_name_plural = _('Pdf issues')
 
-    issue = models.ForeignKey(Issue, null=True, related_name='pdfs')
-
-    # publication_date = models.DateField(blank=True, null=True)
+    issue = models.ForeignKey(
+        Issue, related_name='pdfs'
+    )
 
     pages = models.IntegerField(
         help_text='Number of pages',
@@ -172,8 +199,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
 
     pdf = models.FileField(
         help_text=_('Pdf file for this issue.'),
-        upload_to='pdf/',
-        blank=True, null=True,
+        upload_to=upload_pdf_to,
     )
 
     cover_page = thumbnail.ImageField(
@@ -189,7 +215,10 @@ class PrintIssue(models.Model, Edit_url_mixin):
     )
 
     def __str__(self):
-        return self.pdf.url
+        if self.pdf:
+            return self.pdf.url
+        else:
+            return super().__str__()
 
     def save(self, *args, **kwargs):
         if self.pk:
@@ -203,7 +232,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
             self.cover_page.delete()
         if not self.pdf and self.cover_page:
             self.cover_page.delete()
-        if self.pdf and not self.issue:
+        if self.pdf and not self.issue_id:
             publication_date = self.get_publication_date()
             self.issue, created = Issue.objects.get_or_create(
                 publication_date=publication_date,
@@ -214,30 +243,31 @@ class PrintIssue(models.Model, Edit_url_mixin):
     def create_thumbnail(self):
         """ Create a jpg version of the pdf frontpage """
         def pdf_frontpage_to_image():
-            reader = PyPDF2.PdfFileReader(self.pdf.file)
+            reader = PyPDF2.PdfFileReader(self.pdf.file, strict=False)
             writer = PyPDF2.PdfFileWriter()
             first_page = reader.getPage(0)
             writer.addPage(first_page)
             outputStream = BytesIO()
             writer.write(outputStream)
             outputStream.seek(0)
-            pdfimg = WandImage(
+            img = WandImage(
                 blob=outputStream,
                 format='pdf',
                 resolution=60,
             )
-            # filename = '/tmp/cover.png'
-            # pdfimg.save(filename=filename)
-            # pngimg = WandImage(filename=filename)
-            return pdfimg
+            background = WandImage(
+                width=img.width,
+                height=img.height,
+                background=Color('white'))
+            background.format = 'jpeg'
+            background.composite(img, 0, 0)
+            return background
 
         def pdf_not_found():
             """Creates an error frontpage"""
             img = WandImage(width=400, height=600,)
             msg = 'ERROR:\n{}\nnot found on disk'.format(self.pdf.name)
             with Drawing() as draw:
-                #draw.font = 'wandtests/assets/League_Gothic.otf'
-                #draw.font_size = 40
                 draw.text_alignment = 'center'
                 draw.text(img.width // 2, img.height // 3, msg)
                 draw(img)
@@ -249,9 +279,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
             background.composite(img, 0, 0)
             return background
 
-        filename = self.pdf.name.replace(
-            '.pdf', '.jpg').replace(
-            'pdf/', 'pdf/covers/')
+        filename = pathlib.Path(self.pdf.name).with_suffix('.jpg').name
 
         try:
             cover = pdf_frontpage_to_image()
@@ -276,14 +304,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
         self.create_thumbnail()
         return self.cover_page
 
-    def extract_page_text(self, page_number):
-        """ Extracts text from a page in the pdf """
-        pdf_file = PyPDF2.PdfFileReader(self.pdf, strict=True)
-        text = pdf_file.getPage(page_number - 1).extractText()
-        return text
-
     def get_publication_date(self):
-        page_2_text = self.extract_page_text(2)
         dateline_regex = (
             r'^\d(?P<day>\w+) (?P<date>\d{1,2})\.'
             r' (?P<month>\w+) (?P<year>\d{4})')
@@ -291,6 +312,11 @@ class PrintIssue(models.Model, Edit_url_mixin):
             'januar', 'februar', 'mars', 'april', 'mai', 'juni',
             'juli', 'august', 'september', 'oktober', 'november', 'desember',
         ]
+        try:
+            page_2_text = extract_pdf_text(self.pdf.path, 2)
+        except IndexError:
+            page_2_text = ''
+
         dateline = re.match(dateline_regex, page_2_text)
         if dateline:
             day = int(dateline.group('date'))
@@ -310,7 +336,6 @@ class PrintIssue(models.Model, Edit_url_mixin):
                 days=3 - created.isoweekday())
         return created
 
-    # @models.permalink
     def get_absolute_url(self):
         return self.pdf.url
 
@@ -318,7 +343,6 @@ class PrintIssue(models.Model, Edit_url_mixin):
 @receiver(pre_delete, sender=PrintIssue)
 def delete_pdf_and_cover_page(sender, instance, **kwargs):
     thumbnail.delete(instance.cover_page, delete_file=True)
-    # instance.cover_page.delete(False)
     instance.pdf.delete(False)
 
 
