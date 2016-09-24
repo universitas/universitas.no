@@ -4,13 +4,12 @@ from PIL import Image
 import pytest
 import tempfile
 import os
-import glob
 import shutil
 import pathlib
 from datetime import date
 # from django.utils.timezone import datetime
 from django.core.files.base import ContentFile
-from apps.issues.models import Issue
+from apps.issues.models import Issue, PrintIssue
 # from apps.issues.models import extract_pdf_text
 from apps.issues.tasks import (
     MissingBinary,
@@ -22,6 +21,8 @@ from apps.issues.tasks import (
     create_web_bundle,
     create_print_issue_pdf,
 )
+
+PAGE_ONE = 'UNI11VER16010101000.pdf'
 
 
 def get_contentfile(filepath):
@@ -45,8 +46,7 @@ def tmp_fixture_dir(settings):
 
 
 def test_get_staging_pdf_files(tmp_fixture_dir):
-    fixture_dir = tmp_fixture_dir.name
-    globpattern='UNI11VER*.pdf'
+    globpattern = 'UNI11VER*.pdf'
     pages = get_staging_pdf_files(globpattern)
     assert len(pages) == 4
 
@@ -65,13 +65,13 @@ def test_get_staging_pdf_files(tmp_fixture_dir):
 def test_convert_pdf_page_to_web(tmp_fixture_dir):
     """Convert single page pdf to web version"""
 
-    pdf = pathlib.Path(tmp_fixture_dir.name) / 'STAGING' / 'PDF' / 'pg1.pdf'
+    pdf = pathlib.Path(tmp_fixture_dir.name) / 'STAGING' / 'PDF' / PAGE_ONE
 
     # Make new file
     opt = convert_pdf_to_web(pdf)
 
     # Default file location
-    assert opt == pdf.parent / 'WEB' / 'pg1.pdf'
+    assert opt == pdf.parent / 'WEB' / PAGE_ONE
     assert opt.exists()
 
     # Conversion changes file content
@@ -95,8 +95,8 @@ def test_convert_pdf_page_to_web(tmp_fixture_dir):
 
 
 def test_optimize_all_pages(tmp_fixture_dir):
-    pages = optimize_staging_pages('pg*.pdf')
-    assert len(pages) == 4
+    pages = optimize_staging_pages()
+    assert len(pages) == 8
 
 
 def test_create_bundle(tmp_fixture_dir):
@@ -104,7 +104,7 @@ def test_create_bundle(tmp_fixture_dir):
     bundle_file = pathlib.Path(fixture_dir) / 'bundle.pdf'
     assert not bundle_file.exists()
 
-    bundle = create_web_bundle(bundle_file, 'pg*.pdf')
+    bundle = create_web_bundle(bundle_file)
     assert bundle.exists()
     assert bundle.stat().st_size > 1000
 
@@ -112,13 +112,13 @@ def test_create_bundle(tmp_fixture_dir):
 def test_convert_pdf_page_to_image(tmp_fixture_dir):
     """Convert single page pdf to image"""
 
-    pdf = pathlib.Path(tmp_fixture_dir.name) / 'STAGING' / 'PDF' / 'pg1.pdf'
+    pdf = pathlib.Path(tmp_fixture_dir.name) / 'STAGING' / 'PDF' / PAGE_ONE
 
     # Make new file
     png_file = generate_pdf_preview(pdf)
 
     # Default file location
-    assert str(png_file) == str(pdf.parent / 'PNG' / 'pg1.png')
+    assert png_file == (pdf.parent / 'PNG' / PAGE_ONE).with_suffix('.png')
     assert png_file.exists()
     img = Image.open(str(png_file))
 
@@ -150,7 +150,19 @@ def test_require_binary_decorator():
 
 @pytest.mark.django_db
 def test_create_current_issue_web_bundle(tmp_fixture_dir):
-    Issue.objects.create(
-        publication_date=date(2016, 1, 1))
-    result = create_print_issue_pdf()
-    assert result == []
+    assert PrintIssue.objects.count() == 0
+    assert Issue.objects.count() == 0
+    create_print_issue_pdf()
+    assert PrintIssue.objects.count() == 2
+    assert Issue.objects.count() == 1
+    staging_dir = pathlib.Path(tmp_fixture_dir.name) / 'STAGING' / 'PDF'
+    mag_pages = list(staging_dir.glob('UNI12*.pdf'))
+    assert len(mag_pages) == 4
+    mag_pages[0].unlink()
+
+    # Wrong number of pages
+    with pytest.raises(RuntimeError):
+        create_print_issue_pdf()
+
+    assert PrintIssue.objects.count() == 2
+    assert Issue.objects.count() == 1
