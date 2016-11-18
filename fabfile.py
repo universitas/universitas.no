@@ -7,7 +7,6 @@ from fabric.contrib.files import append, exists, put
 from fabric.context_managers import shell_env, cd
 from fabric.api import local, env, run, sudo, settings, task
 from fabric.utils import abort
-from fabtools.vagrant import vagrant
 from deployment_tools.generate_postactivate import make_postactivate_file
 
 # github repo used for deploying the site
@@ -18,9 +17,6 @@ LINUXGROUP = 'universitas'  # linux user group on the webserver
 WEBSERVER_ROOT = '/srv'  # root folder for all websites on the webserver
 SITE_NAME = 'universitas.no'
 env.site_url = 'vagrant.' + SITE_NAME
-
-# Stops annoying linting error. "vagrant" is a command line task
-vagrant = vagrant
 
 
 @task(name='local')
@@ -176,6 +172,13 @@ def _get_configs(
 def fix_permissions():
     folders = _get_folders()
     _folders_and_permissions(folders)
+
+
+@task
+def make_postactivate():
+    """ create postactivate file """
+    postactivate_file, project_settings = make_postactivate_file(env.site_url, )
+    return postactivate_file
 
 
 @task
