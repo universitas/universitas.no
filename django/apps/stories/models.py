@@ -169,7 +169,7 @@ class Section(models.Model):
     slug = AutoSlugField(
         _('slug'),
         populate_from=('title',),
-        null=True,
+        default='section-slug',
         max_length=50,
         overwrite=True,
         slugify_function=slugify,
@@ -200,7 +200,7 @@ class StoryType(models.Model):
 
     slug = AutoSlugField(
         _('slug'),
-        null=True,
+        default='storytype-slug',
         populate_from=('name',),
         max_length=50,
         overwrite=True,
@@ -505,7 +505,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     )
     slug = AutoSlugField(
         _('slug'),
-        default='slug-here',
+        default='story-slug',
         allow_duplicates=True,
         populate_from=('title',),
         max_length=50,
