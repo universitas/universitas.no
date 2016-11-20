@@ -4,7 +4,9 @@
   "description": "frontend assets universitas",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo no build yet",
+    "dev": "echo no dev yet"
   },
   "repository": {
     "type": "git",
@@ -13,13 +15,17 @@
   "author": "Håken Lid",
   "license": "ISC",
   "devDependencies": {
+    "css-loader": "^0.26.0",
+    "extract-text-webpack-plugin": "^1.0.1",
     "node-sass": "^3.13.0",
     "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2"
   },
   "dependencies": {
     "slick-carousel": "^1.6.0",
+    "url-loader": "^0.5.7",
     "zurb-foundation-5": "^5.4.7"
   }
 }
