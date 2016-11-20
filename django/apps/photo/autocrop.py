@@ -1,15 +1,20 @@
 """ Face and feature detection with opencv. """
 
 import numpy
-import cv2
+
 import os
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from collections import namedtuple
 
+
 import logging
 logger = logging.getLogger(__name__)
+try:
+    import cv2
+except ImportError:
+    logger.warning('Opencv is not installed')
 
 Cropping = namedtuple('Cropping', ['top', 'left', 'diameter'])
 
