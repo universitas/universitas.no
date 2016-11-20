@@ -8,13 +8,13 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from collections import namedtuple
 
-
 import logging
 logger = logging.getLogger(__name__)
 try:
     import cv2
 except ImportError:
     logger.warning('Opencv is not installed')
+    cv2 = None
 
 Cropping = namedtuple('Cropping', ['top', 'left', 'diameter'])
 
@@ -211,3 +211,6 @@ class AutoCropImage(models.Model):
             return Cropping(left=x, top=y, diameter=d)
 
         main()
+
+if not cv2:
+    del AutoCropImage.save
