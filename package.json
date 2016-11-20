@@ -13,7 +13,13 @@
   "author": "Håken Lid",
   "license": "ISC",
   "devDependencies": {
+    "node-sass": "^3.13.0",
+    "sass-loader": "^4.0.2",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2"
+  },
+  "dependencies": {
+    "slick-carousel": "^1.6.0",
+    "zurb-foundation-5": "^5.4.7"
   }
 }
