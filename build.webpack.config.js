@@ -1,14 +1,27 @@
 var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var CopyPlugin = require('copy-webpack-plugin');
+
+var dest = __dirname + '/build';
 
 module.exports = {
+  plugins: [
+    new ExtractTextPlugin("stylesheet/universitas.css"),
+    new CopyPlugin([
+      { from: 'src/fonts', to: dest + '/fonts' },
+      { from: 'src/images', to: dest + '/images' },
+      { from: 'src/favicon', to: dest + '/favicon' }
+    ])
+  ],
   entry: {
     stylesheet: './src/stylesheets/universitas.scss',
-    javascripts: './src/javascripts/site.js',
+    site: './src/javascripts/site.js',
+    head: './src/javascripts/head.js',
+    vendor: './src/javascripts/vendor.js'
   },
   output: {
-    path: __dirname + '/built',
-    filename: '[name]/universitas.js'
+    path: dest,
+    filename: 'javascripts/[name].js'
   },
   module: {
     loaders: [
@@ -29,7 +42,4 @@ module.exports = {
     ]
 
   },
-  plugins: [
-    new ExtractTextPlugin("[name].css")
-  ]
 }
