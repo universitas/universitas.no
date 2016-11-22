@@ -4,8 +4,7 @@
 from os.path import dirname
 # import django.conf.global_settings as DEFAULT_SETTINGS
 from django.utils.translation import ugettext_lazy as _
-from utils.setting_helpers import (
-    environment_variable, join_path, load_json_file)
+from utils.setting_helpers import environment_variable, join_path
 from .logging_settings import LOGGING  # NOQA
 
 SITE_URL = environment_variable('SITE_URL')
@@ -161,11 +160,8 @@ CACHES = {
 # source code folder
 BASE_DIR = environment_variable('SOURCE_FOLDER')
 # outside of repo
-PROJECT_DIR = dirname(BASE_DIR)
+PROJECT_DIR = dirname(dirname(BASE_DIR))
 
-# GULP FILE REVISIONS
-GULP_FILEREVS = load_json_file(
-    join_path(PROJECT_DIR, 'build', 'rev-manifest.json'))
 
 # Django puts generated translation files here.
 LOCALE_PATHS = [join_path(BASE_DIR, 'translation'), ]
