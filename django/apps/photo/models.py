@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*FIELDNAME = forms.SlugField()-
+# -*- coding: utf-8 -*-
 """ Photography and image files in the publication  """
 # Python standard library
 # import os
@@ -13,6 +13,7 @@ from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models.signals import pre_delete, post_save
 from django.core.files import File
+from django.conf import settings
 # Installed apps
 
 from model_utils.models import TimeStampedModel
@@ -197,7 +198,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     def save_local_image_as_source(self, filepath, save=True):
         """Save file from local filesystem as source
 
-        Does not save if the file is identical to the one that is already there.
+        Only saves if the new file is different from the one that exists.
         """
         mtime = os.stat(filepath).st_mtime
         size = os.stat(filepath).st_size
@@ -368,8 +369,8 @@ class ProfileImage(ImageFile):
 
 def remove_imagefile_and_thumbnail(sender, instance, **kwargs):
     """Remove image file"""
-    thumbnail.delete(instance.source_file, delete_file=True)
-    # instance.source_file.delete()
+    delete_file = not settings.DEBUG  # only in production
+    thumbnail.delete(instance.source_file, delete_file=delete_file)
 
 
 def remove_thumbnail(sender, instance, **kwargs):
