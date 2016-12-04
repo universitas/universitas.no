@@ -20,7 +20,6 @@ rgb_profile="$SCRIPT_FOLDER/sRGB.icc"
   -sDefaultRGBProfile=$rgb_profile \
   -dColorConversionStrategy=/DeviceRGB \
   -dColorConversionStrategyForImages=/DeviceRGB \
-  -dFastWebView=true \
   -dBATCH  \
   -dNOPAUSE  \
   -sDEVICE=pdfwrite  \
