@@ -160,7 +160,7 @@ CACHES = {
 # source code folder
 BASE_DIR = environment_variable('SOURCE_FOLDER')
 # outside of repo
-PROJECT_DIR = dirname(dirname(BASE_DIR))
+PROJECT_DIR = dirname(BASE_DIR)
 
 
 # Django puts generated translation files here.
