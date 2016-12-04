@@ -226,7 +226,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
         else:
             old_self = PrintIssue()
         if self.pdf and old_self.pdf != self.pdf:
-            reader = PyPDF2.PdfFileReader(self.pdf)
+            reader = PyPDF2.PdfFileReader(self.pdf, strict=False)
             self.pages = reader.numPages
             self.text = reader.getPage(0).extractText()[:200]
             self.cover_page.delete()
