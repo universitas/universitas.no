@@ -61,13 +61,6 @@ def start_runserver_plus():
         run('source bin/activate && django-admin runserver_plus')
 
 
-@task(name='gulp')
-def gulp_watch():
-    folders = _get_folders(env.site_url)
-    with cd(folders['django']):
-        run('../node_modules/.bin/gulp')
-
-
 @task(name='admin')
 def django_admin(*args):
     """ run arbitrary django-admin commands """
@@ -111,7 +104,7 @@ def _get_folders(site_url=None):
 def _get_configs(
         site_url=None, user_name=None, bin_folder=None, config_folder=None):
     """
-    Return a dictionary containing configuration for webserver programs and services.
+    Return a dictionary containing configuration for webserver services.
     """
     # user name for database and linux
     site_url = site_url or env.site_url
@@ -125,7 +118,7 @@ def _get_configs(
     config_folder = config_folder or dirname(__file__) + '/deployment_tools'
 
     configs = {
-        # 'service': { # name of program or service that need configuration files.
+        # 'service': { # name of program or service that need configuration
         # 'template': # template for configuration file
         # 'filename': # what to call the config file made from template
         # 'target folder': # where to put the config file
@@ -134,35 +127,39 @@ def _get_configs(
         # 'stop': # bash command to stop the service
         # },
         'site': {  # python wsgi runner for django
-            'template': '{config}/site/template'.format(config=config_folder,),
-            'filename': '{user}.sh'.format(user=user_name,),
+            'template': '{c}/site/template'.format(c=config_folder),
+            'filename': '{u}.sh'.format(u=user_name),
             'target folder': bin_folder,
             # make bash file executable by the supervisor user.
-            'install': 'sudo chmod 774 $FILENAME && sudo chown {user} $FILENAME'.format(user=user_name,),
+            'install': ('sudo chmod 774 $FILENAME &&'
+                        'sudo chown {u} $FILENAME').format(u=user_name),
             'start': ':',
             'stop': ':',
         },
         'supervisor': {  # keeps gunicorn running
-            'template': '{config}/supervisor/template'.format(config=config_folder,),
-            'filename': '{user}.conf'.format(user=user_name,),
+            'template': '{c}/supervisor/template'.format(c=config_folder,),
+            'filename': '{u}.conf'.format(u=user_name,),
             'target folder': '/etc/supervisor/conf.d',
             # read all config files in conf.d folder
             'install': 'sudo supervisorctl reread && sudo supervisorctl update',
-            'start': 'sudo supervisorctl start {url}:*'.format(url=site_url,),
-            'stop': 'sudo supervisorctl stop {url}:*'.format(url=site_url,),
+            'start': 'sudo supervisorctl start {url}:*'.format(url=site_url),
+            'stop': 'sudo supervisorctl stop {url}:*'.format(url=site_url),
         },
         'nginx': {  # webserver
-            'template': '{config}/nginx/template'.format(config=config_folder,),
+            'template': '{c}/nginx/template'.format(c=config_folder,),
             'filename': '{url}'.format(url=site_url,),
             'target folder': '/etc/nginx/sites-available',
             'install': ':',
             'start': (
                 # create symbolic link from config file to sites-enabled
-                'sudo ln -sf /etc/nginx/sites-available/{url} /etc/nginx/sites-enabled/{url} '
+                'sudo ln -sf '
+                '/etc/nginx/sites-available/{url} '
+                '/etc/nginx/sites-enabled/{url} '
                 # reload nginx service
                 '&& sudo nginx -s reload').format(url=site_url),
             # remove symbolic link
-            'stop': 'sudo rm -f /etc/nginx/sites-enabled/{url} && sudo nginx -s reload'.format(url=site_url,),
+            'stop': ('sudo rm -f /etc/nginx/sites-enabled/{url} && '
+                     'sudo nginx -s reload').format(url=site_url,),
         },
     }
     return configs
@@ -177,17 +174,20 @@ def fix_permissions():
 @task
 def make_postactivate():
     """ create postactivate file """
-    postactivate_file, project_settings = make_postactivate_file(env.site_url, )
+    postactivate_file, project_settings = make_postactivate_file(
+        env.site_url, )
     return postactivate_file
 
 
 @task
 def deploy():
-    """ create database, make folders, install django, create linux user, make virtualenv. """
+    """Create database, make folders, install django,
+    create linux user, make virtualenv. """
     # Folders are named something like www.example.com
     # or www.staging.example.com for production or staging
     folders = _get_folders()
-    postactivate_file, project_settings = make_postactivate_file(env.site_url, )
+    postactivate_file, project_settings = make_postactivate_file(
+        env.site_url, )
     _create_postgres_db(project_settings)
     _create_linux_user(project_settings['user'], LINUXGROUP)
     _folders_and_permissions(folders)
@@ -210,7 +210,7 @@ def update():
     stop()
     _database_migrations()
     _npm_install(folders)
-    _gulp_build(folders)
+    _npm_build(folders)
     _collect_static()
     start()
 
@@ -297,8 +297,8 @@ def _deploy_configs(user_name=None, user_group=None, upload=True):
             # upload config file
             put(target, destination, use_sudo=True)
             with shell_env(FILENAME=destination):
-            # run command to make service register new config and restart if
-            # needed.
+                # run command to make service register new config and restart if
+                # needed.
                 run(config['install'])
 
 
@@ -340,13 +340,15 @@ def _folders_and_permissions(folders):
     # set linux user group.
     sudo('mkdir -p {site_folder} &&'
          'chown -R :{group} {site_folder}'.format(
-        group=LINUXGROUP,
-        site_folder=site_folder))
+             group=LINUXGROUP,
+             site_folder=site_folder))
 
 
 def _create_linux_user(username, group):
-    """ Create a new linux user to run programs and own project files and folders on the webserver. """
-    # Bash command id user returns error code 1 if user does not exist and code 0 if user exists.
+    """ Create a new linux user to run programs and own project files and
+    folders on the webserver. """
+    # Bash command id user returns error code 1 if user does not
+    # exist and code 0 if user exists.
     # To avoid Fabric raising an exception on an expected shell error,
     # return code ($?) is echoded to stdout and passed to python as a string.
     user_exists = run(
@@ -378,7 +380,8 @@ def _create_linux_user(username, group):
 
 
 def _drop_postgres_db(db_name, backup=True):
-    """ Delete database and user. Dumps the database to file before deleting """
+    """Delete database and user.
+    Dumps the database to file before deleting"""
     if backup:
         run('pg_dump -Fc {db_name} > {db_name}_$(date +"%Y-%m-%d").sql'.format(
             db_name=db_name,))
@@ -387,7 +390,8 @@ def _drop_postgres_db(db_name, backup=True):
 
 
 def _create_postgres_db(project_settings):
-    """ Create postgres database and user for the django deployment. Will also change that user's postgres password. """
+    """Create postgres database and user for the django deployment.
+    Will also change that user's postgres password."""
     username = project_settings['user']
     password = project_settings['db_password']
     db_name = project_settings['db_name']
@@ -419,10 +423,10 @@ def _get_latest_source(folders):
     if not exists(site_folder + '/.git'):
         run('git clone {} {}'.format(REPO_URL, site_folder))
 
-    if not 'branch is ahead' in git_status and 'nothing to commit' in git_status:
+    if 'branch is ahead' not in git_status and 'nothing to commit' in git_status:
         with cd(site_folder):
             run('git fetch && git reset --hard {}'.format(current_commit))
-    elif not 'vagrant' in env.site_url and not 'local' in env.site_url:
+    elif 'vagrant' not in env.site_url and 'local' not in env.site_url:
         abort('Local source code changes has not been pushed to repo.')
 
 
@@ -455,10 +459,10 @@ def _npm_install(folders):
         run('npm install')
 
 
-def _gulp_build(folders):
-    """ Build with gulp """
+def _npm_build(folders):
+    """ Build with webpack """
     with cd(folders['site']):
-        run('node_modules/.bin/gulp build:production')
+        run('npm run build')
 
 
 def _collect_static():
