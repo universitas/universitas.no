@@ -1,6 +1,6 @@
 node_modules/
-build/
 .cache/
+build/
 bin/*universitas_no.sh
 bin/postactivate
 media

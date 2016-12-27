@@ -1,6 +1,7 @@
 {% load cache %}
 {% load universitas_menu %}
-{% load gulp_rev_staticfiles %}
+{% load static %}
+{% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html class="no-js" lang="{{ LANGUAGE_CODE }}">
   <head>
@@ -9,8 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% include "_favicons.html" %}
     {% block head %}{% endblock head %}
-    <link rel="stylesheet" type="text/css" href="{% static 'stylesheets/universitas.css' %}">
-    <script src="{% static 'javascripts/head.js' %}"></script>
+    {% render_bundle 'stylesheets' 'css' %}
+    {% render_bundle 'head' 'js' %}
   </head>
 
   <body>
@@ -35,8 +36,8 @@
     </footer>
     {% endblock footer %}
 
-    <script src="{% static 'javascripts/vendor.js' %}"></script>
-    <script src="{% static 'javascripts/site.js' %}"></script>
+    {% render_bundle 'vendor' 'js' %}
+    {% render_bundle 'site' 'js' %}
     {# {% include 'autocomplete_light/static.html' %} #}
   </body>
 </html>
