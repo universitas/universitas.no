@@ -4,8 +4,7 @@
 from os.path import dirname
 # import django.conf.global_settings as DEFAULT_SETTINGS
 from django.utils.translation import ugettext_lazy as _
-from utils.setting_helpers import (
-    environment_variable, join_path, load_json_file)
+from utils.setting_helpers import environment_variable, join_path
 from .logging_settings import LOGGING  # NOQA
 
 SITE_URL = environment_variable('SITE_URL')
@@ -35,19 +34,20 @@ AWS_S3_USE_SSL = False
 # AWS_S3_FILE_BUFFER_SIZE = 5242880
 # Buffer size is used to calculate md5 hash for AWS mulitpart uploads
 # if changed, md5 hashes for large files might be wrong
-STATIC_ROOT = 'static'
-MEDIA_ROOT = 'media'
+# STATIC_ROOT = 'static'
+# MEDIA_ROOT = 'media'
 STATICFILES_STORAGE = 'utils.aws_custom_storage.StaticStorage'
 DEFAULT_FILE_STORAGE = 'utils.aws_custom_storage.MediaStorage'
 THUMBNAIL_STORAGE = 'utils.aws_custom_storage.ThumbStorage'
 
 STATIC_URL = "http://{host}/{static}/".format(
-    host=AWS_S3_CUSTOM_DOMAIN, static=STATIC_ROOT, )
+    host=AWS_S3_CUSTOM_DOMAIN, static='static', )
 
 MEDIA_URL = "http://{host}/{media}/".format(
-    host=AWS_S3_CUSTOM_DOMAIN, media=MEDIA_ROOT, )
+    host=AWS_S3_CUSTOM_DOMAIN, media='media', )
 
-INSTALLED_APPS = [  # CUSTOM APPS
+# CUSTOM APPS
+INSTALLED_APPS = [
     'apps.issues',
     'apps.stories',
     'apps.core',
@@ -58,19 +58,22 @@ INSTALLED_APPS = [  # CUSTOM APPS
     'apps.legacy_db',
     'apps.adverts',
     'apps.search',
-    # 'functional_tests',
 ]
 
-INSTALLED_APPS = [  # THIRD PARTY APPS
+# THIRD PARTY APPS
+INSTALLED_APPS = [
     'autocomplete_light',
     'django_extensions',
     'sorl.thumbnail',
     'watson',
     'raven.contrib.django.raven_compat',
     'storages',
+    'webpack_loader',
+
 ] + INSTALLED_APPS
 
-INSTALLED_APPS = [  # CORE APPS
+# CORE APPS
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -163,14 +166,13 @@ BASE_DIR = environment_variable('SOURCE_FOLDER')
 # outside of repo
 PROJECT_DIR = dirname(BASE_DIR)
 
-# GULP FILE REVISIONS
-GULP_FILEREVS = load_json_file(
-    join_path(PROJECT_DIR, 'build', 'rev-manifest.json'))
 
 # Django puts generated translation files here.
 LOCALE_PATHS = [join_path(BASE_DIR, 'translation'), ]
 # Extra path to collect static assest such as javascript and css
-STATICFILES_DIRS = [join_path(PROJECT_DIR, 'build'), ]
+STATICFILES_DIRS = [
+    join_path(PROJECT_DIR, 'build'),
+]
 # Project wide fixtures to be loaded into database.
 FIXTURE_DIRS = [join_path(BASE_DIR, 'fixtures'), ]
 # Project wide django template files
@@ -222,3 +224,10 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
 ]
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': './',  # must end with slash
+        'STATS_FILE': join_path(PROJECT_DIR, 'webpack-stats.json'),
+    }
+}
