@@ -40,9 +40,11 @@ def test_create_issue():
 
 
 def test_extract_page_text(fixture_pdf):
-    page_one_text = extract_pdf_text(fixture_pdf, 1)
+    with open(fixture_pdf, 'rb') as fp:
+        data = fp.read()
+    page_one_text = extract_pdf_text(data, 1)
     assert page_one_text == 'Page 1'
-    all_text = extract_pdf_text(fixture_pdf, 1, 4)
+    all_text = extract_pdf_text(data, 1, 4)
     assert 'Page 1' in all_text
     assert 'Page 4' in all_text
 
@@ -61,6 +63,10 @@ def test_create_printissue(fixture_pdf, settings, tempdir):
 
     # Save content of fixture pdf as well as model
     print_issue.pdf.save(filename, content)
+
+    # Check that publication date works
+    publication_date = print_issue.get_publication_date()
+    assert publication_date > date(1900, 1, 1)
 
     assert 'fixture_universitas' in str(print_issue)
     assert print_issue.pages == 4
