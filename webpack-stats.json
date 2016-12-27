@@ -1,0 +1,33 @@
+{
+  "status": "done",
+  "chunks": {
+    "head": [
+      {
+        "name": "javascripts/head-23ff225e4646.js",
+        "path": "/home/haakenlid/projects/tassen/build/javascripts/head-23ff225e4646.js"
+      }
+    ],
+    "site": [
+      {
+        "name": "javascripts/site-23ff225e4646.js",
+        "path": "/home/haakenlid/projects/tassen/build/javascripts/site-23ff225e4646.js"
+      }
+    ],
+    "stylesheets": [
+      {
+        "name": "javascripts/stylesheets-23ff225e4646.js",
+        "path": "/home/haakenlid/projects/tassen/build/javascripts/stylesheets-23ff225e4646.js"
+      },
+      {
+        "name": "stylesheets/universitas-23ff225e4646.css",
+        "path": "/home/haakenlid/projects/tassen/build/stylesheets/universitas-23ff225e4646.css"
+      }
+    ],
+    "vendor": [
+      {
+        "name": "javascripts/vendor-23ff225e4646.js",
+        "path": "/home/haakenlid/projects/tassen/build/javascripts/vendor-23ff225e4646.js"
+      }
+    ]
+  }
+}

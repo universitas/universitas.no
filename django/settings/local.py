@@ -1,6 +1,11 @@
 """ Settings for local development """
 
-from .dev import *
+from .dev import *  # noqa
+from .dev import (
+    STATIC_ROOT, PROJECT_DIR,
+    INSTALLED_APPS, MIDDLEWARE_CLASSES,
+    environment_variable, join_path
+)
 
 DEFAULT_FROM_EMAIL = 'localemail@localhost'
 # DATABASES['prodsys'].update({'HOST': 'localhost', })
@@ -12,8 +17,8 @@ INSTALLED_APPS += ['debug_toolbar', ]
 MIDDLEWARE_CLASSES += ['debug_toolbar.middleware.DebugToolbarMiddleware', ]
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
-# INTERNAL_IPS = environment_variable('DEBUG_TOOLBAR_INTERNAL_IPS').split(' ')
-INTERNAL_IPS = ['127.0.0.1']
+INTERNAL_IPS = environment_variable('DEBUG_TOOLBAR_INTERNAL_IPS').split(' ')
+# INTERNAL_IPS = ['127.0.0.1']
 
 # Use File system in local development instead of Amanon S3
 # DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
@@ -21,10 +26,10 @@ INTERNAL_IPS = ['127.0.0.1']
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # MEDIA_ROOT = join_path(PROJECT_DIR, MEDIA_ROOT)
-# STATIC_ROOT = join_path(PROJECT_DIR, STATIC_ROOT)
-MEDIA_URL = '/media/'
+STATIC_ROOT = join_path(PROJECT_DIR, STATIC_ROOT)
+# MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 
 DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK" : lambda request: True,
+    "SHOW_TOOLBAR_CALLBACK": lambda request: True,
 }

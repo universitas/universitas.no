@@ -1,22 +1,19 @@
+// Config for building static assets
 var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var CopyPlugin = require('copy-webpack-plugin');
 var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var BundleTracker = require('webpack-bundle-tracker');
 
-var dest = __dirname + '/build';
+var dest = __dirname + '/build/';
+var source = __dirname + '/src/';
 
 module.exports = {
   plugins: [
-    new ExtractTextPlugin("stylesheets/universitas.css"),
-    new CopyPlugin([
-      { from: 'src/fonts', to: dest + '/fonts' },
-      { from: 'src/images', to: dest + '/images' },
-      { from: 'src/favicon', to: dest + '/favicon' }
-    ]),
-    new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery"
-    })
+    new ExtractTextPlugin("stylesheets/universitas-[hash:12].css"),
+    new webpack.ProvidePlugin({$: "jquery", jQuery: "jquery"}),
+    new BundleTracker({indent: '  ', filename: './webpack-stats.json'}),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin()
   ],
   resolve: {
     alias: {
@@ -33,13 +30,13 @@ module.exports = {
   },
   output: {
     path: dest,
-    filename: 'javascripts/[name].js'
+    filename: 'javascripts/[name]-[hash:12].js'
   },
   module: {
     loaders: [
       {
         test: /\.(svg|gif|jpg|png|woff|woff2|eot|ttf|svg)$/,
-        loader: 'url'
+        loader: 'url?name=assets/[name]-[hash:12].[ext]&limit=10000'
       },
       {
         test: /\.scss$/,
@@ -52,6 +49,5 @@ module.exports = {
       path.resolve(__dirname, "./node_modules/zurb-foundation-5/scss/"),
       path.resolve(__dirname, "./node_modules/slick-carousel/")
     ]
-
   },
 }
