@@ -47,7 +47,7 @@ LOGGING['formatters'] = {
 }
 LOGGING['handlers'] = {
     'errorlog': logfile_handler('error-django.log'),
-    'celerylog': logfile_handler('celery.log', debug=True),
+    'celerylog': logfile_handler('celery-django.log', debug=True),
     'debuglog': logfile_handler('debug-django.log', debug=True),
     'bylineslog': logfile_handler(
         'bylines.log', level='INFO', filters=[], formatter='minimal',),
