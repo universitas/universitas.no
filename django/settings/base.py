@@ -172,7 +172,6 @@ LOCALE_PATHS = [join_path(BASE_DIR, 'translation'), ]
 # Extra path to collect static assest such as javascript and css
 STATICFILES_DIRS = [
     join_path(PROJECT_DIR, 'build'),
-    join_path(BASE_DIR, 'static'),
 ]
 # Project wide fixtures to be loaded into database.
 FIXTURE_DIRS = [join_path(BASE_DIR, 'fixtures'), ]
