@@ -1,29 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-import os
-from django.core import serializers
+from pathlib import Path
+from django.db import migrations
+from utils.migration_helpers import unload_fixture, load_fixture
 
-from django.db import models, migrations
-
-fixture_dir = os.path.dirname(__file__)
-fixture_filename = 'markup_tags.json'
-
-
-def load_fixture(apps, schema_editor):
-    fixture_file = os.path.join(fixture_dir, fixture_filename)
-    fixture = open(fixture_file, 'rb')
-    objects = serializers.deserialize('json', fixture, ignorenonexistent=True)
-    for obj in objects:
-        obj.save()
-    fixture.close()
-
-
-def unload_fixture(apps, schema_editor):
-    "Brutally deleting all entries for this model..."
-    for modelname in ('BlockTag', 'InlineTag', 'Alias'):
-        model = apps.get_model('markup', modelname)
-        model.objects.all().delete()
-
+fixture = Path(__file__).parent / 'markup_tags.json'
 
 class Migration(migrations.Migration):
 
@@ -33,7 +13,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(
-            load_fixture,
-            reverse_code=unload_fixture,
+            code=load_fixture(str(fixture)),
+            reverse_code=unload_fixture(
+                'markup', ['BlockTag', 'InlineTag', 'Alias'])
         ),
     ]
