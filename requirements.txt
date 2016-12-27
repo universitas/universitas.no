@@ -1,4 +1,4 @@
-Djangojk
+Django
 Jinja2
 MarkupSafe
 Pillow
