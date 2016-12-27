@@ -41,12 +41,13 @@ DEFAULT_FILE_STORAGE = 'utils.aws_custom_storage.MediaStorage'
 THUMBNAIL_STORAGE = 'utils.aws_custom_storage.ThumbStorage'
 
 STATIC_URL = "http://{host}/{static}/".format(
-    host=AWS_S3_CUSTOM_DOMAIN, static=STATIC_ROOT, )
+    host=AWS_S3_CUSTOM_DOMAIN, static='static', )
 
 MEDIA_URL = "http://{host}/{media}/".format(
-    host=AWS_S3_CUSTOM_DOMAIN, media=MEDIA_ROOT, )
+    host=AWS_S3_CUSTOM_DOMAIN, media='media', )
 
-INSTALLED_APPS = [  # CUSTOM APPS
+# CUSTOM APPS
+INSTALLED_APPS = [
     'apps.issues',
     'apps.stories',
     'apps.core',
@@ -57,19 +58,22 @@ INSTALLED_APPS = [  # CUSTOM APPS
     'apps.legacy_db',
     'apps.adverts',
     'apps.search',
-    # 'functional_tests',
 ]
 
-INSTALLED_APPS = [  # THIRD PARTY APPS
+# THIRD PARTY APPS
+INSTALLED_APPS = [
     'autocomplete_light',
     'django_extensions',
     'sorl.thumbnail',
     'watson',
     'raven.contrib.django.raven_compat',
     'storages',
+    'webpack_loader',
+
 ] + INSTALLED_APPS
 
-INSTALLED_APPS = [  # CORE APPS
+# CORE APPS
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -166,7 +170,10 @@ PROJECT_DIR = dirname(BASE_DIR)
 # Django puts generated translation files here.
 LOCALE_PATHS = [join_path(BASE_DIR, 'translation'), ]
 # Extra path to collect static assest such as javascript and css
-STATICFILES_DIRS = [join_path(PROJECT_DIR, 'build'), ]
+STATICFILES_DIRS = [
+    join_path(PROJECT_DIR, 'build'),
+    join_path(BASE_DIR, 'static'),
+]
 # Project wide fixtures to be loaded into database.
 FIXTURE_DIRS = [join_path(BASE_DIR, 'fixtures'), ]
 # Project wide django template files
@@ -218,3 +225,13 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
 ]
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': '/',  # must end with slash
+        'STATS_FILE': join_path(BASE_DIR, '..', 'webpack-stats.json'),
+        'POLL_INTERVAL': 0.1,
+        'TIMEOUT': None,
+        'IGNORE': ['.+\.hot-update.js', '.+\.map']
+    }
+}
