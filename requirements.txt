@@ -1,4 +1,4 @@
-Django
+Djangojk
 Jinja2
 MarkupSafe
 Pillow
@@ -47,3 +47,4 @@ certifi==2015.04.28
 ptpython
 celery
 snakeviz
+django-webpack-loader==0.4.1
