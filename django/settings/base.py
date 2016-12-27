@@ -34,8 +34,8 @@ AWS_S3_USE_SSL = False
 # AWS_S3_FILE_BUFFER_SIZE = 5242880
 # Buffer size is used to calculate md5 hash for AWS mulitpart uploads
 # if changed, md5 hashes for large files might be wrong
-STATIC_ROOT = 'static'
-MEDIA_ROOT = 'media'
+# STATIC_ROOT = 'static'
+# MEDIA_ROOT = 'media'
 STATICFILES_STORAGE = 'utils.aws_custom_storage.StaticStorage'
 DEFAULT_FILE_STORAGE = 'utils.aws_custom_storage.MediaStorage'
 THUMBNAIL_STORAGE = 'utils.aws_custom_storage.ThumbStorage'
@@ -227,10 +227,7 @@ STATICFILES_FINDERS = [
 WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': not DEBUG,
-        'BUNDLE_DIR_NAME': '/',  # must end with slash
-        'STATS_FILE': join_path(BASE_DIR, '..', 'webpack-stats.json'),
-        'POLL_INTERVAL': 0.1,
-        'TIMEOUT': None,
-        'IGNORE': ['.+\.hot-update.js', '.+\.map']
+        'BUNDLE_DIR_NAME': './',  # must end with slash
+        'STATS_FILE': join_path(PROJECT_DIR, 'webpack-stats.json'),
     }
 }

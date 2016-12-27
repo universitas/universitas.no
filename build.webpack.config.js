@@ -11,7 +11,7 @@ module.exports = {
   plugins: [
     new ExtractTextPlugin("stylesheets/universitas-[hash:12].css"),
     new webpack.ProvidePlugin({$: "jquery", jQuery: "jquery"}),
-    new BundleTracker({indent: '  ', filename: './webpack-stats.json'}),
+    new BundleTracker({indent: '  ', filename: 'webpack-stats.json'}),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin()
   ],
