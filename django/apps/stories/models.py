@@ -20,6 +20,7 @@ from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django.template import Context, Template
 from django.template.loader import get_template
+# from django.contrib.postgres.fields import JSONField
 
 # Installed apps
 from django_extensions.db.fields import AutoSlugField
@@ -424,8 +425,11 @@ class StoryQuerySet(models.QuerySet):
     def published(self):
         now = timezone.now()
         return self.filter(
-            publication_status=Story.STATUS_PUBLISHED).filter(
-                publication_date__lt=now)
+            publication_status__in=[
+                Story.STATUS_PUBLISHED,
+                Story.STATUS_NOINDEX,
+            ]
+        ).filter(publication_date__lt=now)
 
     def is_on_frontpage(self, frontpage):
         return self.filter(frontpagestory__placements=frontpage)
@@ -473,6 +477,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     STATUS_EDITOR = 5
     STATUS_READY = 9
     STATUS_PUBLISHED = 10
+    STATUS_NOINDEX = 11
     STATUS_PRIVATE = 15
     STATUS_TEMPLATE = 100
     STATUS_ERROR = 500
@@ -481,6 +486,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         (STATUS_EDITOR, _('Ready to edit')),
         (STATUS_READY, _('Ready to publish on website')),
         (STATUS_PUBLISHED, _('Published on website')),
+        (STATUS_NOINDEX, _('Published, but hidden from search engines')),
         (STATUS_PRIVATE, _('Will not be published')),
         (STATUS_TEMPLATE, _('Used as template for new articles')),
         (STATUS_ERROR, _('Technical error')),
@@ -506,8 +512,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     slug = AutoSlugField(
         _('slug'),
         default='story-slug',
-        allow_duplicates=True,
-        populate_from=('title',),
+        allow_duplicates=True, populate_from=('title',),
         max_length=50,
         overwrite=True,
         slugify_function=slugify,
