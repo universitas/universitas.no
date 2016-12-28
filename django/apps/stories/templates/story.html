@@ -5,6 +5,8 @@
 {% load advert_channel %}
 {% block title %}{{ story.title }} | universitas.no{% endblock title %}
 {% block head %}
+  {% if story.publication_status != story.STATUS_PUBLISHED %}
+  <meta name="robots" content="noindex" />{% endif %}
   <meta name="description" content="{{ story.lede }}" />
   <meta name="author" content="{{ story.get_bylines }}" />
   <meta property="og:title" content="{{ story.title }}" />
