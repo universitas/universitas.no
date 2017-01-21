@@ -1,10 +1,10 @@
 #!/bin/bash
-DUMPFILE='prodsys_dump_new.mysql'
+DUMPFILE=domeneshop_universitas_no_$(date +"%Y-%m-%d").mysql
 source "postactivate"
 
 cd "$DJANGO_SOURCE_FOLDER/.."
 
-echo "fetching database dump from domeneshop."
+echo "fetching database dump from domeneshop. Saving as $DUMPFILE"
 mysqldump \
   --host=$DJANGO_PRODSYS_DB_HOST \
   --user=$DJANGO_PRODSYS_DB_USER \

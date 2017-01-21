@@ -336,7 +336,7 @@ class Advert(models.Model):
                     'end_time': _('End time must be after start time.')
                 })
 
-    def dimension(self, axis):
+    def dimension(self, axis, fallback=300):
         """ return default height or width of this ad in pixels """
         if axis in ('w', 'width', 'x'):
             axis = 'width'
@@ -344,15 +344,14 @@ class Advert(models.Model):
             axis = 'height'
 
         try:
-            return getattr(self.imagefile, axis)
+            value = getattr(self.imagefile, axis)
         except (AttributeError, FileNotFoundError):
-            pass
-        try:
-            return getattr(self.ad_channels.first().ad_formats.first(), axis)
-        except AttributeError:
-            pass
+            try:
+                value = getattr(self.ad_channels.first().ad_formats.first(), axis)
+            except AttributeError:
+                value = None
 
-        return 300
+        return value or fallback
 
     @property
     def width(self):
