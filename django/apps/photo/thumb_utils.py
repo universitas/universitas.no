@@ -1,14 +1,16 @@
-from sorl.thumbnail.engines.convert_engine import Engine as GraphicsMagickConvertEngine
+from sorl.thumbnail.engines.wand_engine import Engine as WandEngine
+# from sorl.thumbnail.engines.pil_engine import Engine as PilEngine
+# from sorl.thumbnail.engines.convert_engine import Engine
 import re
-import logging
 from PIL import Image
-logger = logging.getLogger(__name__)
 
 
 from sorl.thumbnail.base import ThumbnailBackend, EXTENSIONS
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import tokey, serialize
 import os.path
+import logging
+logger = logging.getLogger(__name__)
 
 
 class KeepNameThumbnailBackend(ThumbnailBackend):
@@ -38,7 +40,7 @@ class KeepNameThumbnailBackend(ThumbnailBackend):
         return filename
 
 
-class CloseCropEngine(GraphicsMagickConvertEngine):
+class CloseCropEngine(WandEngine):
 
     def create(self, image, geometry, options):
         if options.get('diameter'):
@@ -46,15 +48,6 @@ class CloseCropEngine(GraphicsMagickConvertEngine):
 
         image = super().create(image, geometry, options)
         return image
-
-    def write(self, image, options, thumbnail):
-        # remove all metadata from thumbnail.
-        image['options']['strip'] = None
-        try:
-            return super().write(image, options, thumbnail)
-        except Exception:
-            logger.exception('could not write image: %s' % image)
-            raise
 
     def close_crop(self, image, geometry, options):
         """ crop it close """
@@ -65,7 +58,6 @@ class CloseCropEngine(GraphicsMagickConvertEngine):
         crop = options['crop']
         if isinstance(crop, str) and '%' in crop:
 
-            #ratio = org_width / org_height
             new_ratio = geometry[0] / geometry[1]
             if new_ratio > 1:
                 # landscape

@@ -3,30 +3,30 @@
   "chunks": {
     "head": [
       {
-        "name": "javascripts/head-23ff225e4646.js",
-        "path": "/home/haakenlid/projects/tassen/build/javascripts/head-23ff225e4646.js"
+        "name": "javascripts/head-7faf69fc3972.js",
+        "path": "/home/haakenlid/projects/tassen/universitas.no/build/javascripts/head-7faf69fc3972.js"
       }
     ],
     "site": [
       {
-        "name": "javascripts/site-23ff225e4646.js",
-        "path": "/home/haakenlid/projects/tassen/build/javascripts/site-23ff225e4646.js"
+        "name": "javascripts/site-7faf69fc3972.js",
+        "path": "/home/haakenlid/projects/tassen/universitas.no/build/javascripts/site-7faf69fc3972.js"
       }
     ],
     "stylesheets": [
       {
-        "name": "javascripts/stylesheets-23ff225e4646.js",
-        "path": "/home/haakenlid/projects/tassen/build/javascripts/stylesheets-23ff225e4646.js"
+        "name": "javascripts/stylesheets-7faf69fc3972.js",
+        "path": "/home/haakenlid/projects/tassen/universitas.no/build/javascripts/stylesheets-7faf69fc3972.js"
       },
       {
-        "name": "stylesheets/universitas-23ff225e4646.css",
-        "path": "/home/haakenlid/projects/tassen/build/stylesheets/universitas-23ff225e4646.css"
+        "name": "stylesheets/universitas-7faf69fc3972.css",
+        "path": "/home/haakenlid/projects/tassen/universitas.no/build/stylesheets/universitas-7faf69fc3972.css"
       }
     ],
     "vendor": [
       {
-        "name": "javascripts/vendor-23ff225e4646.js",
-        "path": "/home/haakenlid/projects/tassen/build/javascripts/vendor-23ff225e4646.js"
+        "name": "javascripts/vendor-7faf69fc3972.js",
+        "path": "/home/haakenlid/projects/tassen/universitas.no/build/javascripts/vendor-7faf69fc3972.js"
       }
     ]
   }
