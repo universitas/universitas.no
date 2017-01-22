@@ -11,13 +11,15 @@ from sorl.thumbnail.admin import AdminImageMixin
 from sorl.thumbnail import get_thumbnail
 from autocomplete_light.forms import modelform_factory
 from .models import ImageFile, ProfileImage
+import logging
+logger = logging.getLogger(__name__)
 
 
 class ThumbAdmin:
     exclude = ()
 
     def thumbnail(self, instance, width=200, height=100):
-        url = settings.STATIC_URL + 'admin/img/icon-no.gif'
+        url = settings.STATIC_URL + 'admin/img/icon-no.svg'
         if hasattr(instance, 'imagefile'):
             imagefile = instance.imagefile
         else:
@@ -28,7 +30,7 @@ class ThumbAdmin:
                 thumb = get_thumbnail(source, '%sx%s' % (width, height))
                 url = thumb.url
             except Exception:
-                pass
+                logger.exception('Cannot create thumbnail')
         return mark_safe('<img src="{}">'.format(url))
 
     thumbnail.allow_tags = True
