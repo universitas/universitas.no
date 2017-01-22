@@ -31,7 +31,7 @@ class ThumbAdmin:
             thumb = get_thumbnail(source, '%sx%s' % (width, height))
             url = thumb.url
         except (AttributeError, FileNotFoundError):  # noqa
-            url = '/static/admin/img/icon-no.gif'
+            url = '/static/admin/img/icon-no.svg'
         if instance.pdf:
             html = '<a href="{pdf}"><img src="{thumb}"></a>'.format(
                 thumb=url,
@@ -63,7 +63,7 @@ class IssueAdmin(admin.ModelAdmin):
             )
             url = thumb.url
         except FileNotFoundError:  # noqa
-            url = '/static/admin/img/icon-no.gif'
+            url = '/static/admin/img/icon-no.svg'
         return url
 
     def pdf_links(self, instance):
