@@ -12,6 +12,7 @@ DEFAULT_FROM_EMAIL = 'localemail@localhost'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8010'
+ALLOWED_HOSTS = '*'
 # TOOLBAR CONFIGURATION
 INSTALLED_APPS += ['debug_toolbar', ]
 MIDDLEWARE_CLASSES += ['debug_toolbar.middleware.DebugToolbarMiddleware', ]
@@ -31,6 +32,11 @@ STATIC_URL = '/static/'
 
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": lambda request: True,
+}
+
+DATABASES['prodsys'] = {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': 'prodsys',
 }
 
 WEBPACK_LOADER = {
