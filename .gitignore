@@ -7,4 +7,5 @@ media
 static
 celerybeat-schedule
 celerybeat.pid
+webpack-stats.json
 tags
