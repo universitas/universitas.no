@@ -1,50 +1,60 @@
+# vim: ft=config:
+
+# Installation
+pip
+wheel
+
+# Django
 Django
-Jinja2
-MarkupSafe
-Pillow
-Werkzeug
-beautifulsoup4
-django-appconf
-django-classy-tags
+
+# DJANGO PLUGINS
 django-debug-toolbar
 django-extensions
-django-model-utils
+# django-model-utils
 django-redis-cache
-pytest
-pytest-xdist
-django-pytest
-gunicorn
-hiredis
-ipdb
-ipython
-mysqlclient
-nose
-numpy
-pypdf2
-psycopg2
-pyparsing
-pytz
-pyzmq
-redis
-requests
-selenium
-setproctitle
-six
-sqlparse
-tornado
-sorl-thumbnail
+django-webpack-loader==0.4.1
 django-autocomplete-light>=2.2,<3.0
-diff-match-patch
-awesome-slugify
-fuzzywuzzy
-python-Levenshtein
-Wand
-raven
+sorl-thumbnail
+
+# DATABASE LIBRARIES
+mysqlclient
+psycopg2
+redis
+hiredis
+
+# AMAZON
 awscli
 django-storages-redux
 boto
-certifi==2015.04.28
-ptpython
+# certifi==2015.04.28
+
+# OTHER LIBRARIES
+Pillow
+Wand
+beautifulsoup4
+pypdf2
+requests
+fuzzywuzzy
+diff-match-patch
+awesome-slugify
+
+# TASK RUNNER
 celery
-snakeviz
-django-webpack-loader==0.4.1
+
+# ERROR REPORTING
+raven
+
+# WSGI WEB SERVER
+gunicorn
+
+# TESTING
+django-pytest
+pytest
+pytest-xdist
+selenium
+
+# DEBUGGING AND DEVELOPMENT
+Werkzeug
+ipdb
+ipython
+ptpython
