@@ -9,7 +9,7 @@ LOG_FOLDER = join_path(environment_variable('SOURCE_FOLDER'), '..', 'logs')
 def logfile_handler(filename, debug=False, **kwargs):
     config = {
         'filename': join_path(LOG_FOLDER, filename),
-        'filters': ['require_debug_true'] if debug else ['require_debug_false'],
+        'filters': ['debug_on'] if debug else ['debug_off'],
         'level': 'DEBUG' if debug else 'WARNING',
         'class': 'logging.FileHandler',
         'formatter': 'verbose',
@@ -17,15 +17,16 @@ def logfile_handler(filename, debug=False, **kwargs):
     config.update(kwargs)
     return config
 
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
 }
 LOGGING['filters'] = {
-    'require_debug_false': {
+    'debug_off': {
         '()': 'django.utils.log.RequireDebugFalse'
     },
-    'require_debug_true': {
+    'debug_on': {
         '()': 'django.utils.log.RequireDebugTrue'
     }
 }
@@ -53,11 +54,11 @@ LOGGING['handlers'] = {
         'bylines.log', level='INFO', filters=[], formatter='minimal',),
     'sentry': {
         'level': 'ERROR',
-        'filters': ['require_debug_false'],
+        'filters': ['debug_off'],
         'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
     },
     'console': {
-        'filters': ['require_debug_true'],
+        'filters': ['debug_on'],
         'level': 'DEBUG',
         'class': 'logging.StreamHandler',
         'formatter': 'verbose',
@@ -85,7 +86,7 @@ LOGGING['loggers'] = {
         'handlers': ['console', 'errorlog', 'debuglog', 'sentry'],
     },
     'celery': {
-        'level': 'INFO', 'propagate': False,
+        'level': 'ERROR', 'propagate': False,
         'handlers': ['console', 'celerylog', 'sentry'],
     },
 }
