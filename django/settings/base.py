@@ -16,8 +16,9 @@ RAVEN_CONFIG = {'dsn': environment_variable('RAVEN_DSN'), }
 SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
 
 # CELERY TASK RUNNER
+CELERYD_HIJACK_ROOT_LOGGER = False
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/5'
-CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_ACCEPT_CONTENT = ['json', 'pickle']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 BROKER_URL = 'redis://localhost:6379/5'
