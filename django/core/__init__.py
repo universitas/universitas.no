@@ -1,1 +1,1 @@
-from .celery import celery_app  # noqa
+from .celery import celery  # noqa
