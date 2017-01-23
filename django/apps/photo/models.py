@@ -5,6 +5,7 @@
 import os
 import hashlib
 import logging
+from collections import namedtuple
 
 # Django core
 from django.db import models
@@ -25,7 +26,7 @@ import boto
 
 # Project apps
 from apps.issues.models import current_issue
-from .autocrop import AutoCropImage, Cropping
+# from .autocrop import AutoCropImage, Cropping
 logger = logging.getLogger(__name__)
 
 
@@ -62,6 +63,37 @@ def upload_image_to(instance, filename):
     return os.path.join(
         instance.upload_folder(),
         instance.slugify(filename)
+    )
+
+
+Cropping = namedtuple('Cropping', ['top', 'left', 'diameter'])
+
+
+class AutoCropImage(models.Model):
+    CROP_NONE = 0
+    CROP_PENDING = 1
+    CROP_FEATURES = 5
+    CROP_PORTRAIT = 15
+    CROP_FACES = 10
+    CROP_MANUAL = 100
+
+    CROP_CHOICES = (
+        (CROP_NONE, _('center')),
+        (CROP_PENDING, _('pending')),
+        (CROP_FEATURES, _('corner detection')),
+        (CROP_FACES, _('multiple faces')),
+        (CROP_PORTRAIT, _('single face')),
+        (CROP_MANUAL, _('manual crop')),
+    )
+
+    class Meta:
+        abstract = True
+
+    cropping_method = models.PositiveSmallIntegerField(
+        verbose_name=_('cropping method'),
+        choices=CROP_CHOICES,
+        default=CROP_PENDING,
+        help_text=_('How this image has been cropped.'),
     )
 
 
@@ -297,7 +329,8 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
             diameter=self.crop_diameter)
 
     @cropping.setter
-    def cropping(self, crop):
+    def cropping(self, _crop):
+        crop = Cropping(*_crop)
         self.from_top = crop.top
         self.from_left = crop.left
         self.crop_diameter = crop.diameter
@@ -373,10 +406,24 @@ def remove_imagefile_and_thumbnail(sender, instance, **kwargs):
     thumbnail.delete(instance.source_file, delete_file=delete_file)
 
 
+def autocrop_image(sender, instance, **kwargs):
+    """Schedule autocropping"""
+    from .tasks import detect_crop, update_image_crop
+    logger.debug('status {}'.format(instance.cropping_method))
+    if instance.cropping_method == AutoCropImage.CROP_PENDING:
+        logger.debug('autocrop')
+        detect_crop.apply_async(
+            kwargs={'image_pk': instance.pk},
+            link=update_image_crop.s(),
+        )
+
+
 def remove_thumbnail(sender, instance, **kwargs):
     thumbnail.delete(instance.source_file, delete_file=False)
+
 
 pre_delete.connect(remove_imagefile_and_thumbnail, sender=ImageFile)
 pre_delete.connect(remove_imagefile_and_thumbnail, sender=ProfileImage)
 post_save.connect(remove_thumbnail, sender=ImageFile)
 post_save.connect(remove_thumbnail, sender=ProfileImage)
+post_save.connect(autocrop_image, sender=ImageFile)

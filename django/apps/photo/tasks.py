@@ -5,12 +5,32 @@ import os
 from datetime import timedelta
 
 from celery.decorators import periodic_task
+from celery import shared_task
 from celery.utils.log import get_task_logger
 
 from .models import upload_image_to, ImageFile
 from apps.core.staging import new_staging_images
+from .autocrop import autocrop
 
 logger = get_task_logger(__name__)
+
+
+@shared_task()
+def update_image_crop(args):
+    image_pk, left, top, diameter, method = args
+    img = ImageFile.objects.get(pk=image_pk)
+    img.cropping_method = method
+    img.cropping = (left, top, diameter)
+    img.save()
+
+
+@shared_task()
+def detect_crop(image_pk):
+    """placeholder"""
+    img = ImageFile.objects.get(pk=image_pk)
+    args = (image_pk, *autocrop(img))
+    logger.info('new crop is {}'.format(args))
+    return args
 
 
 @periodic_task(run_every=timedelta(minutes=1))
