@@ -8,29 +8,29 @@ from celery.decorators import periodic_task
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
-from .models import upload_image_to, ImageFile
 from apps.core.staging import new_staging_images
+from sorl import thumbnail
 from .autocrop import autocrop
+from .models import upload_image_to, ImageFile
 
 logger = get_task_logger(__name__)
 
 
-@shared_task()
-def update_image_crop(args):
-    image_pk, left, top, diameter, method = args
-    img = ImageFile.objects.get(pk=image_pk)
-    img.cropping_method = method
-    img.cropping = (left, top, diameter)
-    img.save()
+@shared_task(serializer='pickle')
+def post_save_task(instance):
+    if instance.cropping_method == instance.CROP_PENDING:
+        logger.debug('detecting crop')
+        left, top, diameter, method = autocrop(instance)
+        instance.cropping_method = method
+        instance.cropping = (left, top, diameter)
+        instance.save(update_fields=(
+            'from_top', 'from_left', 'cropping_method', 'crop_diameter'))
 
-
-@shared_task()
-def detect_crop(image_pk):
-    """placeholder"""
-    img = ImageFile.objects.get(pk=image_pk)
-    args = (image_pk, *autocrop(img))
-    logger.info('new crop is {}'.format(args))
-    return args
+    else:
+        # delete thumbnail
+        thumbnail.delete(instance.source_file, delete_file=False)
+        # rebuild thumbnail
+        instance.thumb()
 
 
 @periodic_task(run_every=timedelta(minutes=1))
