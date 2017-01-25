@@ -39,7 +39,8 @@ class ThumbAdmin:
 
 def autocrop(modeladmin, request, queryset):
     for image in queryset.all():
-        image.autocrop()
+        image.cropping_method = image.CROP_PENDING
+        image.save()
 
 autocrop.short_description = _('Autocrop')
 

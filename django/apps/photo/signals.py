@@ -1,8 +1,7 @@
 from django.db.models.signals import pre_delete, post_save
 from django.conf import settings
 from sorl import thumbnail
-from .models import ImageFile, ProfileImage
-from .tasks import post_save_task
+# from apps.photo import tasks
 
 import logging
 logger = logging.getLogger(__name__)
@@ -17,11 +16,14 @@ def image_post_delete(sender, instance, **kwargs):
 
 def image_post_save(sender, instance, **kwargs):
     """Schedule autocropping and rebuild thumbnail"""
-    logger.info(str(kwargs))
-    post_save_task.delay(instance)
+    # from celery import Celery
+    # app = Celery('core')
+    # app.send_task('apps.photo.tasks.post_save_task', [instance.pk])
+    from apps.photo import tasks
+    tasks.post_save_task.delay(instance)
 
 
-pre_delete.connect(image_post_delete, sender=ImageFile)
-pre_delete.connect(image_post_delete, sender=ProfileImage)
-post_save.connect(image_post_save, sender=ImageFile)
-post_save.connect(image_post_save, sender=ProfileImage)
+pre_delete.connect(image_post_delete, sender='photo.ImageFile')
+pre_delete.connect(image_post_delete, sender='photo.ProfileImage')
+post_save.connect(image_post_save, sender='photo.ImageFile')
+post_save.connect(image_post_save, sender='photo.ProfileImage')
