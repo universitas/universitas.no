@@ -18,15 +18,18 @@ logger = get_task_logger(__name__)
 
 @shared_task(serializer='pickle')
 def post_save_task(instance):
+    # logger.info(instance.get_cropping_method_display())
     if instance.cropping_method == instance.CROP_PENDING:
-        logger.debug('detecting crop')
+        logger.info('autocrop')
         left, top, diameter, method = autocrop(instance)
         instance.cropping_method = method
         instance.cropping = (left, top, diameter)
+        assert instance.cropping_method != instance.CROP_PENDING
         instance.save(update_fields=(
             'from_top', 'from_left', 'cropping_method', 'crop_diameter'))
 
     else:
+        logger.info('rebuild thumbs')
         # delete thumbnail
         thumbnail.delete(instance.source_file, delete_file=False)
         # rebuild thumbnail
