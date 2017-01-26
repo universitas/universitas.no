@@ -7,7 +7,7 @@ from celery import Celery
 
 # set the default Django settings module for the 'celery' program.
 
-app = Celery('core')
+app = Celery('universitas')
 
 # the configuration object to child processes.
 # - namespace='CELERY' means all celery-related configuration keys

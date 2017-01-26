@@ -85,7 +85,7 @@ LOGGING['loggers'] = {
         'level': 'DEBUG', 'propagate': False,
         'handlers': ['console', 'errorlog', 'debuglog', 'sentry'],
     },
-    'core': {
+    'universitas': {
         'level': 'DEBUG', 'propagate': False,
         'handlers': ['console', 'errorlog', 'debuglog', 'sentry'],
     },
