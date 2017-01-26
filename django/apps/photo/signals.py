@@ -4,6 +4,7 @@ from sorl import thumbnail
 # from apps.photo import tasks
 
 import logging
+from apps.photo import tasks
 logger = logging.getLogger(__name__)
 
 
@@ -19,7 +20,6 @@ def image_post_save(sender, instance, **kwargs):
     # from celery import Celery
     # app = Celery('core')
     # app.send_task('apps.photo.tasks.post_save_task', [instance.pk])
-    from apps.photo import tasks
     tasks.post_save_task.delay(instance)
 
 
