@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-28 10:16+0100\n"
+"POT-Creation-Date: 2017-01-26 14:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -531,15 +531,15 @@ msgstr ""
 msgid "explain this pattern"
 msgstr ""
 
-#: apps/photo/admin.py:35
+#: apps/photo/admin.py:37
 msgid "preview"
 msgstr ""
 
-#: apps/photo/admin.py:42
+#: apps/photo/admin.py:45
 msgid "Autocrop"
 msgstr ""
 
-#: apps/photo/appconf.py:6 apps/stories/models.py:1700
+#: apps/photo/appconf.py:7 apps/stories/models.py:1700
 msgid "Photo"
 msgstr ""
 
@@ -547,103 +547,107 @@ msgstr ""
 msgid "Filename"
 msgstr ""
 
-#: apps/photo/autocrop.py:34
+#: apps/photo/models.py:79
 msgid "center"
 msgstr ""
 
-#: apps/photo/autocrop.py:35
+#: apps/photo/models.py:80
+msgid "pending"
+msgstr ""
+
+#: apps/photo/models.py:81
 msgid "corner detection"
 msgstr ""
 
-#: apps/photo/autocrop.py:36
+#: apps/photo/models.py:82
 msgid "multiple faces"
 msgstr ""
 
-#: apps/photo/autocrop.py:37
+#: apps/photo/models.py:83
 msgid "single face"
 msgstr ""
 
-#: apps/photo/autocrop.py:38
+#: apps/photo/models.py:84
 msgid "manual crop"
 msgstr ""
 
-#: apps/photo/autocrop.py:44
+#: apps/photo/models.py:91
 msgid "cropping method"
 msgstr ""
 
-#: apps/photo/autocrop.py:47
+#: apps/photo/models.py:94
 msgid "How this image has been cropped."
 msgstr ""
 
-#: apps/photo/models.py:79
+#: apps/photo/models.py:109
 msgid "ImageFile"
 msgstr ""
 
-#: apps/photo/models.py:80
+#: apps/photo/models.py:110
 msgid "ImageFiles"
 msgstr ""
 
-#: apps/photo/models.py:85
+#: apps/photo/models.py:115
 msgid "source file"
 msgstr ""
 
-#: apps/photo/models.py:92
+#: apps/photo/models.py:122
 msgid "md5"
 msgstr ""
 
-#: apps/photo/models.py:93
+#: apps/photo/models.py:123
 msgid "md5 hash of source file"
 msgstr ""
 
-#: apps/photo/models.py:99
+#: apps/photo/models.py:129
 msgid "file size"
 msgstr ""
 
-#: apps/photo/models.py:100
+#: apps/photo/models.py:130
 msgid "size of file in bytes"
 msgstr ""
 
-#: apps/photo/models.py:105
+#: apps/photo/models.py:135
 msgid "timestamp"
 msgstr ""
 
-#: apps/photo/models.py:106
+#: apps/photo/models.py:136
 msgid "mtime timestamp of source file"
 msgstr ""
 
-#: apps/photo/models.py:111
+#: apps/photo/models.py:141
 msgid "height"
 msgstr ""
 
-#: apps/photo/models.py:112 apps/photo/models.py:117
+#: apps/photo/models.py:142 apps/photo/models.py:147
 msgid "full height in pixels"
 msgstr ""
 
-#: apps/photo/models.py:116
+#: apps/photo/models.py:146
 msgid "width"
 msgstr ""
 
-#: apps/photo/models.py:121
+#: apps/photo/models.py:151
 msgid "from top"
 msgstr ""
 
-#: apps/photo/models.py:123
+#: apps/photo/models.py:153
 msgid "image crop vertical. Between 0% and 100%."
 msgstr ""
 
-#: apps/photo/models.py:127
+#: apps/photo/models.py:157
 msgid "from left"
 msgstr ""
 
-#: apps/photo/models.py:129
+#: apps/photo/models.py:159
 msgid "image crop horizontal. Between 0% and 100%."
 msgstr ""
 
-#: apps/photo/models.py:133
+#: apps/photo/models.py:163
 msgid "crop diameter"
 msgstr ""
 
-#: apps/photo/models.py:136
+#: apps/photo/models.py:166
 msgid ""
 "area containing most relevant content. Area is considered a circle with "
 "center x,y and diameter d where x and y are the values \"from_left\" and "
@@ -651,35 +655,35 @@ msgid ""
 "close cropping of some images, for instance byline photos."
 msgstr ""
 
-#: apps/photo/models.py:148
+#: apps/photo/models.py:178
 msgid "old file path"
 msgstr ""
 
-#: apps/photo/models.py:149
+#: apps/photo/models.py:179
 msgid "previous path if the image has been moved."
 msgstr ""
 
-#: apps/photo/models.py:155
+#: apps/photo/models.py:185
 msgid "contributor"
 msgstr ""
 
-#: apps/photo/models.py:156
+#: apps/photo/models.py:186
 msgid "who made this"
 msgstr ""
 
-#: apps/photo/models.py:161
+#: apps/photo/models.py:191
 msgid "copyright information"
 msgstr ""
 
-#: apps/photo/models.py:163
+#: apps/photo/models.py:193
 msgid "extra information about license and attribution if needed."
 msgstr ""
 
-#: apps/photo/models.py:356
+#: apps/photo/models.py:379
 msgid "Profile Image"
 msgstr ""
 
-#: apps/photo/models.py:357
+#: apps/photo/models.py:380
 msgid "Profile Images"
 msgstr ""
 
@@ -1133,18 +1137,6 @@ msgstr ""
 msgid "Bylines"
 msgstr ""
 
-#: settings/base.py:187
-msgid "Norwegian Bokmal"
-msgstr ""
-
-#: settings/base.py:188
-msgid "Norwegian Nynorsk"
-msgstr ""
-
-#: settings/base.py:189
-msgid "English"
-msgstr ""
-
 #: templates/admin/base_site.html:59
 msgid "Django site admin"
 msgstr ""
@@ -1318,4 +1310,16 @@ msgstr ""
 
 #: templates/registration/password_reset_form.html:22
 msgid "Reset my password"
+msgstr ""
+
+#: universitas/base.py:189
+msgid "Norwegian Bokmal"
+msgstr ""
+
+#: universitas/base.py:190
+msgid "Norwegian Nynorsk"
+msgstr ""
+
+#: universitas/base.py:191
+msgid "English"
 msgstr ""
