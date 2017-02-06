@@ -8,7 +8,7 @@ from celery.decorators import periodic_task
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
-from .models import upload_image_to, ImageFile
+from .models import upload_image_to, ImageFile, ProfileImage
 from apps.core.staging import new_staging_images
 from .autocrop import autocrop
 
@@ -18,19 +18,29 @@ logger = get_task_logger(__name__)
 @shared_task()
 def update_image_crop(args):
     image_pk, left, top, diameter, method = args
-    img = ImageFile.objects.get(pk=image_pk)
-    img.cropping_method = method
-    img.cropping = (left, top, diameter)
-    img.save()
+    try:
+        img = ImageFile.objects.get(pk=image_pk)
+    except ImageFile.DoesNotExist:
+        logger.warning('image with pk %s not found' % image_pk)
+    else:
+        img.cropping_method = method
+        img.cropping = (left, top, diameter)
+        img.save()
 
 
 @shared_task()
 def detect_crop(image_pk):
     """placeholder"""
-    img = ImageFile.objects.get(pk=image_pk)
-    args = (image_pk, *autocrop(img))
-    logger.info('new crop is {}'.format(args))
-    return args
+    try:
+        img = ImageFile.objects.get(pk=image_pk)
+    except ImageFile.DoesNotExist:
+        logger.warning('image with pk %s not found' % image_pk)
+        return None
+    else:
+        img = ImageFile.objects.get(pk=image_pk)
+        args = (image_pk, *autocrop(img))
+        logger.info('new crop is {}'.format(args))
+        return args
 
 
 @periodic_task(run_every=timedelta(minutes=1))
