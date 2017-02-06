@@ -10,6 +10,7 @@ from .logging_settings import LOGGING  # NOQA
 SITE_URL = environment_variable('SITE_URL')
 DEBUG = False
 ALLOWED_HOSTS = environment_variable('ALLOWED_HOSTS').split()
+TEMPLATE_DEBUG = DEBUG
 
 # SENTRY
 RAVEN_CONFIG = {'dsn': environment_variable('RAVEN_DSN'), }
