@@ -204,6 +204,10 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         else:
             return super(ImageFile, self).__str__()
 
+    def autocrop(self):
+        self.cropping_method = self.CROP_PENDING
+        self.save()
+
     def save(self, *args, **kwargs):
         pk = self.pk
         if pk and not kwargs.pop('autocrop', False):
@@ -224,8 +228,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         assert self.md5 is not None
         assert self.mtime is not None
         super().save(*args, **kwargs)
-        if pk is None and self.cropping == self.CROP_NONE:
-            self.autocrop()
 
     def save_local_image_as_source(self, filepath, save=True):
         """Save file from local filesystem as source
@@ -345,8 +347,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
 
     def get_crop(self):
         """ return center point of image in percent from top and left. """
-        if self.cropping_method == self.CROP_NONE:
-            self.autocrop()
         return '{h}% {v}%'.format(h=self.from_left, v=self.from_top)
 
     # def compare_and_update(self, filepath):
