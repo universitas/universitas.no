@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-28 10:16+0100\n"
+"POT-Creation-Date: 2017-01-26 14:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -530,15 +530,15 @@ msgstr "aliaser"
 msgid "explain this pattern"
 msgstr "forklar dette mønsteret"
 
-#: apps/photo/admin.py:35
+#: apps/photo/admin.py:37
 msgid "preview"
 msgstr "visning"
 
-#: apps/photo/admin.py:42
+#: apps/photo/admin.py:45
 msgid "Autocrop"
 msgstr "Automatisk beskjæring"
 
-#: apps/photo/appconf.py:6 apps/stories/models.py:1700
+#: apps/photo/appconf.py:7 apps/stories/models.py:1700
 msgid "Photo"
 msgstr "Foto"
 
@@ -546,103 +546,107 @@ msgstr "Foto"
 msgid "Filename"
 msgstr "Filnavn"
 
-#: apps/photo/autocrop.py:34
+#: apps/photo/models.py:79
 msgid "center"
 msgstr "midtpunkt"
 
-#: apps/photo/autocrop.py:35
+#: apps/photo/models.py:80
+msgid "pending"
+msgstr "i kø"
+
+#: apps/photo/models.py:81
 msgid "corner detection"
 msgstr "detaljer"
 
-#: apps/photo/autocrop.py:36
+#: apps/photo/models.py:82
 msgid "multiple faces"
 msgstr "ansikter"
 
-#: apps/photo/autocrop.py:37
+#: apps/photo/models.py:83
 msgid "single face"
 msgstr "portrett"
 
-#: apps/photo/autocrop.py:38
+#: apps/photo/models.py:84
 msgid "manual crop"
 msgstr "manuell beskjæring"
 
-#: apps/photo/autocrop.py:44
+#: apps/photo/models.py:91
 msgid "cropping method"
 msgstr "beskjæringsmetode"
 
-#: apps/photo/autocrop.py:47
+#: apps/photo/models.py:94
 msgid "How this image has been cropped."
 msgstr "Metode for beskjæring"
 
-#: apps/photo/models.py:79
+#: apps/photo/models.py:109
 msgid "ImageFile"
 msgstr "Biletefil"
 
-#: apps/photo/models.py:80
+#: apps/photo/models.py:110
 msgid "ImageFiles"
 msgstr "Biletefiler"
 
-#: apps/photo/models.py:85
+#: apps/photo/models.py:115
 msgid "source file"
 msgstr "kildefil"
 
-#: apps/photo/models.py:92
+#: apps/photo/models.py:122
 msgid "md5"
 msgstr "md5"
 
-#: apps/photo/models.py:93
+#: apps/photo/models.py:123
 msgid "md5 hash of source file"
 msgstr "md5-hash av kildefila"
 
-#: apps/photo/models.py:99
+#: apps/photo/models.py:129
 msgid "file size"
 msgstr "biletestorleik"
 
-#: apps/photo/models.py:100
+#: apps/photo/models.py:130
 msgid "size of file in bytes"
 msgstr "storleik på kildefila i bytes"
 
-#: apps/photo/models.py:105
+#: apps/photo/models.py:135
 msgid "timestamp"
 msgstr "timestamp"
 
-#: apps/photo/models.py:106
+#: apps/photo/models.py:136
 msgid "mtime timestamp of source file"
 msgstr "mtime timestamp for kildefila"
 
-#: apps/photo/models.py:111
+#: apps/photo/models.py:141
 msgid "height"
 msgstr "høgde"
 
-#: apps/photo/models.py:112 apps/photo/models.py:117
+#: apps/photo/models.py:142 apps/photo/models.py:147
 msgid "full height in pixels"
 msgstr "full pikselhøgde"
 
-#: apps/photo/models.py:116
+#: apps/photo/models.py:146
 msgid "width"
 msgstr "bredde"
 
-#: apps/photo/models.py:121
+#: apps/photo/models.py:151
 msgid "from top"
 msgstr "frå toppen"
 
-#: apps/photo/models.py:123
+#: apps/photo/models.py:153
 msgid "image crop vertical. Between 0% and 100%."
 msgstr "vertikalt midtpunkt"
 
-#: apps/photo/models.py:127
+#: apps/photo/models.py:157
 msgid "from left"
 msgstr "frå venstre"
 
-#: apps/photo/models.py:129
+#: apps/photo/models.py:159
 msgid "image crop horizontal. Between 0% and 100%."
 msgstr "horizontalt midtpunkt"
 
-#: apps/photo/models.py:133
+#: apps/photo/models.py:163
 msgid "crop diameter"
 msgstr "beskjæringsdiameter"
 
-#: apps/photo/models.py:136
+#: apps/photo/models.py:166
 msgid ""
 "area containing most relevant content. Area is considered a circle with "
 "center x,y and diameter d where x and y are the values \"from_left\" and "
@@ -650,35 +654,35 @@ msgid ""
 "close cropping of some images, for instance byline photos."
 msgstr ""
 
-#: apps/photo/models.py:148
+#: apps/photo/models.py:178
 msgid "old file path"
 msgstr "gamal filplassering"
 
-#: apps/photo/models.py:149
+#: apps/photo/models.py:179
 msgid "previous path if the image has been moved."
 msgstr "logg av tidligere filplasseringer"
 
-#: apps/photo/models.py:155
+#: apps/photo/models.py:185
 msgid "contributor"
 msgstr "opphavsperson"
 
-#: apps/photo/models.py:156
+#: apps/photo/models.py:186
 msgid "who made this"
 msgstr "hvem har laget dette?"
 
-#: apps/photo/models.py:161
+#: apps/photo/models.py:191
 msgid "copyright information"
 msgstr "opphavsrett"
 
-#: apps/photo/models.py:163
+#: apps/photo/models.py:193
 msgid "extra information about license and attribution if needed."
 msgstr "Supplerende informasjon om opphavsrett for biletet"
 
-#: apps/photo/models.py:356
+#: apps/photo/models.py:379
 msgid "Profile Image"
 msgstr "Profilbilete"
 
-#: apps/photo/models.py:357
+#: apps/photo/models.py:380
 msgid "Profile Images"
 msgstr "Profilbileter"
 
@@ -1132,18 +1136,6 @@ msgstr "Byline"
 msgid "Bylines"
 msgstr "Bylines"
 
-#: settings/base.py:187
-msgid "Norwegian Bokmal"
-msgstr "Bokmål"
-
-#: settings/base.py:188
-msgid "Norwegian Nynorsk"
-msgstr "Nynorsk"
-
-#: settings/base.py:189
-msgid "English"
-msgstr "Engelsk"
-
 #: templates/admin/base_site.html:59
 msgid "Django site admin"
 msgstr "Adminside"
@@ -1318,6 +1310,18 @@ msgstr ""
 #: templates/registration/password_reset_form.html:22
 msgid "Reset my password"
 msgstr ""
+
+#: universitas/base.py:189
+msgid "Norwegian Bokmal"
+msgstr "Bokmål"
+
+#: universitas/base.py:190
+msgid "Norwegian Nynorsk"
+msgstr "Nynorsk"
+
+#: universitas/base.py:191
+msgid "English"
+msgstr "Engelsk"
 
 #~ msgid "add more"
 #~ msgstr "legg til fleire"

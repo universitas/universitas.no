@@ -7,7 +7,7 @@ from os import environ, path
 import sys
 
 PREFIX = 'DJANGO_'  # Environment variable prefix
-SETTINGS_MODULE = 'settings'  # Python module path to settings folder
+SETTINGS_MODULE = 'universitas'  # Python module path to settings folder
 WEBSERVER_ROOT = '/srv'  # Location of each django project
 OVERRIDES = {  # Change some settings from the defaults in named deployments.
     'www': {

@@ -4,7 +4,7 @@ from .base import *  # NOQA
 
 DEBUG = True
 THUMBNAIL_DEBUG = True
-ROOT_URLCONF = 'core.dev_urls'
+ROOT_URLCONF = 'universitas.dev_urls'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

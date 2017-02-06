@@ -12,9 +12,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db.models.signals import pre_delete, post_save
 from django.core.files import File
-from django.conf import settings
 # Installed apps
 
 from model_utils.models import TimeStampedModel
@@ -209,24 +207,18 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         self.save()
 
     def save(self, *args, **kwargs):
-        pk = self.pk
-        if pk and not kwargs.pop('autocrop', False):
-            self.md5 = None
-            self.size = None
-            self.mtime = None
-            try:
-                saved = type(self).objects.get(id=self.pk)
-                if (self.from_left,
-                    self.from_top) != (saved.from_left,
-                                       saved.from_top):
-                    self.cropping_method = self.CROP_MANUAL
-            except ImageFile.DoesNotExist:
-                pass
-        if not pk:
-            super().save(*args, **kwargs)
-        assert self.size is not None
-        assert self.md5 is not None
-        assert self.mtime is not None
+        self.md5, self.size, self.mtime = (None, None, None)
+        # refresh values
+        self.md5, self.size, self.mtime
+        try:
+            saved = type(self).objects.get(id=self.pk)
+        except ImageFile.DoesNotExist:
+            pass
+        else:
+            if all((self.cropping_method != self.CROP_PENDING,
+                    saved.cropping_method != self.CROP_PENDING,
+                    saved.cropping != self.cropping)):
+                self.cropping_method = self.CROP_MANUAL
         super().save(*args, **kwargs)
 
     def save_local_image_as_source(self, filepath, save=True):
@@ -399,31 +391,3 @@ class ProfileImage(ImageFile):
     def upload_folder():
         return ProfileImage.UPLOAD_FOLDER
 
-
-def remove_imagefile_and_thumbnail(sender, instance, **kwargs):
-    """Remove image file"""
-    delete_file = not settings.DEBUG  # only in production
-    thumbnail.delete(instance.source_file, delete_file=delete_file)
-
-
-def autocrop_image(sender, instance, **kwargs):
-    """Schedule autocropping"""
-    from .tasks import detect_crop, update_image_crop
-    logger.debug('status {}'.format(instance.cropping_method))
-    if instance.cropping_method == AutoCropImage.CROP_PENDING:
-        logger.debug('autocrop')
-        detect_crop.apply_async(
-            kwargs={'image_pk': instance.pk},
-            link=update_image_crop.s(),
-        )
-
-
-def remove_thumbnail(sender, instance, **kwargs):
-    thumbnail.delete(instance.source_file, delete_file=False)
-
-
-pre_delete.connect(remove_imagefile_and_thumbnail, sender=ImageFile)
-pre_delete.connect(remove_imagefile_and_thumbnail, sender=ProfileImage)
-post_save.connect(remove_thumbnail, sender=ImageFile)
-post_save.connect(remove_thumbnail, sender=ProfileImage)
-post_save.connect(autocrop_image, sender=ImageFile)
