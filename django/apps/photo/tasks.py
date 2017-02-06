@@ -10,7 +10,9 @@ from celery.utils.log import get_task_logger
 
 from .models import upload_image_to, ImageFile, ProfileImage
 from apps.core.staging import new_staging_images
+from sorl import thumbnail
 from .autocrop import autocrop
+from .models import upload_image_to, ImageFile
 
 logger = get_task_logger(__name__)
 

@@ -69,6 +69,10 @@ LOGGING['root'] = {
     'handlers': ['console', 'errorlog', 'debuglog', 'sentry'],
 }
 LOGGING['loggers'] = {
+   'werkzeug': {
+        'level': 'DEBUG', 'propagate': True,
+        'handlers': ['console'],
+    },
     'bylines': {
         'level': 'INFO', 'propagate': False,
         'handlers': ['bylineslog'],
@@ -81,7 +85,7 @@ LOGGING['loggers'] = {
         'level': 'DEBUG', 'propagate': False,
         'handlers': ['console', 'errorlog', 'debuglog', 'sentry'],
     },
-    'core': {
+    'universitas': {
         'level': 'DEBUG', 'propagate': False,
         'handlers': ['console', 'errorlog', 'debuglog', 'sentry'],
     },

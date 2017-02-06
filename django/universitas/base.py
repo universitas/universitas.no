@@ -17,13 +17,14 @@ RAVEN_CONFIG = {'dsn': environment_variable('RAVEN_DSN'), }
 SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
 
 # CELERY TASK RUNNER
+CELERY_BROKER_URL = 'redis://localhost:6379/5'
+CELERY_BROKER_TRANSPORT_OPTIONS = {'fanout_prefix': True}
 CELERYD_HIJACK_ROOT_LOGGER = False
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/5'
 CELERY_ACCEPT_CONTENT = ['json', 'pickle']
 CELERY_TASK_SERIALIZER = 'json'
+CELERY_TASK_DEFAULT_QUEUE = SITE_URL
 CELERY_RESULT_SERIALIZER = 'json'
-BROKER_URL = 'redis://localhost:6379/5'
-BROKER_TRANSPORT_OPTIONS = {'fanout_prefix': True}
 
 # AMAZON WEB SERVICES
 AWS_STORAGE_BUCKET_NAME = environment_variable('AWS_STORAGE_BUCKET_NAME')
@@ -98,10 +99,10 @@ PRODSYS_USER = environment_variable('PRODSYS_USER')
 PRODSYS_PASSWORD = environment_variable('PRODSYS_PASSWORD')
 PRODSYS_URL = environment_variable('PRODSYS_URL')
 
-ROOT_URLCONF = 'core.urls'
+ROOT_URLCONF = 'universitas.urls'
 SECRET_KEY = environment_variable('SECRET_KEY')
 SITE_URL = environment_variable('SITE_URL')
-WSGI_APPLICATION = 'core.wsgi.application'
+WSGI_APPLICATION = 'universitas.wsgi.application'
 
 LOGIN_URL = '/admin/login/'
 LOGIN_REDIRECT_URL = '/'
