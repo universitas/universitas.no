@@ -13,7 +13,7 @@ case $1 in
     run "django-admin reset_db --noinput && django-admin dbshell < dbdump.sql"
     ;;
   migrate)
-    run "django-admin makemigrations && django-admin migrate" 
+    run "django-admin makemigrations && django-admin migrate"
     ;;
   jupyter)
     run "django-admin shell_plus --notebook"
@@ -29,7 +29,7 @@ case $1 in
     ;;
   uwsgi)
     echo 'starting django uwsgi'
-    if [[ $DEBUG -eq 'True' ]]; then
+    if [[ $DEBUG = 'True' ]]; then
       run 'uwsgi uwsgi.dev.ini'
     else
       run 'uwsgi uwsgi.ini'
