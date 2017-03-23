@@ -27,7 +27,7 @@ for arg; do case $arg in
     SERVER=universitas.no
     DB=www_universitas_no
     echo "creating db dump from server $SERVER"
-    ssh $SERVER "sudo -u postgres pg_dump --no-owner --dbname=$DB --file=/tmp/dbdump.sql"
+    ssh $SERVER "pg_dump --no-owner --dbname=$DB --file=/tmp/dbdump.sql"
     echo "copying db dump from server"
     rsync --remove-source-files --compress $SERVER:/tmp/dbdump.sql django/dbdump.sql
 
