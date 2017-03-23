@@ -76,6 +76,8 @@ def frontpage_layout(blocks):
                     'image': source,
                     'crop': crop,
                     'story': story,
+                    'url': story.url,
+                    'alt': story.headline,
                     'block': bb,
                 }
                 items.append(item)

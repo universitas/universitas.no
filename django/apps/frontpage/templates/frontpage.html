@@ -24,7 +24,7 @@
           {% if item.image %}
             <div class="image-block">
               {% thumbnail item.image item.image_size crop=item.crop as image %}
-                <a href="{{ item.story.url }}"><img src="{{ image.url }}" alt="{{ item.story.headline|strip_tags }}"></img></a>
+                <a href="{{ item.url }}"><img src="{{ image.url }}" alt="{{ item.alt|strip_tags }}"></img></a>
               {% endthumbnail %}
           {% else %}
             <div class="no-image-block">
@@ -43,7 +43,7 @@
           <div class="text-block">
             {% if item.story.headline %}
               <div class="headline-block {{ item.headline_class }}">
-              <a href="{{ item.story.url }}">
+              <a href="{{ item.url }}">
               {% if item.story.kicker %}
                 <h2 class="frontpage-kicker">{{ item.story.kicker|inline_tags }}</h2>
               {% endif %}

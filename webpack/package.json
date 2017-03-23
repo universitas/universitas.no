@@ -1,0 +1,32 @@
+{
+  "name": "universitas.no",
+  "author": "Håken Lid",
+  "license": "ISC",
+  "version": "1.2.0",
+  "description": "frontend assets universitas",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm $BUILD_DIR/* -rf; webpack --config webpack.prod.config.js",
+    "watch": "webpack --watch",
+    "dev": "webpack-dev-server --hot --inline --config webpack.dev.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "gh:universitas/tassen"
+  },
+  "dependencies": {
+    "webpack": "^2.2.1",
+    "node-sass": "^4.5.0",
+    "file-loader": "^0.10.0",
+    "css-loader": "^0.26.1",
+    "sass-loader": "^5.0.1",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack-dev-server": "^2.3.0",
+    "webpack-bundle-tracker": "^0.2.0",
+    "extract-text-webpack-plugin": "^2.0.0-rc.3",
+    "slick-carousel": "^1.6.0",
+    "foundation-sites": "^6.3.0"
+  },
+  "devDependencies": {}
+}

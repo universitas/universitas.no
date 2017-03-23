@@ -1,0 +1,57 @@
+#!/bin/bash
+# Build and demonize docker container
+
+if [[ ! -f django/local.env ]]; then
+  echo "# Add environment variables here" > django/local.env
+fi
+
+case $1 in
+  dummydata )
+    docker-compose run --rm web django-admin fake_content -c10 -s50
+    ;;
+
+  init )
+    docker-compose down
+    echo "building"
+    export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml
+    docker-compose build
+    docker-compose run --rm web django-admin migrate
+    docker-compose run --rm web django-admin collectstatic --noinput
+    ;;
+
+  webpack )
+    export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml
+    docker-compose run --rm webpack build
+    ;;
+
+  fetchdb )
+    echo "fetching db dump"
+    ssh universitas.no "sudo -upostgres pg_dump --no-owner -dwww_universitas_no -f /tmp/dbdump.sql"
+    echo "copying db dump from server"
+    rsync --progress -az universitas.no:/tmp/dbdump.sql django/dbdump.sql
+    ssh universitas.no "sudo rm /tmp/dbdump.sql"
+    docker-compose down
+    docker-compose run --rm web load_db
+    rm /django/dbdump.sql
+    ;;
+
+  prod )
+    docker-compose down
+    echo "running universitas production"
+    export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml
+    docker-compose up -d
+    ;;
+
+  dev )
+    docker-compose down
+    echo "running universitas development"
+    unset COMPOSE_FILE
+    docker-compose up
+    ;;
+
+  * )
+    echo "usage $0 init | prod | dev | fetchdb | webpack"
+    exit 1
+    ;;
+esac
+docker ps

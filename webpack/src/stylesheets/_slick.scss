@@ -1,0 +1,79 @@
+$slick-font-path:         "../fonts/"         ;// Directory path for the slick icon font
+$slick-font-family:       "universitas-icons"           ;// Font-family for slick icon font
+$slick-loader-path:       "../images/"        ;// Directory path for the loader image
+$slick-arrow-color:       #FFF             ;// Color of the left/right arrow icons
+$slick-dot-color:         #FFF             ;// Color of the navigation dots
+$slick-dot-color-active:  $slick-dot-color  ;// Color of the active navigation dot
+$slick-prev-character:    $icon-previous    ;// Unicode character code for the previous arrow icon
+$slick-next-character:    $icon-next        ;// Unicode character code for the next arrow icon
+$slick-dot-character:     $icon-circle      ;// Unicode character code for the navigation dot icon
+$slick-dot-size:          1rem               ;// Size of the navigation dots
+
+@import "slick/slick-theme.scss";
+@import "slick/slick.scss";
+
+%icon {
+    transition: 500ms;
+    margin: 0;
+    // transform: translate(0,0);
+    z-index: 10;
+}
+
+%symbol {
+    text-shadow: 1px 1px 5px #000;
+    opacity: .5;
+    &:hover{
+      opacity: 1;
+    }
+}
+
+%arrow {
+    @extend %icon;
+    height: 100%;
+    &:before{
+      @extend %symbol;
+      font-size: 1.5rem;
+    }
+}
+
+.slick-dotted.slick-slider {
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+.slick-active {
+  outline: none;
+}
+.slideshow {
+  >.image-container {
+    display: none;
+    &:first-child {
+      display: block;
+    }
+  }
+}
+.slick-dots {
+  @extend %icon;
+  transform: translate(0,-40px);
+  bottom: inherit;
+  top: 0;
+  li.active button:before{
+    opacity: 1;
+  }
+  li button:before {
+    @extend %symbol;
+  }
+  .slideshow:hover & {
+    transform: translate(0,0);
+  }
+}
+.slick-next {
+  @extend %arrow;
+  // transform: translate(40px,0);
+  right: 0;
+}
+.slick-prev {
+  @extend %arrow;
+  // transform: translate(-40px,0);
+  left: 0;
+}

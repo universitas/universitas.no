@@ -2,7 +2,7 @@ from sorl.thumbnail.engines.wand_engine import Engine as WandEngine
 # from sorl.thumbnail.engines.pil_engine import Engine as PilEngine
 # from sorl.thumbnail.engines.convert_engine import Engine
 import re
-from PIL import Image
+# from PIL import Image
 
 
 from sorl.thumbnail.base import ThumbnailBackend, EXTENSIONS
@@ -52,8 +52,7 @@ class CloseCropEngine(WandEngine):
     def close_crop(self, image, geometry, options):
         """ crop it close """
         # crop circle diameter in pixels
-        org_width, org_height = size = image['size']
-        filename = image['source']
+        org_width, org_height = size = image.size
         diameter = options['diameter'] * min(size) / 100 * 1.5
         crop = options['crop']
         if isinstance(crop, str) and '%' in crop:
@@ -81,11 +80,6 @@ class CloseCropEngine(WandEngine):
                 new_geometry = [int(value) for value in (
                     crop_left, crop_top, crop_right, crop_bottom
                 )]
-
-                original = Image.open(filename)
-                cropped = original.crop(new_geometry)
-                cropped.thumbnail(geometry)
-                cropped.save(filename, **options)
-                image['size'] = geometry
+                image.crop(*new_geometry)
 
         return image

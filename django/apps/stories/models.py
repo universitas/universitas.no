@@ -78,7 +78,7 @@ class MarkupFieldMixin(object):
         value = remove_control_chars(value)
         value = re.sub(r'\r\n', '\n', value)
         value = self.clean_links(value, model_instance)
-        soup = BeautifulSoup(value)
+        soup = BeautifulSoup(value, 'html5lib')
         if value != soup.text:
             error_message = '{warning} {tags}'.format(
                 warning=_('HTML tags found in text: '), tags=soup.find_all())
@@ -276,7 +276,7 @@ class TextContent(models.Model, MarkupModelMixin):
 
     def get_plaintext(self):
         """ Returns text content as plain text. """
-        soup = BeautifulSoup(self.get_html())
+        soup = BeautifulSoup(self.get_html(), 'html5lib')
         return soup.get_text()
 
     def make_html(self, body=None):
@@ -604,7 +604,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             return '{}'.format(self.title,)
 
     def save(self, *args, **kwargs):
-        new = self.pk is None or kwargs.pop('new', None)
+        new = kwargs.pop('new', (self.pk is None))
 
         super().save(*args, **kwargs)
 
@@ -1641,7 +1641,7 @@ class InlineLink(TimeStampedModel):
         # if '&' in bodytext:
         # find = re.findall(r'.{,20}&.{,20}', bodytext)
         # logger.debug(find)
-        soup = BeautifulSoup(bodytext)
+        soup = BeautifulSoup(bodytext, 'html5lib')
         for link in soup.find_all('a'):
             href = link.get('href') or ''
             text = link.text
