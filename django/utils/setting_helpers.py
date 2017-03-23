@@ -6,7 +6,7 @@ import json
 logger = logging.getLogger(__name__)
 
 
-def environment_variable(keyname):
+def environment_variable(keyname, default=''):
     """Shortcut for getting environmental variables"""
     # To avoid commiting passwords and usernames to git and GitHub,
     # saved as environmental variables in a file called postactivate.
@@ -14,7 +14,9 @@ def environment_variable(keyname):
     if keyname.startswith('DJANGO_'):
         keyname = keyname[7:]
     keyname = 'DJANGO_{}'.format(keyname.upper().replace(' ', '_'))
-    return os.environ.get(keyname) or ''
+    return os.environ.get(keyname) or default
+
+
 
 
 def join_path(*paths):

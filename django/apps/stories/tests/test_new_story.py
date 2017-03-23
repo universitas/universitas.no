@@ -14,17 +14,19 @@ from apps.markup.models import BlockTag
 
 @pytest.fixture
 def news():
-    section = Section.objects.create()
-    news = StoryType.objects.create(section=section, name='News')
-    return news
+    try:
+        return StoryType.objects.get(name='News')
+    except StoryType.DoesNotExist:
+        section = Section.objects.get_or_create(title='Foo')[0]
+        return StoryType.objects.create(section=section, name='News')
 
 
 @pytest.mark.django_db
 def test_that_db_is_empty():
     """There should be no content"""
-    assert Section.objects.count() == 0
     assert Story.objects.count() == 0
-    assert StoryType.objects.count() == 0
+    # assert Section.objects.count() == 0
+    # assert StoryType.objects.count() == 0
 
 
 @pytest.mark.django_db

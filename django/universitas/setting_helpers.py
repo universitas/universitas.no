@@ -1,34 +1,51 @@
 # -*- coding: utf-8 -*-
 """Utility functions for settings"""
 import os
-import json
-import logging
-logger = logging.getLogger(__name__)
+import re
+from pathlib import Path
 
 
-def environment_variable(keyname):
-    """shortcut for getting environmental variables"""
-    # To avoid commiting passwords and usernames to git and GitHub,
-    # these settings are saved as environmental variables in a file called postactivate.
-    # Postactivate is sourced when the virtual environment is activated.
-    if keyname.startswith('DJANGO_'):
-        keyname = keyname[7:]
-    keyname = 'DJANGO_{}'.format(keyname.upper().replace(' ', '_'))
-    return os.environ.get(keyname) or ''
+def joinpath(*paths, resolve=False):
+    """Helper function to determine paths in config file"""
+    base_dir = Path(__file__).parent.parent.resolve()
+    result = base_dir.joinpath(*paths)
+    if resolve:
+        result.resolve()
+    return str(result)
 
 
-def join_path(*paths):
-    """ shortcut for joining paths. cross os compatible """
-    return os.path.normpath(os.path.join(*paths))
+class Environment:
+    """Helper class to access environental variables"""
 
+    def __init__(self, prefix='', strict=True):
+        def _attrname(name):
+            result = re.sub(r'[^a-z]', '_', name.lower())
+            result = result[len(prefix):].strip('_')
+            return result or name.lower()
 
-def load_json_file(filepath):
-    """Load json file -> dictionary"""
-    try:
-        with open(filepath) as filerevs_fh:
-            jsondict = json.load(filerevs_fh)
-    except IOError as err:
-        # No file revisions found, continuing without
-        logger.exception('%s' % err)
-        jsondict = {}
-    return jsondict
+        self._keys = {
+            _attrname(key): key
+            for key in os.environ.keys()
+            if key.startswith(prefix)
+        }
+        self._strict = strict
+
+    def __dir__(self):
+        attrs = set(self._keys.keys()) | set(super().__dir__())
+        return sorted(list(attrs))
+
+    def __getattr__(self, name):
+        try:
+            if name in self._keys:
+                value = os.environ.get(self._keys[name])
+            else:
+                value = os.environ[name]
+            try:
+                return int(value)
+            except ValueError:
+                return value
+
+        except KeyError:
+            if not self._strict:
+                return ''
+            raise AttributeError

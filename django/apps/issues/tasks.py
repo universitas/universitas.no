@@ -72,7 +72,7 @@ def get_staging_pdf_files(
 def get_output_file(input_file, subfolder, suffix=None):
     if suffix is None:
         suffix = input_file.suffix
-    if not suffix.startswith('.'):
+    if suffix and not suffix.startswith('.'):
         suffix = '.' + suffix
     output_dir = input_file.parent / subfolder
     output_dir.mkdir(exist_ok=True)
@@ -90,7 +90,7 @@ def get_output_file(input_file, subfolder, suffix=None):
 def convert_pdf_to_web(input_file):
     """Compress images and convert to rgb using ghostscript"""
     input_file = pathlib.Path(input_file)
-    input_file.resolve()  # Raises FileNotFound
+    input_file.resolve(strict=True)  # Raises FileNotFound
     output_file, no_change = get_output_file(input_file, 'WEB')
     if no_change:
         return output_file
@@ -170,7 +170,7 @@ def create_web_bundle(filename, *args, **kwargs):
 
     number_of_pages = len(pages)
     if number_of_pages == 0:
-        raise RuntimeWarning('No pages found')
+        raise RuntimeError('No pages found')
 
     if number_of_pages % 4 != 0:
         raise RuntimeError('Wrong number of pages %d' % number_of_pages)
@@ -207,10 +207,9 @@ def create_print_issue_pdf():
     results = []
     for suffix, globpattern in editions:
 
-        pdf_name = OUTPUT_PDF_NAME.format(issue=issue, suffix=suffix)
-        issue_name = '{issue.number}/{issue.date.year}{suffix}'.format(
-            suffix=suffix, issue=issue)
-        logger.info('Creating pdf: {}'.format(issue_name))
+        pdf_name = OUTPUT_PDF_NAME.format(
+            issue=issue.issue_tuple(), suffix=suffix)
+        logger.info('Creating pdf: {}'.format(pdf_name))
         tmp_bundle_file = tempfile.NamedTemporaryFile(suffix='.pdf')
         try:
             create_web_bundle(
@@ -219,15 +218,13 @@ def create_print_issue_pdf():
             logger.info(str(warning))
             continue
         try:
-            # pdf_lookfor = pdf_name.split('.')[0]
-            # print(pdf_name, pdf_lookfor)
-            print_issue = PrintIssue.objects.get(pdf__endswith=pdf_name)
+            print_issue = PrintIssue.objects.get(pdf__contains=pdf_name)
         except PrintIssue.DoesNotExist:
             print_issue = PrintIssue()
         with open(tmp_bundle_file.name, 'rb') as src:
             pdf_content = ContentFile(src.read())
         print_issue.pdf.save(pdf_name, pdf_content, save=False)
-        # print_issue.issue_name = issue_name
+        print_issue.issue = issue
         print_issue.save()
         logger.info('New bundle file: {}'.format(pdf_name))
         results.append(pdf_name)

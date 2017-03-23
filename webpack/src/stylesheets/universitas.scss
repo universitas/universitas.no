@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+// Fonts and icons
+@import "includes/googlefonts";
+
+// CSS Framework
+@import "settings";
+@import "foundation_components";
+
+// Icon fonts
+@import "includes/icons";
+
+// Carousel
+@import "slick";
+
+// Local styles
+@import "includes/colors";
+@import "includes/elements";
+@import "includes/adverts";
+@import "includes/story";
+@import "includes/frontpage";
+@import "includes/old-menu";
+@import "includes/pdf-archive";
+@import "includes/search-results";
+
