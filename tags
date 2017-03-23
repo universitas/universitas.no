@@ -73,6 +73,7 @@ CROP_PORTRAIT	django/apps/photo/models.py	/^    CROP_PORTRAIT = 15$/;"	v	class:A
 CachedTag	django/apps/markup/models.py	/^class CachedTag(models.Model):$/;"	c
 ChannelAdmin	django/apps/adverts/admin.py	/^class ChannelAdmin(admin.ModelAdmin):$/;"	c
 CloseCropEngine	django/apps/photo/thumb_utils.py	/^class CloseCropEngine(WandEngine):$/;"	c
+Command	django/apps/core/management/commands/fake_content.py	/^class Command(BaseCommand):$/;"	c
 Command	django/apps/issues/management/commands/find_pdf_files.py	/^class Command(BaseCommand):$/;"	c
 Command	django/apps/issues/management/commands/web_pdf.py	/^class Command(BaseCommand):$/;"	c
 Command	django/apps/legacy_db/management/commands/importer_fra_prodsys.py	/^class Command(BaseCommand):$/;"	c
@@ -136,6 +137,7 @@ ElementManager	django/apps/stories/models.py	/^class ElementManager(models.Manag
 ElementQuerySet	django/apps/stories/models.py	/^class ElementQuerySet(models.QuerySet):$/;"	c
 Environment	django/universitas/setting_helpers.py	/^class Environment:$/;"	c
 Eposttinging	django/apps/legacy_db/models.py	/^class Eposttinging(models.Model):$/;"	c
+FAKE	django/apps/core/content_factory.py	/^FAKE = Factory.create('no')$/;"	v
 FILENAME_PATTERN	django/apps/issues/management/commands/web_pdf.py	/^FILENAME_PATTERN = 'universitas_{issue.date.year}-{issue.number}{suffix}.pdf'$/;"	v
 FILE_UPLOAD_DIRECTORY_PERMISSIONS	django/universitas/base.py	/^FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770$/;"	v
 FILE_UPLOAD_PERMISSIONS	django/universitas/base.py	/^FILE_UPLOAD_PERMISSIONS = 0o664$/;"	v
@@ -331,6 +333,7 @@ MissingBinary	django/apps/issues/tasks.py	/^class MissingBinary(RuntimeError):$/
 MySQLSearchBackend	django/watson/backends.py	/^class MySQLSearchBackend(SearchBackend):$/;"	c
 NON_PRINTING_CHARS	django/apps/stories/models.py	/^NON_PRINTING_CHARS = re.compile('[{}]'.format(''.join($/;"	v
 NOTEBOOK_ARGUMENTS	django/universitas/dev.py	/^NOTEBOOK_ARGUMENTS = [$/;"	v
+OE	django/dbdump.sql	/^14599	Olav Event		OE	\\N	f	\\N	\\N	0$/;"	e
 OLD_DRAFT	django/apps/legacy_db/models.py	/^    OLD_DRAFT = 1$/;"	v	class:Prodsak
 ORDER_GAP	django/apps/frontpage/models.py	/^    ORDER_GAP = 100$/;"	v	class:StoryModule
 ORIGINAL_RATIO	django/apps/stories/models.py	/^    ORIGINAL_RATIO = 100.0$/;"	v	class:StoryMedia
@@ -392,6 +395,7 @@ SHORT_DATETIME_FORMAT	django/universitas/base.py	/^SHORT_DATETIME_FORMAT = 'y-m-
 SHORT_DATE_FORMAT	django/universitas/base.py	/^SHORT_DATE_FORMAT = 'Y-m-d'$/;"	v
 SITE_URL	django/universitas/base.py	/^SITE_URL = env.site_url or 'www.example.com'$/;"	v
 SIZES	django/apps/frontpage/models.py	/^    SIZES = [(3, 1), (3, 1), (3, 1), (3, 2),$/;"	v	class:FrontpageStoryManager
+SOURCE_IMG	django/apps/core/content_factory.py	/^SOURCE_IMG = Path(__file__).parent \/ 'judgement2.jpg'$/;"	v
 SPECIAL	django/apps/issues/models.py	/^    SPECIAL = 3$/;"	v	class:Issue
 STAGING_FOLDER	django/apps/legacy_db/export_content_and_images.py	/^STAGING_FOLDER = os.path.join(settings.STAGING_ROOT, 'STAGING', 'IMAGES')$/;"	v
 STAGING_ROOT	django/universitas/base.py	/^STAGING_ROOT = '\/srv\/fotoarkiv_universitas\/'$/;"	v
@@ -618,6 +622,7 @@ actual_frontpage	django/apps/frontpage/views.py	/^def actual_frontpage(request, 
 ad_channels	django/apps/adverts/models.py	/^    ad_channels = models.ManyToManyField($/;"	v	class:Advert
 ad_formats	django/apps/adverts/models.py	/^    ad_formats = models.ManyToManyField($/;"	v	class:AdChannel
 ad_type	django/apps/adverts/models.py	/^    ad_type = models.PositiveIntegerField($/;"	v	class:Advert
+add_arguments	django/apps/core/management/commands/fake_content.py	/^    def add_arguments(self, parser):$/;"	m	class:Command
 add_arguments	django/apps/issues/management/commands/find_pdf_files.py	/^    def add_arguments(self, parser):$/;"	m	class:Command
 add_arguments	django/apps/issues/management/commands/web_pdf.py	/^    def add_arguments(self, parser):$/;"	m	class:Command
 add_arguments	django/apps/legacy_db/management/commands/importer_fra_prodsys.py	/^    def add_arguments(self, parser):$/;"	m	class:Command
@@ -628,6 +633,46 @@ add_to_context	django/watson/search.py	/^    def add_to_context(self, engine, ob
 admin_search_engine	django/watson/admin.py	/^admin_search_engine = SearchEngine("admin")$/;"	v
 advert	django/apps/adverts/templatetags/advert_channel.py	/^def advert(context, channel_name):$/;"	f
 advert_deadline	django/apps/issues/models.py	/^    def advert_deadline(self):$/;"	m	class:Issue
+adverts_adchannel	django/dbdump.sql	/^CREATE TABLE adverts_adchannel ($/;"	t
+adverts_adchannel.description	django/dbdump.sql	/^    name character varying(50) NOT NULL,$/;"	F
+adverts_adchannel.extra_classes	django/dbdump.sql	/^    description text,$/;"	F
+adverts_adchannel.id	django/dbdump.sql	/^CREATE TABLE adverts_adchannel ($/;"	F
+adverts_adchannel.max_at_once	django/dbdump.sql	/^    extra_classes character varying(50) NOT NULL,$/;"	F
+adverts_adchannel.name	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+adverts_adchannel_ad_formats	django/dbdump.sql	/^CREATE TABLE adverts_adchannel_ad_formats ($/;"	t
+adverts_adchannel_ad_formats.adchannel_id	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+adverts_adchannel_ad_formats.adformat_id	django/dbdump.sql	/^    adchannel_id integer NOT NULL,$/;"	F
+adverts_adchannel_ad_formats.id	django/dbdump.sql	/^CREATE TABLE adverts_adchannel_ad_formats ($/;"	F
+adverts_adformat	django/dbdump.sql	/^CREATE TABLE adverts_adformat ($/;"	t
+adverts_adformat.category	django/dbdump.sql	/^    published boolean NOT NULL,$/;"	F
+adverts_adformat.height	django/dbdump.sql	/^    width smallint NOT NULL,$/;"	F
+adverts_adformat.id	django/dbdump.sql	/^CREATE TABLE adverts_adformat ($/;"	F
+adverts_adformat.name	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+adverts_adformat.price	django/dbdump.sql	/^    height smallint NOT NULL,$/;"	F
+adverts_adformat.published	django/dbdump.sql	/^    price integer NOT NULL,$/;"	F
+adverts_adformat.width	django/dbdump.sql	/^    name character varying(50) NOT NULL,$/;"	F
+adverts_advert	django/dbdump.sql	/^CREATE TABLE adverts_advert ($/;"	t
+adverts_advert.ad_type	django/dbdump.sql	/^    status integer NOT NULL,$/;"	F
+adverts_advert.alt_text	django/dbdump.sql	/^    link character varying(200),$/;"	F
+adverts_advert.customer_id	django/dbdump.sql	/^    html_source text,$/;"	F
+adverts_advert.description	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+adverts_advert.end_time	django/dbdump.sql	/^    start_time timestamp with time zone NOT NULL,$/;"	F
+adverts_advert.extra_classes	django/dbdump.sql	/^    customer_id integer NOT NULL,$/;"	F
+adverts_advert.html_source	django/dbdump.sql	/^    alt_text character varying(50) NOT NULL,$/;"	F
+adverts_advert.id	django/dbdump.sql	/^CREATE TABLE adverts_advert ($/;"	F
+adverts_advert.imagefile	django/dbdump.sql	/^    end_time timestamp with time zone NOT NULL,$/;"	F
+adverts_advert.link	django/dbdump.sql	/^    imagefile character varying(100),$/;"	F
+adverts_advert.ordering	django/dbdump.sql	/^    description character varying(100),$/;"	F
+adverts_advert.start_time	django/dbdump.sql	/^    ad_type integer NOT NULL,$/;"	F
+adverts_advert.status	django/dbdump.sql	/^    ordering integer NOT NULL,$/;"	F
+adverts_advert_ad_channels	django/dbdump.sql	/^CREATE TABLE adverts_advert_ad_channels ($/;"	t
+adverts_advert_ad_channels.adchannel_id	django/dbdump.sql	/^    advert_id integer NOT NULL,$/;"	F
+adverts_advert_ad_channels.advert_id	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+adverts_advert_ad_channels.id	django/dbdump.sql	/^CREATE TABLE adverts_advert_ad_channels ($/;"	F
+adverts_customer	django/dbdump.sql	/^CREATE TABLE adverts_customer ($/;"	t
+adverts_customer.contact_info	django/dbdump.sql	/^    name character varying(500) NOT NULL,$/;"	F
+adverts_customer.id	django/dbdump.sql	/^CREATE TABLE adverts_customer ($/;"	F
+adverts_customer.name	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
 aliases	django/apps/contributors/models.py	/^    aliases = models.TextField(blank=True)$/;"	v	class:Contributor
 allow_migrate	django/apps/legacy_db/router.py	/^    def allow_migrate(self, db, app_label, model_name=None, **hints):$/;"	m	class:ProdsysRouter
 alt_text	django/apps/adverts/models.py	/^    alt_text = models.CharField($/;"	v	class:Advert
@@ -650,6 +695,38 @@ attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:ImageIn
 attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:PullquoteInline
 attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:VideoInline
 attrs	django/apps/stories/autocomplete_light_registry.py	/^    attrs={$/;"	v
+auth_group	django/dbdump.sql	/^CREATE TABLE auth_group ($/;"	t
+auth_group.id	django/dbdump.sql	/^CREATE TABLE auth_group ($/;"	F
+auth_group.name	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+auth_group_permissions	django/dbdump.sql	/^CREATE TABLE auth_group_permissions ($/;"	t
+auth_group_permissions.group_id	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+auth_group_permissions.id	django/dbdump.sql	/^CREATE TABLE auth_group_permissions ($/;"	F
+auth_group_permissions.permission_id	django/dbdump.sql	/^    group_id integer NOT NULL,$/;"	F
+auth_permission	django/dbdump.sql	/^CREATE TABLE auth_permission ($/;"	t
+auth_permission.codename	django/dbdump.sql	/^    content_type_id integer NOT NULL,$/;"	F
+auth_permission.content_type_id	django/dbdump.sql	/^    name character varying(255) NOT NULL,$/;"	F
+auth_permission.id	django/dbdump.sql	/^CREATE TABLE auth_permission ($/;"	F
+auth_permission.name	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+auth_user	django/dbdump.sql	/^CREATE TABLE auth_user ($/;"	t
+auth_user.date_joined	django/dbdump.sql	/^    is_active boolean NOT NULL,$/;"	F
+auth_user.email	django/dbdump.sql	/^    last_name character varying(30) NOT NULL,$/;"	F
+auth_user.first_name	django/dbdump.sql	/^    username character varying(150) NOT NULL,$/;"	F
+auth_user.id	django/dbdump.sql	/^CREATE TABLE auth_user ($/;"	F
+auth_user.is_active	django/dbdump.sql	/^    is_staff boolean NOT NULL,$/;"	F
+auth_user.is_staff	django/dbdump.sql	/^    email character varying(254) NOT NULL,$/;"	F
+auth_user.is_superuser	django/dbdump.sql	/^    last_login timestamp with time zone,$/;"	F
+auth_user.last_login	django/dbdump.sql	/^    password character varying(128) NOT NULL,$/;"	F
+auth_user.last_name	django/dbdump.sql	/^    first_name character varying(30) NOT NULL,$/;"	F
+auth_user.password	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+auth_user.username	django/dbdump.sql	/^    is_superuser boolean NOT NULL,$/;"	F
+auth_user_groups	django/dbdump.sql	/^CREATE TABLE auth_user_groups ($/;"	t
+auth_user_groups.group_id	django/dbdump.sql	/^    user_id integer NOT NULL,$/;"	F
+auth_user_groups.id	django/dbdump.sql	/^CREATE TABLE auth_user_groups ($/;"	F
+auth_user_groups.user_id	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+auth_user_user_permissions	django/dbdump.sql	/^CREATE TABLE auth_user_user_permissions ($/;"	t
+auth_user_user_permissions.id	django/dbdump.sql	/^CREATE TABLE auth_user_user_permissions ($/;"	F
+auth_user_user_permissions.permission_id	django/dbdump.sql	/^    user_id integer NOT NULL,$/;"	F
+auth_user_user_permissions.user_id	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
 autocomplete_list	django/apps/core/autocomplete_views.py	/^def autocomplete_list(request):$/;"	f
 autocreate	django/apps/frontpage/models.py	/^    def autocreate(self, story):$/;"	m	class:FrontpageStoryManager
 autocrop	django/apps/photo/admin.py	/^def autocrop(modeladmin, request, queryset):$/;"	f
@@ -771,6 +848,29 @@ context_object_name	django/watson/views.py	/^    context_object_name = "search_r
 contributor	django/apps/contributors/models.py	/^    contributor = models.ForeignKey(Contributor)$/;"	v	class:Stint
 contributor	django/apps/photo/models.py	/^    contributor = models.ForeignKey($/;"	v	class:ImageFile
 contributor	django/apps/stories/models.py	/^    contributor = models.ForeignKey(Contributor)$/;"	v	class:Byline
+contributors_contributor	django/dbdump.sql	/^CREATE TABLE contributors_contributor ($/;"	t
+contributors_contributor.aliases	django/dbdump.sql	/^    display_name character varying(50) NOT NULL,$/;"	F
+contributors_contributor.byline_photo_id	django/dbdump.sql	/^    initials character varying(5),$/;"	F
+contributors_contributor.display_name	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+contributors_contributor.email	django/dbdump.sql	/^    verified boolean NOT NULL,$/;"	F
+contributors_contributor.id	django/dbdump.sql	/^CREATE TABLE contributors_contributor ($/;"	F
+contributors_contributor.initials	django/dbdump.sql	/^    aliases text NOT NULL,$/;"	F
+contributors_contributor.phone	django/dbdump.sql	/^    email character varying(254),$/;"	F
+contributors_contributor.status	django/dbdump.sql	/^    phone character varying(20),$/;"	F
+contributors_contributor.verified	django/dbdump.sql	/^    byline_photo_id integer,$/;"	F
+contributors_position	django/dbdump.sql	/^CREATE TABLE contributors_position ($/;"	t
+contributors_position.id	django/dbdump.sql	/^CREATE TABLE contributors_position ($/;"	F
+contributors_position.title	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+contributors_position_groups	django/dbdump.sql	/^CREATE TABLE contributors_position_groups ($/;"	t
+contributors_position_groups.group_id	django/dbdump.sql	/^    position_id integer NOT NULL,$/;"	F
+contributors_position_groups.id	django/dbdump.sql	/^CREATE TABLE contributors_position_groups ($/;"	F
+contributors_position_groups.position_id	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+contributors_stint	django/dbdump.sql	/^CREATE TABLE contributors_stint ($/;"	t
+contributors_stint.contributor_id	django/dbdump.sql	/^    end_date date,$/;"	F
+contributors_stint.end_date	django/dbdump.sql	/^    start_date date NOT NULL,$/;"	F
+contributors_stint.id	django/dbdump.sql	/^CREATE TABLE contributors_stint ($/;"	F
+contributors_stint.position_id	django/dbdump.sql	/^    contributor_id integer NOT NULL,$/;"	F
+contributors_stint.start_date	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
 convert_html_links	django/apps/stories/models.py	/^    def convert_html_links(cls, bodytext, return_html=False):$/;"	m	class:InlineLink
 convert_pdf_to_web	django/apps/issues/tasks.py	/^def convert_pdf_to_web(input_file):$/;"	f
 copyright_information	django/apps/photo/models.py	/^    copyright_information = models.CharField($/;"	v	class:ImageFile
@@ -780,6 +880,7 @@ create	django/apps/photo/thumb_utils.py	/^    def create(self, image, geometry, 
 create	django/apps/stories/models.py	/^    def create(cls, full_byline, story, initials=''):$/;"	m	class:Byline
 create_dummy	django/apps/adverts/models.py	/^    def create_dummy(self, adformat):$/;"	m	class:AdvertManager
 create_dummy_ads	django/apps/adverts/admin.py	/^def create_dummy_ads(modeladmin, request, queryset):$/;"	f
+create_fake_content	django/apps/core/content_factory.py	/^def create_fake_content(contributors=3, stories=10, delete_existing=False,$/;"	f
 create_from_file	django/apps/photo/models.py	/^    def create_from_file(self, filepath, **kwargs):$/;"	m	class:ImageFileManager
 create_from_url	django/apps/stories/models.py	/^    def create_from_url(cls, url, parent_story):$/;"	m	class:StoryVideo
 create_pdf	django/apps/issues/admin.py	/^def create_pdf(modeladmin, request, queryset):$/;"	f
@@ -956,6 +1057,28 @@ diskusjon	django/apps/legacy_db/models.py	/^    diskusjon = models.IntegerField(
 display_bylines	django/apps/stories/admin.py	/^    def display_bylines(self, instance):$/;"	m	class:StoryAdmin
 display_name	django/apps/contributors/models.py	/^    display_name = models.CharField(blank=True, max_length=50)$/;"	v	class:Contributor
 disqus_enabled	django/apps/stories/models.py	/^    def disqus_enabled(self):$/;"	m	class:Story
+django_admin_log	django/dbdump.sql	/^CREATE TABLE django_admin_log ($/;"	t
+django_admin_log.action_flag	django/dbdump.sql	/^    object_repr character varying(200) NOT NULL,$/;"	F
+django_admin_log.action_time	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+django_admin_log.change_message	django/dbdump.sql	/^    action_flag smallint NOT NULL,$/;"	F
+django_admin_log.content_type_id	django/dbdump.sql	/^    change_message text NOT NULL,$/;"	F
+django_admin_log.id	django/dbdump.sql	/^CREATE TABLE django_admin_log ($/;"	F
+django_admin_log.object_id	django/dbdump.sql	/^    action_time timestamp with time zone NOT NULL,$/;"	F
+django_admin_log.object_repr	django/dbdump.sql	/^    object_id text,$/;"	F
+django_admin_log.user_id	django/dbdump.sql	/^    content_type_id integer,$/;"	F
+django_content_type	django/dbdump.sql	/^CREATE TABLE django_content_type ($/;"	t
+django_content_type.app_label	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+django_content_type.id	django/dbdump.sql	/^CREATE TABLE django_content_type ($/;"	F
+django_content_type.model	django/dbdump.sql	/^    app_label character varying(100) NOT NULL,$/;"	F
+django_migrations	django/dbdump.sql	/^CREATE TABLE django_migrations ($/;"	t
+django_migrations.app	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+django_migrations.applied	django/dbdump.sql	/^    name character varying(255) NOT NULL,$/;"	F
+django_migrations.id	django/dbdump.sql	/^CREATE TABLE django_migrations ($/;"	F
+django_migrations.name	django/dbdump.sql	/^    app character varying(255) NOT NULL,$/;"	F
+django_session	django/dbdump.sql	/^CREATE TABLE django_session ($/;"	t
+django_session.expire_date	django/dbdump.sql	/^    session_data text NOT NULL,$/;"	F
+django_session.session_data	django/dbdump.sql	/^    session_key character varying(40) NOT NULL,$/;"	F
+django_session.session_key	django/dbdump.sql	/^CREATE TABLE django_session ($/;"	F
 do_filter	django/watson/backends.py	/^    def do_filter(self, engine_slug, queryset, search_text):$/;"	m	class:MySQLSearchBackend
 do_filter	django/watson/backends.py	/^    def do_filter(self, engine_slug, queryset, search_text):$/;"	m	class:PostgresSearchBackend
 do_filter	django/watson/backends.py	/^    def do_filter(self, engine_slug, queryset, search_text):$/;"	m	class:RegexSearchMixin
@@ -1032,10 +1155,15 @@ extra_classes	django/apps/adverts/models.py	/^    extra_classes = models.CharFie
 extra_context	django/watson/views.py	/^    extra_context = {}$/;"	v	class:SearchMixin
 extract_pdf_text	django/apps/issues/models.py	/^def extract_pdf_text(pdf_data, first_page, last_page=None):$/;"	f
 fake	django/utils/content_factory.py	/^fake = Factory.create('no')$/;"	v
+fake_contributor	django/apps/core/content_factory.py	/^def fake_contributor(fake=FAKE, **kwargs):$/;"	f
 fake_contributor	django/utils/content_factory.py	/^def fake_contributor(**kwargs):$/;"	f
+fake_imagefile	django/apps/core/content_factory.py	/^def fake_imagefile(size=(1200, 600), class_=ImageFile, fake=FAKE, **kwargs):$/;"	f
 fake_imagefile	django/utils/content_factory.py	/^def fake_imagefile(size=(900, 500), class_=ImageFile, **kwargs):$/;"	f
+fake_story	django/apps/core/content_factory.py	/^def fake_story():$/;"	f
 fake_story	django/utils/content_factory.py	/^def fake_story():$/;"	f
+fake_story_content	django/apps/core/content_factory.py	/^def fake_story_content(fake=FAKE):$/;"	f
 fake_story_content	django/utils/content_factory.py	/^def fake_story_content():$/;"	f
+fake_story_image	django/apps/core/content_factory.py	/^def fake_story_image(story, byline):$/;"	f
 fake_story_image	django/utils/content_factory.py	/^def fake_story_image(story, byline):$/;"	f
 fallback_view	django/apps/frontpage/views.py	/^def fallback_view(request, slug):$/;"	f
 fancyoverskrift	django/apps/legacy_db/models.py	/^    fancyoverskrift = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
@@ -1187,8 +1315,45 @@ forwards	django/watson/south_migrations/0002_installwatson.py	/^    def forwards
 from_left	django/apps/photo/models.py	/^    from_left = models.PositiveSmallIntegerField($/;"	v	class:ImageFile
 from_top	django/apps/photo/models.py	/^    from_top = models.PositiveSmallIntegerField($/;"	v	class:ImageFile
 frontpage	django/apps/frontpage/models.py	/^    frontpage = models.ForeignKey($/;"	v	class:FrontPageModule
+frontpage_frontpage	django/dbdump.sql	/^CREATE TABLE frontpage_frontpage ($/;"	t
+frontpage_frontpage.created	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+frontpage_frontpage.id	django/dbdump.sql	/^CREATE TABLE frontpage_frontpage ($/;"	F
+frontpage_frontpage.label	django/dbdump.sql	/^    modified timestamp with time zone NOT NULL,$/;"	F
+frontpage_frontpage.modified	django/dbdump.sql	/^    created timestamp with time zone NOT NULL,$/;"	F
+frontpage_frontpage.published	django/dbdump.sql	/^    label character varying(100) NOT NULL,$/;"	F
+frontpage_frontpagestory	django/dbdump.sql	/^CREATE TABLE frontpage_frontpagestory ($/;"	t
+frontpage_frontpagestory.created	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+frontpage_frontpagestory.headline	django/dbdump.sql	/^    modified timestamp with time zone NOT NULL,$/;"	F
+frontpage_frontpagestory.html_class	django/dbdump.sql	/^    lede character varying(200) NOT NULL,$/;"	F
+frontpage_frontpagestory.id	django/dbdump.sql	/^CREATE TABLE frontpage_frontpagestory ($/;"	F
+frontpage_frontpagestory.imagefile_id	django/dbdump.sql	/^    html_class character varying(200) NOT NULL,$/;"	F
+frontpage_frontpagestory.kicker	django/dbdump.sql	/^    headline character varying(200) NOT NULL,$/;"	F
+frontpage_frontpagestory.lede	django/dbdump.sql	/^    kicker character varying(200) NOT NULL,$/;"	F
+frontpage_frontpagestory.modified	django/dbdump.sql	/^    created timestamp with time zone NOT NULL,$/;"	F
+frontpage_frontpagestory.story_id	django/dbdump.sql	/^    imagefile_id integer,$/;"	F
+frontpage_frontpagestory.vignette	django/dbdump.sql	/^    story_id integer NOT NULL,$/;"	F
 frontpage_layout	django/apps/frontpage/views.py	/^def frontpage_layout(blocks):$/;"	f
+frontpage_staticmodule	django/dbdump.sql	/^CREATE TABLE frontpage_staticmodule ($/;"	t
+frontpage_staticmodule.columns	django/dbdump.sql	/^    height smallint NOT NULL,$/;"	F
+frontpage_staticmodule.content	django/dbdump.sql	/^    name character varying(50) NOT NULL,$/;"	F
+frontpage_staticmodule.created	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+frontpage_staticmodule.frontpage_id	django/dbdump.sql	/^    render_template boolean NOT NULL,$/;"	F
+frontpage_staticmodule.height	django/dbdump.sql	/^    modified timestamp with time zone NOT NULL,$/;"	F
+frontpage_staticmodule.id	django/dbdump.sql	/^CREATE TABLE frontpage_staticmodule ($/;"	F
+frontpage_staticmodule.modified	django/dbdump.sql	/^    created timestamp with time zone NOT NULL,$/;"	F
+frontpage_staticmodule.name	django/dbdump.sql	/^    columns smallint NOT NULL,$/;"	F
+frontpage_staticmodule.position	django/dbdump.sql	/^    content text NOT NULL,$/;"	F
+frontpage_staticmodule.render_template	django/dbdump.sql	/^    "position" integer NOT NULL,$/;"	F
 frontpage_story	django/apps/frontpage/models.py	/^    frontpage_story = models.ForeignKey($/;"	v	class:StoryModule
+frontpage_storymodule	django/dbdump.sql	/^CREATE TABLE frontpage_storymodule ($/;"	t
+frontpage_storymodule.columns	django/dbdump.sql	/^    height smallint NOT NULL,$/;"	F
+frontpage_storymodule.created	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+frontpage_storymodule.frontpage_id	django/dbdump.sql	/^    "position" integer NOT NULL,$/;"	F
+frontpage_storymodule.frontpage_story_id	django/dbdump.sql	/^    frontpage_id integer NOT NULL,$/;"	F
+frontpage_storymodule.height	django/dbdump.sql	/^    modified timestamp with time zone NOT NULL,$/;"	F
+frontpage_storymodule.id	django/dbdump.sql	/^CREATE TABLE frontpage_storymodule ($/;"	F
+frontpage_storymodule.modified	django/dbdump.sql	/^    created timestamp with time zone NOT NULL,$/;"	F
+frontpage_storymodule.position	django/dbdump.sql	/^    columns smallint NOT NULL,$/;"	F
 frontpage_view	django/apps/frontpage/views.py	/^def frontpage_view(request, *args, **kwargs):$/;"	f
 full_height	django/apps/photo/models.py	/^    full_height = models.PositiveIntegerField($/;"	v	class:ImageFile
 full_width	django/apps/photo/models.py	/^    full_width = models.PositiveIntegerField($/;"	v	class:ImageFile
@@ -1269,6 +1434,7 @@ groups	django/apps/contributors/models.py	/^    groups = models.ManyToManyField(
 groups_list	django/apps/contributors/admin.py	/^    def groups_list(self, instance):$/;"	m	class:PositionAdmin
 guess_language	django/apps/stories/management/commands/guess_language.py	/^        def guess_language(text):$/;"	f	function:Command.handle
 gzip	django/utils/aws_custom_storage.py	/^    gzip = setting('AWS_IS_GZIPPED', True)$/;"	v	class:CustomS3BotoStorage
+handle	django/apps/core/management/commands/fake_content.py	/^    def handle(self, contributors, stories, delete_existing, verbosity,$/;"	m	class:Command
 handle	django/apps/issues/management/commands/find_pdf_files.py	/^    def handle(self, *args, **options):$/;"	m	class:Command
 handle	django/apps/issues/management/commands/web_pdf.py	/^    def handle(self, *args, **options):$/;"	m	class:Command
 handle	django/apps/legacy_db/management/commands/importer_fra_prodsys.py	/^    def handle(self, *args, **options):$/;"	m	class:Command
@@ -1289,6 +1455,7 @@ height	django/apps/adverts/models.py	/^    def height(self):$/;"	m	class:Advert
 height	django/apps/adverts/models.py	/^    height = models.PositiveSmallIntegerField()$/;"	v	class:AdFormat
 height	django/apps/frontpage/models.py	/^    height = models.PositiveSmallIntegerField($/;"	v	class:FrontPageModule
 height_field	django/apps/photo/models.py	/^        height_field='full_height',$/;"	v	class:ImageFile.Meta
+help	django/apps/core/management/commands/fake_content.py	/^    help = 'Create fake content'$/;"	v	class:Command
 help	django/apps/issues/management/commands/find_pdf_files.py	/^    help = 'Create print issues from pdf files.'$/;"	v	class:Command
 help	django/apps/issues/management/commands/web_pdf.py	/^    help = 'Make web pdf'$/;"	v	class:Command
 help	django/apps/legacy_db/management/commands/importer_fra_prodsys.py	/^    help = 'Imports content from legacy website.'$/;"	v	class:Command
@@ -1454,6 +1621,18 @@ issue_name	django/apps/issues/models.py	/^    issue_name = models.CharField($/;"
 issue_tuple	django/apps/issues/models.py	/^    def issue_tuple(self):$/;"	m	class:Issue
 issue_type	django/apps/issues/models.py	/^    issue_type = models.PositiveSmallIntegerField($/;"	v	class:Issue
 issues	django/apps/issues/context_processors.py	/^def issues(request):$/;"	f
+issues_issue	django/dbdump.sql	/^CREATE TABLE issues_issue ($/;"	t
+issues_issue.id	django/dbdump.sql	/^CREATE TABLE issues_issue ($/;"	F
+issues_issue.issue_name	django/dbdump.sql	/^    issue_type smallint NOT NULL,$/;"	F
+issues_issue.issue_type	django/dbdump.sql	/^    publication_date date,$/;"	F
+issues_issue.publication_date	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+issues_printissue	django/dbdump.sql	/^CREATE TABLE issues_printissue ($/;"	t
+issues_printissue.cover_page	django/dbdump.sql	/^    pdf character varying(100) NOT NULL,$/;"	F
+issues_printissue.id	django/dbdump.sql	/^CREATE TABLE issues_printissue ($/;"	F
+issues_printissue.issue_id	django/dbdump.sql	/^    text text NOT NULL,$/;"	F
+issues_printissue.pages	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+issues_printissue.pdf	django/dbdump.sql	/^    pages integer NOT NULL,$/;"	F
+issues_printissue.text	django/dbdump.sql	/^    cover_page character varying(100),$/;"	F
 item_description	django/apps/stories/feeds.py	/^    def item_description(self, item):$/;"	m	class:LatestStories
 item_title	django/apps/stories/feeds.py	/^    def item_title(self, item):$/;"	m	class:LatestStories
 items	django/apps/stories/feeds.py	/^    def items(self):$/;"	m	class:LatestStories
@@ -1555,6 +1734,7 @@ logger	django/apps/adverts/models.py	/^logger = logging.getLogger(__name__)$/;"	
 logger	django/apps/adverts/templatetags/advert_channel.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/contributors/models.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/contributors/templatetags/byline_image.py	/^logger = logging.getLogger(__name__)$/;"	v
+logger	django/apps/core/management/commands/fake_content.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/core/tasks.py	/^logger = get_task_logger(__name__)$/;"	v
 logger	django/apps/core/templatetags/gulp_rev_staticfiles.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/core/templatetags/universitas_menu.py	/^logger = logging.getLogger(__name__)$/;"	v
@@ -1610,6 +1790,28 @@ managed	django/apps/legacy_db/models.py	/^        managed = False$/;"	v	class:Pr
 managed	django/apps/legacy_db/models.py	/^        managed = False$/;"	v	class:Sak.Meta
 mappe	django/apps/legacy_db/models.py	/^    mappe = models.CharField(max_length=100, blank=True)$/;"	v	class:Prodsak
 mappe	django/apps/legacy_db/models.py	/^    mappe = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
+markup_alias	django/dbdump.sql	/^CREATE TABLE markup_alias ($/;"	t
+markup_alias.flags	django/dbdump.sql	/^    replacement character varying(100) NOT NULL,$/;"	F
+markup_alias.flags_sum	django/dbdump.sql	/^    flags character varying(5) NOT NULL,$/;"	F
+markup_alias.id	django/dbdump.sql	/^CREATE TABLE markup_alias ($/;"	F
+markup_alias.ordering	django/dbdump.sql	/^    timing smallint NOT NULL,$/;"	F
+markup_alias.pattern	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+markup_alias.replacement	django/dbdump.sql	/^    pattern character varying(100) NOT NULL,$/;"	F
+markup_alias.timing	django/dbdump.sql	/^    flags_sum smallint NOT NULL,$/;"	F
+markup_blocktag	django/dbdump.sql	/^CREATE TABLE markup_blocktag ($/;"	t
+markup_blocktag.action	django/dbdump.sql	/^    html_class character varying(50) NOT NULL,$/;"	F
+markup_blocktag.html_class	django/dbdump.sql	/^    html_tag character varying(50) NOT NULL,$/;"	F
+markup_blocktag.html_tag	django/dbdump.sql	/^    start_tag character varying(50) NOT NULL,$/;"	F
+markup_blocktag.id	django/dbdump.sql	/^CREATE TABLE markup_blocktag ($/;"	F
+markup_blocktag.start_tag	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+markup_inlinetag	django/dbdump.sql	/^CREATE TABLE markup_inlinetag ($/;"	t
+markup_inlinetag.end_tag	django/dbdump.sql	/^    html_class character varying(50) NOT NULL,$/;"	F
+markup_inlinetag.html_class	django/dbdump.sql	/^    html_tag character varying(50) NOT NULL,$/;"	F
+markup_inlinetag.html_tag	django/dbdump.sql	/^    start_tag character varying(50) NOT NULL,$/;"	F
+markup_inlinetag.id	django/dbdump.sql	/^CREATE TABLE markup_inlinetag ($/;"	F
+markup_inlinetag.pattern	django/dbdump.sql	/^    end_tag character varying(50) NOT NULL,$/;"	F
+markup_inlinetag.replacement	django/dbdump.sql	/^    pattern character varying(200) NOT NULL,$/;"	F
+markup_inlinetag.start_tag	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
 markup_tag	django/apps/stories/models.py	/^    markup_tag = ''  # change in subclasses$/;"	v	class:StoryElement
 markup_tag	django/apps/stories/models.py	/^    markup_tag = ASIDE_TAG$/;"	v	class:Aside
 markup_tag	django/apps/stories/models.py	/^    markup_tag = IMAGE_TAG$/;"	v	class:StoryImage
@@ -2068,6 +2270,23 @@ pdf_not_found	django/apps/issues/models.py	/^def pdf_not_found(pdf_name):$/;"	f
 pdf_thumb	django/apps/issues/admin.py	/^    def pdf_thumb(self, pdf, width=250, height=100):$/;"	m	class:IssueAdmin
 permanent	django/universitas/redirect_urls.py	/^                             permanent=True)),$/;"	v
 phone	django/apps/contributors/models.py	/^    phone = models.CharField(blank=True, null=True, max_length=20)$/;"	v	class:Contributor
+photo_imagefile	django/dbdump.sql	/^CREATE TABLE photo_imagefile ($/;"	t
+photo_imagefile._md5	django/dbdump.sql	/^    crop_diameter smallint NOT NULL,$/;"	F
+photo_imagefile._mtime	django/dbdump.sql	/^    _size integer,$/;"	F
+photo_imagefile._size	django/dbdump.sql	/^    _md5 character varying(32),$/;"	F
+photo_imagefile.contributor_id	django/dbdump.sql	/^    copyright_information character varying(1000),$/;"	F
+photo_imagefile.copyright_information	django/dbdump.sql	/^    old_file_path character varying(1000),$/;"	F
+photo_imagefile.created	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+photo_imagefile.crop_diameter	django/dbdump.sql	/^    contributor_id integer,$/;"	F
+photo_imagefile.cropping_method	django/dbdump.sql	/^    from_left smallint NOT NULL,$/;"	F
+photo_imagefile.from_left	django/dbdump.sql	/^    from_top smallint NOT NULL,$/;"	F
+photo_imagefile.from_top	django/dbdump.sql	/^    full_width integer,$/;"	F
+photo_imagefile.full_height	django/dbdump.sql	/^    source_file character varying(1024) NOT NULL,$/;"	F
+photo_imagefile.full_width	django/dbdump.sql	/^    full_height integer,$/;"	F
+photo_imagefile.id	django/dbdump.sql	/^CREATE TABLE photo_imagefile ($/;"	F
+photo_imagefile.modified	django/dbdump.sql	/^    created timestamp with time zone NOT NULL,$/;"	F
+photo_imagefile.old_file_path	django/dbdump.sql	/^    cropping_method smallint NOT NULL,$/;"	F
+photo_imagefile.source_file	django/dbdump.sql	/^    modified timestamp with time zone NOT NULL,$/;"	F
 place_all_inline_elements	django/apps/stories/models.py	/^    def place_all_inline_elements(self):$/;"	m	class:Story
 placements	django/apps/frontpage/models.py	/^    placements = models.ManyToManyField($/;"	v	class:FrontpageStory
 populate_from	django/apps/stories/models.py	/^        populate_from=('name',),$/;"	v	class:StoryType
@@ -2132,9 +2351,13 @@ qs_methods	django/apps/stories/models.py	/^    qs_methods = [attr for attr in di
 query_param	django/apps/search/views.py	/^    query_param = "q"$/;"	v	class:SearchMixin
 query_param	django/watson/views.py	/^    query_param = "q"$/;"	v	class:SearchMixin
 queryset	django/apps/legacy_db/admin.py	/^    def queryset(self, request, queryset):$/;"	m	class:ProdusertFilter
+random_bands	django/apps/core/content_factory.py	/^def random_bands(sourceimg):$/;"	f
 random_color	django/apps/adverts/dummy_image_advert.py	/^def random_color():$/;"	f
+random_contributor	django/apps/core/content_factory.py	/^def random_contributor():$/;"	f
 random_contributor	django/utils/content_factory.py	/^def random_contributor():$/;"	f
+random_image	django/apps/core/content_factory.py	/^def random_image(sourceimg=None, size=(200, 100)):$/;"	f
 random_image	django/utils/content_factory.py	/^def random_image(img=IMG, size=(200, 100)):$/;"	f
+random_storytype	django/apps/core/content_factory.py	/^def random_storytype():$/;"	f
 random_storytype	django/utils/content_factory.py	/^def random_storytype():$/;"	f
 raw_id_fields	django/apps/stories/admin.py	/^    raw_id_fields = ($/;"	v	class:BylineAdmin
 raw_id_fields	django/apps/stories/admin.py	/^    raw_id_fields = ($/;"	v	class:StoryTypeAdmin
@@ -2292,6 +2515,91 @@ status_code	django/apps/stories/models.py	/^    status_code = models.CharField($
 stikktittel	django/apps/legacy_db/models.py	/^    stikktittel = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
 stoppa	django/apps/legacy_db/models.py	/^    stoppa = models.DateTimeField(blank=True, null=True)$/;"	v	class:Eposttinging
 store	django/watson/search.py	/^    store = ()$/;"	v	class:SearchAdapter
+stories_aside	django/dbdump.sql	/^CREATE TABLE stories_aside ($/;"	t
+stories_aside.bodytext_html	django/dbdump.sql	/^    bodytext_markup text NOT NULL,$/;"	F
+stories_aside.bodytext_markup	django/dbdump.sql	/^    storyelement_ptr_id integer NOT NULL,$/;"	F
+stories_aside.storyelement_ptr_id	django/dbdump.sql	/^CREATE TABLE stories_aside ($/;"	F
+stories_byline	django/dbdump.sql	/^CREATE TABLE stories_byline ($/;"	t
+stories_byline.contributor_id	django/dbdump.sql	/^    title character varying(200),$/;"	F
+stories_byline.credit	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+stories_byline.id	django/dbdump.sql	/^CREATE TABLE stories_byline ($/;"	F
+stories_byline.ordering	django/dbdump.sql	/^    story_id integer NOT NULL,$/;"	F
+stories_byline.story_id	django/dbdump.sql	/^    contributor_id integer NOT NULL,$/;"	F
+stories_byline.title	django/dbdump.sql	/^    credit character varying(20) NOT NULL,$/;"	F
+stories_inlinehtml	django/dbdump.sql	/^CREATE TABLE stories_inlinehtml ($/;"	t
+stories_inlinehtml.bodytext_html	django/dbdump.sql	/^    storyelement_ptr_id integer NOT NULL,$/;"	F
+stories_inlinehtml.storyelement_ptr_id	django/dbdump.sql	/^CREATE TABLE stories_inlinehtml ($/;"	F
+stories_inlinelink	django/dbdump.sql	/^CREATE TABLE stories_inlinelink ($/;"	t
+stories_inlinelink.alt_text	django/dbdump.sql	/^    href character varying(500) NOT NULL,$/;"	F
+stories_inlinelink.created	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+stories_inlinelink.href	django/dbdump.sql	/^    number smallint NOT NULL,$/;"	F
+stories_inlinelink.id	django/dbdump.sql	/^CREATE TABLE stories_inlinelink ($/;"	F
+stories_inlinelink.linked_story_id	django/dbdump.sql	/^    status_code character varying(3) NOT NULL,$/;"	F
+stories_inlinelink.modified	django/dbdump.sql	/^    created timestamp with time zone NOT NULL,$/;"	F
+stories_inlinelink.number	django/dbdump.sql	/^    modified timestamp with time zone NOT NULL,$/;"	F
+stories_inlinelink.parent_story_id	django/dbdump.sql	/^    linked_story_id integer,$/;"	F
+stories_inlinelink.status_code	django/dbdump.sql	/^    text text NOT NULL,$/;"	F
+stories_inlinelink.text	django/dbdump.sql	/^    alt_text character varying(500) NOT NULL,$/;"	F
+stories_pullquote	django/dbdump.sql	/^CREATE TABLE stories_pullquote ($/;"	t
+stories_pullquote.bodytext_html	django/dbdump.sql	/^    bodytext_markup text NOT NULL,$/;"	F
+stories_pullquote.bodytext_markup	django/dbdump.sql	/^    storyelement_ptr_id integer NOT NULL,$/;"	F
+stories_pullquote.storyelement_ptr_id	django/dbdump.sql	/^CREATE TABLE stories_pullquote ($/;"	F
+stories_section	django/dbdump.sql	/^CREATE TABLE stories_section ($/;"	t
+stories_section.id	django/dbdump.sql	/^CREATE TABLE stories_section ($/;"	F
+stories_section.slug	django/dbdump.sql	/^    title character varying(50) NOT NULL,$/;"	F
+stories_section.title	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+stories_story	django/dbdump.sql	/^CREATE TABLE stories_story ($/;"	t
+stories_story.bodytext_html	django/dbdump.sql	/^    story_type_id integer NOT NULL,$/;"	F
+stories_story.bodytext_markup	django/dbdump.sql	/^    modified timestamp with time zone NOT NULL,$/;"	F
+stories_story.bylines_html	django/dbdump.sql	/^    hot_count integer NOT NULL,$/;"	F
+stories_story.created	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+stories_story.hit_count	django/dbdump.sql	/^    page integer,$/;"	F
+stories_story.hot_count	django/dbdump.sql	/^    hit_count integer NOT NULL,$/;"	F
+stories_story.id	django/dbdump.sql	/^CREATE TABLE stories_story ($/;"	F
+stories_story.issue_id	django/dbdump.sql	/^    legacy_prodsys_source text,$/;"	F
+stories_story.kicker	django/dbdump.sql	/^    title character varying(1000) NOT NULL,$/;"	F
+stories_story.language	django/dbdump.sql	/^    slug character varying(50) NOT NULL,$/;"	F
+stories_story.lede	django/dbdump.sql	/^    kicker character varying(1000) NOT NULL,$/;"	F
+stories_story.legacy_html_source	django/dbdump.sql	/^    bylines_html text NOT NULL,$/;"	F
+stories_story.legacy_prodsys_source	django/dbdump.sql	/^    legacy_html_source text,$/;"	F
+stories_story.modified	django/dbdump.sql	/^    created timestamp with time zone NOT NULL,$/;"	F
+stories_story.page	django/dbdump.sql	/^    publication_status integer NOT NULL,$/;"	F
+stories_story.prodsak_id	django/dbdump.sql	/^    bodytext_markup text NOT NULL,$/;"	F
+stories_story.publication_date	django/dbdump.sql	/^    theme_word character varying(100) NOT NULL,$/;"	F
+stories_story.publication_status	django/dbdump.sql	/^    publication_date timestamp with time zone,$/;"	F
+stories_story.slug	django/dbdump.sql	/^    bodytext_html text NOT NULL,$/;"	F
+stories_story.story_type_id	django/dbdump.sql	/^    issue_id integer,$/;"	F
+stories_story.theme_word	django/dbdump.sql	/^    comment text NOT NULL,$/;"	F
+stories_story.title	django/dbdump.sql	/^    prodsak_id integer,$/;"	F
+stories_storyelement	django/dbdump.sql	/^CREATE TABLE stories_storyelement ($/;"	t
+stories_storyelement._subclass	django/dbdump.sql	/^    modified timestamp with time zone NOT NULL,$/;"	F
+stories_storyelement.created	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+stories_storyelement.id	django/dbdump.sql	/^CREATE TABLE stories_storyelement ($/;"	F
+stories_storyelement.modified	django/dbdump.sql	/^    created timestamp with time zone NOT NULL,$/;"	F
+stories_storyelement.parent_story_id	django/dbdump.sql	/^    top boolean NOT NULL,$/;"	F
+stories_storyelement.top	django/dbdump.sql	/^    index smallint,$/;"	F
+stories_storyimage	django/dbdump.sql	/^CREATE TABLE stories_storyimage ($/;"	t
+stories_storyimage.aspect_ratio	django/dbdump.sql	/^    imagefile_id integer NOT NULL,$/;"	F
+stories_storyimage.caption	django/dbdump.sql	/^    storyelement_ptr_id integer NOT NULL,$/;"	F
+stories_storyimage.creditline	django/dbdump.sql	/^    caption character varying(1000) NOT NULL,$/;"	F
+stories_storyimage.imagefile_id	django/dbdump.sql	/^    size smallint NOT NULL,$/;"	F
+stories_storyimage.size	django/dbdump.sql	/^    creditline character varying(100) NOT NULL,$/;"	F
+stories_storyimage.storyelement_ptr_id	django/dbdump.sql	/^CREATE TABLE stories_storyimage ($/;"	F
+stories_storytype	django/dbdump.sql	/^CREATE TABLE stories_storytype ($/;"	t
+stories_storytype.id	django/dbdump.sql	/^CREATE TABLE stories_storytype ($/;"	F
+stories_storytype.name	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+stories_storytype.prodsys_mappe	django/dbdump.sql	/^    name character varying(50) NOT NULL,$/;"	F
+stories_storytype.section_id	django/dbdump.sql	/^    prodsys_mappe character varying(20),$/;"	F
+stories_storytype.slug	django/dbdump.sql	/^    template_id integer,$/;"	F
+stories_storytype.template_id	django/dbdump.sql	/^    section_id integer NOT NULL,$/;"	F
+stories_storyvideo	django/dbdump.sql	/^CREATE TABLE stories_storyvideo ($/;"	t
+stories_storyvideo.aspect_ratio	django/dbdump.sql	/^    host_video_id character varying(100) NOT NULL,$/;"	F
+stories_storyvideo.caption	django/dbdump.sql	/^    storyelement_ptr_id integer NOT NULL,$/;"	F
+stories_storyvideo.creditline	django/dbdump.sql	/^    caption character varying(1000) NOT NULL,$/;"	F
+stories_storyvideo.host_video_id	django/dbdump.sql	/^    video_host character varying(20) NOT NULL,$/;"	F
+stories_storyvideo.size	django/dbdump.sql	/^    creditline character varying(100) NOT NULL,$/;"	F
+stories_storyvideo.storyelement_ptr_id	django/dbdump.sql	/^CREATE TABLE stories_storyvideo ($/;"	F
+stories_storyvideo.video_host	django/dbdump.sql	/^    size smallint NOT NULL,$/;"	F
 story	django/apps/frontpage/models.py	/^    story = models.ForeignKey($/;"	v	class:FrontpageStory
 story	django/apps/stories/models.py	/^    story = models.ForeignKey(Story)$/;"	v	class:Byline
 story_type	django/apps/stories/models.py	/^    story_type = models.ForeignKey($/;"	v	class:Story
@@ -2337,6 +2645,9 @@ test_create_printissue	django/apps/issues/tests/test_models.py	/^def test_create
 test_create_story_from_xtags	django/apps/stories/tests/test_new_story.py	/^def test_create_story_from_xtags(news):$/;"	f
 test_environ_prefix	django/universitas/tests/test_setting_helpers.py	/^def test_environ_prefix():$/;"	f
 test_extract_page_text	django/apps/issues/tests/test_models.py	/^def test_extract_page_text(fixture_pdf):$/;"	f
+test_fake_contributor	django/apps/core/tests/test_content_factory.py	/^def test_fake_contributor():$/;"	f
+test_fake_imagefile	django/apps/core/tests/test_content_factory.py	/^def test_fake_imagefile():$/;"	f
+test_fake_story	django/apps/core/tests/test_content_factory.py	/^def test_fake_story():$/;"	f
 test_get_staging_pdf_files	django/apps/issues/tests/test_tasks.py	/^def test_get_staging_pdf_files(tmp_fixture_dir):$/;"	f
 test_log	django/apps/core/tasks.py	/^def test_log():$/;"	f
 test_minify	django/utils/html.py	/^def test_minify():$/;"	f
@@ -2345,7 +2656,9 @@ test_nonstrict_environ	django/universitas/tests/test_setting_helpers.py	/^def te
 test_optimize_all_pages	django/apps/issues/tests/test_tasks.py	/^def test_optimize_all_pages(tmp_fixture_dir):$/;"	f
 test_path	django/universitas/tests/test_setting_helpers.py	/^def test_path():$/;"	f
 test_prettify	django/utils/html.py	/^def test_prettify():$/;"	f
+test_random_image	django/apps/core/tests/test_content_factory.py	/^def test_random_image():$/;"	f
 test_require_binary_decorator	django/apps/issues/tests/test_tasks.py	/^def test_require_binary_decorator():$/;"	f
+test_story_content	django/apps/core/tests/test_content_factory.py	/^def test_story_content():$/;"	f
 test_that_db_is_empty	django/apps/stories/tests/test_new_story.py	/^def test_that_db_is_empty():$/;"	f
 text	django/apps/issues/models.py	/^    text = models.TextField($/;"	v	class:PrintIssue
 text	django/apps/stories/models.py	/^    text = models.TextField($/;"	v	class:InlineLink
@@ -2355,6 +2668,9 @@ thumb	django/apps/photo/models.py	/^    def thumb(self, height=315, width=600):$
 thumb	django/apps/stories/models.py	/^    def thumb(self):$/;"	m	class:Story
 thumbnail	django/apps/issues/admin.py	/^    def thumbnail(self, instance, width=200, height=200):$/;"	m	class:ThumbAdmin
 thumbnail	django/apps/photo/admin.py	/^    def thumbnail(self, instance, width=200, height=100):$/;"	m	class:ThumbAdmin
+thumbnail_kvstore	django/dbdump.sql	/^CREATE TABLE thumbnail_kvstore ($/;"	t
+thumbnail_kvstore.key	django/dbdump.sql	/^CREATE TABLE thumbnail_kvstore ($/;"	F
+thumbnail_kvstore.value	django/dbdump.sql	/^    key character varying(200) NOT NULL,$/;"	F
 tid	django/apps/legacy_db/models.py	/^    tid = models.DateTimeField()$/;"	v	class:InnleggAbstract
 timelock	django/apps/legacy_db/models.py	/^    timelock = models.DateTimeField(editable=False, blank=True, null=True)$/;"	v	class:Prodsak
 timestamp	django/apps/core/staging.py	/^def timestamp(delta, fallback):$/;"	f
@@ -2557,6 +2873,17 @@ visit_page	django/apps/stories/models.py	/^    def visit_page(self, request):$/;
 wait_for	django/wait-for-it.sh	/^wait_for()$/;"	f
 wait_for_wrapper	django/wait-for-it.sh	/^wait_for_wrapper()$/;"	f
 watermark	django/apps/adverts/dummy_image_advert.py	/^def watermark(img, mark, position, opacity=1):$/;"	f
+watson_searchentry	django/dbdump.sql	/^CREATE TABLE watson_searchentry ($/;"	t
+watson_searchentry.content	django/dbdump.sql	/^    description text NOT NULL,$/;"	F
+watson_searchentry.content_type_id	django/dbdump.sql	/^    meta_encoded text NOT NULL,$/;"	F
+watson_searchentry.description	django/dbdump.sql	/^    title character varying(1000) NOT NULL,$/;"	F
+watson_searchentry.engine_slug	django/dbdump.sql	/^    id integer NOT NULL,$/;"	F
+watson_searchentry.id	django/dbdump.sql	/^CREATE TABLE watson_searchentry ($/;"	F
+watson_searchentry.meta_encoded	django/dbdump.sql	/^    url character varying(1000) NOT NULL,$/;"	F
+watson_searchentry.object_id	django/dbdump.sql	/^    engine_slug character varying(200) NOT NULL,$/;"	F
+watson_searchentry.object_id_int	django/dbdump.sql	/^    object_id text NOT NULL,$/;"	F
+watson_searchentry.search_tsv	django/dbdump.sql	/^    content_type_id integer NOT NULL,$/;"	F
+watson_searchentry.title	django/dbdump.sql	/^    object_id_int integer,$/;"	F
 widget_attrs	django/apps/contributors/autocomplete_light_registry.py	/^    widget_attrs={$/;"	v
 widget_attrs	django/apps/photo/autocomplete_light_registry.py	/^    widget_attrs={$/;"	v
 widget_attrs	django/apps/stories/autocomplete_light_registry.py	/^    widget_attrs={$/;"	v
