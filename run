@@ -27,17 +27,16 @@ for arg; do case $arg in
     SERVER=universitas.no
     DB=www_universitas_no
     echo "creating db dump from server $SERVER"
-    ssh $SERVER "sudo -u postgres pg_dump --no-owner -d $DB -f /tmp/dbdump.sql"
+    ssh $SERVER "sudo -u postgres pg_dump --no-owner --dbname=$DB --file=/tmp/dbdump.sql"
     echo "copying db dump from server"
-    rsync --progress -az $SERVER:/tmp/dbdump.sql django/dbdump.sql
+    rsync --remove-source-files --compress $SERVER:/tmp/dbdump.sql django/dbdump.sql
 
     # loading data
     docker-compose down
     docker-compose run --rm web load_db
 
     # cleanup
-    ssh $SERVER "sudo rm /tmp/dbdump.sql"
-    rm /django/dbdump.sql
+    rm django/dbdump.sql
     echo "done"
     ;;
   build )
