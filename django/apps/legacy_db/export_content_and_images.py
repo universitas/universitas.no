@@ -9,6 +9,7 @@ import os
 import errno
 import re
 from datetime import datetime, date, time
+import logging
 # from html.parser import HTMLParser
 from html import unescape
 from bs4 import BeautifulSoup
@@ -27,12 +28,8 @@ from apps.photo.models import ImageFile, upload_image_to
 from slugify import Slugify
 slugify_filename = Slugify(safe_chars='.-', separator='-')
 
-# from apps.contributors.models import Contributor
-# BILDEMAPPE = os.path.join(MEDIA_ROOT, '')
-# PDFMAPPE = os.path.join(MEDIA_ROOT, 'pdf')
 STAGING_FOLDER = os.path.join(settings.STAGING_ROOT, 'STAGING', 'IMAGES')
 
-import logging
 logger = logging.getLogger(__name__)
 count = 0
 
@@ -70,7 +67,8 @@ def reset_db_autoincrement():
 def drop_model_tables(*models):
     """ Empty tables before importing from legacy database """
     for model in models:
-        logger.debug('sletter {model_label}'.format(model_label=model.__name__))
+        logger.debug('sletter {model_label}'.format(
+            model_label=model.__name__))
         model.objects.all().delete()
 
 
@@ -102,11 +100,7 @@ def import_legacy_website_content(
 
 
 def import_prodsys_content(
-        first=0,
-        last=None,
-        reverse=False,
         replace_existing=False,
-        text_only=False,
         autocrop=False):
     """ Import all new stories from prodsys. """
     status = [Prodsak.READY_FOR_WEB, ]
@@ -115,13 +109,12 @@ def import_prodsys_content(
     prodsak_ids = Prodsak.objects.filter(
         produsert__in=status).values_list(
         'prodsak_id', flat=True)
-    prodsak_ids = sorted(set(prodsak_ids), reverse=reverse)
+    prodsak_ids = sorted(set(prodsak_ids))
 
     logger.info('Found {} stories to import'.format(len(prodsak_ids)))
 
-    import_images = not text_only
     for prodsak_id in prodsak_ids:
-        _importer_prodsak(prodsak_id, replace_existing, autocrop, import_images)
+        _importer_prodsak(prodsak_id, replace_existing, autocrop)
         Prodsak.objects.filter(
             prodsak_id=prodsak_id,
             # produsert__in=status
@@ -360,7 +353,8 @@ def _importer_bilder_fra_webside(websak, story, autocrop):
                 image_file.autocrop()
 
 
-def _create_image_file(filepath, publication_date=None, pk=None, prodsys=False):
+def _create_image_file(
+        filepath, publication_date=None, pk=None, prodsys=False):
     """ Create an ImageFile object from a filepath. """
     current_filepath = upload_image_to(ImageFile, os.path.basename(filepath))
 
@@ -385,7 +379,7 @@ def _create_image_file(filepath, publication_date=None, pk=None, prodsys=False):
             return None
 
         creation_time = _make_aware(
-            datetime.fromtimestamp( os.path.getmtime( staging_image ) ) )
+            datetime.fromtimestamp(os.path.getmtime(staging_image)))
 
         if publication_date:
             publication_datetime = _make_aware(publication_date)
@@ -434,7 +428,8 @@ def _websak_til_xtags(websak):
         """Construct an xtags string from relevant fields in websak model. """
         # Add content to the content list.
         xtags_header_title_and_bylines()
-        # TODO: HTML entiteter i <bylin></bylin>es blir ikke fikset under import
+        # TODO: HTML entiteter i <bylin></bylin>es blir ikke fikset under
+        # import
         xtags_body_text()
         xtags_pull_quotes()
         xtags_review_aside()
@@ -454,7 +449,7 @@ def _websak_til_xtags(websak):
             (websak.byline, "bl"),
         )
         for field_content, tag in header_fields:
-            if not field_content is None and field_content.strip():
+            if field_content is not None and field_content.strip():
                 field_content = re.sub(r'\s+', ' ', field_content)
                 content_list.append('@{}: {}\n'.format(tag, field_content))
 
