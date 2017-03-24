@@ -1,14 +1,13 @@
 @charset "UTF-8";
 
-$header-font-family: $univ-condensed;
-$header-font-weight: 700;
-$header-font-style: normal;
-$header-font-color: #333;
-$header-line-height: 1.1;
-$header-top-margin: .3rem;
 
 $half-gutter: $column-gutter/2;
 $separator-line: 1px solid #EEE;
+
+$light-grey: #999;
+$medium-grey: #777;
+$dark-grey: #333;
+$medium-yellow: #FFB653;
 
 $section-colors: (
   nyheter: #C44530,
@@ -20,11 +19,12 @@ $section-colors: (
   magasin: #FFB653,
 );
 
-$light-grey: #999;
-$medium-grey: #777;
-$dark-grey: #333;
-$medium-yellow: #FFB653;
-
+$header-font-family: $univ-condensed;
+$header-font-weight: 700;
+$header-font-style: normal;
+$header-font-color: $medium-grey;
+$header-line-height: 1.1;
+$header-top-margin: .3rem;
 
 @function color-get($section, $change: none) {
   $base-color: map-get($section-colors, $section);

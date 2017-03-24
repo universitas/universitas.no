@@ -17,6 +17,11 @@ for (entry in config.entry ){
 
 config.devtool = 'eval'
 config.output.publicPath = 'http://localhost:3000/static/'
+
+// use sourcemaps for sass-loader and css-loader
+config.module.rules[1].use[1].options.sourceMap = true
+config.module.rules[1].use[2].options.sourceMap = true
+
 config.devServer = {
   port: 3000,
   host: '0.0.0.0',

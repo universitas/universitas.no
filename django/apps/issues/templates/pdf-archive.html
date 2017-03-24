@@ -1,7 +1,7 @@
 {% extends "base-template.html" %}
 {% load thumbnail %}
 {% block title %}
-  PDF-arkiv 
+  PDF-arkiv
 {% endblock title %}
 {% block content %}
 <div class="row">
@@ -14,10 +14,10 @@
         </ul>
       {% endif %}
       <h2>{{ issue.publication_date.year }}</h2>
-      <ul class="small-block-grid-2 medium-block-grid-4 large-block-grid-5">
+      <ul class="row small-up-2 medium-up-4 large-up-5">
     {% endifchanged %}
     {% for pdf in issue.pdfs.all %}
-      <li class="print-issue">
+      <li class="column column-block print-issue">
       <a href="{{ pdf.pdf.url }}">
         <div class="label">
           <span class="number">{{ issue.issue_name }}</span>

@@ -2,6 +2,7 @@
 
 .print-issue {
   position: relative;
+  list-style: none;
   .frontpage {
     @extend %faximile;
     transition: all .1s ease-in-out;
