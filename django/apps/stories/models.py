@@ -271,9 +271,7 @@ class TextContent(models.Model, MarkupModelMixin):
         if self.bodytext_markup and not self.bodytext_html:
             self.bodytext_html = self.make_html()
             self.save(update_fields=['bodytext_html'])
-            return mark_safe(self.bodytext_html)
-        else:
-            return mark_safe(self.bodytext_html)
+        return mark_safe(self.bodytext_html)
 
     def get_plaintext(self):
         """ Returns text content as plain text. """
@@ -606,6 +604,13 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
     def save(self, *args, **kwargs):
         new = kwargs.pop('new', (self.pk is None))
+
+        try:
+            old_markup = Story.objects.get(pk=self.pk).bodytext_markup
+            if self.bodytext_markup != old_markup:
+                self.bodytext_html = ''
+        except ObjectDoesNotExist:
+            pass
 
         super().save(*args, **kwargs)
 
