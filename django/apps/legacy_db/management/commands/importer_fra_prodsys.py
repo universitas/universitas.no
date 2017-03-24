@@ -95,10 +95,6 @@ class Command(BaseCommand):
                 drop_model_tables(Story, Contributor, ImageFile)
 
             status = import_prodsys_content(
-                text_only=options['text only'],
-                first=options['first'],
-                last=last,
-                reverse=options['reverse'],
                 replace_existing=options['replace existing'],
                 autocrop=options['autocrop'],
             )

@@ -33,7 +33,7 @@ if DEBUG:
 
 DATABASES['prodsys'] = {
     'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': 'prodsys',
+    'NAME': 'prodsys.sqlite3.db',
 }
 
 WEBPACK_LOADER['DEFAULT'].update({
