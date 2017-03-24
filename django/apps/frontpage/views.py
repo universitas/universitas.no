@@ -7,7 +7,9 @@ from django.http import (
     Http404
 )
 from django.utils.http import base36_to_int
+from django.utils.decorators import available_attrs
 from django.views.decorators.cache import cache_page
+from functools import wraps
 
 from apps.core.views import search_404_view
 from apps.stories.models import Story, Section, StoryType
@@ -16,6 +18,19 @@ import logging
 logger = logging.getLogger(__name__)
 
 # from django.contrib.auth.decorators import login_required
+
+
+def anonymous_cache(timeout):
+    def decorator(view_func):
+        @wraps(view_func, assigned=available_attrs(view_func))
+        def _wrapped_view(request, *args, **kwargs):
+
+            if request.user.is_authenticated():
+                return (view_func)(request, *args, **kwargs)
+            else:
+                return cache_page(timeout)(view_func)(request, *args, **kwargs)
+        return _wrapped_view
+    return decorator
 
 
 def frontpage_layout(blocks):
@@ -102,7 +117,8 @@ def get_frontpage_stories(story_queryset, frontpage=None):
     return result
 
 
-def actual_frontpage(request, stories=None, frontpage=None):
+@anonymous_cache(60 * 3)
+def frontpage_view(request, stories=None, frontpage=None):
     """ Shows the newspaper frontpage. """
     context = {}
     if stories is None:
@@ -113,21 +129,6 @@ def actual_frontpage(request, stories=None, frontpage=None):
     context['frontpage_items'] = frontpage_layout(blocks)
 
     return render(request, 'frontpage.html', context)
-
-
-@cache_page(10 * 60)
-def cached_frontpage(request, *args, **kwargs):
-    return actual_frontpage(request, *args, **kwargs)
-
-
-def frontpage_view(request, *args, **kwargs):
-    # Very hacky way of only caching for anauthenticated visitors.
-    # if request.user.is_authenticated():
-    #     func = actual_frontpage
-    # else:
-    #     func = cached_frontpage
-    func = actual_frontpage
-    return func(request, *args, **kwargs)
 
 
 def section_frontpage(request, section):
