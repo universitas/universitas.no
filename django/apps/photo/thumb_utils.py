@@ -80,7 +80,6 @@ class CloseCropEngine(WandEngine):
                 new_geometry = [int(value) for value in (
                     crop_left, crop_top, crop_right, crop_bottom
                 )]
-
                 image.crop(*new_geometry)
 
         return image

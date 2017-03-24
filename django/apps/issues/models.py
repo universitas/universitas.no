@@ -80,7 +80,7 @@ def current_issue():
         else:
             current_issue = Issue.objects.next_issue()
 
-    return current_issue.issue_tuple()
+    return current_issue
 
 
 def today():

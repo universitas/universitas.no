@@ -1,0 +1,12 @@
+# overrides for development
+version: '2.1'
+services:
+  webpack:
+    command: "dev-server"
+    ports:
+      - "3000:3000"
+
+  web:
+    command: "runserver"
+    ports:
+      - "8000:8000"

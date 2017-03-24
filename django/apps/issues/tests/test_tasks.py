@@ -6,7 +6,6 @@ import tempfile
 import os
 import shutil
 import pathlib
-from datetime import date
 # from django.utils.timezone import datetime
 from django.core.files.base import ContentFile
 from apps.issues.models import Issue, PrintIssue
@@ -151,10 +150,11 @@ def test_require_binary_decorator():
 @pytest.mark.django_db
 def test_create_current_issue_web_bundle(tmp_fixture_dir):
     assert PrintIssue.objects.count() == 0
-    assert Issue.objects.count() == 0
+    count = Issue.objects.count()
+    create_print_issue_pdf()
     create_print_issue_pdf()
     assert PrintIssue.objects.count() == 2
-    assert Issue.objects.count() == 1
+    assert Issue.objects.count() == count
     staging_dir = tmp_fixture_dir / 'STAGING' / 'PDF'
     mag_pages = list(staging_dir.glob('UNI12*.pdf'))
     assert len(mag_pages) == 4
@@ -165,4 +165,4 @@ def test_create_current_issue_web_bundle(tmp_fixture_dir):
         create_print_issue_pdf()
 
     assert PrintIssue.objects.count() == 2
-    assert Issue.objects.count() == 1
+    assert Issue.objects.count() == count

@@ -1,0 +1,62 @@
+# vim: ft=config:
+
+# Installation
+pip
+wheel
+
+# Django
+Django
+
+# DJANGO PLUGINS
+django-debug-toolbar
+django-extensions
+django-redis-cache
+django-webpack-loader==0.4.1
+django-autocomplete-light>=2.2,<3.0
+sorl-thumbnail
+django-model-utils
+
+# DATABASE LIBRARIES
+mysqlclient
+psycopg2
+redis
+hiredis
+
+# AMAZON
+awscli
+django-storages-redux
+boto
+# certifi==2015.04.28
+
+# OTHER LIBRARIES
+Pillow
+Wand
+beautifulsoup4
+pypdf2
+requests
+fuzzywuzzy
+python-Levenshtein
+diff-match-patch
+awesome-slugify
+faker
+
+# TASK RUNNER
+celery
+
+# ERROR REPORTING
+raven
+
+# WSGI WEB SERVER
+uWSGI
+
+# TESTING
+pytest
+pytest-xdist
+pytest-django
+selenium
+
+# DEBUGGING AND DEVELOPMENT
+Werkzeug
+ipdb
+ipython
+ptpython
