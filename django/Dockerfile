@@ -20,6 +20,6 @@ COPY install-jupyter.sh /app/install-jupyter.sh
 RUN /app/install-jupyter.sh
 
 # create directories
-RUN cd /var && mkdir media static logs && chown django media static logs
+RUN cd /var && mkdir staging media static logs && chown django:django *
 WORKDIR /app/
 ENTRYPOINT ["/app/docker-entrypoint.sh"]

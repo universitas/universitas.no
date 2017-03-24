@@ -165,8 +165,8 @@ STATICFILES_DIRS = [env.BUILD_DIR]
 # Project wide fixtures to be loaded into database.
 FIXTURE_DIRS = [path('fixtures')]
 # Look for byline images here
-BYLINE_PHOTO_DIR = '/srv/fotoarkiv_universitas/byline/'
-STAGING_ROOT = '/srv/fotoarkiv_universitas/'
+STAGING_ROOT = '/var/staging/'
+BYLINE_PHOTO_DIR = STAGING_ROOT + 'BYLINE/'
 
 # INTERNATIONALIZATIONh
 LANGUAGE_CODE = 'nb'
