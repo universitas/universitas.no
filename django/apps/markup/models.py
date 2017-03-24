@@ -3,17 +3,15 @@
 
 # Python standard library
 import re
-from diff_match_patch import diff_match_patch
 import difflib
-import logging
-logger = logging.getLogger(__name__)
-
-# import html
 
 # Django core
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.core.cache import cache
+
+import logging
+logger = logging.getLogger(__name__)
 
 # Installed apps
 
@@ -144,7 +142,9 @@ class BlockTagManager(TagManager):
                 best_diffratio = diffratio
                 best_candidate = candidate
         if best_diffratio < cutoff and best_candidate:
-            error_message = 'Looked for {} with cutoff {}. Best candidate is {} with ratio {}'.format(
+            error_message = ('Looked for {} with cutoff {}.'
+                             'Best candidate is {} with ratio {}'
+                             ).format(
                 start_tag,
                 cutoff,
                 best_candidate.start_tag,
@@ -165,7 +165,8 @@ class BlockTag(MarkupTag):
     class Meta:
         verbose_name = _('block tag')
         verbose_name_plural = _('block tags')
-    # TODO: Should maybe not be hard coded, but imported from apps.stories.Story
+    # TODO: Should maybe not be hard coded, but imported from
+    # apps.stories.Story
     ACTION_CHOICES = (
         ('append:', _('add'),),
         (ALIAS_ACTION, _('alias'),),
@@ -223,7 +224,9 @@ class BlockTag(MarkupTag):
             if outer:
                 parent_tags.append(outer)
 
-            html_block = '{close}{open}<{tag}{class_parameter}>{content}</{tag}>'.format(
+            html_block = (
+                '{close}{open}<{tag}{class_parameter}>{content}</{tag}>'
+            ).format(
                 tag=inner,
                 class_parameter=self.get_html_class(),
                 content=self.split(content)[1],
@@ -250,7 +253,10 @@ class BlockTag(MarkupTag):
         if not change_to or change_to == self.DEFAULT_HTML_TAG:
             similar_blocktag = self.__class__.objects.similar_tag(
                 self.start_tag)
-            change_to = similar_blocktag.start_tag if similar_blocktag else self.start_tag
+            change_to = (
+                similar_blocktag.start_tag
+                if similar_blocktag else self.start_tag
+            )
 
         pattern = '^' + re.escape(self.start_tag),
         if not Alias.objects.filter(pattern=pattern):
@@ -423,4 +429,4 @@ class Alias(CachedTag):
             self.pattern,
             self.replacement,
             content,
-            flags=self.flags_sum)
+            flags=self.flags_sum & ~ re.LOCALE)

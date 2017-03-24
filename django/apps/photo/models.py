@@ -292,7 +292,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
 
     @classmethod
     def upload_folder(cls):
-        issue = current_issue()
+        issue = current_issue().issue_tuple()
         return os.path.join(str(issue.date.year), str(issue.number))
 
     @staticmethod
@@ -390,4 +390,3 @@ class ProfileImage(ImageFile):
     @staticmethod
     def upload_folder():
         return ProfileImage.UPLOAD_FOLDER
-

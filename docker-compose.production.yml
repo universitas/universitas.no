@@ -1,0 +1,14 @@
+# overrides for production
+version: '2.1'
+services:
+  webpack:
+    command: "true"  # noop command
+    volumes:
+      - ./build:/var/build/
+
+  web:
+    command: "uwsgi"
+    environment:
+      - DEBUG=False
+    volumes:
+      - ./build:/var/build/

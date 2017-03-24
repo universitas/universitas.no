@@ -42,7 +42,7 @@
         {% endif %}
       </div>
     </header>
-    <div class="left-sidebar medium-2 columns">
+    <div class="left-sidebar small-12 medium-2 columns">
       <div class="story-info">
         <div class="artikkeltype {{ story.section.slug }}">
           {{ story.story_type.name }}
@@ -83,14 +83,14 @@
         </div>
       </div>
     </div>
-    <main class="medium-10 columns">
+    <main class="small-12 medium-10 columns">
      {{ story.get_html }}
     </main>
   </article>
   <section id="after-story" class="row">
     {% advert "story after" %}
     {% if story.disqus_enabled %}
-      <div id="comments-left" class="show-for-large-up large-2 columns"></div>
+      <div id="comments-left" class="show-for-large large-2 columns"></div>
       <div id="comments" class="large-10 columns">
         {% include '_disqus.html' %}
       </div>

@@ -10,16 +10,12 @@ logger = logging.getLogger(__name__)
 
 def image_post_delete(sender, instance, **kwargs):
     """Remove image file and thumbnail"""
-    logger.info(str(kwargs))
     delete_file = not settings.DEBUG  # only in production
     thumbnail.delete(instance.source_file, delete_file=delete_file)
 
 
 def image_post_save(sender, instance, **kwargs):
     """Schedule autocropping and rebuild thumbnail"""
-    # from celery import Celery
-    # app = Celery('core')
-    # app.send_task('apps.photo.tasks.post_save_task', [instance.pk])
     tasks.post_save_task.delay(instance)
 
 

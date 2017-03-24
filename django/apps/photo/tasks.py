@@ -8,13 +8,33 @@ from celery.decorators import periodic_task
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
-from .models import upload_image_to, ImageFile, ProfileImage
-from apps.core.staging import new_staging_images
 from sorl import thumbnail
-from .autocrop import autocrop
+
+from apps.core.staging import new_staging_images
 from .models import upload_image_to, ImageFile
+from .autocrop import autocrop
 
 logger = get_task_logger(__name__)
+
+
+@shared_task(serializer='pickle')
+def post_save_task(instance):
+    # logger.info(instance.get_cropping_method_display())
+    if instance.cropping_method == instance.CROP_PENDING:
+        logger.info('autocrop')
+        left, top, diameter, method = autocrop(instance)
+        instance.cropping_method = method
+        instance.cropping = (left, top, diameter)
+        assert instance.cropping_method != instance.CROP_PENDING
+        instance.save(update_fields=(
+            'from_top', 'from_left', 'cropping_method', 'crop_diameter'))
+
+    else:
+        logger.info('rebuild thumbs')
+        # delete thumbnail
+        thumbnail.delete(instance.source_file, delete_file=False)
+        # rebuild thumbnail
+        instance.thumb()
 
 
 @shared_task()

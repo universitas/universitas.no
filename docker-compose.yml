@@ -1,0 +1,83 @@
+version: '2.1'
+services:
+  django:
+    build: ./django/
+    volumes:
+      - ./django:/app
+      - ./logs:/var/logs
+      - webpack_build:/var/build/
+      - django_static:/var/static/
+      - django_media:/var/media/
+    env_file:
+      - ./django/base.env
+      - ./django/local.env
+
+  web:
+    command: uwsgi
+    extends: django
+    restart: always
+    expose:
+      - "8000"  # wsgi on tcp socket
+    depends_on:
+      - postgres
+      - redis
+      - rabbit
+
+  celery:
+    command: celery
+    extends: django
+    restart: always
+    depends_on:
+      - postgres
+      - redis
+      - rabbit
+
+  celerybeat:
+    command: celerybeat
+    extends: django
+    restart: always
+    depends_on:
+      - rabbit
+
+  nginx:
+    build: ./nginx/
+    restart: always
+    volumes:
+      - django_static:/var/static/
+      - django_media:/var/media/
+    ports:
+      - "${NGINX_PORT:-80}:80"
+
+  webpack:
+    build: ./webpack/
+    volumes:
+      - ./webpack:/app/
+      - webpack_build:/var/build/
+      - node_modules:/app/node_modules/
+    environment:
+      - BUILD_DIR=/var/build/
+
+  # RabbitMQ message queue
+  # default username:password is guest:guest
+  rabbit:
+    image: rabbitmq:3.6
+
+  # PostgreSQL database
+  postgres:
+    image: postgres:9.6
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+
+  # Redis key value store
+  redis:
+    image: redis:3.2
+    volumes:
+      - redisdata:/data/
+
+volumes:
+  redisdata: {}
+  pgdata: {}
+  node_modules: {}
+  webpack_build: {}
+  django_media: {}
+  django_static: {}

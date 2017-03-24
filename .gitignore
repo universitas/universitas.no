@@ -1,11 +1,1 @@
-node_modules/
-.cache/
-build/
-bin/*universitas_no.sh
-bin/postactivate
-media
-static
-celerybeat-schedule
-celerybeat.pid
-webpack-stats.json
-tags
+deployment.env

@@ -1,0 +1,64 @@
+#!/bin/bash
+# Build and demonize docker container
+
+if [[ ! -f django/local.env ]]; then
+  echo "# Add environment variables here" > django/local.env
+fi
+
+for arg; do case $arg in
+  help )
+    echo "usage: prod | dev | fake | fetchdb | build | webpack | up"
+    exit 0
+    ;;
+  prod )
+    echo "production settings"
+    export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml
+    ;;
+  dev )
+    echo "development settings"
+    unset COMPOSE_FILE
+    ;;
+  fake )
+    echo "populating database with fake data"
+    docker-compose run --rm web django-admin fake_content -c10 -s50
+    ;;
+  fetchdb )
+    set -e
+    SERVER=tassen.no
+    DB=www_universitas_no
+    echo "creating db dump from server $SERVER"
+    ssh $SERVER "pg_dump --no-owner --dbname=$DB --file=/tmp/dbdump.sql"
+    echo "copying db dump from server"
+    rsync --remove-source-files --compress $SERVER:/tmp/dbdump.sql django/dbdump.sql
+
+    # loading data
+    docker-compose down
+    docker-compose run --rm web load_db
+
+    # cleanup
+    rm django/dbdump.sql
+    echo "done"
+    ;;
+  build )
+    docker-compose down
+    echo "building"
+    docker-compose build
+    docker-compose run --rm web django-admin migrate
+    docker-compose run --rm web django-admin collectstatic --noinput
+    ;;
+  staticfiles )
+    docker-compose run --rm web django-admin collectstatic --noinput
+    ;;
+  migrate )
+    docker-compose run --rm web django-admin migrate
+    ;;
+  webpack )
+    docker-compose run --rm webpack build
+    ;;
+  up )
+    echo "running webserver"
+    docker-compose down
+    docker-compose up -d
+    ;;
+esac; done
+docker ps
