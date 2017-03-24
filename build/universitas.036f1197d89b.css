@@ -3008,9 +3008,10 @@ table.hover:not(.unstriped) tr:nth-of-type(even):hover {
     font-style: italic; }
   #story .feit {
     font-weight: 700; }
-  #story .inline-right {
-    border-left: 1px solid #EEE;
-    height: 0; }
+  @media print, screen and (min-width: 40em) {
+    #story .inline-right {
+      height: 0;
+      border-left: 1px solid #EEE; } }
   #story .inline-aside h2 {
     font-size: 1rem;
     font-weight: medium;

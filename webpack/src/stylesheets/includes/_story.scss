@@ -192,12 +192,14 @@
   }
 
   .inline-right {
-    border-left: $separator-line;
-    height: 0;
     @extend .columns;
     @extend .small-12;
     @extend .medium-3;
     @extend .medium-offset-9;
+    @include breakpoint(medium){
+      height: 0;
+      border-left: $separator-line;
+    }
   }
 
   main .row {
