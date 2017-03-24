@@ -24,7 +24,7 @@ for arg; do case $arg in
     ;;
   fetchdb )
     set -e
-    SERVER=universitas.no
+    SERVER=tassen.no
     DB=www_universitas_no
     echo "creating db dump from server $SERVER"
     ssh $SERVER "pg_dump --no-owner --dbname=$DB --file=/tmp/dbdump.sql"
