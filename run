@@ -46,6 +46,12 @@ for arg; do case $arg in
     docker-compose run --rm web django-admin migrate
     docker-compose run --rm web django-admin collectstatic --noinput
     ;;
+  staticfiles )
+    docker-compose run --rm web django-admin collectstatic --noinput
+    ;;
+  migrate )
+    docker-compose run --rm web django-admin migrate
+    ;;
   webpack )
     docker-compose run --rm webpack build
     ;;
