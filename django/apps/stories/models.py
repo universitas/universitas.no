@@ -7,6 +7,7 @@ import difflib
 import json
 import logging
 import unicodedata
+import functools
 
 # Django core
 from django.utils.translation import ugettext_lazy as _
@@ -272,7 +273,7 @@ class TextContent(models.Model, MarkupModelMixin):
             self.save(update_fields=['bodytext_html'])
             return mark_safe(self.bodytext_html)
         else:
-            return mark_safe(self.make_html())
+            return mark_safe(self.bodytext_html)
 
     def get_plaintext(self):
         """ Returns text content as plain text. """
@@ -718,6 +719,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             return image.imagefile.thumb()
 
     @property
+    @functools.lru_cache(16)
     def section(self):
         """ Shortcut to related Section """
         return self.story_type.section
