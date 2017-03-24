@@ -3008,10 +3008,6 @@ table.hover:not(.unstriped) tr:nth-of-type(even):hover {
     font-style: italic; }
   #story .feit {
     font-weight: 700; }
-  #story .bodytext {
-    float: left; }
-  #story .inline-left {
-    float: left; }
   #story .inline-right {
     border-left: 1px solid #EEE;
     height: 0; }

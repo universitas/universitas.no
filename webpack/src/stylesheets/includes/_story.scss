@@ -170,10 +170,9 @@
   }
 
   .bodytext {
+    @extend .columns;
     @extend .small-12;
     @extend .medium-9;
-    @extend .columns;
-    float: left;
   }
 
   .inline-full {
@@ -181,25 +180,24 @@
   }
 
   .inline-regular {
+    @extend .columns;
     @extend .small-12;
     @extend .medium-9;
-    @extend .columns;
   }
 
   .inline-left {
+    @extend .columns;
     @extend .small-12;
     @extend .medium-3;
-    @extend .columns;
-    float: left;
   }
 
   .inline-right {
     border-left: $separator-line;
     height: 0;
+    @extend .columns;
     @extend .small-12;
     @extend .medium-3;
     @extend .medium-offset-9;
-    @extend .columns;
   }
 
   main .row {
