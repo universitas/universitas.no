@@ -2,12 +2,12 @@
 
 $cols-slug: cols;
 $rows-slug: rows;
-$base-headline: 3rem;
+$base-headline: 3.5rem;
 $block-height-l: 150px;
 $block-height-m: 120px;
 $block-height-s: 80px;
 $minimum-height: 00px;
-$minimum-headline: 1.5rem;
+$minimum-headline: 1.8rem;
 
 @for $columns from 1 through 12 {
   // $small-cols: ".small-" + ceil($columns/6) * 6;
@@ -79,8 +79,8 @@ $minimum-headline: 1.5rem;
     // color: white;
     text-transform: uppercase;
     font-weight: 400;
-    font-size: 1em;
-    line-height: 1em;
+    font-size: 1.2rem;
+    line-height: 1;
   }
 
   .text-block {

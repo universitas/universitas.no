@@ -115,15 +115,15 @@ $header-lineheight: 1.1;
 $header-margin-bottom: 0.5rem;
 $header-margin-top: 0.3rem;
 $header-styles: (
-  medium: (
-    'h1': ('font-size': 100),
-    'h2': ('font-size': 37),
-    'h3': ('font-size': 30),
-  ),
   small: (
     'h1': ('font-size': 45),
     'h2': ('font-size': 30),
     'h3': ('font-size': 25),
+  ),
+  medium: (
+    'h1': ('font-size': 60),
+    'h2': ('font-size': 37),
+    'h3': ('font-size': 30),
   ),
 );
 // $header-text-rendering: optimizeLegibility;
