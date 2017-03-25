@@ -5,9 +5,9 @@ from apps.stories.models import Story
 import logging
 logger = logging.getLogger(__name__)
 
+
 class Command(BaseCommand):
     help = 'Devalue hotness of all Stories.'
 
     def handle(self, *args, **options):
         Story.objects.devalue_hotness()
-

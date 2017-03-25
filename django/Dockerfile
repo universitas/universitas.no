@@ -21,5 +21,8 @@ RUN /app/install-jupyter.sh
 
 # create directories
 RUN cd /var && mkdir media static logs && chown django media static logs
+
+RUN apt-get install -y fortune
+
 WORKDIR /app/
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
