@@ -10,5 +10,6 @@ logger = get_task_logger(__name__)
 
 @periodic_task(run_every=timedelta(seconds=5))
 def import_stories_from_prodsys():
-    logger.debug('importing stuff')
+    """ Get stories from prodsys when they are ready for web """
+    logger.info('importing stuff')
     import_prodsys_content
