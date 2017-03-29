@@ -3,10 +3,11 @@
 Source code for the newspaper universitas.no
 
 [![Code Health](https://landscape.io/github/haakenlid/tassen-dockerize/master/landscape.svg?style=flat)](https://landscape.io/github/haakenlid/tassen-dockerize/master)
-[![Build Status](https://travis-ci.org/universitas/universitas.no.svg?branch=master)](https://travis-ci.org/universitas/universitas.no)
+master:[![Build Status](https://travis-ci.org/universitas/universitas.no.svg?branch=master)](https://travis-ci.org/universitas/universitas.no)
+develop:[![Build Status](https://travis-ci.org/universitas/universitas.no.svg?branch=develop)](https://travis-ci.org/universitas/universitas.no)
 
 ## Backend Stack
-- [Django](https://www.djangoproject.com/) Python web framework 
+- [Django](https://www.djangoproject.com/) Python web framework
 - [uWSGI](https://uwsgi-docs.readthedocs.io/) Python application server
 - [Nginx](http://nginx.org) HTTP and reverse proxy server
 - [PostgreSQL](http://www.postgresql.org) Database server
