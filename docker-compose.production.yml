@@ -12,3 +12,8 @@ services:
       - DEBUG=False
     volumes:
       - ./build:/var/build/
+      - /srv/STAGING:/var/staging/
+
+  celery:
+    volumes:
+      - /srv/STAGING:/var/staging/

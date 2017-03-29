@@ -1,9 +1,5 @@
 # vim: ft=config:
 
-# Installation
-pip
-wheel
-
 # Django
 Django
 
