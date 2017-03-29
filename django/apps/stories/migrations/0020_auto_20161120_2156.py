@@ -16,16 +16,19 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='section',
             name='slug',
-            field=django_extensions.db.fields.AutoSlugField(blank=True, default='section-slug', editable=False, overwrite=True, populate_from=('title',), verbose_name='slug'),
+            field=django_extensions.db.fields.AutoSlugField(
+                blank=True, default='section-slug', editable=False, overwrite=True, populate_from=('title',), verbose_name='slug'),
         ),
         migrations.AlterField(
             model_name='story',
             name='slug',
-            field=django_extensions.db.fields.AutoSlugField(allow_duplicates=True, blank=True, default='story-slug', editable=False, overwrite=True, populate_from=('title',), verbose_name='slug'),
+            field=django_extensions.db.fields.AutoSlugField(
+                allow_duplicates=True, blank=True, default='story-slug', editable=False, overwrite=True, populate_from=('title',), verbose_name='slug'),
         ),
         migrations.AlterField(
             model_name='storytype',
             name='slug',
-            field=django_extensions.db.fields.AutoSlugField(blank=True, default='storytype-slug', editable=False, overwrite=True, populate_from=('name',), verbose_name='slug'),
+            field=django_extensions.db.fields.AutoSlugField(
+                blank=True, default='storytype-slug', editable=False, overwrite=True, populate_from=('name',), verbose_name='slug'),
         ),
     ]

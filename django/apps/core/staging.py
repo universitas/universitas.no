@@ -13,6 +13,7 @@ IMAGES_DIR = 'IMAGES'
 PDF_DIR = 'PDF'
 BYLINE_DIR = 'BYLINE'
 
+
 def timestamp(delta, fallback):
     """Calculates seconds since epoch of current time minus delta.
     If delta is out of range, calculates timestamp of fallback datetime instead.

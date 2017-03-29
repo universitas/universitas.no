@@ -26,7 +26,8 @@ def insert_span_to(value, marker=':'):
     strip = False
     if marker in value:
         find = r'^(.*?){}'.format(marker)
-        replace = r'<span class="{}">\1{}</span>'.format(html_class, '' if strip else marker)
+        replace = r'<span class="{}">\1{}</span>'.format(
+            html_class, '' if strip else marker)
         value = re.sub(find, replace, value, re.M)
     return mark_safe(value)
 

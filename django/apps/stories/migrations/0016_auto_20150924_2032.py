@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='story',
             name='hot_count',
-            field=models.PositiveIntegerField(default=50, editable=False, help_text='calculated value representing recent page views.', verbose_name='recent page views'),
+            field=models.PositiveIntegerField(
+                default=50, editable=False, help_text='calculated value representing recent page views.', verbose_name='recent page views'),
         ),
     ]

@@ -15,7 +15,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Stint',
             fields=[
-                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+                ('id', models.AutoField(serialize=False,
+                                        verbose_name='ID', primary_key=True, auto_created=True)),
                 ('start_date', models.DateField(auto_now_add=True)),
                 ('duration', models.DateField(blank=True, null=True)),
                 ('contributor', models.ForeignKey(to='contributors.Contributor')),
@@ -28,7 +29,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='position',
             name='group_membership',
-            field=models.ForeignKey(to='auth.Group', help_text='Group membership', blank=True, null=True),
+            field=models.ForeignKey(
+                to='auth.Group', help_text='Group membership', blank=True, null=True),
             preserve_default=True,
         ),
     ]

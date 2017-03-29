@@ -14,7 +14,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='contributor',
             name='verified',
-            field=models.BooleanField(default=False, help_text='Verified to be a correct name.'),
+            field=models.BooleanField(
+                default=False, help_text='Verified to be a correct name.'),
             preserve_default=True,
         ),
     ]

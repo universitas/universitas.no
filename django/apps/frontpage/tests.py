@@ -12,11 +12,10 @@ from .models import Frontpage, StoryModule, FrontpageStory
 #         self.assertTemplateUsed('frontpage.html')
 
 # class FasterTestCase(unittest.TestCase):
-    # def test_model_foo(self):
-        # instance = (name="Test Instance")
-        # self.assertTrue(model_foo(instance))
+# def test_model_foo(self):
+# instance = (name="Test Instance")
+# self.assertTrue(model_foo(instance))
 
 # class FrontPageTest(TestCase):
 
-    # def make_frontpage_story:
-
+# def make_frontpage_story:

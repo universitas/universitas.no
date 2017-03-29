@@ -24,6 +24,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='imagefile',
             name='_mtime',
-            field=models.PositiveIntegerField(editable=False, verbose_name='mtime timestamp of source file', null=True),
+            field=models.PositiveIntegerField(
+                editable=False, verbose_name='mtime timestamp of source file', null=True),
         ),
     ]

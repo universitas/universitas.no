@@ -8,6 +8,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 FONT_FILE = os.path.join(os.path.dirname(__file__), 'arial.ttf')
 
+
 def dummy_image_advert(width, height, watermarktext, labeltext):
     """ Create a dummy image ad that can be used for testing purposes """
     img = Image.new('RGB', (width, height), color=random_color())

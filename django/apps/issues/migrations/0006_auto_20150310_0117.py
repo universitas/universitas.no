@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='printissue',
             name='issue',
-            field=models.ForeignKey(to='issues.Issue', related_name='pdfs', null=True),
+            field=models.ForeignKey(
+                to='issues.Issue', related_name='pdfs', null=True),
         ),
     ]
