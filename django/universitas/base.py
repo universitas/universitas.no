@@ -17,7 +17,7 @@ SECRET_KEY = env.secret_key
 ALLOWED_HOSTS = env.allowed_hosts.split(',') or '*'
 
 # SENTRY
-RAVEN_CONFIG = {'dsn': env.raven_dsn, }
+RAVEN_CONFIG = {'dsn': env.raven_dsn, 'site': SITE_URL}
 SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
 
 # CELERY TASK RUNNER
