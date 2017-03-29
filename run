@@ -66,12 +66,14 @@ for arg; do case $arg in
     ;;
   up )
     echo "running webserver"
-    docker-compose down
-    docker-compose up -d
+    docker-compose up
     ;;
   enable )
     echo "enable systemd service"
-    cp systemd.init /etc/init.d/universitas
+    # must run as root
+    ln -s $PWD/universitas.service /lib/systemd/system/
+    systemctl enable universitas.service
+    systemctl start universitas.service
     ;;
 
 
