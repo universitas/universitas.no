@@ -69,5 +69,11 @@ for arg; do case $arg in
     docker-compose down
     docker-compose up -d
     ;;
+  enable )
+    echo "enable systemd service"
+    cp systemd.init /etc/init.d/universitas
+    ;;
+
+
 esac; done
 docker ps
