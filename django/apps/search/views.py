@@ -35,7 +35,6 @@ class SearchMixin:
         """Returns the URL to redirect an empty query to, or None."""
         return self.empty_query_redirect
 
-
     def get_context_data(self, **kwargs):
         """Generates context variables."""
         context = super(SearchMixin, self).get_context_data(**kwargs)

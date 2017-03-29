@@ -15,6 +15,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='imagefile',
             name='cropping_method',
-            field=models.PositiveSmallIntegerField(choices=[(0, 'center'), (1, 'pending'), (5, 'corner detection'), (10, 'multiple faces'), (15, 'single face'), (100, 'manual crop')], default=1, help_text='How this image has been cropped.', verbose_name='cropping method'),
+            field=models.PositiveSmallIntegerField(choices=[(0, 'center'), (1, 'pending'), (5, 'corner detection'), (10, 'multiple faces'), (
+                15, 'single face'), (100, 'manual crop')], default=1, help_text='How this image has been cropped.', verbose_name='cropping method'),
         ),
     ]

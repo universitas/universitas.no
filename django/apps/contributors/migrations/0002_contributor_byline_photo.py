@@ -15,7 +15,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='contributor',
             name='byline_photo',
-            field=models.ForeignKey(help_text='photo used for byline credit.', null=True, related_name='person', blank=True, to='photo.ImageFile'),
+            field=models.ForeignKey(help_text='photo used for byline credit.',
+                                    null=True, related_name='person', blank=True, to='photo.ImageFile'),
             preserve_default=True,
         ),
     ]

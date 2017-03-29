@@ -14,19 +14,22 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='aside',
             name='bodytext_html',
-            field=models.TextField(verbose_name='bodytext html tagged', blank=True, editable=False, help_text='HTML tagged content', default=''),
+            field=models.TextField(verbose_name='bodytext html tagged', blank=True,
+                                   editable=False, help_text='HTML tagged content', default=''),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='pullquote',
             name='bodytext_html',
-            field=models.TextField(verbose_name='bodytext html tagged', blank=True, editable=False, help_text='HTML tagged content', default=''),
+            field=models.TextField(verbose_name='bodytext html tagged', blank=True,
+                                   editable=False, help_text='HTML tagged content', default=''),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='story',
             name='bodytext_html',
-            field=models.TextField(verbose_name='bodytext html tagged', blank=True, editable=False, help_text='HTML tagged content', default=''),
+            field=models.TextField(verbose_name='bodytext html tagged', blank=True,
+                                   editable=False, help_text='HTML tagged content', default=''),
             preserve_default=True,
         ),
     ]

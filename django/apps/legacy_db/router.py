@@ -2,6 +2,7 @@ class ProdsysRouter(object):
     """
     A router to control access to the legacy prodsys database.
     """
+
     def db_for_read(self, model, **hints):
         """
         Attempts to read prodsys models go to prodsys database

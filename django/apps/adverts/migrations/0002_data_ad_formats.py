@@ -4,6 +4,7 @@ from django.core.management import call_command
 
 FIXTURE = 'ad_formats'
 
+
 def load_fixture(apps, schema_editor):
     call_command('loaddata', FIXTURE, app_label='adverts')
 
@@ -11,6 +12,7 @@ def load_fixture(apps, schema_editor):
 def unload_fixture(apps, schema_editor):
     MyModel = apps.get_model('adverts', 'AdFormat')
     MyModel.objects.all().delete()
+
 
 class Migration(migrations.Migration):
 

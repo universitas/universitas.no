@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='story',
             name='publication_status',
-            field=models.IntegerField(help_text='publication status.', verbose_name='status', default=0, choices=[(0, 'Draft'), (5, 'Ready to edit'), (9, 'Ready to publish on website'), (10, 'Published on website'), (15, 'Will not be published'), (100, 'Used as template for new articles'), (500, 'Technical error')]),
+            field=models.IntegerField(help_text='publication status.', verbose_name='status', default=0, choices=[(0, 'Draft'), (5, 'Ready to edit'), (
+                9, 'Ready to publish on website'), (10, 'Published on website'), (15, 'Will not be published'), (100, 'Used as template for new articles'), (500, 'Technical error')]),
         ),
     ]

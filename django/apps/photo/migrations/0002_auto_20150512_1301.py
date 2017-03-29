@@ -16,6 +16,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='imagefile',
             name='source_file',
-            field=sorl.thumbnail.fields.ImageField(width_field='full_width', upload_to=apps.photo.models.upload_image_to, max_length=1024, height_field='full_height'),
+            field=sorl.thumbnail.fields.ImageField(
+                width_field='full_width', upload_to=apps.photo.models.upload_image_to, max_length=1024, height_field='full_height'),
         ),
     ]

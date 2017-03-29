@@ -16,11 +16,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='printissue',
             name='issue',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='pdfs', to='issues.Issue'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name='pdfs', to='issues.Issue'),
         ),
         migrations.AlterField(
             model_name='printissue',
             name='pdf',
-            field=models.FileField(help_text='Pdf file for this issue.', upload_to='pdf/'),
+            field=models.FileField(
+                help_text='Pdf file for this issue.', upload_to='pdf/'),
         ),
     ]

@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='story',
             name='language',
-            field=models.CharField(verbose_name='language', default='nb', choices=[('nb', 'Norwegian Bokmal'), ('nn', 'Norwegian Nynorsk'), ('en', 'English')], help_text='language', max_length=10),
+            field=models.CharField(verbose_name='language', default='nb', choices=[(
+                'nb', 'Norwegian Bokmal'), ('nn', 'Norwegian Nynorsk'), ('en', 'English')], help_text='language', max_length=10),
         ),
     ]
