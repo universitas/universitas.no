@@ -7,7 +7,6 @@ import difflib
 import json
 import logging
 import unicodedata
-import functools
 
 # Django core
 from django.utils.translation import ugettext_lazy as _
@@ -723,7 +722,6 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             return image.imagefile.thumb()
 
     @property
-    @functools.lru_cache(16)
     def section(self):
         """ Shortcut to related Section """
         return self.story_type.section

@@ -2,11 +2,21 @@
 version: '2.1'
 services:
   webpack:
-    command: "dev-server"
+    command: dev-server
     ports:
       - "3000:3000"
 
   web:
-    command: "runserver"
+    command: runserver
     ports:
       - "8000:8000"
+
+  flower:
+    extends: django
+    # celery monitoring
+    command: flower
+    restart: always
+    ports:
+      - "5555:5555"
+    depends_on:
+      - celery
