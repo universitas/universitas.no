@@ -6,6 +6,8 @@ services:
   - docker
 
 before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - sudo pip install docker-compose
   - docker-compose build   
 
 script:
