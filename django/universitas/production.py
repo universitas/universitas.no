@@ -3,7 +3,6 @@
 from .base import *  # noqa
 from .setting_helpers import Environment
 
-aws = Environment('AWS')
 gmail = Environment('GMAIL')
 
 # DEBUG CONFIGURATION
@@ -19,6 +18,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 # AMAZON WEB SERVICES
+aws = Environment('AWS')
 STATICFILES_STORAGE = 'utils.aws_custom_storage.StaticStorage'
 DEFAULT_FILE_STORAGE = 'utils.aws_custom_storage.MediaStorage'
 THUMBNAIL_STORAGE = 'utils.aws_custom_storage.ThumbStorage'
