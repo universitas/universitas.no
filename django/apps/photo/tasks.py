@@ -6,7 +6,6 @@ from datetime import timedelta
 
 from celery.decorators import periodic_task
 from celery import shared_task
-from celery.utils.log import get_task_logger
 
 from sorl import thumbnail
 
@@ -14,7 +13,8 @@ from apps.core.staging import new_staging_images
 from .models import upload_image_to, ImageFile
 from .autocrop import autocrop
 
-logger = get_task_logger(__name__)
+import logging
+logger = logging.getLogger(__name__)
 
 
 @shared_task(serializer='pickle')

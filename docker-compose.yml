@@ -31,6 +31,7 @@ services:
       - postgres
       - redis
       - rabbit
+      - celerybeat
 
   celerybeat:
     command: celerybeat
@@ -46,7 +47,7 @@ services:
       - django_static:/var/static/
       - django_media:/var/media/
     ports:
-      - "${NGINX_PORT:-80}:80"
+      - "${NGINX_PORT:-8080}:80"
 
   webpack:
     build: ./webpack/

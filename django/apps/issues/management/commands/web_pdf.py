@@ -17,10 +17,10 @@ from apps.issues.models import PrintIssue, current_issue
 
 PDF_STAGING = os.path.join(settings.STAGING_ROOT, 'STAGING', 'PDF')
 PDF_FOLDER = os.path.join(settings.STAGING_ROOT, 'pdf')
-
 PDF_MERGE = os.path.join(settings.PROJECT_DIR, 'bin', 'pdf_merge.sh')
-
 FILENAME_PATTERN = 'universitas_{issue.date.year}-{issue.number}{suffix}.pdf'
+
+logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -36,11 +36,6 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        # print(options)
-        # if int(options['verbosity']) > 1:
-        #     logger = logging.getLogger('console')
-        # else:
-        logger = logging.getLogger(__name__)
         bundle_pdf(current_issue(), logger)
 
 
@@ -96,5 +91,5 @@ def bundle_pdf(for_issue, logger):
         with open(pdf_path, 'rb') as src:
             content = ContentFile(src.read())
         issue.pdf.save(filename, content)
-        # issue.issue_name = name
-        # issue.save()
+        issue.issue_name = name
+        issue.save()
