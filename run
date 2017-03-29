@@ -55,6 +55,9 @@ for arg; do case $arg in
   bash )
     docker-compose run --rm web bash
     ;;
+  test )
+    docker-compose run --rm web pytest
+    ;;
   webpack )
     docker-compose run --rm webpack build
     ;;
