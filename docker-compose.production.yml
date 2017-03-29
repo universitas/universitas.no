@@ -6,6 +6,10 @@ services:
     volumes:
       - ./build:/var/build/
 
+  nginx:
+    ports:
+      - "80:80"
+
   web:
     command: "uwsgi"
     environment:

@@ -36,7 +36,7 @@ def test_new_story(news):
     empty_story.save()
     assert empty_story.id is not None
     html = empty_story.get_html()
-    assert len(html) > 0
+    assert len(html) == 0
 
 
 @pytest.mark.django_db

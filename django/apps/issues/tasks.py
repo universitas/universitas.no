@@ -5,12 +5,13 @@ import subprocess
 import pathlib
 from datetime import datetime
 import tempfile
-# import re
 
 from django.conf import settings
 from django.core.files.base import ContentFile
 from apps.issues.models import current_issue, PrintIssue
 from celery import shared_task
+from celery.decorators import periodic_task
+from celery.schedules import crontab
 
 import logging
 logger = logging.getLogger(__name__)
@@ -20,10 +21,18 @@ PAGES_GLOB = 'UNI11VER*.pdf'
 MAG_PAGES_GLOB = 'UNI12VER*.pdf'
 # OUTPUT_PDF_DIRECTORY = STAGING_ROOT / 'pdf'
 OUTPUT_PDF_NAME = 'universitas_{issue.date.year}-{issue.number}{suffix}.pdf'
-
 # Binaries
 GHOSTSCRIPT = '/usr/bin/ghostscript'
 CONVERT = '/usr/bin/convert'
+
+# Make bundle Wednesday night
+BUNDLE_TIME = crontab(hour=4, minute=0, day_of_week=3)
+
+
+@periodic_task(run_every=BUNDLE_TIME)
+def weekly_bundle():
+    logger.info('bundle time!')
+    create_print_issue_pdf()
 
 
 class MissingBinary(RuntimeError):

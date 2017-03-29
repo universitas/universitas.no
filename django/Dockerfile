@@ -15,13 +15,11 @@ RUN apt-get install -y \
 COPY requirements.txt install-jupyter.sh docker-entrypoint.sh /app/
 
 # install python dependencies for django
-RUN pip install --upgrade pip wheel
 RUN pip install -r /app/requirements.txt
 
 # install jupyter notebook with vim key bindings
 RUN /app/install-jupyter.sh
 
-# create directories
 RUN cd /var && mkdir staging media static logs && chown django:django staging media static logs
 
 WORKDIR /app/
