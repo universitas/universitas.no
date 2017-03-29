@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   django:
-    build: ./django/
+    image: universitas/django:latest
     volumes:
       - ./django:/app
       - ./logs:/var/logs
@@ -50,7 +50,7 @@ services:
       - "${NGINX_PORT:-8080}:80"
 
   webpack:
-    build: ./webpack/
+    image: universitas/webpack:latest
     volumes:
       - ./webpack:/app/
       - webpack_build:/var/build/
