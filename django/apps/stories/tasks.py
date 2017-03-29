@@ -11,5 +11,5 @@ logger = logging.getLogger(__name__)
 @periodic_task(run_every=timedelta(hours=1))
 def devalue_hotness():
     """ Decrease the hotness rating of all stories """
-    logger.info('decreasing hotnessssss')
+    logger.info('decreasing hotness')
     Story.objects.devalue_hotness()

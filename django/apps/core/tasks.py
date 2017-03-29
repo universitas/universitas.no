@@ -9,13 +9,12 @@ logger = logging.getLogger(__name__)
 # @periodic_task(run_every=timedelta(seconds=10))
 
 
-@periodic_task(run_every=timedelta(seconds=3))
+@periodic_task(run_every=timedelta(hours=1))
 def test_log():
     """ Logs an interesting message! """
-    logger.info('fortune!')
     try:
-        fortune = subprocess.check_output(['fortune']).decode('utf-8')
-        logger.info('fortune %s' % fortune)
+        fortune = subprocess.check_output(['top', '-bn1']).decode('utf-8')
+        logger.info('top %s' % fortune)
     except Exception:
         logger.info('broken')
         logger.exception('error')

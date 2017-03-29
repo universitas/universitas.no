@@ -115,10 +115,11 @@ def import_prodsys_content(
 
     for prodsak_id in prodsak_ids:
         _importer_prodsak(prodsak_id, replace_existing, autocrop)
-        Prodsak.objects.filter(
-            prodsak_id=prodsak_id,
-            # produsert__in=status
-        ).update(produsert=Prodsak.PUBLISHED_ON_WEB)
+        if not settings.DEBUG:
+            # update prodsys
+            Prodsak.objects.filter(
+                prodsak_id=prodsak_id
+            ).update(produsert=Prodsak.PUBLISHED_ON_WEB)
 
     return len(prodsak_ids)
 
@@ -252,14 +253,6 @@ def _importer_prodsak(
 
     new_story.full_clean()
     new_story.save(new=True)
-
-    # Update the prodsys object if needed.
-    # if prodsak.produsert == Prodsak.READY_FOR_WEB:
-    #     prodsak.produsert = Prodsak.PUBLISHED_ON_WEB
-    #     prodsak.kommentar = (
-    #         prodsak.kommentar or '') + '\n\n Importert til nettside'
-    #     prodsak.save()
-    #     logger.debug('prodsak updated: {}'.format(prodsak))
 
 
 def _get_xtags_from_prodsys(prodsak_id, status_in=None):
@@ -520,7 +513,7 @@ def _clean_up_html(html):
         html = re.sub(pattern, replacement, html, flags=flags)
 
     # Remove final html fragments.
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, 'html5lib')
     html = soup.text
 
     return html

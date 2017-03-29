@@ -27,13 +27,12 @@ CONVERT = '/usr/bin/convert'
 
 # Make bundle Wednesday night
 BUNDLE_TIME = crontab(hour=4, minute=0, day_of_week=3)
-BUNDLE_TIME = crontab(minute='*')
 
 
 @periodic_task(run_every=BUNDLE_TIME)
 def weekly_bundle():
     logger.info('bundle time!')
-    # create_print_issue_pdf()
+    create_print_issue_pdf()
 
 
 class MissingBinary(RuntimeError):

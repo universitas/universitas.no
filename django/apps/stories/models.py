@@ -395,7 +395,6 @@ class TextContent(models.Model, MarkupModelMixin):
             setattr(self, modelfield, new_content)
             return self
         except (AttributeError):
-            raise
             # No such field. Try the main story instead.
             return self.parent_story._block_append(tag, content, modelfield)
         except (AssertionError,) as errormsg:

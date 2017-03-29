@@ -11,18 +11,16 @@ RUN apt-get install -y \
   poppler-utils \
   postgresql-client
 
+# copy files
+COPY requirements.txt install-jupyter.sh docker-entrypoint.sh /app/
+
 # install python dependencies for django
-COPY requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 
 # install jupyter notebook with vim key bindings
-COPY install-jupyter.sh /app/install-jupyter.sh
 RUN /app/install-jupyter.sh
 
-# create directories
-RUN cd /var && mkdir media static logs && chown django media static logs
-
-RUN apt-get install -y fortune
+RUN cd /var && mkdir staging media static logs && chown django:django staging media static logs
 
 WORKDIR /app/
 ENTRYPOINT ["/app/docker-entrypoint.sh"]

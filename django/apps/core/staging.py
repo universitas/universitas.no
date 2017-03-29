@@ -9,6 +9,9 @@ import glob
 import time
 # import logging
 
+IMAGES_DIR = 'IMAGES'
+PDF_DIR = 'PDF'
+BYLINE_DIR = 'BYLINE'
 
 def timestamp(delta, fallback):
     """Calculates seconds since epoch of current time minus delta.
@@ -29,7 +32,7 @@ def new_staging_files(
         max_age=timedelta.max):
     """Check for new or updated files in staging area."""
     directory = os.path.join(
-        settings.STAGING_ROOT, 'STAGING', staging_subdirectory)
+        settings.STAGING_ROOT, staging_subdirectory)
     os.chdir(directory)
     all_files = glob.glob(fileglob)
     min_mtime = timestamp(min_age, fallback=datetime.max)
@@ -42,7 +45,7 @@ def new_staging_files(
 def new_staging_images(**kwargs):
     """Check for new or updated images in staging area"""
     arguments = dict(
-        staging_subdirectory='IMAGES',
+        staging_subdirectory=IMAGES_DIR,
         fileglob='*.jpg',
     )
     arguments.update(kwargs)
@@ -52,7 +55,7 @@ def new_staging_images(**kwargs):
 def new_staging_byline_images(**kwargs):
     """Check for new or updated byline images in staging area"""
     arguments = dict(
-        staging_subdirectory='BYLINE',
+        staging_subdirectory=BYLINE_DIR,
         fileglob='*.jpg',
         max_age=timedelta(days=1),
     )
@@ -63,7 +66,7 @@ def new_staging_byline_images(**kwargs):
 def new_staging_pdf_files(**kwargs):
     """Check for new or updated pdf files in staging area"""
     arguments = dict(
-        staging_subdirectory='PDF',
+        staging_subdirectory=PDF_DIR,
         fileglob='UNI1*VER*000.pdf',
         max_age=timedelta(days=100),
     )

@@ -6,9 +6,18 @@ services:
     volumes:
       - ./build:/var/build/
 
+  nginx:
+    ports:
+      - "80:80"
+
   web:
     command: "uwsgi"
     environment:
       - DEBUG=False
     volumes:
       - ./build:/var/build/
+      - /srv/STAGING:/var/staging/
+
+  celery:
+    volumes:
+      - /srv/STAGING:/var/staging/
