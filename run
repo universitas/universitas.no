@@ -55,6 +55,9 @@ for arg; do case $arg in
   bash )
     docker-compose run --rm web bash
     ;;
+  flower )
+    docker-compose run --rm -p 5555:5555 django flower
+    ;;
   test )
     docker-compose run --rm web pytest
     ;;

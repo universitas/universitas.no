@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 
 def article_view(request, story_id, **section_and_slug):
     template = 'story.html'
-    # template = 'dateline.html'
     try:
         story = Story.objects.get(pk=story_id)
     except Story.DoesNotExist:
@@ -34,10 +33,8 @@ def article_view(request, story_id, **section_and_slug):
         return HttpResponseRedirect(correct_url)
 
     translation.activate(story.language)
-    # context = Context({'story': story, })
-    # template = get_template('story.html')
-    # response = template.render(context)
 
     context = {'story': story, }
     response = render(request, template, context,)
+    story.visit_page(request)
     return response

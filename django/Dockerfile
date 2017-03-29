@@ -15,7 +15,7 @@ RUN apt-get install -y \
 COPY requirements.txt install-jupyter.sh docker-entrypoint.sh /app/
 
 # install python dependencies for django
-RUN pip install -r /app/requirements.txt
+RUN pip install --no-cache wheel && pip install --no-cache -r /app/requirements.txt
 
 # install jupyter notebook with vim key bindings
 RUN /app/install-jupyter.sh

@@ -38,6 +38,7 @@ faker
 
 # TASK RUNNER
 celery
+flower
 
 # ERROR REPORTING
 raven

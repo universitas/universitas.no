@@ -31,6 +31,7 @@ if DEBUG:
         "SHOW_TOOLBAR_CALLBACK": lambda request: True
     }
 
+# DATABASE_ROUTERS = []
 DATABASES['prodsys'] = {
     'ENGINE': 'django.db.backends.sqlite3',
     'NAME': 'prodsys.sqlite3.db',

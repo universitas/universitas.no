@@ -34,7 +34,7 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {'fanout_prefix': True}
 
 # Rabbitmq
 CELERY_BROKER_URL = 'amqp://guest:guest@rabbit//?heartbeat=30'
-CELERY_BROKER_POOL_LIMIT = 1
+CELERY_BROKER_POOL_LIMIT = 10
 CELERY_BROKER_CONNECTION_TIMEOUT = 10
 
 # STATIC_ROOT = 'static'

@@ -37,11 +37,14 @@ case $1 in
     ;;
   celerybeat)
     echo 'starting celery beat'
-    run 'celery beat -A universitas --loglevel=DEBUG --pidfile= --schedule=/tmp/celerybeat-schedule'
+    run 'celery -A universitas beat --loglevel=INFO --pidfile= --schedule=/tmp/celerybeat-schedule'
     ;;
   celery)
     echo 'starting celery workers'
-    run 'celery worker -A universitas --loglevel=DEBUG'
+    run 'celery -A universitas worker --loglevel=INFO'
+    ;;
+  flower)
+    run "celery -A universitas flower"
     ;;
   *)
     exec "$@"; exit
