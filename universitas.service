@@ -9,4 +9,4 @@ ExecStart=/bin/bash -c "cd /srv/tassen; ./run prod up"
 ExecStop=/bin/bash -c "cd /srv/tassen; docker-compose down"
 
 [Install]
-WantedBy=local.target
+WantedBy=multi-user.target
