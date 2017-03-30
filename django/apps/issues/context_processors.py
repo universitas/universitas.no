@@ -1,6 +1,7 @@
 """ Issues context processor """
 from .models import Issue
 
+
 def issues(request):
     context = {
         'issues': {
@@ -9,4 +10,3 @@ def issues(request):
         }
     }
     return context
-

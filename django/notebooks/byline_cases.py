@@ -14,7 +14,7 @@ BYLINE_CASES = [  # List of cases: ( "Input string", "Expected output" )
     ), (
         "Espen Mikkelsen, Styreleder Erasmus Student Network UiO",
         "text: Espen Mikkelsen, Styreleder Erasmus Student Network UiO"
-    # ), (
+        # ), (
         # "Amanda Schei og Ingrid Keenan, Liberal liste",
         # "text: Amanda Schei, Liberal liste\ntext: Ingrid Keenan, Liberal liste"
     ), (

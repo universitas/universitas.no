@@ -81,7 +81,8 @@ class Bilde(models.Model):
     id_bilde = models.IntegerField(primary_key=True)
     path = models.CharField(max_length=255)
     sak = models.ForeignKey(Sak, db_column='id_sak', blank=True, null=True)
-    bildetekst = models.ForeignKey(Bildetekst, db_column='id_bildetekst', blank=True, null=True)
+    bildetekst = models.ForeignKey(
+        Bildetekst, db_column='id_bildetekst', blank=True, null=True)
     size = models.IntegerField(db_column='str', blank=True, null=True)
     crop = models.IntegerField()
 
@@ -125,7 +126,8 @@ class DiskInnlegg(InnleggAbstract):
 
 class DiskSvar(InnleggAbstract):
     id_svar = models.IntegerField(primary_key=True)
-    innlegg = models.ForeignKey(DiskInnlegg, db_column='id_innlegg', blank=True, null=True)
+    innlegg = models.ForeignKey(
+        DiskInnlegg, db_column='id_innlegg', blank=True, null=True)
     sak = models.ForeignKey(Sak, db_column='sak_id', blank=True, null=True)
     epost_sendt = models.DateTimeField(blank=True, null=True)
 
@@ -182,6 +184,7 @@ class ProdsakQueryset(models.QuerySet):
     def active(self):
         return self.exclude(produsert=Prodsak.ARCHIVED)
 
+
 class ProdsakManager(models.Manager):
 
     def get_queryset(self):
@@ -192,9 +195,9 @@ class ProdsakManager(models.Manager):
 
     def active(self):
         return self.get_queryset(
-            ).active(
-            ).order_by('-prodsak_id'
-            ).single()
+        ).active(
+        ).order_by('-prodsak_id'
+                   ).single()
 
 
 class Prodsak(models.Model):
@@ -235,7 +238,8 @@ class Prodsak(models.Model):
     kommentar = models.TextField(blank=True)
     mappe = models.CharField(max_length=100, blank=True)
     flagg = models.IntegerField(blank=True, null=True, choices=FLAGG_CHOICES)
-    produsert = models.IntegerField(blank=True, null=True, choices=PRODUSERT_CHOICES)
+    produsert = models.IntegerField(
+        blank=True, null=True, choices=PRODUSERT_CHOICES)
     dato = models.DateTimeField()
     version_no = models.IntegerField(editable=False,)
     version_date = models.DateTimeField(editable=False, blank=True, null=True)

@@ -17,9 +17,11 @@ def create_pdf(modeladmin, request, queryset):
     messages.add_message(request, messages.INFO, 'started creating pdf')
     create_print_issue_pdf.delay()
 
+
 def create_pdf_syncronous(modeladmin, request, queryset):
     create_print_issue_pdf()
     messages.add_message(request, messages.INFO, 'pdf created')
+
 
 class ThumbAdmin:
     exclude = ()

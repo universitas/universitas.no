@@ -20,6 +20,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='byline',
             name='credit',
-            field=models.CharField(choices=[('text', 'Text'), ('video', 'Text'), ('text and photo', 'TextPhoto'), ('text and video', 'TextVideo'), ('photo and video', 'PhotoVideo'), ('photo', 'Photo'), ('video', 'Video'), ('illus', 'Illustration'), ('graph', 'Graphics'), ('trans', 'Translation'), ('???', 'Unknown')], max_length=20, default='text'),
+            field=models.CharField(choices=[('text', 'Text'), ('video', 'Text'), ('text and photo', 'TextPhoto'), ('text and video', 'TextVideo'), ('photo and video', 'PhotoVideo'), (
+                'photo', 'Photo'), ('video', 'Video'), ('illus', 'Illustration'), ('graph', 'Graphics'), ('trans', 'Translation'), ('???', 'Unknown')], max_length=20, default='text'),
         ),
     ]

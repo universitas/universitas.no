@@ -27,7 +27,8 @@ def search_results(context, search_results):
 @register.simple_tag(takes_context=True)
 def search_result_item(context, search_result):
     obj = search_result.object
-    content_type = ContentType.objects.get_for_id(search_result.content_type_id)
+    content_type = ContentType.objects.get_for_id(
+        search_result.content_type_id)
 
     params = {
         "app_label": content_type.app_label,
@@ -42,7 +43,8 @@ def search_result_item(context, search_result):
             "query": context["query"],
         })
         return template.loader.render_to_string((
-            "watson/includes/search_result_{app_label}_{model_name}.html".format(**params),
+            "watson/includes/search_result_{app_label}_{model_name}.html".format(
+                **params),
             "watson/includes/search_result_{app_label}.html".format(**params),
             "watson/includes/search_result_item.html",
         ), context)

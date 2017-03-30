@@ -183,7 +183,7 @@ class StoryAdmin(admin.ModelAdmin):
         'legacy_html_source',
         'legacy_prodsys_source',
         'get_html'
-        ]
+    ]
 
     formfield_overrides = {
         models.CharField: {'widget': Textarea(attrs={'rows': 2, 'cols': 30})},

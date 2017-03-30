@@ -17,11 +17,13 @@ class Command(BaseCommand):
         backend = get_backend()
         if not backend.requires_installation:
             if verbosity >= 2:
-                self.stdout.write("Your search backend does not require installation.\n")
+                self.stdout.write(
+                    "Your search backend does not require installation.\n")
         elif backend.is_installed():
             if verbosity >= 2:
                 self.stdout.write("django-watson is already installed.\n")
         else:
             backend.do_install()
             if verbosity >= 2:
-                self.stdout.write("django-watson has been successfully installed.\n")
+                self.stdout.write(
+                    "django-watson has been successfully installed.\n")

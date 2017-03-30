@@ -44,6 +44,7 @@ class InlineTagAdmin(admin.ModelAdmin):
         'html_class',
     )
 
+
 @admin.register(models.Alias)
 class AliasAdmin(admin.ModelAdmin):
     list_display = (

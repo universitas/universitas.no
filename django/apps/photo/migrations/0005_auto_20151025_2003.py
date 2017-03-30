@@ -14,11 +14,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='imagefile',
             name='source_md5',
-            field=models.CharField(max_length=32, editable=False, null=True, verbose_name='md5 hash of source file'),
+            field=models.CharField(
+                max_length=32, editable=False, null=True, verbose_name='md5 hash of source file'),
         ),
         migrations.AddField(
             model_name='imagefile',
             name='source_size',
-            field=models.PositiveIntegerField(editable=False, null=True, verbose_name='size of file in bytes'),
+            field=models.PositiveIntegerField(
+                editable=False, null=True, verbose_name='size of file in bytes'),
         ),
     ]
