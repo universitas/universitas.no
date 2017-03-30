@@ -58,6 +58,9 @@ for arg; do case $arg in
   flower )
     docker-compose run --rm -p 5555:5555 django flower
     ;;
+  jupyter )
+    docker-compose run --rm -p 8888:8888 django jupyter
+    ;;
   test )
     docker-compose run --rm web pytest
     ;;
