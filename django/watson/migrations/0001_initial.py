@@ -23,10 +23,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SearchEntry',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('engine_slug', models.CharField(default='default', max_length=200, db_index=True)),
+                ('id', models.AutoField(verbose_name='ID',
+                                        serialize=False, auto_created=True, primary_key=True)),
+                ('engine_slug', models.CharField(
+                    default='default', max_length=200, db_index=True)),
                 ('object_id', models.TextField()),
-                ('object_id_int', models.IntegerField(db_index=True, null=True, blank=True)),
+                ('object_id_int', models.IntegerField(
+                    db_index=True, null=True, blank=True)),
                 ('title', models.CharField(max_length=1000)),
                 ('description', models.TextField(blank=True)),
                 ('content', models.TextField(blank=True)),

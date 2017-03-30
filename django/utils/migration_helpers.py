@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.core import serializers
 
+
 def load_fixture(fixture_file):
     def _load(apps, schema_editor):
         original_apps = serializers.python.apps
@@ -15,6 +16,7 @@ def load_fixture(fixture_file):
             serializers.python.apps = original_apps
 
     return _load
+
 
 def unload_fixture(appname, models=[]):
     def _unload(apps, schema_editor):

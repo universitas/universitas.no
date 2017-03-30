@@ -347,7 +347,8 @@ class Advert(models.Model):
             value = getattr(self.imagefile, axis)
         except (AttributeError, FileNotFoundError):
             try:
-                value = getattr(self.ad_channels.first().ad_formats.first(), axis)
+                value = getattr(
+                    self.ad_channels.first().ad_formats.first(), axis)
             except AttributeError:
                 value = None
 

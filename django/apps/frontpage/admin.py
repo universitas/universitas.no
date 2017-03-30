@@ -21,7 +21,7 @@ class StoryModuleInline(admin.TabularInline):
 class FrontpageStoryAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin):
     form = modelform_factory(FrontpageStory, exclude=())
     form.Meta.widgets = {
-        'lede': admin.widgets.AdminTextareaWidget(attrs={'rows':3})
+        'lede': admin.widgets.AdminTextareaWidget(attrs={'rows': 3})
     }
     save_on_top = True
     list_per_page = 25

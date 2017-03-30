@@ -19,7 +19,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='position',
             name='groups',
-            field=models.ManyToManyField(help_text='Group membership', to='auth.Group'),
+            field=models.ManyToManyField(
+                help_text='Group membership', to='auth.Group'),
             preserve_default=True,
         ),
     ]

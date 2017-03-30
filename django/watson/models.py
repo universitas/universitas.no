@@ -13,6 +13,7 @@ try:
 except ImportError:
     from django.contrib.contenttypes.generic import GenericForeignKey
 
+
 def has_int_pk(model):
     """Tests whether the given model has an integer primary key."""
     pk = model._meta.pk
@@ -34,9 +35,9 @@ class SearchEntry(models.Model):
     """An entry in the search index."""
 
     engine_slug = models.CharField(
-        max_length = 200,
-        db_index = True,
-        default = "default",
+        max_length=200,
+        db_index=True,
+        default="default",
     )
 
     content_type = models.ForeignKey(
@@ -46,28 +47,28 @@ class SearchEntry(models.Model):
     object_id = models.TextField()
 
     object_id_int = models.IntegerField(
-        blank = True,
-        null = True,
-        db_index = True,
+        blank=True,
+        null=True,
+        db_index=True,
     )
 
     object = GenericForeignKey()
 
     title = models.CharField(
-        max_length = 1000,
+        max_length=1000,
     )
 
     description = models.TextField(
-        blank = True,
+        blank=True,
     )
 
     content = models.TextField(
-        blank = True,
+        blank=True,
     )
 
     url = models.CharField(
-        max_length = 1000,
-        blank = True,
+        max_length=1000,
+        blank=True,
     )
 
     meta_encoded = models.TextField()
@@ -75,7 +76,8 @@ class SearchEntry(models.Model):
     def _deserialize_meta(self):
         from watson.search import SearchEngine
         engine = SearchEngine._created_engines[self.engine_slug]
-        model = ContentType.objects.get_for_id(self.content_type_id).model_class()
+        model = ContentType.objects.get_for_id(
+            self.content_type_id).model_class()
         adapter = engine.get_adapter(model)
         return adapter.deserialize_meta(self.meta_encoded)
 

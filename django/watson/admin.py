@@ -21,12 +21,14 @@ class WatsonSearchChangeList(ChangeList):
         search_fields = self.search_fields
         self.search_fields = ()
         try:
-            qs = super(WatsonSearchChangeList, self).get_queryset(*args, **kwargs)
+            qs = super(WatsonSearchChangeList,
+                       self).get_queryset(*args, **kwargs)
         finally:
             self.search_fields = search_fields
         # Do the full text searching.
         if self.query.strip():
-            qs = self.model_admin.search_engine.filter(qs, self.query, ranking=False)
+            qs = self.model_admin.search_engine.filter(
+                qs, self.query, ranking=False)
         return qs
 
 
@@ -54,7 +56,8 @@ class SearchAdmin(admin.ModelAdmin):
         # Check that the search fields are valid.
         for search_field in self.search_fields or ():
             if search_field[0] in ("^", "@", "="):
-                raise ValueError("SearchAdmin does not support search fields prefixed with '^', '=' or '@'")
+                raise ValueError(
+                    "SearchAdmin does not support search fields prefixed with '^', '=' or '@'")
         # Register with the search engine.
         self.register_model_with_watson()
         # Set up revision contexts on key methods, just in case.
@@ -68,9 +71,10 @@ class SearchAdmin(admin.ModelAdmin):
         if not self.search_engine.is_registered(self.model) and self.search_fields:
             self.search_engine.register(
                 self.model,
-                fields = self.search_fields,
-                adapter_cls = self.search_adapter_cls,
-                get_live_queryset = lambda self_: None,  # Ensure complete queryset is used in admin.
+                fields=self.search_fields,
+                adapter_cls=self.search_adapter_cls,
+                # Ensure complete queryset is used in admin.
+                get_live_queryset=lambda self_: None,
             )
 
     def get_changelist(self, request, **kwargs):

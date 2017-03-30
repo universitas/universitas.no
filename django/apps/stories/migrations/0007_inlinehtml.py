@@ -14,7 +14,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='InlineHtml',
             fields=[
-                ('storyelement_ptr', models.OneToOneField(primary_key=True, serialize=False, parent_link=True, auto_created=True, to='stories.StoryElement')),
+                ('storyelement_ptr', models.OneToOneField(primary_key=True, serialize=False,
+                                                          parent_link=True, auto_created=True, to='stories.StoryElement')),
                 ('bodytext_html', models.TextField()),
             ],
             options={

@@ -5,6 +5,7 @@ from utils.migration_helpers import unload_fixture, load_fixture
 
 fixture = Path(__file__).parent / 'markup_tags.json'
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
