@@ -15,13 +15,3 @@ EMAIL_HOST_PASSWORD = gmail.password or 'password'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-
-NOTEBOOK_ARGUMENTS = [
-    '--no-browser',
-    '--port=8888',
-    '--ip=0.0.0.0',
-    '--NotebookApp.token=""',
-    '--NotebookApp.password=""',
-    '--notebook-dir',
-    path('notebooks')
-]

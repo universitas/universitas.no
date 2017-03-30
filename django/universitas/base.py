@@ -218,3 +218,14 @@ WEBPACK_LOADER = {
         'STATS_FILE': env.BUILD_DIR + 'webpack-stats.json',
     }
 }
+
+
+NOTEBOOK_ARGUMENTS = [
+    '--no-browser',
+    '--port=8888',
+    '--ip=0.0.0.0',
+    '--NotebookApp.token=""',
+    '--NotebookApp.password="{}"'.format(env.NOTEBOOK_PASSWORD),
+    '--notebook-dir',
+    path('notebooks')
+]
