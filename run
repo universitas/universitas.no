@@ -71,6 +71,11 @@ for arg; do case $arg in
     echo "running webserver"
     docker-compose up
     ;;
+  dbdump )
+    DUMP=$(date +"dbdump_%d-%m-%Y_%H.%M.%S.sql")
+    echo "dumping database to $DUMP"
+    docker-compose exec postgres pg_dump --no-owner -U postgres -d postgres > $DUMP
+    ;;
   enable )
     echo "enable systemd service"
     # must run as root
