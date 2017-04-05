@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   django:
-    image: universitas/django:latest
+    image: universitas/django:1.11
     volumes:
       - ./django:/app
       - ./logs:/var/logs
