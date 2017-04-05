@@ -18,7 +18,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import URLValidator, ValidationError
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
-from django.template import Context, Template
+from django.template import Template
 from django.template.loader import get_template
 # from django.contrib.postgres.fields import JSONField
 
@@ -309,7 +309,7 @@ class TextContent(models.Model, MarkupModelMixin):
             else:  # Inline element.
                 sections.append(main_body)
                 paragraph = Template(paragraph).render(
-                    Context({"story": self, "index": index, }))
+                    {"story": self, "index": index, })
                 sections.append(paragraph)
                 main_body = []
 
@@ -329,7 +329,7 @@ class TextContent(models.Model, MarkupModelMixin):
                 })
 
         t = get_template(self.template_name)
-        html = t.render(Context({"blocks": blocks}))
+        html = t.render({"blocks": blocks})
         return html
 
     def insert_urls_in_links(self, text):

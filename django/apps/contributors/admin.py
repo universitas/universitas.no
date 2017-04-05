@@ -4,9 +4,9 @@ Admin for contributors app.
 """
 
 from django.contrib import admin
-from django.template import Context, Template
+from django.template import Template
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
+# from django.utils.translation import ugettext_lazy as _
 
 from autocomplete_light.forms import modelform_factory
 
@@ -17,7 +17,7 @@ from apps.stories.admin import BylineInline
 def byline_image(obj):
     t = Template("{% load byline_image %}{% byline_image contributor size %}")
     d = {"contributor": obj, "size": "80x80"}
-    html = t.render(Context(d))
+    html = t.render(d)
     return mark_safe(html)
 
 
