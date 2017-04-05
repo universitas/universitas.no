@@ -22,23 +22,6 @@ for arg; do case $arg in
     echo "populating database with fake data"
     docker-compose run --rm web django-admin fake_content -c10 -s50
     ;;
-  fetchdb )
-    set -e
-    SERVER=tassen.no
-    DB=www_universitas_no
-    echo "creating db dump from server $SERVER"
-    ssh $SERVER "pg_dump --no-owner --dbname=$DB --file=/tmp/dbdump.sql"
-    echo "copying db dump from server"
-    rsync --remove-source-files --compress $SERVER:/tmp/dbdump.sql django/dbdump.sql
-
-    # loading data
-    docker-compose down
-    docker-compose run --rm web load_db
-
-    # cleanup
-    rm django/dbdump.sql
-    echo "done"
-    ;;
   build )
     docker-compose down
     echo "building"
@@ -71,10 +54,24 @@ for arg; do case $arg in
     echo "running webserver"
     docker-compose up
     ;;
-  dbdump )
+  dumpdb )
     DUMP=$(date +"dbdump_%d-%m-%Y_%H.%M.%S.sql")
+    docker-compose up -d postgres
     echo "dumping database to $DUMP"
     docker-compose exec postgres pg_dump --no-owner -U postgres -d postgres > $DUMP
+    ;;
+  loaddb )
+    dumpfile=$(ls *.sql -1t | head -n1)
+    [[ "" = $dumpfile ]] && exit 1
+    echo "found database dump: $dumpfile"
+    cp $dumpfile django/dbdump.sql
+    # loading data
+    docker-compose down
+    docker-compose run --rm web load_db
+
+    # cleanup
+    rm django/dbdump.sql
+    echo "done"
     ;;
   enable )
     echo "enable systemd service"
@@ -83,7 +80,6 @@ for arg; do case $arg in
     systemctl enable universitas.service
     systemctl start universitas.service
     ;;
-
 
 esac; done
 docker ps
