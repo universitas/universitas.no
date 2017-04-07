@@ -2,6 +2,7 @@
 
 from .dev import *  # noqa
 from .dev import (
+    TEMPLATES,
     WEBPACK_LOADER, DEBUG, INSTALLED_APPS, MIDDLEWARE_CLASSES, DATABASES, env
 )
 from .setting_helpers import Environment
@@ -21,6 +22,7 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 STATIC_ROOT = env.STATIC_DIR or '/static/'
 STATIC_URL = '/static/'
 
+TEMPLATES[0]['OPTIONS']['string_if_invalid'] = 'INVALID'
 
 aws = Environment('AWS')
 try:
@@ -50,6 +52,10 @@ except AttributeError:
 
 if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
+        'DISABLE_PANELS': {
+            'debug_toolbar.panels.redirects.RedirectsPanel',
+            'debug_toolbar.panels.templates.TemplatesPanel'
+        },
         "SHOW_TOOLBAR_CALLBACK": lambda request: True
     }
 

@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 # @register.inclusion_tag('universitas-menu.html')
-@register.inclusion_tag('old-menu.html')
-def universitas_menu(active_section):
+@register.inclusion_tag('old-menu.html', takes_context=True)
+def universitas_menu(context, active_section):
 
     sections = [
         Section.objects.get(title__iexact=title) for title in [
@@ -25,12 +25,13 @@ def universitas_menu(active_section):
     latest_pdf = PrintIssue.objects.exclude(pdf=None).order_by(
         'issue__publication_date', 'pk').last()
 
-    context = {
+    return  {
         'sections': sections,
         'active_section': active_section,
         'latest_pdf': latest_pdf,
+        'staff': context['staff'],
+        'office': context['office'],
     }
-    return context
 
 
 @register.inclusion_tag('top-stories.html')

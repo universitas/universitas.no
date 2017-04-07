@@ -5,10 +5,10 @@
   <div class="medium-6 columns">
     <h3>Generell kontaktinfo</h3>
     <table>
-    <tr><td>Telefon:<td>22 85 33 36
-    <tr><td>Faks:<td>22 85 32 74
-    <tr><td>Postadresse:<td>Boks 89 Blindern, 0314 Oslo
-    <tr><td>Besøksadresse:<td>Moltke Moes vei 33
+    <tr><td>Telefon:<td>{{ office.phone }}
+    <tr><td>Faks:<td>{{ office.fax }}
+    <tr><td>Postadresse:<td>{{ office.mail }}
+    <tr><td>Besøksadresse:<td>{{ office.address }}
     </table>
     <h3>Utgivelsesplan</h3>
     <p>Neste avis er nr {{ issues.next.number }} og kommer ut {{ issues.next.publication_date }}.</p>

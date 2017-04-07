@@ -10,9 +10,9 @@
       <div class="row">
         <div class="panel-1">
           <p>Norges største studentavis</p>
-          <p>Telefon: 22 85 33 36</p>
-          <p>Postadresse: Boks 89 Blindern, 0314 Oslo</p>
-          <p>Besøksadresse: Moltke Moes vei 33</p>
+          <p>Telefon: {{ office.phone }}</p>
+          <p>Postadresse: {{ office.mail }}</p>
+          <p>Besøksadresse: {{ office.address }}</p>
           <div class="follow-us">
             <a href="https://www.facebook.com/UniversitasOslo">
               <i class="icon -facebook"></i>
@@ -23,7 +23,7 @@
             <a href="mailto:universitas@universitas.no" title="universitas@universitas.no">
               <i class="icon -mail"></i>
             </a>
-            <a href="tel:+4722853336" title="22 85 33 36">
+            <a href="tel:+47{{ office.phone }}" title="{{ office.phone }}">
               <i class="icon -phone"></i>
             </a>
           </div>
