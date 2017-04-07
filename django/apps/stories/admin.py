@@ -127,10 +127,8 @@ class ImageInline(admin.TabularInline, ThumbAdmin, ):
     form = modelform_factory(StoryImage, exclude=())
     formfield_overrides = {
         models.CharField: {
-            'widget': Textarea(
-                attrs={
-                    'rows': 5,
-                    'cols': 30})},
+            'widget': Textarea(attrs={'rows': 5, 'cols': 30})
+        },
     }
     model = StoryImage
     fields = [
@@ -175,9 +173,7 @@ class StoryAdmin(admin.ModelAdmin):
         # 'display_bylines', 'image_count'
     ]
 
-    list_editable = [
-        # 'publication_status',
-    ]
+    # list_editable = [ 'publication_status', ]
 
     readonly_fields = [
         'legacy_html_source',
