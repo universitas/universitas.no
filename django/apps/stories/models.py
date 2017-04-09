@@ -18,7 +18,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import URLValidator, ValidationError
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
-from django.template import Template
+from django.template import Template, Context
 from django.template.loader import get_template
 # from django.contrib.postgres.fields import JSONField
 
@@ -309,7 +309,8 @@ class TextContent(models.Model, MarkupModelMixin):
             else:  # Inline element.
                 sections.append(main_body)
                 paragraph = Template(paragraph).render(
-                    {"story": self, "index": index, })
+                    Context({"story": self, "index": index})
+                )
                 sections.append(paragraph)
                 main_body = []
 
