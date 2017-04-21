@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ Content in the publication. """
 
 # Python standard library
@@ -32,6 +31,7 @@ import os.path
 
 from utils.model_mixins import Edit_url_mixin
 logger = logging.getLogger('universitas')
+IssueTuple = collections.namedtuple('IssueTuple', ['number', 'date'])
 
 
 def upload_pdf_to(instance, filename):
@@ -40,10 +40,9 @@ def upload_pdf_to(instance, filename):
 
 
 def extract_pdf_text(pdf_data, first_page, last_page=None):
-    """ Extracts text from a page in the pdf """
+    """Extracts text from a page in the pdf"""
     if last_page is None:
         last_page = first_page
-    # pdftotext stdin and stdout
     args = ['pdftotext', '-f', first_page, '-l', last_page, '-', '-']
     args = [str(a) for a in args]
     text = subprocess.run(
@@ -55,7 +54,7 @@ def extract_pdf_text(pdf_data, first_page, last_page=None):
 
 
 def pdf_not_found(pdf_name):
-    """Creates an error frontpage"""
+    """Creates an error frontpage image"""
     img = WandImage(width=300, height=500,)
     msg = 'ERROR:\n{}\nnot found on disk'.format(pdf_name)
     with Drawing() as draw:
@@ -63,8 +62,6 @@ def pdf_not_found(pdf_name):
         draw.text(img.width // 2, img.height // 3, msg)
         draw(img)
     return img
-
-IssueTuple = collections.namedtuple('IssueTuple', ['number', 'date'])
 
 
 def current_issue():

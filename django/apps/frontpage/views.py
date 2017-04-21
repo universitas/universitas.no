@@ -66,10 +66,10 @@ def frontpage_layout(blocks):
                 if story.imagefile:
                     image = story.imagefile
                     source = image.source_file
-                    crop = image.get_crop()
+                    crop_box = image.get_crop_box()
                 else:
                     source = None
-                    crop = None
+                    crop_box = None
 
                 headline_size = 'xl'
                 headline = story.headline
@@ -89,7 +89,7 @@ def frontpage_layout(blocks):
                         height=MIN_H + PIX_H * floorheight,
                     ),
                     'image': source,
-                    'crop': crop,
+                    'crop_box': crop_box,
                     'story': story,
                     'url': story.url,
                     'alt': story.headline,

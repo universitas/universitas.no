@@ -1,30 +1,28 @@
-# -*- coding: utf-8 -*-
 """ Photography and image files in the publication  """
+
 # Python standard library
-# import os
 import os
 import hashlib
 import logging
-from collections import namedtuple
 
 # Django core
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.files import File
-# Installed apps
 
+# Installed apps
 from model_utils.models import TimeStampedModel
 from utils.model_mixins import Edit_url_mixin
 from sorl import thumbnail
 from slugify import Slugify
-# from boto.utils import parse_ts
 import boto
 
 # Project apps
 from apps.issues.models import current_issue
-# from .autocrop import AutoCropImage, Cropping
+
+from .autocropimage import AutoCropImage
+
 logger = logging.getLogger(__name__)
 
 
@@ -64,37 +62,6 @@ def upload_image_to(instance, filename):
     )
 
 
-Cropping = namedtuple('Cropping', ['top', 'left', 'diameter'])
-
-
-class AutoCropImage(models.Model):
-    CROP_NONE = 0
-    CROP_PENDING = 1
-    CROP_FEATURES = 5
-    CROP_PORTRAIT = 15
-    CROP_FACES = 10
-    CROP_MANUAL = 100
-
-    CROP_CHOICES = (
-        (CROP_NONE, _('center')),
-        (CROP_PENDING, _('pending')),
-        (CROP_FEATURES, _('corner detection')),
-        (CROP_FACES, _('multiple faces')),
-        (CROP_PORTRAIT, _('single face')),
-        (CROP_MANUAL, _('manual crop')),
-    )
-
-    class Meta:
-        abstract = True
-
-    cropping_method = models.PositiveSmallIntegerField(
-        verbose_name=_('cropping method'),
-        choices=CROP_CHOICES,
-        default=CROP_PENDING,
-        help_text=_('How this image has been cropped.'),
-    )
-
-
 class ImageFileManager(models.Manager):
 
     def create_from_file(self, filepath, **kwargs):
@@ -118,6 +85,16 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         width_field='full_width',
         max_length=1024,
     )
+    full_height = models.PositiveIntegerField(
+        verbose_name=_('height'),
+        help_text=_('full height in pixels'),
+        null=True, editable=False,
+    )
+    full_width = models.PositiveIntegerField(
+        verbose_name=_('width'),
+        help_text=_('full height in pixels'),
+        null=True, editable=False,
+    )
     _md5 = models.CharField(
         verbose_name=_('md5'),
         help_text=_('md5 hash of source file'),
@@ -136,42 +113,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         help_text=_('mtime timestamp of source file'),
         editable=False,
         null=True,
-    )
-    full_height = models.PositiveIntegerField(
-        verbose_name=_('height'),
-        help_text=_('full height in pixels'),
-        null=True, editable=False,
-    )
-    full_width = models.PositiveIntegerField(
-        verbose_name=_('width'),
-        help_text=_('full height in pixels'),
-        null=True, editable=False,
-    )
-    from_top = models.PositiveSmallIntegerField(
-        verbose_name=_('from top'),
-        default=50,
-        help_text=_('image crop vertical. Between 0% and 100%.'),
-        validators=[MaxValueValidator(100), MinValueValidator(0)],
-    )
-    from_left = models.PositiveSmallIntegerField(
-        verbose_name=_('from left'),
-        default=50,
-        help_text=_('image crop horizontal. Between 0% and 100%.'),
-        validators=[MaxValueValidator(100), MinValueValidator(0)],
-    )
-    crop_diameter = models.PositiveSmallIntegerField(
-        verbose_name=_('crop diameter'),
-        default=100,
-        help_text=_(
-            'area containing most relevant content. Area is considered a '
-            'circle with center x,y and diameter d where x and y are the '
-            'values "from_left" and "from_right" and d is a percentage of '
-            'the shortest axis. This is used for close cropping of some '
-            'images, for instance byline photos.'
-        ),
-        validators=[
-            MaxValueValidator(100),
-            MinValueValidator(0)],
     )
 
     old_file_path = models.CharField(
@@ -202,23 +143,10 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         else:
             return super(ImageFile, self).__str__()
 
-    def autocrop(self):
-        self.cropping_method = self.CROP_PENDING
-        self.save()
-
     def save(self, *args, **kwargs):
         self.md5, self.size, self.mtime = (None, None, None)
         # refresh values
         self.md5, self.size, self.mtime
-        try:
-            saved = type(self).objects.get(id=self.pk)
-        except ImageFile.DoesNotExist:
-            pass
-        else:
-            if all((self.cropping_method != self.CROP_PENDING,
-                    saved.cropping_method != self.CROP_PENDING,
-                    saved.cropping != self.cropping)):
-                self.cropping_method = self.CROP_MANUAL
         super().save(*args, **kwargs)
 
     def save_local_image_as_source(self, filepath, save=True):
@@ -303,75 +231,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         slug = '.'.join(segment.strip('-') for segment in slugs)
         return slug
 
-    def thumb(self, height=315, width=600):
-        geometry = '{}x{}'.format(width, height)
-        try:
-            return thumbnail.get_thumbnail(
-                self.source_file,
-                geometry,
-                crop=self.get_crop()).url
-        except Exception as e:
-            msg = 'Thumbnail failed: {} {}'.format(e, self.source_file)
-            logger.warn(msg)
-            return self.source_file
-
-    @property
-    def cropping(self):
-        return Cropping(
-            top=self.from_top,
-            left=self.from_left,
-            diameter=self.crop_diameter)
-
-    @cropping.setter
-    def cropping(self, _crop):
-        crop = Cropping(*_crop)
-        self.from_top = crop.top
-        self.from_left = crop.left
-        self.crop_diameter = crop.diameter
-
-    @cropping.deleter
-    def cropping(self):
-        field_names = (
-            'from_top', 'from_left', 'crop_diameter', 'cropping_method')
-        for field_name in field_names:
-            field = self._meta.get_field(field_name)
-            setattr(self, field.name, field.default)
-
-    def get_crop(self):
-        """ return center point of image in percent from top and left. """
-        return '{h}% {v}%'.format(h=self.from_left, v=self.from_top)
-
-    # def compare_and_update(self, filepath):
-    #     """Check for changes and update stored source file if needed."""
-    #     mtime = os.stat(filepath).st_mtime
-    #     size = os.stat(filepath).st_size
-    #     md5 = local_md5(filepath)
-    #     if mtime > self.mtime and (size, md5) != (self.size, self.md5):
-    #         self.mtime = mtime
-    #         self.md5 = md5
-    #         self.size = size
-    #         self.source_file
-
-    # def identify_photo_file_initials(self, contributors=(),):
-    #     """Assign contributor to photo
-    #
-    #     If passed a file path that matches the Universitas format for photo
-    #     credit. Searches database or optional iterable of contributors for a
-    #     person that matches initials at end of jpg-file name
-    #     """
-    #     from apps.contributors.models import Contributor
-    #     filename_pattern = re.compile(r'^.+[-_]([A-ZÆØÅ]{2,5})\.jp.?g$')
-    #     match = filename_pattern.match(self.source_file.name)
-    #     if match:
-    #         initials = match.groups()[0]
-    #         for contributor in contributors:
-    #             if contributor.initials == initials:
-    #                 return contributor
-    #         try:
-    #             return Contributor.objects.get(initials=initials)
-    #         except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
-    #             logger.warning(self, initials, e)
-    #     return None
 
 
 class ProfileImage(ImageFile):

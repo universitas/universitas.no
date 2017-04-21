@@ -1,7 +1,7 @@
 {% load thumbnail %}
 {% with contributor.get_byline_image as img %}
 {% if img %}
-{% thumbnail img.source_file image_size colorspace="GRAY" crop=img.get_crop diameter=img.crop_diameter as thumb %}
+{% thumbnail img.source_file image_size colorspace="GRAY" crop_box=img.get_crop_box as thumb %}
 <div class="byline_image">
       <img src="{{ thumb.url }}" alt="{{ contributor.name }}">
 </div>

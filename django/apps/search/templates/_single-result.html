@@ -6,7 +6,7 @@
       {% with story.main_image as image %}
         {% if image %}
           <div class="image">
-            {% thumbnail image.imagefile.source_file "120x120" diameter=image.imagefile.crop_diameter crop=image.imagefile.get_crop as thumb %}
+            {% thumbnail image.imagefile.source_file "120x120" crop_box=image.imagefile.get_crop_box as thumb %}
               <img id="img_{{ image.pk }}" src="{{ thumb.url }}" ></img>
             {% endthumbnail %}
           </div>

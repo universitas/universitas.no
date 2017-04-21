@@ -1,8 +1,9 @@
 """ Face and feature detection with opencv. """
 
-import os
+from pathlib import Path
 import logging
-from collections import namedtuple
+from apps.photo.autocropimage import CropBox
+from .boundingbox import Box
 logger = logging.getLogger(__name__)
 
 
@@ -13,12 +14,18 @@ except ImportError:
     pass
 
 
-Cropping = namedtuple('Cropping', ['top', 'left', 'diameter'])
+def get_haarcascade(filename):
+    DIR = (Path(cv2.__file__) /
+           '../../../../share/OpenCV/haarcascades').resolve()
+    if not DIR.exists():
+        raise RuntimeError('Cannot find OpenCV haarcascades')
+    file = DIR / filename
+    if not file.exists():
+        raise RuntimeError('Cannot find file {file}'.format(file=file))
+    return str(file)
 
-CASCADE_FILE = os.path.join(
-    os.path.dirname(__file__),
-    'haarcascade_frontalface_default.xml'
-)
+
+CASCADE_FILE = get_haarcascade('haarcascade_frontalface_default.xml')
 
 
 def opencv_image(instance, size=400):
@@ -56,18 +63,17 @@ def autocrop(instance):
         cropping = detect_features(grayscale_image)
         cropping_method = instance.CROP_FEATURES
 
-    left = int(round(100 * cropping.left /
-                     grayscale_image.shape[1]))
-    top = int(round(100 * cropping.top /
-                    grayscale_image.shape[0]))
-    diameter = int(round(100 * cropping.diameter /
-                         min(grayscale_image.shape)))
-
+    height, width = grayscale_image.shape[:2]
     del(grayscale_image)  # Might save some memory?
 
-    diameter = min(100, diameter)
+    left = cropping.left / width
+    top = cropping.top / height
+    right = cropping.right / width
+    bottom = cropping.bottom / height
 
-    return left, top, diameter, cropping_method
+    x, y = (left + right) / 2, (top + bottom) / 2
+
+    return CropBox(left, top, right, bottom, x, y), cropping_method
 
 
 def detect_faces(cv2img,):
@@ -130,14 +136,7 @@ def detect_faces(cv2img,):
             face_bottom, box.get('bottom', face_bottom))
 
     if horizontal_faces:
-        left = sum(horizontal_faces) / len(horizontal_faces)
-        top = sum(vertical_faces) / len(vertical_faces)
-        diameter = max(
-            box['right'] - box['left'],
-            box['bottom'] - box['top']
-        )
-        return Cropping(
-            left=left, top=top, diameter=diameter), len(faces)
+        return Box(**box), len(faces)
     else:
         # No faces found
         return None, len(faces)
@@ -180,7 +179,6 @@ def detect_features(cv2img):
     yy = corners.ravel()[1::2]
     w = max(xx) - min(xx)
     h = max(yy) - min(yy)
-    d = max(w, h)
     x = xx.mean()
     y = yy.mean()
-    return Cropping(left=x, top=y, diameter=d)
+    return Box(x - w / 2, y - h / 2, x + w / 2, x + h / 2)

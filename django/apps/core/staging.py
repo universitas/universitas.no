@@ -16,24 +16,25 @@ BYLINE_DIR = 'BYLINE'
 
 def timestamp(delta, fallback):
     """Calculates seconds since epoch of current time minus delta.
-    If delta is out of range, calculates timestamp of fallback datetime instead.
+    If delta is out of range, calculates timestamp of fallback datetime
+    instead.
     """
     try:
         dt = datetime.now() - delta
     except (OverflowError):
-        # logger.exception('locals:%s' % locals())
+        # date out of bounds
         dt = fallback
     return int(time.mktime(dt.timetuple()))
 
 
 def new_staging_files(
-        staging_subdirectory,
-        fileglob='*.*',
-        min_age=timedelta.min,
-        max_age=timedelta.max):
+        staging_subdirectory, fileglob='*.*',
+        min_age=timedelta.min, max_age=timedelta.max):
     """Check for new or updated files in staging area."""
     directory = os.path.join(
         settings.STAGING_ROOT, staging_subdirectory)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
     os.chdir(directory)
     all_files = glob.glob(fileglob)
     min_mtime = timestamp(min_age, fallback=datetime.max)

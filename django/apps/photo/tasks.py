@@ -11,7 +11,7 @@ from sorl import thumbnail
 
 from apps.core.staging import new_staging_images
 from .models import upload_image_to, ImageFile
-from .autocrop import autocrop
+from .cropping.oldcrop import autocrop
 
 import logging
 logger = logging.getLogger(__name__)
@@ -22,12 +22,11 @@ def post_save_task(instance):
     # logger.info(instance.get_cropping_method_display())
     if instance.cropping_method == instance.CROP_PENDING:
         logger.info('autocrop')
-        left, top, diameter, method = autocrop(instance)
+        box, method = autocrop(instance)
         instance.cropping_method = method
-        instance.cropping = (left, top, diameter)
+        instance.crop_box = box
         assert instance.cropping_method != instance.CROP_PENDING
-        instance.save(update_fields=(
-            'from_top', 'from_left', 'cropping_method', 'crop_diameter'))
+        instance.save(update_fields=('crop_box', 'cropping_method'))
 
     else:
         logger.info('rebuild thumbs')
@@ -37,36 +36,12 @@ def post_save_task(instance):
         instance.thumb()
 
 
-@shared_task()
-def update_image_crop(args):
-    image_pk, left, top, diameter, method = args
-    try:
-        img = ImageFile.objects.get(pk=image_pk)
-    except ImageFile.DoesNotExist:
-        logger.warning('image with pk %s not found' % image_pk)
-    else:
-        img.cropping_method = method
-        img.cropping = (left, top, diameter)
-        img.save()
-
-
-@shared_task()
-def detect_crop(image_pk):
-    """placeholder"""
-    try:
-        img = ImageFile.objects.get(pk=image_pk)
-    except ImageFile.DoesNotExist:
-        logger.warning('image with pk %s not found' % image_pk)
-        return None
-    else:
-        img = ImageFile.objects.get(pk=image_pk)
-        args = (image_pk, *autocrop(img))
-        logger.info('new crop is {}'.format(args))
-        return args
-
-
 @periodic_task(run_every=timedelta(minutes=1))
 def import_staging_images(max_age=timedelta(minutes=10)):
+    """
+    Check staging directories for new or changed image files, and save to
+    database.
+    """
     directory, files = new_staging_images(max_age=max_age)
     files_saved = []
     for file in files:
