@@ -101,7 +101,7 @@ LOGOUT_URL = '/'
 
 # SORL
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
-THUMBNAIL_ENGINE = 'apps.photo.crop_engine.CloseCropEngine'
+THUMBNAIL_ENGINE = 'apps.photo.cropping.crop_engine.CloseCropEngine'
 THUMBNAIL_QUALITY = 75
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
 FILE_UPLOAD_PERMISSIONS = 0o664

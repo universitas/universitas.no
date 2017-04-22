@@ -1,5 +1,5 @@
-
 import cv2
+import numpy
 import abc
 from .boundingbox import Box
 from typing import List, Mapping, Union
@@ -8,10 +8,10 @@ from numpy import ndarray as CVImage
 from pathlib import Path
 
 # type annotation aliases
-FileName = str
+Image = Union[Path, bytes]
 
 
-def get_haarcascade(filename: FileName) -> Path:
+def get_haarcascade(filename: str) -> Path:
     cascade_dir = (Path(cv2.__file__) /
                    '../../../../share/OpenCV/haarcascades').resolve()
     if not cascade_dir.exists():
@@ -84,20 +84,26 @@ class FeatureDetector(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def detect_features(self, fn: FileName) -> List[Feature]:
+    def detect_features(self, source: Image) -> List[Feature]:
         """Find the most salient features of the image."""
         ...
 
     @staticmethod
-    def _opencv_image(fn: str, resize: int=0) -> CVImage:
+    def _opencv_image(source: Image, resize: int=0) -> CVImage:
         """Read image file to grayscale openCV int array.
 
         The OpenCV algorithms works on a two dimensional
         numpy array integers where 0 is black and 255 is
         white. Color images will be converted to grayscale.
         """
-        assert Path(fn).exists(), 'file {} not found'.format(fn)
-        cv_image = cv2.imread(fn)
+        if isinstance(source, Path):
+            assert source.exists(), 'file {} not found'.format(source)
+            source = source.read_bytes()
+        if not isinstance(source, bytes):
+            raise TypeError('incorrect type')
+
+        data = numpy.fromstring(source, numpy.uint8)
+        cv_image = cv2.imdecode(data, cv2.IMREAD_COLOR)
         cv_image = cv2.cvtColor(
             cv_image, cv2.COLOR_BGR2GRAY)
         if resize > 0:
@@ -141,9 +147,9 @@ class MockFeatureDetector(FeatureDetector):
         self._size = imagesize
         self._circles = [m / n for m in range(1, n + 1)]
 
-    def detect_features(self, fn: FileName) -> List[Feature]:
+    def detect_features(self, source: Image) -> List[Feature]:
         """Concentric features at center of the image"""
-        cv_image = self._opencv_image(fn, self._size)
+        cv_image = self._opencv_image(source, self._size)
         img_h, img_w = cv_image.shape[:2]
         middle = Feature(0, 'mock keypoint', 0, 0, img_w, img_h)
         middle.width = middle.height = min(img_w, img_h)
@@ -171,9 +177,9 @@ class KeypointDetector(FeatureDetector):
         _kwargs.update(kwargs)
         self._detector = cv2.ORB_create(**_kwargs)
 
-    def detect_features(self, fn: str) -> List[Feature]:
+    def detect_features(self, source: Image) -> List[Feature]:
         """Find interesting keypoints in the image."""
-        cv_image = self._opencv_image(fn, self._imagesize)
+        cv_image = self._opencv_image(source, self._imagesize)
         keypoints = self._detector.detect(cv_image)
         features = [self._kp_to_feature(kp)
                     for kp in keypoints]
@@ -200,12 +206,12 @@ class Cascade:
 
     """Wrapper for Haar cascade classifier"""
 
-    def __init__(self, label: str, fn: FileName,
+    def __init__(self, label: str, filename: str,
                  size: float=1, weight: float=100) -> None:
         self.label = label
         self.size = size
         self.weight = weight
-        self._file = get_haarcascade(fn)
+        self._file = get_haarcascade(filename)
 
         self.classifier = cv2.CascadeClassifier(str(self._file))
 
@@ -247,9 +253,9 @@ class FaceDetector(FeatureDetector):
         }
         self._kwargs.update(kwargs)
 
-    def detect_features(self, fn: FileName) -> List[Feature]:
+    def detect_features(self, source: Image) -> List[Feature]:
         """Find faces in the image."""
-        cv_image = self._opencv_image(fn, self._imagesize)
+        cv_image = self._opencv_image(source, self._imagesize)
         features = []  # type: List[Feature]
 
         for cascade in self._cascades:
@@ -292,10 +298,10 @@ class HybridDetector(FeatureDetector):
         self.fallback = KeypointDetector(n)
         self.breakpoint = self.BREAKPOINT
 
-    def detect_features(self, fn: FileName) -> List[Feature]:
+    def detect_features(self, source: Image) -> List[Feature]:
         """Find faces and/or keypoints in the image."""
-        faces = self.primary.detect_features(fn)
+        faces = self.primary.detect_features(source)
         if faces and sum(faces).size > self.breakpoint:
             return faces
-        features = faces + self.fallback.detect_features(fn)
+        features = faces + self.fallback.detect_features(source)
         return features[:self._number]

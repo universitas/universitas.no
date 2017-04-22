@@ -1,5 +1,5 @@
 from sorl.thumbnail.engines.wand_engine import Engine as WandEngine
-from .cropping.boundingbox import Box
+from .boundingbox import Box
 
 import logging
 logger = logging.getLogger(__name__)

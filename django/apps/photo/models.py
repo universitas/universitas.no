@@ -21,7 +21,7 @@ import boto
 # Project apps
 from apps.issues.models import current_issue
 
-from .autocropimage import AutoCropImage
+from .cropping.models import AutoCropImage
 
 logger = logging.getLogger(__name__)
 
@@ -144,9 +144,13 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
             return super(ImageFile, self).__str__()
 
     def save(self, *args, **kwargs):
-        self.md5, self.size, self.mtime = (None, None, None)
-        # refresh values
-        self.md5, self.size, self.mtime
+        mtime = self._mtime
+        self.mtime = None
+        if self.mtime != mtime:  # file changed
+            self.md5, self.size = None, None
+        self.mtime
+        self.md5
+        self.size
         super().save(*args, **kwargs)
 
     def save_local_image_as_source(self, filepath, save=True):
@@ -230,7 +234,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         slugs[-1] = slugs[-1].lower().replace('jpeg', 'jpg')
         slug = '.'.join(segment.strip('-') for segment in slugs)
         return slug
-
 
 
 class ProfileImage(ImageFile):

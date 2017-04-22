@@ -40,8 +40,9 @@ AliasAdmin	django/apps/markup/admin.py	/^class AliasAdmin(admin.ModelAdmin):$/;"
 AliasManager	django/apps/markup/models.py	/^class AliasManager(TagManager):$/;"	c
 Aside	django/apps/stories/models.py	/^class Aside(TextContent, StoryElement):$/;"	c
 AsideInline	django/apps/stories/admin.py	/^class AsideInline(admin.TabularInline, ):$/;"	c
-AutoCropImage	django/apps/photo/models.py	/^class AutoCropImage(models.Model):$/;"	c
+AutoCropImage	django/apps/photo/cropping/models.py	/^class AutoCropImage(models.Model):$/;"	c
 BASE_DIR	django/universitas/base.py	/^BASE_DIR = path()$/;"	v
+BREAKPOINT	django/apps/photo/cropping/crop_detector.py	/^    BREAKPOINT = 0.15$/;"	v	class:HybridDetector
 BUNDLE_TIME	django/apps/issues/tasks.py	/^BUNDLE_TIME = crontab(hour=4, minute=0, day_of_week=3)$/;"	v
 BYLINE_CASES	django/notebooks/byline_cases.py	/^BYLINE_CASES = [  # List of cases: ( "Input string", "Expected output" )$/;"	v
 BYLINE_DIR	django/apps/core/staging.py	/^BYLINE_DIR = 'BYLINE'$/;"	v
@@ -52,13 +53,14 @@ Bildetekst	django/apps/legacy_db/models.py	/^class Bildetekst(models.Model):$/;"
 BlockTag	django/apps/markup/models.py	/^class BlockTag(MarkupTag):$/;"	c
 BlockTagAdmin	django/apps/markup/admin.py	/^class BlockTagAdmin(admin.ModelAdmin):$/;"	c
 BlockTagManager	django/apps/markup/models.py	/^class BlockTagManager(TagManager):$/;"	c
+Box	django/apps/photo/cropping/boundingbox.py	/^class Box:$/;"	c
+BoxField	django/apps/photo/cropping/models.py	/^class BoxField(models.Field):$/;"	c
 Byline	django/apps/stories/models.py	/^class Byline(models.Model):$/;"	c
 BylineAdmin	django/apps/stories/admin.py	/^class BylineAdmin(admin.ModelAdmin):$/;"	c
 BylineInline	django/apps/stories/admin.py	/^class BylineInline(admin.TabularInline):$/;"	c
 BylineManager	django/apps/stories/models.py	/^class BylineManager(models.Manager):$/;"	c
 CACHES	django/universitas/base.py	/^CACHES = {$/;"	v
 CACHE_MIDDLEWARE_KEY_PREFIX	django/universitas/base.py	/^CACHE_MIDDLEWARE_KEY_PREFIX = SITE_URL$/;"	v
-CASCADE_FILE	django/apps/photo/autocrop.py	/^CASCADE_FILE = os.path.join($/;"	v
 CATEGORY_CHOICES	django/apps/adverts/models.py	/^    CATEGORY_CHOICES = [(PRINT, _('print')), (WEB, _('web')), ]$/;"	v	class:AdFormat
 CELERYD_HIJACK_ROOT_LOGGER	django/universitas/base.py	/^CELERYD_HIJACK_ROOT_LOGGER = False$/;"	v
 CELERY_ACCEPT_CONTENT	django/universitas/base.py	/^CELERY_ACCEPT_CONTENT = ['json', 'pickle']$/;"	v
@@ -72,16 +74,17 @@ CELERY_TASK_SERIALIZER	django/universitas/base.py	/^CELERY_TASK_SERIALIZER = 'js
 CODE_AD	django/apps/adverts/models.py	/^    CODE_AD = 2$/;"	v	class:Advert
 CONVERT	django/apps/issues/tasks.py	/^CONVERT = '\/usr\/bin\/convert'$/;"	v
 CREDIT_CHOICES	django/apps/stories/models.py	/^    CREDIT_CHOICES = [$/;"	v	class:Byline
-CROP_CHOICES	django/apps/photo/models.py	/^    CROP_CHOICES = ($/;"	v	class:AutoCropImage
-CROP_FACES	django/apps/photo/models.py	/^    CROP_FACES = 10$/;"	v	class:AutoCropImage
-CROP_FEATURES	django/apps/photo/models.py	/^    CROP_FEATURES = 5$/;"	v	class:AutoCropImage
-CROP_MANUAL	django/apps/photo/models.py	/^    CROP_MANUAL = 100$/;"	v	class:AutoCropImage
-CROP_NONE	django/apps/photo/models.py	/^    CROP_NONE = 0$/;"	v	class:AutoCropImage
-CROP_PENDING	django/apps/photo/models.py	/^    CROP_PENDING = 1$/;"	v	class:AutoCropImage
-CROP_PORTRAIT	django/apps/photo/models.py	/^    CROP_PORTRAIT = 15$/;"	v	class:AutoCropImage
+CROP_CHOICES	django/apps/photo/cropping/models.py	/^    CROP_CHOICES = ($/;"	v	class:AutoCropImage
+CROP_FACES	django/apps/photo/cropping/models.py	/^    CROP_FACES = 10$/;"	v	class:AutoCropImage
+CROP_FEATURES	django/apps/photo/cropping/models.py	/^    CROP_FEATURES = 5$/;"	v	class:AutoCropImage
+CROP_MANUAL	django/apps/photo/cropping/models.py	/^    CROP_MANUAL = 100$/;"	v	class:AutoCropImage
+CROP_NONE	django/apps/photo/cropping/models.py	/^    CROP_NONE = 0$/;"	v	class:AutoCropImage
+CROP_PENDING	django/apps/photo/cropping/models.py	/^    CROP_PENDING = 1$/;"	v	class:AutoCropImage
+CROP_PORTRAIT	django/apps/photo/cropping/models.py	/^    CROP_PORTRAIT = 15$/;"	v	class:AutoCropImage
 CachedTag	django/apps/markup/models.py	/^class CachedTag(models.Model):$/;"	c
+Cascade	django/apps/photo/cropping/crop_detector.py	/^class Cascade:$/;"	c
 ChannelAdmin	django/apps/adverts/admin.py	/^class ChannelAdmin(admin.ModelAdmin):$/;"	c
-CloseCropEngine	django/apps/photo/thumb_utils.py	/^class CloseCropEngine(WandEngine):$/;"	c
+CloseCropEngine	django/apps/photo/cropping/crop_engine.py	/^class CloseCropEngine(WandEngine):$/;"	c
 Command	django/apps/core/management/commands/fake_content.py	/^class Command(BaseCommand):$/;"	c
 Command	django/apps/issues/management/commands/find_pdf_files.py	/^class Command(BaseCommand):$/;"	c
 Command	django/apps/issues/management/commands/web_pdf.py	/^class Command(BaseCommand):$/;"	c
@@ -98,8 +101,7 @@ Command	django/watson/management/commands/uninstallwatson.py	/^class Command(Bas
 Contributor	django/apps/contributors/models.py	/^class Contributor(models.Model):$/;"	c
 ContributorAdmin	django/apps/contributors/admin.py	/^class ContributorAdmin(admin.ModelAdmin):$/;"	c
 ContributorsAppConfig	django/apps/contributors/appconf.py	/^class ContributorsAppConfig(AppConfig):$/;"	c
-Cropping	django/apps/photo/autocrop.py	/^Cropping = namedtuple('Cropping', ['top', 'left', 'diameter'])$/;"	v
-Cropping	django/apps/photo/models.py	/^Cropping = namedtuple('Cropping', ['top', 'left', 'diameter'])$/;"	v
+CropBox	django/apps/photo/cropping/models.py	/^class CropBox(Box):$/;"	c
 CustomS3BotoStorage	django/utils/aws_custom_storage.py	/^class CustomS3BotoStorage(S3BotoStorage):$/;"	c
 Customer	django/apps/adverts/models.py	/^class Customer(models.Model):$/;"	c
 CustomerAdmin	django/apps/adverts/admin.py	/^class CustomerAdmin(admin.ModelAdmin):$/;"	c
@@ -156,7 +158,11 @@ FIXTURE	django/apps/adverts/migrations/0003_universitas_ad_channels.py	/^FIXTURE
 FIXTURE_DIRS	django/universitas/base.py	/^FIXTURE_DIRS = [path('fixtures')]$/;"	v
 FLAGG_CHOICES	django/apps/legacy_db/models.py	/^    FLAGG_CHOICES = ($/;"	v	class:Prodsak
 FONT_FILE	django/apps/adverts/dummy_image_advert.py	/^FONT_FILE = os.path.join(os.path.dirname(__file__), 'arial.ttf')$/;"	v
+FORM_RENDERER	django/universitas/base.py	/^FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'$/;"	v
+FaceDetector	django/apps/photo/cropping/crop_detector.py	/^class FaceDetector(FeatureDetector):$/;"	c
 Fakta	django/apps/legacy_db/models.py	/^class Fakta(models.Model):$/;"	c
+Feature	django/apps/photo/cropping/crop_detector.py	/^class Feature(Box):$/;"	c
+FeatureDetector	django/apps/photo/cropping/crop_detector.py	/^class FeatureDetector(abc.ABC):$/;"	c
 FileRevNode	django/apps/core/templatetags/gulp_rev_staticfiles.py	/^class FileRevNode(StaticNode):$/;"	c
 FrontPageModule	django/apps/frontpage/models.py	/^class FrontPageModule(TimeStampedModel, Edit_url_mixin):$/;"	c
 Frontpage	django/apps/frontpage/models.py	/^class Frontpage(TimeStampedModel):$/;"	c
@@ -170,6 +176,7 @@ GHOSTSCRIPT	django/apps/issues/tasks.py	/^GHOSTSCRIPT = '\/usr\/bin\/ghostscript
 HTTP_STATUS_CODES	django/apps/stories/status_codes.py	/^HTTP_STATUS_CODES = [$/;"	v
 HtmlInline	django/apps/stories/admin.py	/^class HtmlInline(admin.TabularInline, ):$/;"	c
 HumansTxtView	django/apps/core/views.py	/^class HumansTxtView(TextTemplateView):$/;"	c
+HybridDetector	django/apps/photo/cropping/crop_detector.py	/^class HybridDetector(FeatureDetector):$/;"	c
 IMAGES_DIR	django/apps/core/staging.py	/^IMAGES_DIR = 'IMAGES'$/;"	v
 IMAGE_AD	django/apps/adverts/models.py	/^    IMAGE_AD = 1$/;"	v	class:Advert
 IMAGE_TAG	django/apps/stories/models.py	/^IMAGE_TAG = '@image:'$/;"	v
@@ -178,6 +185,7 @@ IMPORTED_TO_INDESIGN	django/apps/legacy_db/models.py	/^    IMPORTED_TO_INDESIGN 
 INLINE_HTML_TAG	django/apps/stories/models.py	/^INLINE_HTML_TAG = '@html:'$/;"	v
 INSTALLED_APPS	django/universitas/base.py	/^INSTALLED_APPS = [$/;"	v
 ISSUE_TYPES	django/apps/issues/models.py	/^    ISSUE_TYPES = [$/;"	v	class:Issue
+Image	django/apps/photo/cropping/crop_detector.py	/^Image = Union[Path, bytes]$/;"	v
 ImageFile	django/apps/legacy_db/image_archive.py	/^class ImageFile(object):$/;"	c
 ImageFile	django/apps/photo/models.py	/^class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):$/;"	c
 ImageFileAdmin	django/apps/photo/admin.py	/^class ImageFileAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin, ):$/;"	c
@@ -195,7 +203,9 @@ IssueAdmin	django/apps/issues/admin.py	/^class IssueAdmin(admin.ModelAdmin):$/;"
 IssueQueryset	django/apps/issues/models.py	/^class IssueQueryset(models.QuerySet):$/;"	c
 IssueTuple	django/apps/issues/models.py	/^IssueTuple = collections.namedtuple('IssueTuple', ['number', 'date'])$/;"	v
 IssuesAppConfig	django/apps/issues/appconf.py	/^class IssuesAppConfig(AppConfig):$/;"	c
-KeepNameThumbnailBackend	django/apps/photo/thumb_utils.py	/^class KeepNameThumbnailBackend(ThumbnailBackend):$/;"	c
+KeepNameThumbnailBackend	django/apps/photo/thumb_backend.py	/^class KeepNameThumbnailBackend(ThumbnailBackend):$/;"	c
+KeypointDetector	django/apps/photo/cropping/crop_detector.py	/^class KeypointDetector(FeatureDetector):$/;"	c
+LABEL	django/apps/photo/cropping/crop_detector.py	/^    LABEL = 'ORB keypoint'$/;"	v	class:KeypointDetector
 LANGUAGES	django/universitas/base.py	/^LANGUAGES = [$/;"	v
 LANGUAGE_CODE	django/universitas/base.py	/^LANGUAGE_CODE = 'nb'$/;"	v
 LANGUAGE_CORPUS	django/apps/stories/management/commands/guess_language.py	/^LANGUAGE_CORPUS = {$/;"	v
@@ -252,7 +262,7 @@ Meta	django/apps/markup/models.py	/^    class Meta:$/;"	c	class:BlockTag
 Meta	django/apps/markup/models.py	/^    class Meta:$/;"	c	class:CachedTag
 Meta	django/apps/markup/models.py	/^    class Meta:$/;"	c	class:InlineTag
 Meta	django/apps/markup/models.py	/^    class Meta:$/;"	c	class:MarkupTag
-Meta	django/apps/photo/models.py	/^    class Meta:$/;"	c	class:AutoCropImage
+Meta	django/apps/photo/cropping/models.py	/^    class Meta:$/;"	c	class:AutoCropImage
 Meta	django/apps/photo/models.py	/^    class Meta:$/;"	c	class:ImageFile
 Meta	django/apps/photo/models.py	/^    class Meta:$/;"	c	class:ProfileImage
 Meta	django/apps/stories/models.py	/^    class Meta:$/;"	c	class:Aside
@@ -316,6 +326,9 @@ Migration	django/apps/photo/migrations/0005_auto_20151025_2003.py	/^class Migrat
 Migration	django/apps/photo/migrations/0006_auto_20151025_2149.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/photo/migrations/0007_auto_20160906_1614.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/photo/migrations/0008_auto_20170214_1552.py	/^class Migration(migrations.Migration):$/;"	c
+Migration	django/apps/photo/migrations/0009_imagefile_crop_box.py	/^class Migration(migrations.Migration):$/;"	c
+Migration	django/apps/photo/migrations/0010_data_imagefile_cropbox.py	/^class Migration(migrations.Migration):$/;"	c
+Migration	django/apps/photo/migrations/0011_auto_20170422_2232.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0001_initial.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0002_auto_20141217_1841.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^class Migration(migrations.Migration):$/;"	c
@@ -342,6 +355,7 @@ Migration	django/watson/migrations/0001_initial.py	/^class Migration(migrations.
 Migration	django/watson/south_migrations/0001_initial.py	/^class Migration(SchemaMigration):$/;"	c
 Migration	django/watson/south_migrations/0002_installwatson.py	/^class Migration(DataMigration):$/;"	c
 MissingBinary	django/apps/issues/tasks.py	/^class MissingBinary(RuntimeError):$/;"	c
+MockFeatureDetector	django/apps/photo/cropping/crop_detector.py	/^class MockFeatureDetector(FeatureDetector):$/;"	c
 MySQLSearchBackend	django/watson/backends.py	/^class MySQLSearchBackend(SearchBackend):$/;"	c
 NON_PRINTING_CHARS	django/apps/stories/models.py	/^NON_PRINTING_CHARS = re.compile('[{}]'.format(''.join($/;"	v
 NOTEBOOK_ARGUMENTS	django/universitas/base.py	/^NOTEBOOK_ARGUMENTS = [$/;"	v
@@ -473,10 +487,10 @@ StoryTypeAdmin	django/apps/stories/admin.py	/^class StoryTypeAdmin(admin.ModelAd
 StoryTypeInline	django/apps/stories/admin.py	/^class StoryTypeInline(admin.TabularInline):$/;"	c
 StoryVideo	django/apps/stories/models.py	/^class StoryVideo(StoryMedia):$/;"	c
 TEMPLATES	django/universitas/base.py	/^TEMPLATES = [$/;"	v
-THUMBNAIL_BACKEND	django/universitas/base.py	/^THUMBNAIL_BACKEND = 'apps.photo.thumb_utils.KeepNameThumbnailBackend'$/;"	v
+THUMBNAIL_BACKEND	django/universitas/base.py	/^THUMBNAIL_BACKEND = 'apps.photo.thumb_backend.KeepNameThumbnailBackend'$/;"	v
 THUMBNAIL_DEBUG	django/universitas/dev.py	/^THUMBNAIL_DEBUG = DEBUG$/;"	v
 THUMBNAIL_DEBUG	django/universitas/production.py	/^THUMBNAIL_DEBUG = DEBUG$/;"	v
-THUMBNAIL_ENGINE	django/universitas/base.py	/^THUMBNAIL_ENGINE = 'apps.photo.thumb_utils.CloseCropEngine'$/;"	v
+THUMBNAIL_ENGINE	django/universitas/base.py	/^THUMBNAIL_ENGINE = 'apps.photo.cropping.crop_engine.CloseCropEngine'$/;"	v
 THUMBNAIL_FORCE_OVERWRITE	django/universitas/base.py	/^THUMBNAIL_FORCE_OVERWRITE = True$/;"	v
 THUMBNAIL_KEY_PREFIX	django/universitas/base.py	/^THUMBNAIL_KEY_PREFIX = SITE_URL$/;"	v
 THUMBNAIL_KVSTORE	django/universitas/base.py	/^THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'$/;"	v
@@ -514,17 +528,30 @@ WEBPACK_LOADER	django/universitas/base.py	/^WEBPACK_LOADER = {$/;"	v
 WSGI_APPLICATION	django/universitas/base.py	/^WSGI_APPLICATION = 'universitas.wsgi.application'$/;"	v
 WatsonSearchChangeList	django/watson/admin.py	/^class WatsonSearchChangeList(ChangeList):$/;"	c
 XTAG_PATTERN	django/apps/markup/models.py	/^    XTAG_PATTERN = r'^@[^: ]+:'$/;"	v	class:BlockTag
+_CASCADES	django/apps/photo/cropping/crop_detector.py	/^    _CASCADES = [$/;"	v	class:FaceDetector
 _HTML	django/apps/stories/models.py	/^    class _HTML(object):$/;"	c	class:MarkupModelMixin
+__add__	django/apps/photo/cropping/boundingbox.py	/^    def __add__(self, other: typing.Any) -> 'Box':$/;"	m	class:Box	file:
 __all__	django/universitas/logging_settings.py	/^__all__ = ['LOGGING']$/;"	v
+__and__	django/apps/photo/cropping/boundingbox.py	/^    def __and__(self, other: typing.Any) -> 'Box':$/;"	m	class:Box	file:
 __call__	django/watson/search.py	/^    def __call__(self, func):$/;"	m	class:SearchContext	file:
 __dir__	django/universitas/setting_helpers.py	/^    def __dir__(self):$/;"	m	class:Environment	file:
 __enter__	django/watson/search.py	/^    def __enter__(self):$/;"	m	class:SearchContext	file:
+__eq__	django/apps/photo/cropping/boundingbox.py	/^    def __eq__(self, other: typing.Any) -> bool:$/;"	m	class:Box	file:
 __exit__	django/watson/search.py	/^    def __exit__(self, exc_type, exc_value, traceback):$/;"	m	class:SearchContext	file:
 __exit__	django/watson/search.py	/^    def __exit__(self, exc_type, exc_value, traceback):$/;"	m	class:SkipSearchContext	file:
 __getattr__	django/apps/stories/models.py	/^        def __getattr__(self, attr, *args):$/;"	m	class:MarkupModelMixin._HTML	file:
 __getattr__	django/apps/stories/models.py	/^    def __getattr__(self, attr):$/;"	m	class:ElementManager	file:
 __getattr__	django/universitas/setting_helpers.py	/^    def __getattr__(self, name):$/;"	m	class:Environment	file:
 __init__	django/apps/legacy_db/image_archive.py	/^    def __init__(self, fullpath, filesize, filedate, issue, year):$/;"	m	class:ImageFile
+__init__	django/apps/photo/cropping/boundingbox.py	/^    def __init__(self, left: float, top: float,$/;"	m	class:Box
+__init__	django/apps/photo/cropping/crop_detector.py	/^    def __init__(self, label: str, filename: str,$/;"	m	class:Cascade
+__init__	django/apps/photo/cropping/crop_detector.py	/^    def __init__(self, n: int) -> None:$/;"	m	class:FeatureDetector
+__init__	django/apps/photo/cropping/crop_detector.py	/^    def __init__(self, n: int=10, padding: float=1.0,$/;"	m	class:KeypointDetector
+__init__	django/apps/photo/cropping/crop_detector.py	/^    def __init__(self, n: int=10, padding: float=1.2,$/;"	m	class:FaceDetector
+__init__	django/apps/photo/cropping/crop_detector.py	/^    def __init__(self, n: int=3, imagesize: int=200) -> None:$/;"	m	class:MockFeatureDetector
+__init__	django/apps/photo/cropping/crop_detector.py	/^    def __init__(self, n=10) -> None:$/;"	m	class:HybridDetector
+__init__	django/apps/photo/cropping/crop_detector.py	/^    def __init__(self, weight: float, label: str,$/;"	m	class:Feature
+__init__	django/apps/photo/cropping/models.py	/^    def __init__(self, left, top, right, bottom, x, y):$/;"	m	class:CropBox
 __init__	django/apps/stories/models.py	/^        def __init__(self, parent):$/;"	m	class:MarkupModelMixin._HTML
 __init__	django/apps/stories/models.py	/^    def __init__(self, *args, **kwargs):$/;"	m	class:MarkupFieldMixin
 __init__	django/universitas/setting_helpers.py	/^    def __init__(self, prefix='', strict=True):$/;"	m	class:Environment
@@ -534,7 +561,13 @@ __init__	django/watson/search.py	/^    def __init__(self):$/;"	m	class:SearchCon
 __init__	django/watson/search.py	/^    def __init__(self, context_manager):$/;"	m	class:SearchContext
 __init__	django/watson/search.py	/^    def __init__(self, engine_slug, search_context_manager=search_context_manager):$/;"	m	class:SearchEngine
 __init__	django/watson/search.py	/^    def __init__(self, model):$/;"	m	class:SearchAdapter
+__iter__	django/apps/photo/cropping/boundingbox.py	/^    def __iter__(self) -> typing.Iterator:$/;"	m	class:Box	file:
+__lt__	django/apps/photo/cropping/crop_detector.py	/^    def __lt__(self, other):$/;"	m	class:Feature	file:
+__mul__	django/apps/photo/cropping/boundingbox.py	/^    def __mul__(self, factor: float) -> 'Box':$/;"	m	class:Box	file:
+__mul__	django/apps/photo/cropping/crop_detector.py	/^    def __mul__(self, factor: float) -> 'Feature':$/;"	m	class:Feature	file:
 __new__	django/watson/backends.py	/^    def __new__(cls):$/;"	m	class:AdaptiveSearchBackend	file:
+__radd__	django/apps/photo/cropping/boundingbox.py	/^    def __radd__(self, other: typing.Any) -> 'Box':$/;"	m	class:Box	file:
+__repr__	django/apps/photo/cropping/boundingbox.py	/^    def __repr__(self) -> str:$/;"	m	class:Box	file:
 __str__	django/apps/adverts/models.py	/^    def __str__(self):$/;"	m	class:AdChannel	file:
 __str__	django/apps/adverts/models.py	/^    def __str__(self):$/;"	m	class:AdFormat	file:
 __str__	django/apps/adverts/models.py	/^    def __str__(self):$/;"	m	class:Advert	file:
@@ -552,6 +585,8 @@ __str__	django/apps/legacy_db/models.py	/^    def __str__(self):$/;"	m	class:Bil
 __str__	django/apps/legacy_db/models.py	/^    def __str__(self):$/;"	m	class:Prodsak	file:
 __str__	django/apps/legacy_db/models.py	/^    def __str__(self):$/;"	m	class:Sak	file:
 __str__	django/apps/markup/models.py	/^    def __str__(self):$/;"	m	class:MarkupTag	file:
+__str__	django/apps/photo/cropping/boundingbox.py	/^    def __str__(self) -> str:$/;"	m	class:Box	file:
+__str__	django/apps/photo/cropping/models.py	/^    def __str__(self):$/;"	m	class:CropBox	file:
 __str__	django/apps/photo/models.py	/^    def __str__(self):$/;"	m	class:ImageFile	file:
 __str__	django/apps/stories/models.py	/^    def __str__(self):$/;"	m	class:Byline	file:
 __str__	django/apps/stories/models.py	/^    def __str__(self):$/;"	m	class:Section	file:
@@ -563,6 +598,8 @@ __unicode__	django/watson/models.py	/^    def __unicode__(self):$/;"	m	class:Sea
 _add_path	django/apps/legacy_db/image_archive.py	/^    def _add_path(self, newpath):$/;"	m	class:ImageFile
 _assert_active	django/watson/search.py	/^    def _assert_active(self):$/;"	m	class:SearchContextManager
 _attrname	django/universitas/setting_helpers.py	/^        def _attrname(name):$/;"	f	function:Environment.__init__
+_attrs	django/apps/photo/cropping/boundingbox.py	/^    _attrs = ['left', 'top', 'bottom', 'right']$/;"	v	class:Box
+_attrs	django/apps/photo/cropping/models.py	/^    _attrs = ['left', 'top', 'bottom', 'right', 'x', 'y']$/;"	v	class:CropBox
 _backends_cache	django/watson/search.py	/^_backends_cache = {}$/;"	v
 _block_append	django/apps/stories/models.py	/^    def _block_append(self, tag, content, modelfield=None):$/;"	m	class:TextContent
 _block_drop	django/apps/stories/models.py	/^    def _block_drop(self, *args, **kwargs):$/;"	m	class:TextContent
@@ -582,21 +619,24 @@ _format_query	django/watson/backends.py	/^    def _format_query(self, search_tex
 _get_entries_for_obj	django/watson/search.py	/^    def _get_entries_for_obj(self, obj):$/;"	m	class:SearchEngine
 _get_included_models	django/watson/search.py	/^    def _get_included_models(self, models):$/;"	m	class:SearchEngine
 _get_story_type	django/apps/legacy_db/export_content_and_images.py	/^def _get_story_type(prodsys_mappe):$/;"	f
-_get_thumbnail_filename	django/apps/photo/thumb_utils.py	/^    def _get_thumbnail_filename(self, source, geometry_string, options):$/;"	m	class:KeepNameThumbnailBackend
+_get_thumbnail_filename	django/apps/photo/thumb_backend.py	/^    def _get_thumbnail_filename(self, source, geometry_string, options):$/;"	m	class:KeepNameThumbnailBackend
 _get_xtags_from_prodsys	django/apps/legacy_db/export_content_and_images.py	/^def _get_xtags_from_prodsys(prodsak_id, status_in=None):$/;"	f
 _importer_bilder_fra_prodsys	django/apps/legacy_db/export_content_and_images.py	/^def _importer_bilder_fra_prodsys(prodsak, story, autocrop):$/;"	f
 _importer_bilder_fra_webside	django/apps/legacy_db/export_content_and_images.py	/^def _importer_bilder_fra_webside(websak, story, autocrop):$/;"	f
 _importer_prodsak	django/apps/legacy_db/export_content_and_images.py	/^def _importer_prodsak($/;"	f
 _importer_websak	django/apps/legacy_db/export_content_and_images.py	/^def _importer_websak(websak):$/;"	f
+_kp_to_feature	django/apps/photo/cropping/crop_detector.py	/^    def _kp_to_feature(self, kp: cv2.KeyPoint) -> Feature:$/;"	m	class:KeypointDetector
 _load	django/utils/migration_helpers.py	/^    def _load(apps, schema_editor):$/;"	f	function:load_fixture
 _main	django/apps/stories/models.py	/^        def _main(self=self, body=self.bodytext_markup):$/;"	f	function:Story.place_all_inline_elements
 _make_aware	django/apps/legacy_db/export_content_and_images.py	/^def _make_aware(time_input):$/;"	f
 _md5	django/apps/photo/models.py	/^    _md5 = models.CharField($/;"	v	class:ImageFile
 _mtime	django/apps/photo/models.py	/^    _mtime = models.PositiveIntegerField($/;"	v	class:ImageFile
+_opencv_image	django/apps/photo/cropping/crop_detector.py	/^    def _opencv_image(source: Image, resize: int=0) -> CVImage:$/;"	m	class:FeatureDetector
 _post_save_receiver	django/watson/search.py	/^    def _post_save_receiver(self, instance, **kwargs):$/;"	m	class:SearchEngine
 _pre_delete_receiver	django/watson/search.py	/^    def _pre_delete_receiver(self, instance, **kwargs):$/;"	m	class:SearchEngine
 _repair_legacy_links	django/apps/stories/management/commands/check_links.py	/^    def _repair_legacy_links(self, links_to_check):$/;"	m	class:Command
 _request_finished_receiver	django/watson/search.py	/^    def _request_finished_receiver(self, **kwargs):$/;"	m	class:SearchContextManager
+_resize_feature	django/apps/photo/cropping/crop_detector.py	/^    def _resize_feature($/;"	m	class:FeatureDetector
 _resolve_field	django/watson/search.py	/^    def _resolve_field(self, obj, name):$/;"	m	class:SearchAdapter
 _size	django/apps/photo/models.py	/^    _size = models.PositiveIntegerField($/;"	v	class:ImageFile
 _slugify_filename	django/apps/legacy_db/image_archive.py	/^    def _slugify_filename(self):$/;"	m	class:ImageFile
@@ -610,7 +650,7 @@ abstract	django/apps/frontpage/models.py	/^        abstract = True$/;"	v	class:F
 abstract	django/apps/legacy_db/models.py	/^        abstract = True$/;"	v	class:InnleggAbstract.Meta
 abstract	django/apps/markup/models.py	/^        abstract = True$/;"	v	class:CachedTag.Meta
 abstract	django/apps/markup/models.py	/^        abstract = True$/;"	v	class:MarkupTag.Meta
-abstract	django/apps/photo/models.py	/^        abstract = True$/;"	v	class:AutoCropImage.Meta
+abstract	django/apps/photo/cropping/models.py	/^        abstract = True$/;"	v	class:AutoCropImage.Meta
 abstract	django/apps/stories/models.py	/^        abstract = True$/;"	v	class:RemembersSubClass.Meta
 abstract	django/apps/stories/models.py	/^        abstract = True$/;"	v	class:StoryMedia.Meta
 abstract	django/apps/stories/models.py	/^        abstract = True$/;"	v	class:TextContent.Meta
@@ -665,15 +705,14 @@ attrs	django/apps/photo/autocomplete_light_registry.py	/^    attrs={$/;"	v
 attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:AsideInline
 attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:BylineInline
 attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:HtmlInline
-attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:ImageInline
 attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:PullquoteInline
 attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:VideoInline
 attrs	django/apps/stories/autocomplete_light_registry.py	/^    attrs={$/;"	v
 autocomplete_list	django/apps/core/autocomplete_views.py	/^def autocomplete_list(request):$/;"	f
 autocreate	django/apps/frontpage/models.py	/^    def autocreate(self, story):$/;"	m	class:FrontpageStoryManager
 autocrop	django/apps/photo/admin.py	/^def autocrop(modeladmin, request, queryset):$/;"	f
-autocrop	django/apps/photo/autocrop.py	/^def autocrop(instance):$/;"	f
-autocrop	django/apps/photo/models.py	/^    def autocrop(self):$/;"	m	class:ImageFile
+autocrop	django/apps/photo/cropping/models.py	/^    def autocrop(self):$/;"	m	class:AutoCropImage
+autocrop	django/apps/photo/tasks.py	/^def autocrop(instance):$/;"	f
 aws	django/universitas/local.py	/^aws = Environment('AWS')$/;"	v
 aws	django/universitas/production.py	/^aws = Environment('AWS')$/;"	v
 backwards	django/apps/frontpage/migrations/0002_ensure_one_frontpage.py	/^def backwards(apps, schema_editor):$/;"	f
@@ -726,6 +765,7 @@ bundle_pdf	django/apps/issues/management/commands/web_pdf.py	/^def bundle_pdf(fo
 byline	django/apps/legacy_db/models.py	/^    byline = models.CharField(max_length=255)$/;"	v	class:Sak
 byline_image	django/apps/contributors/admin.py	/^def byline_image(obj):$/;"	f
 byline_image	django/apps/contributors/templatetags/byline_image.py	/^def byline_image(contributor, image_size=None):$/;"	f
+byline_image	django/apps/photo/admin.py	/^    def byline_image(self, instance):$/;"	m	class:ThumbAdmin
 byline_photo	django/apps/contributors/models.py	/^    byline_photo = models.ForeignKey($/;"	v	class:Contributor
 bylines	django/apps/stories/models.py	/^    bylines = models.ManyToManyField($/;"	v	class:Story
 bylines_count	django/apps/contributors/models.py	/^    def bylines_count(self):$/;"	m	class:Contributor
@@ -741,10 +781,12 @@ cache_max_age	django/utils/aws_custom_storage.py	/^    cache_max_age = 60 * 60 *
 cache_query	django/apps/markup/models.py	/^    def cache_query(self):$/;"	m	class:AliasManager
 cache_query	django/apps/markup/models.py	/^    def cache_query(self):$/;"	m	class:TagManager
 cached	django/apps/markup/models.py	/^    def cached(self):$/;"	m	class:TagManager
+calculate_crop	django/apps/photo/cropping/crop_engine.py	/^def calculate_crop(width, height, crop_width, crop_height, crop_box):$/;"	f
 calculate_flags	django/apps/markup/models.py	/^    def calculate_flags(self):$/;"	m	class:Alias
 can_import_settings	django/apps/legacy_db/management/commands/importer_fra_prodsys.py	/^    can_import_settings = True,$/;"	v	class:Command
 caption	django/apps/stories/models.py	/^    caption = MarkupCharField($/;"	v	class:StoryMedia
 category	django/apps/adverts/models.py	/^    category = models.PositiveSmallIntegerField($/;"	v	class:AdFormat
+center	django/apps/photo/cropping/boundingbox.py	/^    def center(self) -> typing.Tuple[float, float]:$/;"	m	class:Box
 change_pattern	django/apps/stories/models.py	/^    change_pattern = '[{text}]({ref})'$/;"	v	class:InlineLink
 channels	django/apps/adverts/models.py	/^    def channels(self):$/;"	m	class:Advert
 check_link	django/apps/stories/models.py	/^        def check_link(url, method='head', timeout=2):$/;"	f	function:StoryVideo.create_from_url
@@ -759,7 +801,7 @@ choices	django/apps/contributors/models.py	/^        choices=STATUS_CHOICES,$/;"
 choices	django/apps/issues/models.py	/^        choices=ISSUE_TYPES,$/;"	v	class:Issue
 choices	django/apps/markup/models.py	/^        choices=ACTION_CHOICES,$/;"	v	class:BlockTag.Meta
 choices	django/apps/markup/models.py	/^        choices=TIMING_CHOICES,$/;"	v	class:Alias.Meta
-choices	django/apps/photo/models.py	/^        choices=CROP_CHOICES,$/;"	v	class:AutoCropImage.Meta
+choices	django/apps/photo/cropping/models.py	/^        choices=CROP_CHOICES,$/;"	v	class:AutoCropImage.Meta
 choices	django/apps/stories/migrations/0001_initial.py	/^                                                choices=[('vimeo', 'vimeo'), ('youtu', 'youtube')])),$/;"	v	class:Migration
 choices	django/apps/stories/models.py	/^        choices=ASPECT_RATIO_CHOICES,$/;"	v	class:StoryMedia.Meta
 choices	django/apps/stories/models.py	/^        choices=CREDIT_CHOICES,$/;"	v	class:Byline
@@ -772,8 +814,9 @@ clean	django/apps/stories/models.py	/^    def clean(self, value, model_instance)
 clean_and_create_links	django/apps/stories/models.py	/^    def clean_and_create_links(cls, body, parent_story):$/;"	m	class:InlineLink
 clean_links	django/apps/stories/models.py	/^    def clean_links(self, text, model_instance):$/;"	m	class:MarkupFieldMixin
 clean_up_bylines	django/apps/stories/bylines.py	/^def clean_up_bylines(raw_bylines):$/;"	f
+clean_up_pending_autocrop	django/apps/photo/tasks.py	/^def clean_up_pending_autocrop():$/;"	f
 clear_html	django/apps/stories/models.py	/^    def clear_html(self):$/;"	m	class:Story
-close_crop	django/apps/photo/thumb_utils.py	/^    def close_crop(self, image, geometry, options):$/;"	m	class:CloseCropEngine
+close_crop	django/apps/photo/cropping/crop_engine.py	/^def close_crop(x, y, left, right, top, bottom, aspect_ratio):$/;"	f
 code	django/apps/issues/migrations/0011_data_load_publication_plan.py	/^            code=load_fixture(str(fixture)),$/;"	v	class:Migration
 code	django/apps/markup/migrations/0002_load_markup_tags.py	/^            code=load_fixture(str(fixture)),$/;"	v	class:Migration
 code	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^            code=load_fixture(str(fixture)),$/;"	v	class:Migration
@@ -797,8 +840,9 @@ convert_pdf_to_web	django/apps/issues/tasks.py	/^def convert_pdf_to_web(input_fi
 copyright_information	django/apps/photo/models.py	/^    copyright_information = models.CharField($/;"	v	class:ImageFile
 count	django/apps/legacy_db/export_content_and_images.py	/^count = 0$/;"	v
 cover_page	django/apps/issues/models.py	/^    cover_page = thumbnail.ImageField($/;"	v	class:PrintIssue
-create	django/apps/photo/thumb_utils.py	/^    def create(self, image, geometry, options):$/;"	m	class:CloseCropEngine
+create	django/apps/photo/cropping/crop_engine.py	/^    def create(self, image, geometry, options):$/;"	m	class:CloseCropEngine
 create	django/apps/stories/models.py	/^    def create(cls, full_byline, story, initials=''):$/;"	m	class:Byline
+create_cropbox	django/apps/photo/migrations/0010_data_imagefile_cropbox.py	/^def create_cropbox(image_file):$/;"	f
 create_dummy	django/apps/adverts/models.py	/^    def create_dummy(self, adformat):$/;"	m	class:AdvertManager
 create_dummy_ads	django/apps/adverts/admin.py	/^def create_dummy_ads(modeladmin, request, queryset):$/;"	f
 create_fake_content	django/apps/core/content_factory.py	/^def create_fake_content(contributors=3, stories=10, delete_existing=False,$/;"	f
@@ -813,10 +857,8 @@ create_web_bundle	django/apps/issues/tasks.py	/^def create_web_bundle(filename, 
 credit	django/apps/stories/models.py	/^    credit = models.CharField($/;"	v	class:Byline
 creditline	django/apps/stories/models.py	/^    creditline = MarkupCharField($/;"	v	class:StoryMedia
 crop	django/apps/legacy_db/models.py	/^    crop = models.IntegerField()$/;"	v	class:Bilde
-crop_diameter	django/apps/photo/models.py	/^    crop_diameter = models.PositiveSmallIntegerField($/;"	v	class:ImageFile
-cropping	django/apps/photo/models.py	/^    def cropping(self):$/;"	m	class:ImageFile
-cropping	django/apps/photo/models.py	/^    def cropping(self, _crop):$/;"	m	class:ImageFile
-cropping_method	django/apps/photo/models.py	/^    cropping_method = models.PositiveSmallIntegerField($/;"	v	class:AutoCropImage
+crop_box	django/apps/photo/cropping/models.py	/^    crop_box = BoxField($/;"	v	class:AutoCropImage
+cropping_method	django/apps/photo/cropping/models.py	/^    cropping_method = models.PositiveSmallIntegerField($/;"	v	class:AutoCropImage
 css_classes	django/apps/adverts/models.py	/^    def css_classes(self):$/;"	m	class:AdChannel
 current_ads	django/apps/adverts/models.py	/^    def current_ads(self, at_time=None, publication_status=None):$/;"	m	class:AdChannel
 current_issue	django/apps/issues/models.py	/^def current_issue():$/;"	f
@@ -862,9 +904,9 @@ default	django/apps/markup/models.py	/^        default=1,$/;"	v	class:Alias.Meta
 default	django/apps/markup/models.py	/^        default=ACTION_CHOICES[0][0],$/;"	v	class:BlockTag.Meta
 default	django/apps/markup/models.py	/^        default=TIMING_CHOICES[0][0],$/;"	v	class:Alias.Meta
 default	django/apps/markup/models.py	/^        default=_('explain this pattern')$/;"	v	class:Alias.Meta
-default	django/apps/photo/models.py	/^        default=100,$/;"	v	class:ImageFile.Meta
-default	django/apps/photo/models.py	/^        default=50,$/;"	v	class:ImageFile.Meta
-default	django/apps/photo/models.py	/^        default=CROP_PENDING,$/;"	v	class:AutoCropImage.Meta
+default	django/apps/photo/cropping/models.py	/^        default=CROP_PENDING,$/;"	v	class:AutoCropImage.Meta
+default	django/apps/photo/cropping/models.py	/^        default=default_crop_box,$/;"	v	class:AutoCropImage.Meta
+default	django/apps/photo/migrations/0009_imagefile_crop_box.py	/^                default=apps.photo.cropping.models.default_crop_box,$/;"	v	class:Migration
 default	django/apps/stories/models.py	/^        default='',$/;"	v	class:InlineLink.Meta
 default	django/apps/stories/models.py	/^        default='',$/;"	v	class:TextContent.Meta
 default	django/apps/stories/models.py	/^        default='section-slug',$/;"	v	class:Section.Meta
@@ -889,9 +931,11 @@ default_app_config	django/apps/legacy_db/__init__.py	/^default_app_config = 'app
 default_app_config	django/apps/markup/__init__.py	/^default_app_config = 'apps.markup.appconf.MarkupAppConfig'$/;"	v
 default_app_config	django/apps/photo/__init__.py	/^default_app_config = 'apps.photo.appconf.PhotoAppConfig'$/;"	v
 default_app_config	django/apps/stories/__init__.py	/^default_app_config = 'apps.stories.appconf.StoriesAppConfig'$/;"	v
+default_crop_box	django/apps/photo/cropping/models.py	/^def default_crop_box():$/;"	f
 default_end_time	django/apps/adverts/models.py	/^def default_end_time():$/;"	f
 default_search_engine	django/watson/search.py	/^default_search_engine = SearchEngine("default")$/;"	v
 default_start_time	django/apps/adverts/models.py	/^def default_start_time():$/;"	f
+default_validators	django/apps/photo/cropping/models.py	/^    default_validators = [validate_box]$/;"	v	class:BoxField
 delete_cache	django/apps/markup/models.py	/^    def delete_cache(self):$/;"	m	class:TagManager
 delete_pdf_and_cover_page	django/apps/issues/models.py	/^def delete_pdf_and_cover_page(sender, instance, **kwargs):$/;"	f
 dependencies	django/apps/adverts/migrations/0001_initial.py	/^    dependencies = [$/;"	v	class:Migration
@@ -940,6 +984,9 @@ dependencies	django/apps/photo/migrations/0005_auto_20151025_2003.py	/^    depen
 dependencies	django/apps/photo/migrations/0006_auto_20151025_2149.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/photo/migrations/0007_auto_20160906_1614.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/photo/migrations/0008_auto_20170214_1552.py	/^    dependencies = [$/;"	v	class:Migration
+dependencies	django/apps/photo/migrations/0009_imagefile_crop_box.py	/^    dependencies = [$/;"	v	class:Migration
+dependencies	django/apps/photo/migrations/0010_data_imagefile_cropbox.py	/^    dependencies = [('photo', '0009_imagefile_crop_box')]$/;"	v	class:Migration
+dependencies	django/apps/photo/migrations/0011_auto_20170422_2232.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0001_initial.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0002_auto_20141217_1841.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^    dependencies = [$/;"	v	class:Migration
@@ -965,17 +1012,23 @@ dependencies	django/apps/stories/migrations/0022_auto_20161228_0956.py	/^    dep
 dependencies	django/watson/migrations/0001_initial.py	/^    dependencies = [$/;"	v	class:Migration
 description	django/apps/adverts/models.py	/^    description = models.CharField($/;"	v	class:Advert
 description	django/apps/adverts/models.py	/^    description = models.TextField($/;"	v	class:AdChannel
+description	django/apps/photo/cropping/models.py	/^    description = 'Bounding Box field'$/;"	v	class:BoxField
 description	django/apps/stories/feeds.py	/^    description = "Nyeste publiserte saker fra universitas.no"$/;"	v	class:LatestStories
 description	django/apps/stories/models.py	/^    description = 'subclass of Charfield containing markup.'$/;"	v	class:MarkupCharField
 description	django/apps/stories/models.py	/^    description = 'subclass of Textfield containing markup.'$/;"	v	class:MarkupTextField
 description	django/watson/models.py	/^    description = models.TextField($/;"	v	class:SearchEntry
+deserialize	django/apps/photo/cropping/crop_detector.py	/^    def deserialize(cls, data: dict) -> 'Feature':$/;"	m	class:Feature
 deserialize_meta	django/watson/search.py	/^    def deserialize_meta(self, meta_encoded):$/;"	m	class:SearchAdapter
-detect_crop	django/apps/photo/tasks.py	/^def detect_crop(image_pk):$/;"	f
-detect_faces	django/apps/photo/autocrop.py	/^def detect_faces(cv2img,):$/;"	f
-detect_features	django/apps/photo/autocrop.py	/^def detect_features(cv2img):$/;"	f
+detect_features	django/apps/photo/cropping/crop_detector.py	/^    def detect_features(self, source: Image) -> List[Feature]:$/;"	m	class:FaceDetector
+detect_features	django/apps/photo/cropping/crop_detector.py	/^    def detect_features(self, source: Image) -> List[Feature]:$/;"	m	class:FeatureDetector
+detect_features	django/apps/photo/cropping/crop_detector.py	/^    def detect_features(self, source: Image) -> List[Feature]:$/;"	m	class:HybridDetector
+detect_features	django/apps/photo/cropping/crop_detector.py	/^    def detect_features(self, source: Image) -> List[Feature]:$/;"	m	class:KeypointDetector
+detect_features	django/apps/photo/cropping/crop_detector.py	/^    def detect_features(self, source: Image) -> List[Feature]:$/;"	m	class:MockFeatureDetector
 determine_ad_type	django/apps/adverts/models.py	/^    def determine_ad_type(self, as_string=False):$/;"	m	class:Advert
+determine_method	django/apps/photo/tasks.py	/^def determine_method(features):$/;"	f
 devalue_hotness	django/apps/stories/models.py	/^    def devalue_hotness(self, factor=0.99):$/;"	m	class:PublishedStoryManager
 devalue_hotness	django/apps/stories/tasks.py	/^def devalue_hotness():$/;"	f
+diagonal	django/apps/photo/cropping/boundingbox.py	/^    def diagonal(self) -> float:$/;"	m	class:Box
 dimension	django/apps/adverts/models.py	/^    def dimension(self, axis, fallback=300):$/;"	m	class:Advert
 diskusjon	django/apps/legacy_db/models.py	/^    diskusjon = models.IntegerField()$/;"	v	class:Sak
 display_bylines	django/apps/stories/admin.py	/^    def display_bylines(self, instance):$/;"	m	class:StoryAdmin
@@ -1027,7 +1080,6 @@ end_tag	django/apps/markup/models.py	/^    end_tag = models.CharField($/;"	v	cla
 end_time	django/apps/adverts/models.py	/^    end_time = models.DateTimeField($/;"	v	class:Advert
 engine_slug	django/watson/models.py	/^    engine_slug = models.CharField($/;"	v	class:SearchEntry
 env	django/universitas/base.py	/^env = Environment(strict=False)$/;"	v
-environment_variable	django/utils/setting_helpers.py	/^def environment_variable(keyname, default=''):$/;"	f
 epost	django/apps/legacy_db/models.py	/^    epost = models.CharField(max_length=255)$/;"	v	class:Eposttinging
 epost	django/apps/legacy_db/models.py	/^    epost = models.CharField(max_length=255, blank=True)$/;"	v	class:InnleggAbstract
 epost_sendt	django/apps/legacy_db/models.py	/^    epost_sendt = models.DateTimeField(blank=True, null=True)$/;"	v	class:DiskSvar
@@ -1117,6 +1169,7 @@ field	django/apps/photo/migrations/0007_auto_20160906_1614.py	/^            fiel
 field	django/apps/photo/migrations/0007_auto_20160906_1614.py	/^            field=models.PositiveSmallIntegerField(default=50, help_text='image crop vertical. Between 0% and 100%.', validators=[$/;"	v	class:Migration
 field	django/apps/photo/migrations/0007_auto_20160906_1614.py	/^            field=sorl.thumbnail.fields.ImageField(height_field='full_height', max_length=1024,$/;"	v	class:Migration
 field	django/apps/photo/migrations/0008_auto_20170214_1552.py	/^            field=models.PositiveSmallIntegerField(choices=[(0, 'center'), (1, 'pending'), (5, 'corner detection'), (10, 'multiple faces'), ($/;"	v	class:Migration
+field	django/apps/photo/migrations/0009_imagefile_crop_box.py	/^            field=apps.photo.cropping.models.BoxField($/;"	v	class:Migration
 field	django/apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey($/;"	v	class:Migration
 field	django/apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey(null=True, help_text='link to story on this website.',$/;"	v	class:Migration
 field	django/apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey(to='stories.Story'),$/;"	v	class:Migration
@@ -1175,11 +1228,14 @@ find_single_item_or_none	django/apps/contributors/models.py	/^        def find_s
 fixture	django/apps/issues/migrations/0011_data_load_publication_plan.py	/^fixture = Path(__file__).parent \/ 'pub-plan-2010-2015.json'$/;"	v
 fixture	django/apps/markup/migrations/0002_load_markup_tags.py	/^fixture = Path(__file__).parent \/ 'markup_tags.json'$/;"	v
 fixture	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^fixture = Path(__file__).parent \/ 'sections_and_story_types.json'$/;"	v
+fixture_image	django/apps/photo/tests/test_models.py	/^def fixture_image():$/;"	f
+fixture_image	django/apps/photo/tests/test_tasks.py	/^def fixture_image():$/;"	f
 fixture_pdf	django/apps/issues/tests/test_models.py	/^def fixture_pdf():$/;"	f
 fk_name	django/apps/stories/admin.py	/^    fk_name = 'parent_story'$/;"	v	class:LinkInline
 flagg	django/apps/legacy_db/models.py	/^    flagg = models.IntegerField(blank=True, null=True, choices=FLAGG_CHOICES)$/;"	v	class:Prodsak
 flags	django/apps/markup/models.py	/^    flags = models.CharField($/;"	v	class:Alias
 flags_sum	django/apps/markup/models.py	/^    flags_sum = models.PositiveSmallIntegerField($/;"	v	class:Alias
+floatformat	django/apps/photo/cropping/crop_detector.py	/^        def floatformat(f):$/;"	f	function:Feature.serialize
 fn	django/apps/issues/tests/test_tasks.py	/^    def fn(): return 'spam'$/;"	f	function:test_require_binary_decorator
 fn_wrapper	django/apps/issues/tasks.py	/^        def fn_wrapper(*args, **kwargs):$/;"	f	function:require_binary.binary_decorator
 form	django/apps/contributors/admin.py	/^    form = modelform_factory($/;"	v	class:ContributorAdmin
@@ -1206,8 +1262,7 @@ formfield_overrides	django/apps/stories/admin.py	/^    formfield_overrides = {$/
 forwards	django/apps/stories/migrations/0021_data_generate_slugs.py	/^def forwards(apps, schema_editor):$/;"	f
 forwards	django/watson/south_migrations/0001_initial.py	/^    def forwards(self, orm):$/;"	m	class:Migration
 forwards	django/watson/south_migrations/0002_installwatson.py	/^    def forwards(self, orm):$/;"	m	class:Migration
-from_left	django/apps/photo/models.py	/^    from_left = models.PositiveSmallIntegerField($/;"	v	class:ImageFile
-from_top	django/apps/photo/models.py	/^    from_top = models.PositiveSmallIntegerField($/;"	v	class:ImageFile
+from_db_value	django/apps/photo/cropping/models.py	/^    def from_db_value(self, value, expression, connection, context):$/;"	m	class:BoxField
 frontpage	django/apps/frontpage/models.py	/^    frontpage = models.ForeignKey($/;"	v	class:FrontPageModule
 frontpage_layout	django/apps/frontpage/views.py	/^def frontpage_layout(blocks):$/;"	f
 frontpage_story	django/apps/frontpage/models.py	/^    frontpage_story = models.ForeignKey($/;"	v	class:StoryModule
@@ -1240,7 +1295,7 @@ get_context_data	django/apps/issues/views.py	/^    def get_context_data(self, **
 get_context_data	django/apps/search/views.py	/^    def get_context_data(self, **kwargs):$/;"	m	class:SearchMixin
 get_context_data	django/watson/views.py	/^    def get_context_data(self, **kwargs):$/;"	m	class:SearchMixin
 get_created_engines	django/watson/search.py	/^    def get_created_engines(cls):$/;"	m	class:SearchEngine
-get_crop	django/apps/photo/models.py	/^    def get_crop(self):$/;"	m	class:ImageFile
+get_crop_box	django/apps/photo/cropping/models.py	/^    def get_crop_box(self):$/;"	m	class:AutoCropImage
 get_description	django/watson/search.py	/^    def get_description(self, obj):$/;"	m	class:SearchAdapter
 get_edit_url	django/utils/model_mixins.py	/^    def get_edit_url(self):$/;"	m	class:Edit_url_mixin
 get_empty_query_redirect	django/apps/search/views.py	/^    def get_empty_query_redirect(self):$/;"	m	class:SearchMixin
@@ -1249,12 +1304,14 @@ get_engine	django/watson/management/commands/buildwatson.py	/^def get_engine(eng
 get_exclude	django/watson/views.py	/^    def get_exclude(self):$/;"	m	class:SearchMixin
 get_extra_context	django/watson/views.py	/^    def get_extra_context(self):$/;"	m	class:SearchMixin
 get_frontpage_stories	django/apps/frontpage/views.py	/^def get_frontpage_stories(story_queryset, frontpage=None):$/;"	f
+get_haarcascade	django/apps/photo/cropping/crop_detector.py	/^def get_haarcascade(filename: str) -> Path:$/;"	f
 get_height	django/apps/stories/models.py	/^    def get_height(self, width, height):$/;"	m	class:StoryMedia
 get_html	django/apps/adverts/models.py	/^    def get_html(self):$/;"	m	class:Advert
 get_html	django/apps/stories/models.py	/^    def get_html(self):$/;"	m	class:InlineHtml
 get_html	django/apps/stories/models.py	/^    def get_html(self):$/;"	m	class:InlineLink
 get_html	django/apps/stories/models.py	/^    def get_html(self):$/;"	m	class:TextContent
 get_html_class	django/apps/markup/models.py	/^    def get_html_class(self):$/;"	m	class:MarkupTag
+get_internal_type	django/apps/photo/cropping/models.py	/^    def get_internal_type(self):$/;"	m	class:BoxField
 get_items	django/apps/stories/templatetags/inline_elements.py	/^def get_items(queryset, argument_string):$/;"	f
 get_live_queryset	django/watson/search.py	/^    def get_live_queryset(self):$/;"	m	class:SearchAdapter
 get_meta	django/watson/search.py	/^    def get_meta(self, obj):$/;"	m	class:SearchAdapter
@@ -1263,6 +1320,7 @@ get_or_create	django/apps/contributors/models.py	/^    def get_or_create(cls, in
 get_output_file	django/apps/issues/tasks.py	/^def get_output_file(input_file, subfolder, suffix=None):$/;"	f
 get_plaintext	django/apps/stories/models.py	/^    def get_plaintext(self):$/;"	m	class:TextContent
 get_postgresql_version	django/watson/backends.py	/^def get_postgresql_version(connection):$/;"	f
+get_prep_value	django/apps/photo/cropping/models.py	/^    def get_prep_value(self, value):$/;"	m	class:BoxField
 get_publication_date	django/apps/issues/models.py	/^    def get_publication_date(self):$/;"	m	class:PrintIssue
 get_query	django/apps/search/views.py	/^    def get_query(self, request):$/;"	m	class:SearchMixin
 get_query	django/watson/views.py	/^    def get_query(self, request):$/;"	m	class:SearchMixin
@@ -1311,6 +1369,8 @@ headline	django/apps/frontpage/models.py	/^    headline = models.CharField($/;"	
 height	django/apps/adverts/models.py	/^    def height(self):$/;"	m	class:Advert
 height	django/apps/adverts/models.py	/^    height = models.PositiveSmallIntegerField()$/;"	v	class:AdFormat
 height	django/apps/frontpage/models.py	/^    height = models.PositiveSmallIntegerField($/;"	v	class:FrontPageModule
+height	django/apps/photo/cropping/boundingbox.py	/^    def height(self) -> float:$/;"	m	class:Box
+height	django/apps/photo/cropping/boundingbox.py	/^    def height(self, value: float) -> None:$/;"	m	class:Box
 height_field	django/apps/photo/models.py	/^        height_field='full_height',$/;"	v	class:ImageFile.Meta
 help	django/apps/core/management/commands/fake_content.py	/^    help = 'Create fake content'$/;"	v	class:Command
 help	django/apps/issues/management/commands/find_pdf_files.py	/^    help = 'Create print issues from pdf files.'$/;"	v	class:Command
@@ -1368,12 +1428,11 @@ help_text	django/apps/issues/models.py	/^        help_text='Number of pages',$/;
 help_text	django/apps/issues/models.py	/^        help_text=_('An image file of the front page'),$/;"	v	class:PrintIssue.Meta
 help_text	django/apps/issues/models.py	/^        help_text=_('Extracted from file.'),$/;"	v	class:PrintIssue.Meta
 help_text	django/apps/issues/models.py	/^        help_text=_('Pdf file for this issue.'),$/;"	v	class:PrintIssue.Meta
+help_text	django/apps/photo/cropping/models.py	/^        help_text=_('How this image has been cropped.'),$/;"	v	class:AutoCropImage.Meta
 help_text	django/apps/photo/migrations/0001_initial.py	/^                                                           help_text='extra information about license and attribution if needed.')),$/;"	v	class:Migration
+help_text	django/apps/photo/migrations/0009_imagefile_crop_box.py	/^                help_text='How this image has been cropped.',$/;"	v	class:Migration
 help_text	django/apps/photo/models.py	/^        help_text=_($/;"	v	class:ImageFile.Meta
-help_text	django/apps/photo/models.py	/^        help_text=_('How this image has been cropped.'),$/;"	v	class:AutoCropImage.Meta
 help_text	django/apps/photo/models.py	/^        help_text=_('full height in pixels'),$/;"	v	class:ImageFile.Meta
-help_text	django/apps/photo/models.py	/^        help_text=_('image crop horizontal. Between 0% and 100%.'),$/;"	v	class:ImageFile.Meta
-help_text	django/apps/photo/models.py	/^        help_text=_('image crop vertical. Between 0% and 100%.'),$/;"	v	class:ImageFile.Meta
 help_text	django/apps/photo/models.py	/^        help_text=_('md5 hash of source file'),$/;"	v	class:ImageFile.Meta
 help_text	django/apps/photo/models.py	/^        help_text=_('mtime timestamp of source file'),$/;"	v	class:ImageFile.Meta
 help_text	django/apps/photo/models.py	/^        help_text=_('previous path if the image has been moved.'),$/;"	v	class:ImageFile.Meta
@@ -1469,6 +1528,7 @@ insert_url	django/apps/stories/models.py	/^    def insert_url(self, text):$/;"	m
 insert_urls	django/apps/stories/models.py	/^    def insert_urls(self, text):$/;"	m	class:InlineLinkManager
 insert_urls_in_links	django/apps/stories/models.py	/^    def insert_urls_in_links(self, text):$/;"	m	class:TextContent
 install_watson	django/watson/migrations/0001_initial.py	/^def install_watson(apps, schema_editor):$/;"	f
+invalid_cascade_file	django/apps/photo/tests/test_cropping.py	/^def invalid_cascade_file():$/;"	f
 invalidate	django/watson/search.py	/^    def invalidate(self):$/;"	m	class:SearchContextManager
 ip	django/apps/legacy_db/models.py	/^    ip = models.CharField(max_length=16, blank=True)$/;"	v	class:InnleggAbstract
 is_active	django/watson/search.py	/^    def is_active(self):$/;"	m	class:SearchContextManager
@@ -1492,7 +1552,6 @@ item_title	django/apps/stories/feeds.py	/^    def item_title(self, item):$/;"	m	
 items	django/apps/stories/feeds.py	/^    def items(self):$/;"	m	class:LatestStories
 iter_search_entries	django/watson/management/commands/buildwatson.py	/^    def iter_search_entries():$/;"	f	function:rebuild_index_for_model
 join_models	django/apps/issues/migrations/0005_data_link_pdf_to_issue.py	/^def join_models(apps, schema_editor):$/;"	f
-join_path	django/utils/setting_helpers.py	/^def join_path(*paths):$/;"	f
 joinpath	django/universitas/setting_helpers.py	/^def joinpath(*paths, resolve=False):$/;"	f
 journalist	django/apps/legacy_db/models.py	/^    journalist = models.CharField(max_length=50, blank=True)$/;"	v	class:Prodsak
 kicker	django/apps/frontpage/models.py	/^    kicker = models.CharField($/;"	v	class:FrontpageStory
@@ -1536,7 +1595,8 @@ list_display	django/apps/legacy_db/admin.py	/^    list_display = ($/;"	v	class:S
 list_display	django/apps/markup/admin.py	/^    list_display = ($/;"	v	class:AliasAdmin
 list_display	django/apps/markup/admin.py	/^    list_display = ($/;"	v	class:BlockTagAdmin
 list_display	django/apps/markup/admin.py	/^    list_display = ($/;"	v	class:InlineTagAdmin
-list_display	django/apps/photo/admin.py	/^    list_display = ($/;"	v	class:ImageFileAdmin
+list_display	django/apps/photo/admin.py	/^    list_display = ImageFileAdmin.list_display + ['byline_image']$/;"	v	class:ProfileImageAdmin
+list_display	django/apps/photo/admin.py	/^    list_display = [$/;"	v	class:ImageFileAdmin
 list_display	django/apps/stories/admin.py	/^    list_display = ($/;"	v	class:BylineAdmin
 list_display	django/apps/stories/admin.py	/^    list_display = ($/;"	v	class:LinkAdmin
 list_display	django/apps/stories/admin.py	/^    list_display = ($/;"	v	class:SectionAdmin
@@ -1563,7 +1623,6 @@ list_editable	django/apps/stories/admin.py	/^    list_editable = ($/;"	v	class:B
 list_editable	django/apps/stories/admin.py	/^    list_editable = ($/;"	v	class:LinkAdmin
 list_editable	django/apps/stories/admin.py	/^    list_editable = ($/;"	v	class:SectionAdmin
 list_editable	django/apps/stories/admin.py	/^    list_editable = ($/;"	v	class:StoryTypeAdmin
-list_editable	django/apps/stories/admin.py	/^    list_editable = [$/;"	v	class:StoryAdmin
 list_filter	django/apps/legacy_db/admin.py	/^    list_filter = (ProdusertFilter, 'produsert')$/;"	v	class:ProdsakAdmin
 list_filter	django/apps/stories/admin.py	/^    list_filter = ('status_code',)$/;"	v	class:LinkAdmin
 list_filter	django/apps/stories/admin.py	/^    list_filter = ['language', 'publication_status']$/;"	v	class:StoryAdmin
@@ -1578,7 +1637,6 @@ list_per_page	django/apps/stories/admin.py	/^    list_per_page = 25$/;"	v	class:
 load_fixture	django/apps/adverts/migrations/0002_data_ad_formats.py	/^def load_fixture(apps, schema_editor):$/;"	f
 load_fixture	django/apps/adverts/migrations/0003_universitas_ad_channels.py	/^def load_fixture(apps, schema_editor):$/;"	f
 load_fixture	django/utils/migration_helpers.py	/^def load_fixture(fixture_file):$/;"	f
-load_json_file	django/utils/setting_helpers.py	/^def load_json_file(file_path):$/;"	f
 local_md5	django/apps/photo/models.py	/^def local_md5(filepath, blocksize=65536):$/;"	f
 location	django/utils/aws_custom_storage.py	/^    location = 'media'$/;"	v	class:MediaStorage
 location	django/utils/aws_custom_storage.py	/^    location = 'media'$/;"	v	class:ThumbStorage
@@ -1604,11 +1662,11 @@ logger	django/apps/legacy_db/management/commands/importer_fra_prodsys.py	/^logge
 logger	django/apps/legacy_db/tasks.py	/^logger = get_task_logger(__name__)$/;"	v
 logger	django/apps/markup/models.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/photo/admin.py	/^logger = logging.getLogger(__name__)$/;"	v
-logger	django/apps/photo/autocrop.py	/^logger = logging.getLogger(__name__)$/;"	v
+logger	django/apps/photo/cropping/crop_engine.py	/^logger = logging.getLogger(__name__)$/;"	v
+logger	django/apps/photo/cropping/models.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/photo/models.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/photo/signals.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/photo/tasks.py	/^logger = logging.getLogger(__name__)$/;"	v
-logger	django/apps/photo/thumb_utils.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/stories/management/commands/check_links.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/stories/management/commands/devalue_hotness.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/stories/management/commands/frontpage_stories.py	/^logger = logging.getLogger(__name__)$/;"	v
@@ -1618,7 +1676,6 @@ logger	django/apps/stories/models.py	/^logger = logging.getLogger(__name__)$/;"	
 logger	django/apps/stories/tasks.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/stories/templatetags/inline_elements.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/stories/views.py	/^logger = logging.getLogger(__name__)$/;"	v
-logger	django/utils/setting_helpers.py	/^logger = logging.getLogger(__name__)$/;"	v
 lookups	django/apps/legacy_db/admin.py	/^    def lookups(self, request, model_admin):$/;"	m	class:ProdusertFilter
 main	django/apps/legacy_db/export_content_and_images.py	/^    def main(websak):$/;"	f	function:_websak_til_xtags
 main	django/apps/legacy_db/image_archive.py	/^def main():$/;"	f
@@ -1702,6 +1759,7 @@ md5	django/apps/photo/models.py	/^    def md5(self):$/;"	m	class:ImageFile
 md5	django/apps/photo/models.py	/^    def md5(self, value):$/;"	m	class:ImageFile
 meta	django/watson/models.py	/^    def meta(self):$/;"	m	class:SearchEntry
 meta_encoded	django/watson/models.py	/^    meta_encoded = models.TextField()$/;"	v	class:SearchEntry
+migrate_cropboxes	django/apps/photo/migrations/0010_data_imagefile_cropbox.py	/^def migrate_cropboxes(apps, schema_editor):$/;"	f
 minify	django/utils/html.py	/^def minify(source):$/;"	f
 model	django/apps/contributors/admin.py	/^    model = Stint$/;"	v	class:StintInline
 model	django/apps/frontpage/admin.py	/^    model = StoryModule$/;"	v	class:StoryModuleInline
@@ -1752,6 +1810,8 @@ model_name	django/apps/photo/migrations/0005_auto_20151025_2003.py	/^           
 model_name	django/apps/photo/migrations/0006_auto_20151025_2149.py	/^            model_name='imagefile',$/;"	v	class:Migration
 model_name	django/apps/photo/migrations/0007_auto_20160906_1614.py	/^            model_name='imagefile',$/;"	v	class:Migration
 model_name	django/apps/photo/migrations/0008_auto_20170214_1552.py	/^            model_name='imagefile',$/;"	v	class:Migration
+model_name	django/apps/photo/migrations/0009_imagefile_crop_box.py	/^            model_name='imagefile',$/;"	v	class:Migration
+model_name	django/apps/photo/migrations/0011_auto_20170422_2232.py	/^            model_name='imagefile',$/;"	v	class:Migration
 model_name	django/apps/stories/migrations/0001_initial.py	/^            model_name='byline',$/;"	v	class:Migration
 model_name	django/apps/stories/migrations/0001_initial.py	/^            model_name='inlinelink',$/;"	v	class:Migration
 model_name	django/apps/stories/migrations/0001_initial.py	/^            model_name='story',$/;"	v	class:Migration
@@ -1886,6 +1946,10 @@ name	django/apps/photo/migrations/0007_auto_20160906_1614.py	/^            name=
 name	django/apps/photo/migrations/0007_auto_20160906_1614.py	/^            name='old_file_path',$/;"	v	class:Migration
 name	django/apps/photo/migrations/0007_auto_20160906_1614.py	/^            name='source_file',$/;"	v	class:Migration
 name	django/apps/photo/migrations/0008_auto_20170214_1552.py	/^            name='cropping_method',$/;"	v	class:Migration
+name	django/apps/photo/migrations/0009_imagefile_crop_box.py	/^            name='crop_box',$/;"	v	class:Migration
+name	django/apps/photo/migrations/0011_auto_20170422_2232.py	/^            name='crop_diameter',$/;"	v	class:Migration
+name	django/apps/photo/migrations/0011_auto_20170422_2232.py	/^            name='from_left',$/;"	v	class:Migration
+name	django/apps/photo/migrations/0011_auto_20170422_2232.py	/^            name='from_top',$/;"	v	class:Migration
 name	django/apps/stories/appconf.py	/^    name = 'apps.stories'$/;"	v	class:StoriesAppConfig
 name	django/apps/stories/migrations/0001_initial.py	/^            name='Aside',$/;"	v	class:Migration
 name	django/apps/stories/migrations/0001_initial.py	/^            name='Byline',$/;"	v	class:Migration
@@ -1953,6 +2017,8 @@ null	django/apps/adverts/models.py	/^        null=True,$/;"	v	class:Advert
 null	django/apps/contributors/migrations/0010_auto_20151013_2307.py	/^                null=True),$/;"	v	class:Migration
 null	django/apps/issues/models.py	/^        null=True)$/;"	v	class:Issue
 null	django/apps/issues/models.py	/^        null=True,$/;"	v	class:PrintIssue.Meta
+null	django/apps/photo/cropping/models.py	/^        null=True,$/;"	v	class:AutoCropImage.Meta
+null	django/apps/photo/migrations/0009_imagefile_crop_box.py	/^                null=True,$/;"	v	class:Migration
 null	django/apps/photo/models.py	/^        null=True,$/;"	v	class:ImageFile.Meta
 null	django/apps/stories/models.py	/^        null=True,$/;"	v	class:Byline
 null	django/watson/models.py	/^        null=True,$/;"	v	class:SearchEntry
@@ -1979,7 +2045,6 @@ old_name	django/apps/photo/migrations/0006_auto_20151025_2149.py	/^            o
 old_name	django/apps/photo/migrations/0006_auto_20151025_2149.py	/^            old_name='source_size',$/;"	v	class:Migration
 on_delete	django/apps/contributors/migrations/0010_auto_20151013_2307.py	/^                on_delete=django.db.models.deletion.SET_NULL,$/;"	v	class:Migration
 on_delete	django/apps/contributors/models.py	/^        on_delete=models.SET_NULL,$/;"	v	class:Contributor
-opencv_image	django/apps/photo/autocrop.py	/^def opencv_image(instance, size=400):$/;"	f
 operations	django/apps/adverts/migrations/0001_initial.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/adverts/migrations/0002_data_ad_formats.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/adverts/migrations/0003_universitas_ad_channels.py	/^    operations = [$/;"	v	class:Migration
@@ -2026,6 +2091,9 @@ operations	django/apps/photo/migrations/0005_auto_20151025_2003.py	/^    operati
 operations	django/apps/photo/migrations/0006_auto_20151025_2149.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/photo/migrations/0007_auto_20160906_1614.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/photo/migrations/0008_auto_20170214_1552.py	/^    operations = [$/;"	v	class:Migration
+operations	django/apps/photo/migrations/0009_imagefile_crop_box.py	/^    operations = [$/;"	v	class:Migration
+operations	django/apps/photo/migrations/0010_data_imagefile_cropbox.py	/^    operations = [migrations.RunPython(migrate_cropboxes)]$/;"	v	class:Migration
+operations	django/apps/photo/migrations/0011_auto_20170422_2232.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0001_initial.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0002_auto_20141217_1841.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^    operations = [$/;"	v	class:Migration
@@ -2093,6 +2161,7 @@ parameter_name	django/apps/legacy_db/admin.py	/^    parameter_name = 'status'$/;
 parent_story	django/apps/stories/models.py	/^    def parent_story(self):$/;"	m	class:Story
 parent_story	django/apps/stories/models.py	/^    parent_story = models.ForeignKey($/;"	v	class:InlineLink
 parent_story	django/apps/stories/models.py	/^    parent_story = models.ForeignKey(Story)$/;"	v	class:StoryElement
+parse_box_data	django/apps/photo/cropping/models.py	/^def parse_box_data(value):$/;"	f
 parse_markup	django/apps/stories/models.py	/^    def parse_markup(self):$/;"	m	class:TextContent
 path	django/apps/legacy_db/models.py	/^    path = models.CharField(max_length=255)$/;"	v	class:Bilde
 pattern	django/apps/markup/models.py	/^    pattern = models.CharField($/;"	v	class:Alias
@@ -2177,6 +2246,7 @@ random_image	django/apps/core/content_factory.py	/^def random_image(sourceimg=No
 random_image	django/utils/content_factory.py	/^def random_image(img=IMG, size=(200, 100)):$/;"	f
 random_storytype	django/apps/core/content_factory.py	/^def random_storytype():$/;"	f
 random_storytype	django/utils/content_factory.py	/^def random_storytype():$/;"	f
+ratio	django/apps/photo/cropping/boundingbox.py	/^    def ratio(self) -> float:$/;"	m	class:Box
 raw_id_fields	django/apps/stories/admin.py	/^    raw_id_fields = ($/;"	v	class:BylineAdmin
 raw_id_fields	django/apps/stories/admin.py	/^    raw_id_fields = ($/;"	v	class:StoryTypeAdmin
 readonly_fields	django/apps/adverts/admin.py	/^    readonly_fields = ['get_html']$/;"	v	class:AdvertAdmin
@@ -2247,6 +2317,7 @@ save	django/apps/markup/models.py	/^    def save(self, *args, **kwargs):$/;"	m	c
 save	django/apps/markup/models.py	/^    def save(self, *args, **kwargs):$/;"	m	class:BlockTag
 save	django/apps/markup/models.py	/^    def save(self, *args, **kwargs):$/;"	m	class:CachedTag
 save	django/apps/markup/models.py	/^    def save(self, *args, **kwargs):$/;"	m	class:InlineTag
+save	django/apps/photo/cropping/models.py	/^    def save(self, *args, **kwargs):$/;"	m	class:AutoCropImage
 save	django/apps/photo/models.py	/^    def save(self, *args, **kwargs):$/;"	m	class:ImageFile
 save	django/apps/stories/models.py	/^    def save(self, *args, **kwargs):$/;"	m	class:InlineLink
 save	django/apps/stories/models.py	/^    def save(self, *args, **kwargs):$/;"	m	class:RemembersSubClass
@@ -2294,6 +2365,8 @@ section	django/apps/stories/models.py	/^    def section(self):$/;"	m	class:Story
 section	django/apps/stories/models.py	/^    section = models.ForeignKey(Section)$/;"	v	class:StoryType
 section_frontpage	django/apps/frontpage/views.py	/^def section_frontpage(request, section):$/;"	f
 sensurert	django/apps/legacy_db/models.py	/^    sensurert = models.IntegerField(blank=True, null=True)$/;"	v	class:InnleggAbstract
+serialize	django/apps/photo/cropping/boundingbox.py	/^    def serialize(self, precision: int=4) -> typing.Mapping[str, float]:$/;"	m	class:Box
+serialize	django/apps/photo/cropping/crop_detector.py	/^            -> Mapping[str, Union[str, float]]:$/;"	m	class:Feature
 serialize_meta	django/watson/search.py	/^    def serialize_meta(self, obj):$/;"	m	class:SearchAdapter
 serve_ads	django/apps/adverts/models.py	/^    def serve_ads(self):$/;"	m	class:AdChannel
 siblings	django/apps/stories/models.py	/^    def siblings(self):$/;"	m	class:StoryElement
@@ -2302,6 +2375,7 @@ single	django/apps/legacy_db/models.py	/^    def single(self):$/;"	m	class:Prods
 single	django/apps/legacy_db/models.py	/^    def single(self):$/;"	m	class:ProdsakQueryset
 sitat	django/apps/legacy_db/models.py	/^    sitat = models.TextField(blank=True)$/;"	v	class:Sak
 size	django/apps/legacy_db/models.py	/^    size = models.IntegerField(db_column='str', blank=True, null=True)$/;"	v	class:Bilde
+size	django/apps/photo/cropping/boundingbox.py	/^    def size(self) -> float:$/;"	m	class:Box
 size	django/apps/photo/models.py	/^    def size(self):$/;"	m	class:ImageFile
 size	django/apps/photo/models.py	/^    def size(self, value):$/;"	m	class:ImageFile
 size	django/apps/stories/models.py	/^    size = models.PositiveSmallIntegerField($/;"	v	class:StoryMedia
@@ -2369,6 +2443,13 @@ template_name	django/apps/search/views.py	/^    template_name = "search-results.
 template_name	django/apps/stories/models.py	/^    template_name = 'bodytext.html'$/;"	v	class:Story
 template_name	django/apps/stories/models.py	/^    template_name = 'bodytext_element.html'$/;"	v	class:TextContent
 template_name	django/watson/views.py	/^    template_name = "watson\/search_results.html"$/;"	v	class:SearchView
+test_box_exceptions	django/apps/photo/cropping/boundingbox.py	/^def test_box_exceptions():$/;"	f
+test_box_methods	django/apps/photo/cropping/boundingbox.py	/^def test_box_methods():$/;"	f
+test_box_operators	django/apps/photo/cropping/boundingbox.py	/^def test_box_operators():$/;"	f
+test_box_operators	django/apps/photo/tests/test_cropping.py	/^def test_box_operators():$/;"	f
+test_box_properties	django/apps/photo/cropping/boundingbox.py	/^def test_box_properties():$/;"	f
+test_box_serialize	django/apps/photo/cropping/boundingbox.py	/^def test_box_serialize():$/;"	f
+test_cascade	django/apps/photo/tests/test_cropping.py	/^def test_cascade(valid_cascade_file, invalid_cascade_file):$/;"	f
 test_convert_pdf_page_to_image	django/apps/issues/tests/test_tasks.py	/^def test_convert_pdf_page_to_image(tmp_fixture_dir):$/;"	f
 test_convert_pdf_page_to_web	django/apps/issues/tests/test_tasks.py	/^def test_convert_pdf_page_to_web(tmp_fixture_dir):$/;"	f
 test_create_bundle	django/apps/issues/tests/test_tasks.py	/^def test_create_bundle(tmp_fixture_dir):$/;"	f
@@ -2376,31 +2457,40 @@ test_create_current_issue_web_bundle	django/apps/issues/tests/test_tasks.py	/^de
 test_create_issue	django/apps/issues/tests/test_models.py	/^def test_create_issue():$/;"	f
 test_create_printissue	django/apps/issues/tests/test_models.py	/^def test_create_printissue(fixture_pdf, settings, tempdir):$/;"	f
 test_create_story_from_xtags	django/apps/stories/tests/test_new_story.py	/^def test_create_story_from_xtags(news):$/;"	f
+test_cropdetector	django/apps/photo/tests/test_cropping.py	/^def test_cropdetector(Detector, testimage):$/;"	f
+test_custom_field	django/apps/photo/tests/test_models.py	/^def test_custom_field(fixture_image):$/;"	f
 test_environ_prefix	django/universitas/tests/test_setting_helpers.py	/^def test_environ_prefix():$/;"	f
 test_extract_page_text	django/apps/issues/tests/test_models.py	/^def test_extract_page_text(fixture_pdf):$/;"	f
 test_fake_contributor	django/apps/core/tests/test_content_factory.py	/^def test_fake_contributor():$/;"	f
 test_fake_imagefile	django/apps/core/tests/test_content_factory.py	/^def test_fake_imagefile():$/;"	f
 test_fake_story	django/apps/core/tests/test_content_factory.py	/^def test_fake_story():$/;"	f
+test_feature_operators	django/apps/photo/tests/test_cropping.py	/^def test_feature_operators():$/;"	f
 test_get_staging_pdf_files	django/apps/issues/tests/test_tasks.py	/^def test_get_staging_pdf_files(tmp_fixture_dir):$/;"	f
 test_log	django/apps/core/tasks.py	/^def test_log():$/;"	f
 test_minify	django/utils/html.py	/^def test_minify():$/;"	f
+test_new_staging_images	django/apps/photo/tests/test_tasks.py	/^def test_new_staging_images():$/;"	f
 test_new_story	django/apps/stories/tests/test_new_story.py	/^def test_new_story(news):$/;"	f
 test_nonstrict_environ	django/universitas/tests/test_setting_helpers.py	/^def test_nonstrict_environ():$/;"	f
 test_optimize_all_pages	django/apps/issues/tests/test_tasks.py	/^def test_optimize_all_pages(tmp_fixture_dir):$/;"	f
 test_path	django/universitas/tests/test_setting_helpers.py	/^def test_path():$/;"	f
+test_post_save	django/apps/photo/tests/test_tasks.py	/^def test_post_save(fixture_image):$/;"	f
 test_prettify	django/utils/html.py	/^def test_prettify():$/;"	f
 test_random_image	django/apps/core/tests/test_content_factory.py	/^def test_random_image():$/;"	f
 test_require_binary_decorator	django/apps/issues/tests/test_tasks.py	/^def test_require_binary_decorator():$/;"	f
+test_serialize_and_deserialize	django/apps/photo/tests/test_cropping.py	/^def test_serialize_and_deserialize():$/;"	f
 test_story_content	django/apps/core/tests/test_content_factory.py	/^def test_story_content():$/;"	f
+test_that_both_file_and_bytes_work	django/apps/photo/tests/test_cropping.py	/^def test_that_both_file_and_bytes_work(testimage):$/;"	f
 test_that_db_is_empty	django/apps/stories/tests/test_new_story.py	/^def test_that_db_is_empty():$/;"	f
+test_that_keypointdetector_returns_correct_number_of_features	django/apps/photo/tests/test_cropping.py	/^def test_that_keypointdetector_returns_correct_number_of_features(testimage):$/;"	f
+testimage	django/apps/photo/tests/test_cropping.py	/^def testimage():$/;"	f
 text	django/apps/issues/models.py	/^    text = models.TextField($/;"	v	class:PrintIssue
 text	django/apps/stories/models.py	/^    text = models.TextField($/;"	v	class:InlineLink
 theme_word	django/apps/stories/models.py	/^    theme_word = MarkupCharField($/;"	v	class:Story
 through	django/apps/frontpage/models.py	/^        through=StoryModule,$/;"	v	class:FrontpageStory.Meta
-thumb	django/apps/photo/models.py	/^    def thumb(self, height=315, width=600):$/;"	m	class:ImageFile
+thumb	django/apps/photo/cropping/models.py	/^    def thumb(self, height=315, width=600):$/;"	m	class:AutoCropImage
 thumb	django/apps/stories/models.py	/^    def thumb(self):$/;"	m	class:Story
 thumbnail	django/apps/issues/admin.py	/^    def thumbnail(self, instance, width=200, height=200):$/;"	m	class:ThumbAdmin
-thumbnail	django/apps/photo/admin.py	/^    def thumbnail(self, instance, width=200, height=100):$/;"	m	class:ThumbAdmin
+thumbnail	django/apps/photo/admin.py	/^    def thumbnail(self, instance, width=200, height=100, **kwargs):$/;"	m	class:ThumbAdmin
 tid	django/apps/legacy_db/models.py	/^    tid = models.DateTimeField()$/;"	v	class:InnleggAbstract
 timelock	django/apps/legacy_db/models.py	/^    timelock = models.DateTimeField(editable=False, blank=True, null=True)$/;"	v	class:Prodsak
 timestamp	django/apps/core/staging.py	/^def timestamp(delta, fallback):$/;"	f
@@ -2416,6 +2506,7 @@ title	django/watson/models.py	/^    title = models.CharField($/;"	v	class:Search
 tittel	django/apps/legacy_db/models.py	/^    tittel = models.CharField(max_length=255, blank=True)$/;"	v	class:DiskInnlegg
 tmp_fixture_dir	django/apps/issues/tests/test_tasks.py	/^def tmp_fixture_dir(settings):$/;"	f
 to	django/apps/contributors/migrations/0010_auto_20151013_2307.py	/^                to='photo.ProfileImage',$/;"	v	class:Migration
+to_python	django/apps/photo/cropping/models.py	/^    def to_python(self, value):$/;"	m	class:BoxField
 today	django/apps/contributors/models.py	/^def today():$/;"	f
 today	django/apps/issues/models.py	/^def today():$/;"	f
 top	django/apps/stories/models.py	/^    def top(self):$/;"	m	class:ElementQuerySet
@@ -2431,7 +2522,7 @@ unique	django/apps/markup/models.py	/^        unique=True,$/;"	v	class:MarkupTag
 unique	django/apps/stories/models.py	/^        unique=True,$/;"	v	class:Section.Meta
 unique_together	django/apps/adverts/migrations/0001_initial.py	/^            unique_together=set([('width', 'height')]),$/;"	v	class:Migration
 unique_together	django/apps/adverts/models.py	/^        unique_together = ('width', 'height')$/;"	v	class:AdFormat.Meta
-universitas_menu	django/apps/core/templatetags/universitas_menu.py	/^def universitas_menu(active_section):$/;"	f
+universitas_menu	django/apps/core/templatetags/universitas_menu.py	/^def universitas_menu(context, active_section):$/;"	f
 unjoin_models	django/apps/issues/migrations/0005_data_link_pdf_to_issue.py	/^def unjoin_models(apps, schema_editor):$/;"	f
 unload_fixture	django/apps/adverts/migrations/0002_data_ad_formats.py	/^def unload_fixture(apps, schema_editor):$/;"	f
 unload_fixture	django/apps/adverts/migrations/0003_universitas_ad_channels.py	/^def unload_fixture(apps, schema_editor):$/;"	f
@@ -2440,7 +2531,6 @@ unpublished	django/apps/issues/models.py	/^    def unpublished(self):$/;"	m	clas
 unpublished	django/apps/stories/models.py	/^    def unpublished(self):$/;"	m	class:ElementQuerySet
 unregister	django/watson/search.py	/^    def unregister(self, model):$/;"	m	class:SearchEngine
 unregister	django/watson/search.py	/^unregister = default_search_engine.unregister$/;"	v
-update_image_crop	django/apps/photo/tasks.py	/^def update_image_crop(args):$/;"	f
 update_index	django/watson/search.py	/^    def update_index(self):$/;"	m	class:SearchContextManager
 update_index	django/watson/search.py	/^update_index = search_context_manager.update_index$/;"	v
 update_obj_index	django/watson/search.py	/^    def update_obj_index(self, obj):$/;"	m	class:SearchEngine
@@ -2461,13 +2551,13 @@ urlpatterns	django/universitas/redirect_urls.py	/^urlpatterns = [$/;"	v
 urlpatterns	django/universitas/urls.py	/^urlpatterns = [$/;"	v
 urlpatterns	django/watson/urls.py	/^urlpatterns = [$/;"	v
 usage	django/wait-for-it.sh	/^usage()$/;"	f
+valid_cascade_file	django/apps/photo/tests/test_cropping.py	/^def valid_cascade_file():$/;"	f
+validate_box	django/apps/photo/cropping/models.py	/^def validate_box(value):$/;"	f
 validate_columns	django/apps/frontpage/models.py	/^    def validate_columns(value, minvalue=1, maxvalue=12):$/;"	m	class:FrontPageModule
 validate_height	django/apps/frontpage/models.py	/^    def validate_height(value, minvalue=1, maxvalue=12):$/;"	m	class:FrontPageModule
 validate_url	django/apps/stories/models.py	/^    def validate_url(cls, href):$/;"	m	class:InlineLink
 validators	django/apps/photo/migrations/0001_initial.py	/^                                                               validators=[django.core.validators.MaxValueValidator(100), django.core.validators.MinValueValidator(0)])),$/;"	v	class:Migration
 validators	django/apps/photo/migrations/0001_initial.py	/^                                                              validators=[django.core.validators.MaxValueValidator(100), django.core.validators.MinValueValidator(0)])),$/;"	v	class:Migration
-validators	django/apps/photo/models.py	/^        validators=[$/;"	v	class:ImageFile.Meta
-validators	django/apps/photo/models.py	/^        validators=[MaxValueValidator(100), MinValueValidator(0)],$/;"	v	class:ImageFile.Meta
 verbose_name	django/apps/adverts/appconf.py	/^    verbose_name = _('Adverts')$/;"	v	class:AdvertsAppConfig
 verbose_name	django/apps/adverts/models.py	/^        verbose_name = _("Advert")$/;"	v	class:Advert.Meta
 verbose_name	django/apps/adverts/models.py	/^        verbose_name = _("Customer")$/;"	v	class:Customer.Meta
@@ -2498,15 +2588,14 @@ verbose_name	django/apps/markup/models.py	/^        verbose_name = _('Alias')$/;
 verbose_name	django/apps/markup/models.py	/^        verbose_name = _('block tag')$/;"	v	class:BlockTag.Meta
 verbose_name	django/apps/markup/models.py	/^        verbose_name = _('inline tag')$/;"	v	class:InlineTag.Meta
 verbose_name	django/apps/photo/appconf.py	/^    verbose_name = _('Photo')$/;"	v	class:PhotoAppConfig
+verbose_name	django/apps/photo/cropping/models.py	/^        verbose_name=_('crop box'),$/;"	v	class:AutoCropImage.Meta
+verbose_name	django/apps/photo/cropping/models.py	/^        verbose_name=_('cropping method'),$/;"	v	class:AutoCropImage.Meta
+verbose_name	django/apps/photo/migrations/0009_imagefile_crop_box.py	/^                verbose_name='crop box'$/;"	v	class:Migration
 verbose_name	django/apps/photo/models.py	/^        verbose_name = _('ImageFile')$/;"	v	class:ImageFile.Meta
 verbose_name	django/apps/photo/models.py	/^        verbose_name = _('Profile Image')$/;"	v	class:ProfileImage.Meta
 verbose_name	django/apps/photo/models.py	/^        verbose_name=_('contributor'),$/;"	v	class:ImageFile.Meta
 verbose_name	django/apps/photo/models.py	/^        verbose_name=_('copyright information'),$/;"	v	class:ImageFile.Meta
-verbose_name	django/apps/photo/models.py	/^        verbose_name=_('crop diameter'),$/;"	v	class:ImageFile.Meta
-verbose_name	django/apps/photo/models.py	/^        verbose_name=_('cropping method'),$/;"	v	class:AutoCropImage.Meta
 verbose_name	django/apps/photo/models.py	/^        verbose_name=_('file size'),$/;"	v	class:ImageFile.Meta
-verbose_name	django/apps/photo/models.py	/^        verbose_name=_('from left'),$/;"	v	class:ImageFile.Meta
-verbose_name	django/apps/photo/models.py	/^        verbose_name=_('from top'),$/;"	v	class:ImageFile.Meta
 verbose_name	django/apps/photo/models.py	/^        verbose_name=_('height'),$/;"	v	class:ImageFile.Meta
 verbose_name	django/apps/photo/models.py	/^        verbose_name=_('md5'),$/;"	v	class:ImageFile.Meta
 verbose_name	django/apps/photo/models.py	/^        verbose_name=_('old file path'),$/;"	v	class:ImageFile.Meta
@@ -2612,6 +2701,8 @@ widget_attrs	django/apps/photo/autocomplete_light_registry.py	/^    widget_attrs
 widget_attrs	django/apps/stories/autocomplete_light_registry.py	/^    widget_attrs={$/;"	v
 width	django/apps/adverts/models.py	/^    def width(self):$/;"	m	class:Advert
 width	django/apps/adverts/models.py	/^    width = models.PositiveSmallIntegerField()$/;"	v	class:AdFormat
+width	django/apps/photo/cropping/boundingbox.py	/^    def width(self) -> float:$/;"	m	class:Box
+width	django/apps/photo/cropping/boundingbox.py	/^    def width(self, value: float) -> None:$/;"	m	class:Box
 width_field	django/apps/photo/models.py	/^        width_field='full_width',$/;"	v	class:ImageFile.Meta
 xtags_body_text	django/apps/legacy_db/export_content_and_images.py	/^    def xtags_body_text():$/;"	f	function:_websak_til_xtags
 xtags_fact_asides	django/apps/legacy_db/export_content_and_images.py	/^    def xtags_fact_asides():$/;"	f	function:_websak_til_xtags

@@ -10,30 +10,66 @@ from celery import shared_task
 from sorl import thumbnail
 
 from apps.core.staging import new_staging_images
-from .models import upload_image_to, ImageFile
-from .cropping.oldcrop import autocrop
+from .models import upload_image_to, ImageFile, ProfileImage
+from .cropping.models import CropBox, AutoCropImage
+# from .cropping.oldcrop import autocrop
+from .cropping.crop_detector import HybridDetector
 
 import logging
 logger = logging.getLogger(__name__)
+
+
+def determine_method(features):
+    if 'face' in features[-1].label:
+        if len(features) == 1:
+            return AutoCropImage.CROP_PORTRAIT
+        return AutoCropImage.CROP_FACES
+    return AutoCropImage.CROP_FEATURES
+
+
+def autocrop(instance):
+    with instance.source_file as img:
+        imgdata = img.read()
+    if isinstance(instance, ProfileImage):
+        detector = HybridDetector(n=1)
+    else:
+        detector = HybridDetector(n=10)
+    features = detector.detect_features(imgdata)
+    x, y = features[0].center
+    left, top, right, bottom = sum(features)
+    cropbox = CropBox(left, top, right, bottom, x, y)
+    cropping_method = determine_method(features)
+    return cropbox, cropping_method
 
 
 @shared_task(serializer='pickle')
 def post_save_task(instance):
     # logger.info(instance.get_cropping_method_display())
     if instance.cropping_method == instance.CROP_PENDING:
-        logger.info('autocrop')
         box, method = autocrop(instance)
         instance.cropping_method = method
+        logger.info('autocrop {i.pk} {i} {m}'.format(
+            i=instance, m=instance.get_cropping_method_display()))
         instance.crop_box = box
         assert instance.cropping_method != instance.CROP_PENDING
         instance.save(update_fields=('crop_box', 'cropping_method'))
 
     else:
-        logger.info('rebuild thumbs')
+        logger.info('clear thumbs for %d %s' % (instance.pk, instance))
         # delete thumbnail
         thumbnail.delete(instance.source_file, delete_file=False)
         # rebuild thumbnail
         instance.thumb()
+
+
+@periodic_task(run_every=timedelta(hours=1))
+def clean_up_pending_autocrop():
+    # In case some images have ended up in limbo
+    pending_images = ImageFile.objects.filter(
+        cropping_method=ImageFile.CROP_PENDING
+    )
+    for image in pending_images:
+        post_save_task(image)
 
 
 @periodic_task(run_every=timedelta(minutes=1))

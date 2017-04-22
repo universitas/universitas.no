@@ -47,6 +47,9 @@ for arg; do case $arg in
   test )
     docker-compose run --rm -u django web pytest
     ;;
+  repl )
+    docker-compose run --rm web django-admin shell_plus
+    ;;
   webpack )
     docker-compose run --rm webpack build
     ;;

@@ -3,21 +3,17 @@
 # Python standard library
 import logging
 import json
-from collections import namedtuple
 
 # Django core
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
-from .cropping.boundingbox import Box
+from .boundingbox import Box
 
 # Third party apps
 from sorl import thumbnail
 
 logger = logging.getLogger(__name__)
-
-Cropping = namedtuple('Cropping', ['top', 'left', 'diameter'])
 
 
 class CropBox(Box):
@@ -25,8 +21,16 @@ class CropBox(Box):
     _attrs = ['left', 'top', 'bottom', 'right', 'x', 'y']
 
     def __init__(self, left, top, right, bottom, x, y):
-        h = [0.0, left, x, right, 1.0]
-        v = [0.0, top, y, bottom, 1.0]
+
+        # truncate overflowing values
+        left = max(0.0, left)
+        top = max(0.0, top)
+        right = min(1.0, right)
+        bottom = min(1.0, bottom)
+
+        # make sure values are valid
+        h = [left, x, right]
+        v = [top, y, bottom]
         if not (sorted(h), sorted(v)) == (h, v):
             raise ValueError('invalid data %s: %s' % (h, v))
         self.x, self.y = x, y
@@ -115,39 +119,6 @@ class AutoCropImage(models.Model):
         default=default_crop_box,
         help_text=_('How this image has been cropped.'),
     )
-    from_top = models.PositiveSmallIntegerField(
-        verbose_name=_('from top'),
-        default=50,
-        help_text=_('image crop vertical. Between 0% and 100%.'),
-        validators=[MaxValueValidator(100), MinValueValidator(0)],
-    )
-    from_left = models.PositiveSmallIntegerField(
-        verbose_name=_('from left'),
-        default=50,
-        help_text=_('image crop horizontal. Between 0% and 100%.'),
-        validators=[MaxValueValidator(100), MinValueValidator(0)],
-    )
-    crop_diameter = models.PositiveSmallIntegerField(
-        verbose_name=_('crop diameter'),
-        default=100,
-        help_text=_(
-            'area containing most relevant content. Area is considered a '
-            'circle with center x,y and diameter d where x and y are the '
-            'values "from_left" and "from_right" and d is a percentage of '
-            'the shortest axis. This is used for close cropping of some '
-            'images, for instance byline photos.'
-        ),
-        validators=[
-            MaxValueValidator(100),
-            MinValueValidator(0)],
-    )
-
-    @property
-    def cropping(self):
-        return Cropping(
-            top=self.from_top,
-            left=self.from_left,
-            diameter=self.crop_diameter)
 
     def save(self, *args, **kwargs):
         cls = self.__class__
@@ -158,7 +129,7 @@ class AutoCropImage(models.Model):
         else:
             if all((self.cropping_method != self.CROP_PENDING,
                     saved.cropping_method != self.CROP_PENDING,
-                    saved.cropping != self.cropping)):
+                    saved.crop_box != self.crop_box)):
                 self.cropping_method = self.CROP_MANUAL
 
         super().save(*args, **kwargs)

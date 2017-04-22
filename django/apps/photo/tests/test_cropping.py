@@ -4,7 +4,7 @@ import pytest
 import json
 from pathlib import Path
 from apps.photo.cropping.crop_detector import (
-    FeatureDetector, Feature, KeypointDetector, Cascade
+    FeatureDetector, MockFeatureDetector, Feature, KeypointDetector, Cascade
 )
 from apps.photo.cropping.boundingbox import Box
 
@@ -13,7 +13,7 @@ from apps.photo.cropping.boundingbox import Box
 def testimage():
     img = Path(__file__).parent / 'fixtureimage.jpg'
     assert img.exists()
-    return str(img)
+    return img
 
 
 @pytest.fixture
@@ -60,6 +60,15 @@ def test_that_keypointdetector_returns_correct_number_of_features(testimage):
     detector = KeypointDetector(n=5)
     features = detector.detect_features(testimage)
     assert len(features) == 5
+
+
+def test_that_both_file_and_bytes_work(testimage):
+    detector = MockFeatureDetector(n=3)
+    data = testimage.read_bytes()
+    features = detector.detect_features(testimage)
+    features2 = detector.detect_features(data)
+    assert len(features) == 3
+    assert features == features2
 
 
 def test_feature_operators():
