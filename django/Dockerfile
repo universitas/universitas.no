@@ -20,7 +20,11 @@ RUN pip install --no-cache wheel && pip install --no-cache -r /app/requirements.
 # install jupyter notebook with vim key bindings
 RUN /app/install-jupyter.sh
 
-RUN cd /var && mkdir staging media static logs && chown django:django staging media static logs
+RUN cd /var && mkdir staging media static logs &&\
+    chown 1000:1000 staging media static logs &&\
+    mkdir /home/django/.ptpython &&\
+    ln -s /var/logs/.ptpython_history /home/django/.ptpython_history &&\
+    ln -s /app/ptpython_config.py /home/django/.ptpython/config.py
 
 WORKDIR /app/
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
