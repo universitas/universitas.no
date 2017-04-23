@@ -29,7 +29,7 @@ class SearchMixin:
         """Parses the query from the request."""
         return request.GET.get(self.query_param, "").strip()
 
-    empty_query_redirect = None
+    empty_query_redirect = None  # type: ignore
 
     def get_empty_query_redirect(self):
         """Returns the URL to redirect an empty query to, or None."""

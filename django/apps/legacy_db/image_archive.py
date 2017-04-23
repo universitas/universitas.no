@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # pylint: disable=logging-format-interpolation
 
 import re
@@ -12,8 +11,6 @@ logger = logging.getLogger(__name__)
 
 class ImageFile(object):
 
-    issue = None
-
     def __init__(self, fullpath, filesize, filedate, issue, year):
         self.created_date = filedate
         self.year = int(year)
@@ -21,7 +18,6 @@ class ImageFile(object):
         self.path = fullpath
         self.filename = fullpath.split('/')[-1]
         self._slugify_filename()
-        # logger.debug(self._slugify_filename())
 
     def _slugify_filename(self):
         filename, dot, extension = self.filename.rpartition('.')
@@ -90,7 +86,6 @@ def main():
                 year = filedate.year
                 issue = '00'
 
-        # logger.debug('year: {}, issue: {}, file: {}'.format(issuematch.group('year'), issuematch.group('issue'), filename))
         if year and issue:
             image_file = ImageFile(
                 filepath,
@@ -110,6 +105,7 @@ def main():
     msg = 'all: {0} placed: {1} duplicates: {2}'.format(
         len(images), len(imagedict), duplicates)
     logger.debug(msg)
+
 
 if __name__ == '__main__':
     main()

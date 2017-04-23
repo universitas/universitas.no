@@ -1108,7 +1108,6 @@ class StoryElement(TimeStampedModel, RemembersSubClass):
     """ Models that are placed somewhere inside an article """
 
     markup_tag = ''  # change in subclasses
-    needle = ''  # for fuzzy search
 
     objects = ElementManager()
     parent_story = models.ForeignKey(Story)
@@ -1123,6 +1122,11 @@ class StoryElement(TimeStampedModel, RemembersSubClass):
         default=False,
         help_text=_('Is this element placed on top?'),
     )
+
+    class Meta:
+        verbose_name = _('story element')
+        verbose_name_plural = _('story elements')
+        ordering = ['index']
 
     @property
     def published(self):
@@ -1149,13 +1153,8 @@ class StoryElement(TimeStampedModel, RemembersSubClass):
         super().save(*args, **kwargs)
         self.parent_story.clear_html()
 
-    class Meta:
-        verbose_name = _('story element')
-        verbose_name_plural = _('story elements')
-        ordering = ['index']
 
-
-class Pullquote(TextContent, StoryElement):
+class Pullquote(TextContent, StoryElement):  # type: ignore
 
     """ A quote that is that is pulled out of the content. """
 
@@ -1171,7 +1170,7 @@ class Pullquote(TextContent, StoryElement):
         verbose_name_plural = _('Pullquotes')
 
 
-class Aside(TextContent, StoryElement):
+class Aside(TextContent, StoryElement):  # type: ignore
 
     """ Fact box or other information typically placed in side bar """
 
@@ -1510,7 +1509,7 @@ class InlineLink(TimeStampedModel):
             text=self.text, href=self.link, alt=self.alt_text)
         return mark_safe(html)
 
-    get_html.allow_tags = True
+    get_html.allow_tags = True  # type: ignore
 
     @property
     def link(self):

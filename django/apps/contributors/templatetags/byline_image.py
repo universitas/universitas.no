@@ -1,4 +1,6 @@
-""" Template tags for inline story elements such as images, asides and pullquotes """
+"""
+Template tags for inline story elements such as images, asides and pullquotes
+"""
 
 import logging
 from django import template

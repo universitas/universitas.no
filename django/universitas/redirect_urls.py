@@ -7,7 +7,8 @@ urlpatterns = [
     # PHP utils from old website and other cruft that older browsers might
     # request.
     url(r'^favicon.ico$',
-        RedirectView.as_view(url='/static/favicon/favicon.ico', permanent=False)),
+        RedirectView.as_view(url='/static/favicon/favicon.ico',
+                             permanent=False)),
     url(r'^(?P<base>.+)/(hl|tel):.+$',
         RedirectView.as_view(url=r'/%(base)s/', permanent=True)),
     url(r'^rss\.php$', RedirectView.as_view(url=r'/rss/', permanent=True)),
