@@ -11,7 +11,7 @@ from sorl import thumbnail
 
 from apps.core.staging import new_staging_images
 from .models import upload_image_to, ImageFile, ProfileImage
-from .cropping.models import CropBox, AutoCropImage
+from .cropping.models import CropBox, AutoCropImage, default_crop_box
 # from .cropping.oldcrop import autocrop
 from .cropping.crop_detector import HybridDetector
 
@@ -35,6 +35,8 @@ def autocrop(instance):
     else:
         detector = HybridDetector(n=10)
     features = detector.detect_features(imgdata)
+    if not features:
+        return default_crop_box(), ImageFile.CROP_NONE
     x, y = features[0].center
     left, top, right, bottom = sum(features)
     cropbox = CropBox(left, top, right, bottom, x, y)
