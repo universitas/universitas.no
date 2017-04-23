@@ -12,6 +12,14 @@ django-autocomplete-light>=2.2,<3.0
 sorl-thumbnail
 django-model-utils
 
+# REST FRAMEWORK
+djangorestframework
+markdown
+django-filter
+django-guardian
+django-crispy-forms
+django-rest-swagger
+
 # DATABASE LIBRARIES
 mysqlclient
 psycopg2
