@@ -45,7 +45,10 @@ for arg; do case $arg in
     docker-compose run --rm -p 8888:8888 django jupyter
     ;;
   test )
-    docker-compose run --rm web pytest
+    docker-compose run --rm -u django web pytest --create-db
+    ;;
+  repl )
+    docker-compose run --rm web django-admin shell_plus --quiet-load
     ;;
   webpack )
     docker-compose run --rm webpack build
