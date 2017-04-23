@@ -54,6 +54,7 @@ def move_to_archive(modeladmin, request, queryset):
         story.produsert = Prodsak.ARCHIVED
         story.save()
 
+
 move_to_archive.short_description = _('Move story to archive.')
 
 

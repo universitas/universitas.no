@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import re
-import random
 from django.db import models
 from slugify import Slugify
 
@@ -45,7 +44,8 @@ class AdFormat(models.Model):
 
     def __str__(self):
         unit = 'px' if self.category == self.WEB else 'mm'
-        return '{s.name} ({s.width}{u} × {s.height}{u})'.format(s=self, u=unit)
+        return '{s.name} ({s.width}{u} × {s.height}{u})'.format(
+            s=self, u=unit)
 
 
 class AdChannel(models.Model):
@@ -115,18 +115,6 @@ class AdChannel(models.Model):
             '?',
         )[:self.max_at_once]
         return served_ads
-
-        # old_ads = old_ads or []
-        # served_ads = []
-        # unseen_ads = self.current_ads.exclude(id__in=seen_ads).order_by('-priority').all()
-        # seen_ads = self.current_ads.filter(id__in=seen_ads).order_by('-priority').all()
-        # spots = self.max_at_once
-        # while spots:
-        #     spots -= 1
-        #     if unseen_ads:
-        #         unseen_ads.pop()
-        #         served_ads.append()
-        #     elif seen_ads:
 
 
 class Customer(models.Model):
@@ -316,7 +304,9 @@ class Advert(models.Model):
         if self.status in [self.PUBLISHED, self.DEFAULT]:
             if self.ad_channels.count() == 0:
                 raise ValidationError(
-                    {'ad_channels': _('Choose one or more ad channels before publishing.')})
+                    {'ad_channels': _(
+                        'Choose one or more ad channels before publishing.'
+                    )})
             if self.ad_type == self.DUMMY_AD:
                 raise ValidationError(
                     _('Published ad must contain an image or html code.'))
@@ -363,7 +353,7 @@ class Advert(models.Model):
         return self.dimension('height')
 
     def determine_ad_type(self, as_string=False):
-        """ Determine which kind of ad it is based on which fields are filled in. """
+        """ Determine which kind of ad it is based on fields filled in. """
         if self.html_source:
             return self.CODE_AD
         elif self.imagefile:

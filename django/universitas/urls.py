@@ -69,7 +69,7 @@ urlpatterns = [
 ]
 
 # redirect 404 to search page
-if settings.DEBUG == False:
+if not settings.DEBUG:
     urlpatterns += [
         url(r'^(?P<slug>.+)/$',
             search_404_view, name='not_found'),

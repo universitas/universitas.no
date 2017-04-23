@@ -1,15 +1,17 @@
-# -*- coding: utf-8 -*-
+import random
+import logging
+
 # Django core
 from django.db import models
-import random
-from model_utils.models import TimeStampedModel
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-# from django.core.exceptions import ObjectDesNotExist
+
+from model_utils.models import TimeStampedModel
 
 # Project apps
-from utils.model_mixins import Edit_url_mixin
 from apps.photo.models import ImageFile
-import logging
+from utils.model_mixins import Edit_url_mixin
+
 logger = logging.getLogger(__name__)
 
 
@@ -61,8 +63,6 @@ class Frontpage(TimeStampedModel):
 
     def __unicode__(self):
         return self.label
-
-from django.core.exceptions import ValidationError
 
 
 class FrontPageModule(TimeStampedModel, Edit_url_mixin):
@@ -298,7 +298,8 @@ class FrontpageStory(TimeStampedModel, Edit_url_mixin):
     #         self.kicker = self.kicker or self.story.kicker[:200]
     #         self.headline = self.headline or self.story.title[:200]
     #         self.vignette = self.vignette or section[:50]
-    #         self.html_class = self.html_class or section[:200].replace(' ', '-')
+    #         self.html_class = (
+    #               self.html_class or section[:200].replace(' ', '-'))
     #         if random.randint(1, 4) == 1:
     #             self.html_class += " negative"
 

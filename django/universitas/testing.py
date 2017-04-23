@@ -1,8 +1,9 @@
 """ Settings for running tests """
-from .local import *
+from .local import *  # NOQA
+from .local import DATABASES, DATABASE_ROUTERS
 import logging
 logging.disable(logging.CRITICAL)
-DATABASE_ROUTERS = []
+del DATABASE_ROUTERS
 del DATABASES['prodsys']
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',

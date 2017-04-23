@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 """Configurations for logging"""
 from .setting_helpers import Environment, joinpath as path
+from typing import Dict # NOQA
 __all__ = ['LOGGING']
 
 LOG_FOLDER = Environment().LOG_DIR or path('..', 'logs')
@@ -21,7 +21,7 @@ def logfile_handler(filename, debug=False, **kwargs):
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
-}
+}  # type: Dict
 LOGGING['filters'] = {
     'debug_off': {
         '()': 'django.utils.log.RequireDebugFalse'

@@ -47,6 +47,9 @@ for arg; do case $arg in
   test )
     docker-compose run --rm -u django web pytest --create-db
     ;;
+  testf )
+    docker-compose run --rm -u django web pytest -f -x --ff
+    ;;
   repl )
     docker-compose run --rm web django-admin shell_plus --quiet-load
     ;;

@@ -1,9 +1,4 @@
-import logging
-logger = logging.getLogger(__name__)
-
-from django.core.management.base import BaseCommand  # , CommandError
-# from django.db.models import Count
-
+from django.core.management.base import BaseCommand
 from apps.stories.models import Story, Section, StoryType
 
 

@@ -4,7 +4,6 @@ Admin for frontpage app.
 """
 
 from django.contrib import admin
-from django.forms import Textarea
 from .models import StoryModule, FrontpageStory, StaticModule
 from apps.photo.admin import ThumbAdmin
 from autocomplete_light.forms import modelform_factory

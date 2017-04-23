@@ -3,7 +3,7 @@
 Configuration for the task runner celery
 """
 
-from celery import Celery
+from celery import Celery  # type: ignore
 
 # set the default Django settings module for the 'celery' program.
 

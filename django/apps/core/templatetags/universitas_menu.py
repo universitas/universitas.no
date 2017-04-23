@@ -25,7 +25,7 @@ def universitas_menu(context, active_section):
     latest_pdf = PrintIssue.objects.exclude(pdf=None).order_by(
         'issue__publication_date', 'pk').last()
 
-    return  {
+    return {
         'sections': sections,
         'active_section': active_section,
         'latest_pdf': latest_pdf,
