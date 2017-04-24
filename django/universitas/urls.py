@@ -13,6 +13,7 @@ from apps.stories.views import article_view
 from apps.stories.feeds import LatestStories
 from autocomplete_light import urls as autocomplete_light_urls
 from .redirect_urls import urlpatterns as redirect_urls
+from .api_urls import urlpatterns as api_urls
 # from watson import urls as watson_urls
 
 from django.views.generic import TemplateView
@@ -57,6 +58,7 @@ urlpatterns = [
 
     url(r'^search/', include(search_urls, namespace='watson')),
     url(r'^', include(redirect_urls, namespace='redirect')),
+    url(r'^api/', include(api_urls, namespace='api')),
 
     url(r'^(?P<section>[a-z0-9-]+)/(?P<story_id>\d+)/(?P<slug>[a-z0-9-]*)/?$',
         article_view, name='article'),

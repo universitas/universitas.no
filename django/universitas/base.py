@@ -1,11 +1,8 @@
 """ Django settings for universitas_no project. """
-# -*- coding: utf-8 -*-
 
-# import django.conf.global_settings as DEFAULT_SETTINGS
 from django.utils.translation import ugettext_lazy as _
 from .setting_helpers import Environment, joinpath as path
 from .logging_settings import LOGGING  # NOQA
-# from .celery_settings import *  # NOQA
 
 env = Environment(strict=False)
 redis_host = env.redis_host or 'redis'
@@ -16,6 +13,15 @@ TEMPLATE_DEBUG = DEBUG
 SITE_URL = env.site_url or 'www.example.com'
 SECRET_KEY = env.secret_key
 ALLOWED_HOSTS = env.allowed_hosts.split(',') or '*'
+
+# DJANGO REST FRAMEWORK
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 # SENTRY
 RAVEN_CONFIG = {'dsn': env.raven_dsn, 'site': SITE_URL}
@@ -65,7 +71,7 @@ INSTALLED_APPS = [
     'raven.contrib.django.raven_compat',
     'storages',
     'webpack_loader',
-
+    'rest_framework',
 ] + INSTALLED_APPS
 
 # CORE APPS
