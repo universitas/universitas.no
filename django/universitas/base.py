@@ -12,6 +12,7 @@ redis_host = env.redis_host or 'redis'
 redis_port = env.redis_port or 6379
 
 DEBUG = True if env.debug.lower() == 'true' else False
+TEMPLATE_DEBUG = DEBUG
 SITE_URL = env.site_url or 'www.example.com'
 SECRET_KEY = env.secret_key
 ALLOWED_HOSTS = env.allowed_hosts.split(',') or '*'
@@ -194,6 +195,7 @@ TEMPLATES = [
         'DIRS': [path('templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
+            'debug': DEBUG,
             'context_processors': [
                 'apps.issues.context_processors.issues',
                 'apps.contributors.context_processors.staff',
@@ -209,6 +211,7 @@ TEMPLATES = [
         },
     },
 ]
+
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',

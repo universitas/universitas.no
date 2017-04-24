@@ -44,7 +44,13 @@ class CloseCropEngine(WandEngine):
 
     def create(self, image, geometry, options):
         cropbox = options.pop('crop_box', None)
-        expand = options.pop('expand', 0)
+        try:
+            expand = options.pop('expand', 0)
+            expand = float(expand)
+        except (KeyError, TypeError):
+            expand = 0.0
+            logger.exception('foo')
+
         if cropbox:
             new_geometry = calculate_crop(
                 image.width, image.height,

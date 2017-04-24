@@ -54,7 +54,9 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
         'DISABLE_PANELS': {
             'debug_toolbar.panels.redirects.RedirectsPanel',
-            'debug_toolbar.panels.templates.TemplatesPanel'
+            'debug_toolbar.panels.sql.SQLPanel',
+            'debug_toolbar.panels.templates.TemplatesPanel',
+            'debug_toolbar.panels.loggin.LoggingPanel',
         },
         "SHOW_TOOLBAR_CALLBACK": lambda request: True
     }

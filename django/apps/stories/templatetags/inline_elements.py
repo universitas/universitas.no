@@ -19,12 +19,15 @@ def header_image(context):
     context = {
         'elements': [i.child for i in images] + [i.child for i in videos],
         'css_classes': 'main_image',
+        'expand': 0,
     }
     images = context['elements']
 
     if images:
         first_image = images[0]
         height = first_image.get_height(width, height)
+        if first_image.aspect_ratio == first_image.ORIGINAL_RATIO:
+            context['expand'] = 1
 
     if len(context['elements']) > 1:
         context['css_classes'] += ' slideshow'
@@ -42,11 +45,15 @@ def inline_storyimage(context, argument_string):
     images = story.images().inline()
     # videos = story.videos().inline()
     context = get_items(images, argument_string)
+    context['expand'] = 0
     # context['elements'] += [i.child for i in videos]
     images = context['elements']
     if images:
         first_image = images[0]
         height = first_image.get_height(width, height)
+        if first_image.aspect_ratio == first_image.ORIGINAL_RATIO:
+            context['expand'] = 1
+
     size = '{}x{}'.format(width, height)
     if len(images) > 1:
         context['slideshow'] = True
