@@ -1299,6 +1299,9 @@ class StoryImage(StoryMedia):
             needle = name.group(0)
         return needle.strip()[:60] or str(self.imagefile)
 
+    def thumb(self):
+        return self.imagefile.thumb()
+
 
 class StoryVideo(StoryMedia):
 

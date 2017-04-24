@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             model_name='imagefile',
             name='crop_box',
             field=apps.photo.cropping.models.BoxField(
-                default=apps.photo.cropping.models.default_crop_box,
+                default=apps.photo.cropping.models.CropBox.basic,
                 help_text='How this image has been cropped.',
                 null=True,
                 verbose_name='crop box'

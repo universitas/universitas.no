@@ -21,6 +21,15 @@ def test_post_save(fixture_image):
     post_save_task(img)
     assert img.cropping_method != img.CROP_PENDING
 
+    # run again, to generate thumbnail
+    post_save_task(img)
+    thumb = img.thumb()
+    assert '<img' in thumb
+    assert 'admin/img/icon-no.svg' not in thumb
+    preview = img.preview()
+    assert '<img' in preview
+    assert 'admin/img/icon-no.svg' not in preview
+
 
 def test_new_staging_images():
     staging_dir, new_files = new_staging_images()

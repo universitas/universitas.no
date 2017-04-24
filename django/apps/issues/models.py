@@ -10,7 +10,7 @@ import collections
 import subprocess
 import unicodedata
 import uuid
-import pathlib
+from pathlib import Path
 
 # Django core
 from django.utils import timezone
@@ -277,7 +277,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
             background.composite(img, 0, 0)
             return background
 
-        filename = pathlib.Path(self.pdf.name).with_suffix('.jpg').name
+        filename = Path(self.pdf.name).with_suffix('.jpg').name
 
         try:
             cover = pdf_frontpage_to_image()
@@ -337,6 +337,12 @@ class PrintIssue(models.Model, Edit_url_mixin):
 
     def get_absolute_url(self):
         return self.pdf.url
+
+    def download_from_aws(self, dest=Path('/var/media/')):
+        path = dest / self.pdf.name
+        data = self.pdf.file.read()
+        path.parent.mkdir(0o775, True, True)
+        path.write_bytes(data)
 
 
 @receiver(pre_delete, sender=PrintIssue)

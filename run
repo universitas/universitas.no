@@ -1,91 +1,93 @@
 #!/bin/bash
-# Build and demonize docker container
 
-if [[ ! -f django/local.env ]]; then
-  echo "# Add environment variables here" > django/local.env
-fi
-
+main(){
 for arg; do case $arg in
-  help )
-    echo "usage: prod | dev | fake | fetchdb | build | webpack | up"
-    exit 0
-    ;;
-  prod )
-    echo "production settings"
-    export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml
-    ;;
-  dev )
-    echo "development settings"
-    unset COMPOSE_FILE
-    ;;
-  fake )
-    echo "populating database with fake data"
-    docker-compose run --rm web django-admin fake_content -c10 -s50
-    ;;
-  build )
-    docker-compose down
-    echo "building"
-    docker-compose build
-    docker-compose run --rm web django-admin migrate
-    docker-compose run --rm web django-admin collectstatic --noinput
-    ;;
-  staticfiles )
-    docker-compose run --rm web django-admin collectstatic --noinput
-    ;;
-  migrate )
-    docker-compose run --rm web django-admin migrate
-    ;;
-  bash )
-    docker-compose run --rm web bash
-    ;;
-  flower )
-    docker-compose run --rm -p 5555:5555 django flower
-    ;;
-  jupyter )
-    docker-compose run --rm -p 8888:8888 django jupyter
-    ;;
-  test )
-    docker-compose run --rm -u django web pytest --create-db
-    ;;
-  testf )
-    docker-compose run --rm -u django web pytest -f -x --ff
-    ;;
-  repl )
-    docker-compose run --rm web django-admin shell_plus --quiet-load
-    ;;
-  webpack )
-    docker-compose run --rm webpack build
-    ;;
-  up )
-    echo "running webserver"
-    docker-compose up
-    ;;
-  dumpdb )
-    DUMP=$(date +"dbdump_%d-%m-%Y_%H.%M.%S.sql")
-    docker-compose up -d postgres
-    echo "dumping database to $DUMP"
-    docker-compose exec postgres pg_dump --no-owner -U postgres -d postgres > $DUMP
-    ;;
-  loaddb )
-    dumpfile=$(ls *.sql -1t | head -n1)
-    [[ "" = $dumpfile ]] && exit 1
-    echo "found database dump: $dumpfile"
-    cp $dumpfile django/dbdump.sql
-    # loading data
-    docker-compose down
-    docker-compose run --rm web load_db
+  help    ) show_help ;;
 
-    # cleanup
-    rm django/dbdump.sql
-    echo "done"
-    ;;
-  enable )
-    echo "enable systemd service"
-    # must run as root
-    ln -s $PWD/universitas.service /lib/systemd/system/
-    systemctl enable universitas.service
-    systemctl start universitas.service
-    ;;
+  dumpdb  ) dump_db ;;
+  loaddb  ) load_db ;;
+  enable  ) enable_service ;; 
+  build   ) build_django ;;
 
+  webpack ) docker-compose run --rm webpack build ;;
+
+  repl    ) docker-compose run --rm web django-admin shell_plus --quiet-load ;;
+  bash    ) docker-compose run --rm -u django web bash ;;
+  root    ) docker-compose run --rm           django bash ;;
+  test    ) docker-compose run --rm -u django web pytest --create-db ;;
+  testf   ) docker-compose run --rm -u django web pytest -f -x --ff ;;
+
+  flower  ) docker-compose run --rm -p 5555:5555 celery flower ;;
+  jupyter ) start_jupyter ;;
+
+  fake    ) docker-compose run --rm web django-admin fake_content -c10 -s50 ;;
+  static  ) docker-compose run --rm web django-admin collectstatic --noinput ;;
+  migrate ) docker-compose run --rm web django-admin migrate ;;
+
+  up      ) docker-compose up ;;
+  upd     ) docker-compose up -d ;;
+  down    ) docker-compose down ;;
+  pull    ) docker-compose pull ;;
+  logs    ) docker-compose logs -f ;;
+
+  tags    ) ctags -R django/ && echo "collected ctags" ;;
+
+  prod    ) echo "production settings"
+            export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml ;;
+  dev     ) echo "development settings"; unset COMPOSE_FILE ;;
+  *       ) show_help ;;
 esac; done
-docker ps
+}
+
+show_help() {
+  awk '/esac/{exit}p && /\w  *) /{print}/case/{p=1}' $(realpath $0)
+  exit 0
+}
+
+load_db() {
+  dumpfile=$(ls *.sql -1t | head -n1)
+  [[ "" = $dumpfile ]] && exit 1
+  echo "found database dump: $dumpfile"
+  cp $dumpfile django/dbdump.sql
+
+  # loading data
+  docker-compose down
+  docker-compose run --rm django load_db
+
+  # cleanup
+  rm django/dbdump.sql
+  echo "done"
+}
+
+dump_db() {
+  DUMP=$(date +"dbdump_%d-%m-%Y_%H.%M.%S.sql")
+  docker-compose up -d postgres
+  echo "dumping database to $DUMP"
+  docker-compose exec postgres pg_dump --no-owner -U postgres -d postgres > $DUMP
+}
+
+enable_service() {
+  echo "enable systemd service"
+  # must run as root
+  ln -s $PWD/universitas.service /lib/systemd/system/
+  systemctl enable universitas.service
+  systemctl start universitas.service
+}
+
+start_jupyter() {
+  echo "starting jupyter on http://localhost:8888"
+  ( sleep 6; sensible-browser http://localhost:8888 &> /dev/null)&
+  docker-compose run --rm -p 8888:8888 web jupyter
+}
+
+build_django() {
+  echo "building"
+  docker-compose build
+  docker-compose run --rm web django-admin migrate
+  docker-compose run --rm web django-admin collectstatic --noinput
+}
+
+cd $(dirname $(realpath $0))
+[[ ! -f django/local.env ]] && echo "# Add environment variables here" > django/local.env
+main $@
+[[ $(tput cols) -lt 80 ]] || docker-compose ps

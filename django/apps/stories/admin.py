@@ -54,8 +54,8 @@ class BylineInline(admin.TabularInline):
 class FrontpageStoryInline(SmallTextArea, admin.TabularInline, ThumbAdmin):
     form = modelform_factory(FrontpageStory, exclude=())
     model = FrontpageStory
-    fields = ('headline', 'kicker', 'lede', 'imagefile', 'thumbnail',),
-    readonly_fields = ('thumbnail', )
+    fields = ('headline', 'kicker', 'lede', 'imagefile', 'full_thumb',),
+    readonly_fields = ('full_thumb', )
     extra = 0
 
 
@@ -139,9 +139,9 @@ class ImageInline(admin.TabularInline, ThumbAdmin, ):
         'size',
         'aspect_ratio',
         'imagefile',
-        'thumbnail',
+        'full_thumb',
     ]
-    readonly_fields = ('thumbnail', )
+    readonly_fields = ('full_thumb', )
     extra = 0
 
 

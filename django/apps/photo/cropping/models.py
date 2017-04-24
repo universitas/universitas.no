@@ -8,7 +8,7 @@ import json
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
-from .boundingbox import Box
+from .boundingbox import CropBox
 
 # Third party apps
 from sorl import thumbnail
@@ -16,42 +16,14 @@ from sorl import thumbnail
 logger = logging.getLogger(__name__)
 
 
-class CropBox(Box):
-
-    _attrs = ['left', 'top', 'bottom', 'right', 'x', 'y']
-
-    def __init__(self, left, top, right, bottom, x, y):
-
-        # truncate overflowing values
-        left = max(0.0, left)
-        top = max(0.0, top)
-        right = min(1.0, right)
-        bottom = min(1.0, bottom)
-
-        # make sure values are valid
-        h = [left, x, right]
-        v = [top, y, bottom]
-        if not (sorted(h), sorted(v)) == (h, v):
-            raise ValueError('invalid data %s: %s' % (h, v))
-        self.x, self.y = x, y
-        super().__init__(left, top, right, bottom)
-
-    def __str__(self):
-        return json.dumps(self.serialize())
-
-
 def parse_box_data(value):
     try:
         data = json.loads(value)
         return CropBox(**data)
     except json.JSONDecodeError:
-        return default_crop_box()
+        return CropBox.basic()
     except ValueError:
-        return default_crop_box()
-
-
-def default_crop_box():
-    return CropBox(0, 0, 1, 1, 0.5, 0.5)
+        return CropBox.basic()
 
 
 def validate_box(value):
@@ -71,7 +43,7 @@ class BoxField(models.Field):
         return parse_box_data(value)
 
     def to_python(self, value):
-        if isinstance(value, Box):
+        if isinstance(value, CropBox):
             return value
         if value is None:
             return value
@@ -88,6 +60,7 @@ class BoxField(models.Field):
 
 
 class AutoCropImage(models.Model):
+    """ Advanced cropping """
     CROP_NONE = 0
     CROP_PENDING = 1
     CROP_FEATURES = 5
@@ -116,7 +89,7 @@ class AutoCropImage(models.Model):
     crop_box = BoxField(
         verbose_name=_('crop box'),
         null=True,
-        default=default_crop_box,
+        default=CropBox.basic,
         help_text=_('How this image has been cropped.'),
     )
 

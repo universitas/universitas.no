@@ -131,6 +131,55 @@ class Box:
         )
 
 
+class CropBox(Box):
+
+    _attrs = ['left', 'top', 'bottom', 'right', 'x', 'y']
+
+    def __init__(self, left, top, right, bottom, x, y):
+
+        # truncate overflowing values
+        left = max(0.0, left)
+        top = max(0.0, top)
+        right = min(1.0, right)
+        bottom = min(1.0, bottom)
+
+        # make sure values are valid
+        h = [left, x, right]
+        v = [top, y, bottom]
+        if not (sorted(h), sorted(v)) == (h, v):
+            raise ValueError('invalid data %s: %s' % (h, v))
+        self.x, self.y = x, y
+        super().__init__(left, top, right, bottom)
+
+    def __str__(self):
+        return json.dumps(self.serialize())
+
+    @classmethod
+    def basic(cls):
+        """ Create a default CropBox """
+        return cls(0, 0, 1, 1, 0.5, 0.5)
+
+    def expand(self, h, v=None):
+        """ Make box grow or shrink around point of interest """
+        if v is None:
+            v = h
+        if not (-1 <= h <= 1 and -1 <= v <= 1):
+            raise ValueError('Values must be between -1 and 1')
+        if h >= 0:  # expand x-axis
+            left = self.left - self.left * h
+            right = self.right + (1 - self.right) * h
+        else:  # shrink x-axis
+            left = self.left - (self.x - self.left) * h
+            right = self.right + (self.right - self.x) * h
+        if v >= 0:  # expand y-axis
+            top = self.top - self.top * v
+            bottom = self.bottom + (1 - self.bottom) * v
+        else:  # shrink y-axis
+            top = self.top - (self.y - self.top) * v
+            bottom = self.bottom + (self.bottom - self.y) * v
+        return self.__class__(left, top, right, bottom, self.x, self.y)
+
+
 def test_box_properties():
     width, height = 7, 11
     box = Box(0, 0, width, height)
@@ -220,3 +269,35 @@ def test_box_serialize():
     data = json.dumps(box1.serialize())
     box2 = Box(**(json.loads(data)))
     assert box1 == box2
+
+
+def test_cropbox_expansion():
+    box = CropBox(.2, .3, .8, .9, .6, .5)
+    # no change when expand 0
+    assert box == box.expand(0)
+
+    # shrink
+    smaller_box = box.expand(-1)
+    assert smaller_box == CropBox(.6, .5, .6, .5, .6, .5)
+    assert smaller_box.size == 0
+
+    # grow
+    larger_box = box.expand(1)
+    assert larger_box == CropBox(0, 0, 1, 1, .6, .5)
+    assert larger_box.size == 1
+
+    # shrink / grow by half
+    smaller_box = box.expand(-0.5)
+    assert smaller_box == CropBox(.4, .4, .7, .7, .6, .5)
+    larger_box = box.expand(0.5)
+    assert larger_box == CropBox(.1, .15, .9, .95, .6, .5)
+
+    # combinations of x and y
+    box.expand(-0.5, 0.5) == CropBox(.4, .15, .7, .95, .6, .5)
+    box.expand(0, 1) == CropBox(.2, 0, .8, 1, .6, .5)
+
+    with pytest.raises(ValueError):
+        box.expand(2)
+
+    with pytest.raises(ValueError):
+        box.expand(.3, -3)

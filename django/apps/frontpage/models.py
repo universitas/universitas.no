@@ -173,7 +173,7 @@ class StaticModule(FrontPageModule):
         default=False)
 
     def save(self, *args, **kwargs):
-        if '{%' in self.content or '{{' in self.content:
+        if '{' in self.content or '}' in self.content:
             self.render_template = True
         super().save(*args, **kwargs)
 
@@ -289,32 +289,11 @@ class FrontpageStory(TimeStampedModel, Edit_url_mixin):
     def story_type_url(self):
         return self.story.story_type.get_absolute_url()
 
-    # def save(self, *args, **kwargs):
-    #     if self.pk is None and self.story:
-    # default lede, kicker, headline and kicker is based on parent
-    # story.
-    #         section = '{}'.format(self.story.section).lower()
-    #         self.lede = self.lede or self.story.lede[:200]
-    #         self.kicker = self.kicker or self.story.kicker[:200]
-    #         self.headline = self.headline or self.story.title[:200]
-    #         self.vignette = self.vignette or section[:50]
-    #         self.html_class = (
-    #               self.html_class or section[:200].replace(' ', '-'))
-    #         if random.randint(1, 4) == 1:
-    #             self.html_class += " negative"
-
-    #         if self.imagefile is None and self.story.images():
-    #             self.imagefile = self.story.main_image().imagefile
-
-    #         super().save()
-    #     if self.placements.count() == 0 and not self.imagefile is None:
-    # is automatically put on front page if it has an image.
-    #         content_block = StoryModule(
-    #             frontpage_story=self,
-    #             frontpage=Frontpage.objects.root(),
-    #         )
-    #         content_block.save()
-    #     super().save()
+    def thumbnail(self):
+        if self.imagefile:
+            return self.imagefile.thumb()
+        else:
+            return _("no image")
 
     def __str__(self):
         return self.headline or self.story.title

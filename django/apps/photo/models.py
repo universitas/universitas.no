@@ -4,12 +4,15 @@
 import os
 import hashlib
 import logging
+from pathlib import Path
 
 # Django core
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.core.files import File
+from django.conf import settings
 
 # Installed apps
 from model_utils.models import TimeStampedModel
@@ -20,7 +23,6 @@ import boto
 
 # Project apps
 from apps.issues.models import current_issue
-
 from .cropping.models import AutoCropImage
 
 logger = logging.getLogger(__name__)
@@ -56,6 +58,7 @@ def s3_md5(s3key, blocksize=65536):
 
 
 def upload_image_to(instance, filename):
+    """Image folder name"""
     return os.path.join(
         instance.upload_folder(),
         instance.slugify(filename)
@@ -64,10 +67,22 @@ def upload_image_to(instance, filename):
 
 class ImageFileManager(models.Manager):
 
+    def pending(self):
+        return self.get_queryset().filter(
+            cropping_method=self.model.CROP_PENDING)
+
     def create_from_file(self, filepath, **kwargs):
         image = self.model(**kwargs)
         image.save_local_image_as_source(filepath)
         return image
+
+    def filter_profile_images(self):
+        return super().get_queryset().filter(
+            source_file__startswith=ProfileImage.UPLOAD_FOLDER)
+
+    def exclude_profile_images(self):
+        return super().get_queryset().exclude(
+            source_file__startswith=ProfileImage.UPLOAD_FOLDER)
 
 
 class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
@@ -235,6 +250,39 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         slug = '.'.join(segment.strip('-') for segment in slugs)
         return slug
 
+    def thumb(self, height=150, width=0, css='', **options):
+        """Return thumb of full image"""
+        try:
+            url = thumbnail.get_thumbnail(
+                self.source_file,
+                f'{width or ""}x{height}',
+                **options,
+            ).url
+        except Exception:
+            url = settings.STATIC_URL + 'admin/img/icon-no.svg'
+            logger.exception('Cannot create thumbnail')
+
+        html = (f'<img height={height} style="{css}", src="{url}" />')
+        return mark_safe(html)
+
+    def preview(self):
+        """Return thumb of cropped image"""
+        return self.thumb(crop_box=self.get_crop_box(), width=250)
+
+    def download_from_aws(self, dest=Path('/var/media/')):
+        path = dest / self.source_file.name
+        if path.exists():
+            return
+        data = self.source_file.file.read()
+        path.parent.mkdir(0o775, True, True)
+        path.write_bytes(data)
+
+
+class ProfileImageManager(ImageFileManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(
+            source_file__startswith=ProfileImage.UPLOAD_FOLDER)
+
 
 class ProfileImage(ImageFile):
 
@@ -242,6 +290,8 @@ class ProfileImage(ImageFile):
         proxy = True
         verbose_name = _('Profile Image')
         verbose_name_plural = _('Profile Images')
+
+    objects = ProfileImageManager()
 
     UPLOAD_FOLDER = 'byline-photo'
 
@@ -252,3 +302,11 @@ class ProfileImage(ImageFile):
     @staticmethod
     def upload_folder():
         return ProfileImage.UPLOAD_FOLDER
+
+    def preview(self):
+        """Return thumb of cropped image"""
+        return self.thumb(
+            crop_box=self.get_crop_box(), width=150, height=150,
+            expand=0.2,
+            colorspace='GRAY',
+            css='border-radius: 50%')

@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Admin for frontpage app.
-"""
+""" Admin for frontpage app.  """
 
 from django.contrib import admin
 from .models import StoryModule, FrontpageStory, StaticModule
-from apps.photo.admin import ThumbAdmin
 from autocomplete_light.forms import modelform_factory
 from sorl.thumbnail.admin import AdminImageMixin
 
@@ -17,7 +13,7 @@ class StoryModuleInline(admin.TabularInline):
 
 
 @admin.register(FrontpageStory)
-class FrontpageStoryAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin):
+class FrontpageStoryAdmin(AdminImageMixin, admin.ModelAdmin):
     form = modelform_factory(FrontpageStory, exclude=())
     form.Meta.widgets = {
         'lede': admin.widgets.AdminTextareaWidget(attrs={'rows': 3})

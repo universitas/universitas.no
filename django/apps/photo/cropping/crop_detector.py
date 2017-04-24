@@ -2,7 +2,7 @@ import cv2
 import numpy
 import abc
 from .boundingbox import Box
-from typing import List, Mapping, Union
+from typing import List, Union
 from collections import OrderedDict
 from numpy import ndarray as CVImage
 from pathlib import Path
@@ -46,8 +46,7 @@ class Feature(Box):
             **box.__dict__,
         )
 
-    def serialize(self, precision: int=3) \
-            -> Mapping[str, Union[str, float]]:
+    def serialize(self, precision: int=3) -> OrderedDict:
         """Build a json serializable dictionary with the
         attributes relevant for client side visualisation of
         the Feature."""

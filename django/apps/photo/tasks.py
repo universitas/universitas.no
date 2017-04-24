@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 """Celery tasks for photos"""
 import os
-# import logging
 from datetime import timedelta
 
 from celery.decorators import periodic_task
@@ -11,20 +9,19 @@ from sorl import thumbnail
 
 from apps.core.staging import new_staging_images
 from .models import upload_image_to, ImageFile, ProfileImage
-from .cropping.models import CropBox, AutoCropImage, default_crop_box
-# from .cropping.oldcrop import autocrop
+from .cropping.boundingbox import CropBox
 from .cropping.crop_detector import HybridDetector
 
 import logging
 logger = logging.getLogger(__name__)
 
 
-def determine_method(features):
+def determine_cropping_method(features):
     if 'face' in features[-1].label:
         if len(features) == 1:
-            return AutoCropImage.CROP_PORTRAIT
-        return AutoCropImage.CROP_FACES
-    return AutoCropImage.CROP_FEATURES
+            return ImageFile.CROP_PORTRAIT
+        return ImageFile.CROP_FACES
+    return ImageFile.CROP_FEATURES
 
 
 def autocrop(instance):
@@ -36,11 +33,11 @@ def autocrop(instance):
         detector = HybridDetector(n=10)
     features = detector.detect_features(imgdata)
     if not features:
-        return default_crop_box(), ImageFile.CROP_NONE
+        return CropBox.basic(), ImageFile.CROP_NONE
     x, y = features[0].center
     left, top, right, bottom = sum(features)
     cropbox = CropBox(left, top, right, bottom, x, y)
-    cropping_method = determine_method(features)
+    cropping_method = determine_cropping_method(features)
     return cropbox, cropping_method
 
 
@@ -57,11 +54,13 @@ def post_save_task(instance):
         instance.save(update_fields=('crop_box', 'cropping_method'))
 
     else:
-        logger.info('clear thumbs for %d %s' % (instance.pk, instance))
         # delete thumbnail
         thumbnail.delete(instance.source_file, delete_file=False)
-        # rebuild thumbnail
+        # rebuild thumbnails
         instance.thumb()
+        instance.preview()
+        logger.info('rebuilt thumbs for %d %s' % (instance.pk, instance))
+
 
 
 @periodic_task(run_every=timedelta(hours=1))

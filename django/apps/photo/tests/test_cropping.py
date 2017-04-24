@@ -7,6 +7,7 @@ from apps.photo.cropping.crop_detector import (
     FeatureDetector, MockFeatureDetector, Feature, KeypointDetector, Cascade
 )
 from apps.photo.cropping.boundingbox import Box
+from apps.photo.cropping.models import CropBox
 
 
 @pytest.fixture
@@ -80,14 +81,3 @@ def test_feature_operators():
     assert intersection == Box(2, 2, 3, 3)
     double = f1 * 2
     assert double == Feature(2, 'f1', 0, 1, 4, 5)
-
-
-def test_box_operators():
-    b1 = Box(1, 2, 3, 4)
-    b2 = Box(2, 1, 4, 3)
-    combined = b1 + b2
-    assert combined == Box(1, 1, 4, 4)
-    intersection = b1 & b2
-    assert intersection == Box(2, 2, 3, 3)
-    double = b1 * 2
-    assert double == Box(0, 1, 4, 5)
