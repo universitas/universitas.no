@@ -179,7 +179,7 @@ def create_web_bundle(filename, **kwargs):
 
     number_of_pages = len(pages)
     if number_of_pages == 0:
-        raise RuntimeError('No pages found')
+        raise RuntimeWarning('No pages found')
 
     if number_of_pages % 4 != 0:
         raise RuntimeError('Wrong number of pages %d' % number_of_pages)
