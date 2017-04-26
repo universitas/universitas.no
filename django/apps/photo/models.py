@@ -9,7 +9,6 @@ from pathlib import Path
 # Django core
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.core.files import File
 from django.conf import settings
@@ -242,15 +241,15 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         issue = current_issue().issue_tuple()
         return os.path.join(str(issue.date.year), str(issue.number))
 
-    @staticmethod
-    def slugify(filename):
+    @classmethod
+    def slugify(cls, filename):
         slugify = Slugify(safe_chars='.-', separator='-')
         slugs = slugify(filename).split('.')
         slugs[-1] = slugs[-1].lower().replace('jpeg', 'jpg')
         slug = '.'.join(segment.strip('-') for segment in slugs)
         return slug
 
-    def thumb(self, height=150, width=0, css='', **options):
+    def thumb(self, height=150, width=0, **options):
         """Return thumb of full image"""
         try:
             url = thumbnail.get_thumbnail(
@@ -261,9 +260,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         except Exception:
             url = settings.STATIC_URL + 'admin/img/icon-no.svg'
             logger.exception('Cannot create thumbnail')
-
-        html = (f'<img height={height} style="{css}", src="{url}" />')
-        return mark_safe(html)
+        return url
 
     def preview(self):
         """Return thumb of cropped image"""
@@ -295,13 +292,13 @@ class ProfileImage(ImageFile):
 
     UPLOAD_FOLDER = 'byline-photo'
 
-    @staticmethod
-    def slugify(filename):
-        return ImageFile.slugify(filename.title())
+    @classmethod
+    def slugify(cls, filename):
+        return super().slugify(filename.title())
 
-    @staticmethod
-    def upload_folder():
-        return ProfileImage.UPLOAD_FOLDER
+    @classmethod
+    def upload_folder(cls):
+        return cls.UPLOAD_FOLDER
 
     def preview(self):
         """Return thumb of cropped image"""
@@ -309,4 +306,4 @@ class ProfileImage(ImageFile):
             crop_box=self.get_crop_box(), width=150, height=150,
             expand=0.2,
             colorspace='GRAY',
-            css='border-radius: 50%')
+        )

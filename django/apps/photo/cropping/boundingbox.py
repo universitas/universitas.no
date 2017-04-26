@@ -1,5 +1,4 @@
 import typing
-from collections import OrderedDict
 import pytest
 import numbers
 import json
@@ -126,7 +125,7 @@ class Box:
     def serialize(self, precision: int=4) -> typing.Mapping[str, float]:
         """Build a json serializable dictionary for the box"""
 
-        return OrderedDict(
+        return dict(
             (a, round(getattr(self, a), precision)) for a in self._attrs
         )
 

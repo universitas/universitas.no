@@ -14,7 +14,7 @@
   {% else %}
   <div class="image-container">
     {% thumbnail image.imagefile.source_file img_size expand=expand crop_box=image.imagefile.get_crop_box as thumb %}
-      <img id="img_{{ image.pk }}" src="{{ thumb.url }}" alt="{{ image.caption|strip_tags }}"></img>
+      <img data-pk="{{ image.imagefile.pk }}" src="{{ thumb.url }}" alt="{{ image.caption|strip_tags }}"></img>
     {% endthumbnail %}
     {% include '_caption.html' with caption=image.caption %}
   </div>

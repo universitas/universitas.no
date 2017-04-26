@@ -23,12 +23,8 @@ def test_post_save(fixture_image):
 
     # run again, to generate thumbnail
     post_save_task(img)
-    thumb = img.thumb()
-    assert '<img' in thumb
-    assert 'admin/img/icon-no.svg' not in thumb
-    preview = img.preview()
-    assert '<img' in preview
-    assert 'admin/img/icon-no.svg' not in preview
+    assert '.jpg' in img.thumb()
+    assert '.jpg' in img.preview()
 
 
 def test_new_staging_images():

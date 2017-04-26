@@ -49,6 +49,10 @@ class BoxField(models.Field):
             return value
         return parse_box_data(value)
 
+    def value_to_string(self, obj):
+        value = self.value_from_object(obj)
+        return self.get_prep_value(value)
+
     def get_prep_value(self, value):
         if value is None:
             return ''

@@ -3,6 +3,7 @@
 main(){
 for arg; do case $arg in
   help    ) show_help ;;
+  init    ) sudo bash -c "$(declare -f install_docker); install_docker $(whoami)" ;;
 
   dumpdb  ) dump_db ;;
   loaddb  ) load_db ;;
@@ -85,6 +86,28 @@ build_django() {
   docker-compose build
   docker-compose run --rm web django-admin migrate
   docker-compose run --rm web django-admin collectstatic --noinput
+}
+
+install_docker() {
+  USERNAME=$1
+  apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    software-properties-common \
+    python3-pip
+
+  pip3 install -U docker-compose
+
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  apt-get update
+  apt-get install -y docker-ce
+
+  groupadd -f docker
+  if [[ -z $USERNAME ]]; then
+    usermod -aG docker $USERNAME
+  fi
+  systemctl enable docker
 }
 
 cd $(dirname $(realpath $0))

@@ -5,6 +5,7 @@ Admin for photo app.
 
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
+from django.utils.safestring import mark_safe
 from sorl.thumbnail.admin import AdminImageMixin
 from autocomplete_light.forms import modelform_factory
 from .models import ImageFile, ProfileImage
@@ -15,11 +16,17 @@ logger = logging.getLogger(__name__)
 class ThumbAdmin:
     exclude = ()
 
+    @staticmethod
+    def _img_tag(url, css=''):
+        return mark_safe(f'<img style="{css}", src="{url}" />')
+
     def full_thumb(self, instance):
-        return instance.thumb()
+        url = instance.thumb()
+        return self._img_tag(url)
 
     def cropped_thumb(self, instance):
-        return instance.preview()
+        url = instance.preview()
+        return self._img_tag(url)
 
     full_thumb.allow_tags = True  # type: ignore
     full_thumb.short_description = _('preview')  # type: ignore

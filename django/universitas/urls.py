@@ -58,7 +58,7 @@ urlpatterns = [
 
     url(r'^search/', include(search_urls, namespace='watson')),
     url(r'^', include(redirect_urls, namespace='redirect')),
-    url(r'^api/', include(api_urls, namespace='api')),
+    url(r'^api/', include(api_urls)),
 
     url(r'^(?P<section>[a-z0-9-]+)/(?P<story_id>\d+)/(?P<slug>[a-z0-9-]*)/?$',
         article_view, name='article'),
