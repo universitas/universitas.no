@@ -41,7 +41,7 @@ esac; done
 }
 
 show_help() {
-  awk '/esac/{exit}p && /\w  *) /{print}/case/{p=1}' $(realpath $0)
+  awk '/esac/{exit}p && /\w  *) /{print}/case/{p=1}' run 
   exit 0
 }
 
@@ -110,7 +110,7 @@ install_docker() {
   systemctl enable docker
 }
 
-cd $(dirname $(realpath $0))
+cd $(dirname $(readlink -f $0))
 [[ ! -f django/local.env ]] && echo "# Add environment variables here" > django/local.env
 main $@
 [[ $(tput cols) -lt 80 ]] || docker-compose ps
