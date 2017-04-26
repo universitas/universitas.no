@@ -32,7 +32,7 @@ BUNDLE_TIME = crontab(hour=4, minute=0, day_of_week=3)
 @periodic_task(run_every=BUNDLE_TIME)
 def weekly_bundle():
     logger.info('bundle time!')
-    create_print_issue_pdf()
+    create_print_issue_pdf(expiration_days=6)
 
 
 class MissingBinary(RuntimeError):
@@ -208,7 +208,8 @@ def create_web_bundle(filename, **kwargs):
 
 
 @shared_task
-def create_print_issue_pdf(delete_expired=not settings.DEBUG):
+def create_print_issue_pdf(
+        expiration_days=0, delete_expired=not settings.DEBUG):
     """Create or update pdf for the current issue"""
 
     issue = current_issue()
@@ -224,6 +225,7 @@ def create_print_issue_pdf(delete_expired=not settings.DEBUG):
             create_web_bundle(
                 filename=tmp_bundle_file.name,
                 globpattern=globpattern,
+                expiration_days=expiration_days,
                 delete_expired=delete_expired,
             )
         except RuntimeWarning as warning:
