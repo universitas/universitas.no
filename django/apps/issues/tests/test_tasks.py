@@ -36,22 +36,27 @@ def tmp_fixture_dir(settings):
     """A temporary directory that will be deleted from the file system
     when the object is garbage collected."""
     tmpdir = tempfile.TemporaryDirectory()
-    settings.STAGING_ROOT = tmpdir.name
 
     src = pathlib.Path(__file__).parent / 'STAGING'
     dst = pathlib.Path(tmpdir.name) / 'STAGING'
     shutil.copytree(str(src), str(dst))
+    # for file in dst.glob('**/*.*'):
+    #     file.touch()
+
     # Yield will keep the TemporaryDirectory from being garbage collected.
-    yield pathlib.Path(tmpdir.name)
+    settings.STAGING_ROOT = str(dst)
+    yield dst
 
 
 def test_get_staging_pdf_files(tmp_fixture_dir):
     globpattern = 'UNI11VER*.pdf'
-    pages = get_staging_pdf_files(globpattern)
+    pages = get_staging_pdf_files(
+        globpattern)
     assert len(pages) == 4
 
     # Exclude pages that are older than tomorrow
-    future_pages = get_staging_pdf_files(globpattern, expiration_days=-1)
+    future_pages = get_staging_pdf_files(
+        globpattern, expiration_days=-1)
     assert len(future_pages) == 0
     # Files should exist
     assert all(os.path.exists(pdf) for pdf in pages)
@@ -65,7 +70,7 @@ def test_get_staging_pdf_files(tmp_fixture_dir):
 def test_convert_pdf_page_to_web(tmp_fixture_dir):
     """Convert single page pdf to web version"""
 
-    pdf = pathlib.Path(tmp_fixture_dir) / 'STAGING' / 'PDF' / PAGE_ONE
+    pdf = pathlib.Path(tmp_fixture_dir) / 'PDF' / PAGE_ONE
 
     # Make new file
     opt = convert_pdf_to_web(pdf)
@@ -111,7 +116,7 @@ def test_create_bundle(tmp_fixture_dir):
 def test_convert_pdf_page_to_image(tmp_fixture_dir):
     """Convert single page pdf to image"""
 
-    pdf = tmp_fixture_dir / 'STAGING' / 'PDF' / PAGE_ONE
+    pdf = tmp_fixture_dir / 'PDF' / PAGE_ONE
 
     # Make new file
     png_file = generate_pdf_preview(pdf)
@@ -155,7 +160,7 @@ def test_create_current_issue_web_bundle(tmp_fixture_dir):
     create_print_issue_pdf()
     assert PrintIssue.objects.count() == 2
     assert Issue.objects.count() == count
-    staging_dir = tmp_fixture_dir / 'STAGING' / 'PDF'
+    staging_dir = tmp_fixture_dir  / 'PDF'
     mag_pages = list(staging_dir.glob('UNI12*.pdf'))
     assert len(mag_pages) == 4
     mag_pages[0].unlink()
