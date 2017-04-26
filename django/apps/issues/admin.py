@@ -15,12 +15,7 @@ from django.contrib import messages
 
 def create_pdf(modeladmin, request, queryset):
     messages.add_message(request, messages.INFO, 'started creating pdf')
-    create_print_issue_pdf.delay()
-
-
-def create_pdf_syncronous(modeladmin, request, queryset):
-    create_print_issue_pdf()
-    messages.add_message(request, messages.INFO, 'pdf created')
+    create_print_issue_pdf.delay(expiration_days=6)
 
 
 class ThumbAdmin:
@@ -43,7 +38,7 @@ class ThumbAdmin:
             html = '<p>{}</p>'.format(_('PDF is not uploaded yet.'))
         return mark_safe(html)
 
-    thumbnail.allow_tags = True
+    thumbnail.allow_tags = True  # typing: disable
 
     def large_thumbnail(self, instance):
         return self.thumbnail(instance, width=800, height=800)
@@ -98,7 +93,7 @@ class IssueAdmin(admin.ModelAdmin):
 @admin.register(PrintIssue)
 class PrintIssueAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
     # date_hierarchy = 'publication_date'
-    actions = [create_pdf, create_pdf_syncronous]
+    actions = [create_pdf]
     actions_on_top = True
     actions_on_bottom = True
     save_on_top = True

@@ -156,6 +156,7 @@ FIXTURE	django/apps/adverts/migrations/0003_universitas_ad_channels.py	/^FIXTURE
 FIXTURE_DIRS	django/universitas/base.py	/^FIXTURE_DIRS = [path('fixtures')]$/;"	v
 FLAGG_CHOICES	django/apps/legacy_db/models.py	/^    FLAGG_CHOICES = ($/;"	v	class:Prodsak
 FONT_FILE	django/apps/adverts/dummy_image_advert.py	/^FONT_FILE = os.path.join(os.path.dirname(__file__), 'arial.ttf')$/;"	v
+FORM_RENDERER	django/universitas/base.py	/^FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'$/;"	v
 Fakta	django/apps/legacy_db/models.py	/^class Fakta(models.Model):$/;"	c
 FileRevNode	django/apps/core/templatetags/gulp_rev_staticfiles.py	/^class FileRevNode(StaticNode):$/;"	c
 FrontPageModule	django/apps/frontpage/models.py	/^class FrontPageModule(TimeStampedModel, Edit_url_mixin):$/;"	c
@@ -515,6 +516,7 @@ WSGI_APPLICATION	django/universitas/base.py	/^WSGI_APPLICATION = 'universitas.ws
 WatsonSearchChangeList	django/watson/admin.py	/^class WatsonSearchChangeList(ChangeList):$/;"	c
 XTAG_PATTERN	django/apps/markup/models.py	/^    XTAG_PATTERN = r'^@[^: ]+:'$/;"	v	class:BlockTag
 _HTML	django/apps/stories/models.py	/^    class _HTML(object):$/;"	c	class:MarkupModelMixin
+__all__	django/ptpython_config.py	/^__all__ = ($/;"	v
 __all__	django/universitas/logging_settings.py	/^__all__ = ['LOGGING']$/;"	v
 __call__	django/watson/search.py	/^    def __call__(self, func):$/;"	m	class:SearchContext	file:
 __dir__	django/universitas/setting_helpers.py	/^    def __dir__(self):$/;"	m	class:Environment	file:
@@ -576,6 +578,7 @@ _close_search_context	django/watson/middleware.py	/^    def _close_search_contex
 _create_image_file	django/apps/legacy_db/export_content_and_images.py	/^def _create_image_file($/;"	f
 _create_model_filter	django/watson/search.py	/^    def _create_model_filter(self, models):$/;"	m	class:SearchEngine
 _created_engines	django/watson/search.py	/^    _created_engines = WeakValueDictionary()$/;"	v	class:SearchEngine
+_custom_ui_colorscheme	django/ptpython_config.py	/^_custom_ui_colorscheme = {$/;"	v
 _deserialize_meta	django/watson/models.py	/^    def _deserialize_meta(self):$/;"	m	class:SearchEntry
 _find_in_text	django/apps/stories/models.py	/^            def _find_in_text(needle, haystack):$/;"	f	function:Story.place_all_inline_elements.fuzzy_search
 _format_query	django/watson/backends.py	/^    def _format_query(self, search_text):$/;"	m	class:MySQLSearchBackend
@@ -665,7 +668,6 @@ attrs	django/apps/photo/autocomplete_light_registry.py	/^    attrs={$/;"	v
 attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:AsideInline
 attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:BylineInline
 attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:HtmlInline
-attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:ImageInline
 attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:PullquoteInline
 attrs	django/apps/stories/admin.py	/^                attrs={$/;"	v	class:VideoInline
 attrs	django/apps/stories/autocomplete_light_registry.py	/^    attrs={$/;"	v
@@ -783,6 +785,7 @@ comment	django/apps/markup/models.py	/^    comment = models.CharField($/;"	v	cla
 comment	django/apps/stories/models.py	/^    comment = models.TextField($/;"	v	class:Story
 complete_apps	django/watson/south_migrations/0001_initial.py	/^    complete_apps = ['watson']$/;"	v	class:Migration
 complete_apps	django/watson/south_migrations/0002_installwatson.py	/^    complete_apps = ['watson']$/;"	v	class:Migration
+configure	django/ptpython_config.py	/^def configure(repl):$/;"	f
 contact_info	django/apps/adverts/models.py	/^    contact_info = models.TextField(blank=True)$/;"	v	class:Customer
 content	django/apps/frontpage/models.py	/^    content = models.TextField()$/;"	v	class:StaticModule
 content	django/watson/models.py	/^    content = models.TextField($/;"	v	class:SearchEntry
@@ -806,10 +809,10 @@ create_from_file	django/apps/photo/models.py	/^    def create_from_file(self, fi
 create_from_url	django/apps/stories/models.py	/^    def create_from_url(cls, url, parent_story):$/;"	m	class:StoryVideo
 create_pdf	django/apps/issues/admin.py	/^def create_pdf(modeladmin, request, queryset):$/;"	f
 create_pdf_syncronous	django/apps/issues/admin.py	/^def create_pdf_syncronous(modeladmin, request, queryset):$/;"	f
-create_print_issue_pdf	django/apps/issues/tasks.py	/^def create_print_issue_pdf():$/;"	f
+create_print_issue_pdf	django/apps/issues/tasks.py	/^def create_print_issue_pdf(delete_expired=not settings.DEBUG):$/;"	f
 create_thumbnail	django/apps/issues/models.py	/^    def create_thumbnail(self):$/;"	m	class:PrintIssue
 create_watermark	django/apps/adverts/dummy_image_advert.py	/^def create_watermark(text='xxx', angle=0, thumb_size=(50, 50)):$/;"	f
-create_web_bundle	django/apps/issues/tasks.py	/^def create_web_bundle(filename, *args, **kwargs):$/;"	f
+create_web_bundle	django/apps/issues/tasks.py	/^def create_web_bundle(filename, **kwargs):$/;"	f
 credit	django/apps/stories/models.py	/^    credit = models.CharField($/;"	v	class:Byline
 creditline	django/apps/stories/models.py	/^    creditline = MarkupCharField($/;"	v	class:StoryMedia
 crop	django/apps/legacy_db/models.py	/^    crop = models.IntegerField()$/;"	v	class:Bilde
@@ -818,6 +821,7 @@ cropping	django/apps/photo/models.py	/^    def cropping(self):$/;"	m	class:Image
 cropping	django/apps/photo/models.py	/^    def cropping(self, _crop):$/;"	m	class:ImageFile
 cropping_method	django/apps/photo/models.py	/^    cropping_method = models.PositiveSmallIntegerField($/;"	v	class:AutoCropImage
 css_classes	django/apps/adverts/models.py	/^    def css_classes(self):$/;"	m	class:AdChannel
+ctrlb	django/ptpython_config.py	/^    def ctrlb(event):$/;"	f	function:configure
 current_ads	django/apps/adverts/models.py	/^    def current_ads(self, at_time=None, publication_status=None):$/;"	m	class:AdChannel
 current_issue	django/apps/issues/models.py	/^def current_issue():$/;"	f
 customer	django/apps/adverts/models.py	/^    customer = models.ForeignKey($/;"	v	class:Advert
@@ -1027,7 +1031,6 @@ end_tag	django/apps/markup/models.py	/^    end_tag = models.CharField($/;"	v	cla
 end_time	django/apps/adverts/models.py	/^    end_time = models.DateTimeField($/;"	v	class:Advert
 engine_slug	django/watson/models.py	/^    engine_slug = models.CharField($/;"	v	class:SearchEntry
 env	django/universitas/base.py	/^env = Environment(strict=False)$/;"	v
-environment_variable	django/utils/setting_helpers.py	/^def environment_variable(keyname, default=''):$/;"	f
 epost	django/apps/legacy_db/models.py	/^    epost = models.CharField(max_length=255)$/;"	v	class:Eposttinging
 epost	django/apps/legacy_db/models.py	/^    epost = models.CharField(max_length=255, blank=True)$/;"	v	class:InnleggAbstract
 epost_sendt	django/apps/legacy_db/models.py	/^    epost_sendt = models.DateTimeField(blank=True, null=True)$/;"	v	class:DiskSvar
@@ -1217,7 +1220,7 @@ full_width	django/apps/photo/models.py	/^    full_width = models.PositiveInteger
 fuzzy_search	django/apps/contributors/models.py	/^        def fuzzy_search():$/;"	f	function:Contributor.get_or_create
 fuzzy_search	django/apps/stories/models.py	/^        def fuzzy_search(queryset, body, flags=''):$/;"	f	function:Story.place_all_inline_elements
 generate_pdf_preview	django/apps/issues/tasks.py	/^def generate_pdf_preview(input_file, img_format='png', size=300):$/;"	f
-generate_thumbnails	django/apps/issues/tasks.py	/^def generate_thumbnails(*args, **kwargs):$/;"	f
+generate_thumbnails	django/apps/issues/tasks.py	/^def generate_thumbnails(**kwargs):$/;"	f
 get	django/apps/search/views.py	/^    def get(self, request, *args, **kwargs):$/;"	m	class:SearchMixin
 get	django/watson/views.py	/^    def get(self, request, *args, **kwargs):$/;"	m	class:SearchMixin
 get_absolute_url	django/apps/issues/models.py	/^    def get_absolute_url(self):$/;"	m	class:PrintIssue
@@ -1491,8 +1494,8 @@ item_description	django/apps/stories/feeds.py	/^    def item_description(self, i
 item_title	django/apps/stories/feeds.py	/^    def item_title(self, item):$/;"	m	class:LatestStories
 items	django/apps/stories/feeds.py	/^    def items(self):$/;"	m	class:LatestStories
 iter_search_entries	django/watson/management/commands/buildwatson.py	/^    def iter_search_entries():$/;"	f	function:rebuild_index_for_model
+j_j	django/ptpython_config.py	/^    def j_j(event):$/;"	f	function:configure
 join_models	django/apps/issues/migrations/0005_data_link_pdf_to_issue.py	/^def join_models(apps, schema_editor):$/;"	f
-join_path	django/utils/setting_helpers.py	/^def join_path(*paths):$/;"	f
 joinpath	django/universitas/setting_helpers.py	/^def joinpath(*paths, resolve=False):$/;"	f
 journalist	django/apps/legacy_db/models.py	/^    journalist = models.CharField(max_length=50, blank=True)$/;"	v	class:Prodsak
 kicker	django/apps/frontpage/models.py	/^    kicker = models.CharField($/;"	v	class:FrontpageStory
@@ -1563,7 +1566,6 @@ list_editable	django/apps/stories/admin.py	/^    list_editable = ($/;"	v	class:B
 list_editable	django/apps/stories/admin.py	/^    list_editable = ($/;"	v	class:LinkAdmin
 list_editable	django/apps/stories/admin.py	/^    list_editable = ($/;"	v	class:SectionAdmin
 list_editable	django/apps/stories/admin.py	/^    list_editable = ($/;"	v	class:StoryTypeAdmin
-list_editable	django/apps/stories/admin.py	/^    list_editable = [$/;"	v	class:StoryAdmin
 list_filter	django/apps/legacy_db/admin.py	/^    list_filter = (ProdusertFilter, 'produsert')$/;"	v	class:ProdsakAdmin
 list_filter	django/apps/stories/admin.py	/^    list_filter = ('status_code',)$/;"	v	class:LinkAdmin
 list_filter	django/apps/stories/admin.py	/^    list_filter = ['language', 'publication_status']$/;"	v	class:StoryAdmin
@@ -1578,7 +1580,6 @@ list_per_page	django/apps/stories/admin.py	/^    list_per_page = 25$/;"	v	class:
 load_fixture	django/apps/adverts/migrations/0002_data_ad_formats.py	/^def load_fixture(apps, schema_editor):$/;"	f
 load_fixture	django/apps/adverts/migrations/0003_universitas_ad_channels.py	/^def load_fixture(apps, schema_editor):$/;"	f
 load_fixture	django/utils/migration_helpers.py	/^def load_fixture(fixture_file):$/;"	f
-load_json_file	django/utils/setting_helpers.py	/^def load_json_file(file_path):$/;"	f
 local_md5	django/apps/photo/models.py	/^def local_md5(filepath, blocksize=65536):$/;"	f
 location	django/utils/aws_custom_storage.py	/^    location = 'media'$/;"	v	class:MediaStorage
 location	django/utils/aws_custom_storage.py	/^    location = 'media'$/;"	v	class:ThumbStorage
@@ -1618,7 +1619,6 @@ logger	django/apps/stories/models.py	/^logger = logging.getLogger(__name__)$/;"	
 logger	django/apps/stories/tasks.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/stories/templatetags/inline_elements.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/stories/views.py	/^logger = logging.getLogger(__name__)$/;"	v
-logger	django/utils/setting_helpers.py	/^logger = logging.getLogger(__name__)$/;"	v
 lookups	django/apps/legacy_db/admin.py	/^    def lookups(self, request, model_admin):$/;"	m	class:ProdusertFilter
 main	django/apps/legacy_db/export_content_and_images.py	/^    def main(websak):$/;"	f	function:_websak_til_xtags
 main	django/apps/legacy_db/image_archive.py	/^def main():$/;"	f
@@ -2050,7 +2050,7 @@ operations	django/apps/stories/migrations/0021_data_generate_slugs.py	/^    oper
 operations	django/apps/stories/migrations/0022_auto_20161228_0956.py	/^    operations = [$/;"	v	class:Migration
 operations	django/watson/migrations/0001_initial.py	/^    operations = [$/;"	v	class:Migration
 oppretta	django/apps/legacy_db/models.py	/^    oppretta = models.DateTimeField()$/;"	v	class:Eposttinging
-optimize_staging_pages	django/apps/issues/tasks.py	/^def optimize_staging_pages(*args, **kwargs):$/;"	f
+optimize_staging_pages	django/apps/issues/tasks.py	/^def optimize_staging_pages(**kwargs):$/;"	f
 option_list	django/watson/management/commands/buildwatson.py	/^    option_list = BaseCommand.option_list + ($/;"	v	class:Command
 options	django/apps/adverts/migrations/0001_initial.py	/^            options={$/;"	v	class:Migration
 options	django/apps/contributors/migrations/0001_initial.py	/^            options={$/;"	v	class:Migration
@@ -2431,7 +2431,7 @@ unique	django/apps/markup/models.py	/^        unique=True,$/;"	v	class:MarkupTag
 unique	django/apps/stories/models.py	/^        unique=True,$/;"	v	class:Section.Meta
 unique_together	django/apps/adverts/migrations/0001_initial.py	/^            unique_together=set([('width', 'height')]),$/;"	v	class:Migration
 unique_together	django/apps/adverts/models.py	/^        unique_together = ('width', 'height')$/;"	v	class:AdFormat.Meta
-universitas_menu	django/apps/core/templatetags/universitas_menu.py	/^def universitas_menu(active_section):$/;"	f
+universitas_menu	django/apps/core/templatetags/universitas_menu.py	/^def universitas_menu(context, active_section):$/;"	f
 unjoin_models	django/apps/issues/migrations/0005_data_link_pdf_to_issue.py	/^def unjoin_models(apps, schema_editor):$/;"	f
 unload_fixture	django/apps/adverts/migrations/0002_data_ad_formats.py	/^def unload_fixture(apps, schema_editor):$/;"	f
 unload_fixture	django/apps/adverts/migrations/0003_universitas_ad_channels.py	/^def unload_fixture(apps, schema_editor):$/;"	f

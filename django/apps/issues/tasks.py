@@ -32,7 +32,7 @@ BUNDLE_TIME = crontab(hour=4, minute=0, day_of_week=3)
 @periodic_task(run_every=BUNDLE_TIME)
 def weekly_bundle():
     logger.info('bundle time!')
-    create_print_issue_pdf()
+    create_print_issue_pdf(expiration_days=6)
 
 
 class MissingBinary(RuntimeError):
@@ -55,12 +55,12 @@ def require_binary(binary):
 def get_staging_pdf_files(
         globpattern='*.pdf',
         directory=None,
-        expiration_days=0,
-        delete_expired=False):
+        delete_expired=False,
+        expiration_days=0):
     """Find pages for latest issue in pdf staging directory."""
 
     if directory is None:
-        staging_dir = pathlib.Path(settings.STAGING_ROOT) / 'STAGING' / 'PDF'
+        staging_dir = pathlib.Path(settings.STAGING_ROOT) / 'PDF'
     else:
         staging_dir = pathlib.Path(str(directory))
     pages = staging_dir.glob(globpattern)
@@ -157,29 +157,29 @@ def generate_pdf_preview(input_file, img_format='png', size=300):
     return output_file
 
 
-def optimize_staging_pages(*args, **kwargs):
+def optimize_staging_pages(**kwargs):
     """Optimize all pages"""
-    pages = get_staging_pdf_files(*args, **kwargs)
+    pages = get_staging_pdf_files(**kwargs)
     return [convert_pdf_to_web(pdf) for pdf in pages]
 
 
-def generate_thumbnails(*args, **kwargs):
+def generate_thumbnails(**kwargs):
     """Create thumbnails"""
-    pages = get_staging_pdf_files(*args, **kwargs)
+    pages = get_staging_pdf_files(**kwargs)
     return [generate_pdf_preview(pdf) for pdf in pages]
 
 
-def create_web_bundle(filename, *args, **kwargs):
+def create_web_bundle(filename, **kwargs):
     """Creates a web bundle file"""
     output_file = pathlib.Path(filename)
     output_file.touch()
 
     pages = [str(p) for p in
-             optimize_staging_pages(*args, **kwargs)]
+             optimize_staging_pages(**kwargs)]
 
     number_of_pages = len(pages)
     if number_of_pages == 0:
-        raise RuntimeError('No pages found')
+        raise RuntimeWarning('No pages found')
 
     if number_of_pages % 4 != 0:
         raise RuntimeError('Wrong number of pages %d' % number_of_pages)
@@ -208,7 +208,8 @@ def create_web_bundle(filename, *args, **kwargs):
 
 
 @shared_task
-def create_print_issue_pdf():
+def create_print_issue_pdf(
+        expiration_days=0, delete_expired=not settings.DEBUG):
     """Create or update pdf for the current issue"""
 
     issue = current_issue()
@@ -222,7 +223,11 @@ def create_print_issue_pdf():
         tmp_bundle_file = tempfile.NamedTemporaryFile(suffix='.pdf')
         try:
             create_web_bundle(
-                filename=tmp_bundle_file.name, globpattern=globpattern)
+                filename=tmp_bundle_file.name,
+                globpattern=globpattern,
+                expiration_days=expiration_days,
+                delete_expired=delete_expired,
+            )
         except RuntimeWarning as warning:
             logger.info(str(warning))
             continue
