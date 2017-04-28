@@ -1,16 +1,7 @@
-import React from "react"
-import ReactDOM from "react-dom"
+/* eslint-env browser */
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-var Hello = React.createClass ({
-    render: function() {
-        return (
-            <h1>
-            Hello, React!
-            </h1>
-        )
-    }
-})
+const HelloWorld = () => <h1>Foobar</h1>
 
-export default () => {
-  ReactDOM.render(<Hello />, document.getElementById('container'))
-}
+export default () => { ReactDOM.render(<HelloWorld />, document.getElementById('react-container')) }

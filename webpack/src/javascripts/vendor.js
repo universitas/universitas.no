@@ -1,3 +1,4 @@
+/* eslint-env browser */
 const $ = require('jquery')
 require('foundation-sites/dist/js/plugins/foundation.core')
 require('foundation-sites/dist/js/plugins/foundation.reveal')
