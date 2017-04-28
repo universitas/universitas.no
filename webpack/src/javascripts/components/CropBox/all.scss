@@ -1,0 +1,141 @@
+.cropboxWrapper {
+  max-width: 50em;
+  position: relative;
+  display: flex;
+  user-select: none;
+  -webkit-user-select: none;
+  margin: 1rem 0;
+  img {
+    display: block;
+  }
+  .masterImgWrapper {
+    flex: 11;
+    align-self: center;
+  }
+}
+.infoParent {
+  position: relative;
+  &:hover .infoBox {
+    transform: translateY(0);
+  }
+}
+.infoBoxWrapper {
+  pointer-events: none;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 80;
+  .infoBox {
+    display: block;
+    top: inherit;
+    transform: translateY(105%);
+    transition: transform 100ms ease;
+    background: rgba(0,0,0,0.8);
+    font-size: 13px;
+    line-height: 1.2;
+    color: white;
+    padding: .3em;
+    margin: 0;
+    div {
+      display: inline-block;
+    }
+    .infoRow {
+      padding-right: 1em;
+      .value {
+        font-weight: 500;
+      }
+      .label {
+        padding-right: .2em;
+      }
+    }
+  }
+}
+.cropInfo {
+  top: 0;
+  left: 0;
+  position: absolute;
+  display: table;
+  .infoRow {
+    display: table-row;
+    .label, .value {
+      display: table-cell;
+    }
+  }
+}
+
+.overlayWrapper {
+  .dragKing {
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    cursor: move;
+  }
+  svg.overlay {
+    height: 100%;
+    z-index: 10;
+    shape-rendering: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    path, rect, ellipse {
+      vector-effect: non-scaling-stroke;
+      fill: rgba(0,0,0,0.0);
+    }
+    .outside {
+      fill: rgba(0,0,0,0.5);
+    }
+    .centerPoint {
+      position: relative;
+      .handle {
+        cursor: crosshair;
+        opacity: 0;
+        &:hover + .cross {
+          stroke: rgba(255,255,0,1.0);
+        }
+      }
+      .cross {
+        pointer-events: none;
+        // shape-rendering: crispEdges;
+        vector-effect: non-scaling-stroke;
+        stroke: rgba(255,255,0,0.5)
+      }
+    }
+    .inside {
+      .box {
+        stroke: rgba(255,255,255,0.3);
+        cursor: move;
+      }
+      &:hover .box {
+        stroke: rgba(255,255,255,0.8);
+      }
+      .handles {
+        overflow: visible;
+      }
+    }
+    &.inactive {
+      .inside, .handle {
+        pointer-events: none;
+      }
+    }
+  }
+}
+.previewPanel {
+  $margin: .3vw;
+  display: flex;
+  flex: 3;
+  margin: -$margin;
+  padding: 2*$margin 0 0 0;
+  .previewWrapper {
+    position: relative;
+    margin: $margin;
+    svg.previewImg {
+      display: block;
+    }
+  }
+}

@@ -1,0 +1,14 @@
+.previewPanel {
+  $margin: .3vw;
+  display: flex;
+  flex: 3;
+  margin: -$margin;
+  padding: 2*$margin 0 0 0;
+  .previewWrapper {
+    position: relative;
+    margin: $margin;
+    svg.previewImg {
+      display: block;
+    }
+  }
+}
