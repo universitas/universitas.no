@@ -7,7 +7,7 @@ for arg; do case $arg in
 
   dumpdb  ) dump_db ;;
   loaddb  ) load_db ;;
-  enable  ) enable_service ;; 
+  enable  ) enable_service ;;
   build   ) build_django ;;
 
   webpack ) docker-compose run --rm webpack build ;;
@@ -31,7 +31,7 @@ for arg; do case $arg in
   pull    ) docker-compose pull ;;
   logs    ) docker-compose logs -f ;;
 
-  tags    ) ctags -R django/ && echo "collected ctags" ;;
+  tags    ) cd django && ctags -R && cd ../webpack && ctags -R src && echo "collected ctags" ;;
 
   prod    ) echo "production settings"
             export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml ;;
@@ -41,7 +41,7 @@ esac; done
 }
 
 show_help() {
-  awk '/esac/{exit}p && /\w  *) /{print}/case/{p=1}' run 
+  awk '/esac/{exit}p && /\w  *) /{print}/case/{p=1}' run
   exit 0
 }
 
