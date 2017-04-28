@@ -42,6 +42,12 @@ module.exports = {
           }
         }
       ]
+    },{
+      test: /\.jsx?$/,
+      exclude: /node_modules/,
+      use: [{
+        loader: "babel-loader"
+      }]
     }]
   },
   resolve: {
@@ -55,8 +61,8 @@ module.exports = {
   },
   entry: {
     stylesheets: 'stylesheets/universitas.scss',
-    site: 'javascripts/site.js',
     head: 'javascripts/head.js',
+    site: 'javascripts/site.js',
     vendor: 'javascripts/vendor.js'
   },
   output: {
