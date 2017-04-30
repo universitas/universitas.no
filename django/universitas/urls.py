@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Base url router for universitas.no"""
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -73,6 +72,5 @@ urlpatterns = [
 # redirect 404 to search page
 if not settings.DEBUG:
     urlpatterns += [
-        url(r'^(?P<slug>.+)/$',
-            search_404_view, name='not_found'),
+        url(r'^(?P<slug>.+)/$', search_404_view, name='not_found'),
     ]

@@ -14,48 +14,61 @@ Handle	src/javascripts/components/CropBox/Overlay.js	/^const Handle = ({ name, m
 InfoBox	src/javascripts/components/CropBox/CropInfo.js	/^const InfoBox = ({ items }) => ($/;"	r
 Keypoint	src/javascripts/components/CropBox/Features.js	/^const Keypoint = () => ($/;"	r
 Label	src/javascripts/components/CropBox/Features.js	/^const Label = ({ items, size }) => ($/;"	r
-Previews	src/javascripts/components/CropBox/Preview.js	/^const Previews = ({ src, aspects = [2], flexDirection }) => ($/;"	r
+Previews	src/javascripts/components/CropBox/Preview.js	/^const Previews = ({ id, aspects = [2], flexDirection }) => ($/;"	r
+Root	src/javascripts/containers/Root.js	/^const Root = () => ($/;"	r
 Symbols	src/javascripts/components/CropBox/Features.js	/^const Symbols = () => ($/;"	r
 aspects	src/javascripts/components/CropBox/CropBox.js	/^    const aspects = horizontal ? [0.6, 2] : [1, 0.5, 2.5]$/;"	r
+bindEventToImageFiles	src/javascripts/react.js	/^const bindEventToImageFiles = () => {$/;"	r
 boxPath	src/javascripts/components/CropBox/Overlay.js	/^  const boxPath = `M${left}, ${top}V${bottom}H${right}V${top}Z`$/;"	r
 circleRadius	src/javascripts/components/CropBox/Overlay.js	/^  const circleRadius = (rx) => ({ rx, ry: rx * size[0] \/ size[1] || rx })$/;"	r
 closeCrop	src/javascripts/components/CropBox/Preview.js	/^const closeCrop = (x, y, l, r, t, b, A) => {$/;"	r
-crop	src/javascripts/components/CropBox/CropInfo.js	/^  const crop = state.images[src].crop$/;"	r
-cropBoxReducer	src/javascripts/components/CropBox/reducers.js	/^const cropBoxReducer = combineReducers({$/;"	r
+container	src/javascripts/react.js	/^  const container = document.getElementById('react-container')$/;"	r
+crop	src/javascripts/components/CropBox/CropInfo.js	/^  const crop = state.images[id].crop$/;"	r
 cursor	src/javascripts/components/CropBox/Overlay.js	/^const cursor = {$/;"	r
 defaultCrop	src/javascripts/components/CropBox/CropBox.js	/^const defaultCrop = { h: [0.1, 0.5, 0.9], v: [0.1, 0.5, 0.9] }$/;"	r
+devTools	src/javascripts/containers/Root.js	/^const devTools = ($/;"	r
 direction	src/javascripts/components/CropBox/CropBox.js	/^    const direction = horizontal ? ['row', 'column'] : ['column', 'row']$/;"	r
-dx	src/javascripts/components/CropBox/reducers.js	/^        const dx = x - pi[0]$/;"	r
-dy	src/javascripts/components/CropBox/reducers.js	/^        const dy = y - pi[1]$/;"	r
+dispatchSelectImage	src/javascripts/containers/Root.js	/^const dispatchSelectImage = (src) => {$/;"	r
+dx	src/javascripts/components/CropBox/reducers.js	/^      const dx = x - pi[0]$/;"	r
+dy	src/javascripts/components/CropBox/reducers.js	/^      const dy = y - pi[1]$/;"	r
 getStyles	src/javascripts/components/CropBox/Preview.js	/^const getStyles = (src, crop, imgRatio, frameRatio) => {$/;"	r
 handleSize	src/javascripts/components/CropBox/Overlay.js	/^  const handleSize = 0.1$/;"	r
 height	src/javascripts/components/CropBox/Preview.js	/^  const height = bottom - top$/;"	r
 horizontal	src/javascripts/components/CropBox/CropBox.js	/^    const horizontal = false$/;"	r
+id	src/javascripts/components/CropBox/reducers.js	/^    const id = action.payload.id$/;"	r
+id	src/javascripts/react.js	/^  const id = e.target.getAttribute('data-pk')$/;"	r
 image	src/javascripts/components/CropBox/reducers.js	/^const image = (state, action) => {$/;"	r
 imageDefaultState	src/javascripts/components/CropBox/reducers.js	/^const imageDefaultState = {$/;"	r
+imageFileOnClick	src/javascripts/react.js	/^const imageFileOnClick = (e) => {$/;"	r
+imageFiles	src/javascripts/react.js	/^  const imageFiles = document.querySelectorAll('img[data-pk]')$/;"	r
 images	src/javascripts/components/CropBox/reducers.js	/^const images = (state = {}, action) => {$/;"	r
 img	src/javascripts/components/CropBox/CropBox.js	/^    const img = e.target$/;"	r
 img	src/javascripts/components/CropBox/CropBox.js	/^    const img = this.refs.masterImg.getBoundingClientRect()$/;"	r
+imgState	src/javascripts/components/CropBox/reducers.js	/^    const imgState = image(state[id], action)$/;"	r
 items	src/javascripts/components/CropBox/Preview.js	/^  const items = {$/;"	r
 mapDispatchToProps	src/javascripts/components/CropBox/CropBox.js	/^const mapDispatchToProps = (dispatch, { src, crop = defaultCrop }) => ({$/;"	r
 mapDispatchToProps	src/javascripts/components/CropBox/Overlay.js	/^const mapDispatchToProps = (dispatch, { src }) => ({$/;"	r
-mapStateToProps	src/javascripts/components/CropBox/CropInfo.js	/^const mapStateToProps = (state, { src }) => {$/;"	r
+mapStateToProps	src/javascripts/components/CropBox/CropInfo.js	/^const mapStateToProps = (state, { id }) => {$/;"	r
 mapStateToProps	src/javascripts/components/CropBox/Overlay.js	/^const mapStateToProps = (state, { src }) => state.images[src]$/;"	r
-mapStateToProps	src/javascripts/components/CropBox/Preview.js	/^const mapStateToProps = (state, { src }) => state.images[src]$/;"	r
+mapStateToProps	src/javascripts/components/CropBox/Preview.js	/^const mapStateToProps = (state, { id }) => state.images[id]$/;"	r
 mask	src/javascripts/components/CropBox/Overlay.js	/^  const mask = name.split('').map(parseFloat)$/;"	r
 mouseDownHandler	src/javascripts/components/CropBox/Overlay.js	/^  const mouseDownHandler = (dragMask) => (e) => startDragHandle(getRelativePosition(e), dragMask)$/;"	r
 mouseMove	src/javascripts/components/CropBox/Overlay.js	/^  const mouseMove = (e) => moveDragHandle(getRelativePosition(e))$/;"	r
 moveCenter	src/javascripts/components/CropBox/Overlay.js	/^  const moveCenter = (e) => setCenter(getRelativePosition(e))$/;"	r
 newCrop	src/javascripts/components/CropBox/Overlay.js	/^  const newCrop = (e) => startNewCrop(getRelativePosition(e))$/;"	r
-newState	src/javascripts/components/CropBox/reducers.js	/^    const newState = { ...state }$/;"	r
 normalize	src/javascripts/components/CropBox/reducers.js	/^const normalize = (dim) => {$/;"	r
 numberToPercent	src/javascripts/components/CropBox/Preview.js	/^  const numberToPercent = number => `${(100 * number).toFixed(1)}%`$/;"	r
 outerPath	src/javascripts/components/CropBox/Overlay.js	/^  const outerPath = 'M0, 0H1V1H0Z'$/;"	r
 ratioOf	src/javascripts/components/CropBox/Preview.js	/^  const ratioOf = (low, val, high) => ((high === low) ? 0.5 : ((val - low) \/ (high - low)))$/;"	r
 regex	src/javascripts/foot.js	/^  const regex = \/(^[^<]{0,10}[^\\s<]*)\/$/;"	r
+render	src/javascripts/react.js	/^const render = (App) => {$/;"	r
 replace	src/javascripts/foot.js	/^  const replace = '<span class=inngangsord>$1<\/span>'$/;"	r
+rootReducer	src/javascripts/containers/Root.js	/^const rootReducer = combineReducers({$/;"	r
+rootStore	src/javascripts/containers/Root.js	/^const rootStore = createStore(rootReducer, {}, devTools)$/;"	r
+selectImage	src/javascripts/containers/Root.js	/^const selectImage = (src) => ({$/;"	r
+selectedImage	src/javascripts/containers/Root.js	/^const selectedImage = (state = '', action) => {$/;"	r
 sorted	src/javascripts/components/CropBox/reducers.js	/^  const sorted = [0, dim[0], dim[2], 1].sort((a, b) => a - b)$/;"	r
-src	src/javascripts/components/CropBox/reducers.js	/^    const src = action.payload.src$/;"	r
+src	src/javascripts/react.js	/^  const src = e.target.getAttribute('src')$/;"	r
 styles	src/javascripts/components/CropBox/Preview.js	/^  const styles = getStyles(src, crop, size[0] \/ size[1], aspect)$/;"	r
 symbol	src/javascripts/components/CropBox/Features.js	/^  const symbol = className.includes('profile') ?$/;"	r
 width	src/javascripts/components/CropBox/Preview.js	/^  const width = right - left$/;"	r

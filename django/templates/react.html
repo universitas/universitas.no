@@ -1,0 +1,13 @@
+{% extends "base-template.html" %}
+{% load image_file %}
+{% block title %}React debug{% endblock title %}
+{% block content %}
+<div class="row small-up-4 medium-up-6">
+  {% for image in images %}
+  <div class="column">
+    {% image_file image '' 400 %}
+  </div>
+  {% endfor %}
+</div>
+<div id=react-container ></div>
+{% endblock content %}

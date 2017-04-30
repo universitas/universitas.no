@@ -11,6 +11,8 @@ for arg; do case $arg in
   build   ) build_django ;;
 
   webpack ) docker-compose run --rm webpack build ;;
+  npmi    ) read -p "package? " pack && \
+    docker-compose run --rm -u root webpack npm i --upgrade --save $pack;;
 
   repl    ) docker-compose run --rm web django-admin shell_plus --quiet-load ;;
   bash    ) docker-compose run --rm -u django web bash ;;

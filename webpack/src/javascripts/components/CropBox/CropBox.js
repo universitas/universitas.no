@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
-import { setImgSize, addImage } from './actions'
+import { setImgSize } from './actions'
 import { Previews } from './Preview'
 import { Overlay } from './Overlay'
 import { CropInfo } from './CropInfo'
@@ -10,12 +11,8 @@ import './cropbox.scss'
 class Canvas extends React.Component {
   constructor(props) {
     super(props)
-    props.addImage()
     this.imgOnLoad = this.imgOnLoad.bind(this)
     this.getRelativePosition = this.getRelativePosition.bind(this)
-    if (props.imageSize !== undefined) {
-      this.props.setImgSize(props.imageSize)
-    }
   }
   getRelativePosition(e) {
     const img = this.refs.masterImg.getBoundingClientRect()
@@ -30,7 +27,7 @@ class Canvas extends React.Component {
   }
   render() {
     const horizontal = false
-    const { src, interactive, features, showPreviews } = this.props
+    const { id, src, interactive, features, showPreviews } = this.props
     const direction = horizontal ? ['row', 'column'] : ['column', 'row']
     const aspects = horizontal ? [0.6, 2] : [1, 0.5, 2.5]
     return (
@@ -49,15 +46,15 @@ class Canvas extends React.Component {
           />
           <Overlay
             getRelativePosition={this.getRelativePosition}
-            src={src}
+            id={id}
             features={features}
             interactive={interactive}
           />
-          <CropInfo src={src} />
+          <CropInfo id={id} />
         </div>
         {showPreviews &&
           <Previews
-            src={src}
+            id={id}
             aspects={aspects}
             flexDirection={direction[1]}
           />
@@ -67,26 +64,25 @@ class Canvas extends React.Component {
   }
 }
 Canvas.propTypes = {
-  src: React.PropTypes.string.isRequired,
-  aspects: React.PropTypes.array,
-  imageSize: React.PropTypes.array,
-  setImgSize: React.PropTypes.func.isRequired,
-  addImage: React.PropTypes.func.isRequired,
-  interactive: React.PropTypes.bool.isRequired,
-  features: React.PropTypes.array.isRequired,
-  showPreviews: React.PropTypes.bool.isRequired,
+  id: PropTypes.string.isRequired,
+  src: PropTypes.string.isRequired,
+  aspects: PropTypes.array,
+  imageSize: PropTypes.array,
+  setImgSize: PropTypes.func.isRequired,
+  interactive: PropTypes.bool.isRequired,
+  features: PropTypes.array.isRequired,
+  showPreviews: PropTypes.bool.isRequired,
 }
 Canvas.defaultProps = {
   interactive: true,
   showPreviews: true,
   features: [],
 }
-const defaultCrop = { h: [0.1, 0.5, 0.9], v: [0.1, 0.5, 0.9] }
 
-const mapDispatchToProps = (dispatch, { src, crop = defaultCrop }) => ({
-  setImgSize: size => dispatch(setImgSize(src, size)),
-  addImage: () => dispatch(addImage(src, crop)),
+const mapDispatchToProps = (dispatch, {id}) => ({
+  setImgSize: size => dispatch(setImgSize(id, size)),
 })
-const CropBox = connect(null, mapDispatchToProps)(Canvas)
+const mapStateToProps = (state, {id}) => ({src: state.images[id].src})
+const CropBox = connect(mapStateToProps, mapDispatchToProps)(Canvas)
 
 export { CropBox }

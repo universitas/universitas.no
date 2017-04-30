@@ -1,35 +1,35 @@
 // Action creators
-export const setCenter = (src, position) => ({
+export const setCenter = (id, position) => ({
   type: 'MOVE_CENTER',
-  payload: { src, position },
+  payload: { id, position },
 })
 
-export const startDragHandle = (src, position, dragMask) => ({
+export const startDragHandle = (id, position, dragMask) => ({
   type: 'START_DRAG_HANDLE',
-  payload: { src, position, dragMask },
+  payload: { id, position, dragMask },
 })
 
-export const startNewCrop = (src, position) => ({
+export const startNewCrop = (id, position) => ({
   type: 'START_NEW_CROP',
-  payload: { src, position },
+  payload: { id, position },
 })
 
-export const moveDragHandle = (src, position) => ({
+export const moveDragHandle = (id, position) => ({
   type: 'MOVE_DRAG_HANDLE',
-  payload: { src, position },
+  payload: { id, position },
 })
 
-export const endDragHandle = (src) => ({
+export const endDragHandle = (id) => ({
   type: 'END_DRAG_HANDLE',
-  payload: { src },
+  payload: { id },
 })
 
-export const setImgSize = (src, size) => ({
+export const setImgSize = (id, size) => ({
   type: 'SET_IMAGE_SIZE',
-  payload: { src, size },
+  payload: { id, size },
 })
 
-export const addImage = (src, crop) => ({
+export const addImage = (id, src, crop) => ({
   type: 'ADD_IMAGE',
-  payload: { src, crop },
+  payload: { id, src, crop },
 })

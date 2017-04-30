@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import * as actions from './actions'
@@ -42,8 +43,8 @@ const Handle = ({ name, mouseDownHandler }) => {
   )
 }
 Handle.propTypes = {
-  name: React.PropTypes.string,
-  mouseDownHandler: React.PropTypes.func,
+  name: PropTypes.string,
+  mouseDownHandler: PropTypes.func,
 }
 
 let Overlay = ({
@@ -128,36 +129,36 @@ let Overlay = ({
 }
 
 Overlay.propTypes = {
-  size: React.PropTypes.array,
-  crop: React.PropTypes.object.isRequired,
-  dragging: React.PropTypes.object,
-  getRelativePosition: React.PropTypes.func.isRequired,
-  startDragHandle: React.PropTypes.func.isRequired,
-  moveDragHandle: React.PropTypes.func.isRequired,
-  endDragHandle: React.PropTypes.func.isRequired,
-  setCenter: React.PropTypes.func.isRequired,
-  startNewCrop: React.PropTypes.func.isRequired,
-  interactive: React.PropTypes.bool.isRequired,
-  features: React.PropTypes.array.isRequired,
+  size: PropTypes.array,
+  crop: PropTypes.object.isRequired,
+  dragging: PropTypes.object,
+  getRelativePosition: PropTypes.func.isRequired,
+  startDragHandle: PropTypes.func.isRequired,
+  moveDragHandle: PropTypes.func.isRequired,
+  endDragHandle: PropTypes.func.isRequired,
+  setCenter: PropTypes.func.isRequired,
+  startNewCrop: PropTypes.func.isRequired,
+  interactive: PropTypes.bool.isRequired,
+  features: PropTypes.array.isRequired,
 }
 
-const mapStateToProps = (state, { src }) => state.images[src]
+const mapStateToProps = (state, { id }) => state.images[id]
 
-const mapDispatchToProps = (dispatch, { src }) => ({
+const mapDispatchToProps = (dispatch, { id }) => ({
   setCenter: (position) => {
-    dispatch(actions.setCenter(src, position))
+    dispatch(actions.setCenter(id, position))
   },
   startNewCrop: (position) => {
-    dispatch(actions.startNewCrop(src, position))
+    dispatch(actions.startNewCrop(id, position))
   },
   startDragHandle: (position, dragMask) => {
-    dispatch(actions.startDragHandle(src, position, dragMask))
+    dispatch(actions.startDragHandle(id, position, dragMask))
   },
   moveDragHandle: (position) => {
-    dispatch(actions.moveDragHandle(src, position))
+    dispatch(actions.moveDragHandle(id, position))
   },
   endDragHandle: () => {
-    dispatch(actions.endDragHandle(src))
+    dispatch(actions.endDragHandle(id))
   },
 })
 

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react'
 import './cropinfo.scss'
 import { connect } from 'react-redux'
@@ -15,12 +16,12 @@ const InfoBox = ({ items }) => (
   </div>
 )
 InfoBox.propTypes = {
-  items: React.PropTypes.object,
+  items: PropTypes.object,
 }
 
 
-const mapStateToProps = (state, { src }) => {
-  const crop = state.images[src].crop
+const mapStateToProps = (state, { id }) => {
+  const crop = state.images[id].crop
   const [left, x, right, top, y, bottom] = [...crop.v, ...crop.h]
     .map(num => num.toFixed(3))
   return { items: { left, top, right, bottom, x, y } }

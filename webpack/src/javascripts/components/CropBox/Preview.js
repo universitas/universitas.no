@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import { normalize } from './reducers'
@@ -42,7 +43,7 @@ let PreviewImg = ({ src, crop, size, aspect, style = {} }) => {
   const items = {
     position: styles.backgroundPosition,
     size: styles.backgroundSize,
-    "aspect ratio": aspect,
+    'aspect ratio': aspect,
   }
   return (
     <div className="previewWrapper infoParent" style={style} >
@@ -56,16 +57,16 @@ let PreviewImg = ({ src, crop, size, aspect, style = {} }) => {
   )
 }
 PreviewImg.propTypes = {
-  src: React.PropTypes.string.isRequired,
-  size: React.PropTypes.array.isRequired,
-  crop: React.PropTypes.object.isRequired,
-  aspect: React.PropTypes.number.isRequired,
-  style: React.PropTypes.object,
+  src: PropTypes.string.isRequired,
+  size: PropTypes.array.isRequired,
+  crop: PropTypes.object.isRequired,
+  aspect: PropTypes.number.isRequired,
+  style: PropTypes.object,
 }
-const mapStateToProps = (state, { src }) => state.images[src]
+const mapStateToProps = (state, { id }) => state.images[id]
 PreviewImg = connect(mapStateToProps)(PreviewImg)
 
-const Previews = ({ src, aspects = [2], flexDirection }) => (
+const Previews = ({ id, aspects = [2], flexDirection }) => (
   <div
     className="previewPanel"
     style={{ flexDirection }}
@@ -74,17 +75,17 @@ const Previews = ({ src, aspects = [2], flexDirection }) => (
       aspects.map((aspect, i) => (
         <PreviewImg
           key={i}
+          id={id}
           aspect={aspect}
-          src={src}
           style={{ flex: flexDirection === 'row' ? aspect : 1 / aspect }}
         />))
     }
   </div>
 )
 Previews.propTypes = {
-  src: React.PropTypes.string,
-  aspects: React.PropTypes.array,
-  flexDirection: React.PropTypes.string,
+  id: PropTypes.string,
+  aspects: PropTypes.array,
+  flexDirection: PropTypes.string,
 }
 
 export { Previews, PreviewImg }

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react'
 import './features.scss'
 
@@ -40,8 +41,8 @@ const Label = ({ items, size }) => (
   </text>
 )
 Label.propTypes = {
-  items: React.PropTypes.object,
-  size: React.PropTypes.number,
+  items: PropTypes.object,
+  size: PropTypes.number,
 }
 
 const Keypoint = () => (
@@ -67,7 +68,7 @@ const Face = ({ className }) => {
   )
 }
 Face.propTypes = {
-  className: React.PropTypes.string,
+  className: PropTypes.string,
 }
 
 const Feature = ({ label = "", weight = 0, ...props }) => (
@@ -83,9 +84,9 @@ const Feature = ({ label = "", weight = 0, ...props }) => (
   </svg>
 )
 Feature.propTypes = {
-  label: React.PropTypes.string,
-  weight: React.PropTypes.number,
-  width: React.PropTypes.number,
+  label: PropTypes.string,
+  weight: PropTypes.number,
+  width: PropTypes.number,
 }
 
 export { Feature, Symbols }

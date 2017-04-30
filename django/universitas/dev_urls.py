@@ -9,11 +9,14 @@ from django.conf.urls.static import static
 from debug_toolbar import urls as debug_toolbar_urls
 
 from .urls import urlpatterns
+from .dev_views import ReactDevView
+
 
 # django debug toolbar
-urlpatterns += [
+urlpatterns = [
     url(r'^__debug__/', include(debug_toolbar_urls)),
-]
+    url(r'^react/$', ReactDevView.as_view(), name='react-dev'),
+] + urlpatterns
 
 # serve media files from development server
 urlpatterns += static(

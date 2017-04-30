@@ -163,7 +163,6 @@ FaceDetector	apps/photo/cropping/crop_detector.py	/^class FaceDetector(FeatureDe
 Fakta	apps/legacy_db/models.py	/^class Fakta(models.Model):$/;"	c
 Feature	apps/photo/cropping/crop_detector.py	/^class Feature(Box):$/;"	c
 FeatureDetector	apps/photo/cropping/crop_detector.py	/^class FeatureDetector(abc.ABC):$/;"	c
-FileRevNode	apps/core/templatetags/gulp_rev_staticfiles.py	/^class FileRevNode(StaticNode):$/;"	c
 FrontPageModule	apps/frontpage/models.py	/^class FrontPageModule(TimeStampedModel, Edit_url_mixin):$/;"	c
 Frontpage	apps/frontpage/models.py	/^class Frontpage(TimeStampedModel):$/;"	c
 FrontpageAppConfig	apps/frontpage/appconf.py	/^class FrontpageAppConfig(AppConfig):$/;"	c
@@ -416,6 +415,7 @@ RE_SPACE	watson/backends.py	/^RE_SPACE = re.compile(r"[\\s]+", re.UNICODE)$/;"	v
 ROOT_URLCONF	universitas/base.py	/^ROOT_URLCONF = 'universitas.urls'$/;"	v
 ROOT_URLCONF	universitas/dev.py	/^ROOT_URLCONF = 'universitas.dev_urls'$/;"	v
 RUNSERVERPLUS_SERVER_ADDRESS_PORT	universitas/local.py	/^RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8000'$/;"	v
+ReactDevView	universitas/dev_views.py	/^class ReactDevView(TemplateView):$/;"	c
 RegexSearchBackend	watson/backends.py	/^class RegexSearchBackend(RegexSearchMixin, SearchBackend):$/;"	c
 RegexSearchMixin	watson/backends.py	/^class RegexSearchMixin(six.with_metaclass(abc.ABCMeta)):$/;"	c
 RegistrationError	watson/search.py	/^class RegistrationError(SearchEngineError):$/;"	c
@@ -1312,6 +1312,7 @@ get_contentfile	apps/issues/tests/test_tasks.py	/^def get_contentfile(filepath):
 get_context_data	apps/issues/views.py	/^    def get_context_data(self, **kwargs):$/;"	m	class:PdfArchiveView
 get_context_data	apps/issues/views.py	/^    def get_context_data(self, **kwargs):$/;"	m	class:PubPlanView
 get_context_data	apps/search/views.py	/^    def get_context_data(self, **kwargs):$/;"	m	class:SearchMixin
+get_context_data	universitas/dev_views.py	/^    def get_context_data(self, **kwargs):$/;"	m	class:ReactDevView
 get_context_data	watson/views.py	/^    def get_context_data(self, **kwargs):$/;"	m	class:SearchMixin
 get_created_engines	watson/search.py	/^    def get_created_engines(cls):$/;"	m	class:SearchEngine
 get_crop_box	apps/photo/cropping/models.py	/^    def get_crop_box(self):$/;"	m	class:AutoCropImage
@@ -1514,6 +1515,7 @@ id_sak	apps/legacy_db/models.py	/^    id_sak = models.ForeignKey(Sak, db_column=
 id_sak	apps/legacy_db/models.py	/^    id_sak = models.IntegerField(primary_key=True)$/;"	v	class:Sak
 id_svar	apps/legacy_db/models.py	/^    id_svar = models.IntegerField(primary_key=True)$/;"	v	class:DiskSvar
 image_count	apps/stories/models.py	/^    def image_count(self):$/;"	m	class:Story
+image_file	apps/photo/templatetags/image_file.py	/^def image_file(image_file, width=300, height=None):$/;"	f
 image_post_delete	apps/photo/signals.py	/^def image_post_delete(sender, instance, **kwargs):$/;"	f
 image_post_save	apps/photo/signals.py	/^def image_post_save(sender, instance, **kwargs):$/;"	f
 imagefile	apps/adverts/models.py	/^    imagefile = ImageField($/;"	v	class:Advert
@@ -1670,7 +1672,6 @@ logger	apps/contributors/models.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	apps/contributors/templatetags/byline_image.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	apps/core/management/commands/fake_content.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	apps/core/tasks.py	/^logger = logging.getLogger(__name__)$/;"	v
-logger	apps/core/templatetags/gulp_rev_staticfiles.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	apps/core/templatetags/universitas_menu.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	apps/frontpage/models.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	apps/frontpage/views.py	/^logger = logging.getLogger(__name__)$/;"	v
@@ -2294,9 +2295,9 @@ reduce_opacity	apps/adverts/dummy_image_advert.py	/^def reduce_opacity(im, opaci
 regex_from_word	watson/backends.py	/^def regex_from_word(word):$/;"	f
 register	apps/adverts/templatetags/advert_channel.py	/^register = template.Library()$/;"	v
 register	apps/contributors/templatetags/byline_image.py	/^register = template.Library()$/;"	v
-register	apps/core/templatetags/gulp_rev_staticfiles.py	/^register = template.Library()$/;"	v
 register	apps/core/templatetags/universitas_menu.py	/^register = template.Library()$/;"	v
 register	apps/markup/templatetags/parse_markup.py	/^register = template.Library()$/;"	v
+register	apps/photo/templatetags/image_file.py	/^register = template.Library()$/;"	v
 register	apps/stories/templatetags/inline_elements.py	/^register = template.Library()$/;"	v
 register	watson/search.py	/^    def register(self, model, adapter_cls=SearchAdapter, **field_overrides):$/;"	m	class:SearchEngine
 register	watson/search.py	/^register = default_search_engine.register$/;"	v
@@ -2431,7 +2432,6 @@ start	watson/search.py	/^    def start(self):$/;"	m	class:SearchContextManager
 start_date	apps/contributors/models.py	/^    start_date = models.DateField($/;"	v	class:Stint
 start_tag	apps/markup/models.py	/^    start_tag = models.CharField($/;"	v	class:MarkupTag
 start_time	apps/adverts/models.py	/^    start_time = models.DateTimeField($/;"	v	class:Advert
-static	apps/core/templatetags/gulp_rev_staticfiles.py	/^def static(parser, token):$/;"	f
 status	apps/adverts/models.py	/^    status = models.PositiveIntegerField($/;"	v	class:Advert
 status	apps/contributors/models.py	/^    status = models.PositiveSmallIntegerField($/;"	v	class:Contributor
 status	apps/legacy_db/models.py	/^    status = models.IntegerField()$/;"	v	class:InnleggAbstract
@@ -2474,6 +2474,7 @@ template_name	apps/issues/views.py	/^    template_name = 'publication-plan.html'
 template_name	apps/search/views.py	/^    template_name = "search-results.html"$/;"	v	class:SearchView
 template_name	apps/stories/models.py	/^    template_name = 'bodytext.html'$/;"	v	class:Story
 template_name	apps/stories/models.py	/^    template_name = 'bodytext_element.html'$/;"	v	class:TextContent
+template_name	universitas/dev_views.py	/^    template_name = 'react.html'$/;"	v	class:ReactDevView
 template_name	watson/views.py	/^    template_name = "watson\/search_results.html"$/;"	v	class:SearchView
 test_box_exceptions	apps/photo/cropping/boundingbox.py	/^def test_box_exceptions():$/;"	f
 test_box_methods	apps/photo/cropping/boundingbox.py	/^def test_box_methods():$/;"	f
@@ -2580,11 +2581,11 @@ upload_to	apps/adverts/models.py	/^        upload_to=upload_folder,$/;"	v	class:
 upload_to	apps/issues/models.py	/^        upload_to='pdf\/covers\/',$/;"	v	class:PrintIssue.Meta
 upload_to	apps/issues/models.py	/^        upload_to=upload_pdf_to,$/;"	v	class:PrintIssue.Meta
 upload_to	apps/photo/models.py	/^        upload_to=upload_image_to,$/;"	v	class:ImageFile.Meta
-url	apps/core/templatetags/gulp_rev_staticfiles.py	/^    def url(self, context):$/;"	m	class:FileRevNode
 url	apps/frontpage/models.py	/^    def url(self):$/;"	m	class:FrontpageStory
 url	watson/models.py	/^    url = models.CharField($/;"	v	class:SearchEntry
 urlpatterns	apps/search/urls.py	/^urlpatterns = [$/;"	v
 urlpatterns	universitas/api_urls.py	/^urlpatterns = [$/;"	v
+urlpatterns	universitas/dev_urls.py	/^urlpatterns = [$/;"	v
 urlpatterns	universitas/redirect_urls.py	/^urlpatterns = [$/;"	v
 urlpatterns	universitas/urls.py	/^urlpatterns = [$/;"	v
 urlpatterns	watson/urls.py	/^urlpatterns = [$/;"	v
