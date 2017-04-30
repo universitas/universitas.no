@@ -3,6 +3,7 @@ const imageDefaultState = {
   dragging: {},
   size: [],
   crop: {},
+  dirty: false,
 }
 
 const normalize = (dim) => {
@@ -13,12 +14,15 @@ const normalize = (dim) => {
 const image = (state, action) => {
   switch (action.type) {
   case 'ADD_IMAGE':
-    return state || { ...imageDefaultState, ...action.payload }
+    return { ...state,  ...imageDefaultState, ...action.payload }
+  case 'IMAGE_FILE_PATCHED':
+    return { ...state,  dirty: false }
   case 'MOVE_CENTER': {
     const [x, y] = action.payload.position
     const { h, v } = state.crop
     return {
       ...state,
+      dirty: true,
       crop: {
         h: normalize([h[0], x, h[2]]),
         v: normalize([v[0], y, v[2]]),
@@ -29,6 +33,7 @@ const image = (state, action) => {
     const [x, y] = action.payload.position
     return {
       ...state,
+      dirty: true,
       crop: {
         h: [x, state.crop.h[1], x],
         v: [y, state.crop.v[1], y],
@@ -43,6 +48,7 @@ const image = (state, action) => {
   case 'START_DRAG_HANDLE':
     return {
       ...state,
+      dirty: true,
       dragging: {
         dragMask: action.payload.dragMask,
         initialPosition: action.payload.position,

@@ -1,5 +1,5 @@
 // action creator
-import { SELECT_IMAGE, RECEIVE_IMAGE_FILE } from './actions'
+import { SELECT_IMAGE } from './actions'
 import { image } from '../components/CropBox/reducers'
 import { combineReducers } from 'redux'
 

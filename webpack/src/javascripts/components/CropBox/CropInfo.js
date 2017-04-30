@@ -22,9 +22,10 @@ InfoBox.propTypes = {
 
 const mapStateToProps = (state, { id }) => {
   const crop = state.images[id].crop
+  const status = state.images[id].dirty? 'dirty' : 'clean'
   const [left, x, right, top, y, bottom] = [...crop.v, ...crop.h]
     .map(num => num.toFixed(3))
-  return { items: { left, top, right, bottom, x, y } }
+  return { items: { status, left, top, right, bottom, x, y } }
 }
 
 const CropInfo = connect(mapStateToProps)(InfoBox)
