@@ -18,7 +18,7 @@ def load_fixture(fixture_file):
     return _load
 
 
-def unload_fixture(appname, models=[]):
+def unload_fixture(appname, models=()):
     def _unload(apps, schema_editor):
         """Brutally deleting all entries for this model..."""
         for modelname in models:
