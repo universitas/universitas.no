@@ -198,7 +198,7 @@ class BlockTag(MarkupTag):
             content = content.replace(self.start_tag, '', 1).strip()
         return self.start_tag, content
 
-    def make_html(self, content, parent_tags=[]): # pylint:disable=dangerous-default-value
+    def make_html(self, content, parent_tags=[]):
         if self.match(content):
             tags = self.html_tag.split('>')
             inner = tags[-1]
