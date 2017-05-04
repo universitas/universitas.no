@@ -7,11 +7,8 @@ pep8:
     - E1004
 pylint:
   disable:
-    # - dangerous-default-value
-    # - missing-super-argument
-    # - super-on-old-class
-    # - protected-access
-    # - old-style-class
+    - syntax-error  # f-strings
+    - invalid-sequence-index  # type annotations
 max-line-length: 120
 uses:
   - django
