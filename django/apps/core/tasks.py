@@ -1,5 +1,5 @@
 """Celery tasks"""
-from celery.decorators import periodic_task
+from celery.task import periodic_task
 from datetime import timedelta
 import subprocess
 

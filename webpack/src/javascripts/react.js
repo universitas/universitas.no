@@ -13,17 +13,11 @@ const render = App => {
 
 const bindEventToImageFiles = () => {
   const imageFiles = document.querySelectorAll('img[data-pk]')
-  imageFiles.forEach(img => {
-    img.addEventListener('click', imgOnClick)
-  })
+  imageFiles.forEach(img => img.addEventListener('click', imgOnClick))
 }
 
 export default () => {
   bindEventToImageFiles()
   render(Root)
-  if (module.hot) {
-    module.hot.accept('./containers/Root', () => {
-      render(Root)
-    })
-  }
+  if (module.hot) module.hot.accept('./containers/Root', () => render(Root))
 }

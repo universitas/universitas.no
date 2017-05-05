@@ -2,7 +2,7 @@
 
 import pytest
 import json
-from pathlib import Path
+from pathlib import PosixPath as Path
 from apps.photo.cropping.crop_detector import (
     FeatureDetector, MockFeatureDetector, Feature, KeypointDetector, Cascade
 )

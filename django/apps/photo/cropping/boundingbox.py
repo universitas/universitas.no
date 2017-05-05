@@ -229,7 +229,7 @@ def test_box_methods():
     box = Box(0, 1, 2, 3)
     # __dict__
     assert box.__dict__ == dict(left=0, top=1, right=2, bottom=3)
-    assert box == Box(**box.__dict__)
+    assert box == Box(**box.__dict__)  # pylint: disable-all
 
     # __iter__
     assert list(box) == [0, 1, 2, 3]

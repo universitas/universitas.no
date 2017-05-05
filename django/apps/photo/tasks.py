@@ -2,7 +2,7 @@
 import os
 from datetime import timedelta
 
-from celery.decorators import periodic_task
+from celery.task import periodic_task
 from celery import shared_task
 
 from sorl import thumbnail

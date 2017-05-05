@@ -1,5 +1,6 @@
 """ Content in the publication. """
 
+# pylint: disable=no-member
 # Python standard library
 import re
 import os

@@ -1,5 +1,5 @@
 import pytest
-from pathlib import Path
+from pathlib import PosixPath as Path
 from django.core.exceptions import ValidationError
 from apps.photo.models import ImageFile
 from django.core.files import File
@@ -17,7 +17,7 @@ def fixture_image():
 def test_custom_field(fixture_image):
     img = ImageFile()
     assert img.cropping_method == img.CROP_PENDING
-    assert img.crop_box.left < img.crop_box.right
+    assert img.crop_box.left < img.crop_box.right  # pylint: disable-all
     with open(fixture_image, 'rb') as fp:
         img.source_file.save('foobar.jpg', File(fp))
     img.crop_box.right = 5

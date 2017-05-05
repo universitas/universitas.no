@@ -10,7 +10,7 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from apps.issues.models import current_issue, PrintIssue
 from celery import shared_task
-from celery.decorators import periodic_task
+from celery.task import periodic_task
 from celery.schedules import crontab
 
 import logging

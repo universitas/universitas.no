@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Configuration for the task runner celery
-"""
+""" Configuration for the task runner Celery """
 
 from celery import Celery  # type: ignore
 
