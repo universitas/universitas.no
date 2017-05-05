@@ -19,6 +19,7 @@ def prettify(source):
         root, encoding='unicode', pretty_print=True
     ).strip()
 
+
 data = """
     <div>
         <h1>

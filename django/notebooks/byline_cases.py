@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# pylint: disable=line-too-long
+# flake8: noqa
 """ Contains test data for byline import """
 
 BYLINE_CASES = [  # List of cases: ( "Input string", "Expected output" )

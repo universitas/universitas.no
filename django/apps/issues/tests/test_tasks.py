@@ -160,7 +160,7 @@ def test_create_current_issue_web_bundle(tmp_fixture_dir):
     create_print_issue_pdf()
     assert PrintIssue.objects.count() == 2
     assert Issue.objects.count() == count
-    staging_dir = tmp_fixture_dir  / 'PDF'
+    staging_dir = tmp_fixture_dir / 'PDF'
     mag_pages = list(staging_dir.glob('UNI12*.pdf'))
     assert len(mag_pages) == 4
     mag_pages[0].unlink()

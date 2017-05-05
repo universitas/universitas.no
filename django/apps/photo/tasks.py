@@ -62,7 +62,6 @@ def post_save_task(instance):
         logger.info('rebuilt thumbs for %d %s' % (instance.pk, instance))
 
 
-
 @periodic_task(run_every=timedelta(hours=1))
 def clean_up_pending_autocrop():
     # In case some images have ended up in limbo

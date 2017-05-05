@@ -7,7 +7,6 @@ from apps.photo.cropping.crop_detector import (
     FeatureDetector, MockFeatureDetector, Feature, KeypointDetector, Cascade
 )
 from apps.photo.cropping.boundingbox import Box
-from apps.photo.cropping.models import CropBox
 
 
 @pytest.fixture
