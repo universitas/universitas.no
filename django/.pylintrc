@@ -103,7 +103,7 @@ dummy-variables-rgx=_+$|(_[a-zA-Z0-9_]*[a-zA-Z0-9]+?$)|dummy|^ignored_|^unused_
 
 # Argument names that match this expression will be ignored. Default to name
 # with leading underscore
-ignored-argument-names=_.*|^ignored_|^unused_
+ignored-argument-names=_.*|^ignored_|^unused_|request|modeladmin
 
 # Tells whether we should check for unused import in __init__ files.
 init-import=no
@@ -210,7 +210,7 @@ class-rgx=[A-Z_][a-zA-Z0-9]+$
 const-name-hint=(([A-Z_][A-Z0-9_]*)|(__.*__))$
 
 # Regular expression matching correct constant names
-const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$
+const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$|logger|register
 
 # Minimum line length for functions/classes that require docstrings, shorter
 # ones are exempt.
