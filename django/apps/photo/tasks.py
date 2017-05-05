@@ -2,7 +2,7 @@
 import os
 from datetime import timedelta
 
-from celery.decorators import periodic_task
+from celery.task import periodic_task
 from celery import shared_task
 
 from sorl import thumbnail
@@ -60,7 +60,6 @@ def post_save_task(instance):
         instance.thumb()
         instance.preview()
         logger.info('rebuilt thumbs for %d %s' % (instance.pk, instance))
-
 
 
 @periodic_task(run_every=timedelta(hours=1))

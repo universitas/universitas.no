@@ -70,9 +70,9 @@ class Migration(migrations.Migration):
                 ('modified', model_utils.fields.AutoLastModifiedField(
                     editable=False, verbose_name='modified', default=django.utils.timezone.now)),
                 ('height', models.PositiveSmallIntegerField(validators=[
-                 apps.frontpage.models.FrontPageModule.validate_height], help_text='height - minimum 1 maximum 3', default=1)),
+                 apps.frontpage.models.validate_height], help_text='height - minimum 1 maximum 3', default=1)),
                 ('columns', models.PositiveSmallIntegerField(validators=[
-                 apps.frontpage.models.FrontPageModule.validate_columns], help_text='width - minimum 1 maximum 12', default=6)),
+                 apps.frontpage.models.validate_columns], help_text='width - minimum 1 maximum 12', default=6)),
                 ('name', models.CharField(max_length=50)),
                 ('content', models.TextField()),
                 ('position', models.IntegerField(
@@ -98,9 +98,9 @@ class Migration(migrations.Migration):
                 ('modified', model_utils.fields.AutoLastModifiedField(
                     editable=False, verbose_name='modified', default=django.utils.timezone.now)),
                 ('height', models.PositiveSmallIntegerField(validators=[
-                 apps.frontpage.models.FrontPageModule.validate_height], help_text='height - minimum 1 maximum 3', default=1)),
+                 apps.frontpage.models.validate_height], help_text='height - minimum 1 maximum 3', default=1)),
                 ('columns', models.PositiveSmallIntegerField(validators=[
-                 apps.frontpage.models.FrontPageModule.validate_columns], help_text='width - minimum 1 maximum 12', default=6)),
+                 apps.frontpage.models.validate_columns], help_text='width - minimum 1 maximum 12', default=6)),
                 ('position', models.PositiveIntegerField(
                     help_text='larger numbers come first')),
                 ('frontpage', models.ForeignKey(to='frontpage.Frontpage')),

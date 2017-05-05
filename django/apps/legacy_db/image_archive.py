@@ -39,10 +39,6 @@ class ImageFile(object):
         )
         return better_filename
 
-    def _add_path(self, newpath):
-        if newpath not in self.paths:
-            self.paths.append(newpath)
-
 
 def main():
     with open('bildeliste2') as f:

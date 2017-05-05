@@ -59,6 +59,8 @@ pytest
 pytest-xdist
 pytest-django
 selenium
+pylint
+pylint-django
 
 # DEBUGGING AND DEVELOPMENT
 Werkzeug

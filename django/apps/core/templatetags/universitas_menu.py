@@ -9,7 +9,6 @@ register = template.Library()
 logger = logging.getLogger(__name__)
 
 
-# @register.inclusion_tag('universitas-menu.html')
 @register.inclusion_tag('old-menu.html', takes_context=True)
 def universitas_menu(context, active_section):
 

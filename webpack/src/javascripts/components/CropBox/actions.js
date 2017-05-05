@@ -19,7 +19,7 @@ export const moveDragHandle = (id, position) => ({
   payload: { id, position },
 })
 
-export const endDragHandle = (id) => ({
+export const endDragHandle = id => ({
   type: 'END_DRAG_HANDLE',
   payload: { id },
 })

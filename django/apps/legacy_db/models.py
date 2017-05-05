@@ -192,7 +192,7 @@ class ProdsakManager(models.Manager):
         return ProdsakQueryset(self.model, using=self._db)
 
     def single(self):
-        return self.get_queryset().latest_version()
+        return self.get_queryset().single()
 
     def active(self):
         return self.get_queryset(

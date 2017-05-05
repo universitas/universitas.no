@@ -5,7 +5,7 @@ import pytest
 import tempfile
 import os
 import shutil
-import pathlib
+from pathlib import PosixPath as Path
 # from django.utils.timezone import datetime
 from django.core.files.base import ContentFile
 from apps.issues.models import Issue, PrintIssue
@@ -37,8 +37,8 @@ def tmp_fixture_dir(settings):
     when the object is garbage collected."""
     tmpdir = tempfile.TemporaryDirectory()
 
-    src = pathlib.Path(__file__).parent / 'STAGING'
-    dst = pathlib.Path(tmpdir.name) / 'STAGING'
+    src = Path(__file__).parent / 'STAGING'
+    dst = Path(tmpdir.name) / 'STAGING'
     shutil.copytree(str(src), str(dst))
     # for file in dst.glob('**/*.*'):
     #     file.touch()
@@ -70,7 +70,7 @@ def test_get_staging_pdf_files(tmp_fixture_dir):
 def test_convert_pdf_page_to_web(tmp_fixture_dir):
     """Convert single page pdf to web version"""
 
-    pdf = pathlib.Path(tmp_fixture_dir) / 'PDF' / PAGE_ONE
+    pdf = Path(tmp_fixture_dir) / 'PDF' / PAGE_ONE
 
     # Make new file
     opt = convert_pdf_to_web(pdf)
@@ -160,7 +160,7 @@ def test_create_current_issue_web_bundle(tmp_fixture_dir):
     create_print_issue_pdf()
     assert PrintIssue.objects.count() == 2
     assert Issue.objects.count() == count
-    staging_dir = tmp_fixture_dir  / 'PDF'
+    staging_dir = tmp_fixture_dir / 'PDF'
     mag_pages = list(staging_dir.glob('UNI12*.pdf'))
     assert len(mag_pages) == 4
     mag_pages[0].unlink()

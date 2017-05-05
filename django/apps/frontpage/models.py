@@ -1,3 +1,4 @@
+# pylint: disable=no-member
 import random
 import logging
 
@@ -65,28 +66,26 @@ class Frontpage(TimeStampedModel):
         return self.label
 
 
+def validate_columns(value, minvalue=1, maxvalue=12):
+    if not minvalue <= value <= maxvalue:
+        raise ValidationError(
+            _('{} is not a number between {} and {}').format(
+                value, minvalue, maxvalue))
+
+
+def validate_height(value, minvalue=1, maxvalue=12):
+    if not minvalue <= value <= maxvalue:
+        raise ValidationError(
+            _('{} is not a number between {} and {}').format(
+                value, minvalue, maxvalue))
+
+
 class FrontPageModule(TimeStampedModel, Edit_url_mixin):
 
     """ A single item on the front page """
 
     class Meta:
         abstract = True
-
-    def validate_columns(value, minvalue=1, maxvalue=12):
-        if not minvalue <= value <= maxvalue:
-            raise ValidationError(
-                _('{} is not a number between {} and {}').format(
-                    value,
-                    minvalue,
-                    maxvalue))
-
-    def validate_height(value, minvalue=1, maxvalue=12):
-        if not minvalue <= value <= maxvalue:
-            raise ValidationError(
-                _('{} is not a number between {} and {}').format(
-                    value,
-                    minvalue,
-                    maxvalue))
 
     frontpage = models.ForeignKey(
         Frontpage,

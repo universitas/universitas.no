@@ -10,6 +10,7 @@ for arg; do case $arg in
   enable  ) enable_service ;;
   build   ) build_django ;;
 
+  lint    ) lint_javascript ; lint_python ;; 
   webpack ) docker-compose run --rm webpack build ;;
   npmi    ) read -p "package? " pack && \
     docker-compose run --rm -u root webpack npm i --upgrade --save $pack;;
@@ -45,6 +46,15 @@ esac; done
 show_help() {
   awk '/esac/{exit}p && /\w  *) /{print}/case/{p=1}' run
   exit 0
+}
+
+lint_javascript() {
+  js_files=$(git diff --staged --name-only | awk '/\.js$/')
+  [[ -n $js_files ]] && prettier --write --semi false --single-quote --trailing-comma es5 $js_files
+}
+lint_python() {
+  py_files=$(git diff --staged --name-only | awk '/\.py$/')
+  [[ -n $py_files ]] && autopep8 --experimental -vvv -a -j 0 --in-place $py_files
 }
 
 load_db() {

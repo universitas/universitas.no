@@ -2,19 +2,19 @@ import fetch from 'isomorphic-fetch'
 import * as Cookies from 'js-cookie'
 
 export const SELECT_IMAGE = 'SELECT_IMAGE'
-export const selectImage = (id) => ({
+export const selectImage = id => ({
   type: SELECT_IMAGE,
   payload: { id },
 })
 
 export const REQUEST_IMAGE_FILE = 'REQUEST_IMAGE_FILE'
-export const requestImageFile = (id) => ({
+export const requestImageFile = id => ({
   type: REQUEST_IMAGE_FILE,
   payload: { id },
 })
 
 export const ADD_IMAGE = 'ADD_IMAGE'
-export const addImage = (json) => ({
+export const addImage = json => ({
   type: ADD_IMAGE,
   payload: {
     ...transformApidata2State(json),
@@ -27,7 +27,6 @@ export const imageFilePatched = (id, status_code) => ({
   type: IMAGE_FILE_PATCHED,
   payload: { id, status_code },
 })
-
 
 export const fetchImageFile = id => dispatch => {
   // update the app state to indicate that the API call is starting
@@ -48,17 +47,18 @@ export const patchImage = (id, data) => dispatch => {
     body: JSON.stringify(patch_data),
     headers: {
       'Content-Type': 'application/json',
-      'X_CSRFTOKEN': Cookies.get('csrftoken'),
+      X_CSRFTOKEN: Cookies.get('csrftoken'),
     },
   }
 
-  return fetch(`/api/images/${id}/`, patch_request)
-    .then(response => dispatch(imageFilePatched(id, response.statusText)))
+  return fetch(`/api/images/${id}/`, patch_request).then(response =>
+    dispatch(imageFilePatched(id, response.statusText))
+  )
   // add error handling
 }
 
-const transformApidata2State = (data) => {
-  const {x, y, top, bottom, left, right} = data.crop_box
+const transformApidata2State = data => {
+  const { x, y, top, bottom, left, right } = data.crop_box
   return {
     src: data.source_file,
     size: [data.full_width, data.full_height],
@@ -69,9 +69,9 @@ const transformApidata2State = (data) => {
   }
 }
 
-const transformImageData2Api = (data) => {
+const transformImageData2Api = data => {
   const [left, x, right] = data.crop.h
   const [top, y, bottom] = data.crop.v
-  const crop_box = {x, y, top, bottom, left, right}
+  const crop_box = { x, y, top, bottom, left, right }
   return { crop_box }
 }
