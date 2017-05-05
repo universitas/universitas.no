@@ -6,6 +6,6 @@ require('foundation-sites/dist/js/plugins/foundation.util.mediaQuery')
 require('slick-carousel/slick/slick')
 
 $(document).foundation()
-$(function(){
-  $('.slideshow').slick({ dots:true, arrows:true })
+$(function() {
+  $('.slideshow').slick({ dots: true, arrows: true })
 })

@@ -7,7 +7,6 @@ import { Overlay } from './Overlay'
 import { CropInfo } from './CropInfo'
 import './cropbox.scss'
 
-
 class Canvas extends React.Component {
   constructor(props) {
     super(props)
@@ -35,9 +34,7 @@ class Canvas extends React.Component {
         className="cropboxWrapper"
         style={{ flexDirection: direction[0], display: 'flex' }}
       >
-        <div
-          className="masterImgWrapper infoParent"
-        >
+        <div className="masterImgWrapper infoParent">
           <img
             ref="masterImg"
             className="masterImg"
@@ -53,12 +50,7 @@ class Canvas extends React.Component {
           <CropInfo id={id} />
         </div>
         {showPreviews &&
-          <Previews
-            id={id}
-            aspects={aspects}
-            flexDirection={direction[1]}
-          />
-        }
+          <Previews id={id} aspects={aspects} flexDirection={direction[1]} />}
       </div>
     )
   }
@@ -79,10 +71,10 @@ Canvas.defaultProps = {
   features: [],
 }
 
-const mapDispatchToProps = (dispatch, {id}) => ({
+const mapDispatchToProps = (dispatch, { id }) => ({
   setImgSize: size => dispatch(setImgSize(id, size)),
 })
-const mapStateToProps = (state, {id}) => ({src: state.images[id].src})
+const mapStateToProps = (state, { id }) => ({ src: state.images[id].src })
 const CropBox = connect(mapStateToProps, mapDispatchToProps)(Canvas)
 
 export { CropBox }

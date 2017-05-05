@@ -6,13 +6,7 @@ import { normalize } from './reducers'
 import { Feature, Symbols } from './Features'
 import './overlay.scss'
 
-
-const DragKing = (props) => (
-  <div
-    className="dragKing"
-    {...props}
-  />
-)
+const DragKing = props => <div className="dragKing" {...props} />
 
 /* eslint-disable quote-props */
 const cursor = {
@@ -64,12 +58,13 @@ let Overlay = ({
   const [top, y, bottom] = normalize(crop.v)
   const boxPath = `M${left}, ${top}V${bottom}H${right}V${top}Z`
   const outerPath = 'M0, 0H1V1H0Z'
-  const circleRadius = (rx) => ({ rx, ry: rx * size[0] / size[1] || rx })
+  const circleRadius = rx => ({ rx, ry: rx * size[0] / size[1] || rx })
 
-  const mouseDownHandler = (dragMask) => (e) => startDragHandle(getRelativePosition(e), dragMask)
-  const mouseMove = (e) => moveDragHandle(getRelativePosition(e))
-  const newCrop = (e) => startNewCrop(getRelativePosition(e))
-  const moveCenter = (e) => setCenter(getRelativePosition(e))
+  const mouseDownHandler = dragMask => e =>
+    startDragHandle(getRelativePosition(e), dragMask)
+  const mouseMove = e => moveDragHandle(getRelativePosition(e))
+  const newCrop = e => startNewCrop(getRelativePosition(e))
+  const moveCenter = e => setCenter(getRelativePosition(e))
 
   return (
     <div className="overlayWrapper">
@@ -87,7 +82,7 @@ let Overlay = ({
           d={outerPath + boxPath}
           onMouseDown={newCrop}
         />
-        <g className="inside" >
+        <g className="inside">
           <path
             onMouseDown={mouseDownHandler([1, 1, 1, 1, 0])}
             onClick={moveCenter}
@@ -103,8 +98,21 @@ let Overlay = ({
             x={left}
             y={top}
           >
-            {['1000', '0100', '0010', '0001', '1100', '0110', '0011', '1001'].map(name => (
-              <Handle key={name} name={name} mouseDownHandler={mouseDownHandler} />
+            {[
+              '1000',
+              '0100',
+              '0010',
+              '0001',
+              '1100',
+              '0110',
+              '0011',
+              '1001',
+            ].map(name => (
+              <Handle
+                key={name}
+                name={name}
+                mouseDownHandler={mouseDownHandler}
+              />
             ))}
           </svg>
         </g>
@@ -113,17 +121,20 @@ let Overlay = ({
             className="handle"
             style={{ opacity: 0 }}
             onMouseDown={mouseDownHandler([0, 0, 0, 0, 1])}
-            cx={x} cy={y} {...circleRadius(0.05)}
+            cx={x}
+            cy={y}
+            {...circleRadius(0.05)}
           />
           <path className="cross" d={`M0, ${y}H1M${x}, 0V1`} />
         </g>
         {features.map((f, i) => <Feature key={i} {...f} />)}
       </svg>
-      {dragging.dragMask && <DragKing
-        onMouseMove={mouseMove}
-        onMouseUp={endDragHandle}
-        onMouseLeave={endDragHandle}
-      />}
+      {dragging.dragMask &&
+        <DragKing
+          onMouseMove={mouseMove}
+          onMouseUp={endDragHandle}
+          onMouseLeave={endDragHandle}
+        />}
     </div>
   )
 }
@@ -145,16 +156,16 @@ Overlay.propTypes = {
 const mapStateToProps = (state, { id }) => state.images[id]
 
 const mapDispatchToProps = (dispatch, { id }) => ({
-  setCenter: (position) => {
+  setCenter: position => {
     dispatch(actions.setCenter(id, position))
   },
-  startNewCrop: (position) => {
+  startNewCrop: position => {
     dispatch(actions.startNewCrop(id, position))
   },
   startDragHandle: (position, dragMask) => {
     dispatch(actions.startDragHandle(id, position, dragMask))
   },
-  moveDragHandle: (position) => {
+  moveDragHandle: position => {
     dispatch(actions.moveDragHandle(id, position))
   },
   endDragHandle: () => {

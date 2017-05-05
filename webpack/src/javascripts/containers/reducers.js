@@ -5,10 +5,10 @@ import { combineReducers } from 'redux'
 
 const selectedImage = (state = '', action) => {
   switch (action.type) {
-  case SELECT_IMAGE:
-    return action.payload.id
-  default:
-    return state
+    case SELECT_IMAGE:
+      return action.payload.id
+    default:
+      return state
   }
 }
 
@@ -24,5 +24,3 @@ const images = (state = {}, action) => {
 }
 
 export default combineReducers({ selectedImage, images })
-
-

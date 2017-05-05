@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import React from 'react'
 import './features.scss'
 
@@ -23,11 +23,8 @@ const Symbols = () => (
 )
 
 const Label = ({ items, size }) => (
-  <text
-    x="1" y={size * 0.6}
-    textAnchor="middle"
-  >
-    {Object.keys(items).map((key) => (
+  <text x="1" y={size * 0.6} textAnchor="middle">
+    {Object.keys(items).map(key => (
       <tspan
         key={key}
         className={key}
@@ -58,12 +55,27 @@ const Keypoint = () => (
 )
 
 const Face = ({ className }) => {
-  const symbol = className.includes('profile') ?
-    '#profile-face' : '#frontal-face'
+  const symbol = className.includes('profile')
+    ? '#profile-face'
+    : '#frontal-face'
   return (
     <g>
-      <use xlinkHref={symbol} x="0" y="0" height="2" width="2" className="back" />
-      <use xlinkHref={symbol} x="0" y="0" height="2" width="2" className="front" />
+      <use
+        xlinkHref={symbol}
+        x="0"
+        y="0"
+        height="2"
+        width="2"
+        className="back"
+      />
+      <use
+        xlinkHref={symbol}
+        x="0"
+        y="0"
+        height="2"
+        width="2"
+        className="front"
+      />
     </g>
   )
 }
@@ -71,7 +83,7 @@ Face.propTypes = {
   className: PropTypes.string,
 }
 
-const Feature = ({ label = "", weight = 0, ...props }) => (
+const Feature = ({ label = '', weight = 0, ...props }) => (
   <svg
     className={`feature ${label}`}
     preserveAspectRatio="none"

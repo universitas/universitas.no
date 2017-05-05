@@ -10,32 +10,29 @@ import { selectImage, fetchImageFile, patchImage } from './actions'
 import rootReducer from './reducers'
 
 // react-dev-tools
-const composeEnhancers = typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const composeEnhancers =
+  (typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+  compose
 
 const rootStore = createStore(
   rootReducer,
   {},
-  composeEnhancers(applyMiddleware(
-    thunkMiddleware,
-    createLogger()
-  )),
+  composeEnhancers(applyMiddleware(thunkMiddleware, createLogger()))
 )
 
 const Spinner = () => <div className="spinner">Loading...</div>
 
-let App = ({id, loaded}) => (
+let App = ({ id, loaded }) => (
   <section className="ReactApp">
-    {id ? ( loaded ? <CropBox id={id}/> : <Spinner /> ) : <p>select an image</p> }
-    <button onClick={ patchButtonOnClick } > Patch </button>
+    {id ? (loaded ? <CropBox id={id} /> : <Spinner />) : <p>select an image</p>}
+    <button onClick={patchButtonOnClick}> Patch </button>
   </section>
 )
 
-App = connect(
-  state => ({
-    id: state.selectedImage,
-    loaded: Boolean(state.images[state.selectedImage]),
-  })
-)(App)
+App = connect(state => ({
+  id: state.selectedImage,
+  loaded: Boolean(state.images[state.selectedImage]),
+}))(App)
 
 App.propTypes = {
   id: PropTypes.string,
@@ -43,7 +40,7 @@ App.propTypes = {
 }
 
 const Root = () => (
-  <Provider store={ rootStore }>
+  <Provider store={rootStore}>
     <App />
   </Provider>
 )
@@ -55,7 +52,7 @@ const patchButtonOnClick = () => {
 }
 
 // selects another image
-const imgOnClick = (e) => {
+const imgOnClick = e => {
   const img = e.target
   const id = img.getAttribute('data-pk')
   rootStore.dispatch(selectImage(id))
