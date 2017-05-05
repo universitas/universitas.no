@@ -13,16 +13,15 @@ export const requestImageFile = (id) => ({
   payload: { id },
 })
 
-
 export const ADD_IMAGE = 'ADD_IMAGE'
-export const addImage = (id, json) => ({
+export const addImage = (json) => ({
   type: ADD_IMAGE,
   payload: {
-    id,
+    ...transformApidata2State(json),
     receivedAt: Date.now(),
-    ...json,
   },
 })
+
 export const IMAGE_FILE_PATCHED = 'IMAGE_FILE_PATCHED'
 export const imageFilePatched = (id, status_code) => ({
   type: IMAGE_FILE_PATCHED,
@@ -36,8 +35,7 @@ export const fetchImageFile = id => dispatch => {
 
   return fetch(`/api/images/${id}/`, { credentials: 'same-origin' })
     .then(response => response.json())
-    .then(transformApidata2State)
-    .then(data => dispatch(addImage(id, data)))
+    .then(data => dispatch(addImage(data)))
   // add error handling
 }
 

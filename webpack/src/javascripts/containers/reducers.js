@@ -1,6 +1,7 @@
 // action creator
 import { SELECT_IMAGE } from './actions'
 import { image } from '../components/CropBox/reducers'
+import { searchField, imageList } from '../components/PhotoList/reducers'
 import { combineReducers } from 'redux'
 
 const selectedImage = (state = '', action) => {
@@ -23,6 +24,6 @@ const images = (state = {}, action) => {
   return state
 }
 
-export default combineReducers({ selectedImage, images })
+export default combineReducers({ selectedImage, imageList, searchField, images })
 
 

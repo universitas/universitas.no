@@ -1,7 +1,8 @@
 from .models import ImageFile
-from rest_framework import serializers, viewsets
+from rest_framework import serializers, viewsets, filters
 from rest_framework.exceptions import ValidationError
 from .cropping.boundingbox import CropBox
+from django_filters.rest_framework import DjangoFilterBackend
 import json
 
 
@@ -64,3 +65,13 @@ class ImageFileViewSet(viewsets.ModelViewSet):
 
     queryset = ImageFile.objects.all()
     serializer_class = ImageFileSerializer
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend)
+    search_fields = ('source_file',)
+
+    def get_queryset(self):
+        profile_images = self.request.query_params.get('profile_images', '')
+        if profile_images.lower() in ['1', 'yes', 'true']:
+            return self.queryset.profile_images()
+        elif profile_images.lower() in ['0', 'no', 'false']:
+            return self.queryset.photos()
+        return self.queryset

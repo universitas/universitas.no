@@ -11,6 +11,7 @@ const render = (App) => {
   }
 }
 
+// dispatches action when image is clicked.
 const bindEventToImageFiles = () => {
   const imageFiles = document.querySelectorAll('img[data-pk]')
   imageFiles.forEach((img)=>{
@@ -22,6 +23,7 @@ export default () => {
   bindEventToImageFiles()
   render(Root)
   if (module.hot) {
+    const Root = require('./containers/Root').Root
     module.hot.accept('./containers/Root', () => { render(Root) })
   }
 }

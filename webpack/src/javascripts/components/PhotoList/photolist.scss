@@ -1,0 +1,15 @@
+.cropboxWrapper {
+  max-width: 50em;
+  position: relative;
+  display: flex;
+  user-select: none;
+  -webkit-user-select: none;
+  margin: 1rem 0;
+  img {
+    display: block;
+  }
+  .masterImgWrapper {
+    flex: 11;
+    align-self: center;
+  }
+}
