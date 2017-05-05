@@ -190,6 +190,7 @@ ImageFile	apps/legacy_db/image_archive.py	/^class ImageFile(object):$/;"	c
 ImageFile	apps/photo/models.py	/^class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):$/;"	c
 ImageFileAdmin	apps/photo/admin.py	/^class ImageFileAdmin(ImageAdmin):$/;"	c
 ImageFileManager	apps/photo/models.py	/^class ImageFileManager(models.Manager):$/;"	c
+ImageFileQuerySet	apps/photo/models.py	/^class ImageFileQuerySet(models.QuerySet):$/;"	c
 ImageFileSerializer	apps/photo/serializers.py	/^class ImageFileSerializer(serializers.HyperlinkedModelSerializer):$/;"	c
 ImageFileViewSet	apps/photo/serializers.py	/^class ImageFileViewSet(viewsets.ModelViewSet):$/;"	c
 ImageInline	apps/stories/admin.py	/^class ImageInline(admin.TabularInline, ThumbAdmin, ):$/;"	c
@@ -603,7 +604,6 @@ __str__	apps/stories/models.py	/^    def __str__(self):$/;"	m	class:StoryImage	f
 __str__	apps/stories/models.py	/^    def __str__(self):$/;"	m	class:StoryType	file:
 __unicode__	apps/frontpage/models.py	/^    def __unicode__(self):$/;"	m	class:Frontpage	file:
 __unicode__	watson/models.py	/^    def __unicode__(self):$/;"	m	class:SearchEntry	file:
-_add_path	apps/legacy_db/image_archive.py	/^    def _add_path(self, newpath):$/;"	m	class:ImageFile
 _assert_active	watson/search.py	/^    def _assert_active(self):$/;"	m	class:SearchContextManager
 _attrname	universitas/setting_helpers.py	/^        def _attrname(name):$/;"	f	function:Environment.__init__
 _attrs	apps/photo/cropping/boundingbox.py	/^    _attrs = ['left', 'top', 'bottom', 'right', 'x', 'y']$/;"	v	class:CropBox
@@ -701,7 +701,7 @@ allow_migrate	apps/legacy_db/router.py	/^    def allow_migrate(self, db, app_lab
 alt_text	apps/adverts/models.py	/^    alt_text = models.CharField($/;"	v	class:Advert
 alt_text	apps/stories/models.py	/^    alt_text = models.CharField($/;"	v	class:InlineLink
 anonymous_cache	apps/frontpage/views.py	/^def anonymous_cache(timeout):$/;"	f
-app	universitas/celery.py	/^app = Celery('universitas')$/;"	v
+app	universitas/celery_settings.py	/^app = Celery('universitas')$/;"	v
 app_label	watson/models.py	/^        app_label = 'watson'$/;"	v	class:SearchEntry.Meta
 application	universitas/wsgi.py	/^application = Sentry(get_wsgi_application())$/;"	v
 arbeidstittel	apps/legacy_db/models.py	/^    arbeidstittel = models.CharField(max_length=200, blank=True)$/;"	v	class:Prodsak
@@ -893,7 +893,7 @@ db_table	apps/legacy_db/models.py	/^        db_table = 'fakta'$/;"	v	class:Fakta
 db_table	apps/legacy_db/models.py	/^        db_table = 'prodbilde'$/;"	v	class:Prodbilde.Meta
 db_table	apps/legacy_db/models.py	/^        db_table = 'prodsak'$/;"	v	class:Prodsak.Meta
 db_table	apps/legacy_db/models.py	/^        db_table = 'sak'$/;"	v	class:Sak.Meta
-debug_task	universitas/celery.py	/^def debug_task(self):$/;"	f
+debug_task	universitas/celery_settings.py	/^def debug_task(self):$/;"	f
 decorator	apps/frontpage/views.py	/^    def decorator(view_func):$/;"	f	function:anonymous_cache
 default	apps/adverts/models.py	/^        default='',$/;"	v	class:Advert
 default	apps/adverts/models.py	/^        default=1,$/;"	v	class:AdChannel
@@ -906,6 +906,11 @@ default	apps/adverts/models.py	/^        default=default_start_time,$/;"	v	class
 default	apps/contributors/models.py	/^        default=False,$/;"	v	class:Contributor
 default	apps/contributors/models.py	/^        default=UNKNOWN,$/;"	v	class:Contributor
 default	apps/contributors/models.py	/^        default=today,$/;"	v	class:Stint
+default	apps/frontpage/migrations/0004_auto_20150308_0249.py	/^                default=2),), ]$/;"	v	class:Migration
+default	apps/frontpage/migrations/0004_auto_20150308_0249.py	/^                default=2),),$/;"	v	class:Migration
+default	apps/frontpage/models.py	/^        default=1,$/;"	v	class:FrontPageModule.Meta
+default	apps/frontpage/models.py	/^        default=2,$/;"	v	class:FrontPageModule.Meta
+default	apps/frontpage/models.py	/^        default=6,$/;"	v	class:FrontPageModule.Meta
 default	apps/frontpage/models.py	/^        default=False)$/;"	v	class:Frontpage
 default	apps/frontpage/models.py	/^        default=False)$/;"	v	class:StaticModule.Meta
 default	apps/issues/models.py	/^        default=REGULAR)$/;"	v	class:Issue
@@ -1075,6 +1080,7 @@ dummy_image_advert	apps/adverts/dummy_image_advert.py	/^def dummy_image_advert(w
 echoerr	wait-for-it.sh	/^echoerr() { if [[ $QUIET -ne 1 ]]; then echo "$@" 1>&2; fi }$/;"	f
 editable	apps/adverts/models.py	/^        editable=False,$/;"	v	class:Advert
 editable	apps/frontpage/models.py	/^        editable=False,$/;"	v	class:StoryModule.Meta
+editable	apps/frontpage/models.py	/^        editable=True,$/;"	v	class:FrontPageModule.Meta
 editable	apps/issues/models.py	/^        editable=False,$/;"	v	class:Issue
 editable	apps/issues/models.py	/^        editable=False,$/;"	v	class:PrintIssue.Meta
 editable	apps/issues/models.py	/^        editable=False,)$/;"	v	class:PrintIssue.Meta
@@ -1107,7 +1113,6 @@ exclude	apps/issues/admin.py	/^    exclude = ()$/;"	v	class:ThumbAdmin
 exclude	apps/photo/admin.py	/^    exclude = ()$/;"	v	class:ThumbAdmin
 exclude	watson/search.py	/^    exclude = ()$/;"	v	class:SearchAdapter
 exclude	watson/views.py	/^    exclude = ()$/;"	v	class:SearchMixin
-exclude_profile_images	apps/photo/models.py	/^    def exclude_profile_images(self):$/;"	m	class:ImageFileManager
 expand	apps/photo/cropping/boundingbox.py	/^    def expand(self, h, v=None):$/;"	m	class:CropBox
 extra	apps/contributors/admin.py	/^    extra = 1$/;"	v	class:StintInline
 extra	apps/frontpage/admin.py	/^    extra = 0$/;"	v	class:StoryModuleInline
@@ -1157,7 +1162,7 @@ field	apps/frontpage/migrations/0001_initial.py	/^            field=models.Forei
 field	apps/frontpage/migrations/0001_initial.py	/^            field=models.ManyToManyField($/;"	v	class:Migration
 field	apps/frontpage/migrations/0003_frontpagestory_vignette.py	/^            field=models.CharField($/;"	v	class:Migration
 field	apps/frontpage/migrations/0004_auto_20150308_0249.py	/^            field=models.BooleanField($/;"	v	class:Migration
-field	apps/frontpage/migrations/0004_auto_20150308_0249.py	/^            field=models.PositiveSmallIntegerField(help_text='height - minimum 1 maximum 12', validators=[$/;"	v	class:Migration
+field	apps/frontpage/migrations/0004_auto_20150308_0249.py	/^            field=models.PositiveSmallIntegerField($/;"	v	class:Migration
 field	apps/frontpage/migrations/0005_auto_20150430_1506.py	/^            field=models.ForeignKey(default=1, to='frontpage.Frontpage'),$/;"	v	class:Migration
 field	apps/issues/migrations/0002_auto_20150307_0013.py	/^            field=models.DateField(null=True, blank=True),$/;"	v	class:Migration
 field	apps/issues/migrations/0004_printissue_issue.py	/^            field=models.ForeignKey(to='issues.Issue', null=True),$/;"	v	class:Migration
@@ -1237,7 +1242,7 @@ file_field_md5	apps/photo/models.py	/^def file_field_md5(source_file, blocksize=
 filnavn	apps/legacy_db/models.py	/^    filnavn = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
 filter	watson/search.py	/^    def filter(self, queryset, search_text, ranking=True, backend_name=None):$/;"	m	class:SearchEngine
 filter	watson/search.py	/^filter = default_search_engine.filter$/;"	v
-filter_profile_images	apps/photo/models.py	/^    def filter_profile_images(self):$/;"	m	class:ImageFileManager
+filter_backends	apps/photo/serializers.py	/^    filter_backends = (filters.SearchFilter, DjangoFilterBackend)$/;"	v	class:ImageFileViewSet
 find_inline_placeholders	apps/stories/models.py	/^    def find_inline_placeholders(self, element_class, body):$/;"	m	class:Story
 find_linked_story	apps/stories/admin.py	/^def find_linked_story(modeladmin, request, queryset):$/;"	f
 find_linked_story	apps/stories/models.py	/^    def find_linked_story(self):$/;"	m	class:InlineLink
@@ -1351,6 +1356,7 @@ get_queryset	apps/issues/views.py	/^    def get_queryset(self):$/;"	m	class:PubP
 get_queryset	apps/legacy_db/models.py	/^    def get_queryset(self):$/;"	m	class:ProdsakManager
 get_queryset	apps/photo/admin.py	/^    def get_queryset(self, request):$/;"	m	class:ImageFileAdmin
 get_queryset	apps/photo/models.py	/^    def get_queryset(self):$/;"	m	class:ProfileImageManager
+get_queryset	apps/photo/serializers.py	/^    def get_queryset(self):$/;"	m	class:ImageFileViewSet
 get_queryset	apps/search/views.py	/^    def get_queryset(self):$/;"	m	class:SearchMixin
 get_queryset	apps/stories/models.py	/^    def get_queryset(self):$/;"	m	class:ElementManager
 get_queryset	apps/stories/models.py	/^    def get_queryset(self):$/;"	m	class:PublishedStoryManager
@@ -1434,11 +1440,13 @@ help_text	apps/contributors/models.py	/^        help_text=_('Verified to be a co
 help_text	apps/contributors/models.py	/^        help_text=_('photo used for byline credit.'),$/;"	v	class:Contributor
 help_text	apps/frontpage/migrations/0001_initial.py	/^                    help_text='Placement on front page')),$/;"	v	class:Migration
 help_text	apps/frontpage/migrations/0001_initial.py	/^                    help_text='larger numbers come first')),$/;"	v	class:Migration
+help_text	apps/frontpage/migrations/0004_auto_20150308_0249.py	/^                help_text='height - minimum 1 maximum 12',$/;"	v	class:Migration
 help_text	apps/frontpage/models.py	/^        help_text=_('Placement on front page'),$/;"	v	class:StaticModule.Meta
 help_text	apps/frontpage/models.py	/^        help_text=_('This page is published.'),$/;"	v	class:Frontpage
 help_text	apps/frontpage/models.py	/^        help_text=_('Unique label used in url'),$/;"	v	class:Frontpage
 help_text	apps/frontpage/models.py	/^        help_text=_('Use django template rendering'),$/;"	v	class:StaticModule.Meta
 help_text	apps/frontpage/models.py	/^        help_text=_('headline'),$/;"	v	class:FrontpageStory.Meta
+help_text	apps/frontpage/models.py	/^        help_text=_('height - minimum 1 maximum 12'),$/;"	v	class:FrontPageModule.Meta
 help_text	apps/frontpage/models.py	/^        help_text=_('html_class'),$/;"	v	class:FrontpageStory.Meta
 help_text	apps/frontpage/models.py	/^        help_text=_('image'),$/;"	v	class:FrontpageStory.Meta
 help_text	apps/frontpage/models.py	/^        help_text=_('kicker'),$/;"	v	class:FrontpageStory.Meta
@@ -1446,6 +1454,7 @@ help_text	apps/frontpage/models.py	/^        help_text=_('larger numbers come fi
 help_text	apps/frontpage/models.py	/^        help_text=_('lede'),$/;"	v	class:FrontpageStory.Meta
 help_text	apps/frontpage/models.py	/^        help_text=_('position and size of story element.'),$/;"	v	class:FrontpageStory.Meta
 help_text	apps/frontpage/models.py	/^        help_text=_('vignette'),$/;"	v	class:FrontpageStory.Meta
+help_text	apps/frontpage/models.py	/^        help_text=_('width - minimum 1 maximum 12'),$/;"	v	class:FrontPageModule.Meta
 help_text	apps/issues/migrations/0001_initial.py	/^                                          help_text='Extracted from file.')),$/;"	v	class:Migration
 help_text	apps/issues/models.py	/^        help_text='Number of pages',$/;"	v	class:PrintIssue.Meta
 help_text	apps/issues/models.py	/^        help_text=_('An image file of the front page'),$/;"	v	class:PrintIssue.Meta
@@ -1813,8 +1822,6 @@ model_name	apps/contributors/migrations/0009_auto_20150924_0005.py	/^           
 model_name	apps/contributors/migrations/0010_auto_20151013_2307.py	/^            model_name='contributor',$/;"	v	class:Migration
 model_name	apps/frontpage/migrations/0001_initial.py	/^            model_name='frontpagestory',$/;"	v	class:Migration
 model_name	apps/frontpage/migrations/0003_frontpagestory_vignette.py	/^            model_name='frontpagestory',$/;"	v	class:Migration
-model_name	apps/frontpage/migrations/0004_auto_20150308_0249.py	/^            model_name='staticmodule',$/;"	v	class:Migration
-model_name	apps/frontpage/migrations/0004_auto_20150308_0249.py	/^            model_name='storymodule',$/;"	v	class:Migration
 model_name	apps/frontpage/migrations/0005_auto_20150430_1506.py	/^            model_name='staticmodule',$/;"	v	class:Migration
 model_name	apps/frontpage/migrations/0005_auto_20150430_1506.py	/^            model_name='storymodule',$/;"	v	class:Migration
 model_name	apps/issues/migrations/0002_auto_20150307_0013.py	/^            model_name='printissue',$/;"	v	class:Migration
@@ -1918,8 +1925,6 @@ name	apps/frontpage/migrations/0001_initial.py	/^            name='StoryModule',
 name	apps/frontpage/migrations/0001_initial.py	/^            name='placements',$/;"	v	class:Migration
 name	apps/frontpage/migrations/0001_initial.py	/^            name='story',$/;"	v	class:Migration
 name	apps/frontpage/migrations/0003_frontpagestory_vignette.py	/^            name='vignette',$/;"	v	class:Migration
-name	apps/frontpage/migrations/0004_auto_20150308_0249.py	/^            name='height',$/;"	v	class:Migration
-name	apps/frontpage/migrations/0004_auto_20150308_0249.py	/^            name='render_template',$/;"	v	class:Migration
 name	apps/frontpage/migrations/0005_auto_20150430_1506.py	/^            name='frontpage',$/;"	v	class:Migration
 name	apps/frontpage/models.py	/^    name = models.CharField(max_length=50)$/;"	v	class:StaticModule
 name	apps/issues/appconf.py	/^    name = 'apps.issues'$/;"	v	class:IssuesAppConfig
@@ -2057,8 +2062,8 @@ objects	apps/legacy_db/models.py	/^    objects = ProdsakManager()$/;"	v	class:Pr
 objects	apps/markup/models.py	/^    objects = AliasManager()$/;"	v	class:Alias
 objects	apps/markup/models.py	/^    objects = BlockTagManager()$/;"	v	class:BlockTag
 objects	apps/markup/models.py	/^    objects = InlineTagManager()$/;"	v	class:InlineTag
-objects	apps/photo/models.py	/^    objects = ImageFileManager()$/;"	v	class:ImageFile
-objects	apps/photo/models.py	/^    objects = ProfileImageManager()$/;"	v	class:ProfileImage
+objects	apps/photo/models.py	/^    objects = ImageFileManager.from_queryset(ImageFileQuerySet)()$/;"	v	class:ImageFile
+objects	apps/photo/models.py	/^    objects = ProfileImageManager.from_queryset(ImageFileQuerySet)()$/;"	v	class:ProfileImage
 objects	apps/stories/models.py	/^    objects = BylineManager()$/;"	v	class:Byline
 objects	apps/stories/models.py	/^    objects = ElementManager()$/;"	v	class:StoryElement
 objects	apps/stories/models.py	/^    objects = InlineLinkManager()$/;"	v	class:InlineLink
@@ -2196,10 +2201,11 @@ pdf_links	apps/issues/admin.py	/^    def pdf_links(self, instance):$/;"	m	class:
 pdf_not_found	apps/issues/models.py	/^        def pdf_not_found():$/;"	f	function:PrintIssue.create_thumbnail
 pdf_not_found	apps/issues/models.py	/^def pdf_not_found(pdf_name):$/;"	f
 pdf_thumb	apps/issues/admin.py	/^    def pdf_thumb(self, pdf, width=250, height=100):$/;"	m	class:IssueAdmin
-pending	apps/photo/models.py	/^    def pending(self):$/;"	m	class:ImageFileManager
+pending	apps/photo/models.py	/^    def pending(self):$/;"	m	class:ImageFileQuerySet
 permanent	universitas/redirect_urls.py	/^                             permanent=False)),$/;"	v
 permanent	universitas/redirect_urls.py	/^                             permanent=True)),$/;"	v
 phone	apps/contributors/models.py	/^    phone = models.CharField(blank=True, null=True, max_length=20)$/;"	v	class:Contributor
+photos	apps/photo/models.py	/^    def photos(self):$/;"	m	class:ImageFileQuerySet
 place_all_inline_elements	apps/stories/models.py	/^    def place_all_inline_elements(self):$/;"	m	class:Story
 placements	apps/frontpage/models.py	/^    placements = models.ManyToManyField($/;"	v	class:FrontpageStory
 populate_from	apps/stories/models.py	/^        populate_from=('name',),$/;"	v	class:StoryType
@@ -2245,6 +2251,7 @@ prodsak_id	apps/legacy_db/models.py	/^    prodsak_id = models.IntegerField(edita
 prodsak_id	apps/stories/models.py	/^    prodsak_id = models.PositiveIntegerField($/;"	v	class:Story
 prodsys_mappe	apps/stories/models.py	/^    prodsys_mappe = models.CharField($/;"	v	class:StoryType
 produsert	apps/legacy_db/models.py	/^    produsert = models.IntegerField($/;"	v	class:Prodsak
+profile_images	apps/photo/models.py	/^    def profile_images(self):$/;"	m	class:ImageFileQuerySet
 proxy	apps/photo/models.py	/^        proxy = True$/;"	v	class:ProfileImage.Meta
 publication_date	apps/frontpage/models.py	/^    def publication_date(self):$/;"	m	class:StoryModule
 publication_date	apps/issues/models.py	/^    publication_date = models.DateField($/;"	v	class:Issue
@@ -2385,6 +2392,7 @@ search_fields	apps/legacy_db/admin.py	/^    search_fields = ($/;"	v	class:Prodsa
 search_fields	apps/legacy_db/admin.py	/^    search_fields = ($/;"	v	class:SakAdmin
 search_fields	apps/photo/admin.py	/^    search_fields = ($/;"	v	class:ImageAdmin
 search_fields	apps/photo/autocomplete_light_registry.py	/^    search_fields=['source_file', ],$/;"	v
+search_fields	apps/photo/serializers.py	/^    search_fields = ('source_file',)$/;"	v	class:ImageFileViewSet
 search_fields	apps/stories/admin.py	/^    search_fields = ($/;"	v	class:StoryAdmin
 search_fields	apps/stories/autocomplete_light_registry.py	/^    search_fields=['title', 'lede', ],$/;"	v
 search_for_alias	apps/contributors/models.py	/^        def search_for_alias():$/;"	f	function:Contributor.get_or_create
@@ -2564,7 +2572,7 @@ universitas_menu	apps/core/templatetags/universitas_menu.py	/^def universitas_me
 unjoin_models	apps/issues/migrations/0005_data_link_pdf_to_issue.py	/^def unjoin_models(apps, schema_editor):$/;"	f
 unload_fixture	apps/adverts/migrations/0002_data_ad_formats.py	/^def unload_fixture(apps, schema_editor):$/;"	f
 unload_fixture	apps/adverts/migrations/0003_universitas_ad_channels.py	/^def unload_fixture(apps, schema_editor):$/;"	f
-unload_fixture	utils/migration_helpers.py	/^def unload_fixture(appname, models=[]):$/;"	f
+unload_fixture	utils/migration_helpers.py	/^def unload_fixture(appname, models=()):$/;"	f
 unpublished	apps/issues/models.py	/^    def unpublished(self):$/;"	m	class:IssueQueryset
 unpublished	apps/stories/models.py	/^    def unpublished(self):$/;"	m	class:ElementQuerySet
 unregister	watson/search.py	/^    def unregister(self, model):$/;"	m	class:SearchEngine
@@ -2592,9 +2600,12 @@ urlpatterns	watson/urls.py	/^urlpatterns = [$/;"	v
 usage	wait-for-it.sh	/^usage()$/;"	f
 valid_cascade_file	apps/photo/tests/test_cropping.py	/^def valid_cascade_file():$/;"	f
 validate_box	apps/photo/cropping/models.py	/^def validate_box(value):$/;"	f
-validate_columns	apps/frontpage/models.py	/^    def validate_columns(value, minvalue=1, maxvalue=12):$/;"	m	class:FrontPageModule
-validate_height	apps/frontpage/models.py	/^    def validate_height(value, minvalue=1, maxvalue=12):$/;"	m	class:FrontPageModule
+validate_columns	apps/frontpage/models.py	/^def validate_columns(value, minvalue=1, maxvalue=12):$/;"	f
+validate_height	apps/frontpage/models.py	/^def validate_height(value, minvalue=1, maxvalue=12):$/;"	f
 validate_url	apps/stories/models.py	/^    def validate_url(cls, href):$/;"	m	class:InlineLink
+validators	apps/frontpage/migrations/0004_auto_20150308_0249.py	/^                validators=[apps.frontpage.models.validate_height],$/;"	v	class:Migration
+validators	apps/frontpage/models.py	/^        validators=[validate_columns, ],$/;"	v	class:FrontPageModule.Meta
+validators	apps/frontpage/models.py	/^        validators=[validate_height, ],$/;"	v	class:FrontPageModule.Meta
 validators	apps/photo/migrations/0001_initial.py	/^                                                               validators=[django.core.validators.MaxValueValidator(100), django.core.validators.MinValueValidator(0)])),$/;"	v	class:Migration
 validators	apps/photo/migrations/0001_initial.py	/^                                                              validators=[django.core.validators.MaxValueValidator(100), django.core.validators.MinValueValidator(0)])),$/;"	v	class:Migration
 value_to_string	apps/photo/cropping/models.py	/^    def value_to_string(self, obj):$/;"	m	class:BoxField

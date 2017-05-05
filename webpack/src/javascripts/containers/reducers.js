@@ -6,10 +6,10 @@ import { combineReducers } from 'redux'
 
 const selectedImage = (state = '', action) => {
   switch (action.type) {
-  case SELECT_IMAGE:
-    return action.payload.id
-  default:
-    return state
+    case SELECT_IMAGE:
+      return action.payload.id
+    default:
+      return state
   }
 }
 
@@ -19,11 +19,16 @@ const images = (state = {}, action) => {
     const imgState = image(state[id], action)
     if (imgState) {
       return { ...state, [id]: imgState }
+    } else {
+      console.log(imgState)
     }
   }
   return state
 }
 
-export default combineReducers({ selectedImage, imageList, searchField, images })
-
-
+export default combineReducers({
+  selectedImage,
+  imageList,
+  searchField,
+  images,
+})
