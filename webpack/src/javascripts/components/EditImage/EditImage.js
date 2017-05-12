@@ -19,14 +19,23 @@ Buttons = connect(null, dispatch => ({
   dismiss: e => dispatch(dismiss()),
 }))(Buttons)
 
-const subset = ({ src, size, id, crop_box }) => ({ id, size, src, crop_box })
+const subset = ({ id, size, created, src, crop_box }) => ({
+  id,
+  size,
+  created,
+  src,
+  crop_box,
+})
 
 const ImageData = data => (
   <table className="ImageData">
-    {console.log(data)}
-    {Object.entries(subset(data)).map(([key, value], i) => (
-      <tr key={i}><th>{key}</th><td>{JSON.stringify(value, null, ' ')}</td></tr>
-    ))}
+    <tbody>
+      {Object.entries(subset(data)).map(([key, value], i) => (
+        <tr key={i}>
+          <th>{key}</th><td>{JSON.stringify(value, null, ' ')}</td>
+        </tr>
+      ))}
+    </tbody>
   </table>
 )
 

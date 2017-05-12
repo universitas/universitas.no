@@ -21,7 +21,6 @@ const Handle = ({ name, startDragHandle }) => {
   const mask = name.split('').map(parseFloat)
   return (
     <rect
-      className={name}
       onMouseDown={startDragHandle(mask)}
       width={1 - mask[0] - mask[2] + handleSize}
       height={1 - mask[1] - mask[3] + handleSize}

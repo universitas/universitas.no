@@ -24,7 +24,6 @@ clearButtonOnClick	src/javascripts/components/PhotoList/SearchField.js	/^  const
 closeCrop	src/javascripts/components/CropBox/Previews.js	/^const closeCrop = (x, y, l, r, t, b, A) => {$/;"	r
 composeEnhancers	src/javascripts/containers/store.js	/^const composeEnhancers =$/;"	r
 cropWidget	src/javascripts/components/EditImage/reducers.js	/^const cropWidget = (state = { id: 0, expanded: false }, action) => {$/;"	r
-crop_box	src/javascripts/containers/actions.js	/^  const crop_box = { x, y, top, bottom, left, right }$/;"	r
 cursor	src/javascripts/components/CropBox/Overlay.js	/^const cursor = {$/;"	r
 data	src/javascripts/containers/middleware.js	/^  const data = store.getState().images[id]$/;"	r
 debouncedFetchImages	src/javascripts/components/PhotoList/actions.js	/^const debouncedFetchImages = debounce(fetchImages, DEBOUNCE_TIMEOUT, {$/;"	r
@@ -74,9 +73,9 @@ startMoveCenter	src/javascripts/components/CropBox/Overlay.js	/^  const startMov
 startMoveCropBox	src/javascripts/components/CropBox/Overlay.js	/^  const startMoveCropBox = startDragHandle([1, 1, 1, 1, 0])$/;"	r
 style	src/javascripts/components/App.js	/^  const style = {}$/;"	r
 styles	src/javascripts/components/CropBox/Previews.js	/^  const styles = getStyles(src, crop_box, size[0] \/ size[1], aspect)$/;"	r
-subset	src/javascripts/components/EditImage/EditImage.js	/^const subset = ({ src, size, id, crop_box }) => ({ id, size, src, crop_box })$/;"	r
+subset	src/javascripts/components/EditImage/EditImage.js	/^const subset = ({ id, size, created, src, crop_box }) => ({$/;"	r
 transformApidata2State	src/javascripts/containers/actions.js	/^const transformApidata2State = data => {$/;"	r
-transformImageData2Api	src/javascripts/containers/actions.js	/^const transformImageData2Api = data => {$/;"	r
+transformImageData2Api	src/javascripts/containers/actions.js	/^const transformImageData2Api = ({ crop_box }) => ({ crop_box })$/;"	r
 trunc	src/javascripts/components/CropBox/CropBox.js	/^    const trunc = num => Math.max(0, Math.min(num, 1))$/;"	r
 url	src/javascripts/components/PhotoList/actions.js	/^  const url = buildUrl(attrs)$/;"	r
 v_sorted	src/javascripts/components/CropBox/reducers.js	/^  const v_sorted = [0, 0, top, bottom, 1, 1].sort(func)$/;"	r

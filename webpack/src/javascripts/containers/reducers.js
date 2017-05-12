@@ -10,8 +10,6 @@ const images = (state = {}, action) => {
     const imgState = imageReducer(state[id], action)
     if (imgState) {
       return { ...state, [id]: imgState }
-    } else {
-      console.log(imgState)
     }
   }
   return state

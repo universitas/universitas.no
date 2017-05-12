@@ -6,7 +6,6 @@ import { imgOnClick } from './containers/store'
 import RootContainer from './containers/RootContainer'
 
 const render = (App, domNode) => {
-  console.log('render')
   ReactDOM.render(
     <AppContainer>
       <App />

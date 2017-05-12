@@ -35,6 +35,7 @@ boto
 # OTHER LIBRARIES
 Pillow
 Wand
+imagehash
 beautifulsoup4
 pypdf2
 requests

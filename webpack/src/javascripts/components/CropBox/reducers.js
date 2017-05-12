@@ -1,6 +1,5 @@
 const imageDefaultState = {
   dragging: {},
-  size: [],
 }
 
 const normalize = ({ x, y, left, top, right, bottom }) => {
@@ -23,6 +22,8 @@ const imageReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_IMAGE':
       return { ...imageDefaultState, ...action.payload }
+    case 'IMAGE_FILE_PATCHED':
+      return { ...state, ...action.payload }
     case 'MOVE_CENTER': {
       const [mx, my] = action.payload.position
       return {

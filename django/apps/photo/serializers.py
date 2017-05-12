@@ -30,6 +30,7 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ImageFile
         fields = [
+            'created',
             'id',
             'cropping_method',
             'url',

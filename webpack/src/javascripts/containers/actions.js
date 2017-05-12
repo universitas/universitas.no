@@ -23,9 +23,12 @@ export const addImage = json => ({
 })
 
 export const IMAGE_FILE_PATCHED = 'IMAGE_FILE_PATCHED'
-export const imageFilePatched = (id, status_code) => ({
+export const imageFilePatched = json => ({
   type: IMAGE_FILE_PATCHED,
-  payload: { id, status_code },
+  payload: {
+    ...transformApidata2State(json),
+    receivedAt: Date.now(),
+  },
 })
 
 export const fetchImageFile = id => dispatch => {
@@ -35,6 +38,7 @@ export const fetchImageFile = id => dispatch => {
   return fetch(`/api/images/${id}/`, { credentials: 'same-origin' })
     .then(response => response.json())
     .then(data => dispatch(addImage(data)))
+    .catch(console.error)
   // add error handling
 }
 
@@ -51,29 +55,20 @@ export const patchImage = (id, data) => dispatch => {
     },
   }
 
-  return fetch(`/api/images/${id}/`, patch_request).then(response =>
-    dispatch(imageFilePatched(id, response.statusText))
-  )
+  return fetch(`/api/images/${id}/`, patch_request)
+    .then(response => response.json())
+    .then(({ crop_box, ...data }) => data)
+    .then(data => dispatch(imageFilePatched(data)))
+    .catch(console.error)
   // add error handling
 }
 
 const transformApidata2State = data => {
-  const { x, y, top, bottom, left, right } = data.crop_box
   return {
     ...data,
-    id: data.id,
     src: data.source_file,
     size: [data.full_width, data.full_height],
-    crop: {
-      h: [left, x, right],
-      v: [top, y, bottom],
-    },
   }
 }
 
-const transformImageData2Api = data => {
-  const [left, x, right] = data.crop.h
-  const [top, y, bottom] = data.crop.v
-  const crop_box = { x, y, top, bottom, left, right }
-  return { crop_box }
-}
+const transformImageData2Api = ({ crop_box }) => ({ crop_box })
