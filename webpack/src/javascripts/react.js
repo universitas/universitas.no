@@ -3,15 +3,15 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
 import { imgOnClick } from './containers/store'
-import Root from './containers/App'
+import RootContainer from './containers/RootContainer'
 
-const render = (App, container) => {
+const render = (App, domNode) => {
   console.log('render')
   ReactDOM.render(
     <AppContainer>
       <App />
     </AppContainer>,
-    container
+    domNode
   )
 }
 
@@ -24,12 +24,14 @@ const bindEventToImageFiles = () => {
 }
 
 export default () => {
-  const container = document.getElementById('react-container')
-  if (container) {
+  const domNode = document.getElementById('react-container')
+  if (domNode) {
     bindEventToImageFiles()
-    render(Root, container)
+    render(RootContainer, domNode)
     if (module.hot) {
-      module.hot.accept('./containers/App', () => render(Root, container))
+      module.hot.accept('./containers/RootContainer', () =>
+        render(RootContainer, domNode)
+      )
     }
   }
 }

@@ -1077,6 +1077,7 @@ download_from_aws	apps/issues/models.py	/^    def download_from_aws(self, dest=P
 download_from_aws	apps/photo/models.py	/^    def download_from_aws(self, dest=Path('\/var\/media\/')):$/;"	m	class:ImageFile
 drop_model_tables	apps/legacy_db/export_content_and_images.py	/^def drop_model_tables(*models):$/;"	f
 dummy_image_advert	apps/adverts/dummy_image_advert.py	/^def dummy_image_advert(width, height, watermarktext, labeltext):$/;"	f
+dump_prodsys_db	docker-entrypoint.sh	/^function dump_prodsys_db {$/;"	f
 echoerr	wait-for-it.sh	/^echoerr() { if [[ $QUIET -ne 1 ]]; then echo "$@" 1>&2; fi }$/;"	f
 editable	apps/adverts/models.py	/^        editable=False,$/;"	v	class:Advert
 editable	apps/frontpage/models.py	/^        editable=False,$/;"	v	class:StoryModule.Meta

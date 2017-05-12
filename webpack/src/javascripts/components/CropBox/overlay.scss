@@ -1,73 +1,57 @@
-.cropInfo {
+.DragKing {
+  position: fixed;
+  z-index: 100;
+  fill: red;
+  opacity: 0.2;
+  cursor: move;
   top: 0;
   left: 0;
-  position: absolute;
-  display: table;
-  .infoRow {
-    display: table-row;
-    .label, .value {
-      display: table-cell;
-    }
-  }
+  width: 100vw;
+  height: 100vh;
 }
 
-.overlayWrapper {
-  .dragKing {
-    z-index: 100;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    cursor: move;
+.Overlay {
+  overflow: visible;
+  height: 100%;
+  z-index: 10;
+  shape-rendering: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  path, rect, ellipse {
+    vector-effect: non-scaling-stroke;
+    fill: rgba(0,0,0,0.0);
   }
-  svg.overlay {
-    height: 100%;
-    z-index: 10;
-    shape-rendering: auto;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    path, rect, ellipse {
+  .outside {
+    fill: rgba(0,0,0,0.5);
+  }
+  .centerPoint {
+    position: relative;
+    .handle {
+      cursor: crosshair;
+      opacity: 0;
+      &:hover + .cross {
+        stroke: rgba(255,255,0,1.0);
+      }
+    }
+    .cross {
+      pointer-events: none;
+      // shape-rendering: crispEdges;
       vector-effect: non-scaling-stroke;
-      fill: rgba(0,0,0,0.0);
+      stroke: rgba(255,255,0,0.5)
     }
-    .outside {
-      fill: rgba(0,0,0,0.5);
+  }
+  .inside {
+    .box {
+      stroke: rgba(255,255,255,0.3);
+      cursor: move;
     }
-    .centerPoint {
-      position: relative;
-      .handle {
-        cursor: crosshair;
-        opacity: 0;
-        &:hover + .cross {
-          stroke: rgba(255,255,0,1.0);
-        }
-      }
-      .cross {
-        pointer-events: none;
-        // shape-rendering: crispEdges;
-        vector-effect: non-scaling-stroke;
-        stroke: rgba(255,255,0,0.5)
-      }
+    &:hover .box {
+      stroke: rgba(255,255,255,0.8);
     }
-    .inside {
-      .box {
-        stroke: rgba(255,255,255,0.3);
-        cursor: move;
-      }
-      &:hover .box {
-        stroke: rgba(255,255,255,0.8);
-      }
-      .handles {
-        overflow: visible;
-      }
-    }
-    &.inactive {
-      .inside, .handle {
-        pointer-events: none;
-      }
+    .handles {
+      overflow: visible;
     }
   }
 }

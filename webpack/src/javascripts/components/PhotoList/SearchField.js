@@ -1,42 +1,39 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { updateSearch, fetchImages } from './actions'
-import { selectImage } from '../../containers/actions'
+import { connect } from 'react-redux'
+import { searchAction } from './actions'
 
-const Thumb = ({ src, onClick, title }) => (
-  <img className="preview" onClick={onClick} src={src} title={title} />
-)
-const mapThumbStateToProps = ( {images}, {id} ) => ({
-  src: images[id].thumbnail,
-  title: images[id].source_file,
-})
-const mapThumbDispatchToProps = (dispatch, {id}) => ({
-  onClick: () => dispatch(selectImage(id)),
-})
-const ImageThumb = connect(mapThumbStateToProps, mapThumbDispatchToProps)(Thumb)
+let SearchField = ({ text, searchChanged }) => {
+  const clearButtonOnClick = e => {
+    searchChanged('')
+    searchInput.focus()
+  }
+  const searchInputOnChange = e => {
+    searchChanged(e.target.value)
+  }
+  let searchInput = null // ref placeholder
+  return (
+    <section className="SearchField">
+      <input
+        value={text}
+        onChange={searchInputOnChange}
+        ref={input => (searchInput = input)}
+        type="search"
+        placeholder="search"
+        spellCheck={false}
+        tabIndex={1}
+      />
+      <button disabled={!text} onClick={clearButtonOnClick}>
+        Clear
+      </button>
+    </section>
+  )
+}
+SearchField = connect(
+  store => store.searchField,
+  dispatch => ({
+    searchChanged: text => dispatch(searchAction(text)),
+  })
+)(SearchField)
 
-const List = ({ images }) => (
-  <div className="previews" >
-    { images.map( img => <ImageThumb key={ img } id={ img } /> ) }
-  </div>
-)
-
-const mapImageListStateToProps = ({imageList}) => ({ imageList })
-const imageList = connect(mapImageListStateToProps, null)(List)
-
-
-let SearchField = ({content, updateSearch, clearSearch}) => (
-  <form>
-    <input onUpdate={onUpdate} placeholder='hello' />
-    <button onClick={clearSearch} />
-  </form>
-)
-
-const mapStateToProps = ( state ) => ({
-  content: state.searchField.content,
-})
-const mapDispatchToProps = (dispatch, { search_field }) => ({
-  updateSearch: dispatch(),
-  clearSearch: dispatch(),
-})
-SearchField = connect(mapStateToProps, mapDispatchToProps)(SearchField)
+export { SearchField }

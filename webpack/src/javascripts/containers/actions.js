@@ -60,6 +60,7 @@ export const patchImage = (id, data) => dispatch => {
 const transformApidata2State = data => {
   const { x, y, top, bottom, left, right } = data.crop_box
   return {
+    ...data,
     id: data.id,
     src: data.source_file,
     size: [data.full_width, data.full_height],

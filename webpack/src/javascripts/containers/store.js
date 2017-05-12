@@ -13,9 +13,7 @@ const composeEnhancers =
 export const rootStore = createStore(
   rootReducer,
   {},
-  composeEnhancers(
-    applyMiddleware(thunkMiddleware, apiMiddleware, createLogger())
-  )
+  composeEnhancers(applyMiddleware(thunkMiddleware, apiMiddleware))
 )
 
 // selects another image

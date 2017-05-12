@@ -266,7 +266,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
 
     def preview(self):
         """Return thumb of cropped image"""
-        return self.thumb(crop_box=self.get_crop_box(), width=250)
+        return self.thumb(crop_box=self.get_crop_box(), width=150)
 
     def download_from_aws(self, dest=Path('/var/media/')):
         path = dest / self.source_file.name

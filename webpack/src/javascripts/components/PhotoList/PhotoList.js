@@ -1,42 +1,43 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import { connect } from 'react-redux'
 import { updateSearch, fetchImages } from './actions'
-import { selectImage } from '../../containers/actions'
+import { selectImage } from '../EditImage/actions'
+import { GetButton } from './GetButton'
+import { SearchField } from './SearchField'
+import './photolist.scss'
 
 const Thumb = ({ src, onClick, title }) => (
-  <img className="preview" onClick={onClick} src={src} title={title} />
-)
-const mapThumbStateToProps = ( {images}, {id} ) => ({
-  src: images[id].thumbnail,
-  title: images[id].source_file,
-})
-const mapThumbDispatchToProps = (dispatch, {id}) => ({
-  onClick: () => dispatch(selectImage(id)),
-})
-const ImageThumb = connect(mapThumbStateToProps, mapThumbDispatchToProps)(Thumb)
-
-const List = ({ images }) => (
-  <div className="previews" >
-    { images.map( img => <ImageThumb key={ img } id={ img } /> ) }
+  <div className="Thumb">
+    <img className="preview" onClick={onClick} src={src} title={title} />
+    <small className="title">{title.replace(/^.*\//, '')}</small>
   </div>
 )
+const mapThumbStateToProps = ({ images }, { id }) => ({
+  src: images[id].preview,
+  title: images[id].source_file,
+})
+const mapThumbDispatchToProps = (dispatch, { id }) => ({
+  onClick: e => dispatch(selectImage(id)),
+})
 
-const mapImageListStateToProps = ({imageList}) => ({ imageList })
-const imageList = connect(mapImageListStateToProps, null)(List)
+const ImageThumb = connect(mapThumbStateToProps, mapThumbDispatchToProps)(Thumb)
 
-
-let SearchField = ({content, updateSearch, clearSearch}) => (
-  <form>
-    <input onUpdate={onUpdate} placeholder='hello' />
-    <button onClick={clearSearch} />
-  </form>
+const List = ({ images, style = {} }) => (
+  <section className="PhotoListPanel" style={style}>
+    <section className="controls">
+      <SearchField /> <GetButton />
+    </section>
+    <section className="photoList">
+      {images.map(img => <ImageThumb key={img} id={img} />)}
+    </section>
+  </section>
 )
 
-const mapStateToProps = ( state ) => ({
-  content: state.searchField.content,
+const mapImageListStateToProps = ({ imageList }) => ({
+  images: imageList,
 })
-const mapDispatchToProps = (dispatch, { search_field }) => ({
-  updateSearch: dispatch(),
-  clearSearch: dispatch(),
-})
-SearchField = connect(mapStateToProps, mapDispatchToProps)(SearchField)
+
+const PhotoList = connect(mapImageListStateToProps)(List)
+
+export { PhotoList }
