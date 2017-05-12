@@ -21,8 +21,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': (
         'rest_framework.pagination.LimitOffsetPagination'),
     'PAGE_SIZE': 50,
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly', ],
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',),
 }
 
 # SENTRY
@@ -74,6 +76,8 @@ INSTALLED_APPS = [
     'storages',
     'webpack_loader',
     'rest_framework',
+    'crispy_forms',
+    'django_filters',
 ] + INSTALLED_APPS
 
 # CORE APPS

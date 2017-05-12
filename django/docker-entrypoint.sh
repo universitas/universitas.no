@@ -7,6 +7,19 @@ function run {
   exec su $(id -nu 1000) -c "$*"
 }
 
+function dump_prodsys_db {
+  DUMP=$(date +"prodsys_dump_%d-%m-%Y_%H.%M.%S.sql")
+  echo "dumping $PRODSYS_DB_HOST:$PRODSYS_DB_NAME to $DUMP"
+  touch $DUMP
+  chown 1000:1000 $DUMP
+  mysqldump \
+  --host=$PRODSYS_DB_HOST \
+  --user=$PRODSYS_DB_USER \
+  --password=$PRODSYS_DB_PASSWORD \
+  $PRODSYS_DB_NAME \
+  > $DUMP
+}
+
 case $1 in
   load_db)
     /app/wait-for-it.sh postgres:5432
@@ -22,6 +35,9 @@ case $1 in
     /app/wait-for-it.sh postgres:5432
     echo "command: $*"
     run "$*"
+    ;;
+  dump_prodsys_db)
+    dump_prodsys_db
     ;;
   runserver)
     echo 'starting django runserver'

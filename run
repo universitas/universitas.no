@@ -7,6 +7,7 @@ for arg; do case $arg in
 
   dumpdb  ) dump_db ;;
   loaddb  ) load_db ;;
+  mysqldb ) docker-compose run --rm -u django web dump_prodsys_db ;;
   enable  ) enable_service ;;
   build   ) build_django ;;
 
@@ -49,11 +50,11 @@ show_help() {
 }
 
 lint_javascript() {
-  js_files=$(git diff --staged --name-only | awk '/\.js$/')
+  js_files=$(git diff --staged --name-status | awk '/^[AM].*\.js$/ {print $2}')
   [[ -n $js_files ]] && prettier --write --semi false --single-quote --trailing-comma es5 $js_files
 }
 lint_python() {
-  py_files=$(git diff --staged --name-only | awk '/\.py$/')
+  py_files=$(git diff --staged --name-status | awk '/^[AM].*\.py$/ {print $2}')
   [[ -n $py_files ]] && autopep8 --experimental -vvv -a -j 0 --in-place $py_files
 }
 
@@ -125,4 +126,4 @@ install_docker() {
 cd $(dirname $(readlink -f $0))
 [[ ! -f django/local.env ]] && echo "# Add environment variables here" > django/local.env
 main $@
-[[ $(tput cols) -lt 80 ]] || docker-compose ps
+# [[ $(tput cols) -lt 80 ]] || docker-compose ps

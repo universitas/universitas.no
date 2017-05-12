@@ -143,10 +143,8 @@ class CropBox(Box):
         bottom = min(1.0, bottom)
 
         # make sure values are valid
-        h = [left, x, right]
-        v = [top, y, bottom]
-        if not (sorted(h), sorted(v)) == (h, v):
-            raise ValueError('invalid data %s: %s' % (h, v))
+        left, x, right = sorted([left, left, x, right, right])[1:4]
+        top, y, bottom = sorted([top, top, y, bottom, bottom])[1:4]
         self.x, self.y = x, y
         super().__init__(left, top, right, bottom)
 

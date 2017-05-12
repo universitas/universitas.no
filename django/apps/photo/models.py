@@ -64,24 +64,26 @@ def upload_image_to(instance, filename):
     )
 
 
-class ImageFileManager(models.Manager):
-
+class ImageFileQuerySet(models.QuerySet):
     def pending(self):
-        return self.get_queryset().filter(
+        return self.filter(
             cropping_method=self.model.CROP_PENDING)
+
+    def photos(self):
+        return self.exclude(
+            source_file__startswith=ProfileImage.UPLOAD_FOLDER)
+
+    def profile_images(self):
+        return self.filter(
+            source_file__startswith=ProfileImage.UPLOAD_FOLDER)
+
+
+class ImageFileManager(models.Manager):
 
     def create_from_file(self, filepath, **kwargs):
         image = self.model(**kwargs)
         image.save_local_image_as_source(filepath)
         return image
-
-    def filter_profile_images(self):
-        return super().get_queryset().filter(
-            source_file__startswith=ProfileImage.UPLOAD_FOLDER)
-
-    def exclude_profile_images(self):
-        return super().get_queryset().exclude(
-            source_file__startswith=ProfileImage.UPLOAD_FOLDER)
 
 
 class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
@@ -90,7 +92,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         verbose_name = _('ImageFile')
         verbose_name_plural = _('ImageFiles')
 
-    objects = ImageFileManager()
+    objects = ImageFileManager.from_queryset(ImageFileQuerySet)()
 
     source_file = thumbnail.ImageField(
         verbose_name=_('source file'),
@@ -264,7 +266,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
 
     def preview(self):
         """Return thumb of cropped image"""
-        return self.thumb(crop_box=self.get_crop_box(), width=250)
+        return self.thumb(crop_box=self.get_crop_box(), width=150)
 
     def download_from_aws(self, dest=Path('/var/media/')):
         path = dest / self.source_file.name
@@ -277,8 +279,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
 
 class ProfileImageManager(ImageFileManager):
     def get_queryset(self):
-        return super().get_queryset().filter(
-            source_file__startswith=ProfileImage.UPLOAD_FOLDER)
+        return super().get_queryset().profile_images()
 
 
 class ProfileImage(ImageFile):
@@ -288,7 +289,7 @@ class ProfileImage(ImageFile):
         verbose_name = _('Profile Image')
         verbose_name_plural = _('Profile Images')
 
-    objects = ProfileImageManager()
+    objects = ProfileImageManager.from_queryset(ImageFileQuerySet)()
 
     UPLOAD_FOLDER = 'byline-photo'
 

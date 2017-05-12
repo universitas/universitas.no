@@ -2,79 +2,68 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import { setImgSize } from './actions'
-import { Previews } from './Preview'
-import { Overlay } from './Overlay'
-import { CropInfo } from './CropInfo'
-import './cropbox.scss'
+import { Overlay, DragKing } from './Overlay'
 
-class Canvas extends React.Component {
+class CropBox extends React.Component {
   constructor(props) {
     super(props)
     this.imgOnLoad = this.imgOnLoad.bind(this)
     this.getRelativePosition = this.getRelativePosition.bind(this)
+    this.masterImg = null
   }
   getRelativePosition(e) {
-    const img = this.refs.masterImg.getBoundingClientRect()
+    const img = this.masterImg.getBoundingClientRect()
+    const trunc = num => Math.max(0, Math.min(num, 1))
     return [
       (e.clientX - img.left) / img.width,
       (e.clientY - img.top) / img.height,
-    ].map(num => Math.max(0, Math.min(num, 1)))
+    ].map(trunc)
   }
   imgOnLoad(e) {
     const img = e.target
     this.props.setImgSize([img.offsetWidth, img.offsetHeight])
   }
   render() {
-    const horizontal = false
-    const { id, src, interactive, features, showPreviews } = this.props
-    const direction = horizontal ? ['row', 'column'] : ['column', 'row']
-    const aspects = horizontal ? [0.6, 2] : [1, 0.5, 2.5]
+    const { id, src, size, dragging } = this.props
+    const [width, height] = size || [100, 100]
     return (
-      <div
-        className="cropboxWrapper"
-        style={{ flexDirection: direction[0], display: 'flex' }}
-      >
-        <div className="masterImgWrapper infoParent">
-          <img
-            ref="masterImg"
+      <div className="CropBox">
+        <svg
+          height="100%"
+          preserveAspectRatio="xMidYMin"
+          viewBox={`0 0 ${width} ${height}`}
+        >
+          <image
             className="masterImg"
+            xlinkHref={src}
+            ref={img => (this.masterImg = img)}
             onLoad={this.imgOnLoad}
-            src={src}
+            width="100%"
+            height="100%"
           />
-          <Overlay
-            getRelativePosition={this.getRelativePosition}
-            id={id}
-            features={features}
-            interactive={interactive}
-          />
-          <CropInfo id={id} />
-        </div>
-        {showPreviews &&
-          <Previews id={id} aspects={aspects} flexDirection={direction[1]} />}
+          <Overlay getRelativePosition={this.getRelativePosition} id={id} />
+        </svg>
+        <DragKing
+          id={id}
+          getRelativePosition={this.getRelativePosition}
+          isActive={Boolean(dragging.dragMask)}
+        />
       </div>
     )
   }
 }
-Canvas.propTypes = {
-  id: PropTypes.string.isRequired,
+CropBox.propTypes = {
+  id: PropTypes.number.isRequired,
   src: PropTypes.string.isRequired,
   aspects: PropTypes.array,
-  imageSize: PropTypes.array,
+  size: PropTypes.array,
+  dragging: PropTypes.object,
   setImgSize: PropTypes.func.isRequired,
-  interactive: PropTypes.bool.isRequired,
-  features: PropTypes.array.isRequired,
-  showPreviews: PropTypes.bool.isRequired,
-}
-Canvas.defaultProps = {
-  interactive: true,
-  showPreviews: true,
-  features: [],
 }
 
 const mapDispatchToProps = (dispatch, { id }) => ({
   setImgSize: size => dispatch(setImgSize(id, size)),
 })
-const mapStateToProps = (state, { id }) => ({ src: state.images[id].src })
-const CropBox = connect(mapStateToProps, mapDispatchToProps)(Canvas)
+CropBox = connect(null, mapDispatchToProps)(CropBox)
 
 export { CropBox }

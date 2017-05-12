@@ -28,8 +28,3 @@ export const setImgSize = (id, size) => ({
   type: 'SET_IMAGE_SIZE',
   payload: { id, size },
 })
-
-export const addImage = (id, src, crop) => ({
-  type: 'ADD_IMAGE',
-  payload: { id, src, crop },
-})

@@ -28,10 +28,10 @@ def test_custom_field(fixture_image):
     assert img.crop_box.right == 1
     assert img.crop_box.top == 0
     assert img.crop_box.x == 1
-    img.crop_box.x = 5
-    with pytest.raises(ValidationError):
-        with transaction.atomic():
-            img.save()
+    img.crop_box.x = -5
+    img.crop_box.y = 5
+    img.save()
     img.refresh_from_db()
-    # nothing changed
-    assert img.crop_box.x == 1
+    # put x, y inside box
+    assert img.crop_box.x == img.crop_box.left
+    assert img.crop_box.y == img.crop_box.bottom

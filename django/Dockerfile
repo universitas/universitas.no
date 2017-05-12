@@ -5,11 +5,12 @@ MAINTAINER haakenlid
 RUN groupadd --gid 1000 django \
   && useradd --uid 1000 --gid 1000 --shell /bin/bash --create-home django
 
-# install pdf utils and database client
+# install pdf utils and database clients
 RUN apt-get install -y \
   ghostscript \
   poppler-utils \
-  postgresql-client
+  postgresql-client \
+  mysql-client
 
 # copy files
 COPY requirements.txt install-jupyter.sh docker-entrypoint.sh /app/

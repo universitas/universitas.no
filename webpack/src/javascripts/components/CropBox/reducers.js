@@ -1,48 +1,51 @@
 const imageDefaultState = {
-  src: '',
   dragging: {},
-  size: [],
-  crop: {},
-  dirty: false,
 }
 
-const normalize = dim => {
-  const sorted = [0, dim[0], dim[2], 1].sort((a, b) => a - b)
-  return [sorted[1], dim[1], sorted[2]]
+const normalize = ({ x, y, left, top, right, bottom }) => {
+  const func = (a, b) => a - b
+  const h_sorted = [0, 0, left, right, 1, 1].sort(func)
+  const v_sorted = [0, 0, top, bottom, 1, 1].sort(func)
+  return {
+    x: [0, x, 1].sort(func)[1],
+    y: [0, y, 1].sort(func)[1],
+    left: h_sorted[2],
+    top: v_sorted[2],
+    right: h_sorted[3],
+    bottom: v_sorted[3],
+  }
 }
 
-const image = (state, action) => {
+const round = num => Number(num.toPrecision(4))
+
+const imageReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_IMAGE':
-      return { ...state, ...imageDefaultState, ...action.payload }
+      return { ...imageDefaultState, ...action.payload }
     case 'IMAGE_FILE_PATCHED':
-      return { ...state, dirty: false }
+      return { ...state, ...action.payload }
     case 'MOVE_CENTER': {
-      const [x, y] = action.payload.position
-      const { h, v } = state.crop
+      const [mx, my] = action.payload.position
       return {
         ...state,
-        dirty: true,
-        crop: {
-          h: normalize([h[0], x, h[2]]),
-          v: normalize([v[0], y, v[2]]),
-        },
+        crop_box: { ...state.crop_box, x: mx, y: my },
       }
     }
-
     case 'START_NEW_CROP': {
-      const [x, y] = action.payload.position
+      const [mx, my] = action.payload.position.map(round)
       return {
         ...state,
-        dirty: true,
-        crop: {
-          h: [x, state.crop.h[1], x],
-          v: [y, state.crop.v[1], y],
+        crop_box: {
+          ...state.crop_box,
+          left: mx,
+          top: my,
+          right: mx,
+          bottom: my,
         },
         dragging: {
           dragMask: [1, 1, 0, 0, 0],
-          initialPosition: action.payload.position,
-          initialCrop: state.crop,
+          initialPosition: [mx, my],
+          initialCrop: state.crop_box,
         },
       }
     }
@@ -50,42 +53,43 @@ const image = (state, action) => {
     case 'START_DRAG_HANDLE':
       return {
         ...state,
-        dirty: true,
         dragging: {
           dragMask: action.payload.dragMask,
-          initialPosition: action.payload.position,
-          initialCrop: state.crop,
+          initialPosition: action.payload.position.map(round),
+          initialCrop: state.crop_box,
         },
       }
     case 'MOVE_DRAG_HANDLE': {
-      const [left, top, right, bottom, center] = state.dragging.dragMask
-      const [x, y] = action.payload.position
-      const { h, v } = state.crop
-      let crop = {
-        h: [left ? x : h[0], center ? x : h[1], right ? x : h[2]],
-        v: [top ? y : v[0], center ? y : v[1], bottom ? y : v[2]],
+      const [mx, my] = action.payload.position.map(round)
+      const { initialPosition, initialCrop: ic } = state.dragging
+      let { x, y, left, top, right, bottom } = state.crop_box
+      let [dl, dt, dr, db, dc] = state.dragging.dragMask
+      const dx = mx - initialPosition[0]
+      const dy = my - initialPosition[1]
+      dc && (x = mx)
+      dc && (y = my)
+      dl && (left = mx)
+      dt && (top = my)
+      dr && (right = mx)
+      db && (bottom = my)
+      if (dl && dr && dt && db) {
+        left = round(ic.left + dx)
+        top = round(ic.top + dy)
+        right = round(ic.right + dx)
+        bottom = round(ic.bottom + dy)
       }
-      if (left && right && top && bottom) {
-        const {
-          initialPosition: pi,
-          initialCrop: { h: hi, v: vi },
-        } = state.dragging
-        const dx = x - pi[0]
-        const dy = y - pi[1]
-        crop = {
-          h: [hi[0] + dx, hi[1], hi[2] + dx],
-          v: [vi[0] + dy, vi[1], vi[2] + dy],
-        }
+      top > bottom && ([dt, db] = [db, dt])
+      left > right && ([dl, dr] = [dr, dl])
+      return {
+        ...state,
+        crop_box: normalize({ x, y, left, top, right, bottom }),
+        dragging: { ...state.dragging, dragMask: [dl, dt, dr, db, dc] },
       }
-      return { ...state, crop }
     }
     case 'END_DRAG_HANDLE':
       return {
         ...state,
-        crop: {
-          h: normalize(state.crop.h),
-          v: normalize(state.crop.v),
-        },
+        crop_box: normalize(state.crop_box),
         dragging: {},
       }
     case 'SET_IMAGE_SIZE':
@@ -95,4 +99,4 @@ const image = (state, action) => {
   }
 }
 
-export { normalize, image }
+export { imageReducer }

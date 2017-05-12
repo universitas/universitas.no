@@ -1,0 +1,44 @@
+$margin: .5rem;
+.EditImage {
+  svg {
+    display: block;
+  }
+  display: flex;
+  flex-direction: column;
+  .ImageData {
+    flex: 0;
+    font-size: smaller;
+    td {
+//    word-break: break-all;
+  }
+  }
+  .Previews {
+    display: flex;
+    margin-left: -$margin;
+    .PreviewImg {
+      margin-left: $margin;
+    }
+  }
+  .CropBox {
+    flex: 1;
+    display: flex;
+    margin: $margin 0;
+    flex-direction: column;
+    .masterImg {
+    }
+  }
+  .Buttons {
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+    button {
+      cursor: pointer;
+      background: #ddd;
+      padding: .2em;
+      margin: .2em;
+      &:hover {
+        background: lighter(blue, 30%);
+      }
+    }
+  }
+}

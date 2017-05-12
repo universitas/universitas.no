@@ -1,9 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { connect } from 'react-redux'
 import { normalize } from './reducers'
-import { InfoBox } from './CropInfo'
-import './preview.scss'
 
 const closeCrop = (x, y, l, r, t, b, A) => {
   const w = r - l
@@ -19,16 +16,14 @@ const closeCrop = (x, y, l, r, t, b, A) => {
   return { left: X - W, right: X + W, top: Y - H, bottom: Y + H }
 }
 
-const getStyles = (src, crop, imgRatio, frameRatio) => {
-  const h = normalize(crop.h)
-  const v = normalize(crop.v)
+const getStyles = (src, crop_box, imgRatio, frameRatio) => {
   const { left, top, right, bottom } = closeCrop(
-    h[1],
-    v[1],
-    h[0],
-    h[2],
-    v[0],
-    v[2],
+    crop_box.x,
+    crop_box.y,
+    crop_box.left,
+    crop_box.right,
+    crop_box.top,
+    crop_box.bottom,
     frameRatio / imgRatio
   )
   const width = right - left
@@ -47,46 +42,43 @@ const getStyles = (src, crop, imgRatio, frameRatio) => {
   }
 }
 
-let PreviewImg = ({ src, crop, size, aspect, style = {} }) => {
-  const styles = getStyles(src, crop, size[0] / size[1], aspect)
+let PreviewImg = ({ src, crop_box, size, aspect, style = {} }) => {
+  const styles = getStyles(src, crop_box, size[0] / size[1], aspect)
   const items = {
     position: styles.backgroundPosition,
     size: styles.backgroundSize,
     'aspect ratio': aspect,
   }
   return (
-    <div className="previewWrapper infoParent" style={style}>
-      <svg className="previewImg" style={styles} viewBox={`0 0 ${aspect} 1`} />
-      <InfoBox items={items} />
+    <div className="PreviewImg" style={style}>
+      <svg style={styles} viewBox={`0 0 ${aspect} 1`} />
     </div>
   )
 }
 PreviewImg.propTypes = {
   src: PropTypes.string.isRequired,
   size: PropTypes.array.isRequired,
-  crop: PropTypes.object.isRequired,
+  crop_box: PropTypes.object.isRequired,
   aspect: PropTypes.number.isRequired,
   style: PropTypes.object,
 }
-const mapStateToProps = (state, { id }) => state.images[id]
-PreviewImg = connect(mapStateToProps)(PreviewImg)
 
-const Previews = ({ id, aspects = [2], flexDirection }) => (
-  <div className="previewPanel" style={{ flexDirection }}>
+const Previews = ({ image, aspects = [2], flexDirection = 'row' }) => (
+  <div className="Previews" style={{ flexDirection }}>
     {aspects.map((aspect, i) => (
       <PreviewImg
         key={i}
-        id={id}
         aspect={aspect}
         style={{ flex: flexDirection === 'row' ? aspect : 1 / aspect }}
+        {...image}
       />
     ))}
   </div>
 )
 Previews.propTypes = {
-  id: PropTypes.string,
   aspects: PropTypes.array,
   flexDirection: PropTypes.string,
+  image: PropTypes.object,
 }
 
-export { Previews, PreviewImg }
+export { Previews }
