@@ -8,8 +8,8 @@ import { SearchField } from './SearchField'
 import './photolist.scss'
 
 const Thumb = ({ src, onClick, title }) => (
-  <div className="Thumb">
-    <img className="preview" onClick={onClick} src={src} title={title} />
+  <div className="Thumb" onClick={onClick}>
+    <img className="preview" src={src} title={title} />
     <small className="title">{title.replace(/^.*\//, '')}</small>
   </div>
 )

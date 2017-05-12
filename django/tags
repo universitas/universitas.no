@@ -333,6 +333,7 @@ Migration	apps/photo/migrations/0008_auto_20170214_1552.py	/^class Migration(mig
 Migration	apps/photo/migrations/0009_imagefile_crop_box.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	apps/photo/migrations/0010_data_imagefile_cropbox.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	apps/photo/migrations/0011_auto_20170422_2232.py	/^class Migration(migrations.Migration):$/;"	c
+Migration	apps/photo/migrations/0012_imagefile__imagehash.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	apps/stories/migrations/0001_initial.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	apps/stories/migrations/0002_auto_20141217_1841.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^class Migration(migrations.Migration):$/;"	c
@@ -630,6 +631,7 @@ _get_included_models	watson/search.py	/^    def _get_included_models(self, model
 _get_story_type	apps/legacy_db/export_content_and_images.py	/^def _get_story_type(prodsys_mappe):$/;"	f
 _get_thumbnail_filename	apps/photo/thumb_backend.py	/^    def _get_thumbnail_filename(self, source, geometry_string, options):$/;"	m	class:KeepNameThumbnailBackend
 _get_xtags_from_prodsys	apps/legacy_db/export_content_and_images.py	/^def _get_xtags_from_prodsys(prodsak_id, status_in=None):$/;"	f
+_imagehash	apps/photo/models.py	/^    _imagehash = models.CharField($/;"	v	class:ImageFile
 _img_tag	apps/photo/admin.py	/^    def _img_tag(url, css=''):$/;"	m	class:ThumbAdmin
 _importer_bilder_fra_prodsys	apps/legacy_db/export_content_and_images.py	/^def _importer_bilder_fra_prodsys(prodsak, story, autocrop):$/;"	f
 _importer_bilder_fra_webside	apps/legacy_db/export_content_and_images.py	/^def _importer_bilder_fra_webside(websak, story, autocrop):$/;"	f
@@ -793,6 +795,7 @@ cache_query	apps/markup/models.py	/^    def cache_query(self):$/;"	m	class:TagMa
 cached	apps/markup/models.py	/^    def cached(self):$/;"	m	class:TagManager
 calculate_crop	apps/photo/cropping/crop_engine.py	/^def calculate_crop(width, height, crop_width, crop_height, crop_box, exp):$/;"	f
 calculate_flags	apps/markup/models.py	/^    def calculate_flags(self):$/;"	m	class:Alias
+calculate_image_hash	apps/photo/models.py	/^    def calculate_image_hash(self, size=11):$/;"	m	class:ImageFile
 can_import_settings	apps/legacy_db/management/commands/importer_fra_prodsys.py	/^    can_import_settings = True,$/;"	v	class:Command
 caption	apps/stories/models.py	/^    caption = MarkupCharField($/;"	v	class:StoryMedia
 category	apps/adverts/models.py	/^    category = models.PositiveSmallIntegerField($/;"	v	class:AdFormat
@@ -925,6 +928,7 @@ default	apps/markup/models.py	/^        default=_('explain this pattern')$/;"	v	
 default	apps/photo/cropping/models.py	/^        default=CROP_PENDING,$/;"	v	class:AutoCropImage.Meta
 default	apps/photo/cropping/models.py	/^        default=CropBox.basic,$/;"	v	class:AutoCropImage.Meta
 default	apps/photo/migrations/0009_imagefile_crop_box.py	/^                default=apps.photo.cropping.models.CropBox.basic,$/;"	v	class:Migration
+default	apps/photo/models.py	/^        default='',$/;"	v	class:ImageFile.Meta
 default	apps/stories/models.py	/^        default='',$/;"	v	class:InlineLink.Meta
 default	apps/stories/models.py	/^        default='',$/;"	v	class:TextContent.Meta
 default	apps/stories/models.py	/^        default='section-slug',$/;"	v	class:Section.Meta
@@ -1004,6 +1008,7 @@ dependencies	apps/photo/migrations/0008_auto_20170214_1552.py	/^    dependencies
 dependencies	apps/photo/migrations/0009_imagefile_crop_box.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	apps/photo/migrations/0010_data_imagefile_cropbox.py	/^    dependencies = [('photo', '0009_imagefile_crop_box')]$/;"	v	class:Migration
 dependencies	apps/photo/migrations/0011_auto_20170422_2232.py	/^    dependencies = [$/;"	v	class:Migration
+dependencies	apps/photo/migrations/0012_imagefile__imagehash.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	apps/stories/migrations/0001_initial.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	apps/stories/migrations/0002_auto_20141217_1841.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^    dependencies = [$/;"	v	class:Migration
@@ -1192,6 +1197,7 @@ field	apps/photo/migrations/0007_auto_20160906_1614.py	/^            field=model
 field	apps/photo/migrations/0007_auto_20160906_1614.py	/^            field=sorl.thumbnail.fields.ImageField(height_field='full_height', max_length=1024,$/;"	v	class:Migration
 field	apps/photo/migrations/0008_auto_20170214_1552.py	/^            field=models.PositiveSmallIntegerField(choices=[(0, 'center'), (1, 'pending'), (5, 'corner detection'), (10, 'multiple faces'), ($/;"	v	class:Migration
 field	apps/photo/migrations/0009_imagefile_crop_box.py	/^            field=apps.photo.cropping.models.BoxField($/;"	v	class:Migration
+field	apps/photo/migrations/0012_imagefile__imagehash.py	/^            field=models.CharField(default='', editable=False, help_text='perceptual hash of image using dhash algorithm', max_length=16, verbose_name='image hash'),$/;"	v	class:Migration
 field	apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey($/;"	v	class:Migration
 field	apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey(null=True, help_text='link to story on this website.',$/;"	v	class:Migration
 field	apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey(to='stories.Story'),$/;"	v	class:Migration
@@ -1239,6 +1245,7 @@ fieldsets	apps/issues/admin.py	/^    fieldsets = ($/;"	v	class:PrintIssueAdmin
 fieldsets	apps/legacy_db/admin.py	/^    fieldsets = ($/;"	v	class:SakAdmin
 fieldsets	apps/stories/admin.py	/^    fieldsets = ($/;"	v	class:StoryAdmin
 fifty_fifty	apps/stories/models.py	/^        def fifty_fifty(queryset, body):$/;"	f	function:Story.place_all_inline_elements
+file_field_image	apps/photo/models.py	/^def file_field_image(source_file):$/;"	f
 file_field_md5	apps/photo/models.py	/^def file_field_md5(source_file, blocksize=65536):$/;"	f
 filnavn	apps/legacy_db/models.py	/^    filnavn = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
 filter	watson/search.py	/^    def filter(self, queryset, search_text, ranking=True, backend_name=None):$/;"	m	class:SearchEngine
@@ -1468,6 +1475,7 @@ help_text	apps/photo/models.py	/^        help_text=_($/;"	v	class:ImageFile.Meta
 help_text	apps/photo/models.py	/^        help_text=_('full height in pixels'),$/;"	v	class:ImageFile.Meta
 help_text	apps/photo/models.py	/^        help_text=_('md5 hash of source file'),$/;"	v	class:ImageFile.Meta
 help_text	apps/photo/models.py	/^        help_text=_('mtime timestamp of source file'),$/;"	v	class:ImageFile.Meta
+help_text	apps/photo/models.py	/^        help_text=_('perceptual hash of image using dhash algorithm'),$/;"	v	class:ImageFile.Meta
 help_text	apps/photo/models.py	/^        help_text=_('previous path if the image has been moved.'),$/;"	v	class:ImageFile.Meta
 help_text	apps/photo/models.py	/^        help_text=_('size of file in bytes'),$/;"	v	class:ImageFile.Meta
 help_text	apps/photo/models.py	/^        help_text=_('who made this'),$/;"	v	class:ImageFile.Meta
@@ -1767,6 +1775,7 @@ max_length	apps/markup/models.py	/^        max_length=50,$/;"	v	class:MarkupTag.
 max_length	apps/photo/models.py	/^        max_length=1000)$/;"	v	class:ImageFile.Meta
 max_length	apps/photo/models.py	/^        max_length=1000,$/;"	v	class:ImageFile.Meta
 max_length	apps/photo/models.py	/^        max_length=1024,$/;"	v	class:ImageFile.Meta
+max_length	apps/photo/models.py	/^        max_length=16,$/;"	v	class:ImageFile.Meta
 max_length	apps/photo/models.py	/^        max_length=32,$/;"	v	class:ImageFile.Meta
 max_length	apps/stories/models.py	/^        max_length=10,$/;"	v	class:Story.Meta
 max_length	apps/stories/models.py	/^        max_length=100,$/;"	v	class:Story.Meta
@@ -1843,6 +1852,7 @@ model_name	apps/photo/migrations/0007_auto_20160906_1614.py	/^            model_
 model_name	apps/photo/migrations/0008_auto_20170214_1552.py	/^            model_name='imagefile',$/;"	v	class:Migration
 model_name	apps/photo/migrations/0009_imagefile_crop_box.py	/^            model_name='imagefile',$/;"	v	class:Migration
 model_name	apps/photo/migrations/0011_auto_20170422_2232.py	/^            model_name='imagefile',$/;"	v	class:Migration
+model_name	apps/photo/migrations/0012_imagefile__imagehash.py	/^            model_name='imagefile',$/;"	v	class:Migration
 model_name	apps/stories/migrations/0001_initial.py	/^            model_name='byline',$/;"	v	class:Migration
 model_name	apps/stories/migrations/0001_initial.py	/^            model_name='inlinelink',$/;"	v	class:Migration
 model_name	apps/stories/migrations/0001_initial.py	/^            model_name='story',$/;"	v	class:Migration
@@ -1979,6 +1989,7 @@ name	apps/photo/migrations/0009_imagefile_crop_box.py	/^            name='crop_b
 name	apps/photo/migrations/0011_auto_20170422_2232.py	/^            name='crop_diameter',$/;"	v	class:Migration
 name	apps/photo/migrations/0011_auto_20170422_2232.py	/^            name='from_left',$/;"	v	class:Migration
 name	apps/photo/migrations/0011_auto_20170422_2232.py	/^            name='from_top',$/;"	v	class:Migration
+name	apps/photo/migrations/0012_imagefile__imagehash.py	/^            name='_imagehash',$/;"	v	class:Migration
 name	apps/stories/appconf.py	/^    name = 'apps.stories'$/;"	v	class:StoriesAppConfig
 name	apps/stories/migrations/0001_initial.py	/^            name='Aside',$/;"	v	class:Migration
 name	apps/stories/migrations/0001_initial.py	/^            name='Byline',$/;"	v	class:Migration
@@ -2124,6 +2135,7 @@ operations	apps/photo/migrations/0008_auto_20170214_1552.py	/^    operations = [
 operations	apps/photo/migrations/0009_imagefile_crop_box.py	/^    operations = [$/;"	v	class:Migration
 operations	apps/photo/migrations/0010_data_imagefile_cropbox.py	/^    operations = [migrations.RunPython(migrate_cropboxes)]$/;"	v	class:Migration
 operations	apps/photo/migrations/0011_auto_20170422_2232.py	/^    operations = [$/;"	v	class:Migration
+operations	apps/photo/migrations/0012_imagefile__imagehash.py	/^    operations = [$/;"	v	class:Migration
 operations	apps/stories/migrations/0001_initial.py	/^    operations = [$/;"	v	class:Migration
 operations	apps/stories/migrations/0002_auto_20141217_1841.py	/^    operations = [$/;"	v	class:Migration
 operations	apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^    operations = [$/;"	v	class:Migration
@@ -2364,6 +2376,7 @@ save	apps/stories/models.py	/^    def save(self, *args, **kwargs):$/;"	m	class:R
 save	apps/stories/models.py	/^    def save(self, *args, **kwargs):$/;"	m	class:Story
 save	apps/stories/models.py	/^    def save(self, *args, **kwargs):$/;"	m	class:StoryElement
 save	apps/stories/models.py	/^    def save(self, *args, **kwargs):$/;"	m	class:StoryMedia
+save_again	apps/photo/models.py	/^    def save_again(self):$/;"	m	class:ImageFile
 save_as	apps/adverts/admin.py	/^    save_as = True$/;"	v	class:AdvertAdmin
 save_local_image_as_source	apps/photo/models.py	/^    def save_local_image_as_source(self, filepath, save=True):$/;"	m	class:ImageFile
 save_on_top	apps/adverts/admin.py	/^    save_on_top = True$/;"	v	class:AdvertAdmin
@@ -2649,6 +2662,7 @@ verbose_name	apps/photo/models.py	/^        verbose_name=_('contributor'),$/;"	v
 verbose_name	apps/photo/models.py	/^        verbose_name=_('copyright information'),$/;"	v	class:ImageFile.Meta
 verbose_name	apps/photo/models.py	/^        verbose_name=_('file size'),$/;"	v	class:ImageFile.Meta
 verbose_name	apps/photo/models.py	/^        verbose_name=_('height'),$/;"	v	class:ImageFile.Meta
+verbose_name	apps/photo/models.py	/^        verbose_name=_('image hash'),$/;"	v	class:ImageFile.Meta
 verbose_name	apps/photo/models.py	/^        verbose_name=_('md5'),$/;"	v	class:ImageFile.Meta
 verbose_name	apps/photo/models.py	/^        verbose_name=_('old file path'),$/;"	v	class:ImageFile.Meta
 verbose_name	apps/photo/models.py	/^        verbose_name=_('source file'),$/;"	v	class:ImageFile.Meta

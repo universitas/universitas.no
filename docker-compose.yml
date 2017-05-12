@@ -1,7 +1,9 @@
 version: '2.1'
 services:
   django:
-    image: universitas/django:1.11
+    mem_limit: 1000m  # limit memory usage to 1000 Mb 
+    cpu_quota: 80000  # 80% of 100000 (I think...)
+    image: universitas/django:${IMAGE_VERSION:-1.12}
     volumes:
       - ./django:/app
       - ./logs:/var/logs
@@ -50,7 +52,7 @@ services:
       - "${NGINX_PORT:-8080}:80"
 
   webpack:
-    image: universitas/webpack:latest
+    image: universitas/webpack:${IMAGE_VERSION:-1.12}
     volumes:
       - ./webpack:/app/
       - webpack_build:/var/build/
