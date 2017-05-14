@@ -46,7 +46,7 @@ export const patchImage = (id, data) => dispatch => {
   // update the app state to indicate that the API call is starting
   const patch_data = transformImageData2Api(data)
   const patch_request = {
-    method: 'patch',
+    method: 'PATCH',
     credentials: 'include',
     body: JSON.stringify(patch_data),
     headers: {

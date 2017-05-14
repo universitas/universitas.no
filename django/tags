@@ -385,6 +385,7 @@ PUBLISHED_ON_WEB	apps/legacy_db/models.py	/^    PUBLISHED_ON_WEB = 8$/;"	v	class
 PULLQUOTE_TAG	apps/stories/models.py	/^PULLQUOTE_TAG = '@quote:'$/;"	v
 PdfArchiveView	apps/issues/views.py	/^class PdfArchiveView(TemplateView):$/;"	c
 PhotoAppConfig	apps/photo/appconf.py	/^class PhotoAppConfig(AppConfig):$/;"	c
+PhotoAppView	apps/photo/views.py	/^class PhotoAppView(LoginRequiredMixin, TemplateView):$/;"	c
 Position	apps/contributors/models.py	/^class Position(models.Model):$/;"	c
 PositionAdmin	apps/contributors/admin.py	/^class PositionAdmin(admin.ModelAdmin):$/;"	c
 PostgresLegacySearchBackend	watson/backends.py	/^class PostgresLegacySearchBackend(PostgresSearchBackend):$/;"	c
@@ -2497,6 +2498,7 @@ template_name	apps/core/views.py	/^        template_name = 'robots-staging.txt'$
 template_name	apps/core/views.py	/^    template_name = 'humans.txt'$/;"	v	class:HumansTxtView
 template_name	apps/issues/views.py	/^    template_name = 'pdf-archive.html'$/;"	v	class:PdfArchiveView
 template_name	apps/issues/views.py	/^    template_name = 'publication-plan.html'$/;"	v	class:PubPlanView
+template_name	apps/photo/views.py	/^    template_name = 'photo_app.html'$/;"	v	class:PhotoAppView
 template_name	apps/search/views.py	/^    template_name = "search-results.html"$/;"	v	class:SearchView
 template_name	apps/stories/models.py	/^    template_name = 'bodytext.html'$/;"	v	class:Story
 template_name	apps/stories/models.py	/^    template_name = 'bodytext_element.html'$/;"	v	class:TextContent
