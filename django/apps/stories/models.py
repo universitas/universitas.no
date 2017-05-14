@@ -1286,7 +1286,7 @@ class StoryImage(StoryMedia):
     )
 
     def __str__(self):
-        return str(self.imagefile)
+        return f'[{self.imagefile}]'
 
     def original_ratio(self):
         return self.imagefile.full_height / self.imagefile.full_width
@@ -1734,10 +1734,10 @@ class Byline(models.Model):
         verbose_name_plural = _('Bylines')
 
     def __str__(self):
-        return '{credit}: {full_name} ({story_title})'.format(
+        return '@bl: {credit}: {full_name}{title})'.format(
             credit=self.get_credit_display(),
             full_name=self.contributor,
-            story_title=self.story,
+            title='' if not self.title else f', {self.title}',
         )
 
     @classmethod

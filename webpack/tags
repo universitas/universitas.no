@@ -48,6 +48,7 @@ img	src/javascripts/components/CropBox/CropBox.js	/^    const img = e.target$/;"
 img	src/javascripts/components/CropBox/CropBox.js	/^    const img = this.masterImg.getBoundingClientRect()$/;"	r
 img	src/javascripts/containers/store.js	/^  const img = e.target$/;"	r
 imgState	src/javascripts/containers/reducers.js	/^    const imgState = imageReducer(state[id], action)$/;"	r
+isFetching	src/javascripts/components/PhotoList/SearchField.js	/^  const isFetching = fetching ? ' isFetching' : ''$/;"	r
 items	src/javascripts/components/CropBox/Previews.js	/^  const items = {$/;"	r
 mapDispatchToProps	src/javascripts/components/CropBox/CropBox.js	/^const mapDispatchToProps = (dispatch, { id }) => ({$/;"	r
 mapDispatchToProps	src/javascripts/components/CropBox/Overlay.js	/^const mapDispatchToProps = (dispatch, { id, getRelativePosition }) => ({$/;"	r

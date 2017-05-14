@@ -17,9 +17,7 @@ export const rootStore = createStore(
 )
 
 // selects another image
-export const imgOnClick = e => {
-  const img = e.target
-  const id = img.getAttribute('data-pk')
+export const imageClickHandler = id => {
   rootStore.dispatch(selectImage(id))
   rootStore.dispatch(fetchImageFile(id))
 }

@@ -1,34 +1,48 @@
-.PhotoListPanel {
-  user-select: none;
-
+.SearchField {
   display: flex;
-  flex-direction: column;
-  .GetButton {
-    margin: 10px;
-    background: red;
-  }
-  .photoList {
-    overflow-y: scroll;
-    display: flex;
+  flex: 1;
+  input {
     flex: 1;
-    flex-flow: row wrap;
-    justify-content: flex-start;
-    align-content: flex-start;
-    align-items: flex-start;
-    .Thumb {
-      display: flex;
-      width: 150px;
-      margin: 5px;
-      flex-flow: column;
-      align-items: center;
-      cursor: pointer;
-      &:hover {
-        box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
-      }
-      img {
-        flex: 1;
-        max-width: 200px;
-      }
+  }
+  &.isFetching {
+    input {
+      background: #ee5;
+    }
+  }
+}
+.ResultsPanel {
+  .urlPanel {
+    flex: 1 0
+  }
+  .urlPanel, .countPanel {
+    padding: 5px 10px;
+    margin: 5px ;
+    background: #ddd;
+  }
+  display: flex;
+  flex: 1 1 100%;
+}
+.PhotoList {
+  overflow-y: scroll;
+  display: flex;
+  flex: 1;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: flex-start;
+  .Thumb {
+    display: flex;
+    width: 150px;
+    margin: 5px;
+    flex-flow: column;
+    align-items: center;
+    cursor: pointer;
+    &:hover {
+      box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
+    }
+    img {
+      flex: 1;
+      max-width: 200px;
     }
   }
 }

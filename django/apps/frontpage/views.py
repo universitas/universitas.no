@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Frontpage views"""
 from django.shortcuts import render
 from django.http import (
@@ -65,11 +64,8 @@ def frontpage_layout(blocks):
 
                 if story.imagefile:
                     image = story.imagefile
-                    source = image.source_file
-                    crop_box = image.get_crop_box()
                 else:
-                    source = None
-                    crop_box = None
+                    image = None
 
                 headline_size = 'xl'
                 headline = story.headline
@@ -88,8 +84,7 @@ def frontpage_layout(blocks):
                         width=PIX_C * columns,
                         height=MIN_H + PIX_H * floorheight,
                     ),
-                    'image': source,
-                    'crop_box': crop_box,
+                    'image': image,
                     'story': story,
                     'url': story.url,
                     'alt': story.headline,

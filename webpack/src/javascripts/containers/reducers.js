@@ -1,7 +1,7 @@
 // action creator
 import { imageReducer } from '../components/CropBox/reducers'
 import { cropWidget } from '../components/EditImage/reducers'
-import { searchField, imageList } from '../components/PhotoList/reducers'
+import { searchField } from '../components/PhotoList/reducers'
 import { combineReducers } from 'redux'
 
 const images = (state = {}, action) => {
@@ -17,7 +17,6 @@ const images = (state = {}, action) => {
 
 export default combineReducers({
   cropWidget,
-  imageList,
   searchField,
   images,
 })
