@@ -179,7 +179,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         if self.mtime != mtime:  # file changed
             self.md5, self.size = None, None
             self._imagehash = self.calculate_image_hash()
-        self.mtime
+        self.md5
         self.size
         super().save(*args, **kwargs)
 
