@@ -9,6 +9,7 @@ from apps.frontpage.views import (
     frontpage_view, section_frontpage, storytype_frontpage, search_404_view)
 from apps.issues.views import PdfArchiveView, PubPlanView
 from apps.stories.views import article_view
+from apps.photo.views import PhotoAppView
 from apps.stories.feeds import LatestStories
 from autocomplete_light import urls as autocomplete_light_urls
 from .redirect_urls import urlpatterns as redirect_urls
@@ -47,6 +48,7 @@ urlpatterns = [
         PdfArchiveView.as_view(),
         name='pdf_archive'),
 
+    url(r'^foto/$', PhotoAppView.as_view(), name='photoapp'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^robots.txt$', RobotsTxtView.as_view(), name='robots.txt'),
     url(r'^humans.txt$', HumansTxtView.as_view(), name='humans.txt'),

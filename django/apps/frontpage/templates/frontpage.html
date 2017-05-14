@@ -23,7 +23,7 @@
         <div class="story-block {{ item.css_height }} {{ item.story.html_class }}">
           {% if item.image %}
             <div class="image-block">
-              {% thumbnail item.image item.image_size crop_box=item.crop_box as image %}
+              {% thumbnail item.image.source_file item.image_size crop_box=item.image.get_crop_box as image %}
                 <a href="{{ item.url }}"><img src="{{ image.url }}" alt="{{ item.alt|strip_tags }}"></img></a>
               {% endthumbnail %}
           {% else %}
@@ -62,4 +62,5 @@
     {% endfor %}
     </div>
   </div>
+  <div id="PhotoCrop" />
 {% endblock content %}

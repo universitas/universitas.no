@@ -17,44 +17,74 @@ export const toggleImageType = option => ({
 })
 
 export const FETCHED_IMAGES = 'FETCHED_IMAGES'
-export const fetchedImages = image_ids => ({
+export const fetchedImages = data => ({
   type: FETCHED_IMAGES,
-  payload: { image_ids },
+  payload: data,
 })
-
+export const FETCHING_IMAGES = 'FETCHING_IMAGES'
+export const fetchingImages = url => ({
+  type: FETCHING_IMAGES,
+  payload: { url },
+})
+export const CLEAR_SEARCH = 'CLEAR_SEARCH'
 export const clearSearch = () => ({
-  type: SEARCH_CHANGED,
-  payload: { text: '' },
+  type: CLEAR_SEARCH,
+  payload: {},
 })
 
 export const searchAction = text => (dispatch, getState) => {
   // update search in store and queue api call to wikipedia
   dispatch(searchChanged(text))
   // debounced api call
-  debouncedFetchImages(dispatch, { search: text, limit: 100 })
+  debouncedDoSearch(dispatch, { search: text, limit: 100 })
 }
 
-export const fetchAction = () => dispatch => fetchImages(dispatch)
+export const nextAction = () => (dispatch, getState) => {
+  const url = getState().searchField.next
+  fetchImages(dispatch, url)
+}
 
-const fetchImages = (dispatch, attrs = { limit: 100 }) => {
-  // update the app state to indicate that the API call is starting
+export const refreshAction = () => (dispatch, getState) => {
+  const url = getState().searchField.url
+  fetchImages(dispatch, url)
+}
+
+export const prevAction = () => (dispatch, getState) => {
+  const url = getState().searchField.previous
+  fetchImages(dispatch, url)
+}
+export const fetchAction = () => (dispatch, getState) => {
+  const url = buildUrl()
+  fetchImages(dispatch, url)
+}
+
+const doSearch = (dispatch, attrs = {}) => {
   if (attrs.search === '') {
-    dispatch(fetchedImages([]))
+    dispatch(clearSearch())
     return
   }
   const url = buildUrl(attrs)
+  fetchImages(dispatch, url)
+}
+
+const fetchImages = (dispatch, url) => {
+  dispatch(fetchingImages(url))
   fetch(url, { credentials: 'same-origin' })
     .then(response => response.json())
     .then(data => {
       data.results.forEach(img => dispatch(addImage(img)))
-      dispatch(fetchedImages(data.results.map(r => r.id)))
+      dispatch(fetchedImages(makePayload(data)))
     })
     .catch(console.error)
-  //add error handling
 }
 
-const debouncedFetchImages = debounce(fetchImages, DEBOUNCE_TIMEOUT, {
+const debouncedDoSearch = debounce(doSearch, DEBOUNCE_TIMEOUT, {
   maxWait: DEBOUNCE_TIMEOUT * 2,
+})
+
+const makePayload = ({ results, ...data }) => ({
+  images: results.map(r => r.id),
+  ...data,
 })
 
 const buildUrl = (attrs = {}) => {

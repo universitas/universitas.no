@@ -4,6 +4,7 @@
 import os
 import hashlib
 import logging
+from io import BytesIO
 from pathlib import Path
 
 # Django core
@@ -19,6 +20,8 @@ from utils.model_mixins import Edit_url_mixin
 from sorl import thumbnail
 from slugify import Slugify
 import boto
+import imagehash
+import PIL
 
 # Project apps
 from apps.issues.models import current_issue
@@ -36,6 +39,10 @@ def local_md5(filepath, blocksize=65536):
             hasher.update(buf)
             buf = source.read(blocksize)
     return hasher.hexdigest()
+
+
+def file_field_image(source_file):
+    """Hexadecimal md5 hash of a django model.FileField"""
 
 
 def file_field_md5(source_file, blocksize=65536):
@@ -118,6 +125,13 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         editable=False,
         null=True,
     )
+    _imagehash = models.CharField(
+        verbose_name=_('image hash'),
+        help_text=_('perceptual hash of image using dhash algorithm'),
+        max_length=16,
+        editable=False,
+        default='',
+    )
     _size = models.PositiveIntegerField(
         verbose_name=_('file size'),
         help_text=_('size of file in bytes'),
@@ -164,8 +178,8 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         self.mtime = None
         if self.mtime != mtime:  # file changed
             self.md5, self.size = None, None
+            self._imagehash = self.calculate_image_hash()
         self.mtime
-        self.md5
         self.size
         super().save(*args, **kwargs)
 
@@ -193,10 +207,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
             return None
         if self._md5 is None:
             self._md5 = file_field_md5(self.source_file)
-            # try:  # Locally stored file
-            #     self._md5 = local_md5(self.source_file.path)
-            # except NotImplementedError:  # AWS S3 storage
-            #     self._md5 = s3_md5(self.source_file.file.key)
         return self._md5
 
     @md5.setter
@@ -275,6 +285,27 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         data = self.source_file.file.read()
         path.parent.mkdir(0o775, True, True)
         path.write_bytes(data)
+
+    def calculate_image_hash(self, size=11):
+        """Calculate perceptual hash for comparison of identical images"""
+        try:
+            if self.source_file.closed:
+                self.source_file.open('rb')
+            blob = BytesIO(self.source_file.read())
+            img = PIL.Image.open(blob).convert('L').resize((size, size))
+            return imagehash.dhash(img)
+        except Exception as e:
+            logger.exception('failed')
+            return 'err'
+        finally:
+            self.source_file.seek(0)
+
+    def save_again(self):
+        """fix broken files"""
+        src = self.source_file
+        filename = os.path.basename(src.name)
+        content = File(src)
+        src.save(filename, content)
 
 
 class ProfileImageManager(ImageFileManager):

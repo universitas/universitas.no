@@ -1,5 +1,8 @@
 <div class="frontpage-edit-menu">
   <a href="{{ item.story.get_edit_url }}" title="oppslag"><i class="icon -wrench"></i></a>
-  <a href="{{ item.story.imagefile.get_edit_url }}" title="foto"><i class="icon -picture"></i></a>
+  {% if item.image %}
+  <a href="{{ item.image.get_edit_url }}" title="foto"><i class="icon -picture"></i></a>
+  <a href="#" data-imagefile-pk="{{ item.image.pk }}" title="crop"><i class="icon -crop"></i></a>
+  {% endif %}
   <a href="{{ item.story.story.get_edit_url }}" title="story"><i class="icon -newspaper"></i></a>
 </div>

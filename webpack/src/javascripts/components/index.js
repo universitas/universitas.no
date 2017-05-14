@@ -1,4 +1,5 @@
 export { EditImage } from './EditImage/EditImage'
 export { PhotoList } from './PhotoList/PhotoList'
-export { GetButton } from './PhotoList/GetButton'
+export { SearchField } from './PhotoList/SearchField'
+export { ResultsPanel } from './PhotoList/ResultsPanel'
 export { App } from './App'

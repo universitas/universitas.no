@@ -3,7 +3,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { searchAction } from './actions'
 
-let SearchField = ({ text, searchChanged }) => {
+let SearchField = ({ text, searchChanged, fetching }) => {
   const clearButtonOnClick = e => {
     searchChanged('')
     searchInput.focus()
@@ -12,8 +12,9 @@ let SearchField = ({ text, searchChanged }) => {
     searchChanged(e.target.value)
   }
   let searchInput = null // ref placeholder
+  const isFetching = fetching ? ' isFetching' : ''
   return (
-    <section className="SearchField">
+    <section className={`SearchField${isFetching}`}>
       <input
         value={text}
         onChange={searchInputOnChange}

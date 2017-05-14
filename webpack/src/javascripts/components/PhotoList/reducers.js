@@ -1,19 +1,19 @@
-import { SEARCH_CHANGED, TOGGLE_IMAGE_TYPE, FETCHED_IMAGES } from './actions'
+import * as actions from './actions'
 
-export const searchField = (state = { text: '' }, action) => {
+const defaultState = { images: [], text: '', fetching: false }
+
+export const searchField = (state = defaultState, action) => {
   switch (action.type) {
-    case SEARCH_CHANGED:
-    case TOGGLE_IMAGE_TYPE:
+    case actions.CLEAR_SEARCH:
+      return defaultState
+    case actions.SEARCH_CHANGED:
       return { ...state, ...action.payload }
-    default:
-      return state
-  }
-}
-
-export const imageList = (state = [], action) => {
-  switch (action.type) {
-    case FETCHED_IMAGES:
-      return action.payload.image_ids
+    case actions.TOGGLE_IMAGE_TYPE:
+      return { ...state, fetching: true, ...action.payload }
+    case actions.FETCHED_IMAGES:
+      return { ...state, fetching: false, ...action.payload }
+    case actions.FETCHING_IMAGES:
+      return { ...state, fetching: true, ...action.payload }
     default:
       return state
   }

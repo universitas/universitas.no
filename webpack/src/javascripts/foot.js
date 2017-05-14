@@ -1,6 +1,7 @@
 /* eslint-env browser */
 // wrap first few words in tingo paragraphs in inngangsord span.
-import mount_react from './react'
+import photocrop from './photocrop.js'
+import photoapp from './photoapp.js'
 
 const wrap_tingo = tingo => {
   const regex = /(^[^<]{0,10}[^\s<]*)/
@@ -8,4 +9,5 @@ const wrap_tingo = tingo => {
   tingo.innerHTML = tingo.innerHTML.replace(regex, replace)
 }
 document.querySelectorAll('p.tingo').forEach(wrap_tingo)
-mount_react()
+photocrop()
+photoapp()
