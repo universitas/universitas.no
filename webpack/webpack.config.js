@@ -5,48 +5,60 @@ const build_dir = process.env.BUILD_DIR
 
 module.exports = {
   plugins: [
-    new webpack.ProvidePlugin({$: 'jquery', jQuery: 'jquery'}),
-    new BundleTracker({indent: ' ', path: build_dir, filename: 'webpack-stats.json'}),
+    new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }),
+    new BundleTracker({
+      indent: ' ',
+      path: build_dir,
+      filename: 'webpack-stats.json',
+    }),
   ],
   module: {
-    rules: [{
-      test: /\.(svg|gif|jpg|png|woff|woff2|eot|ttf|svg)$/,
-      use: [{
-        loader: 'url-loader',
-        options: {
-          name :'assets/[name]-[hash:12].[ext]',
-          limit: 20000,
-        },
-      }],
-    },{
-      test: /\.scss$/,
-      use: [
-        { loader: 'style-loader' },
-        { loader: 'css-loader', options: { sourceMap: false } },
-        {
-          loader: 'postcss-loader',
-          options: {
-            plugins: () => [require('autoprefixer')],
+    rules: [
+      {
+        test: /\.(svg|gif|jpg|png|woff|woff2|eot|ttf|svg)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              name: 'assets/[name]-[hash:12].[ext]',
+              limit: 20000,
+            },
           },
-        },
-        {
-          loader: 'sass-loader',
-          options: {
-            sourceMap: false,
-            includePaths: [
-              'node_modules/foundation-sites/scss/',
-              'node_modules/slick-carousel/',
-            ],
+        ],
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader', options: { sourceMap: false } },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [require('autoprefixer')],
+            },
           },
-        },
-      ],
-    },{
-      test: /\.jsx?$/,
-      exclude: /node_modules/,
-      use: [{
-        loader: 'babel-loader',
-      }],
-    }],
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: false,
+              includePaths: [
+                'node_modules/foundation-sites/scss/',
+                'node_modules/slick-carousel/',
+              ],
+            },
+          },
+        ],
+      },
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'babel-loader',
+          },
+        ],
+      },
+    ],
   },
   resolve: {
     modules: ['src', 'node_modules'],
