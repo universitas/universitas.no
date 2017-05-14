@@ -51,7 +51,7 @@ export const patchImage = (id, data) => dispatch => {
     body: JSON.stringify(patch_data),
     headers: {
       'Content-Type': 'application/json',
-      X_CSRFTOKEN: Cookies.get('csrftoken'),
+      'X-CSRFToken': Cookies.get('csrftoken'),
     },
   }
 
