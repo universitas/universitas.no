@@ -364,6 +364,7 @@ class ProfileImage(ImageFile):
     def upload_folder(cls):
         return cls.UPLOAD_FOLDER
 
+    @property
     def preview(self):
         """Return thumb of cropped image"""
         return self.thumbnail(

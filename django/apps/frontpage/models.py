@@ -288,11 +288,12 @@ class FrontpageStory(TimeStampedModel, Edit_url_mixin):
     def story_type_url(self):
         return self.story.story_type.get_absolute_url()
 
-    def thumbnail(self):
+    @property
+    def preview(self):
         if self.imagefile:
-            return self.imagefile.thumb()
+            return self.imagefile.preview
         else:
-            return _("no image")
+            return None
 
     def __str__(self):
         return self.headline or self.story.title

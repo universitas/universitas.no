@@ -21,11 +21,15 @@ class ThumbAdmin:
         return mark_safe(f'<img style="{css}", src="{url}" />')
 
     def full_thumb(self, instance):
-        url = instance.thumb()
-        return self._img_tag(url)
+        if not instance.small:
+            return '--'
+        url = instance.small.url
+        return self._img_tag(url, 'max-height: 150px;')
 
     def cropped_thumb(self, instance):
-        url = instance.preview()
+        if not instance.preview:
+            return '--'
+        url = instance.preview.url
         return self._img_tag(url)
 
     full_thumb.allow_tags = True  # type: ignore

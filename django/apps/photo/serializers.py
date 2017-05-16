@@ -70,13 +70,13 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
         return self._context['request'].build_absolute_uri(
             instance.small.url)
 
-    def get_src(self, instance):
-        return self._context['request'].build_absolute_uri(
-            instance.large.url)
-
     def get_thumb(self, instance):
         return self._context['request'].build_absolute_uri(
             instance.preview.url)
+
+    def get_src(self, instance):
+        return self._context['request'].build_absolute_uri(
+            instance.large.url)
 
 
 class ImageFileViewSet(viewsets.ModelViewSet):
