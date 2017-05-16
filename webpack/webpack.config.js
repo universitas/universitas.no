@@ -72,8 +72,10 @@ module.exports = {
   entry: {
     stylesheets: 'stylesheets/universitas.scss',
     head: 'javascripts/head.js',
-    foot: 'javascripts/foot.js',
     vendor: 'javascripts/vendor.js',
+    photo_crop_app: 'javascripts/PhotoCropApp.js',
+    photo_list_view: 'javascripts/PhotoListView.js',
+    foot: 'javascripts/foot.js',
   },
   output: {
     path: path.join(build_dir, ''),

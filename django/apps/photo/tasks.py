@@ -5,10 +5,8 @@ from datetime import timedelta
 from celery.task import periodic_task
 from celery import shared_task
 
-from sorl import thumbnail
-
 from apps.core.staging import new_staging_images
-from .models import upload_image_to, ImageFile, ProfileImage
+from .models import upload_image_to, ImageFile
 from .cropping.boundingbox import CropBox
 from .cropping.crop_detector import HybridDetector
 
@@ -24,42 +22,33 @@ def determine_cropping_method(features):
     return ImageFile.CROP_FEATURES
 
 
-def autocrop(instance):
-    with instance.source_file as img:
-        imgdata = img.read()
-    if isinstance(instance, ProfileImage):
+@shared_task
+def autocrop_image_file(pk):
+    instance = ImageFile.objects.get(pk=pk)
+    imgdata = instance.small.read()
+    if instance.is_profile_image:
         detector = HybridDetector(n=1)
     else:
         detector = HybridDetector(n=10)
     features = detector.detect_features(imgdata)
     if not features:
-        return CropBox.basic(), ImageFile.CROP_NONE
-    x, y = features[0].center
-    left, top, right, bottom = sum(features)
-    cropbox = CropBox(left, top, right, bottom, x, y)
-    cropping_method = determine_cropping_method(features)
-    return cropbox, cropping_method
-
-
-@shared_task(serializer='pickle')
-def post_save_task(instance):
-    # logger.info(instance.get_cropping_method_display())
-    if instance.cropping_method == instance.CROP_PENDING:
-        box, method = autocrop(instance)
-        instance.cropping_method = method
-        logger.info('autocrop {i.pk} {i} {m}'.format(
-            i=instance, m=instance.get_cropping_method_display()))
-        instance.crop_box = box
-        assert instance.cropping_method != instance.CROP_PENDING
-        instance.save(update_fields=('crop_box', 'cropping_method'))
-
+        cropbox = CropBox.basic()
+        cropping_method = ImageFile.CROP_NONE
     else:
-        # delete thumbnail
-        thumbnail.delete(instance.source_file, delete_file=False)
-        # rebuild thumbnails
-        instance.thumb()
-        instance.preview()
-        logger.info('rebuilt thumbs for %d %s' % (instance.pk, instance))
+        x, y = features[0].center
+        left, top, right, bottom = sum(features)
+        cropbox = CropBox(left, top, right, bottom, x, y)
+        cropping_method = determine_cropping_method(features)
+    instance.cropbox = cropbox
+    instance.cropping_method = cropping_method
+    instance.save(update_fields=('crop_box', 'cropping_method'))
+
+
+@shared_task
+def post_save_task(pk):
+    instance = ImageFile.objects.get(pk=pk)
+    instance.build_thumbs()
+    instance.calculate_hashes()
 
 
 @periodic_task(run_every=timedelta(hours=1))

@@ -28,21 +28,42 @@
   flex: 1;
   flex-flow: row wrap;
   justify-content: flex-start;
-  align-content: flex-start;
   align-items: flex-start;
-  .Thumb {
+  .Photo {
+    box-sizing: border-box;
     display: flex;
     width: 150px;
-    margin: 5px;
+    height: 190px;
+    padding: 5px;
+    margin: 5px 0;
     flex-flow: column;
     align-items: center;
+    justify-content: space-between;
     cursor: pointer;
     &:hover {
-      box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
+      border-color: #ddd;
+      background: #ddd;
     }
-    img {
-      flex: 1;
-      max-width: 200px;
+    small {
+    }
+    .Thumb {
+      max-width: 150px;
+      max-height: 150px;
+      .Frame {
+        vector-effect: non-scaling-stroke;
+        width: 100%;
+        height: 100%;
+        fill: none;
+        stroke: black;
+        // shape-rendering: crispEdges;
+        stroke-width: 1px;
+      }
+      .cropOverlay {
+        fill: rgba(black, 0.5);
+        vector-effect: non-scaling-stroke;
+        stroke: white;
+        stroke-width: 2px;
+      }
     }
   }
 }

@@ -17,7 +17,7 @@ export const ADD_IMAGE = 'ADD_IMAGE'
 export const addImage = json => ({
   type: ADD_IMAGE,
   payload: {
-    ...transformApidata2State(json),
+    ...json,
     receivedAt: Date.now(),
   },
 })
@@ -26,7 +26,7 @@ export const IMAGE_FILE_PATCHED = 'IMAGE_FILE_PATCHED'
 export const imageFilePatched = json => ({
   type: IMAGE_FILE_PATCHED,
   payload: {
-    ...transformApidata2State(json),
+    ...json,
     receivedAt: Date.now(),
   },
 })
@@ -61,14 +61,6 @@ export const patchImage = (id, data) => dispatch => {
     .then(data => dispatch(imageFilePatched(data)))
     .catch(console.error)
   // add error handling
-}
-
-const transformApidata2State = data => {
-  return {
-    ...data,
-    src: data.source_file,
-    size: [data.full_width, data.full_height],
-  }
 }
 
 const transformImageData2Api = ({ crop_box }) => ({ crop_box })

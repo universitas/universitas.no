@@ -725,7 +725,7 @@ autocomplete_list	apps/core/autocomplete_views.py	/^def autocomplete_list(reques
 autocreate	apps/frontpage/models.py	/^    def autocreate(self, story):$/;"	m	class:FrontpageStoryManager
 autocrop	apps/photo/admin.py	/^def autocrop(modeladmin, request, queryset):$/;"	f
 autocrop	apps/photo/cropping/models.py	/^    def autocrop(self):$/;"	m	class:AutoCropImage
-autocrop	apps/photo/tasks.py	/^def autocrop(instance):$/;"	f
+autocrop_image_file	apps/photo/tasks.py	/^def autocrop_image_file(pk):$/;"	f
 aws	universitas/local.py	/^aws = Environment('AWS')$/;"	v
 aws	universitas/production.py	/^aws = Environment('AWS')$/;"	v
 backwards	apps/frontpage/migrations/0002_ensure_one_frontpage.py	/^def backwards(apps, schema_editor):$/;"	f
@@ -775,6 +775,7 @@ bodytext_html	apps/stories/models.py	/^    bodytext_html = models.TextField($/;"
 bodytext_html	apps/stories/models.py	/^    bodytext_html = models.TextField()$/;"	v	class:InlineHtml
 bodytext_markup	apps/stories/models.py	/^    bodytext_markup = MarkupTextField($/;"	v	class:TextContent
 brodtekst	apps/legacy_db/models.py	/^    brodtekst = models.TextField()$/;"	v	class:Sak
+build_thumbs	apps/photo/models.py	/^    def build_thumbs(self):$/;"	m	class:ImageFile
 bundle_pdf	apps/issues/management/commands/web_pdf.py	/^def bundle_pdf(for_issue, logger):$/;"	f
 byline	apps/legacy_db/models.py	/^    byline = models.CharField(max_length=255)$/;"	v	class:Sak
 byline_image	apps/contributors/admin.py	/^def byline_image(obj):$/;"	f
@@ -796,6 +797,7 @@ cache_query	apps/markup/models.py	/^    def cache_query(self):$/;"	m	class:TagMa
 cached	apps/markup/models.py	/^    def cached(self):$/;"	m	class:TagManager
 calculate_crop	apps/photo/cropping/crop_engine.py	/^def calculate_crop(width, height, crop_width, crop_height, crop_box, exp):$/;"	f
 calculate_flags	apps/markup/models.py	/^    def calculate_flags(self):$/;"	m	class:Alias
+calculate_hashes	apps/photo/models.py	/^    def calculate_hashes(self):$/;"	m	class:ImageFile
 calculate_image_hash	apps/photo/models.py	/^    def calculate_image_hash(self, size=11):$/;"	m	class:ImageFile
 can_import_settings	apps/legacy_db/management/commands/importer_fra_prodsys.py	/^    can_import_settings = True,$/;"	v	class:Command
 caption	apps/stories/models.py	/^    caption = MarkupCharField($/;"	v	class:StoryMedia
@@ -1248,7 +1250,6 @@ fieldsets	apps/issues/admin.py	/^    fieldsets = ($/;"	v	class:PrintIssueAdmin
 fieldsets	apps/legacy_db/admin.py	/^    fieldsets = ($/;"	v	class:SakAdmin
 fieldsets	apps/stories/admin.py	/^    fieldsets = ($/;"	v	class:StoryAdmin
 fifty_fifty	apps/stories/models.py	/^        def fifty_fifty(queryset, body):$/;"	f	function:Story.place_all_inline_elements
-file_field_image	apps/photo/models.py	/^def file_field_image(source_file):$/;"	f
 file_field_md5	apps/photo/models.py	/^def file_field_md5(source_file, blocksize=65536):$/;"	f
 filnavn	apps/legacy_db/models.py	/^    filnavn = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
 filter	watson/search.py	/^    def filter(self, queryset, search_text, ranking=True, backend_name=None):$/;"	m	class:SearchEngine
@@ -1376,6 +1377,7 @@ get_queryset	watson/views.py	/^    def get_queryset(self):$/;"	m	class:SearchMix
 get_registered_models	watson/search.py	/^    def get_registered_models(self):$/;"	m	class:SearchEngine
 get_registered_models	watson/search.py	/^get_registered_models = default_search_engine.get_registered_models$/;"	v
 get_shortlink	apps/stories/models.py	/^    def get_shortlink(self):$/;"	m	class:Story
+get_sourcefile_modification_time	apps/photo/models.py	/^    def get_sourcefile_modification_time(self):$/;"	m	class:ImageFile
 get_staging_pdf_files	apps/issues/management/commands/web_pdf.py	/^def get_staging_pdf_files(magazine='1'):$/;"	f
 get_staging_pdf_files	apps/issues/tasks.py	/^def get_staging_pdf_files($/;"	f
 get_tag	apps/stories/models.py	/^    def get_tag(self, ref=None):$/;"	m	class:InlineLink
@@ -1539,7 +1541,7 @@ id_svar	apps/legacy_db/models.py	/^    id_svar = models.IntegerField(primary_key
 image_count	apps/stories/models.py	/^    def image_count(self):$/;"	m	class:Story
 image_file	apps/photo/templatetags/image_file.py	/^def image_file(image_file, width=300, height=None):$/;"	f
 image_post_delete	apps/photo/signals.py	/^def image_post_delete(sender, instance, **kwargs):$/;"	f
-image_post_save	apps/photo/signals.py	/^def image_post_save(sender, instance, **kwargs):$/;"	f
+image_post_save	apps/photo/signals.py	/^def image_post_save(sender, instance, created, update_fields, **kwargs):$/;"	f
 imagefile	apps/adverts/models.py	/^    imagefile = ImageField($/;"	v	class:Advert
 imagefile	apps/frontpage/models.py	/^    imagefile = models.ForeignKey($/;"	v	class:FrontpageStory
 imagefile	apps/stories/models.py	/^    imagefile = models.ForeignKey($/;"	v	class:StoryImage
@@ -1584,6 +1586,7 @@ is_installed	watson/backends.py	/^    def is_installed(self):$/;"	m	class:Search
 is_invalid	watson/search.py	/^    def is_invalid(self):$/;"	m	class:SearchContextManager
 is_on_frontpage	apps/stories/models.py	/^    def is_on_frontpage(self, frontpage):$/;"	m	class:PublishedStoryManager
 is_on_frontpage	apps/stories/models.py	/^    def is_on_frontpage(self, frontpage):$/;"	m	class:StoryQuerySet
+is_profile_image	apps/photo/models.py	/^    def is_profile_image(self):$/;"	m	class:ImageFile
 is_registered	watson/search.py	/^    def is_registered(self, model):$/;"	m	class:SearchEngine
 is_registered	watson/search.py	/^is_registered = default_search_engine.is_registered$/;"	v
 issue	apps/issues/models.py	/^    issue = models.ForeignKey($/;"	v	class:PrintIssue
@@ -1608,6 +1611,7 @@ kommentar	apps/legacy_db/models.py	/^    kommentar = models.TextField(blank=True
 kwargs	apps/photo/autocomplete_light_registry.py	/^kwargs = dict($/;"	v
 label	apps/frontpage/models.py	/^    label = models.CharField($/;"	v	class:Frontpage
 language	apps/stories/models.py	/^    language = models.CharField($/;"	v	class:Story
+large	apps/photo/models.py	/^    def large(self):$/;"	m	class:ImageFile
 large_thumbnail	apps/issues/admin.py	/^    def large_thumbnail(self, instance):$/;"	m	class:ThumbAdmin
 latest_issue	apps/issues/models.py	/^    def latest_issue(self):$/;"	m	class:IssueQueryset
 leave_locale_alone	apps/legacy_db/management/commands/importer_fra_prodsys.py	/^    leave_locale_alone = True,$/;"	v	class:Command
@@ -1683,7 +1687,7 @@ list_per_page	apps/stories/admin.py	/^    list_per_page = 25$/;"	v	class:StoryAd
 load_fixture	apps/adverts/migrations/0002_data_ad_formats.py	/^def load_fixture(apps, schema_editor):$/;"	f
 load_fixture	apps/adverts/migrations/0003_universitas_ad_channels.py	/^def load_fixture(apps, schema_editor):$/;"	f
 load_fixture	utils/migration_helpers.py	/^def load_fixture(fixture_file):$/;"	f
-local_md5	apps/photo/models.py	/^def local_md5(filepath, blocksize=65536):$/;"	f
+local_file_md5	apps/photo/models.py	/^def local_file_md5(filepath, blocksize=65536):$/;"	f
 location	utils/aws_custom_storage.py	/^    location = 'media'$/;"	v	class:MediaStorage
 location	utils/aws_custom_storage.py	/^    location = 'media'$/;"	v	class:ThumbStorage
 location	utils/aws_custom_storage.py	/^    location = 'static'$/;"	v	class:StaticStorage
@@ -2195,6 +2199,7 @@ ordering	apps/markup/models.py	/^        ordering = ('ordering',)$/;"	v	class:Al
 ordering	apps/markup/models.py	/^    ordering = models.PositiveSmallIntegerField($/;"	v	class:Alias
 ordering	apps/stories/models.py	/^        ordering = ['index']$/;"	v	class:StoryElement.Meta
 ordering	apps/stories/models.py	/^    ordering = models.IntegerField(default=1)$/;"	v	class:Byline
+original	apps/photo/models.py	/^    def original(self):$/;"	m	class:ImageFile
 original_ratio	apps/stories/models.py	/^    def original_ratio(self):$/;"	m	class:StoryImage
 original_ratio	apps/stories/models.py	/^    def original_ratio(self):$/;"	m	class:StoryMedia
 overskrift	apps/legacy_db/models.py	/^    overskrift = models.CharField(max_length=255)$/;"	v	class:Sak
@@ -2233,7 +2238,7 @@ position	apps/contributors/models.py	/^    position = models.ForeignKey(Position
 position	apps/frontpage/models.py	/^    position = models.IntegerField($/;"	v	class:StaticModule
 position	apps/frontpage/models.py	/^    position = models.PositiveIntegerField($/;"	v	class:StoryModule
 position_default	apps/frontpage/models.py	/^    def position_default(self):$/;"	m	class:StoryModule
-post_save_task	apps/photo/tasks.py	/^def post_save_task(instance):$/;"	f
+post_save_task	apps/photo/tasks.py	/^def post_save_task(pk):$/;"	f
 prepare_content	watson/search.py	/^    def prepare_content(self, content):$/;"	m	class:SearchAdapter
 preserve_default	apps/adverts/migrations/0001_initial.py	/^            preserve_default=True,$/;"	v	class:Migration
 preserve_default	apps/adverts/migrations/0004_advert_extra_classes.py	/^            preserve_default=False,$/;"	v	class:Migration
@@ -2452,6 +2457,7 @@ slugify_filename	apps/legacy_db/export_content_and_images.py	/^slugify_filename 
 slugify_function	apps/stories/models.py	/^        slugify_function=slugify,$/;"	v	class:Section.Meta
 slugify_function	apps/stories/models.py	/^        slugify_function=slugify,$/;"	v	class:Story.Meta
 slugify_function	apps/stories/models.py	/^        slugify_function=slugify,$/;"	v	class:StoryType
+small	apps/photo/models.py	/^    def small(self):$/;"	m	class:ImageFile
 source_file	apps/photo/models.py	/^    source_file = thumbnail.ImageField($/;"	v	class:ImageFile
 split	apps/markup/models.py	/^    def split(self, content):$/;"	m	class:BlockTag
 staff	apps/contributors/context_processors.py	/^def staff(request):$/;"	f
@@ -2549,11 +2555,11 @@ text	apps/stories/models.py	/^    text = models.TextField($/;"	v	class:InlineLin
 theme_word	apps/stories/models.py	/^    theme_word = MarkupCharField($/;"	v	class:Story
 through	apps/frontpage/models.py	/^        through=StoryModule,$/;"	v	class:FrontpageStory.Meta
 thumb	apps/photo/cropping/models.py	/^    def thumb(self, height=315, width=600):$/;"	m	class:AutoCropImage
-thumb	apps/photo/models.py	/^    def thumb(self, height=150, width=0, **options):$/;"	m	class:ImageFile
 thumb	apps/stories/models.py	/^    def thumb(self):$/;"	m	class:Story
 thumb	apps/stories/models.py	/^    def thumb(self):$/;"	m	class:StoryImage
 thumbnail	apps/frontpage/models.py	/^    def thumbnail(self):$/;"	m	class:FrontpageStory
 thumbnail	apps/issues/admin.py	/^    def thumbnail(self, instance, width=200, height=200):$/;"	m	class:ThumbAdmin
+thumbnail	apps/photo/models.py	/^    def thumbnail(self, size='x150', **options):$/;"	m	class:ImageFile
 thumbnail	apps/photo/serializers.py	/^    thumbnail = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 tid	apps/legacy_db/models.py	/^    tid = models.DateTimeField()$/;"	v	class:InnleggAbstract
 timelock	apps/legacy_db/models.py	/^    timelock = models.DateTimeField(editable=False, blank=True, null=True)$/;"	v	class:Prodsak

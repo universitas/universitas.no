@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { CropBox } from '../CropBox/CropBox'
 import { Previews } from '../CropBox/Previews'
 import { expand, shrink, dismiss } from './actions'
+import * as moment from 'moment'
 import './editimage.scss'
 
 const Spinner = () => <div className="spinner">Loading...</div>
@@ -19,11 +20,11 @@ Buttons = connect(null, dispatch => ({
   dismiss: e => dispatch(dismiss()),
 }))(Buttons)
 
-const subset = ({ id, size, created, src, crop_box }) => ({
+const subset = ({ id, size, created, filename, crop_box }) => ({
   id,
   size,
-  created,
-  src,
+  created: moment(created).format('ll'),
+  filename,
   crop_box,
 })
 

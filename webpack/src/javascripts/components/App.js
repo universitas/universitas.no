@@ -3,7 +3,6 @@ import React from 'react'
 import './app.scss'
 
 const App = () => {
-  const style = {}
   return (
     <section className="App">
       <section className="controlsPanel">
@@ -18,4 +17,4 @@ const App = () => {
   )
 }
 
-export { App }
+export default App

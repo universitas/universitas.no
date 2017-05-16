@@ -30,7 +30,15 @@ from .cropping.models import AutoCropImage
 logger = logging.getLogger(__name__)
 
 
-def local_md5(filepath, blocksize=65536):
+class BrokenImage:
+    """If thumbnail fails"""
+    url = settings.STATIC_URL + 'admin/img/icon-no.svg'
+
+    def read(self):
+        return b''
+
+
+def local_file_md5(filepath, blocksize=65536):
     """Hexadecimal md5 hash of a file stored on local disk"""
     hasher = hashlib.md5()
     with open(filepath, 'rb') as source:
@@ -39,10 +47,6 @@ def local_md5(filepath, blocksize=65536):
             hasher.update(buf)
             buf = source.read(blocksize)
     return hasher.hexdigest()
-
-
-def file_field_image(source_file):
-    """Hexadecimal md5 hash of a django model.FileField"""
 
 
 def file_field_md5(source_file, blocksize=65536):
@@ -64,7 +68,7 @@ def s3_md5(s3key, blocksize=65536):
 
 
 def upload_image_to(instance, filename):
-    """Image folder name"""
+    """Image folder name based on issue number and year"""
     return os.path.join(
         instance.upload_folder(),
         instance.slugify(filename)
@@ -174,13 +178,11 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
             return super(ImageFile, self).__str__()
 
     def save(self, *args, **kwargs):
-        mtime = self._mtime
-        self.mtime = None
-        if self.mtime != mtime:  # file changed
-            self.md5, self.size = None, None
+        if self.pk is None:
+            self.md5
+            self.size
             self._imagehash = self.calculate_image_hash()
-        self.md5
-        self.size
+
         super().save(*args, **kwargs)
 
     def save_local_image_as_source(self, filepath, save=True):
@@ -190,7 +192,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         """
         mtime = os.stat(filepath).st_mtime
         size = os.stat(filepath).st_size
-        md5 = local_md5(filepath)
+        md5 = local_file_md5(filepath)
         if self.pk and self.source_file:
             if mtime <= self.mtime or (size, md5) == (self.size, self.md5):
                 return False
@@ -203,9 +205,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     @property
     def md5(self):
         """Calculate or retrieve md5 value"""
-        if self.source_file is None:
-            return None
-        if self._md5 is None:
+        if self.source_file and self._md5 is None:
             self._md5 = file_field_md5(self.source_file)
         return self._md5
 
@@ -216,9 +216,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     @property
     def size(self):
         """Calculate or retrive filesize"""
-        if self.source_file is None:
-            return None
-        if self._size is None:
+        if self.source_file and self._size is None:
             self._size = self.source_file.size
         return self._size
 
@@ -226,22 +224,24 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     def size(self, value):
         self._size = value
 
+    def get_sourcefile_modification_time(self):
+        """Modified time as unix timestamp"""
+        try:
+            try:  # Locally stored file
+                mtime = os.path.getmtime(self.source_file.path)
+                return int(mtime)
+            except NotImplementedError:  # AWS S3 storage
+                key = self.source_file.file.key
+                modified = boto.utils.parse_ts(key.last_modified)
+                return int(modified.strftime('%s'))
+        except (FileNotFoundError, AttributeError):
+            # return current time
+            return int(timezone.now().strftime('%s'))
+
     @property
     def mtime(self):
-        """Modified time as unix timestamp"""
-        if self.source_file is None:
-            return None
-        if self._mtime is None:
-            try:
-                try:  # Locally stored file
-                    mtime = os.path.getmtime(self.source_file.path)
-                    self._mtime = int(mtime)
-                except NotImplementedError:  # AWS S3 storage
-                    key = self.source_file.file.key
-                    modified = boto.utils.parse_ts(key.last_modified)
-                    self._mtime = int(modified.strftime('%s'))
-            except (FileNotFoundError, AttributeError):
-                self._mtime = int(timezone.now().strftime('%s'))
+        if self.source_file and self._mtime is None:
+            self._mtime = self.get_sourcefile_modification_time()
         return self._mtime
 
     @mtime.setter
@@ -261,24 +261,38 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         slug = '.'.join(segment.strip('-') for segment in slugs)
         return slug
 
-    def thumb(self, height=150, width=0, **options):
-        """Return thumb of full image"""
-        try:
-            url = thumbnail.get_thumbnail(
-                self.source_file,
-                f'{width or ""}x{height}',
-                **options,
-            ).url
-        except Exception:
-            url = settings.STATIC_URL + 'admin/img/icon-no.svg'
-            logger.exception('Cannot create thumbnail')
-        return url
+    @property
+    def original(self):
+        return self.source_file
 
+    @property
+    def small(self):
+        return self.thumbnail('200x200')
+
+    @property
+    def large(self):
+        return self.thumbnail('1500x1500')
+
+    @property
     def preview(self):
         """Return thumb of cropped image"""
-        return self.thumb(crop_box=self.get_crop_box(), width=150)
+        return self.thumbnail('150x150', crop_box=self.get_crop_box())
+
+    def thumbnail(self, size='x150', **options):
+        """Create thumb of image"""
+        try:
+            return thumbnail.get_thumbnail(
+                self.source_file, size, **options)
+        except TypeError:
+            thumbnail.delete(self.source_file, delete_file=False)
+            return BrokenImage()
+
+        except Exception:
+            # logger.exception('Cannot create thumbnail')
+            return BrokenImage()
 
     def download_from_aws(self, dest=Path('/var/media/')):
+        """Download file for development server"""
         path = dest / self.source_file.name
         if path.exists():
             return
@@ -289,9 +303,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     def calculate_image_hash(self, size=11):
         """Calculate perceptual hash for comparison of identical images"""
         try:
-            if self.source_file.closed:
-                self.source_file.open('rb')
-            blob = BytesIO(self.source_file.read())
+            blob = BytesIO(self.small.read())
             img = PIL.Image.open(blob).convert('L').resize((size, size))
             return imagehash.dhash(img)
         except Exception as e:
@@ -301,11 +313,31 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
             self.source_file.seek(0)
 
     def save_again(self):
-        """fix broken files"""
+        """fix broken files. THIS IS HACK"""
         src = self.source_file
         filename = os.path.basename(src.name)
         content = File(src)
         src.save(filename, content)
+
+    def is_profile_image(self):
+        return self.source_file.startswith(ProfileImage.UPLOAD_FOLDER)
+
+    def build_thumbs(self):
+        """Make sure thumbs exists"""
+        self.large
+        self.small
+        self.preview
+        self.thumb()
+        logger.info(f'built thumbs {self}')
+
+    def calculate_hashes(self):
+        """Make sure the image has size, md5 and imagehash"""
+        self._mtime = self._mtime or file_field_md5(self.source_file)
+        self._md5 = self._md5 or file_field_md5(self.source_file)
+        self._size = self._size or self.source_file.size
+        self._imagehash = self._imagehash or self.calculate_image_hash()
+        self.save(update_fields=['_mtime', '_md5', '_size', '_imagehash'])
+        logger.info(f'updated hashes {self}')
 
 
 class ProfileImageManager(ImageFileManager):
@@ -334,8 +366,9 @@ class ProfileImage(ImageFile):
 
     def preview(self):
         """Return thumb of cropped image"""
-        return self.thumb(
-            crop_box=self.get_crop_box(), width=150, height=150,
+        return self.thumbnail(
+            size='150x150',
+            crop_box=self.get_crop_box(),
             expand=0.2,
             colorspace='GRAY',
         )

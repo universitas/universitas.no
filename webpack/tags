@@ -29,7 +29,7 @@ cropIcons	src/javascripts/photocrop.js	/^  const cropIcons = document.querySelec
 cropWidget	src/javascripts/components/EditImage/reducers.js	/^const cropWidget = (state = { id: 0, expanded: false }, action) => {$/;"	r
 cursor	src/javascripts/components/CropBox/Overlay.js	/^const cursor = {$/;"	r
 data	src/javascripts/containers/middleware.js	/^  const data = store.getState().images[id]$/;"	r
-debouncedDoSearch	src/javascripts/components/PhotoList/actions.js	/^const debouncedDoSearch = debounce(doSearch, DEBOUNCE_TIMEOUT, {$/;"	r
+debouncedDoSearch	src/javascripts/components/PhotoList/actions.js	/^const debouncedDoSearch = debounce(doSearch, DEBOUNCE_TIMEOUT)$/;"	r
 debouncedPatchImage	src/javascripts/containers/middleware.js	/^const debouncedPatchImage = debounce((store, id) => {$/;"	r
 defaultState	src/javascripts/components/PhotoList/reducers.js	/^const defaultState = { images: [], text: '', fetching: false }$/;"	r
 doSearch	src/javascripts/components/PhotoList/actions.js	/^const doSearch = (dispatch, attrs = {}) => {$/;"	r

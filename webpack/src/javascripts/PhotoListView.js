@@ -13,7 +13,7 @@ const render = (App, domNode) => {
   )
 }
 
-export default () => {
+const PhotoListView = () => {
   const domNode = document.getElementById('PhotoApp')
   if (domNode) {
     render(RootContainer, domNode)
@@ -24,3 +24,4 @@ export default () => {
     }
   }
 }
+PhotoListView()

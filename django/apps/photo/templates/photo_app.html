@@ -1,5 +1,9 @@
 {% extends "base-template.html" %}
+{% load render_bundle from webpack_loader %}
 {% block title %}Photo admin{% endblock title %}
 {% block content %}
-<div id=PhotoApp ></div>
+  <div id=PhotoApp ></div>
 {% endblock content %}
+{% block final %}
+  {% render_bundle 'photo_list_view' %}
+{% endblock final %}

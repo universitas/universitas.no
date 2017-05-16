@@ -4,6 +4,7 @@ from rest_framework.exceptions import ValidationError
 from .cropping.boundingbox import CropBox
 from django_filters.rest_framework import DjangoFilterBackend
 import json
+from pathlib import Path
 
 
 class jsonDict(dict):
@@ -30,41 +31,56 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ImageFile
         fields = [
-            'created',
             'id',
-            'cropping_method',
             'url',
-            'preview',
-            'md5',
-            'full_width',
-            'full_height',
-            'source_file',
-            'thumbnail',
-            'preview',
+            'filename',
+            'created',
+            'method',
+            'size',
+            'thumb',
+            'small',
+            'src',
             'crop_box',
         ]
         read_only_fields = [
             'source_file',
         ]
 
-    thumbnail = serializers.SerializerMethodField()
-    preview = serializers.SerializerMethodField()
+    thumb = serializers.SerializerMethodField()
+    filename = serializers.SerializerMethodField()
+    small = serializers.SerializerMethodField()
+    src = serializers.SerializerMethodField()
+    size = serializers.SerializerMethodField()
+    method = serializers.SerializerMethodField()
     crop_box = CropBoxField()
 
-    def get_thumbnail(self, instance):
-        return self._context['request'].build_absolute_uri(
-            instance.thumb())
+    def get_method(self, instance):
+        return instance.get_cropping_method_display()
 
-    def get_preview(self, instance):
+    def get_filename(self, instance):
+        return Path(instance.source_file.name).name
+
+    def get_size(self, instance):
+        return [instance.full_width, instance.full_height]
+
+    def get_small(self, instance):
         return self._context['request'].build_absolute_uri(
-            instance.preview())
+            instance.small.url)
+
+    def get_src(self, instance):
+        return self._context['request'].build_absolute_uri(
+            instance.large.url)
+
+    def get_thumb(self, instance):
+        return self._context['request'].build_absolute_uri(
+            instance.preview.url)
 
 
 class ImageFileViewSet(viewsets.ModelViewSet):
 
     """ API endpoint that allows ImageFile to be viewed or updated.  """
 
-    queryset = ImageFile.objects.all()
+    queryset = ImageFile.objects.order_by('-created')
     serializer_class = ImageFileSerializer
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)
     search_fields = ('source_file',)

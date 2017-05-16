@@ -14,9 +14,18 @@ def image_post_delete(sender, instance, **kwargs):
     thumbnail.delete(instance.source_file, delete_file=delete_file)
 
 
-def image_post_save(sender, instance, **kwargs):
+def image_post_save(sender, instance, created, update_fields, **kwargs):
     """Schedule autocropping and rebuild thumbnail"""
-    tasks.post_save_task.delay(instance)
+    if update_fields:
+        logger.debug(f'no task: {str(instance):>40} fields: {update_fields}')
+        return
+    if not created:
+        old = sender.objects.get(pk=instance.pk)
+        if old._md5 and old._md5 != instance._md5:
+            thumbnail.delete(instance.source_file, delete_file=False)
+    if instance.cropping_method == instance.CROP_PENDING:
+        tasks.autocrop_image_file.delay(instance.pk)
+    tasks.post_save_task.delay(instance.pk)
 
 
 pre_delete.connect(image_post_delete, sender='photo.ImageFile')

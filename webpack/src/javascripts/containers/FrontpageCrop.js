@@ -2,8 +2,7 @@
 import React from 'react'
 import { EditImage } from '../components'
 import { Provider } from 'react-redux'
-import { rootStore } from './store'
-export { imageClickHandler } from './store'
+import { rootStore, imageClickHandler } from './store'
 
 const style = {
   position: 'fixed',
@@ -22,4 +21,4 @@ const FrontpageCrop = () => (
   </Provider>
 )
 
-export { FrontpageCrop }
+export { FrontpageCrop, imageClickHandler }

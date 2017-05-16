@@ -1,15 +1,7 @@
 /* eslint-env browser */
 import React from 'react'
-import { App } from '../components'
 import { Provider } from 'react-redux'
 import { rootStore } from './store'
+import App from '../components/App'
 
-// const App = () => <h1>App</h1>
-
-const Root = () => (
-  <Provider store={rootStore}>
-    <App />
-  </Provider>
-)
-
-export default Root
+export default () => <Provider store={rootStore}><App /></Provider>
