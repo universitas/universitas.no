@@ -9,7 +9,7 @@ django-extensions
 django-redis-cache
 django-webpack-loader==0.4.1
 django-autocomplete-light>=2.2,<3.0
-sorl-thumbnail
+sorl-thumbnail==12.4a1
 django-model-utils
 
 # REST FRAMEWORK
