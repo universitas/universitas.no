@@ -26,22 +26,24 @@ def determine_cropping_method(features):
 def autocrop_image_file(pk):
     instance = ImageFile.objects.get(pk=pk)
     imgdata = instance.small.read()
-    if instance.is_profile_image:
+    if instance.is_profile_image():
         detector = HybridDetector(n=1)
     else:
         detector = HybridDetector(n=10)
     features = detector.detect_features(imgdata)
     if not features:
-        cropbox = CropBox.basic()
+        crop_box = CropBox.basic()
         cropping_method = ImageFile.CROP_NONE
     else:
         x, y = features[0].center
         left, top, right, bottom = sum(features)
-        cropbox = CropBox(left, top, right, bottom, x, y)
+        crop_box = CropBox(left, top, right, bottom, x, y)
         cropping_method = determine_cropping_method(features)
-    instance.cropbox = cropbox
+    instance.crop_box = crop_box
     instance.cropping_method = cropping_method
-    instance.save(update_fields=('crop_box', 'cropping_method'))
+    logger.debug('%s %s %s' % (instance, crop_box,
+                               instance.get_cropping_method_display()))
+    instance.save(update_fields=['crop_box', 'cropping_method'])
 
 
 @shared_task

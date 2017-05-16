@@ -90,10 +90,13 @@ const imageReducer = (state, action) => {
       return {
         ...state,
         crop_box: normalize(state.crop_box),
+        cropping_method: 100,
         dragging: {},
       }
     case 'SET_IMAGE_SIZE':
       return { ...state, size: action.payload.size }
+    case 'AUTOCROP_IMAGE':
+      return { ...state, cropping_method: 1 }
     default:
       return state
   }

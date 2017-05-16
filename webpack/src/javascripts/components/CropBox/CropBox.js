@@ -24,8 +24,9 @@ class CropBox extends React.Component {
     this.props.setImgSize([img.offsetWidth, img.offsetHeight])
   }
   render() {
-    const { id, src, size, dragging } = this.props
+    const { id, src, size, dragging, cropping_method } = this.props
     const [width, height] = size || [100, 100]
+    const pending = cropping_method === 1
     return (
       <div className="CropBox">
         <svg
@@ -41,7 +42,11 @@ class CropBox extends React.Component {
             width="100%"
             height="100%"
           />
-          <Overlay getRelativePosition={this.getRelativePosition} id={id} />
+          <Overlay
+            id={id}
+            pending={pending}
+            getRelativePosition={this.getRelativePosition}
+          />
         </svg>
         <DragKing
           id={id}

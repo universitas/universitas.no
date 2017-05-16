@@ -35,12 +35,15 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'filename',
             'created',
+            'cropping_method',
             'method',
             'size',
             'thumb',
             'small',
             'src',
+            '_imagehash',
             'crop_box',
+            'is_profile_image',
         ]
         read_only_fields = [
             'source_file',

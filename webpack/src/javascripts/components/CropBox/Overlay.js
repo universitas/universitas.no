@@ -35,7 +35,7 @@ Handle.propTypes = {
   startDragHandle: PropTypes.func,
 }
 
-let Overlay = ({ size, crop_box, startDragHandle, startNewCrop }) => {
+let Overlay = ({ size, pending, crop_box, startDragHandle, startNewCrop }) => {
   const { left, x, right, top, y, bottom } = crop_box
   const boxPath = `M${left}, ${top}V${bottom}H${right}V${top}Z`
   const outerPath = 'M0, 0H1V1H0Z'
@@ -58,7 +58,7 @@ let Overlay = ({ size, crop_box, startDragHandle, startNewCrop }) => {
           d={outerPath + boxPath}
           onMouseDown={startNewCrop}
         />
-        <g className="inside">
+        <g className={`inside${pending ? ' pending' : ''}`}>
           <path onMouseDown={startMoveCropBox} className="box" d={boxPath} />
           <svg
             className="handles"
@@ -105,6 +105,7 @@ let Overlay = ({ size, crop_box, startDragHandle, startNewCrop }) => {
 
 Overlay.propTypes = {
   size: PropTypes.array,
+  pending: PropTypes.bool,
   crop_box: PropTypes.object.isRequired,
   startDragHandle: PropTypes.func.isRequired,
   startNewCrop: PropTypes.func.isRequired,

@@ -27,8 +27,7 @@
   display: flex;
   flex: 1;
   flex-flow: row wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
+  align-content: flex-start; // show at top
   .Photo {
     box-sizing: border-box;
     display: flex;
@@ -47,6 +46,8 @@
     small {
       height: 25px;
       line-height: 1;
+      //word-wrap: break-word;
+      word-break: break-all;
     }
     .Thumb {
       max-width: 150px;
@@ -57,7 +58,6 @@
         height: 100%;
         fill: none;
         stroke: black;
-        // shape-rendering: crispEdges;
         stroke-width: 1px;
       }
       .cropOverlay {

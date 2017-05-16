@@ -7,11 +7,10 @@ const debouncedPatchImage = debounce((store, id) => {
 }, 1000)
 
 export const apiMiddleware = store => next => action => {
-
-  switch(action.type) {
-  case 'END_DRAG_HANDLE':
-    debouncedPatchImage(store, action.payload.id)
+  switch (action.type) {
+    case 'AUTOCROP_IMAGE':
+    case 'END_DRAG_HANDLE':
+      debouncedPatchImage(store, action.payload.id)
   }
   return next(action)
 }
-

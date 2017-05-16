@@ -63,4 +63,7 @@ export const patchImage = (id, data) => dispatch => {
   // add error handling
 }
 
-const transformImageData2Api = ({ crop_box }) => ({ crop_box })
+const transformImageData2Api = ({ crop_box, cropping_method }) => ({
+  crop_box,
+  cropping_method,
+})

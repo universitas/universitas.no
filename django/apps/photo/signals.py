@@ -1,6 +1,7 @@
 from django.db.models.signals import pre_delete, post_save
 from django.conf import settings
 from sorl import thumbnail
+# from celery import chain
 # from apps.photo import tasks
 
 import logging
@@ -16,16 +17,21 @@ def image_post_delete(sender, instance, **kwargs):
 
 def image_post_save(sender, instance, created, update_fields, **kwargs):
     """Schedule autocropping and rebuild thumbnail"""
-    if update_fields:
-        logger.debug(f'no task: {str(instance):>40} fields: {update_fields}')
-        return
+
+    # Celery tasks immutable signatures
+    autocrop_signature = tasks.autocrop_image_file.si(instance.pk)
+    post_save_signature = tasks.post_save_task.si(instance.pk)
     if not created:
         old = sender.objects.get(pk=instance.pk)
         if old._md5 and old._md5 != instance._md5:
+            # image file has changed. Invalidate thumbnails.
             thumbnail.delete(instance.source_file, delete_file=False)
     if instance.cropping_method == instance.CROP_PENDING:
-        tasks.autocrop_image_file.delay(instance.pk)
-    tasks.post_save_task.delay(instance.pk)
+        logger.debug('autocrop_signature %s' % instance)
+        # chain two task signatures
+        (autocrop_signature | post_save_signature).apply_async()
+    elif not update_fields:
+        post_save_signature.apply_async()
 
 
 pre_delete.connect(image_post_delete, sender='photo.ImageFile')

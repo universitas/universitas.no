@@ -320,7 +320,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         src.save(filename, content)
 
     def is_profile_image(self):
-        return self.source_file.startswith(ProfileImage.UPLOAD_FOLDER)
+        return self.source_file.name.startswith(ProfileImage.UPLOAD_FOLDER)
 
     def build_thumbs(self):
         """Make sure thumbs exists"""

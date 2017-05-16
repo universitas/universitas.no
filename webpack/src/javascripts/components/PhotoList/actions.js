@@ -69,6 +69,7 @@ const doSearch = (dispatch, attrs = {}) => {
     dispatch(clearSearch())
     return
   }
+  attrs.limit = 20
   const url = buildUrl(attrs)
   fetchImages(dispatch, url)
 }

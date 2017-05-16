@@ -1,3 +1,21 @@
+$ant_size: 6;
+$march_speed: 0.5s;
+$march_lunges: 10;
+
+@keyframes marching_ants {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: $ant_size*2;
+  }
+}
+
+%ants {
+  animation: marching_ants $march_speed steps($march_lunges) infinite;
+  stroke-dasharray: $ant_size;
+}
+
 .DragKing {
   position: fixed;
   z-index: 100;
@@ -49,6 +67,11 @@
     }
     &:hover .box {
       stroke: rgba(255,255,255,0.8);
+    }
+    &.pending .box {
+      @extend %ants;
+      stroke: white;
+      stroke-width: 2px;
     }
     .handles {
       overflow: visible;
