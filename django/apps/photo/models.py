@@ -172,8 +172,8 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     )
 
     def __str__(self):
-        if self.source_file:
-            return os.path.basename(self.source_file.name)
+        if self.original:
+            return os.path.basename(self.original.name)
         else:
             return super(ImageFile, self).__str__()
 
@@ -193,20 +193,20 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         mtime = os.stat(filepath).st_mtime
         size = os.stat(filepath).st_size
         md5 = local_file_md5(filepath)
-        if self.pk and self.source_file:
+        if self.pk and self.original:
             if mtime <= self.mtime or (size, md5) == (self.size, self.md5):
                 return False
         filename = os.path.split(filepath)[1]
         with open(filepath, 'rb') as source:
             content = File(source)
-            self.source_file.save(filename, content, save)
+            self.original.save(filename, content, save)
         return True
 
     @property
     def md5(self):
         """Calculate or retrieve md5 value"""
-        if self.source_file and self._md5 is None:
-            self._md5 = file_field_md5(self.source_file)
+        if self.original and self._md5 is None:
+            self._md5 = file_field_md5(self.original)
         return self._md5
 
     @md5.setter
@@ -216,8 +216,8 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     @property
     def size(self):
         """Calculate or retrive filesize"""
-        if self.source_file and self._size is None:
-            self._size = self.source_file.size
+        if self.original and self._size is None:
+            self._size = self.original.size
         return self._size
 
     @size.setter
@@ -228,10 +228,10 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         """Modified time as unix timestamp"""
         try:
             try:  # Locally stored file
-                mtime = os.path.getmtime(self.source_file.path)
+                mtime = os.path.getmtime(self.original.path)
                 return int(mtime)
             except NotImplementedError:  # AWS S3 storage
-                key = self.source_file.file.key
+                key = self.original.file.key
                 modified = boto.utils.parse_ts(key.last_modified)
                 return int(modified.strftime('%s'))
         except (FileNotFoundError, AttributeError):
@@ -240,7 +240,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
 
     @property
     def mtime(self):
-        if self.source_file and self._mtime is None:
+        if self.original and self._mtime is None:
             self._mtime = self.get_sourcefile_modification_time()
         return self._mtime
 
@@ -281,22 +281,17 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     def thumbnail(self, size='x150', **options):
         """Create thumb of image"""
         try:
-            return thumbnail.get_thumbnail(
-                self.source_file, size, **options)
-        except TypeError:
-            thumbnail.delete(self.source_file, delete_file=False)
-            return BrokenImage()
-
+            return thumbnail.get_thumbnail(self.original, size, **options)
         except Exception:
-            # logger.exception('Cannot create thumbnail')
+            logger.exception('Cannot create thumbnail')
             return BrokenImage()
 
     def download_from_aws(self, dest=Path('/var/media/')):
         """Download file for development server"""
-        path = dest / self.source_file.name
+        path = dest / self.original.name
         if path.exists():
             return
-        data = self.source_file.file.read()
+        data = self.original.file.read()
         path.parent.mkdir(0o775, True, True)
         path.write_bytes(data)
 
@@ -310,34 +305,36 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
             logger.exception('failed')
             return 'err'
         finally:
-            self.source_file.seek(0)
+            self.original.seek(0)
 
     def save_again(self):
         """fix broken files. THIS IS HACK"""
-        src = self.source_file
+        src = self.original
         filename = os.path.basename(src.name)
         content = File(src)
         src.save(filename, content)
 
     def is_profile_image(self):
-        return self.source_file.name.startswith(ProfileImage.UPLOAD_FOLDER)
+        return self.original.name.startswith(ProfileImage.UPLOAD_FOLDER)
 
     def build_thumbs(self):
         """Make sure thumbs exists"""
         self.large
         self.small
         self.preview
-        self.thumb()
         logger.info(f'built thumbs {self}')
 
     def calculate_hashes(self):
         """Make sure the image has size, md5 and imagehash"""
+        if all([self._mtime, self._md5, self._size, self._imagehash]):
+            return False
         self._mtime = self._mtime or self.get_sourcefile_modification_time()
-        self._md5 = self._md5 or file_field_md5(self.source_file)
-        self._size = self._size or self.source_file.size
+        self._md5 = self._md5 or file_field_md5(self.original)
+        self._size = self._size or self.original.size
         self._imagehash = self._imagehash or self.calculate_image_hash()
         self.save(update_fields=['_mtime', '_md5', '_size', '_imagehash'])
         logger.info(f'updated hashes {self}')
+        return True
 
 
 class ProfileImageManager(ImageFileManager):

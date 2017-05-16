@@ -72,6 +72,7 @@ numberToPercent	src/javascripts/components/CropBox/Previews.js	/^  const numberT
 outerPath	src/javascripts/components/CropBox/Overlay.js	/^  const outerPath = 'M0, 0H1V1H0Z'$/;"	r
 patch_data	src/javascripts/containers/actions.js	/^  const patch_data = transformImageData2Api(data)$/;"	r
 patch_request	src/javascripts/containers/actions.js	/^  const patch_request = {$/;"	r
+pending	src/javascripts/components/CropBox/CropBox.js	/^    const pending = cropping_method === 1$/;"	r
 queryString	src/javascripts/components/PhotoList/actions.js	/^  const queryString = Object.entries(attrs)$/;"	r
 ratioOf	src/javascripts/components/CropBox/Previews.js	/^  const ratioOf = (low, val, high) =>$/;"	r
 regex	src/javascripts/foot.js	/^  const regex = \/(^[^<]{0,10}[^\\s<]*)\/$/;"	r
@@ -82,11 +83,12 @@ round	src/javascripts/components/CropBox/reducers.js	/^const round = num => Numb
 searchInputOnChange	src/javascripts/components/PhotoList/SearchField.js	/^  const searchInputOnChange = e => {$/;"	r
 startMoveCenter	src/javascripts/components/CropBox/Overlay.js	/^  const startMoveCenter = startDragHandle([0, 0, 0, 0, 1])$/;"	r
 startMoveCropBox	src/javascripts/components/CropBox/Overlay.js	/^  const startMoveCropBox = startDragHandle([1, 1, 1, 1, 0])$/;"	r
+stringify	src/javascripts/components/EditImage/EditImage.js	/^const stringify = val =>$/;"	r
 style	src/javascripts/containers/FrontpageCrop.js	/^const style = {$/;"	r
 styles	src/javascripts/components/CropBox/Previews.js	/^  const styles = getStyles(src, crop_box, size[0] \/ size[1], aspect)$/;"	r
-subset	src/javascripts/components/EditImage/EditImage.js	/^const subset = ({ id, size, created, filename, crop_box }) => ({$/;"	r
-thumbStyles	src/javascripts/components/PhotoList/PhotoList.js	/^const thumbStyles = [CroppedThumb, FullThumb, FullThumbWithCropBox]$/;"	r
-transformImageData2Api	src/javascripts/containers/actions.js	/^const transformImageData2Api = ({ crop_box }) => ({ crop_box })$/;"	r
+subset	src/javascripts/components/EditImage/EditImage.js	/^const subset = ({$/;"	r
+thumbStyles	src/javascripts/components/PhotoList/PhotoList.js	/^const thumbStyles = [CroppedThumb, FullThumbWithCropBox, FullThumb]$/;"	r
+transformImageData2Api	src/javascripts/containers/actions.js	/^const transformImageData2Api = ({ crop_box, cropping_method }) => ({$/;"	r
 trunc	src/javascripts/components/CropBox/CropBox.js	/^    const trunc = num => Math.max(0, Math.min(num, 1))$/;"	r
 url	src/javascripts/components/PhotoList/actions.js	/^  const url = buildUrl()$/;"	r
 url	src/javascripts/components/PhotoList/actions.js	/^  const url = buildUrl(attrs)$/;"	r

@@ -50,17 +50,20 @@ def autocrop_image_file(pk):
 def post_save_task(pk):
     instance = ImageFile.objects.get(pk=pk)
     instance.build_thumbs()
-    instance.calculate_hashes()
+    instance.calculate_hashes()  # this saves as well
 
 
-@periodic_task(run_every=timedelta(hours=1))
+@periodic_task(run_every=timedelta(minutes=15))
 def clean_up_pending_autocrop():
     # In case some images have ended up in limbo
+    limit = 300  # do in batches
     pending_images = ImageFile.objects.filter(
         cropping_method=ImageFile.CROP_PENDING
-    )
-    for image in pending_images:
-        post_save_task(image)
+    ).values_list('pk', flat=True)
+
+    for image_pk in pending_images[:limit]:
+        autocrop_image_file(image_pk)
+        post_save_task(image_pk)
 
 
 @periodic_task(run_every=timedelta(minutes=1))

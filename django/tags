@@ -169,7 +169,7 @@ Frontpage	apps/frontpage/models.py	/^class Frontpage(TimeStampedModel):$/;"	c
 FrontpageAppConfig	apps/frontpage/appconf.py	/^class FrontpageAppConfig(AppConfig):$/;"	c
 FrontpageManager	apps/frontpage/models.py	/^class FrontpageManager(models.Manager):$/;"	c
 FrontpageStory	apps/frontpage/models.py	/^class FrontpageStory(TimeStampedModel, Edit_url_mixin):$/;"	c
-FrontpageStoryAdmin	apps/frontpage/admin.py	/^class FrontpageStoryAdmin(AdminImageMixin, admin.ModelAdmin):$/;"	c
+FrontpageStoryAdmin	apps/frontpage/admin.py	/^class FrontpageStoryAdmin(admin.ModelAdmin, ThumbAdmin):$/;"	c
 FrontpageStoryInline	apps/stories/admin.py	/^class FrontpageStoryInline(SmallTextArea, admin.TabularInline, ThumbAdmin):$/;"	c
 FrontpageStoryManager	apps/frontpage/models.py	/^class FrontpageStoryManager(models.Manager):$/;"	c
 GHOSTSCRIPT	apps/issues/tasks.py	/^GHOSTSCRIPT = '\/usr\/bin\/ghostscript'$/;"	v
@@ -2264,8 +2264,10 @@ preserve_default	apps/stories/migrations/0005_auto_20150308_0249.py	/^          
 preserve_default	apps/stories/migrations/0009_auto_20150430_1413.py	/^            preserve_default=True,$/;"	v	class:Migration
 preserve_default	apps/stories/migrations/0010_auto_20150527_0022.py	/^            preserve_default=True,$/;"	v	class:Migration
 prettify	utils/html.py	/^def prettify(source):$/;"	f
+preview	apps/frontpage/models.py	/^    def preview(self):$/;"	m	class:FrontpageStory
 preview	apps/photo/models.py	/^    def preview(self):$/;"	m	class:ImageFile
 preview	apps/photo/models.py	/^    def preview(self):$/;"	m	class:ProfileImage
+preview	apps/stories/models.py	/^    def preview(self):$/;"	m	class:StoryImage
 price	apps/adverts/models.py	/^    price = models.PositiveIntegerField($/;"	v	class:AdFormat
 prioritet	apps/legacy_db/models.py	/^    prioritet = models.IntegerField()$/;"	v	class:Sak
 prioritet	apps/legacy_db/models.py	/^    prioritet = models.IntegerField(blank=True, null=True)$/;"	v	class:Prodbilde
@@ -2318,7 +2320,7 @@ raw_id_fields	apps/stories/admin.py	/^    raw_id_fields = ($/;"	v	class:StoryTyp
 read	apps/photo/models.py	/^    def read(self):$/;"	m	class:BrokenImage
 read_only_fields	apps/photo/serializers.py	/^        read_only_fields = [$/;"	v	class:ImageFileSerializer.Meta
 readonly_fields	apps/adverts/admin.py	/^    readonly_fields = ['get_html']$/;"	v	class:AdvertAdmin
-readonly_fields	apps/frontpage/admin.py	/^    readonly_fields = ['thumbnail']$/;"	v	class:FrontpageStoryAdmin
+readonly_fields	apps/frontpage/admin.py	/^    readonly_fields = ['cropped_thumb']$/;"	v	class:FrontpageStoryAdmin
 readonly_fields	apps/issues/admin.py	/^    readonly_fields = ($/;"	v	class:PrintIssueAdmin
 readonly_fields	apps/stories/admin.py	/^    readonly_fields = ('full_thumb', )$/;"	v	class:FrontpageStoryInline
 readonly_fields	apps/stories/admin.py	/^    readonly_fields = ('full_thumb', )$/;"	v	class:ImageInline
@@ -2467,6 +2469,7 @@ slugify_function	apps/stories/models.py	/^        slugify_function=slugify,$/;"	
 slugify_function	apps/stories/models.py	/^        slugify_function=slugify,$/;"	v	class:StoryType
 small	apps/photo/models.py	/^    def small(self):$/;"	m	class:ImageFile
 small	apps/photo/serializers.py	/^    small = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
+small	apps/stories/models.py	/^    def small(self):$/;"	m	class:StoryImage
 source_file	apps/photo/models.py	/^    source_file = thumbnail.ImageField($/;"	v	class:ImageFile
 split	apps/markup/models.py	/^    def split(self, content):$/;"	m	class:BlockTag
 src	apps/photo/serializers.py	/^    src = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
@@ -2567,8 +2570,6 @@ through	apps/frontpage/models.py	/^        through=StoryModule,$/;"	v	class:Fron
 thumb	apps/photo/cropping/models.py	/^    def thumb(self, height=315, width=600):$/;"	m	class:AutoCropImage
 thumb	apps/photo/serializers.py	/^    thumb = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 thumb	apps/stories/models.py	/^    def thumb(self):$/;"	m	class:Story
-thumb	apps/stories/models.py	/^    def thumb(self):$/;"	m	class:StoryImage
-thumbnail	apps/frontpage/models.py	/^    def thumbnail(self):$/;"	m	class:FrontpageStory
 thumbnail	apps/issues/admin.py	/^    def thumbnail(self, instance, width=200, height=200):$/;"	m	class:ThumbAdmin
 thumbnail	apps/photo/models.py	/^    def thumbnail(self, size='x150', **options):$/;"	m	class:ImageFile
 tid	apps/legacy_db/models.py	/^    tid = models.DateTimeField()$/;"	v	class:InnleggAbstract
