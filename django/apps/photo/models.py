@@ -332,7 +332,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
 
     def calculate_hashes(self):
         """Make sure the image has size, md5 and imagehash"""
-        self._mtime = self._mtime or file_field_md5(self.source_file)
+        self._mtime = self._mtime or self.get_sourcefile_modification_time()
         self._md5 = self._md5 or file_field_md5(self.source_file)
         self._size = self._size or self.source_file.size
         self._imagehash = self._imagehash or self.calculate_image_hash()
