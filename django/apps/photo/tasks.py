@@ -49,26 +49,26 @@ def autocrop_image_file(pk):
 @shared_task
 def post_save_task(pk):
     instance = ImageFile.objects.get(pk=pk)
-    try:
-        instance.build_thumbs()
-        instance.calculate_hashes()  # this saves as well
-    except Exception as err:
-        logger.exception(f'autocrop broke!: {instance}')
-        instance.cropping_method = ImageFile.CROP_NONE
-        instance.save()
+    instance.build_thumbs()
+    instance.calculate_hashes()  # this saves as well
 
 
-@periodic_task(run_every=timedelta(minutes=15))
+@periodic_task(run_every=timedelta(minutes=10))
 def clean_up_pending_autocrop():
     # In case some images have ended up in limbo
-    limit = 300  # do in batches
-    pending_images = ImageFile.objects.filter(
+    limit = 200  # do in batches
+    image_pks = ImageFile.objects.filter(
         cropping_method=ImageFile.CROP_PENDING
-    ).values_list('pk', flat=True)
+    ).order_by('?').values_list('pk', flat=True)
 
-    for image_pk in pending_images[:limit]:
-        autocrop_image_file(image_pk)
-        post_save_task(image_pk)
+    for image_pk in image_pks[:limit]:
+        try:
+            autocrop_image_file(image_pk)
+            post_save_task(image_pk)
+        except Exception as err:
+            logger.exception(f'pending autocrop broke: {image_pk}')
+            ImageFile.objects.filter(pk=image_pk).update(
+                cropping_method=ImageFile.CROP_NONE)
 
 
 @periodic_task(run_every=timedelta(minutes=1))
