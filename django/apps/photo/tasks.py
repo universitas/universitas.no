@@ -49,8 +49,13 @@ def autocrop_image_file(pk):
 @shared_task
 def post_save_task(pk):
     instance = ImageFile.objects.get(pk=pk)
-    instance.build_thumbs()
-    instance.calculate_hashes()  # this saves as well
+    try:
+        instance.build_thumbs()
+        instance.calculate_hashes()  # this saves as well
+    except Exception as err:
+        logger.exception(f'autocrop broke!: {instance}')
+        instance.cropping_method = ImageFile.CROP_NONE
+        instance.save()
 
 
 @periodic_task(run_every=timedelta(minutes=15))

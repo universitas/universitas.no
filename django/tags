@@ -1551,6 +1551,8 @@ image_post_save	apps/photo/signals.py	/^def image_post_save(sender, instance, cr
 imagefile	apps/adverts/models.py	/^    imagefile = ImageField($/;"	v	class:Advert
 imagefile	apps/frontpage/models.py	/^    imagefile = models.ForeignKey($/;"	v	class:FrontpageStory
 imagefile	apps/stories/models.py	/^    imagefile = models.ForeignKey($/;"	v	class:StoryImage
+imagehash	apps/photo/models.py	/^    def imagehash(self):$/;"	m	class:ImageFile
+imagehash	apps/photo/models.py	/^    def imagehash(self, value):$/;"	m	class:ImageFile
 images	apps/stories/models.py	/^    def images(self):$/;"	m	class:ElementQuerySet
 images	apps/stories/models.py	/^    def images(self):$/;"	m	class:TextContent
 import_issues_from_file_system	apps/issues/management/commands/find_pdf_files.py	/^    def import_issues_from_file_system(self):$/;"	m	class:Command
@@ -2546,6 +2548,7 @@ test_fake_imagefile	apps/core/tests/test_content_factory.py	/^def test_fake_imag
 test_fake_story	apps/core/tests/test_content_factory.py	/^def test_fake_story():$/;"	f
 test_feature_operators	apps/photo/tests/test_cropping.py	/^def test_feature_operators():$/;"	f
 test_get_staging_pdf_files	apps/issues/tests/test_tasks.py	/^def test_get_staging_pdf_files(tmp_fixture_dir):$/;"	f
+test_image_hashes	apps/photo/tests/test_models.py	/^def test_image_hashes(fixture_image):$/;"	f
 test_log	apps/core/tasks.py	/^def test_log():$/;"	f
 test_minify	utils/html.py	/^def test_minify():$/;"	f
 test_new_staging_images	apps/photo/tests/test_tasks.py	/^def test_new_staging_images():$/;"	f

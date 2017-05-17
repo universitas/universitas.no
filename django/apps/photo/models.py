@@ -181,7 +181,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         if self.pk is None:
             self.md5
             self.size
-            self._imagehash = self.calculate_image_hash()
+            self._imagehash = str(self.calculate_image_hash())
 
         super().save(*args, **kwargs)
 
@@ -214,6 +214,17 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         self._md5 = value
 
     @property
+    def imagehash(self):
+        """Calculate or retrieve md5 value"""
+        if self.original and self._imagehash is '':
+            self.imagehash = self.calculate_image_hash()
+        return imagehash.hex_to_hash(self._imagehash)
+
+    @imagehash.setter
+    def imagehash(self, value):
+        self._imagehash = str(value)
+
+    @property
     def size(self):
         """Calculate or retrive filesize"""
         if self.original and self._size is None:
@@ -223,6 +234,16 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     @size.setter
     def size(self, value):
         self._size = value
+
+    @property
+    def mtime(self):
+        if self.original and self._mtime is None:
+            self._mtime = self.get_sourcefile_modification_time()
+        return self._mtime
+
+    @mtime.setter
+    def mtime(self, timestamp):
+        self._mtime = timestamp
 
     def get_sourcefile_modification_time(self):
         """Modified time as unix timestamp"""
@@ -237,16 +258,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         except (FileNotFoundError, AttributeError):
             # return current time
             return int(timezone.now().strftime('%s'))
-
-    @property
-    def mtime(self):
-        if self.original and self._mtime is None:
-            self._mtime = self.get_sourcefile_modification_time()
-        return self._mtime
-
-    @mtime.setter
-    def mtime(self, timestamp):
-        self._mtime = timestamp
 
     @classmethod
     def upload_folder(cls):
@@ -325,15 +336,19 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         logger.info(f'built thumbs {self}')
 
     def calculate_hashes(self):
-        """Make sure the image has size, md5 and imagehash"""
+        """Make sure the image has size, mtime, md5 and imagehash"""
         if all([self._mtime, self._md5, self._size, self._imagehash]):
             return False
-        self._mtime = self._mtime or self.get_sourcefile_modification_time()
-        self._md5 = self._md5 or file_field_md5(self.original)
-        self._size = self._size or self.original.size
-        self._imagehash = self._imagehash or self.calculate_image_hash()
-        self.save(update_fields=['_mtime', '_md5', '_size', '_imagehash'])
-        logger.info(f'updated hashes {self}')
+        # calculate values
+        self.mtime
+        self.md5
+        self.size
+        self.imagehash
+        if self.pk is not None:
+            # save unless instance does not exist already in db.
+            self.save(update_fields=[
+                'modified', '_mtime', '_md5', '_size', '_imagehash'])
+            logger.info(f'updated hashes {self}')
         return True
 
 
