@@ -34,7 +34,7 @@ def image_post_save(sender, instance, created, update_fields, **kwargs):
         post_save_signature.apply_async()
 
 
-pre_delete.connect(image_post_delete, sender='photo.ImageFile')
-pre_delete.connect(image_post_delete, sender='photo.ProfileImage')
+# pre_delete.connect(image_post_delete, sender='photo.ImageFile')
+# pre_delete.connect(image_post_delete, sender='photo.ProfileImage')
 post_save.connect(image_post_save, sender='photo.ImageFile')
 post_save.connect(image_post_save, sender='photo.ProfileImage')

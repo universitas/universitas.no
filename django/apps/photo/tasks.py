@@ -25,7 +25,7 @@ def determine_cropping_method(features):
 @shared_task
 def autocrop_image_file(pk):
     instance = ImageFile.objects.get(pk=pk)
-    imgdata = instance.small.read()
+    imgdata = instance.large.read()  # should be at least 600 x 600 px
     if instance.is_profile_image():
         detector = HybridDetector(n=1)
     else:

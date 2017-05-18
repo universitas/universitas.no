@@ -309,14 +309,12 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     def calculate_image_hash(self, size=11):
         """Calculate perceptual hash for comparison of identical images"""
         try:
-            blob = BytesIO(self.small.read())
+            blob = BytesIO(self.large.read())
             img = PIL.Image.open(blob).convert('L').resize((size, size))
             return imagehash.dhash(img)
         except Exception as e:
             logger.exception('failed')
-            return 'err'
-        finally:
-            self.original.seek(0)
+            return ''
 
     def save_again(self):
         """fix broken files. THIS IS HACK"""
