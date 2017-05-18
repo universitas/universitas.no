@@ -234,7 +234,11 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         """Calculate or retrieve md5 value"""
         if self.original and self._imagehash is '':
             self.imagehash = self.calculate_image_hash()
-        return imagehash.hex_to_hash(self._imagehash)
+        try:
+            return imagehash.hex_to_hash(self._imagehash)
+        except ValueError:
+            # could not calculate imagehash
+            return imagehash.hex_to_hash('F' * 16)
 
     @imagehash.setter
     def imagehash(self, value):
