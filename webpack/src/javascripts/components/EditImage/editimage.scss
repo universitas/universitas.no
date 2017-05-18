@@ -3,6 +3,8 @@ $margin: .5rem;
   svg {
     display: block;
   }
+  pointer-events: all;
+  background: white;
   display: flex;
   flex-direction: column;
   .ImageData {
@@ -30,7 +32,7 @@ $margin: .5rem;
   .Buttons {
     display: flex;
     justify-content: space-between;
-    align-self: center;
+    align-self: flex-start;
     button {
       cursor: pointer;
       background: #ddd;

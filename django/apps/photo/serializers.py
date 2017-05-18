@@ -41,6 +41,8 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
             'thumb',
             'small',
             'src',
+            'description',
+            'usage',
             '_imagehash',
             'crop_box',
             'is_profile_image',
@@ -55,7 +57,11 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
     src = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
     method = serializers.SerializerMethodField()
+    usage = serializers.SerializerMethodField()
     crop_box = CropBoxField()
+
+    def get_usage(self, instance):
+        return instance.storyimage_set.count()
 
     def get_method(self, instance):
         return instance.get_cropping_method_display()
@@ -86,7 +92,7 @@ class ImageFileViewSet(viewsets.ModelViewSet):
     queryset = ImageFile.objects.order_by('-created')
     serializer_class = ImageFileSerializer
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)
-    search_fields = ('source_file',)
+    search_fields = ('source_file', 'description')
 
     def get_queryset(self):
         profile_images = self.request.query_params.get('profile_images', '')

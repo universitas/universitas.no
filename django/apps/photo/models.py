@@ -2,6 +2,7 @@
 
 # Python standard library
 import os
+import re
 import hashlib
 import logging
 from io import BytesIO
@@ -88,6 +89,14 @@ class ImageFileQuerySet(models.QuerySet):
         return self.filter(
             source_file__startswith=ProfileImage.UPLOAD_FOLDER)
 
+    def update_descriptions(self):
+        count = 0
+        for image in self:
+            if image.description != image.add_description():
+                count += 1
+                image.save(update_fields=['description'])
+        return count
+
 
 class ImageFileManager(models.Manager):
 
@@ -153,15 +162,22 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         verbose_name=_('old file path'),
         help_text=_('previous path if the image has been moved.'),
         blank=True, null=True,
-        max_length=1000)
-
+        max_length=1000,
+    )
     contributor = models.ForeignKey(
         'contributors.Contributor',
         verbose_name=_('contributor'),
         help_text=_('who made this'),
         blank=True, null=True,
     )
-
+    description = models.CharField(
+        verbose_name=_('copyright information'),
+        help_text=_('Description of image'),
+        default='',
+        blank=True,
+        null=False,
+        max_length=1000,
+    )
     copyright_information = models.CharField(
         verbose_name=_('copyright information'),
         help_text=_(
@@ -349,6 +365,15 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
             logger.info(f'updated hashes {self}')
         return True
 
+    def add_description(self):
+        """Populates `description` with relevant content from related models"""
+        if self.is_profile_image():
+            return ProfileImage.add_description(self)
+        cap_list = self.storyimage_set.values_list('caption', flat=True)
+        captions = [re.sub(r'/s+', ' ', c.strip()) for c in cap_list]
+        self.description = '\n'.join(captions)[:1000]
+        return self.description
+
 
 class ProfileImageManager(ImageFileManager):
     def get_queryset(self):
@@ -365,6 +390,13 @@ class ProfileImage(ImageFile):
     objects = ProfileImageManager.from_queryset(ImageFileQuerySet)()
 
     UPLOAD_FOLDER = 'byline-photo'
+
+    def add_description(self):
+        if self.person.count():
+            self.description = self.person.first().display_name
+        else:
+            self.description = ''
+        return self.description
 
     @classmethod
     def slugify(cls, filename):

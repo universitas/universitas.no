@@ -10,7 +10,7 @@ const App = () => {
         <ResultsPanel />
       </section>
       <section className="mainPanel">
-        <EditImage style={{ flex: 1 }} />
+        <EditImage />
         <PhotoList style={{ flex: 2 }} />
       </section>
     </section>

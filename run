@@ -33,7 +33,7 @@ for arg; do case $arg in
   upd     ) docker-compose up -d ;;
   down    ) docker-compose down ;;
   pull    ) docker-compose pull ;;
-  logs    ) docker-compose logs -f ;;
+  logs    ) docker-compose logs --tail=50 -f ;;
 
   tags    ) cd django && ctags -R && cd ../webpack && ctags -R src && echo "collected ctags" ;;
 
