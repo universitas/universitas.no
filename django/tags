@@ -617,6 +617,7 @@ _block_append	apps/stories/models.py	/^    def _block_append(self, tag, content,
 _block_drop	apps/stories/models.py	/^    def _block_drop(self, *args, **kwargs):$/;"	m	class:TextContent
 _block_new	apps/stories/models.py	/^    def _block_new(self, *args, **kwargs):$/;"	m	class:TextContent
 _block_new	apps/stories/models.py	/^    def _block_new(self, tag, content, element):$/;"	m	class:Story
+_build_uri	apps/photo/serializers.py	/^    def _build_uri(self, url):$/;"	m	class:ImageFileSerializer
 _bulk_save_search_entries	watson/search.py	/^def _bulk_save_search_entries(search_entries, batch_size=100):$/;"	f
 _check_links	apps/stories/management/commands/check_links.py	/^    def _check_links(self, links_to_check, timeout):$/;"	m	class:Command
 _clean_up_html	apps/legacy_db/export_content_and_images.py	/^def _clean_up_html(html):$/;"	f
@@ -1260,7 +1261,6 @@ fieldsets	apps/legacy_db/admin.py	/^    fieldsets = ($/;"	v	class:SakAdmin
 fieldsets	apps/stories/admin.py	/^    fieldsets = ($/;"	v	class:StoryAdmin
 fifty_fifty	apps/stories/models.py	/^        def fifty_fifty(queryset, body):$/;"	f	function:Story.place_all_inline_elements
 file_field_md5	apps/photo/models.py	/^def file_field_md5(source_file, blocksize=65536):$/;"	f
-filename	apps/photo/serializers.py	/^    filename = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 filnavn	apps/legacy_db/models.py	/^    filnavn = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
 filter	watson/search.py	/^    def filter(self, queryset, search_text, ranking=True, backend_name=None):$/;"	m	class:SearchEngine
 filter	watson/search.py	/^filter = default_search_engine.filter$/;"	v
@@ -1350,7 +1350,6 @@ get_empty_query_redirect	watson/views.py	/^    def get_empty_query_redirect(self
 get_engine	watson/management/commands/buildwatson.py	/^def get_engine(engine_slug_):$/;"	f
 get_exclude	watson/views.py	/^    def get_exclude(self):$/;"	m	class:SearchMixin
 get_extra_context	watson/views.py	/^    def get_extra_context(self):$/;"	m	class:SearchMixin
-get_filename	apps/photo/serializers.py	/^    def get_filename(self, instance):$/;"	m	class:ImageFileSerializer
 get_frontpage_stories	apps/frontpage/views.py	/^def get_frontpage_stories(story_queryset, frontpage=None):$/;"	f
 get_haarcascade	apps/photo/cropping/crop_detector.py	/^def get_haarcascade(filename: str) -> Path:$/;"	f
 get_height	apps/stories/models.py	/^    def get_height(self, width, height):$/;"	m	class:StoryMedia
@@ -1361,11 +1360,13 @@ get_html	apps/stories/models.py	/^    def get_html(self):$/;"	m	class:TextConten
 get_html_class	apps/markup/models.py	/^    def get_html_class(self):$/;"	m	class:MarkupTag
 get_internal_type	apps/photo/cropping/models.py	/^    def get_internal_type(self):$/;"	m	class:BoxField
 get_items	apps/stories/templatetags/inline_elements.py	/^def get_items(queryset, argument_string):$/;"	f
+get_large	apps/photo/serializers.py	/^    def get_large(self, instance):$/;"	m	class:ImageFileSerializer
 get_live_queryset	watson/search.py	/^    def get_live_queryset(self):$/;"	m	class:SearchAdapter
 get_meta	watson/search.py	/^    def get_meta(self, obj):$/;"	m	class:SearchAdapter
 get_method	apps/photo/serializers.py	/^    def get_method(self, instance):$/;"	m	class:ImageFileSerializer
 get_models	watson/views.py	/^    def get_models(self):$/;"	m	class:SearchMixin
 get_or_create	apps/contributors/models.py	/^    def get_or_create(cls, input_name, initials=''):$/;"	m	class:Contributor
+get_original	apps/photo/serializers.py	/^    def get_original(self, instance):$/;"	m	class:ImageFileSerializer
 get_output_file	apps/issues/tasks.py	/^def get_output_file(input_file, subfolder, suffix=None):$/;"	f
 get_plaintext	apps/stories/models.py	/^    def get_plaintext(self):$/;"	m	class:TextContent
 get_postgresql_version	watson/backends.py	/^def get_postgresql_version(connection):$/;"	f
@@ -1391,7 +1392,6 @@ get_shortlink	apps/stories/models.py	/^    def get_shortlink(self):$/;"	m	class:
 get_size	apps/photo/serializers.py	/^    def get_size(self, instance):$/;"	m	class:ImageFileSerializer
 get_small	apps/photo/serializers.py	/^    def get_small(self, instance):$/;"	m	class:ImageFileSerializer
 get_sourcefile_modification_time	apps/photo/models.py	/^    def get_sourcefile_modification_time(self):$/;"	m	class:ImageFile
-get_src	apps/photo/serializers.py	/^    def get_src(self, instance):$/;"	m	class:ImageFileSerializer
 get_staging_pdf_files	apps/issues/management/commands/web_pdf.py	/^def get_staging_pdf_files(magazine='1'):$/;"	f
 get_staging_pdf_files	apps/issues/tasks.py	/^def get_staging_pdf_files($/;"	f
 get_tag	apps/stories/models.py	/^    def get_tag(self, ref=None):$/;"	m	class:InlineLink
@@ -1631,6 +1631,7 @@ kwargs	apps/photo/autocomplete_light_registry.py	/^kwargs = dict($/;"	v
 label	apps/frontpage/models.py	/^    label = models.CharField($/;"	v	class:Frontpage
 language	apps/stories/models.py	/^    language = models.CharField($/;"	v	class:Story
 large	apps/photo/models.py	/^    def large(self):$/;"	m	class:ImageFile
+large	apps/photo/serializers.py	/^    large = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 large_thumbnail	apps/issues/admin.py	/^    def large_thumbnail(self, instance):$/;"	m	class:ThumbAdmin
 latest_issue	apps/issues/models.py	/^    def latest_issue(self):$/;"	m	class:IssueQueryset
 leave_locale_alone	apps/legacy_db/management/commands/importer_fra_prodsys.py	/^    leave_locale_alone = True,$/;"	v	class:Command
@@ -2224,6 +2225,7 @@ ordering	apps/markup/models.py	/^    ordering = models.PositiveSmallIntegerField
 ordering	apps/stories/models.py	/^        ordering = ['index']$/;"	v	class:StoryElement.Meta
 ordering	apps/stories/models.py	/^    ordering = models.IntegerField(default=1)$/;"	v	class:Byline
 original	apps/photo/models.py	/^    def original(self):$/;"	m	class:ImageFile
+original	apps/photo/serializers.py	/^    original = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 original_ratio	apps/stories/models.py	/^    def original_ratio(self):$/;"	m	class:StoryImage
 original_ratio	apps/stories/models.py	/^    def original_ratio(self):$/;"	m	class:StoryMedia
 overskrift	apps/legacy_db/models.py	/^    overskrift = models.CharField(max_length=255)$/;"	v	class:Sak
@@ -2489,7 +2491,6 @@ small	apps/photo/serializers.py	/^    small = serializers.SerializerMethodField(
 small	apps/stories/models.py	/^    def small(self):$/;"	m	class:StoryImage
 source_file	apps/photo/models.py	/^    source_file = thumbnail.ImageField($/;"	v	class:ImageFile
 split	apps/markup/models.py	/^    def split(self, content):$/;"	m	class:BlockTag
-src	apps/photo/serializers.py	/^    src = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 staff	apps/contributors/context_processors.py	/^def staff(request):$/;"	f
 start	watson/search.py	/^    def start(self):$/;"	m	class:SearchContextManager
 start_date	apps/contributors/models.py	/^    start_date = models.DateField($/;"	v	class:Stint

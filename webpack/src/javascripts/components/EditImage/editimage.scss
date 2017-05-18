@@ -10,9 +10,12 @@ $margin: .5rem;
   .ImageData {
     flex: 0;
     font-size: smaller;
-    td {
-//    word-break: break-all;
-  }
+    td, th {
+      padding:.3em 1em;
+    }
+    pre {
+      font: inherit;
+    }
   }
   .Previews {
     display: flex;

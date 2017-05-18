@@ -43,13 +43,13 @@ const CroppedThumb = ({ thumb, title }) => (
 const Frame = () => <rect className="Frame" width="100%" height="100%" />
 const thumbStyles = [CroppedThumb, FullThumbWithCropBox, FullThumb]
 
-let Photo = ({ onClick, filename, thumbStyle = 0, ...props }) => {
+let Photo = ({ onClick, original, thumbStyle = 0, ...props }) => {
   const Thumb = thumbStyles[thumbStyle]
   return (
     <div className="Photo" onClick={onClick}>
       <Thumb {...props} />
       <small className="title">
-        {filename.replace(/^.*\//, '')}
+        {original.replace(/^.*\//, '')}
       </small>
     </div>
   )

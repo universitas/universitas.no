@@ -20,7 +20,7 @@ PANEL_STATES	src/javascripts/components/EditImage/reducers.js	/^const PANEL_STAT
 PhotoCropApp	src/javascripts/PhotoCropApp.js	/^const PhotoCropApp = () => {$/;"	r
 PhotoList	src/javascripts/components/PhotoList/PhotoList.js	/^const PhotoList = connect(mapImageListStateToProps)(List)$/;"	r
 PhotoListView	src/javascripts/PhotoListView.js	/^const PhotoListView = () => {$/;"	r
-Previews	src/javascripts/components/CropBox/Previews.js	/^const Previews = ({ image, aspects = [2], flexDirection = 'row' }) => ($/;"	r
+Previews	src/javascripts/components/CropBox/Previews.js	/^const Previews = ({ image, src, aspects = [2], flexDirection = 'row' }) => ($/;"	r
 Spinner	src/javascripts/components/EditImage/EditImage.js	/^const Spinner = () => <div className="spinner">Loading...<\/div>$/;"	r
 Thumb	src/javascripts/components/PhotoList/PhotoList.js	/^  const Thumb = thumbStyles[thumbStyle]$/;"	r
 bindEventToImageFiles	src/javascripts/PhotoCropApp.js	/^const bindEventToImageFiles = () => {$/;"	r
@@ -77,6 +77,7 @@ outerPath	src/javascripts/components/CropBox/Overlay.js	/^  const outerPath = 'M
 patch_data	src/javascripts/containers/actions.js	/^  const patch_data = transformImageData2Api(data)$/;"	r
 patch_request	src/javascripts/containers/actions.js	/^  const patch_request = {$/;"	r
 pending	src/javascripts/components/CropBox/CropBox.js	/^    const pending = cropping_method === 1$/;"	r
+prepare	src/javascripts/components/EditImage/EditImage.js	/^const prepare = val => {$/;"	r
 queryString	src/javascripts/components/PhotoList/actions.js	/^  const queryString = Object.entries(attrs)$/;"	r
 ratioOf	src/javascripts/components/CropBox/Previews.js	/^  const ratioOf = (low, val, high) =>$/;"	r
 regex	src/javascripts/foot.js	/^  const regex = \/(^[^<]{0,10}[^\\s<]*)\/$/;"	r
@@ -87,7 +88,6 @@ round	src/javascripts/components/CropBox/reducers.js	/^const round = num => Numb
 searchInputOnChange	src/javascripts/components/PhotoList/SearchField.js	/^  const searchInputOnChange = e => {$/;"	r
 startMoveCenter	src/javascripts/components/CropBox/Overlay.js	/^  const startMoveCenter = startDragHandle([0, 0, 0, 0, 1])$/;"	r
 startMoveCropBox	src/javascripts/components/CropBox/Overlay.js	/^  const startMoveCropBox = startDragHandle([1, 1, 1, 1, 0])$/;"	r
-stringify	src/javascripts/components/EditImage/EditImage.js	/^const stringify = val =>$/;"	r
 style	src/javascripts/components/EditImage/EditImage.js	/^  const style = expanded ? { flex: 3 } : { flex: 1 }$/;"	r
 style	src/javascripts/containers/FrontpageCrop.js	/^const style = {$/;"	r
 styles	src/javascripts/components/CropBox/Previews.js	/^  const styles = getStyles(src, crop_box, size[0] \/ size[1], aspect)$/;"	r

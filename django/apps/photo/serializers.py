@@ -4,7 +4,6 @@ from rest_framework.exceptions import ValidationError
 from .cropping.boundingbox import CropBox
 from django_filters.rest_framework import DjangoFilterBackend
 import json
-from pathlib import Path
 
 
 class jsonDict(dict):
@@ -33,14 +32,14 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'id',
             'url',
-            'filename',
             'created',
             'cropping_method',
             'method',
             'size',
+            'original',
             'thumb',
             'small',
-            'src',
+            'large',
             'description',
             'usage',
             '_imagehash',
@@ -48,13 +47,13 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
             'is_profile_image',
         ]
         read_only_fields = [
-            'source_file',
+            'original',
         ]
 
     thumb = serializers.SerializerMethodField()
-    filename = serializers.SerializerMethodField()
+    original = serializers.SerializerMethodField()
     small = serializers.SerializerMethodField()
-    src = serializers.SerializerMethodField()
+    large = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
     method = serializers.SerializerMethodField()
     usage = serializers.SerializerMethodField()
@@ -66,23 +65,23 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
     def get_method(self, instance):
         return instance.get_cropping_method_display()
 
-    def get_filename(self, instance):
-        return Path(instance.source_file.name).name
-
     def get_size(self, instance):
         return [instance.full_width, instance.full_height]
 
-    def get_small(self, instance):
-        return self._context['request'].build_absolute_uri(
-            instance.small.url)
+    def _build_uri(self, url):
+        return self._context['request'].build_absolute_uri(url)
+
+    def get_original(self, instance):
+        return self._build_uri(instance.original.url)
 
     def get_thumb(self, instance):
-        return self._context['request'].build_absolute_uri(
-            instance.preview.url)
+        return self._build_uri(instance.preview.url)
 
-    def get_src(self, instance):
-        return self._context['request'].build_absolute_uri(
-            instance.large.url)
+    def get_small(self, instance):
+        return self._build_uri(instance.small.url)
+
+    def get_large(self, instance):
+        return self._build_uri(instance.large.url)
 
 
 class ImageFileViewSet(viewsets.ModelViewSet):
