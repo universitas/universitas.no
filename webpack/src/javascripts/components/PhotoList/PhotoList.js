@@ -5,25 +5,69 @@ import { updateSearch, fetchImages } from './actions'
 import { selectImage } from '../EditImage/actions'
 import './photolist.scss'
 
-const Thumb = ({ src, onClick, title }) => (
-  <div className="Thumb" onClick={onClick}>
-    <img className="preview" src={src} title={title} />
-    <small className="title">{title.replace(/^.*\//, '')}</small>
-  </div>
+const FullThumbWithCropBox = ({ small, title, size, crop_box }) => {
+  const { left, x, right, top, y, bottom } = crop_box
+  const [width, height] = size
+  const boxPath = `M0, 0H1V1H0Z M${left}, ${top}V${bottom}H${right}V${top}Z`
+  return (
+    <svg className="Thumb" viewBox={`0 0 ${width} ${height}`}>
+      <image xlinkHref={small} width="100%" height="100%" />
+      <svg
+        viewBox="0 0 1 1"
+        preserveAspectRatio="none"
+        height="100%"
+        width="100%"
+      >
+        <path className="cropOverlay" fillRule="evenodd" d={boxPath} />
+
+      </svg>
+      <Frame />
+    </svg>
+  )
+}
+
+const FullThumb = ({ small, title, size }) => (
+  <svg className="Thumb" viewBox={`0 0 ${size[0]} ${size[1]}`}>
+    <image xlinkHref={small} width="100%" height="100%" />
+    <Frame />
+  </svg>
 )
-const mapThumbStateToProps = ({ images }, { id }) => ({
-  src: images[id].preview,
-  title: images[id].source_file,
+
+const CroppedThumb = ({ thumb, title }) => (
+  <svg className="Thumb" viewBox={'0 0 1 1'}>
+    <image xlinkHref={thumb} height="100%" />
+    <Frame />
+  </svg>
+)
+
+const Frame = () => <rect className="Frame" width="100%" height="100%" />
+const thumbStyles = [CroppedThumb, FullThumbWithCropBox, FullThumb]
+
+let Photo = ({ onClick, original, thumbStyle = 0, ...props }) => {
+  const Thumb = thumbStyles[thumbStyle]
+  return (
+    <div className="Photo" onClick={onClick}>
+      <Thumb {...props} />
+      <small className="title">
+        {original.replace(/^.*\//, '')}
+      </small>
+    </div>
+  )
+}
+const mapImageStatetoProps = ({ searchField, images }, { id }) => ({
+  thumbStyle: searchField.thumbStyle,
+  ...images[id],
 })
-const mapThumbDispatchToProps = (dispatch, { id }) => ({
+
+const mapImageDispatchToProps = (dispatch, { id }) => ({
   onClick: e => dispatch(selectImage(id)),
 })
 
-const ImageThumb = connect(mapThumbStateToProps, mapThumbDispatchToProps)(Thumb)
+Photo = connect(mapImageStatetoProps, mapImageDispatchToProps)(Photo)
 
 const List = ({ images, style = {} }) => (
   <section className="PhotoList" style={style}>
-    {images.map(img => <ImageThumb key={img} id={img} />)}
+    {images.map(img => <Photo key={img} id={img} />)}
   </section>
 )
 

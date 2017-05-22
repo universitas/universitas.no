@@ -2,8 +2,8 @@
 
 from django.contrib import admin
 from .models import StoryModule, FrontpageStory, StaticModule
+from apps.photo.admin import ThumbAdmin
 from autocomplete_light.forms import modelform_factory
-from sorl.thumbnail.admin import AdminImageMixin
 
 
 class StoryModuleInline(admin.TabularInline):
@@ -13,7 +13,7 @@ class StoryModuleInline(admin.TabularInline):
 
 
 @admin.register(FrontpageStory)
-class FrontpageStoryAdmin(AdminImageMixin, admin.ModelAdmin):
+class FrontpageStoryAdmin(admin.ModelAdmin, ThumbAdmin):
     form = modelform_factory(FrontpageStory, exclude=())
     form.Meta.widgets = {
         'lede': admin.widgets.AdminTextareaWidget(attrs={'rows': 3})
@@ -25,12 +25,11 @@ class FrontpageStoryAdmin(AdminImageMixin, admin.ModelAdmin):
         'kicker',
         'headline',
         'lede',
-        # 'imagefile',
         'story',
-        'thumbnail',
+        'cropped_thumb',
         # 'placements',
     )
-    readonly_fields = ['thumbnail']
+    readonly_fields = ['cropped_thumb']
 
     list_editable = (
         'headline',
@@ -65,9 +64,6 @@ class StoryModuleAdmin(admin.ModelAdmin):
         'columns',
         'height',
     )
-    # inlines = (
-    #     FrontpageStoryInline,
-    # )
 
 
 @admin.register(StaticModule)

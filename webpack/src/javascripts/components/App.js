@@ -3,7 +3,6 @@ import React from 'react'
 import './app.scss'
 
 const App = () => {
-  const style = {}
   return (
     <section className="App">
       <section className="controlsPanel">
@@ -11,11 +10,11 @@ const App = () => {
         <ResultsPanel />
       </section>
       <section className="mainPanel">
-        <EditImage style={{ flex: 1 }} />
+        <EditImage />
         <PhotoList style={{ flex: 2 }} />
       </section>
     </section>
   )
 }
 
-export { App }
+export default App

@@ -22,7 +22,7 @@ for arg; do case $arg in
   test    ) docker-compose run --rm -u django web pytest --create-db ;;
   testf   ) docker-compose run --rm -u django web pytest -f -x --ff ;;
 
-  flower  ) docker-compose run --rm -p 5555:5555 celery flower ;;
+  flower  ) docker-compose run --rm -d -p 5555:5555 celery flower ;;
   jupyter ) start_jupyter ;;
 
   fake    ) docker-compose run --rm web django-admin fake_content -c10 -s50 ;;
@@ -33,7 +33,7 @@ for arg; do case $arg in
   upd     ) docker-compose up -d ;;
   down    ) docker-compose down ;;
   pull    ) docker-compose pull ;;
-  logs    ) docker-compose logs -f ;;
+  logs    ) docker-compose logs --tail=50 -f ;;
 
   tags    ) cd django && ctags -R && cd ../webpack && ctags -R src && echo "collected ctags" ;;
 
@@ -66,7 +66,7 @@ load_db() {
 
   # loading data
   docker-compose down
-  docker-compose run --rm django load_db
+  docker-compose run --rm web load_db
 
   # cleanup
   rm django/dbdump.sql
@@ -90,8 +90,8 @@ enable_service() {
 
 start_jupyter() {
   echo "starting jupyter on http://localhost:8888"
-  ( sleep 6; sensible-browser http://localhost:8888 &> /dev/null)&
-  docker-compose run --rm -p 8888:8888 web jupyter
+  ( sleep 10; sensible-browser http://localhost:8888 &> /dev/null)&
+  docker-compose run --rm -d -p 8888:8888 web jupyter
 }
 
 build_django() {

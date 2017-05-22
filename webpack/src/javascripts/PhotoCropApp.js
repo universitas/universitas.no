@@ -26,7 +26,7 @@ const bindEventToImageFiles = () => {
   })
 }
 
-export default () => {
+const PhotoCropApp = () => {
   const domNode = document.getElementById('PhotoCrop')
   if (domNode) {
     bindEventToImageFiles()
@@ -38,3 +38,4 @@ export default () => {
     }
   }
 }
+PhotoCropApp()

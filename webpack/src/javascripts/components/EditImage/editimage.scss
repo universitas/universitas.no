@@ -3,14 +3,22 @@ $margin: .5rem;
   svg {
     display: block;
   }
+  pointer-events: all;
+  background: white;
   display: flex;
   flex-direction: column;
   .ImageData {
     flex: 0;
     font-size: smaller;
+    td, th {
+      padding:.3em 1em;
+    }
     td {
-//    word-break: break-all;
-  }
+      user-select: auto;
+    }
+    pre {
+      font: inherit;
+    }
   }
   .Previews {
     display: flex;
@@ -30,7 +38,7 @@ $margin: .5rem;
   .Buttons {
     display: flex;
     justify-content: space-between;
-    align-self: center;
+    align-self: flex-start;
     button {
       cursor: pointer;
       background: #ddd;

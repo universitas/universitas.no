@@ -63,13 +63,14 @@ PreviewImg.propTypes = {
   style: PropTypes.object,
 }
 
-const Previews = ({ image, aspects = [2], flexDirection = 'row' }) => (
+const Previews = ({ image, src, aspects = [2], flexDirection = 'row' }) => (
   <div className="Previews" style={{ flexDirection }}>
     {aspects.map((aspect, i) => (
       <PreviewImg
         key={i}
         aspect={aspect}
         style={{ flex: flexDirection === 'row' ? aspect : 1 / aspect }}
+        src={src}
         {...image}
       />
     ))}

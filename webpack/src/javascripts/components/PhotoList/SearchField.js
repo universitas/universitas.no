@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
-import { searchAction } from './actions'
+import { searchAction, toggleThumbStyle } from './actions'
 
-let SearchField = ({ text, searchChanged, fetching }) => {
+let SearchField = ({ text, searchChanged, toggleThumbStyle, fetching }) => {
   const clearButtonOnClick = e => {
     searchChanged('')
     searchInput.focus()
@@ -27,6 +27,9 @@ let SearchField = ({ text, searchChanged, fetching }) => {
       <button disabled={!text} onClick={clearButtonOnClick}>
         Clear
       </button>
+      <button onClick={toggleThumbStyle}>
+        Style
+      </button>
     </section>
   )
 }
@@ -34,6 +37,7 @@ SearchField = connect(
   store => store.searchField,
   dispatch => ({
     searchChanged: text => dispatch(searchAction(text)),
+    toggleThumbStyle: e => dispatch(toggleThumbStyle()),
   })
 )(SearchField)
 

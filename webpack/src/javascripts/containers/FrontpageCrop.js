@@ -1,25 +1,43 @@
 /* eslint-env browser */
 import React from 'react'
 import { EditImage } from '../components'
-import { Provider } from 'react-redux'
-import { rootStore } from './store'
-export { imageClickHandler } from './store'
+import { connect, Provider } from 'react-redux'
+import { rootStore, imageClickHandler } from './store'
 
 const style = {
   position: 'fixed',
   top: 0,
   left: 0,
-  padding: '1em',
-  width: '50vw',
+  width: '100vw',
   height: '100vh',
+  display: 'flex',
   zIndex: 1000,
-  background: 'white',
+  background: 'none',
+  pointerEvents: 'none',
 }
 
+const empty = {
+  pointerEvents: 'none',
+  flex: 2,
+}
+
+const mapStateToProps = state => ({
+  active: state.cropWidget.id != 0,
+})
+
+const CropBox = connect(mapStateToProps)(
+  ({ active }) =>
+    active
+      ? <section className="FrontpageCrop" style={style}>
+          <EditImage />
+          <div style={empty} />
+        </section>
+      : null
+)
 const FrontpageCrop = () => (
   <Provider store={rootStore}>
-    <EditImage style={style} />
+    <CropBox />
   </Provider>
 )
 
-export { FrontpageCrop }
+export { FrontpageCrop, imageClickHandler }

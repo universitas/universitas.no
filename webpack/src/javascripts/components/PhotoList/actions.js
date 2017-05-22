@@ -10,6 +10,12 @@ export const searchChanged = text => ({
   payload: { text },
 })
 
+export const TOGGLE_THUMB_STYLE = 'TOGGLE_THUMB_STYLE'
+export const toggleThumbStyle = () => ({
+  type: TOGGLE_THUMB_STYLE,
+  payload: {},
+})
+
 export const TOGGLE_IMAGE_TYPE = 'TOGGLE_IMAGE_TYPE'
 export const toggleImageType = option => ({
   type: TOGGLE_IMAGE_TYPE,
@@ -36,7 +42,7 @@ export const searchAction = text => (dispatch, getState) => {
   // update search in store and queue api call to wikipedia
   dispatch(searchChanged(text))
   // debounced api call
-  debouncedDoSearch(dispatch, { search: text, limit: 100 })
+  debouncedDoSearch(dispatch, { search: text })
 }
 
 export const nextAction = () => (dispatch, getState) => {
@@ -63,6 +69,7 @@ const doSearch = (dispatch, attrs = {}) => {
     dispatch(clearSearch())
     return
   }
+  attrs.limit = 20
   const url = buildUrl(attrs)
   fetchImages(dispatch, url)
 }
@@ -70,6 +77,10 @@ const doSearch = (dispatch, attrs = {}) => {
 const fetchImages = (dispatch, url) => {
   dispatch(fetchingImages(url))
   fetch(url, { credentials: 'same-origin' })
+    .then(response => {
+      console.log(response)
+      return response
+    })
     .then(response => response.json())
     .then(data => {
       data.results.forEach(img => dispatch(addImage(img)))
@@ -78,9 +89,7 @@ const fetchImages = (dispatch, url) => {
     .catch(console.error)
 }
 
-const debouncedDoSearch = debounce(doSearch, DEBOUNCE_TIMEOUT, {
-  maxWait: DEBOUNCE_TIMEOUT * 2,
-})
+const debouncedDoSearch = debounce(doSearch, DEBOUNCE_TIMEOUT)
 
 const makePayload = ({ results, ...data }) => ({
   images: results.map(r => r.id),
