@@ -13,6 +13,9 @@ $margin: .5rem;
     td, th {
       padding:.3em 1em;
     }
+    td {
+      user-select: auto;
+    }
     pre {
       font: inherit;
     }
