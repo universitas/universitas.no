@@ -6,8 +6,8 @@ import os
 from datetime import date
 from django.utils.timezone import datetime
 from django.core.files.base import ContentFile
-from apps.issues.models import (PrintIssue, Issue)
-from apps.issues.models import extract_pdf_text
+from apps.issues.models import (
+    PrintIssue, Issue, pdf_to_text, pdf_to_image, error_image)
 
 
 def get_contentfile(filepath):
@@ -40,13 +40,23 @@ def test_create_issue():
 
 
 def test_extract_page_text(fixture_pdf):
-    with open(fixture_pdf, 'rb') as fp:
-        data = fp.read()
-    page_one_text = extract_pdf_text(data, 1)
+    pdf = get_contentfile(fixture_pdf)
+    page_one_text = pdf_to_text(pdf, 1)
     assert page_one_text == 'Page 1'
-    all_text = extract_pdf_text(data, 1, 4)
+    all_text = pdf_to_text(pdf, 1, 4)
     assert 'Page 1' in all_text
     assert 'Page 4' in all_text
+
+
+def test_create_cover(fixture_pdf):
+    # valid pdf
+    pdf = get_contentfile(fixture_pdf)
+    cover = pdf_to_image(pdf)
+    assert cover.size == (495, 701)
+
+    # invalid pdf
+    cover = error_image('foo', 200, 400)
+    assert cover.size == (200, 400)
 
 
 @pytest.mark.django_db
@@ -81,6 +91,6 @@ def test_create_printissue(fixture_pdf, settings, tempdir):
     print_issue.full_clean()
 
     # Create thumbnail of cover page
-    print_issue.get_thumbnail()
+    print_issue.get_cover_page()
     assert print_issue.cover_page.path.endswith(
         '/covers/fixture_universitas.jpg')

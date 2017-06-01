@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from .setting_helpers import Environment, joinpath as path
 from .logging_settings import LOGGING  # NOQA
 
+
 env = Environment(strict=False)
 redis_host = env.redis_host or 'redis'
 redis_port = env.redis_port or 6379
@@ -13,6 +14,7 @@ TEMPLATE_DEBUG = DEBUG
 SITE_URL = env.site_url or 'www.example.com'
 SECRET_KEY = env.secret_key
 ALLOWED_HOSTS = env.allowed_hosts.split(',') or '*'
+SILENCED_SYSTEM_CHECKS = ["1_8.W001"]
 
 # DJANGO REST FRAMEWORK
 REST_FRAMEWORK = {
@@ -64,6 +66,7 @@ INSTALLED_APPS = [
     'apps.legacy_db',
     'apps.adverts',
     'apps.search',
+    'apps.prodsys',
 ]
 
 # THIRD PARTY APPS

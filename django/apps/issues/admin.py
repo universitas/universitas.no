@@ -52,9 +52,8 @@ class IssueAdmin(admin.ModelAdmin):
 
     def pdf_thumb(self, pdf, width=250, height=100):
         try:
-            source = pdf.get_thumbnail()
             thumb = get_thumbnail(
-                source,
+                pdf.get_cover_page(),
                 '%sx%s' % (width, height),
                 crop='top',
             )

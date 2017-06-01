@@ -1,104 +1,253 @@
+""" Replacement for legacy prodsys app. """
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+import diff_match_patch
+
+from apps.photo.models import ImageFile
+from apps.stories.models import StoryType
+from apps.issues.models import Issue
+from apps.contributors.models import Contributor
+import logging
+logger = logging.getLogger(__name__)
 
 
-class ProdsakQueryset(models.QuerySet):
-
-    def single(self):
-        latest = self.extra(where=[
-            '(prodsak_id, version_no) IN '
-            '(SELECT prodsak_id, MAX(version_no) '
-            'FROM prodsak GROUP BY prodsak_id) '
-        ])
-        return latest
-
-    def active(self):
-        return self.exclude(produsert=Prodsak.ARCHIVED)
-
-
-class ProdsakManager(models.Manager):
-
-    def get_queryset(self):
-        return ProdsakQueryset(self.model, using=self._db)
-
-    def single(self):
-        return self.get_queryset().single()
-
-    def active(self):
-        return self.get_queryset().active().order_by('-prodsak_id').single()
-
-
-class Prodsak(models.Model):
-
-    DRAFT = 0
-    OLD_DRAFT = 1
-    READY_FOR_PRINT = 3
-    IMPORTED_TO_INDESIGN = 4
-    EXPORTED_FROM_INDESIGN = 6
-    READY_FOR_WEB = 7
-    PUBLISHED_ON_WEB = 8
-    ARCHIVED = 9
-
-    PRODUSERT_CHOICES = (
-        (DRAFT, 'i arbeid',),
-        (OLD_DRAFT, 'overligger',),
-        (READY_FOR_PRINT, 'til desk',),
-        (IMPORTED_TO_INDESIGN, 'gammel desk',),
-        (EXPORTED_FROM_INDESIGN, 'edit2web',),
-        (READY_FOR_WEB, 'til web',),
-        (PUBLISHED_ON_WEB, 'gammel web',),
-        (ARCHIVED, 'slettet',),
+class BylineCredit:
+    BY = 'by'
+    TEXT = 'text'
+    PHOTO = 'photo'
+    VIDEO = 'video'
+    ILLUSTRATION = 'illustration'
+    TRANSLATION = 'translation'
+    GRAPHICS = 'graphics'
+    CHOICES = (
+        (BY, _('by')),  # used for opinion pieces
+        (TEXT, _('text')),  # used for journalism
+        (PHOTO, _('photo')),
+        (VIDEO, _('video')),
+        (ILLUSTRATION, _('illustration')),
+        (TRANSLATION, _('translation')),
+        (GRAPHICS, _('graphics')),
     )
 
-    FLAGG_CHOICES = (
-        (1, 'Journalist'),
-        (2, 'Mellomleder'),
-        (3, 'Redaksjonsleder'),
-        (4, 'Redaktør'),
+
+class StoryStatus:
+    DRAFT = 10
+    WORK_IN_PROGRESS = 20
+    READY_FOR_PRINT = 30
+    PRINT_DESK = 40
+    READY_FOR_WEB = 50
+    PUBLISHED_WEB = 60
+    SHELVED = 90
+    DELETED = 100
+    CHOICES = (
+        (DRAFT, _('draft')),
+        (WORK_IN_PROGRESS, _('work in progress')),
+        (READY_FOR_PRINT, _('ready for print layout')),
+        (PRINT_DESK, _('print layout in progress')),
+        (READY_FOR_WEB, _('ready for web publishing')),
+        (PUBLISHED_WEB, _('published on web site')),
+        (SHELVED, _('shelved')),
+        (DELETED, _('deleted')),
     )
 
-    objects = ProdsakManager()
 
-    prodsak_id = models.IntegerField(editable=False)
-    arbeidstittel = models.CharField(max_length=200, blank=True)
-    journalist = models.CharField(max_length=50, blank=True)
-    tekst = models.TextField(blank=True)
-    kommentar = models.TextField(blank=True)
-    mappe = models.CharField(max_length=100, blank=True)
-    flagg = models.IntegerField(blank=True, null=True, choices=FLAGG_CHOICES)
-    produsert = models.IntegerField(
-        blank=True, null=True, choices=PRODUSERT_CHOICES)
-    dato = models.DateTimeField()
-    version_no = models.IntegerField(editable=False,)
-    version_date = models.DateTimeField(editable=False, blank=True, null=True)
-    timelock = models.DateTimeField(editable=False, blank=True, null=True)
+class ProdStory(models.Model):
+    """ Story in Production """
+
+    STATUS = StoryStatus
+
+    status = models.PositiveSmallIntegerField(
+        default=StoryStatus.DRAFT,
+        verbose_name=_('status'),
+        help_text=_('status'),
+        choices=StoryStatus.CHOICES,
+    )
+    working_title = models.CharField(
+        default='new story',
+        max_length=200,
+        verbose_name=_('working_title'),
+        help_text=_('working_title'),
+    )
+    content = models.TextField(
+        verbose_name=_('content'),
+        help_text=_('raw markup content'),
+    )
+    comments = models.TextField(
+        verbose_name=_('comments'),
+        help_text=_('comments'),
+    )
+    story_type = models.ForeignKey(
+        StoryType,
+        verbose_name=_('story_type'),
+        help_text=_('story_type'),
+    )
+    issue = models.ForeignKey(
+        Issue,
+        null=True,
+        related_name='stories',
+        verbose_name=_('issue'),
+        help_text=_('issue'),
+    )
 
     class Meta:
-        managed = False
-        db_table = 'prodsak'
-        verbose_name = _('prodsys sak')
-        verbose_name_plural = _('prodsys saker')
+        verbose_name = _('prodsys story')
+        verbose_name_plural = _('prodsys stories')
+        permissions = [
+            ('change_status', _('can change story status')),
+        ]
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        versions = Prodsak.objects.filter(prodsak_id=self.prodsak_id)
-        versions.update(produsert=self.produsert)
+
+class StoryPatch(models.Model):
+    story = models.ForeignKey(
+        ProdStory,
+        related_name='patches',
+        verbose_name=_('story'),
+        help_text=_('story'),
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_('created'),
+        help_text=_('created'),
+    )
+    contributor = models.ForeignKey(
+        Contributor,
+        null=True,
+        default=None,
+        verbose_name=_('contributor'),
+        help_text=_('contributor'),
+    )
+    patch = models.TextField(
+        verbose_name=_('patch'),
+        help_text=_('patch'),
+    )
+    reverse_patch = models.TextField(
+        default='',
+        verbose_name=_('reverse_patch'),
+        help_text=_('reverse_patch'),
+    )
+    applied = models.BooleanField(
+        default=False,
+        verbose_name=_('applied'),
+        help_text=_('applied'),
+    )
+
+    def apply(self, save=True, original_content=None):
+        """apply patch to story content"""
+        df = diff_match_patch.diff_match_patch()
+        if original_content is None:
+            original_content = self.story.content
+        patches = df.patch_fromText(self.patch)
+        patched_content, results = df.patch_apply(patches, original_content)
+        if not all(results):
+            logger.warn('Incomplete patch: %s %s' % (results, self.patch))
+        if not self.reverse_patch:
+            rev_patches = df.patch_make(patched_content, original_content)
+            self.reverse_patch = df.patch_toText(rev_patches)
+        if save:
+            self.applied = True
+            self.story.content = patched_content
+            self.story.save(update_fields=['content'])
+            self.save()
+        return patched_content
+
+    def unapply(self, original_content=None):
+        """unapply patch to story content"""
+        df = diff_match_patch.diff_match_patch()
+        if original_content is None:
+            original_content = self.story.content
+        patches = df.patch_fromText(self.reverse_patch)
+        patched_content, results = df.patch_apply(patches, original_content)
+        if not all(results):
+            logger.warn('Incomplete patch: %s %s' % (results,
+                                                     self.reverse_patch))
+        return patched_content
+
+    @classmethod
+    def create_from_story(cls, story, patched_content, applied=False):
+        df = diff_match_patch.diff_match_patch()
+        original_content = story.content
+        patch = df.patch_toText(
+            df.patch_make(original_content, patched_content))
+        obj = cls(
+            story=story,
+            patch=patch,
+            applied=applied,
+        )
+        obj.save()
+        return obj
+
+
+class ProdImage(models.Model):
+
+    """ Image with caption """
+
+    priority = models.PositiveSmallIntegerField(
+        default=1,
+        verbose_name=_('priority'),
+        help_text=_('How prominent this image should be in the layout.'),
+    )
+    position = models.PositiveSmallIntegerField(
+        default=0,
+        verbose_name=_('position'),
+        help_text=_('Where this image should be positioned in the layout. '
+                    '0 is used for header images, other images that should '
+                    'be grouped together should have the same position value'
+                    )
+    )
+    image = models.ForeignKey(
+        ImageFile,
+        verbose_name=_('image'),
+        help_text=_('image'),
+    )
+    story = models.ForeignKey(
+        ProdStory,
+        related_name='images',
+        verbose_name=_('story'),
+        help_text=_('story'),
+    )
+    caption = models.CharField(
+        max_length=1000,
+        verbose_name=_('caption'),
+        help_text=_('caption'),
+    )
+
+    class Meta:
+        verbose_name = _('prodsys image')
+        verbose_name_plural = _('prodsys images')
+
+
+class ProdByline(models.Model):
+
+    """ Credits the people who created content for a story. """
+
+    story = models.ForeignKey(ProdStory)
+    contributor = models.ForeignKey(Contributor)
+    index = models.IntegerField(
+        default=1,
+        verbose_name=_('index'),
+        help_text=_('internal ordering of bylines'),
+    )
+    credit = models.CharField(
+        choices=BylineCredit.CHOICES,
+        default=BylineCredit.BY,
+        max_length=32,
+        verbose_name=_('credit'),
+        help_text=_('what this person contributed with'),
+    )
+    description = models.CharField(
+        max_length=300,
+        blank=True,
+        verbose_name=_('description'),
+        help_text=_('person\'s title, qualification or location'),
+    )
+
+    class Meta:
+        verbose_name = _('ProdByline')
+        verbose_name_plural = _('Bylines')
 
     def __str__(self):
-        return '{s.prodsak_id}({s.version_no}) {s.arbeidstittel}'.format(
-            s=self)
-
-
-class Prodbilde(models.Model):
-    prodbilde_id = models.IntegerField(primary_key=True)
-    prodsak_id = models.IntegerField(blank=True, null=True)
-    bildefil = models.TextField(blank=True)
-    bildetekst = models.TextField(blank=True)
-    kommentar = models.TextField(blank=True)
-    prioritet = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'prodbilde'
-        verbose_name = _('prodsys bilde')
-        verbose_name_plural = _('prodsys bilder')
+        return '@bl: {credit}: {full_name}{title})'.format(
+            credit=self.get_credit_display(),
+            full_name=self.contributor,
+            title='' if not self.title else f', {self.title}',
+        )

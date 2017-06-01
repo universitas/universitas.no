@@ -13,7 +13,7 @@ from apps.photo.views import PhotoAppView
 from apps.stories.feeds import LatestStories
 from autocomplete_light import urls as autocomplete_light_urls
 from .redirect_urls import urlpatterns as redirect_urls
-from .api_urls import urlpatterns as api_urls
+from api.urls import urlpatterns as api_urls
 # from watson import urls as watson_urls
 
 from django.views.generic import TemplateView

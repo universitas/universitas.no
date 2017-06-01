@@ -281,8 +281,13 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
 
     @classmethod
     def upload_folder(cls):
-        issue = current_issue().issue_tuple()
-        return os.path.join(str(issue.date.year), str(issue.number))
+        try:
+            issue = current_issue()
+            year, number = issue.year, issue.number
+        except Exception:
+            year = timezone.now().year
+            number = '0'
+        return f'{year}/{number}'
 
     @classmethod
     def slugify(cls, filename):

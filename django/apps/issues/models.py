@@ -17,6 +17,7 @@ from pathlib import Path
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+from django.conf import settings
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch.dispatcher import receiver
 from django.core.files.base import ContentFile
@@ -35,17 +36,39 @@ logger = logging.getLogger('universitas')
 IssueTuple = collections.namedtuple('IssueTuple', ['number', 'date'])
 
 
+class BrokenImage:
+    """If thumbnail fails"""
+    url = settings.STATIC_URL + 'admin/img/icon-no.svg'
+
+    def read(self):
+        return b''
+
+
 def upload_pdf_to(instance, filename):
     dirname = uuid.uuid1().hex
     return os.path.join('pdf', dirname, filename)
 
 
-def extract_pdf_text(pdf_data, first_page, last_page=None):
+def pdf_number_of_pages(pdf):
+    try:
+        pdf.open()
+        reader = PyPDF2.PdfFileReader(pdf, strict=False)
+        return reader.numPages
+    finally:
+        pdf.close()
+
+
+def pdf_to_text(pdf, first_page=1, last_page=None):
     """Extracts text from a page in the pdf"""
     if last_page is None:
         last_page = first_page
-    args = ['pdftotext', '-f', first_page, '-l', last_page, '-', '-']
+    args = ['pdftotext', '-raw', '-f', first_page, '-l', last_page, '-', '-']
     args = [str(a) for a in args]
+    try:
+        pdf.open()
+        pdf_data = pdf.read()
+    finally:
+        pdf.close()
     text = subprocess.run(
         args, check=True, stdout=subprocess.PIPE, input=pdf_data,
     ).stdout.decode()
@@ -54,31 +77,64 @@ def extract_pdf_text(pdf_data, first_page, last_page=None):
     return text
 
 
-def pdf_not_found(pdf_name):
-    """Creates an error frontpage image"""
-    img = WandImage(width=300, height=500,)
-    msg = 'ERROR:\n{}\nnot found on disk'.format(pdf_name)
+def pdf_to_image(pdf, page=1, resolution=60, file_format='jpeg'):
+    """Creates a image file from pdf file"""
+    try:
+        pdf.open()
+        reader = PyPDF2.PdfFileReader(pdf, strict=False)
+        page_content = reader.getPage(page - 1)
+    finally:
+        pdf.close()
+    writer = PyPDF2.PdfFileWriter()
+    writer.addPage(page_content)
+    outputStream = BytesIO()
+    writer.write(outputStream)
+    outputStream.seek(0)
+    # put content of page in a new image
+    foreground = WandImage(
+        blob=outputStream,
+        format='pdf',
+        resolution=resolution,
+    )
+    # white background
+    background = WandImage(
+        width=foreground.width,
+        height=foreground.height,
+        background=Color('white')
+    )
+    background.format = file_format
+    background.composite(foreground, 0, 0)
+    return background
+
+
+def error_image(msg, width, height):
+    """Creates an error frontpage"""
+    img = WandImage(width=width, height=height)
     with Drawing() as draw:
         draw.text_alignment = 'center'
         draw.text(img.width // 2, img.height // 3, msg)
         draw(img)
-    return img
+    background = WandImage(
+        width=img.width,
+        height=img.height,
+        background=Color('white'),
+    )
+    background.format = 'jpeg'
+    background.composite(img, 0, 0)
+    return background
 
 
 def current_issue():
-    """Return an IssueTuple for the current issue."""
-    today = timezone.now().astimezone().date()
+    """Return the current or upcoming issue"""
     try:
         latest_issue = Issue.objects.latest_issue()
     except Issue.DoesNotExist:
-        current_issue = Issue()
+        return Issue(publication_date=today())
     else:
-        if latest_issue.publication_date == today:
-            current_issue = latest_issue
+        if latest_issue.publication_date == today():
+            return latest_issue
         else:
-            current_issue = Issue.objects.next_issue()
-
-    return current_issue
+            return Issue.objects.next_issue()
 
 
 def today():
@@ -156,18 +212,22 @@ class Issue(models.Model, Edit_url_mixin):
         return '{}'.format(self.publication_date)
 
     def save(self, *args, **kwargs):
-        self.issue_name = '{issue.number}/{issue.date.year}'.format(
-            issue=self.issue_tuple())
+        if not self.publication_date:
+            self.publication_date = today()
+        self.issue_name = f'{self.number}/{self.year}'
         return super(Issue, self).save(*args, **kwargs)
 
-    def issue_tuple(self):
-        number = self.__class__.objects.filter(
-            publication_date__year=self.publication_date.year,
-            publication_date__lt=self.publication_date
+    @property
+    def year(self):
+        return self.publication_date.year
+
+    @property
+    def number(self):
+        """Issue number for the giber year"""
+        return self.__class__.objects.filter(
+            publication_date__year=self.year,
+            publication_date__lt=self.publication_date,
         ).count() + 1
-        return IssueTuple(
-            date=self.publication_date,
-            number=number)
 
     @property
     def advert_deadline(self):
@@ -225,9 +285,8 @@ class PrintIssue(models.Model, Edit_url_mixin):
         else:
             old_self = PrintIssue()
         if self.pdf and old_self.pdf != self.pdf:
-            reader = PyPDF2.PdfFileReader(self.pdf, strict=False)
-            self.pages = reader.numPages
-            self.text = reader.getPage(0).extractText()[:200]
+            self.pages = pdf_number_of_pages(self.pdf)
+            self.text = self.get_page_text_content(1, 10)
             self.cover_page.delete()
         if not self.pdf and self.cover_page:
             self.cover_page.delete()
@@ -239,69 +298,44 @@ class PrintIssue(models.Model, Edit_url_mixin):
 
         super().save(*args, **kwargs)
 
-    def create_thumbnail(self):
-        """ Create a jpg version of the pdf frontpage """
-        def pdf_frontpage_to_image():
-            reader = PyPDF2.PdfFileReader(self.pdf.file, strict=False)
-            writer = PyPDF2.PdfFileWriter()
-            first_page = reader.getPage(0)
-            writer.addPage(first_page)
-            outputStream = BytesIO()
-            writer.write(outputStream)
-            outputStream.seek(0)
-            img = WandImage(
-                blob=outputStream,
-                format='pdf',
-                resolution=60,
-            )
-            background = WandImage(
-                width=img.width,
-                height=img.height,
-                background=Color('white'))
-            background.format = 'jpeg'
-            background.composite(img, 0, 0)
-            return background
-
-        def pdf_not_found():
-            """Creates an error frontpage"""
-            img = WandImage(width=400, height=600,)
-            msg = 'ERROR:\n{}\nnot found on disk'.format(self.pdf.name)
-            with Drawing() as draw:
-                draw.text_alignment = 'center'
-                draw.text(img.width // 2, img.height // 3, msg)
-                draw(img)
-            background = WandImage(
-                width=img.width,
-                height=img.height,
-                background=Color('white'))
-            background.format = 'jpeg'
-            background.composite(img, 0, 0)
-            return background
-
-        filename = Path(self.pdf.name).with_suffix('.jpg').name
-
-        try:
-            cover = pdf_frontpage_to_image()
-        except Exception as err:
-            cover = pdf_not_found()
-            filename = filename.replace('.jpg', '_not_found.jpg')
-            logger.error('Error: %s pdf not found: %s ' % (err, self.pdf))
-
-        blob = BytesIO()
-        cover.save(blob)
-        imagefile = ContentFile(blob.getvalue())
-        self.cover_page.save(filename, imagefile, save=True)
-
-    def get_thumbnail(self):
+    def get_cover_page(self):
         """ Get or create a jpg version of the pdf frontpage """
-        pdf = self.pdf
-        if not pdf:
-            return None
-        if self.cover_page:
-            return self.cover_page
+        if self.pdf and not self.cover_page:
+            filename = Path(self.pdf.name).with_suffix('.jpg').name
+            try:
+                cover_image = pdf_to_image(self.pdf.file, 1, 60)
+            except Exception as e:
+                raise e
+                logger.exception('Failed to create cover')
+                msg = 'ERROR:\n{}\nnot found on disk'.format(self.pdf.name)
+                cover_image = error_image(msg, 400, 600)
+                filename = filename.replace('.jpg', '_not_found.jpg')
 
-        self.create_thumbnail()
+            blob = BytesIO()
+            cover_image.save(blob)
+            self.cover_page.save(
+                filename,
+                ContentFile(blob.getvalue()),
+                save=True
+            )
         return self.cover_page
+
+    def thumbnail(self, size='x150', **options):
+        """Create thumb of frontpage"""
+        try:
+            image = self.get_cover_page()
+            return thumbnail.get_thumbnail(image, size, **options)
+        except Exception:
+            logger.exception('Cannot create thumbnail')
+            return BrokenImage()
+
+    def get_page_text_content(self, first_page=1, last_page=None):
+        """Extract the textual page content of a page in the pdf"""
+        if last_page is None:
+            last_page = first_page
+        if self.pages:
+            last_page = min(self.pages, last_page)
+        return pdf_to_text(self.pdf, first_page, last_page)
 
     def get_publication_date(self):
         dateline_regex = (
@@ -311,12 +345,7 @@ class PrintIssue(models.Model, Edit_url_mixin):
             'januar', 'februar', 'mars', 'april', 'mai', 'juni',
             'juli', 'august', 'september', 'oktober', 'november', 'desember',
         ]
-        pdf_data = self.pdf.file.read()
-        try:
-            page_2_text = extract_pdf_text(pdf_data, 2)
-        except subprocess.CalledProcessError:
-            page_2_text = ''
-
+        page_2_text = self.get_page_text_content(2)
         dateline = re.match(dateline_regex, page_2_text)
         if dateline:
             day = int(dateline.group('date'))

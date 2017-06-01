@@ -14,13 +14,6 @@ from .models import Contributor, Position, Stint
 from apps.stories.admin import BylineInline
 
 
-def byline_image(obj):
-    t = Template("{% load byline_image %}{% byline_image contributor size %}")
-    d = {"contributor": obj, "size": "80x80"}
-    html = t.render(d)
-    return mark_safe(html)
-
-
 class StintInline(admin.TabularInline,):
     model = Stint
     fields = ['position', 'start_date', 'end_date']
@@ -40,7 +33,6 @@ class ContributorAdmin(admin.ModelAdmin):
         'bylines_count',
         'verified',
         'status',
-        byline_image,
     )
 
     list_editable = (

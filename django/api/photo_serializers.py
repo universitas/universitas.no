@@ -1,7 +1,7 @@
-from .models import ImageFile
+from apps.photo.models import ImageFile
 from rest_framework import serializers, viewsets, filters
 from rest_framework.exceptions import ValidationError
-from .cropping.boundingbox import CropBox
+from apps.photo.cropping.boundingbox import CropBox
 from django_filters.rest_framework import DjangoFilterBackend
 import json
 

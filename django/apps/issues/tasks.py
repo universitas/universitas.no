@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 PAGES_GLOB = 'UNI11VER*.pdf'
 MAG_PAGES_GLOB = 'UNI12VER*.pdf'
 # OUTPUT_PDF_DIRECTORY = STAGING_ROOT / 'pdf'
-OUTPUT_PDF_NAME = 'universitas_{issue.date.year}-{issue.number}{suffix}.pdf'
+OUTPUT_PDF_NAME = 'universitas_{issue.year}-{issue.number}{suffix}.pdf'
 # Binaries
 GHOSTSCRIPT = '/usr/bin/ghostscript'
 CONVERT = '/usr/bin/convert'
@@ -217,8 +217,7 @@ def create_print_issue_pdf(
     results = []
     for suffix, globpattern in editions:
 
-        pdf_name = OUTPUT_PDF_NAME.format(
-            issue=issue.issue_tuple(), suffix=suffix)
+        pdf_name = OUTPUT_PDF_NAME.format(issue=issue, suffix=suffix)
         logger.info('Creating pdf: {}'.format(pdf_name))
         tmp_bundle_file = tempfile.NamedTemporaryFile(suffix='.pdf')
         try:

@@ -1,14 +1,15 @@
 from django.conf.urls import url, include
 from rest_framework import routers
-from apps.photo.serializers import ImageFileViewSet
+from .photo_serializers import ImageFileViewSet
+from .issue_serializers import IssueViewSet, PrintIssueViewSet
+from .contributor_serializers import ContributorViewSet
 
-
-# Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'images', ImageFileViewSet)
+router.register(r'issues', IssueViewSet)
+router.register(r'pdfs', PrintIssueViewSet)
+router.register(r'contributors', ContributorViewSet)
 
-# Wire up our API using automatic URL routing.
-# Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls',
