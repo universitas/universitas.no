@@ -73,9 +73,10 @@ module.exports = {
     stylesheets: 'stylesheets/universitas.scss',
     head: 'javascripts/head.js',
     vendor: 'javascripts/vendor.js',
-    photo_crop_app: 'javascripts/PhotoCropApp.js',
-    photo_list_view: 'javascripts/PhotoListView.js',
     foot: 'javascripts/foot.js',
+    photo_crop_app: 'react/entry/frontpagecrop.js',
+    photo_list_view: 'react/entry/photosearch.js',
+    tassen_tags_web_editor: 'react/entry/editor.js',
   },
   output: {
     path: path.join(build_dir, ''),

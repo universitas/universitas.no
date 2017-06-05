@@ -17,9 +17,11 @@
 
   <body>
     <header id="sticky-top-menu" class="fixedsticky">
-      {% cache 60 top-menu %}
-      {% universitas_menu "" %}
-      {% endcache %}
+      {% block topmenu %}
+        {% cache 60 top-menu %}
+        {% universitas_menu "" %}
+        {% endcache %}
+      {% endblock topmenu %}
     </header>
     <main>
       <div class="content-wrapper">

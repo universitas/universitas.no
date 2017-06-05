@@ -1367,6 +1367,15 @@ class StoryVideo(StoryMedia):
             height=height, width=width, host_video_id=self.host_video_id,
         )
 
+    @property
+    def link(self):
+        pk = self.host_video_id
+        if self.video_host == 'youtu':
+            return f'https://www.youtube.com/watch?v={pk}'
+        elif self.video_host == 'vimeo':
+            return f'https://vimeo.com/{pk}'
+        return ''
+
     @classmethod
     def create_from_url(cls, url, parent_story):
         """ create video object from input url """
@@ -1491,6 +1500,8 @@ class InlineLink(TimeStampedModel):
         help_text=_('Status code returned from automatic check.'),
         verbose_name=_('http status code'),
     )
+    def __str__(self):
+        return f'[{self.text}]({self.link})'
 
     def get_tag(self, ref=None):
         """ Get markup placeholder for the link """
@@ -1739,7 +1750,7 @@ class Byline(models.Model):
         verbose_name_plural = _('Bylines')
 
     def __str__(self):
-        return '@bl: {credit}: {full_name}{title})'.format(
+        return '@bl: {credit}: {full_name}{title}'.format(
             credit=self.get_credit_display(),
             full_name=self.contributor,
             title='' if not self.title else f', {self.title}',

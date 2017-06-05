@@ -1,12 +1,14 @@
 {% extends "base-template.html" %}
 {% load render_bundle from webpack_loader %}
-{% block title %}Photo admin{% endblock title %}
+{% block title %}Tassen Tags Editor{% endblock title %}
 {% block topmenu %}
   <a style="color: black" href="/">universitas.no</a>
 {% endblock topmenu %}
 {% block content %}
-  <div id=PhotoApp ></div>
+  <div id=ReactApp >
+    mount app here.
+  </div>
 {% endblock content %}
 {% block final %}
-  {% render_bundle 'photo_list_view' %}
+  {% render_bundle 'tassen_tags_web_editor' %}
 {% endblock final %}

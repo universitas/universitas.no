@@ -1,0 +1,32 @@
+.Editor {
+  display: flex;
+  flex-direction: row;
+  height: 90vh;
+  width: 100%;
+  .TextArea {
+    flex: 1;
+    resize: none;
+    border: 2px solid red;
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  -webkit-scrollbar-thumb {
+    background: #bbb;
+    min-height: 30px;
+  }
+  -webkit-scrollbar-track {
+    background: #eee;
+  }
+  }
+  .Preview {
+    flex: 1;
+    padding: 2em;
+    border: 2px solid blue;
+    overflow: auto;
+    .block{
+      &.scrollTo {
+        background: #ff8;
+      }
+    }
+  }
+}
