@@ -14,7 +14,7 @@ sass_loader.use = extractSass.extract({
   use: sass_loader.use,
 })
 
-config.devtool = 'source-map'
+config.devtool = false
 config.plugins.push(
   new webpack.DefinePlugin({
     'process.env': { NODE_ENV: JSON.stringify('production') },

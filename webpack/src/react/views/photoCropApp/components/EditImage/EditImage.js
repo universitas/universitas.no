@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { CropBox } from '../CropBox/CropBox'
 import { Previews } from '../CropBox/Previews'
 import * as actions from './actions'
-import * as moment from 'moment'
+import format from 'date-fns/format'
 import './editimage.scss'
 
 const Spinner = () => <div className="spinner">Loading...</div>
@@ -26,7 +26,7 @@ Buttons = connect(null, (dispatch, { id }) => ({
 
 const subset1 = d => ({
   id: d.id,
-  created: moment(d.created).format('YYYY-MM-DD'),
+  created: format(d.created, 'YYYY-MM-DD'),
   original: d.original,
   'original size': d.size,
   'cropping method': `${d.method} (${d.cropping_method})`,
@@ -36,7 +36,7 @@ const subset1 = d => ({
 })
 const subset0 = d => ({
   filename: d.original.replace(/^.*\//g, ''),
-  created: moment(d.created).format('ll'),
+  created: format(d.created, 'MMM D, YYYY'),
   description: d.description,
   'used in stories': d.usage,
 })

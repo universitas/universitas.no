@@ -38,12 +38,14 @@ AdvertsAppConfig	apps/adverts/appconf.py	/^class AdvertsAppConfig(AppConfig):$/;
 Alias	apps/markup/models.py	/^class Alias(CachedTag):$/;"	c
 AliasAdmin	apps/markup/admin.py	/^class AliasAdmin(admin.ModelAdmin):$/;"	c
 AliasManager	apps/markup/models.py	/^class AliasManager(TagManager):$/;"	c
+ApiAppConfig	api/appconf.py	/^class ApiAppConfig(AppConfig):$/;"	c
 Aside	apps/stories/models.py	/^class Aside(TextContent, StoryElement):  # type: ignore$/;"	c
 AsideInline	apps/stories/admin.py	/^class AsideInline(admin.TabularInline, ):$/;"	c
 AutoCropImage	apps/photo/cropping/models.py	/^class AutoCropImage(models.Model):$/;"	c
 BASE_DIR	universitas/base.py	/^BASE_DIR = path()$/;"	v
 BREAKPOINT	apps/photo/cropping/crop_detector.py	/^    BREAKPOINT = 0.15$/;"	v	class:HybridDetector
 BUNDLE_TIME	apps/issues/tasks.py	/^BUNDLE_TIME = crontab(hour=4, minute=0, day_of_week=3)$/;"	v
+BY	apps/prodsys/models.py	/^    BY = 'by'$/;"	v	class:BylineCredit
 BYLINE_CASES	notebooks/byline_cases.py	/^BYLINE_CASES = [  # List of cases: ( "Input string", "Expected output" )$/;"	v
 BYLINE_DIR	apps/core/staging.py	/^BYLINE_DIR = 'BYLINE'$/;"	v
 BYLINE_PHOTO_DIR	universitas/base.py	/^BYLINE_PHOTO_DIR = STAGING_ROOT + 'BYLINE\/'$/;"	v
@@ -55,9 +57,11 @@ BlockTagAdmin	apps/markup/admin.py	/^class BlockTagAdmin(admin.ModelAdmin):$/;"	
 BlockTagManager	apps/markup/models.py	/^class BlockTagManager(TagManager):$/;"	c
 Box	apps/photo/cropping/boundingbox.py	/^class Box:$/;"	c
 BoxField	apps/photo/cropping/models.py	/^class BoxField(models.Field):$/;"	c
+BrokenImage	apps/issues/models.py	/^class BrokenImage:$/;"	c
 BrokenImage	apps/photo/models.py	/^class BrokenImage:$/;"	c
 Byline	apps/stories/models.py	/^class Byline(models.Model):$/;"	c
 BylineAdmin	apps/stories/admin.py	/^class BylineAdmin(admin.ModelAdmin):$/;"	c
+BylineCredit	apps/prodsys/models.py	/^class BylineCredit:$/;"	c
 BylineInline	apps/stories/admin.py	/^class BylineInline(admin.TabularInline):$/;"	c
 BylineManager	apps/stories/models.py	/^class BylineManager(models.Manager):$/;"	c
 CACHES	universitas/base.py	/^CACHES = {$/;"	v
@@ -72,6 +76,8 @@ CELERY_RESULT_BACKEND	universitas/base.py	/^CELERY_RESULT_BACKEND = 'redis:\/\/{
 CELERY_RESULT_SERIALIZER	universitas/base.py	/^CELERY_RESULT_SERIALIZER = 'json'$/;"	v
 CELERY_TASK_DEFAULT_QUEUE	universitas/base.py	/^CELERY_TASK_DEFAULT_QUEUE = SITE_URL$/;"	v
 CELERY_TASK_SERIALIZER	universitas/base.py	/^CELERY_TASK_SERIALIZER = 'json'$/;"	v
+CHOICES	apps/prodsys/models.py	/^    CHOICES = ($/;"	v	class:BylineCredit
+CHOICES	apps/prodsys/models.py	/^    CHOICES = ($/;"	v	class:StoryStatus
 CODE_AD	apps/adverts/models.py	/^    CODE_AD = 2$/;"	v	class:Advert
 CONVERT	apps/issues/tasks.py	/^CONVERT = '\/usr\/bin\/convert'$/;"	v
 CREDIT_CHOICES	apps/stories/models.py	/^    CREDIT_CHOICES = [$/;"	v	class:Byline
@@ -101,9 +107,11 @@ Command	watson/management/commands/listwatson.py	/^class Command(BaseCommand):$/
 Command	watson/management/commands/uninstallwatson.py	/^class Command(BaseCommand):$/;"	c
 Contributor	apps/contributors/models.py	/^class Contributor(models.Model):$/;"	c
 ContributorAdmin	apps/contributors/admin.py	/^class ContributorAdmin(admin.ModelAdmin):$/;"	c
+ContributorSerializer	api/contributor_serializers.py	/^class ContributorSerializer(serializers.HyperlinkedModelSerializer):$/;"	c
+ContributorViewSet	api/contributor_serializers.py	/^class ContributorViewSet(viewsets.ModelViewSet):$/;"	c
 ContributorsAppConfig	apps/contributors/appconf.py	/^class ContributorsAppConfig(AppConfig):$/;"	c
 CropBox	apps/photo/cropping/boundingbox.py	/^class CropBox(Box):$/;"	c
-CropBoxField	apps/photo/serializers.py	/^class CropBoxField(serializers.Field):$/;"	c
+CropBoxField	api/photo_serializers.py	/^class CropBoxField(serializers.Field):$/;"	c
 CustomS3BotoStorage	utils/aws_custom_storage.py	/^class CustomS3BotoStorage(S3BotoStorage):$/;"	c
 Customer	apps/adverts/models.py	/^class Customer(models.Model):$/;"	c
 CustomerAdmin	apps/adverts/admin.py	/^class CustomerAdmin(admin.ModelAdmin):$/;"	c
@@ -124,8 +132,10 @@ DEFAULT_FROM_EMAIL	universitas/local.py	/^DEFAULT_FROM_EMAIL = 'localemail@local
 DEFAULT_HTML_TAG	apps/markup/models.py	/^    DEFAULT_HTML_TAG = 'p'$/;"	v	class:BlockTag
 DEFAULT_RATIO	apps/stories/models.py	/^    DEFAULT_RATIO = 0.0$/;"	v	class:StoryMedia
 DEFAULT_SIZE	apps/contributors/templatetags/byline_image.py	/^DEFAULT_SIZE = "300x300"$/;"	v
+DELETED	apps/prodsys/models.py	/^    DELETED = 100$/;"	v	class:StoryStatus
 DRAFT	apps/adverts/models.py	/^    DRAFT = 1$/;"	v	class:Advert
 DRAFT	apps/legacy_db/models.py	/^    DRAFT = 0$/;"	v	class:Prodsak
+DRAFT	apps/prodsys/models.py	/^    DRAFT = 10$/;"	v	class:StoryStatus
 DUMMY_AD	apps/adverts/models.py	/^    DUMMY_AD = 3$/;"	v	class:Advert
 DiskInnlegg	apps/legacy_db/models.py	/^class DiskInnlegg(InnleggAbstract):$/;"	c
 DiskSvar	apps/legacy_db/models.py	/^class DiskSvar(InnleggAbstract):$/;"	c
@@ -173,10 +183,12 @@ FrontpageStoryAdmin	apps/frontpage/admin.py	/^class FrontpageStoryAdmin(admin.Mo
 FrontpageStoryInline	apps/stories/admin.py	/^class FrontpageStoryInline(SmallTextArea, admin.TabularInline, ThumbAdmin):$/;"	c
 FrontpageStoryManager	apps/frontpage/models.py	/^class FrontpageStoryManager(models.Manager):$/;"	c
 GHOSTSCRIPT	apps/issues/tasks.py	/^GHOSTSCRIPT = '\/usr\/bin\/ghostscript'$/;"	v
+GRAPHICS	apps/prodsys/models.py	/^    GRAPHICS = 'graphics'$/;"	v	class:BylineCredit
 HTTP_STATUS_CODES	apps/stories/status_codes.py	/^HTTP_STATUS_CODES = [$/;"	v
 HtmlInline	apps/stories/admin.py	/^class HtmlInline(admin.TabularInline, ):$/;"	c
 HumansTxtView	apps/core/views.py	/^class HumansTxtView(TextTemplateView):$/;"	c
 HybridDetector	apps/photo/cropping/crop_detector.py	/^class HybridDetector(FeatureDetector):$/;"	c
+ILLUSTRATION	apps/prodsys/models.py	/^    ILLUSTRATION = 'illustration'$/;"	v	class:BylineCredit
 IMAGES_DIR	apps/core/staging.py	/^IMAGES_DIR = 'IMAGES'$/;"	v
 IMAGE_AD	apps/adverts/models.py	/^    IMAGE_AD = 1$/;"	v	class:Advert
 IMAGE_TAG	apps/stories/models.py	/^IMAGE_TAG = '@image:'$/;"	v
@@ -192,8 +204,8 @@ ImageFile	apps/photo/models.py	/^class ImageFile(TimeStampedModel, Edit_url_mixi
 ImageFileAdmin	apps/photo/admin.py	/^class ImageFileAdmin(ImageAdmin):$/;"	c
 ImageFileManager	apps/photo/models.py	/^class ImageFileManager(models.Manager):$/;"	c
 ImageFileQuerySet	apps/photo/models.py	/^class ImageFileQuerySet(models.QuerySet):$/;"	c
-ImageFileSerializer	apps/photo/serializers.py	/^class ImageFileSerializer(serializers.HyperlinkedModelSerializer):$/;"	c
-ImageFileViewSet	apps/photo/serializers.py	/^class ImageFileViewSet(viewsets.ModelViewSet):$/;"	c
+ImageFileSerializer	api/photo_serializers.py	/^class ImageFileSerializer(serializers.HyperlinkedModelSerializer):$/;"	c
+ImageFileViewSet	api/photo_serializers.py	/^class ImageFileViewSet(viewsets.ModelViewSet):$/;"	c
 ImageInline	apps/stories/admin.py	/^class ImageInline(admin.TabularInline, ThumbAdmin, ):$/;"	c
 InlineHtml	apps/stories/models.py	/^class InlineHtml(StoryElement):$/;"	c
 InlineLink	apps/stories/models.py	/^class InlineLink(TimeStampedModel):$/;"	c
@@ -205,7 +217,9 @@ InnleggAbstract	apps/legacy_db/models.py	/^class InnleggAbstract(models.Model):$
 Issue	apps/issues/models.py	/^class Issue(models.Model, Edit_url_mixin):$/;"	c
 IssueAdmin	apps/issues/admin.py	/^class IssueAdmin(admin.ModelAdmin):$/;"	c
 IssueQueryset	apps/issues/models.py	/^class IssueQueryset(models.QuerySet):$/;"	c
+IssueSerializer	api/issue_serializers.py	/^class IssueSerializer(serializers.HyperlinkedModelSerializer):$/;"	c
 IssueTuple	apps/issues/models.py	/^IssueTuple = collections.namedtuple('IssueTuple', ['number', 'date'])$/;"	v
+IssueViewSet	api/issue_serializers.py	/^class IssueViewSet(viewsets.ModelViewSet):$/;"	c
 IssuesAppConfig	apps/issues/appconf.py	/^class IssuesAppConfig(AppConfig):$/;"	c
 KeepNameThumbnailBackend	apps/photo/thumb_backend.py	/^class KeepNameThumbnailBackend(ThumbnailBackend):$/;"	c
 KeypointDetector	apps/photo/cropping/crop_detector.py	/^class KeypointDetector(FeatureDetector):$/;"	c
@@ -238,6 +252,12 @@ MarkupModelMixin	apps/stories/models.py	/^class MarkupModelMixin(object):$/;"	c
 MarkupTag	apps/markup/models.py	/^class MarkupTag(CachedTag):$/;"	c
 MarkupTextField	apps/stories/models.py	/^class MarkupTextField(MarkupFieldMixin, models.TextField):$/;"	c
 MediaStorage	utils/aws_custom_storage.py	/^class MediaStorage(CustomS3BotoStorage):$/;"	c
+Meta	api/contributor_serializers.py	/^    class Meta:$/;"	c	class:ContributorSerializer
+Meta	api/contributor_serializers.py	/^    class Meta:$/;"	c	class:StintSerializer
+Meta	api/issue_serializers.py	/^    class Meta:$/;"	c	class:IssueSerializer
+Meta	api/issue_serializers.py	/^    class Meta:$/;"	c	class:NestedPDFSerializer
+Meta	api/issue_serializers.py	/^    class Meta:$/;"	c	class:PrintIssueSerializer
+Meta	api/photo_serializers.py	/^    class Meta:$/;"	c	class:ImageFileSerializer
 Meta	apps/adverts/models.py	/^    class Meta:$/;"	c	class:AdChannel
 Meta	apps/adverts/models.py	/^    class Meta:$/;"	c	class:AdFormat
 Meta	apps/adverts/models.py	/^    class Meta:$/;"	c	class:Advert
@@ -269,7 +289,9 @@ Meta	apps/markup/models.py	/^    class Meta:$/;"	c	class:MarkupTag
 Meta	apps/photo/cropping/models.py	/^    class Meta:$/;"	c	class:AutoCropImage
 Meta	apps/photo/models.py	/^    class Meta:$/;"	c	class:ImageFile
 Meta	apps/photo/models.py	/^    class Meta:$/;"	c	class:ProfileImage
-Meta	apps/photo/serializers.py	/^    class Meta:$/;"	c	class:ImageFileSerializer
+Meta	apps/prodsys/models.py	/^    class Meta:$/;"	c	class:ProdByline
+Meta	apps/prodsys/models.py	/^    class Meta:$/;"	c	class:ProdImage
+Meta	apps/prodsys/models.py	/^    class Meta:$/;"	c	class:ProdStory
 Meta	apps/stories/models.py	/^    class Meta:$/;"	c	class:Aside
 Meta	apps/stories/models.py	/^    class Meta:$/;"	c	class:Byline
 Meta	apps/stories/models.py	/^    class Meta:$/;"	c	class:InlineHtml
@@ -336,6 +358,7 @@ Migration	apps/photo/migrations/0010_data_imagefile_cropbox.py	/^class Migration
 Migration	apps/photo/migrations/0011_auto_20170422_2232.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	apps/photo/migrations/0012_imagefile__imagehash.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	apps/photo/migrations/0013_imagefile_description.py	/^class Migration(migrations.Migration):$/;"	c
+Migration	apps/prodsys/migrations/0001_initial.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	apps/stories/migrations/0001_initial.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	apps/stories/migrations/0002_auto_20141217_1841.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^class Migration(migrations.Migration):$/;"	c
@@ -366,10 +389,11 @@ MockFeatureDetector	apps/photo/cropping/crop_detector.py	/^class MockFeatureDete
 MySQLSearchBackend	watson/backends.py	/^class MySQLSearchBackend(SearchBackend):$/;"	c
 NON_PRINTING_CHARS	apps/stories/models.py	/^NON_PRINTING_CHARS = re.compile('[{}]'.format(''.join($/;"	v
 NOTEBOOK_ARGUMENTS	universitas/base.py	/^NOTEBOOK_ARGUMENTS = [$/;"	v
+NestedPDFSerializer	api/issue_serializers.py	/^class NestedPDFSerializer(serializers.ModelSerializer):$/;"	c
 OLD_DRAFT	apps/legacy_db/models.py	/^    OLD_DRAFT = 1$/;"	v	class:Prodsak
 ORDER_GAP	apps/frontpage/models.py	/^    ORDER_GAP = 100$/;"	v	class:StoryModule
 ORIGINAL_RATIO	apps/stories/models.py	/^    ORIGINAL_RATIO = 100.0$/;"	v	class:StoryMedia
-OUTPUT_PDF_NAME	apps/issues/tasks.py	/^OUTPUT_PDF_NAME = 'universitas_{issue.date.year}-{issue.number}{suffix}.pdf'$/;"	v
+OUTPUT_PDF_NAME	apps/issues/tasks.py	/^OUTPUT_PDF_NAME = 'universitas_{issue.year}-{issue.number}{suffix}.pdf'$/;"	v
 PAGES_GLOB	apps/issues/tasks.py	/^PAGES_GLOB = 'UNI11VER*.pdf'$/;"	v
 PAGE_ONE	apps/issues/tests/test_tasks.py	/^PAGE_ONE = 'UNI11VER16010101000.pdf'$/;"	v
 PASSWORD_HASHERS	universitas/testing.py	/^PASSWORD_HASHERS = ($/;"	v
@@ -377,6 +401,8 @@ PDF_DIR	apps/core/staging.py	/^PDF_DIR = 'PDF'$/;"	v
 PDF_FOLDER	apps/issues/management/commands/web_pdf.py	/^PDF_FOLDER = os.path.join(settings.STAGING_ROOT, 'pdf')$/;"	v
 PDF_MERGE	apps/issues/management/commands/web_pdf.py	/^PDF_MERGE = os.path.join(settings.PROJECT_DIR, 'bin', 'pdf_merge.sh')$/;"	v
 PDF_STAGING	apps/issues/management/commands/web_pdf.py	/^PDF_STAGING = os.path.join(settings.STAGING_ROOT, 'STAGING', 'PDF')$/;"	v
+PHOTO	apps/prodsys/models.py	/^    PHOTO = 'photo'$/;"	v	class:BylineCredit
+PRINT_DESK	apps/prodsys/models.py	/^    PRINT_DESK = 40$/;"	v	class:StoryStatus
 PRIVATE	apps/adverts/models.py	/^    PRIVATE = 2$/;"	v	class:Advert
 PRODSYS_PASSWORD	universitas/base.py	/^PRODSYS_PASSWORD = env.prodsys_password$/;"	v
 PRODSYS_URL	universitas/base.py	/^PRODSYS_URL = env.prodsys_url$/;"	v
@@ -384,6 +410,7 @@ PRODSYS_USER	universitas/base.py	/^PRODSYS_USER = env.prodsys_user$/;"	v
 PRODUSERT_CHOICES	apps/legacy_db/models.py	/^    PRODUSERT_CHOICES = ($/;"	v	class:Prodsak
 PUBLISHED	apps/adverts/models.py	/^    PUBLISHED = 3$/;"	v	class:Advert
 PUBLISHED_ON_WEB	apps/legacy_db/models.py	/^    PUBLISHED_ON_WEB = 8$/;"	v	class:Prodsak
+PUBLISHED_WEB	apps/prodsys/models.py	/^    PUBLISHED_WEB = 60$/;"	v	class:StoryStatus
 PULLQUOTE_TAG	apps/stories/models.py	/^PULLQUOTE_TAG = '@quote:'$/;"	v
 PdfArchiveView	apps/issues/views.py	/^class PdfArchiveView(TemplateView):$/;"	c
 PhotoAppConfig	apps/photo/appconf.py	/^class PhotoAppConfig(AppConfig):$/;"	c
@@ -395,11 +422,17 @@ PostgresPrefixLegacySearchBackend	watson/backends.py	/^class PostgresPrefixLegac
 PostgresSearchBackend	watson/backends.py	/^class PostgresSearchBackend(SearchBackend):$/;"	c
 PrintIssue	apps/issues/models.py	/^class PrintIssue(models.Model, Edit_url_mixin):$/;"	c
 PrintIssueAdmin	apps/issues/admin.py	/^class PrintIssueAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):$/;"	c
+PrintIssueSerializer	api/issue_serializers.py	/^class PrintIssueSerializer(serializers.HyperlinkedModelSerializer):$/;"	c
+PrintIssueViewSet	api/issue_serializers.py	/^class PrintIssueViewSet(viewsets.ModelViewSet):$/;"	c
+ProdByline	apps/prodsys/models.py	/^class ProdByline(models.Model):$/;"	c
+ProdImage	apps/prodsys/models.py	/^class ProdImage(models.Model):$/;"	c
+ProdStory	apps/prodsys/models.py	/^class ProdStory(models.Model):$/;"	c
 Prodbilde	apps/legacy_db/models.py	/^class Prodbilde(models.Model):$/;"	c
 Prodsak	apps/legacy_db/models.py	/^class Prodsak(models.Model):$/;"	c
 ProdsakAdmin	apps/legacy_db/admin.py	/^class ProdsakAdmin(admin.ModelAdmin):$/;"	c
 ProdsakManager	apps/legacy_db/models.py	/^class ProdsakManager(models.Manager):$/;"	c
 ProdsakQueryset	apps/legacy_db/models.py	/^class ProdsakQueryset(models.QuerySet):$/;"	c
+ProdsysAppConfig	apps/prodsys/appconf.py	/^class ProdsysAppConfig(AppConfig):$/;"	c
 ProdsysRouter	apps/legacy_db/router.py	/^class ProdsysRouter(object):$/;"	c
 ProdusertFilter	apps/legacy_db/admin.py	/^class ProdusertFilter(admin.SimpleListFilter):$/;"	c
 ProfileImage	apps/photo/models.py	/^class ProfileImage(ImageFile):$/;"	c
@@ -411,7 +444,9 @@ Pullquote	apps/stories/models.py	/^class Pullquote(TextContent, StoryElement):  
 PullquoteInline	apps/stories/admin.py	/^class PullquoteInline(admin.TabularInline, ):$/;"	c
 RAVEN_CONFIG	universitas/base.py	/^RAVEN_CONFIG = {'dsn': env.raven_dsn, 'site': SITE_URL}$/;"	v
 READY_FOR_PRINT	apps/legacy_db/models.py	/^    READY_FOR_PRINT = 3$/;"	v	class:Prodsak
+READY_FOR_PRINT	apps/prodsys/models.py	/^    READY_FOR_PRINT = 30$/;"	v	class:StoryStatus
 READY_FOR_WEB	apps/legacy_db/models.py	/^    READY_FOR_WEB = 7$/;"	v	class:Prodsak
+READY_FOR_WEB	apps/prodsys/models.py	/^    READY_FOR_WEB = 50$/;"	v	class:StoryStatus
 REGULAR	apps/issues/models.py	/^    REGULAR = 1$/;"	v	class:Issue
 REST_FRAMEWORK	universitas/base.py	/^REST_FRAMEWORK = {$/;"	v
 RETIRED	apps/contributors/models.py	/^    RETIRED = 2$/;"	v	class:Contributor
@@ -420,7 +455,6 @@ RE_SPACE	watson/backends.py	/^RE_SPACE = re.compile(r"[\\s]+", re.UNICODE)$/;"	v
 ROOT_URLCONF	universitas/base.py	/^ROOT_URLCONF = 'universitas.urls'$/;"	v
 ROOT_URLCONF	universitas/dev.py	/^ROOT_URLCONF = 'universitas.dev_urls'$/;"	v
 RUNSERVERPLUS_SERVER_ADDRESS_PORT	universitas/local.py	/^RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8000'$/;"	v
-ReactDevView	universitas/dev_views.py	/^class ReactDevView(TemplateView):$/;"	c
 RegexSearchBackend	watson/backends.py	/^class RegexSearchBackend(RegexSearchMixin, SearchBackend):$/;"	c
 RegexSearchMixin	watson/backends.py	/^class RegexSearchMixin(six.with_metaclass(abc.ABCMeta)):$/;"	c
 RegistrationError	watson/search.py	/^class RegistrationError(SearchEngineError):$/;"	c
@@ -428,8 +462,10 @@ RemembersSubClass	apps/stories/models.py	/^class RemembersSubClass(models.Model)
 RobotsTxtView	apps/core/views.py	/^class RobotsTxtView(TextTemplateView):$/;"	c
 SECRET_KEY	universitas/base.py	/^SECRET_KEY = env.secret_key$/;"	v
 SENTRY_CLIENT	universitas/base.py	/^SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'$/;"	v
+SHELVED	apps/prodsys/models.py	/^    SHELVED = 90$/;"	v	class:StoryStatus
 SHORT_DATETIME_FORMAT	universitas/base.py	/^SHORT_DATETIME_FORMAT = 'y-m-d H:i'$/;"	v
 SHORT_DATE_FORMAT	universitas/base.py	/^SHORT_DATE_FORMAT = 'Y-m-d'$/;"	v
+SILENCED_SYSTEM_CHECKS	universitas/base.py	/^SILENCED_SYSTEM_CHECKS = ["1_8.W001"]$/;"	v
 SITE_URL	universitas/base.py	/^SITE_URL = env.site_url or 'www.example.com'$/;"	v
 SIZES	apps/frontpage/models.py	/^    SIZES = [(3, 1), (3, 1), (3, 1), (3, 2),$/;"	v	class:FrontpageStoryManager
 SOURCE_IMG	apps/core/content_factory.py	/^SOURCE_IMG = Path(__file__).parent \/ 'judgement2.jpg'$/;"	v
@@ -443,6 +479,7 @@ STATICFILES_STORAGE	universitas/production.py	/^STATICFILES_STORAGE = 'utils.aws
 STATIC_ROOT	universitas/local.py	/^STATIC_ROOT = env.STATIC_DIR or '\/static\/'$/;"	v
 STATIC_URL	universitas/local.py	/^STATIC_URL = '\/static\/'$/;"	v
 STATIC_URL	universitas/production.py	/^STATIC_URL = "http:\/\/{host}\/{static}\/".format($/;"	v
+STATUS	apps/prodsys/models.py	/^    STATUS = StoryStatus$/;"	v	class:ProdStory
 STATUS_CHOICES	apps/adverts/models.py	/^    STATUS_CHOICES = [$/;"	v	class:Advert
 STATUS_CHOICES	apps/contributors/models.py	/^    STATUS_CHOICES = [$/;"	v	class:Contributor
 STATUS_CHOICES	apps/stories/models.py	/^    STATUS_CHOICES = [$/;"	v	class:Story
@@ -483,6 +520,7 @@ StaticStorage	utils/aws_custom_storage.py	/^class StaticStorage(CustomS3BotoStor
 Stint	apps/contributors/models.py	/^class Stint(models.Model):$/;"	c
 StintAdmin	apps/contributors/admin.py	/^class StintAdmin(admin.ModelAdmin):$/;"	c
 StintInline	apps/contributors/admin.py	/^class StintInline(admin.TabularInline,):$/;"	c
+StintSerializer	api/contributor_serializers.py	/^class StintSerializer(serializers.ModelSerializer):$/;"	c
 StoriesAppConfig	apps/stories/appconf.py	/^class StoriesAppConfig(AppConfig):$/;"	c
 Story	apps/stories/models.py	/^class Story(TextContent, TimeStampedModel, Edit_url_mixin):$/;"	c
 StoryAdmin	apps/stories/admin.py	/^class StoryAdmin(admin.ModelAdmin):$/;"	c
@@ -492,13 +530,16 @@ StoryMedia	apps/stories/models.py	/^class StoryMedia(StoryElement, MarkupModelMi
 StoryModule	apps/frontpage/models.py	/^class StoryModule(FrontPageModule):$/;"	c
 StoryModuleAdmin	apps/frontpage/admin.py	/^class StoryModuleAdmin(admin.ModelAdmin):$/;"	c
 StoryModuleInline	apps/frontpage/admin.py	/^class StoryModuleInline(admin.TabularInline):$/;"	c
+StoryPatch	apps/prodsys/models.py	/^class StoryPatch(models.Model):$/;"	c
 StoryQuerySet	apps/stories/models.py	/^class StoryQuerySet(models.QuerySet):$/;"	c
+StoryStatus	apps/prodsys/models.py	/^class StoryStatus:$/;"	c
 StoryType	apps/stories/models.py	/^class StoryType(models.Model):$/;"	c
 StoryTypeAdmin	apps/stories/admin.py	/^class StoryTypeAdmin(admin.ModelAdmin):$/;"	c
 StoryTypeInline	apps/stories/admin.py	/^class StoryTypeInline(admin.TabularInline):$/;"	c
 StoryVideo	apps/stories/models.py	/^class StoryVideo(StoryMedia):$/;"	c
 TEMPLATES	universitas/base.py	/^TEMPLATES = [$/;"	v
 TEMPLATE_DEBUG	universitas/base.py	/^TEMPLATE_DEBUG = DEBUG$/;"	v
+TEXT	apps/prodsys/models.py	/^    TEXT = 'text'$/;"	v	class:BylineCredit
 THUMBNAIL_BACKEND	universitas/base.py	/^THUMBNAIL_BACKEND = 'apps.photo.thumb_backend.KeepNameThumbnailBackend'$/;"	v
 THUMBNAIL_DEBUG	universitas/production.py	/^THUMBNAIL_DEBUG = DEBUG$/;"	v
 THUMBNAIL_ENGINE	universitas/base.py	/^THUMBNAIL_ENGINE = 'apps.photo.cropping.crop_engine.CloseCropEngine'$/;"	v
@@ -520,6 +561,7 @@ TIMING_CHOICES	apps/markup/models.py	/^    TIMING_CHOICES = ($/;"	v	class:Alias
 TIMING_CLEAN	apps/markup/models.py	/^    TIMING_CLEAN = 4$/;"	v	class:Alias
 TIMING_EXTRA	apps/markup/models.py	/^    TIMING_EXTRA = 2$/;"	v	class:Alias
 TIMING_IMPORT	apps/markup/models.py	/^    TIMING_IMPORT = 1$/;"	v	class:Alias
+TRANSLATION	apps/prodsys/models.py	/^    TRANSLATION = 'translation'$/;"	v	class:BylineCredit
 TagManager	apps/markup/models.py	/^class TagManager(models.Manager):$/;"	c
 TextContent	apps/stories/models.py	/^class TextContent(models.Model, MarkupModelMixin):$/;"	c
 TextTemplateView	apps/core/views.py	/^class TextTemplateView(TemplateView):$/;"	c
@@ -531,11 +573,13 @@ UPLOAD_FOLDER	apps/photo/models.py	/^    UPLOAD_FOLDER = 'byline-photo'$/;"	v	cl
 USE_I18N	universitas/base.py	/^USE_I18N = True  # Internationalisation (string translation)$/;"	v
 USE_L10N	universitas/base.py	/^USE_L10N = True  # Localisation (numbers and stuff)$/;"	v
 USE_TZ	universitas/base.py	/^USE_TZ = True  # Use timezone$/;"	v
+VIDEO	apps/prodsys/models.py	/^    VIDEO = 'video'$/;"	v	class:BylineCredit
 VIDEO_HOSTS	apps/stories/models.py	/^    VIDEO_HOSTS = ($/;"	v	class:StoryVideo
 VIDEO_TAG	apps/stories/models.py	/^VIDEO_TAG = '@video:'$/;"	v
 VideoInline	apps/stories/admin.py	/^class VideoInline(admin.TabularInline, ):$/;"	c
 WATSON_MIDDLEWARE_FLAG	watson/middleware.py	/^WATSON_MIDDLEWARE_FLAG = "watson.search_context_middleware_active"$/;"	v
 WEBPACK_LOADER	universitas/base.py	/^WEBPACK_LOADER = {$/;"	v
+WORK_IN_PROGRESS	apps/prodsys/models.py	/^    WORK_IN_PROGRESS = 20$/;"	v	class:StoryStatus
 WSGI_APPLICATION	universitas/base.py	/^WSGI_APPLICATION = 'universitas.wsgi.application'$/;"	v
 WatsonSearchChangeList	watson/admin.py	/^class WatsonSearchChangeList(ChangeList):$/;"	c
 XTAG_PATTERN	apps/markup/models.py	/^    XTAG_PATTERN = r'^@[^: ]+:'$/;"	v	class:BlockTag
@@ -580,6 +624,7 @@ __mul__	apps/photo/cropping/crop_detector.py	/^    def __mul__(self, factor: flo
 __new__	watson/backends.py	/^    def __new__(cls):$/;"	m	class:AdaptiveSearchBackend	file:
 __radd__	apps/photo/cropping/boundingbox.py	/^    def __radd__(self, other: typing.Any) -> 'Box':$/;"	m	class:Box	file:
 __repr__	apps/photo/cropping/boundingbox.py	/^    def __repr__(self) -> str:$/;"	m	class:Box	file:
+__str__	api/photo_serializers.py	/^    def __str__(self):$/;"	m	class:jsonDict	file:
 __str__	apps/adverts/models.py	/^    def __str__(self):$/;"	m	class:AdChannel	file:
 __str__	apps/adverts/models.py	/^    def __str__(self):$/;"	m	class:AdFormat	file:
 __str__	apps/adverts/models.py	/^    def __str__(self):$/;"	m	class:Advert	file:
@@ -600,8 +645,9 @@ __str__	apps/markup/models.py	/^    def __str__(self):$/;"	m	class:MarkupTag	fil
 __str__	apps/photo/cropping/boundingbox.py	/^    def __str__(self) -> str:$/;"	m	class:Box	file:
 __str__	apps/photo/cropping/boundingbox.py	/^    def __str__(self):$/;"	m	class:CropBox	file:
 __str__	apps/photo/models.py	/^    def __str__(self):$/;"	m	class:ImageFile	file:
-__str__	apps/photo/serializers.py	/^    def __str__(self):$/;"	m	class:jsonDict	file:
+__str__	apps/prodsys/models.py	/^    def __str__(self):$/;"	m	class:ProdByline	file:
 __str__	apps/stories/models.py	/^    def __str__(self):$/;"	m	class:Byline	file:
+__str__	apps/stories/models.py	/^    def __str__(self):$/;"	m	class:InlineLink	file:
 __str__	apps/stories/models.py	/^    def __str__(self):$/;"	m	class:Section	file:
 __str__	apps/stories/models.py	/^    def __str__(self):$/;"	m	class:Story	file:
 __str__	apps/stories/models.py	/^    def __str__(self):$/;"	m	class:StoryImage	file:
@@ -617,7 +663,7 @@ _block_append	apps/stories/models.py	/^    def _block_append(self, tag, content,
 _block_drop	apps/stories/models.py	/^    def _block_drop(self, *args, **kwargs):$/;"	m	class:TextContent
 _block_new	apps/stories/models.py	/^    def _block_new(self, *args, **kwargs):$/;"	m	class:TextContent
 _block_new	apps/stories/models.py	/^    def _block_new(self, tag, content, element):$/;"	m	class:Story
-_build_uri	apps/photo/serializers.py	/^    def _build_uri(self, url):$/;"	m	class:ImageFileSerializer
+_build_uri	api/photo_serializers.py	/^    def _build_uri(self, url):$/;"	m	class:ImageFileSerializer
 _bulk_save_search_entries	watson/search.py	/^def _bulk_save_search_entries(search_entries, batch_size=100):$/;"	f
 _check_links	apps/stories/management/commands/check_links.py	/^    def _check_links(self, links_to_check, timeout):$/;"	m	class:Command
 _clean_up_html	apps/legacy_db/export_content_and_images.py	/^def _clean_up_html(html):$/;"	f
@@ -712,6 +758,8 @@ anonymous_cache	apps/frontpage/views.py	/^def anonymous_cache(timeout):$/;"	f
 app	universitas/celery_settings.py	/^app = Celery('universitas')$/;"	v
 app_label	watson/models.py	/^        app_label = 'watson'$/;"	v	class:SearchEntry.Meta
 application	universitas/wsgi.py	/^application = Sentry(get_wsgi_application())$/;"	v
+applied	apps/prodsys/models.py	/^    applied = models.BooleanField($/;"	v	class:StoryPatch
+apply	apps/prodsys/models.py	/^    def apply(self, save=True, original_content=None):$/;"	m	class:StoryPatch
 arbeidstittel	apps/legacy_db/models.py	/^    arbeidstittel = models.CharField(max_length=200, blank=True)$/;"	v	class:Prodsak
 article_view	apps/stories/views.py	/^def article_view(request, story_id, **section_and_slug):$/;"	f
 asides	apps/stories/models.py	/^    def asides(self):$/;"	m	class:ElementQuerySet
@@ -726,6 +774,7 @@ attrs	apps/stories/admin.py	/^                attrs={$/;"	v	class:HtmlInline
 attrs	apps/stories/admin.py	/^                attrs={$/;"	v	class:PullquoteInline
 attrs	apps/stories/admin.py	/^                attrs={$/;"	v	class:VideoInline
 attrs	apps/stories/autocomplete_light_registry.py	/^    attrs={$/;"	v
+auto_now_add	apps/prodsys/models.py	/^        auto_now_add=True,$/;"	v	class:StoryPatch
 autocomplete_list	apps/core/autocomplete_views.py	/^def autocomplete_list(request):$/;"	f
 autocreate	apps/frontpage/models.py	/^    def autocreate(self, story):$/;"	m	class:FrontpageStoryManager
 autocrop	apps/photo/admin.py	/^def autocrop(modeladmin, request, queryset):$/;"	f
@@ -772,6 +821,7 @@ blank	apps/markup/models.py	/^        blank=True,$/;"	v	class:InlineTag.Meta
 blank	apps/markup/models.py	/^        blank=True,$/;"	v	class:MarkupTag.Meta
 blank	apps/photo/migrations/0013_imagefile_description.py	/^                blank=True,$/;"	v	class:Migration
 blank	apps/photo/models.py	/^        blank=True,$/;"	v	class:ImageFile.Meta
+blank	apps/prodsys/models.py	/^        blank=True,$/;"	v	class:ProdByline
 blank	apps/stories/models.py	/^        blank=True,$/;"	v	class:Byline
 blank	apps/stories/models.py	/^        blank=True,$/;"	v	class:InlineLink.Meta
 blank	apps/stories/models.py	/^        blank=True,$/;"	v	class:Story.Meta
@@ -784,8 +834,8 @@ brodtekst	apps/legacy_db/models.py	/^    brodtekst = models.TextField()$/;"	v	cl
 build_thumbs	apps/photo/models.py	/^    def build_thumbs(self):$/;"	m	class:ImageFile
 bundle_pdf	apps/issues/management/commands/web_pdf.py	/^def bundle_pdf(for_issue, logger):$/;"	f
 byline	apps/legacy_db/models.py	/^    byline = models.CharField(max_length=255)$/;"	v	class:Sak
-byline_image	apps/contributors/admin.py	/^def byline_image(obj):$/;"	f
 byline_image	apps/contributors/templatetags/byline_image.py	/^def byline_image(contributor, image_size=None):$/;"	f
+byline_photo	api/contributor_serializers.py	/^    byline_photo = serializers.HyperlinkedRelatedField($/;"	v	class:ContributorSerializer
 byline_photo	apps/contributors/models.py	/^    byline_photo = models.ForeignKey($/;"	v	class:Contributor
 bylines	apps/stories/models.py	/^    bylines = models.ManyToManyField($/;"	v	class:Story
 bylines_count	apps/contributors/models.py	/^    def bylines_count(self):$/;"	m	class:Contributor
@@ -806,8 +856,10 @@ calculate_flags	apps/markup/models.py	/^    def calculate_flags(self):$/;"	m	cla
 calculate_hashes	apps/photo/models.py	/^    def calculate_hashes(self):$/;"	m	class:ImageFile
 calculate_image_hash	apps/photo/models.py	/^    def calculate_image_hash(self, size=11):$/;"	m	class:ImageFile
 can_import_settings	apps/legacy_db/management/commands/importer_fra_prodsys.py	/^    can_import_settings = True,$/;"	v	class:Command
+caption	apps/prodsys/models.py	/^    caption = models.CharField($/;"	v	class:ProdImage
 caption	apps/stories/models.py	/^    caption = MarkupCharField($/;"	v	class:StoryMedia
 category	apps/adverts/models.py	/^    category = models.PositiveSmallIntegerField($/;"	v	class:AdFormat
+celebrity_gossip	apps/prodsys/tests/test_models.py	/^def celebrity_gossip():$/;"	f
 center	apps/photo/cropping/boundingbox.py	/^    def center(self) -> typing.Tuple[float, float]:$/;"	m	class:Box
 change_pattern	apps/stories/models.py	/^    change_pattern = '[{text}]({ref})'$/;"	v	class:InlineLink
 channels	apps/adverts/models.py	/^    def channels(self):$/;"	m	class:Advert
@@ -824,6 +876,8 @@ choices	apps/issues/models.py	/^        choices=ISSUE_TYPES,$/;"	v	class:Issue
 choices	apps/markup/models.py	/^        choices=ACTION_CHOICES,$/;"	v	class:BlockTag.Meta
 choices	apps/markup/models.py	/^        choices=TIMING_CHOICES,$/;"	v	class:Alias.Meta
 choices	apps/photo/cropping/models.py	/^        choices=CROP_CHOICES,$/;"	v	class:AutoCropImage.Meta
+choices	apps/prodsys/models.py	/^        choices=BylineCredit.CHOICES,$/;"	v	class:ProdByline
+choices	apps/prodsys/models.py	/^        choices=StoryStatus.CHOICES,$/;"	v	class:ProdStory
 choices	apps/stories/migrations/0001_initial.py	/^                                                choices=[('vimeo', 'vimeo'), ('youtu', 'youtube')])),$/;"	v	class:Migration
 choices	apps/stories/models.py	/^        choices=ASPECT_RATIO_CHOICES,$/;"	v	class:StoryMedia.Meta
 choices	apps/stories/models.py	/^        choices=CREDIT_CHOICES,$/;"	v	class:Byline
@@ -846,17 +900,21 @@ code	apps/stories/migrations/0021_data_generate_slugs.py	/^            code=forw
 columns	apps/frontpage/models.py	/^    columns = models.PositiveSmallIntegerField($/;"	v	class:FrontPageModule
 comment	apps/markup/models.py	/^    comment = models.CharField($/;"	v	class:Alias
 comment	apps/stories/models.py	/^    comment = models.TextField($/;"	v	class:Story
+comments	apps/prodsys/models.py	/^    comments = models.TextField($/;"	v	class:ProdStory
 complete_apps	watson/south_migrations/0001_initial.py	/^    complete_apps = ['watson']$/;"	v	class:Migration
 complete_apps	watson/south_migrations/0002_installwatson.py	/^    complete_apps = ['watson']$/;"	v	class:Migration
 configure	ptpython_config.py	/^def configure(repl):$/;"	f
 contact_info	apps/adverts/models.py	/^    contact_info = models.TextField(blank=True)$/;"	v	class:Customer
 content	apps/frontpage/models.py	/^    content = models.TextField()$/;"	v	class:StaticModule
+content	apps/prodsys/models.py	/^    content = models.TextField($/;"	v	class:ProdStory
 content	watson/models.py	/^    content = models.TextField($/;"	v	class:SearchEntry
 content_type	watson/models.py	/^    content_type = models.ForeignKey($/;"	v	class:SearchEntry
 context_object_name	apps/search/views.py	/^    context_object_name = "search_results"$/;"	v	class:SearchMixin
 context_object_name	watson/views.py	/^    context_object_name = "search_results"$/;"	v	class:SearchMixin
 contributor	apps/contributors/models.py	/^    contributor = models.ForeignKey(Contributor)$/;"	v	class:Stint
 contributor	apps/photo/models.py	/^    contributor = models.ForeignKey($/;"	v	class:ImageFile
+contributor	apps/prodsys/models.py	/^    contributor = models.ForeignKey($/;"	v	class:StoryPatch
+contributor	apps/prodsys/models.py	/^    contributor = models.ForeignKey(Contributor)$/;"	v	class:ProdByline
 contributor	apps/stories/models.py	/^    contributor = models.ForeignKey(Contributor)$/;"	v	class:Byline
 convert_html_links	apps/stories/models.py	/^    def convert_html_links(cls, bodytext, return_html=False):$/;"	m	class:InlineLink
 convert_pdf_to_web	apps/issues/tasks.py	/^def convert_pdf_to_web(input_file):$/;"	f
@@ -870,17 +928,19 @@ create_dummy	apps/adverts/models.py	/^    def create_dummy(self, adformat):$/;"	
 create_dummy_ads	apps/adverts/admin.py	/^def create_dummy_ads(modeladmin, request, queryset):$/;"	f
 create_fake_content	apps/core/content_factory.py	/^def create_fake_content(contributors=3, stories=10, delete_existing=False,$/;"	f
 create_from_file	apps/photo/models.py	/^    def create_from_file(self, filepath, **kwargs):$/;"	m	class:ImageFileManager
+create_from_story	apps/prodsys/models.py	/^    def create_from_story(cls, story, patched_content, applied=False):$/;"	m	class:StoryPatch
 create_from_url	apps/stories/models.py	/^    def create_from_url(cls, url, parent_story):$/;"	m	class:StoryVideo
 create_pdf	apps/issues/admin.py	/^def create_pdf(modeladmin, request, queryset):$/;"	f
 create_print_issue_pdf	apps/issues/tasks.py	/^def create_print_issue_pdf($/;"	f
-create_thumbnail	apps/issues/models.py	/^    def create_thumbnail(self):$/;"	m	class:PrintIssue
 create_watermark	apps/adverts/dummy_image_advert.py	/^def create_watermark(text='xxx', angle=0, thumb_size=(50, 50)):$/;"	f
 create_web_bundle	apps/issues/tasks.py	/^def create_web_bundle(filename, **kwargs):$/;"	f
+created	apps/prodsys/models.py	/^    created = models.DateTimeField($/;"	v	class:StoryPatch
+credit	apps/prodsys/models.py	/^    credit = models.CharField($/;"	v	class:ProdByline
 credit	apps/stories/models.py	/^    credit = models.CharField($/;"	v	class:Byline
 creditline	apps/stories/models.py	/^    creditline = MarkupCharField($/;"	v	class:StoryMedia
 crop	apps/legacy_db/models.py	/^    crop = models.IntegerField()$/;"	v	class:Bilde
+crop_box	api/photo_serializers.py	/^    crop_box = CropBoxField()$/;"	v	class:ImageFileSerializer
 crop_box	apps/photo/cropping/models.py	/^    crop_box = BoxField($/;"	v	class:AutoCropImage
-crop_box	apps/photo/serializers.py	/^    crop_box = CropBoxField()$/;"	v	class:ImageFileSerializer
 cropped_thumb	apps/photo/admin.py	/^    def cropped_thumb(self, instance):$/;"	m	class:ThumbAdmin
 cropping_method	apps/photo/cropping/models.py	/^    cropping_method = models.PositiveSmallIntegerField($/;"	v	class:AutoCropImage
 css_classes	apps/adverts/models.py	/^    def css_classes(self):$/;"	m	class:AdChannel
@@ -940,6 +1000,15 @@ default	apps/photo/migrations/0009_imagefile_crop_box.py	/^                defau
 default	apps/photo/migrations/0012_imagefile__imagehash.py	/^                default='',$/;"	v	class:Migration
 default	apps/photo/migrations/0013_imagefile_description.py	/^                default='',$/;"	v	class:Migration
 default	apps/photo/models.py	/^        default='',$/;"	v	class:ImageFile.Meta
+default	apps/prodsys/models.py	/^        default='',$/;"	v	class:StoryPatch
+default	apps/prodsys/models.py	/^        default='new story',$/;"	v	class:ProdStory
+default	apps/prodsys/models.py	/^        default=0,$/;"	v	class:ProdImage
+default	apps/prodsys/models.py	/^        default=1,$/;"	v	class:ProdByline
+default	apps/prodsys/models.py	/^        default=1,$/;"	v	class:ProdImage
+default	apps/prodsys/models.py	/^        default=BylineCredit.BY,$/;"	v	class:ProdByline
+default	apps/prodsys/models.py	/^        default=False,$/;"	v	class:StoryPatch
+default	apps/prodsys/models.py	/^        default=None,$/;"	v	class:StoryPatch
+default	apps/prodsys/models.py	/^        default=StoryStatus.DRAFT,$/;"	v	class:ProdStory
 default	apps/stories/models.py	/^        default='',$/;"	v	class:InlineLink.Meta
 default	apps/stories/models.py	/^        default='',$/;"	v	class:TextContent.Meta
 default	apps/stories/models.py	/^        default='section-slug',$/;"	v	class:Section.Meta
@@ -956,6 +1025,7 @@ default	apps/stories/models.py	/^        default=False,$/;"	v	class:StoryElement
 default	apps/stories/models.py	/^        default=VIDEO_HOSTS[0][0],$/;"	v	class:StoryVideo.Meta
 default	apps/stories/models.py	/^        default=settings.LANGUAGES[0][0],$/;"	v	class:Story.Meta
 default	watson/models.py	/^        default="default",$/;"	v	class:SearchEntry
+default_app_config	api/__init__.py	/^default_app_config = 'api.appconf.ApiAppConfig'$/;"	v
 default_app_config	apps/adverts/__init__.py	/^default_app_config = 'apps.adverts.appconf.AdvertsAppConfig'$/;"	v
 default_app_config	apps/contributors/__init__.py	/^default_app_config = 'apps.contributors.appconf.ContributorsAppConfig'$/;"	v
 default_app_config	apps/frontpage/__init__.py	/^default_app_config = 'apps.frontpage.appconf.FrontpageAppConfig'$/;"	v
@@ -963,6 +1033,7 @@ default_app_config	apps/issues/__init__.py	/^default_app_config = 'apps.issues.a
 default_app_config	apps/legacy_db/__init__.py	/^default_app_config = 'apps.legacy_db.appconf.LegacyDbAppConfig'$/;"	v
 default_app_config	apps/markup/__init__.py	/^default_app_config = 'apps.markup.appconf.MarkupAppConfig'$/;"	v
 default_app_config	apps/photo/__init__.py	/^default_app_config = 'apps.photo.appconf.PhotoAppConfig'$/;"	v
+default_app_config	apps/prodsys/__init__.py	/^default_app_config = 'apps.prodsys.appconf.ProdsysAppConfig'$/;"	v
 default_app_config	apps/stories/__init__.py	/^default_app_config = 'apps.stories.appconf.StoriesAppConfig'$/;"	v
 default_end_time	apps/adverts/models.py	/^def default_end_time():$/;"	f
 default_search_engine	watson/search.py	/^default_search_engine = SearchEngine("default")$/;"	v
@@ -1021,6 +1092,7 @@ dependencies	apps/photo/migrations/0010_data_imagefile_cropbox.py	/^    dependen
 dependencies	apps/photo/migrations/0011_auto_20170422_2232.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	apps/photo/migrations/0012_imagefile__imagehash.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	apps/photo/migrations/0013_imagefile_description.py	/^    dependencies = [$/;"	v	class:Migration
+dependencies	apps/prodsys/migrations/0001_initial.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	apps/stories/migrations/0001_initial.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	apps/stories/migrations/0002_auto_20141217_1841.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^    dependencies = [$/;"	v	class:Migration
@@ -1048,6 +1120,7 @@ description	apps/adverts/models.py	/^    description = models.CharField($/;"	v	c
 description	apps/adverts/models.py	/^    description = models.TextField($/;"	v	class:AdChannel
 description	apps/photo/cropping/models.py	/^    description = 'Bounding Box field'$/;"	v	class:BoxField
 description	apps/photo/models.py	/^    description = models.CharField($/;"	v	class:ImageFile
+description	apps/prodsys/models.py	/^    description = models.CharField($/;"	v	class:ProdByline
 description	apps/stories/feeds.py	/^    description = "Nyeste publiserte saker fra universitas.no"$/;"	v	class:LatestStories
 description	apps/stories/models.py	/^    description = 'subclass of Charfield containing markup.'$/;"	v	class:MarkupCharField
 description	apps/stories/models.py	/^    description = 'subclass of Textfield containing markup.'$/;"	v	class:MarkupTextField
@@ -1090,7 +1163,6 @@ do_search_ranking	watson/backends.py	/^    def do_search_ranking(self, engine_sl
 do_uninstall	watson/backends.py	/^    def do_uninstall(self):$/;"	m	class:MySQLSearchBackend
 do_uninstall	watson/backends.py	/^    def do_uninstall(self):$/;"	m	class:PostgresSearchBackend
 do_uninstall	watson/backends.py	/^    def do_uninstall(self):$/;"	m	class:SearchBackend
-document_root	universitas/dev_urls.py	/^    document_root=settings.MEDIA_ROOT$/;"	v
 download_from_aws	apps/issues/models.py	/^    def download_from_aws(self, dest=Path('\/var\/media\/')):$/;"	m	class:PrintIssue
 download_from_aws	apps/photo/models.py	/^    def download_from_aws(self, dest=Path('\/var\/media\/')):$/;"	m	class:ImageFile
 drop_model_tables	apps/legacy_db/export_content_and_images.py	/^def drop_model_tables(*models):$/;"	f
@@ -1123,6 +1195,7 @@ env	universitas/base.py	/^env = Environment(strict=False)$/;"	v
 epost	apps/legacy_db/models.py	/^    epost = models.CharField(max_length=255)$/;"	v	class:Eposttinging
 epost	apps/legacy_db/models.py	/^    epost = models.CharField(max_length=255, blank=True)$/;"	v	class:InnleggAbstract
 epost_sendt	apps/legacy_db/models.py	/^    epost_sendt = models.DateTimeField(blank=True, null=True)$/;"	v	class:DiskSvar
+error_image	apps/issues/models.py	/^def error_image(msg, width, height):$/;"	f
 escape_mysql_boolean_query	watson/backends.py	/^def escape_mysql_boolean_query(search_text):$/;"	f
 escape_postgres_query	watson/backends.py	/^    def escape_postgres_query(self, text):$/;"	m	class:PostgresLegacySearchBackend
 escape_postgres_query	watson/backends.py	/^    def escape_postgres_query(self, text):$/;"	m	class:PostgresSearchBackend
@@ -1134,6 +1207,7 @@ exclude	apps/photo/admin.py	/^    exclude = ()$/;"	v	class:ThumbAdmin
 exclude	watson/search.py	/^    exclude = ()$/;"	v	class:SearchAdapter
 exclude	watson/views.py	/^    exclude = ()$/;"	v	class:SearchMixin
 expand	apps/photo/cropping/boundingbox.py	/^    def expand(self, h, v=None):$/;"	m	class:CropBox
+experiments	universitas/dev_urls.py	/^experiments = [$/;"	v
 extra	apps/contributors/admin.py	/^    extra = 1$/;"	v	class:StintInline
 extra	apps/frontpage/admin.py	/^    extra = 0$/;"	v	class:StoryModuleInline
 extra	apps/stories/admin.py	/^    extra = 0$/;"	v	class:AsideInline
@@ -1148,7 +1222,6 @@ extra	apps/stories/admin.py	/^    extra = 1$/;"	v	class:StoryTypeInline
 extra_classes	apps/adverts/models.py	/^    extra_classes = models.CharField($/;"	v	class:AdChannel
 extra_classes	apps/adverts/models.py	/^    extra_classes = models.CharField($/;"	v	class:Advert
 extra_context	watson/views.py	/^    extra_context = {}$/;"	v	class:SearchMixin
-extract_pdf_text	apps/issues/models.py	/^def extract_pdf_text(pdf_data, first_page, last_page=None):$/;"	f
 fake	utils/content_factory.py	/^fake = Factory.create('no')$/;"	v
 fake_contributor	apps/core/content_factory.py	/^def fake_contributor(fake=FAKE, **kwargs):$/;"	f
 fake_contributor	utils/content_factory.py	/^def fake_contributor(**kwargs):$/;"	f
@@ -1213,6 +1286,8 @@ field	apps/photo/migrations/0008_auto_20170214_1552.py	/^            field=model
 field	apps/photo/migrations/0009_imagefile_crop_box.py	/^            field=apps.photo.cropping.models.BoxField($/;"	v	class:Migration
 field	apps/photo/migrations/0012_imagefile__imagehash.py	/^            field=models.CharField($/;"	v	class:Migration
 field	apps/photo/migrations/0013_imagefile_description.py	/^            field=models.CharField($/;"	v	class:Migration
+field	apps/prodsys/migrations/0001_initial.py	/^            field=models.ForeignKey(help_text='story', on_delete=django.db.models.deletion.CASCADE, related_name='images', to='prodsys.ProdStory', verbose_name='story'),$/;"	v	class:Migration
+field	apps/prodsys/migrations/0001_initial.py	/^            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='prodsys.ProdStory'),$/;"	v	class:Migration
 field	apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey($/;"	v	class:Migration
 field	apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey(null=True, help_text='link to story on this website.',$/;"	v	class:Migration
 field	apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey(to='stories.Story'),$/;"	v	class:Migration
@@ -1235,6 +1310,12 @@ field	apps/stories/migrations/0018_story_language.py	/^            field=models.
 field	apps/stories/migrations/0019_auto_20160906_1614.py	/^            field=models.FloatField(choices=[(0.0, 'auto'), (0.4, '5:2 landscape'), (0.5, '2:1 landscape'), (0.667, '3:2 landscape'), (0.75, '4:3 landscape'), (1.0, 'square'), ($/;"	v	class:Migration
 field	apps/stories/migrations/0020_auto_20161120_2156.py	/^            field=django_extensions.db.fields.AutoSlugField($/;"	v	class:Migration
 field	apps/stories/migrations/0022_auto_20161228_0956.py	/^            field=models.IntegerField(choices=[(0, 'Draft'), (5, 'Ready to edit'), (9, 'Ready to publish on website'), (10, 'Published on website'), (11, 'Published, but hidden from search engines'), ($/;"	v	class:Migration
+fields	api/contributor_serializers.py	/^        fields = [$/;"	v	class:ContributorSerializer.Meta
+fields	api/contributor_serializers.py	/^        fields = [$/;"	v	class:StintSerializer.Meta
+fields	api/issue_serializers.py	/^        fields = [$/;"	v	class:IssueSerializer.Meta
+fields	api/issue_serializers.py	/^        fields = [$/;"	v	class:NestedPDFSerializer.Meta
+fields	api/issue_serializers.py	/^        fields = [$/;"	v	class:PrintIssueSerializer.Meta
+fields	api/photo_serializers.py	/^        fields = [$/;"	v	class:ImageFileSerializer.Meta
 fields	apps/adverts/migrations/0001_initial.py	/^            fields=[$/;"	v	class:Migration
 fields	apps/contributors/admin.py	/^    fields = ['position', 'start_date', 'end_date']$/;"	v	class:StintInline
 fields	apps/contributors/migrations/0001_initial.py	/^            fields=[$/;"	v	class:Migration
@@ -1247,7 +1328,7 @@ fields	apps/markup/migrations/0001_initial.py	/^            fields=[$/;"	v	class
 fields	apps/photo/migrations/0001_initial.py	/^            fields=[$/;"	v	class:Migration
 fields	apps/photo/migrations/0001_squashed_0003_auto_20150228_2151.py	/^            fields=[$/;"	v	class:Migration
 fields	apps/photo/migrations/0003_profileimage.py	/^            fields=[$/;"	v	class:Migration
-fields	apps/photo/serializers.py	/^        fields = [$/;"	v	class:ImageFileSerializer.Meta
+fields	apps/prodsys/migrations/0001_initial.py	/^            fields=[$/;"	v	class:Migration
 fields	apps/stories/admin.py	/^    fields = ('headline', 'kicker', 'lede', 'imagefile', 'full_thumb',),$/;"	v	class:FrontpageStoryInline
 fields	apps/stories/admin.py	/^    fields = ('ordering', 'credit', 'contributor', 'title', )$/;"	v	class:BylineInline
 fields	apps/stories/admin.py	/^    fields = [$/;"	v	class:ImageInline
@@ -1264,7 +1345,9 @@ file_field_md5	apps/photo/models.py	/^def file_field_md5(source_file, blocksize=
 filnavn	apps/legacy_db/models.py	/^    filnavn = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
 filter	watson/search.py	/^    def filter(self, queryset, search_text, ranking=True, backend_name=None):$/;"	m	class:SearchEngine
 filter	watson/search.py	/^filter = default_search_engine.filter$/;"	v
-filter_backends	apps/photo/serializers.py	/^    filter_backends = (filters.SearchFilter, DjangoFilterBackend)$/;"	v	class:ImageFileViewSet
+filter_backends	api/issue_serializers.py	/^    filter_backends = (filters.SearchFilter, DjangoFilterBackend)$/;"	v	class:IssueViewSet
+filter_backends	api/issue_serializers.py	/^    filter_backends = (filters.SearchFilter, DjangoFilterBackend)$/;"	v	class:PrintIssueViewSet
+filter_backends	api/photo_serializers.py	/^    filter_backends = (filters.SearchFilter, DjangoFilterBackend)$/;"	v	class:ImageFileViewSet
 find_inline_placeholders	apps/stories/models.py	/^    def find_inline_placeholders(self, element_class, body):$/;"	m	class:Story
 find_linked_story	apps/stories/admin.py	/^def find_linked_story(modeladmin, request, queryset):$/;"	f
 find_linked_story	apps/stories/models.py	/^    def find_linked_story(self):$/;"	m	class:InlineLink
@@ -1339,8 +1422,8 @@ get_contentfile	apps/issues/tests/test_tasks.py	/^def get_contentfile(filepath):
 get_context_data	apps/issues/views.py	/^    def get_context_data(self, **kwargs):$/;"	m	class:PdfArchiveView
 get_context_data	apps/issues/views.py	/^    def get_context_data(self, **kwargs):$/;"	m	class:PubPlanView
 get_context_data	apps/search/views.py	/^    def get_context_data(self, **kwargs):$/;"	m	class:SearchMixin
-get_context_data	universitas/dev_views.py	/^    def get_context_data(self, **kwargs):$/;"	m	class:ReactDevView
 get_context_data	watson/views.py	/^    def get_context_data(self, **kwargs):$/;"	m	class:SearchMixin
+get_cover_page	apps/issues/models.py	/^    def get_cover_page(self):$/;"	m	class:PrintIssue
 get_created_engines	watson/search.py	/^    def get_created_engines(cls):$/;"	m	class:SearchEngine
 get_crop_box	apps/photo/cropping/models.py	/^    def get_crop_box(self):$/;"	m	class:AutoCropImage
 get_description	watson/search.py	/^    def get_description(self, obj):$/;"	m	class:SearchAdapter
@@ -1360,14 +1443,15 @@ get_html	apps/stories/models.py	/^    def get_html(self):$/;"	m	class:TextConten
 get_html_class	apps/markup/models.py	/^    def get_html_class(self):$/;"	m	class:MarkupTag
 get_internal_type	apps/photo/cropping/models.py	/^    def get_internal_type(self):$/;"	m	class:BoxField
 get_items	apps/stories/templatetags/inline_elements.py	/^def get_items(queryset, argument_string):$/;"	f
-get_large	apps/photo/serializers.py	/^    def get_large(self, instance):$/;"	m	class:ImageFileSerializer
+get_large	api/photo_serializers.py	/^    def get_large(self, instance):$/;"	m	class:ImageFileSerializer
 get_live_queryset	watson/search.py	/^    def get_live_queryset(self):$/;"	m	class:SearchAdapter
 get_meta	watson/search.py	/^    def get_meta(self, obj):$/;"	m	class:SearchAdapter
-get_method	apps/photo/serializers.py	/^    def get_method(self, instance):$/;"	m	class:ImageFileSerializer
+get_method	api/photo_serializers.py	/^    def get_method(self, instance):$/;"	m	class:ImageFileSerializer
 get_models	watson/views.py	/^    def get_models(self):$/;"	m	class:SearchMixin
 get_or_create	apps/contributors/models.py	/^    def get_or_create(cls, input_name, initials=''):$/;"	m	class:Contributor
-get_original	apps/photo/serializers.py	/^    def get_original(self, instance):$/;"	m	class:ImageFileSerializer
+get_original	api/photo_serializers.py	/^    def get_original(self, instance):$/;"	m	class:ImageFileSerializer
 get_output_file	apps/issues/tasks.py	/^def get_output_file(input_file, subfolder, suffix=None):$/;"	f
+get_page_text_content	apps/issues/models.py	/^    def get_page_text_content(self, first_page=1, last_page=None):$/;"	m	class:PrintIssue
 get_plaintext	apps/stories/models.py	/^    def get_plaintext(self):$/;"	m	class:TextContent
 get_postgresql_version	watson/backends.py	/^def get_postgresql_version(connection):$/;"	f
 get_prep_value	apps/photo/cropping/models.py	/^    def get_prep_value(self, value):$/;"	m	class:BoxField
@@ -1375,12 +1459,12 @@ get_publication_date	apps/issues/models.py	/^    def get_publication_date(self):
 get_query	apps/search/views.py	/^    def get_query(self, request):$/;"	m	class:SearchMixin
 get_query	watson/views.py	/^    def get_query(self, request):$/;"	m	class:SearchMixin
 get_query_param	watson/views.py	/^    def get_query_param(self):$/;"	m	class:SearchMixin
+get_queryset	api/photo_serializers.py	/^    def get_queryset(self):$/;"	m	class:ImageFileViewSet
 get_queryset	apps/issues/views.py	/^    def get_queryset(self):$/;"	m	class:PdfArchiveView
 get_queryset	apps/issues/views.py	/^    def get_queryset(self):$/;"	m	class:PubPlanView
 get_queryset	apps/legacy_db/models.py	/^    def get_queryset(self):$/;"	m	class:ProdsakManager
 get_queryset	apps/photo/admin.py	/^    def get_queryset(self, request):$/;"	m	class:ImageFileAdmin
 get_queryset	apps/photo/models.py	/^    def get_queryset(self):$/;"	m	class:ProfileImageManager
-get_queryset	apps/photo/serializers.py	/^    def get_queryset(self):$/;"	m	class:ImageFileViewSet
 get_queryset	apps/search/views.py	/^    def get_queryset(self):$/;"	m	class:SearchMixin
 get_queryset	apps/stories/models.py	/^    def get_queryset(self):$/;"	m	class:ElementManager
 get_queryset	apps/stories/models.py	/^    def get_queryset(self):$/;"	m	class:PublishedStoryManager
@@ -1389,17 +1473,17 @@ get_queryset	watson/views.py	/^    def get_queryset(self):$/;"	m	class:SearchMix
 get_registered_models	watson/search.py	/^    def get_registered_models(self):$/;"	m	class:SearchEngine
 get_registered_models	watson/search.py	/^get_registered_models = default_search_engine.get_registered_models$/;"	v
 get_shortlink	apps/stories/models.py	/^    def get_shortlink(self):$/;"	m	class:Story
-get_size	apps/photo/serializers.py	/^    def get_size(self, instance):$/;"	m	class:ImageFileSerializer
-get_small	apps/photo/serializers.py	/^    def get_small(self, instance):$/;"	m	class:ImageFileSerializer
+get_size	api/photo_serializers.py	/^    def get_size(self, instance):$/;"	m	class:ImageFileSerializer
+get_small	api/photo_serializers.py	/^    def get_small(self, instance):$/;"	m	class:ImageFileSerializer
 get_sourcefile_modification_time	apps/photo/models.py	/^    def get_sourcefile_modification_time(self):$/;"	m	class:ImageFile
 get_staging_pdf_files	apps/issues/management/commands/web_pdf.py	/^def get_staging_pdf_files(magazine='1'):$/;"	f
 get_staging_pdf_files	apps/issues/tasks.py	/^def get_staging_pdf_files($/;"	f
 get_tag	apps/stories/models.py	/^    def get_tag(self, ref=None):$/;"	m	class:InlineLink
-get_thumb	apps/photo/serializers.py	/^    def get_thumb(self, instance):$/;"	m	class:ImageFileSerializer
-get_thumbnail	apps/issues/models.py	/^    def get_thumbnail(self):$/;"	m	class:PrintIssue
+get_thumb	api/contributor_serializers.py	/^    def get_thumb(self, instance):$/;"	m	class:ContributorSerializer
+get_thumb	api/photo_serializers.py	/^    def get_thumb(self, instance):$/;"	m	class:ImageFileSerializer
 get_title	watson/search.py	/^    def get_title(self, obj):$/;"	m	class:SearchAdapter
 get_url	watson/search.py	/^    def get_url(self, obj):$/;"	m	class:SearchAdapter
-get_usage	apps/photo/serializers.py	/^    def get_usage(self, instance):$/;"	m	class:ImageFileSerializer
+get_usage	api/photo_serializers.py	/^    def get_usage(self, instance):$/;"	m	class:ImageFileSerializer
 gmail	universitas/dev.py	/^gmail = Environment('GOOGLE', strict=False)$/;"	v
 gmail	universitas/production.py	/^gmail = Environment('GMAIL')$/;"	v
 groups	apps/contributors/models.py	/^    groups = models.ManyToManyField($/;"	v	class:Position
@@ -1502,6 +1586,26 @@ help_text	apps/photo/models.py	/^        help_text=_('perceptual hash of image u
 help_text	apps/photo/models.py	/^        help_text=_('previous path if the image has been moved.'),$/;"	v	class:ImageFile.Meta
 help_text	apps/photo/models.py	/^        help_text=_('size of file in bytes'),$/;"	v	class:ImageFile.Meta
 help_text	apps/photo/models.py	/^        help_text=_('who made this'),$/;"	v	class:ImageFile.Meta
+help_text	apps/prodsys/models.py	/^        help_text=_('How prominent this image should be in the layout.'),$/;"	v	class:ProdImage
+help_text	apps/prodsys/models.py	/^        help_text=_('Where this image should be positioned in the layout. '$/;"	v	class:ProdImage
+help_text	apps/prodsys/models.py	/^        help_text=_('applied'),$/;"	v	class:StoryPatch
+help_text	apps/prodsys/models.py	/^        help_text=_('caption'),$/;"	v	class:ProdImage
+help_text	apps/prodsys/models.py	/^        help_text=_('comments'),$/;"	v	class:ProdStory
+help_text	apps/prodsys/models.py	/^        help_text=_('contributor'),$/;"	v	class:StoryPatch
+help_text	apps/prodsys/models.py	/^        help_text=_('created'),$/;"	v	class:StoryPatch
+help_text	apps/prodsys/models.py	/^        help_text=_('image'),$/;"	v	class:ProdImage
+help_text	apps/prodsys/models.py	/^        help_text=_('internal ordering of bylines'),$/;"	v	class:ProdByline
+help_text	apps/prodsys/models.py	/^        help_text=_('issue'),$/;"	v	class:ProdStory
+help_text	apps/prodsys/models.py	/^        help_text=_('patch'),$/;"	v	class:StoryPatch
+help_text	apps/prodsys/models.py	/^        help_text=_('person\\'s title, qualification or location'),$/;"	v	class:ProdByline
+help_text	apps/prodsys/models.py	/^        help_text=_('raw markup content'),$/;"	v	class:ProdStory
+help_text	apps/prodsys/models.py	/^        help_text=_('reverse_patch'),$/;"	v	class:StoryPatch
+help_text	apps/prodsys/models.py	/^        help_text=_('status'),$/;"	v	class:ProdStory
+help_text	apps/prodsys/models.py	/^        help_text=_('story'),$/;"	v	class:ProdImage
+help_text	apps/prodsys/models.py	/^        help_text=_('story'),$/;"	v	class:StoryPatch
+help_text	apps/prodsys/models.py	/^        help_text=_('story_type'),$/;"	v	class:ProdStory
+help_text	apps/prodsys/models.py	/^        help_text=_('what this person contributed with'),$/;"	v	class:ProdByline
+help_text	apps/prodsys/models.py	/^        help_text=_('working_title'),$/;"	v	class:ProdStory
 help_text	apps/stories/migrations/0001_initial.py	/^                                                   help_text='the part of the url that identifies this particular video')),$/;"	v	class:Migration
 help_text	apps/stories/migrations/0001_initial.py	/^                                            help_text='Is this element placed on top?')),$/;"	v	class:Migration
 help_text	apps/stories/models.py	/^        help_text=_($/;"	v	class:Story.Meta
@@ -1555,6 +1659,7 @@ id_innlegg	apps/legacy_db/models.py	/^    id_innlegg = models.IntegerField(prima
 id_sak	apps/legacy_db/models.py	/^    id_sak = models.ForeignKey(Sak, db_column='id_sak', blank=True, null=True)$/;"	v	class:Bildetekst
 id_sak	apps/legacy_db/models.py	/^    id_sak = models.IntegerField(primary_key=True)$/;"	v	class:Sak
 id_svar	apps/legacy_db/models.py	/^    id_svar = models.IntegerField(primary_key=True)$/;"	v	class:DiskSvar
+image	apps/prodsys/models.py	/^    image = models.ForeignKey($/;"	v	class:ProdImage
 image_count	apps/stories/models.py	/^    def image_count(self):$/;"	m	class:Story
 image_file	apps/photo/templatetags/image_file.py	/^def image_file(image_file, width=300, height=None):$/;"	f
 image_post_delete	apps/photo/signals.py	/^def image_post_delete(sender, instance, **kwargs):$/;"	f
@@ -1571,8 +1676,10 @@ import_legacy_website_content	apps/legacy_db/export_content_and_images.py	/^def 
 import_prodsys_content	apps/legacy_db/export_content_and_images.py	/^def import_prodsys_content($/;"	f
 import_staging_images	apps/photo/tasks.py	/^def import_staging_images(max_age=timedelta(minutes=10)):$/;"	f
 import_stories_from_prodsys	apps/legacy_db/tasks.py	/^def import_stories_from_prodsys(**kwargs):$/;"	f
+index	apps/prodsys/models.py	/^    index = models.IntegerField($/;"	v	class:ProdByline
 index	apps/stories/models.py	/^    index = models.PositiveSmallIntegerField($/;"	v	class:StoryElement
 ingress	apps/legacy_db/models.py	/^    ingress = models.TextField()$/;"	v	class:Sak
+initial	apps/prodsys/migrations/0001_initial.py	/^    initial = True$/;"	v	class:Migration
 initials	apps/contributors/models.py	/^    initials = models.CharField(blank=True, null=True, max_length=5)$/;"	v	class:Contributor
 inline	apps/stories/models.py	/^    def inline(self):$/;"	m	class:ElementQuerySet
 inline_aside	apps/stories/templatetags/inline_elements.py	/^def inline_aside(context, argument_string):$/;"	f
@@ -1609,9 +1716,9 @@ is_profile_image	apps/photo/models.py	/^    def is_profile_image(self):$/;"	m	cl
 is_registered	watson/search.py	/^    def is_registered(self, model):$/;"	m	class:SearchEngine
 is_registered	watson/search.py	/^is_registered = default_search_engine.is_registered$/;"	v
 issue	apps/issues/models.py	/^    issue = models.ForeignKey($/;"	v	class:PrintIssue
+issue	apps/prodsys/models.py	/^    issue = models.ForeignKey($/;"	v	class:ProdStory
 issue	apps/stories/models.py	/^    issue = models.ForeignKey($/;"	v	class:Story
 issue_name	apps/issues/models.py	/^    issue_name = models.CharField($/;"	v	class:Issue
-issue_tuple	apps/issues/models.py	/^    def issue_tuple(self):$/;"	m	class:Issue
 issue_type	apps/issues/models.py	/^    issue_type = models.PositiveSmallIntegerField($/;"	v	class:Issue
 issues	apps/issues/context_processors.py	/^def issues(request):$/;"	f
 item_description	apps/stories/feeds.py	/^    def item_description(self, item):$/;"	m	class:LatestStories
@@ -1622,7 +1729,7 @@ j_j	ptpython_config.py	/^    def j_j(event):$/;"	f	function:configure
 join_models	apps/issues/migrations/0005_data_link_pdf_to_issue.py	/^def join_models(apps, schema_editor):$/;"	f
 joinpath	universitas/setting_helpers.py	/^def joinpath(*paths, resolve=False):$/;"	f
 journalist	apps/legacy_db/models.py	/^    journalist = models.CharField(max_length=50, blank=True)$/;"	v	class:Prodsak
-jsonDict	apps/photo/serializers.py	/^class jsonDict(dict):$/;"	c
+jsonDict	api/photo_serializers.py	/^class jsonDict(dict):$/;"	c
 kicker	apps/frontpage/models.py	/^    kicker = models.CharField($/;"	v	class:FrontpageStory
 kicker	apps/stories/models.py	/^    kicker = MarkupCharField($/;"	v	class:Story
 kommentar	apps/legacy_db/models.py	/^    kommentar = models.TextField(blank=True)$/;"	v	class:Prodbilde
@@ -1630,8 +1737,8 @@ kommentar	apps/legacy_db/models.py	/^    kommentar = models.TextField(blank=True
 kwargs	apps/photo/autocomplete_light_registry.py	/^kwargs = dict($/;"	v
 label	apps/frontpage/models.py	/^    label = models.CharField($/;"	v	class:Frontpage
 language	apps/stories/models.py	/^    language = models.CharField($/;"	v	class:Story
+large	api/photo_serializers.py	/^    large = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 large	apps/photo/models.py	/^    def large(self):$/;"	m	class:ImageFile
-large	apps/photo/serializers.py	/^    large = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 large_thumbnail	apps/issues/admin.py	/^    def large_thumbnail(self, instance):$/;"	m	class:ThumbAdmin
 latest_issue	apps/issues/models.py	/^    def latest_issue(self):$/;"	m	class:IssueQueryset
 leave_locale_alone	apps/legacy_db/management/commands/importer_fra_prodsys.py	/^    leave_locale_alone = True,$/;"	v	class:Command
@@ -1645,6 +1752,7 @@ lesninger	apps/legacy_db/models.py	/^    lesninger = models.IntegerField(blank=T
 link	apps/adverts/models.py	/^    link = models.URLField($/;"	v	class:Advert
 link	apps/stories/feeds.py	/^    link = "\/rss\/"$/;"	v	class:LatestStories
 link	apps/stories/models.py	/^    def link(self):$/;"	m	class:InlineLink
+link	apps/stories/models.py	/^    def link(self):$/;"	m	class:StoryVideo
 linked_story	apps/stories/models.py	/^    linked_story = models.ForeignKey($/;"	v	class:InlineLink
 links	apps/stories/models.py	/^    def links(self):$/;"	m	class:TextContent
 list_display	apps/adverts/admin.py	/^    list_display = [$/;"	v	class:AdvertAdmin
@@ -1736,6 +1844,7 @@ logger	apps/photo/cropping/models.py	/^logger = logging.getLogger(__name__)$/;"	
 logger	apps/photo/models.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	apps/photo/signals.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	apps/photo/tasks.py	/^logger = logging.getLogger(__name__)$/;"	v
+logger	apps/prodsys/models.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	apps/stories/management/commands/check_links.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	apps/stories/management/commands/devalue_hotness.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	apps/stories/management/commands/frontpage_stories.py	/^logger = logging.getLogger(__name__)$/;"	v
@@ -1770,6 +1879,8 @@ managed	apps/legacy_db/models.py	/^        managed = False$/;"	v	class:Fakta.Met
 managed	apps/legacy_db/models.py	/^        managed = False$/;"	v	class:Prodbilde.Meta
 managed	apps/legacy_db/models.py	/^        managed = False$/;"	v	class:Prodsak.Meta
 managed	apps/legacy_db/models.py	/^        managed = False$/;"	v	class:Sak.Meta
+many	api/contributor_serializers.py	/^        many=False,$/;"	v	class:ContributorSerializer.Meta
+many	api/issue_serializers.py	/^        many=True,$/;"	v	class:IssueSerializer
 mappe	apps/legacy_db/models.py	/^    mappe = models.CharField(max_length=100, blank=True)$/;"	v	class:Prodsak
 mappe	apps/legacy_db/models.py	/^    mappe = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
 markup_tag	apps/stories/models.py	/^    markup_tag = ''  # change in subclasses$/;"	v	class:StoryElement
@@ -1806,6 +1917,10 @@ max_length	apps/photo/models.py	/^        max_length=1000,$/;"	v	class:ImageFile
 max_length	apps/photo/models.py	/^        max_length=1024,$/;"	v	class:ImageFile.Meta
 max_length	apps/photo/models.py	/^        max_length=16,$/;"	v	class:ImageFile.Meta
 max_length	apps/photo/models.py	/^        max_length=32,$/;"	v	class:ImageFile.Meta
+max_length	apps/prodsys/models.py	/^        max_length=1000,$/;"	v	class:ProdImage
+max_length	apps/prodsys/models.py	/^        max_length=200,$/;"	v	class:ProdStory
+max_length	apps/prodsys/models.py	/^        max_length=300,$/;"	v	class:ProdByline
+max_length	apps/prodsys/models.py	/^        max_length=32,$/;"	v	class:ProdByline
 max_length	apps/stories/models.py	/^        max_length=10,$/;"	v	class:Story.Meta
 max_length	apps/stories/models.py	/^        max_length=100,$/;"	v	class:Story.Meta
 max_length	apps/stories/models.py	/^        max_length=100,$/;"	v	class:StoryMedia.Meta
@@ -1829,12 +1944,17 @@ md5	apps/photo/models.py	/^    def md5(self):$/;"	m	class:ImageFile
 md5	apps/photo/models.py	/^    def md5(self, value):$/;"	m	class:ImageFile
 meta	watson/models.py	/^    def meta(self):$/;"	m	class:SearchEntry
 meta_encoded	watson/models.py	/^    meta_encoded = models.TextField()$/;"	v	class:SearchEntry
-method	apps/photo/serializers.py	/^    method = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
+method	api/photo_serializers.py	/^    method = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 migrate_cropboxes	apps/photo/migrations/0010_data_imagefile_cropbox.py	/^def migrate_cropboxes(apps, schema_editor):$/;"	f
 minify	utils/html.py	/^def minify(source):$/;"	f
+model	api/contributor_serializers.py	/^        model = Contributor$/;"	v	class:ContributorSerializer.Meta
+model	api/contributor_serializers.py	/^        model = Stint$/;"	v	class:StintSerializer.Meta
+model	api/issue_serializers.py	/^        model = Issue$/;"	v	class:IssueSerializer.Meta
+model	api/issue_serializers.py	/^        model = PrintIssue$/;"	v	class:NestedPDFSerializer.Meta
+model	api/issue_serializers.py	/^        model = PrintIssue$/;"	v	class:PrintIssueSerializer.Meta
+model	api/photo_serializers.py	/^        model = ImageFile$/;"	v	class:ImageFileSerializer.Meta
 model	apps/contributors/admin.py	/^    model = Stint$/;"	v	class:StintInline
 model	apps/frontpage/admin.py	/^    model = StoryModule$/;"	v	class:StoryModuleInline
-model	apps/photo/serializers.py	/^        model = ImageFile$/;"	v	class:ImageFileSerializer.Meta
 model	apps/stories/admin.py	/^    model = Aside$/;"	v	class:AsideInline
 model	apps/stories/admin.py	/^    model = Byline$/;"	v	class:BylineInline
 model	apps/stories/admin.py	/^    model = FrontpageStory$/;"	v	class:FrontpageStoryInline
@@ -1884,6 +2004,8 @@ model_name	apps/photo/migrations/0009_imagefile_crop_box.py	/^            model_
 model_name	apps/photo/migrations/0011_auto_20170422_2232.py	/^            model_name='imagefile',$/;"	v	class:Migration
 model_name	apps/photo/migrations/0012_imagefile__imagehash.py	/^            model_name='imagefile',$/;"	v	class:Migration
 model_name	apps/photo/migrations/0013_imagefile_description.py	/^            model_name='imagefile',$/;"	v	class:Migration
+model_name	apps/prodsys/migrations/0001_initial.py	/^            model_name='prodbyline',$/;"	v	class:Migration
+model_name	apps/prodsys/migrations/0001_initial.py	/^            model_name='prodimage',$/;"	v	class:Migration
 model_name	apps/stories/migrations/0001_initial.py	/^            model_name='byline',$/;"	v	class:Migration
 model_name	apps/stories/migrations/0001_initial.py	/^            model_name='inlinelink',$/;"	v	class:Migration
 model_name	apps/stories/migrations/0001_initial.py	/^            model_name='story',$/;"	v	class:Migration
@@ -1925,6 +2047,7 @@ models	watson/views.py	/^    models = ()$/;"	v	class:SearchMixin
 move_to_archive	apps/legacy_db/admin.py	/^def move_to_archive(modeladmin, request, queryset):$/;"	f
 mtime	apps/photo/models.py	/^    def mtime(self):$/;"	m	class:ImageFile
 mtime	apps/photo/models.py	/^    def mtime(self, timestamp):$/;"	m	class:ImageFile
+name	api/appconf.py	/^    name = 'api'$/;"	v	class:ApiAppConfig
 name	apps/adverts/appconf.py	/^    name = 'apps.adverts'$/;"	v	class:AdvertsAppConfig
 name	apps/adverts/migrations/0001_initial.py	/^            name='AdChannel',$/;"	v	class:Migration
 name	apps/adverts/migrations/0001_initial.py	/^            name='AdFormat',$/;"	v	class:Migration
@@ -2022,6 +2145,12 @@ name	apps/photo/migrations/0011_auto_20170422_2232.py	/^            name='from_l
 name	apps/photo/migrations/0011_auto_20170422_2232.py	/^            name='from_top',$/;"	v	class:Migration
 name	apps/photo/migrations/0012_imagefile__imagehash.py	/^            name='_imagehash',$/;"	v	class:Migration
 name	apps/photo/migrations/0013_imagefile_description.py	/^            name='description',$/;"	v	class:Migration
+name	apps/prodsys/appconf.py	/^    name = 'apps.prodsys'$/;"	v	class:ProdsysAppConfig
+name	apps/prodsys/migrations/0001_initial.py	/^            name='ProdByline',$/;"	v	class:Migration
+name	apps/prodsys/migrations/0001_initial.py	/^            name='ProdImage',$/;"	v	class:Migration
+name	apps/prodsys/migrations/0001_initial.py	/^            name='ProdStory',$/;"	v	class:Migration
+name	apps/prodsys/migrations/0001_initial.py	/^            name='StoryPatch',$/;"	v	class:Migration
+name	apps/prodsys/migrations/0001_initial.py	/^            name='story',$/;"	v	class:Migration
 name	apps/stories/appconf.py	/^    name = 'apps.stories'$/;"	v	class:StoriesAppConfig
 name	apps/stories/migrations/0001_initial.py	/^            name='Aside',$/;"	v	class:Migration
 name	apps/stories/migrations/0001_initial.py	/^            name='Byline',$/;"	v	class:Migration
@@ -2065,7 +2194,7 @@ name	universitas/urls.py	/^        name='pdf_archive'),$/;"	v
 name	universitas/urls.py	/^        name='pub_plan'),$/;"	v
 name	universitas/urls.py	/^        name='pub_plan_year'),$/;"	v
 name	watson/migrations/0001_initial.py	/^            name='SearchEntry',$/;"	v	class:Migration
-namespace	universitas/api_urls.py	/^                               namespace='rest_framework'))$/;"	v
+namespace	api/urls.py	/^                               namespace='rest_framework'))$/;"	v
 natural_key	apps/issues/models.py	/^    def natural_key(self):$/;"	m	class:Issue
 navn	apps/legacy_db/models.py	/^    navn = models.CharField(max_length=128)$/;"	v	class:InnleggAbstract
 needle	apps/stories/models.py	/^    def needle(self):$/;"	m	class:Pullquote
@@ -2093,8 +2222,11 @@ null	apps/photo/cropping/models.py	/^        null=True,$/;"	v	class:AutoCropImag
 null	apps/photo/migrations/0009_imagefile_crop_box.py	/^                null=True,$/;"	v	class:Migration
 null	apps/photo/models.py	/^        null=False,$/;"	v	class:ImageFile.Meta
 null	apps/photo/models.py	/^        null=True,$/;"	v	class:ImageFile.Meta
+null	apps/prodsys/models.py	/^        null=True,$/;"	v	class:ProdStory
+null	apps/prodsys/models.py	/^        null=True,$/;"	v	class:StoryPatch
 null	apps/stories/models.py	/^        null=True,$/;"	v	class:Byline
 null	watson/models.py	/^        null=True,$/;"	v	class:SearchEntry
+number	apps/issues/models.py	/^    def number(self):$/;"	m	class:Issue
 number	apps/stories/models.py	/^    number = models.PositiveSmallIntegerField($/;"	v	class:InlineLink
 object	watson/models.py	/^    object = GenericForeignKey()$/;"	v	class:SearchEntry
 object_id	watson/models.py	/^    object_id = models.TextField()$/;"	v	class:SearchEntry
@@ -2170,6 +2302,7 @@ operations	apps/photo/migrations/0010_data_imagefile_cropbox.py	/^    operations
 operations	apps/photo/migrations/0011_auto_20170422_2232.py	/^    operations = [$/;"	v	class:Migration
 operations	apps/photo/migrations/0012_imagefile__imagehash.py	/^    operations = [$/;"	v	class:Migration
 operations	apps/photo/migrations/0013_imagefile_description.py	/^    operations = [$/;"	v	class:Migration
+operations	apps/prodsys/migrations/0001_initial.py	/^    operations = [$/;"	v	class:Migration
 operations	apps/stories/migrations/0001_initial.py	/^    operations = [$/;"	v	class:Migration
 operations	apps/stories/migrations/0002_auto_20141217_1841.py	/^    operations = [$/;"	v	class:Migration
 operations	apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^    operations = [$/;"	v	class:Migration
@@ -2209,6 +2342,7 @@ options	apps/photo/migrations/0001_initial.py	/^            options={$/;"	v	clas
 options	apps/photo/migrations/0001_squashed_0003_auto_20150228_2151.py	/^            options={$/;"	v	class:Migration
 options	apps/photo/migrations/0003_profileimage.py	/^            options={$/;"	v	class:Migration
 options	apps/photo/migrations/0004_auto_20151014_0004.py	/^            options={'verbose_name_plural': 'Profile Images',$/;"	v	class:Migration
+options	apps/prodsys/migrations/0001_initial.py	/^            options={$/;"	v	class:Migration
 options	apps/stories/migrations/0001_initial.py	/^            options={$/;"	v	class:Migration
 options	apps/stories/migrations/0007_inlinehtml.py	/^            options={$/;"	v	class:Migration
 options	watson/migrations/0001_initial.py	/^            options={$/;"	v	class:Migration
@@ -2224,8 +2358,8 @@ ordering	apps/markup/models.py	/^        ordering = ('ordering',)$/;"	v	class:Al
 ordering	apps/markup/models.py	/^    ordering = models.PositiveSmallIntegerField($/;"	v	class:Alias
 ordering	apps/stories/models.py	/^        ordering = ['index']$/;"	v	class:StoryElement.Meta
 ordering	apps/stories/models.py	/^    ordering = models.IntegerField(default=1)$/;"	v	class:Byline
+original	api/photo_serializers.py	/^    original = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 original	apps/photo/models.py	/^    def original(self):$/;"	m	class:ImageFile
-original	apps/photo/serializers.py	/^    original = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 original_ratio	apps/stories/models.py	/^    def original_ratio(self):$/;"	m	class:StoryImage
 original_ratio	apps/stories/models.py	/^    def original_ratio(self):$/;"	m	class:StoryMedia
 overskrift	apps/legacy_db/models.py	/^    overskrift = models.CharField(max_length=255)$/;"	v	class:Sak
@@ -2241,18 +2375,21 @@ parent_story	apps/stories/models.py	/^    parent_story = models.ForeignKey($/;"	
 parent_story	apps/stories/models.py	/^    parent_story = models.ForeignKey(Story)$/;"	v	class:StoryElement
 parse_box_data	apps/photo/cropping/models.py	/^def parse_box_data(value):$/;"	f
 parse_markup	apps/stories/models.py	/^    def parse_markup(self):$/;"	m	class:TextContent
+patch	apps/prodsys/models.py	/^    patch = models.TextField($/;"	v	class:StoryPatch
 path	apps/legacy_db/models.py	/^    path = models.CharField(max_length=255)$/;"	v	class:Bilde
 pattern	apps/markup/models.py	/^    pattern = models.CharField($/;"	v	class:Alias
 pattern	apps/markup/models.py	/^    pattern = models.CharField($/;"	v	class:InlineTag
 pdf	apps/issues/models.py	/^    pdf = models.FileField($/;"	v	class:PrintIssue
-pdf_frontpage_to_image	apps/issues/models.py	/^        def pdf_frontpage_to_image():$/;"	f	function:PrintIssue.create_thumbnail
 pdf_links	apps/issues/admin.py	/^    def pdf_links(self, instance):$/;"	m	class:IssueAdmin
-pdf_not_found	apps/issues/models.py	/^        def pdf_not_found():$/;"	f	function:PrintIssue.create_thumbnail
-pdf_not_found	apps/issues/models.py	/^def pdf_not_found(pdf_name):$/;"	f
+pdf_number_of_pages	apps/issues/models.py	/^def pdf_number_of_pages(pdf):$/;"	f
 pdf_thumb	apps/issues/admin.py	/^    def pdf_thumb(self, pdf, width=250, height=100):$/;"	m	class:IssueAdmin
+pdf_to_image	apps/issues/models.py	/^def pdf_to_image(pdf, page=1, resolution=60, file_format='jpeg'):$/;"	f
+pdf_to_text	apps/issues/models.py	/^def pdf_to_text(pdf, first_page=1, last_page=None):$/;"	f
+pdfs	api/issue_serializers.py	/^    pdfs = NestedPDFSerializer($/;"	v	class:IssueSerializer
 pending	apps/photo/models.py	/^    def pending(self):$/;"	m	class:ImageFileQuerySet
 permanent	universitas/redirect_urls.py	/^                             permanent=False)),$/;"	v
 permanent	universitas/redirect_urls.py	/^                             permanent=True)),$/;"	v
+permissions	apps/prodsys/models.py	/^        permissions = [$/;"	v	class:ProdStory.Meta
 phone	apps/contributors/models.py	/^    phone = models.CharField(blank=True, null=True, max_length=20)$/;"	v	class:Contributor
 photos	apps/photo/models.py	/^    def photos(self):$/;"	m	class:ImageFileQuerySet
 place_all_inline_elements	apps/stories/models.py	/^    def place_all_inline_elements(self):$/;"	m	class:Story
@@ -2260,9 +2397,11 @@ placements	apps/frontpage/models.py	/^    placements = models.ManyToManyField($/
 populate_from	apps/stories/models.py	/^        populate_from=('name',),$/;"	v	class:StoryType
 populate_from	apps/stories/models.py	/^        populate_from=('title',),$/;"	v	class:Section.Meta
 populate_frontpage	apps/stories/models.py	/^    def populate_frontpage(self, **kwargs):$/;"	m	class:PublishedStoryManager
+position	api/contributor_serializers.py	/^    position = serializers.SlugRelatedField($/;"	v	class:StintSerializer
 position	apps/contributors/models.py	/^    position = models.ForeignKey(Position)$/;"	v	class:Stint
 position	apps/frontpage/models.py	/^    position = models.IntegerField($/;"	v	class:StaticModule
 position	apps/frontpage/models.py	/^    position = models.PositiveIntegerField($/;"	v	class:StoryModule
+position	apps/prodsys/models.py	/^    position = models.PositiveSmallIntegerField($/;"	v	class:ProdImage
 position_default	apps/frontpage/models.py	/^    def position_default(self):$/;"	m	class:StoryModule
 post_save_task	apps/photo/tasks.py	/^def post_save_task(pk):$/;"	f
 prepare_content	watson/search.py	/^    def prepare_content(self, content):$/;"	m	class:SearchAdapter
@@ -2291,6 +2430,7 @@ price	apps/adverts/models.py	/^    price = models.PositiveIntegerField($/;"	v	cl
 prioritet	apps/legacy_db/models.py	/^    prioritet = models.IntegerField()$/;"	v	class:Sak
 prioritet	apps/legacy_db/models.py	/^    prioritet = models.IntegerField(blank=True, null=True)$/;"	v	class:Prodbilde
 prioritetdato	apps/legacy_db/models.py	/^    prioritetdato = models.DateTimeField(blank=True, null=True)$/;"	v	class:Sak
+priority	apps/prodsys/models.py	/^    priority = models.PositiveSmallIntegerField($/;"	v	class:ProdImage
 priority	apps/stories/models.py	/^    def priority(self):$/;"	m	class:Story
 process_exception	watson/middleware.py	/^    def process_exception(self, request, exception):$/;"	m	class:SearchContextMiddleware
 process_request	watson/middleware.py	/^    def process_request(self, request):$/;"	m	class:SearchContextMiddleware
@@ -2323,8 +2463,11 @@ pullquotes	apps/stories/models.py	/^    def pullquotes(self):$/;"	m	class:TextCo
 qs_methods	apps/stories/models.py	/^    qs_methods = [attr for attr in dir(ElementQuerySet) if not$/;"	v	class:ElementManager
 query_param	apps/search/views.py	/^    query_param = "q"$/;"	v	class:SearchMixin
 query_param	watson/views.py	/^    query_param = "q"$/;"	v	class:SearchMixin
+queryset	api/contributor_serializers.py	/^    queryset = Contributor.objects.all()$/;"	v	class:ContributorViewSet
+queryset	api/issue_serializers.py	/^    queryset = Issue.objects.all()$/;"	v	class:IssueViewSet
+queryset	api/issue_serializers.py	/^    queryset = PrintIssue.objects.order_by('-issue__publication_date')$/;"	v	class:PrintIssueViewSet
+queryset	api/photo_serializers.py	/^    queryset = ImageFile.objects.order_by('-created')$/;"	v	class:ImageFileViewSet
 queryset	apps/legacy_db/admin.py	/^    def queryset(self, request, queryset):$/;"	m	class:ProdusertFilter
-queryset	apps/photo/serializers.py	/^    queryset = ImageFile.objects.order_by('-created')$/;"	v	class:ImageFileViewSet
 random_bands	apps/core/content_factory.py	/^def random_bands(sourceimg):$/;"	f
 random_color	apps/adverts/dummy_image_advert.py	/^def random_color():$/;"	f
 random_contributor	apps/core/content_factory.py	/^def random_contributor():$/;"	f
@@ -2336,8 +2479,12 @@ random_storytype	utils/content_factory.py	/^def random_storytype():$/;"	f
 ratio	apps/photo/cropping/boundingbox.py	/^    def ratio(self) -> float:$/;"	m	class:Box
 raw_id_fields	apps/stories/admin.py	/^    raw_id_fields = ($/;"	v	class:BylineAdmin
 raw_id_fields	apps/stories/admin.py	/^    raw_id_fields = ($/;"	v	class:StoryTypeAdmin
+read	apps/issues/models.py	/^    def read(self):$/;"	m	class:BrokenImage
 read	apps/photo/models.py	/^    def read(self):$/;"	m	class:BrokenImage
-read_only_fields	apps/photo/serializers.py	/^        read_only_fields = [$/;"	v	class:ImageFileSerializer.Meta
+read_only	api/contributor_serializers.py	/^        read_only=True,$/;"	v	class:ContributorSerializer.Meta
+read_only	api/contributor_serializers.py	/^        read_only=True,$/;"	v	class:StintSerializer.Meta
+read_only	api/issue_serializers.py	/^        read_only=True,$/;"	v	class:IssueSerializer
+read_only_fields	api/photo_serializers.py	/^        read_only_fields = [$/;"	v	class:ImageFileSerializer.Meta
 readonly_fields	apps/adverts/admin.py	/^    readonly_fields = ['get_html']$/;"	v	class:AdvertAdmin
 readonly_fields	apps/frontpage/admin.py	/^    readonly_fields = ['cropped_thumb']$/;"	v	class:FrontpageStoryAdmin
 readonly_fields	apps/issues/admin.py	/^    readonly_fields = ($/;"	v	class:PrintIssueAdmin
@@ -2364,6 +2511,9 @@ register_model_with_watson	watson/admin.py	/^    def register_model_with_watson(
 reindex_inlines	apps/stories/models.py	/^    def reindex_inlines(self, element_classes=None, body=None):$/;"	m	class:Story
 related_name	apps/contributors/migrations/0010_auto_20151013_2307.py	/^                related_name='person',$/;"	v	class:Migration
 related_name	apps/contributors/models.py	/^        related_name='person',$/;"	v	class:Contributor
+related_name	apps/prodsys/models.py	/^        related_name='images',$/;"	v	class:ProdImage
+related_name	apps/prodsys/models.py	/^        related_name='patches',$/;"	v	class:StoryPatch
+related_name	apps/prodsys/models.py	/^        related_name='stories',$/;"	v	class:ProdStory
 related_name	apps/stories/models.py	/^        related_name='incoming_links',$/;"	v	class:InlineLink.Meta
 related_name	apps/stories/models.py	/^        related_name='inline_links'$/;"	v	class:InlineLink.Meta
 remove_control_chars	apps/stories/models.py	/^def remove_control_chars(s):$/;"	f
@@ -2382,14 +2532,16 @@ requires_installation	watson/backends.py	/^    requires_installation = False$/;"
 requires_installation	watson/backends.py	/^    requires_installation = True$/;"	v	class:MySQLSearchBackend
 requires_installation	watson/backends.py	/^    requires_installation = True$/;"	v	class:PostgresSearchBackend
 reset_db_autoincrement	apps/legacy_db/export_content_and_images.py	/^def reset_db_autoincrement():$/;"	f
+reset_primary_key_index	utils/migration_helpers.py	/^def reset_primary_key_index(table, pk="id"):$/;"	f
 reverse_code	apps/frontpage/migrations/0002_ensure_one_frontpage.py	/^            reverse_code=backwards,$/;"	v	class:Migration
 reverse_code	apps/issues/migrations/0005_data_link_pdf_to_issue.py	/^            reverse_code=unjoin_models$/;"	v	class:Migration
 reverse_code	apps/issues/migrations/0011_data_load_publication_plan.py	/^            reverse_code=unload_fixture('issues', ['Issue', 'PrintIssue']),$/;"	v	class:Migration
 reverse_code	apps/markup/migrations/0002_load_markup_tags.py	/^            reverse_code=unload_fixture($/;"	v	class:Migration
 reverse_code	apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^            reverse_code=unload_fixture('stories', ['Section', 'StoryType']),$/;"	v	class:Migration
 reverse_code	apps/stories/migrations/0021_data_generate_slugs.py	/^            reverse_code=backwards,$/;"	v	class:Migration
+reverse_patch	apps/prodsys/models.py	/^    reverse_patch = models.TextField($/;"	v	class:StoryPatch
 root	apps/frontpage/models.py	/^    def root(self):$/;"	m	class:FrontpageManager
-router	universitas/api_urls.py	/^router = routers.DefaultRouter()$/;"	v
+router	api/urls.py	/^router = routers.DefaultRouter()$/;"	v
 run	docker-entrypoint.sh	/^function run {$/;"	f
 s3_md5	apps/photo/models.py	/^def s3_md5(s3key, blocksize=65536):$/;"	f
 sak	apps/legacy_db/models.py	/^    sak = models.ForeignKey(Sak, db_column='id_sak')$/;"	v	class:Fakta
@@ -2435,6 +2587,7 @@ search_config	watson/backends.py	/^    search_config = "pg_catalog.english"$/;"	
 search_context_manager	watson/admin.py	/^    def search_context_manager(self):$/;"	m	class:SearchAdmin
 search_context_manager	watson/search.py	/^search_context_manager = SearchContextManager()$/;"	v
 search_engine	watson/admin.py	/^    search_engine = admin_search_engine$/;"	v	class:SearchAdmin
+search_fields	api/photo_serializers.py	/^    search_fields = ('source_file', 'description')$/;"	v	class:ImageFileViewSet
 search_fields	apps/contributors/admin.py	/^    search_fields = ($/;"	v	class:ContributorAdmin
 search_fields	apps/contributors/autocomplete_light_registry.py	/^    search_fields=['display_name'],$/;"	v
 search_fields	apps/frontpage/admin.py	/^    search_fields = ($/;"	v	class:FrontpageStoryAdmin
@@ -2444,7 +2597,6 @@ search_fields	apps/legacy_db/admin.py	/^    search_fields = ($/;"	v	class:Prodsa
 search_fields	apps/legacy_db/admin.py	/^    search_fields = ($/;"	v	class:SakAdmin
 search_fields	apps/photo/admin.py	/^    search_fields = ($/;"	v	class:ImageAdmin
 search_fields	apps/photo/autocomplete_light_registry.py	/^    search_fields=['source_file', ],$/;"	v
-search_fields	apps/photo/serializers.py	/^    search_fields = ('source_file', 'description')$/;"	v	class:ImageFileViewSet
 search_fields	apps/stories/admin.py	/^    search_fields = ($/;"	v	class:StoryAdmin
 search_fields	apps/stories/autocomplete_light_registry.py	/^    search_fields=['title', 'lede', ],$/;"	v
 search_for_alias	apps/contributors/models.py	/^        def search_for_alias():$/;"	f	function:Contributor.get_or_create
@@ -2460,25 +2612,30 @@ sensurert	apps/legacy_db/models.py	/^    sensurert = models.IntegerField(blank=T
 serialize	apps/photo/cropping/boundingbox.py	/^    def serialize(self, precision: int=4) -> typing.Mapping[str, float]:$/;"	m	class:Box
 serialize	apps/photo/cropping/crop_detector.py	/^    def serialize(self, precision: int=3) -> OrderedDict:$/;"	m	class:Feature
 serialize_meta	watson/search.py	/^    def serialize_meta(self, obj):$/;"	m	class:SearchAdapter
-serializer_class	apps/photo/serializers.py	/^    serializer_class = ImageFileSerializer$/;"	v	class:ImageFileViewSet
+serializer_class	api/contributor_serializers.py	/^    serializer_class = ContributorSerializer$/;"	v	class:ContributorViewSet
+serializer_class	api/issue_serializers.py	/^    serializer_class = IssueSerializer$/;"	v	class:IssueViewSet
+serializer_class	api/issue_serializers.py	/^    serializer_class = PrintIssueSerializer$/;"	v	class:PrintIssueViewSet
+serializer_class	api/photo_serializers.py	/^    serializer_class = ImageFileSerializer$/;"	v	class:ImageFileViewSet
 serve_ads	apps/adverts/models.py	/^    def serve_ads(self):$/;"	m	class:AdChannel
 siblings	apps/stories/models.py	/^    def siblings(self):$/;"	m	class:StoryElement
 similar_tag	apps/markup/models.py	/^    def similar_tag(self, start_tag, cutoff=0.6):$/;"	m	class:BlockTagManager
 single	apps/legacy_db/models.py	/^    def single(self):$/;"	m	class:ProdsakManager
 single	apps/legacy_db/models.py	/^    def single(self):$/;"	m	class:ProdsakQueryset
 sitat	apps/legacy_db/models.py	/^    sitat = models.TextField(blank=True)$/;"	v	class:Sak
+size	api/photo_serializers.py	/^    size = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 size	apps/legacy_db/models.py	/^    size = models.IntegerField(db_column='str', blank=True, null=True)$/;"	v	class:Bilde
 size	apps/photo/cropping/boundingbox.py	/^    def size(self) -> float:$/;"	m	class:Box
 size	apps/photo/models.py	/^    def size(self):$/;"	m	class:ImageFile
 size	apps/photo/models.py	/^    def size(self, value):$/;"	m	class:ImageFile
-size	apps/photo/serializers.py	/^    size = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 size	apps/stories/models.py	/^    size = models.PositiveSmallIntegerField($/;"	v	class:StoryMedia
+skandale	apps/prodsys/tests/test_models.py	/^def skandale(celebrity_gossip):$/;"	f
 skip_index_update	watson/search.py	/^    def skip_index_update(self):$/;"	m	class:SearchContextManager
 skip_index_update	watson/search.py	/^skip_index_update = search_context_manager.skip_index_update$/;"	v
 slagord	apps/legacy_db/models.py	/^    slagord = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
 slug	apps/stories/models.py	/^    slug = AutoSlugField($/;"	v	class:Section
 slug	apps/stories/models.py	/^    slug = AutoSlugField($/;"	v	class:Story
 slug	apps/stories/models.py	/^    slug = AutoSlugField($/;"	v	class:StoryType
+slug_field	api/contributor_serializers.py	/^        slug_field='title',$/;"	v	class:StintSerializer.Meta
 slugify	apps/photo/models.py	/^    def slugify(cls, filename):$/;"	m	class:ImageFile
 slugify	apps/photo/models.py	/^    def slugify(cls, filename):$/;"	m	class:ProfileImage
 slugify	apps/stories/models.py	/^slugify = Slugify(max_length=50, to_lower=True)$/;"	v
@@ -2486,8 +2643,8 @@ slugify_filename	apps/legacy_db/export_content_and_images.py	/^slugify_filename 
 slugify_function	apps/stories/models.py	/^        slugify_function=slugify,$/;"	v	class:Section.Meta
 slugify_function	apps/stories/models.py	/^        slugify_function=slugify,$/;"	v	class:Story.Meta
 slugify_function	apps/stories/models.py	/^        slugify_function=slugify,$/;"	v	class:StoryType
+small	api/photo_serializers.py	/^    small = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 small	apps/photo/models.py	/^    def small(self):$/;"	m	class:ImageFile
-small	apps/photo/serializers.py	/^    small = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 small	apps/stories/models.py	/^    def small(self):$/;"	m	class:StoryImage
 source_file	apps/photo/models.py	/^    source_file = thumbnail.ImageField($/;"	v	class:ImageFile
 split	apps/markup/models.py	/^    def split(self, content):$/;"	m	class:BlockTag
@@ -2499,12 +2656,18 @@ start_time	apps/adverts/models.py	/^    start_time = models.DateTimeField($/;"	v
 status	apps/adverts/models.py	/^    status = models.PositiveIntegerField($/;"	v	class:Advert
 status	apps/contributors/models.py	/^    status = models.PositiveSmallIntegerField($/;"	v	class:Contributor
 status	apps/legacy_db/models.py	/^    status = models.IntegerField()$/;"	v	class:InnleggAbstract
+status	apps/prodsys/models.py	/^    status = models.PositiveSmallIntegerField($/;"	v	class:ProdStory
 status_code	apps/stories/models.py	/^    status_code = models.CharField($/;"	v	class:InlineLink
 stikktittel	apps/legacy_db/models.py	/^    stikktittel = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
+stint_set	api/contributor_serializers.py	/^    stint_set = StintSerializer(many=True, read_only=True)$/;"	v	class:ContributorSerializer
 stoppa	apps/legacy_db/models.py	/^    stoppa = models.DateTimeField(blank=True, null=True)$/;"	v	class:Eposttinging
 store	watson/search.py	/^    store = ()$/;"	v	class:SearchAdapter
 story	apps/frontpage/models.py	/^    story = models.ForeignKey($/;"	v	class:FrontpageStory
+story	apps/prodsys/models.py	/^    story = models.ForeignKey($/;"	v	class:ProdImage
+story	apps/prodsys/models.py	/^    story = models.ForeignKey($/;"	v	class:StoryPatch
+story	apps/prodsys/models.py	/^    story = models.ForeignKey(ProdStory)$/;"	v	class:ProdByline
 story	apps/stories/models.py	/^    story = models.ForeignKey(Story)$/;"	v	class:Byline
+story_type	apps/prodsys/models.py	/^    story_type = models.ForeignKey($/;"	v	class:ProdStory
 story_type	apps/stories/models.py	/^    story_type = models.ForeignKey($/;"	v	class:Story
 story_type_url	apps/frontpage/models.py	/^    def story_type_url(self):$/;"	m	class:FrontpageStory
 storytype_frontpage	apps/frontpage/views.py	/^def storytype_frontpage(request, section, storytype):$/;"	f
@@ -2539,7 +2702,6 @@ template_name	apps/photo/views.py	/^    template_name = 'photo_app.html'$/;"	v	c
 template_name	apps/search/views.py	/^    template_name = "search-results.html"$/;"	v	class:SearchView
 template_name	apps/stories/models.py	/^    template_name = 'bodytext.html'$/;"	v	class:Story
 template_name	apps/stories/models.py	/^    template_name = 'bodytext_element.html'$/;"	v	class:TextContent
-template_name	universitas/dev_views.py	/^    template_name = 'react.html'$/;"	v	class:ReactDevView
 template_name	watson/views.py	/^    template_name = "watson\/search_results.html"$/;"	v	class:SearchView
 test_box_exceptions	apps/photo/cropping/boundingbox.py	/^def test_box_exceptions():$/;"	f
 test_box_methods	apps/photo/cropping/boundingbox.py	/^def test_box_methods():$/;"	f
@@ -2550,9 +2712,11 @@ test_cascade	apps/photo/tests/test_cropping.py	/^def test_cascade(valid_cascade_
 test_convert_pdf_page_to_image	apps/issues/tests/test_tasks.py	/^def test_convert_pdf_page_to_image(tmp_fixture_dir):$/;"	f
 test_convert_pdf_page_to_web	apps/issues/tests/test_tasks.py	/^def test_convert_pdf_page_to_web(tmp_fixture_dir):$/;"	f
 test_create_bundle	apps/issues/tests/test_tasks.py	/^def test_create_bundle(tmp_fixture_dir):$/;"	f
+test_create_cover	apps/issues/tests/test_models.py	/^def test_create_cover(fixture_pdf):$/;"	f
 test_create_current_issue_web_bundle	apps/issues/tests/test_tasks.py	/^def test_create_current_issue_web_bundle(tmp_fixture_dir):$/;"	f
 test_create_issue	apps/issues/tests/test_models.py	/^def test_create_issue():$/;"	f
 test_create_printissue	apps/issues/tests/test_models.py	/^def test_create_printissue(fixture_pdf, settings, tempdir):$/;"	f
+test_create_prodstory	apps/prodsys/tests/test_models.py	/^def test_create_prodstory(celebrity_gossip):$/;"	f
 test_create_story_from_xtags	apps/stories/tests/test_new_story.py	/^def test_create_story_from_xtags(news):$/;"	f
 test_cropbox_expansion	apps/photo/cropping/boundingbox.py	/^def test_cropbox_expansion():$/;"	f
 test_cropdetector	apps/photo/tests/test_cropping.py	/^def test_cropdetector(Detector, testimage):$/;"	f
@@ -2576,6 +2740,7 @@ test_post_save	apps/photo/tests/test_tasks.py	/^def test_post_save(fixture_image
 test_prettify	utils/html.py	/^def test_prettify():$/;"	f
 test_random_image	apps/core/tests/test_content_factory.py	/^def test_random_image():$/;"	f
 test_require_binary_decorator	apps/issues/tests/test_tasks.py	/^def test_require_binary_decorator():$/;"	f
+test_revisions	apps/prodsys/tests/test_models.py	/^def test_revisions(skandale):$/;"	f
 test_serialize_and_deserialize	apps/photo/tests/test_cropping.py	/^def test_serialize_and_deserialize():$/;"	f
 test_story_content	apps/core/tests/test_content_factory.py	/^def test_story_content():$/;"	f
 test_that_both_file_and_bytes_work	apps/photo/tests/test_cropping.py	/^def test_that_both_file_and_bytes_work(testimage):$/;"	f
@@ -2586,10 +2751,12 @@ text	apps/issues/models.py	/^    text = models.TextField($/;"	v	class:PrintIssue
 text	apps/stories/models.py	/^    text = models.TextField($/;"	v	class:InlineLink
 theme_word	apps/stories/models.py	/^    theme_word = MarkupCharField($/;"	v	class:Story
 through	apps/frontpage/models.py	/^        through=StoryModule,$/;"	v	class:FrontpageStory.Meta
+thumb	api/contributor_serializers.py	/^    thumb = serializers.SerializerMethodField()$/;"	v	class:ContributorSerializer
+thumb	api/photo_serializers.py	/^    thumb = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 thumb	apps/photo/cropping/models.py	/^    def thumb(self, height=315, width=600):$/;"	m	class:AutoCropImage
-thumb	apps/photo/serializers.py	/^    thumb = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 thumb	apps/stories/models.py	/^    def thumb(self):$/;"	m	class:Story
 thumbnail	apps/issues/admin.py	/^    def thumbnail(self, instance, width=200, height=200):$/;"	m	class:ThumbAdmin
+thumbnail	apps/issues/models.py	/^    def thumbnail(self, size='x150', **options):$/;"	m	class:PrintIssue
 thumbnail	apps/photo/models.py	/^    def thumbnail(self, size='x150', **options):$/;"	m	class:ImageFile
 tid	apps/legacy_db/models.py	/^    tid = models.DateTimeField()$/;"	v	class:InnleggAbstract
 timelock	apps/legacy_db/models.py	/^    timelock = models.DateTimeField(editable=False, blank=True, null=True)$/;"	v	class:Prodsak
@@ -2606,9 +2773,9 @@ title	watson/models.py	/^    title = models.CharField($/;"	v	class:SearchEntry
 tittel	apps/legacy_db/models.py	/^    tittel = models.CharField(max_length=255, blank=True)$/;"	v	class:DiskInnlegg
 tmp_fixture_dir	apps/issues/tests/test_tasks.py	/^def tmp_fixture_dir(settings):$/;"	f
 to	apps/contributors/migrations/0010_auto_20151013_2307.py	/^                to='photo.ProfileImage',$/;"	v	class:Migration
-to_internal_value	apps/photo/serializers.py	/^    def to_internal_value(self, data):$/;"	m	class:CropBoxField
+to_internal_value	api/photo_serializers.py	/^    def to_internal_value(self, data):$/;"	m	class:CropBoxField
 to_python	apps/photo/cropping/models.py	/^    def to_python(self, value):$/;"	m	class:BoxField
-to_representation	apps/photo/serializers.py	/^    def to_representation(self, obj):$/;"	m	class:CropBoxField
+to_representation	api/photo_serializers.py	/^    def to_representation(self, obj):$/;"	m	class:CropBoxField
 today	apps/contributors/models.py	/^def today():$/;"	f
 today	apps/issues/models.py	/^def today():$/;"	f
 top	apps/stories/models.py	/^    def top(self):$/;"	m	class:ElementQuerySet
@@ -2616,6 +2783,7 @@ top	apps/stories/models.py	/^    top = models.BooleanField($/;"	v	class:StoryEle
 top_position	apps/frontpage/models.py	/^    def top_position(self):$/;"	m	class:Frontpage
 top_right	apps/stories/models.py	/^        def top_right(queryset, body, flags='>'):$/;"	f	function:Story.place_all_inline_elements
 top_stories	apps/core/templatetags/universitas_menu.py	/^def top_stories(section, number, order_by):$/;"	f
+unapply	apps/prodsys/models.py	/^    def unapply(self, original_content=None):$/;"	m	class:StoryPatch
 undersak	apps/legacy_db/models.py	/^    undersak = models.IntegerField(blank=True, null=True)$/;"	v	class:Sak
 uninstall_watson	watson/migrations/0001_initial.py	/^def uninstall_watson(apps, schema_editor):$/;"	f
 unique	apps/adverts/models.py	/^        unique=True,$/;"	v	class:AdChannel
@@ -2647,15 +2815,16 @@ upload_to	apps/issues/models.py	/^        upload_to='pdf\/covers\/',$/;"	v	class
 upload_to	apps/issues/models.py	/^        upload_to=upload_pdf_to,$/;"	v	class:PrintIssue.Meta
 upload_to	apps/photo/models.py	/^        upload_to=upload_image_to,$/;"	v	class:ImageFile.Meta
 url	apps/frontpage/models.py	/^    def url(self):$/;"	m	class:FrontpageStory
+url	apps/issues/models.py	/^    url = settings.STATIC_URL + 'admin\/img\/icon-no.svg'$/;"	v	class:BrokenImage
 url	apps/photo/models.py	/^    url = settings.STATIC_URL + 'admin\/img\/icon-no.svg'$/;"	v	class:BrokenImage
 url	watson/models.py	/^    url = models.CharField($/;"	v	class:SearchEntry
+urlpatterns	api/urls.py	/^urlpatterns = [$/;"	v
 urlpatterns	apps/search/urls.py	/^urlpatterns = [$/;"	v
-urlpatterns	universitas/api_urls.py	/^urlpatterns = [$/;"	v
 urlpatterns	universitas/dev_urls.py	/^urlpatterns = [$/;"	v
 urlpatterns	universitas/redirect_urls.py	/^urlpatterns = [$/;"	v
 urlpatterns	universitas/urls.py	/^urlpatterns = [$/;"	v
 urlpatterns	watson/urls.py	/^urlpatterns = [$/;"	v
-usage	apps/photo/serializers.py	/^    usage = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
+usage	api/photo_serializers.py	/^    usage = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 usage	wait-for-it.sh	/^usage()$/;"	f
 valid_cascade_file	apps/photo/tests/test_cropping.py	/^def valid_cascade_file():$/;"	f
 validate_box	apps/photo/cropping/models.py	/^def validate_box(value):$/;"	f
@@ -2668,6 +2837,7 @@ validators	apps/frontpage/models.py	/^        validators=[validate_height, ],$/;
 validators	apps/photo/migrations/0001_initial.py	/^                                                               validators=[django.core.validators.MaxValueValidator(100), django.core.validators.MinValueValidator(0)])),$/;"	v	class:Migration
 validators	apps/photo/migrations/0001_initial.py	/^                                                              validators=[django.core.validators.MaxValueValidator(100), django.core.validators.MinValueValidator(0)])),$/;"	v	class:Migration
 value_to_string	apps/photo/cropping/models.py	/^    def value_to_string(self, obj):$/;"	m	class:BoxField
+verbose_name	api/appconf.py	/^    verbose_name = _('api')$/;"	v	class:ApiAppConfig
 verbose_name	apps/adverts/appconf.py	/^    verbose_name = _('Adverts')$/;"	v	class:AdvertsAppConfig
 verbose_name	apps/adverts/models.py	/^        verbose_name = _("Advert")$/;"	v	class:Advert.Meta
 verbose_name	apps/adverts/models.py	/^        verbose_name = _("Customer")$/;"	v	class:Customer.Meta
@@ -2715,6 +2885,30 @@ verbose_name	apps/photo/models.py	/^        verbose_name=_('old file path'),$/;"
 verbose_name	apps/photo/models.py	/^        verbose_name=_('source file'),$/;"	v	class:ImageFile.Meta
 verbose_name	apps/photo/models.py	/^        verbose_name=_('timestamp'),$/;"	v	class:ImageFile.Meta
 verbose_name	apps/photo/models.py	/^        verbose_name=_('width'),$/;"	v	class:ImageFile.Meta
+verbose_name	apps/prodsys/appconf.py	/^    verbose_name = _('Prodsys')$/;"	v	class:ProdsysAppConfig
+verbose_name	apps/prodsys/models.py	/^        verbose_name = _('ProdByline')$/;"	v	class:ProdByline.Meta
+verbose_name	apps/prodsys/models.py	/^        verbose_name = _('prodsys image')$/;"	v	class:ProdImage.Meta
+verbose_name	apps/prodsys/models.py	/^        verbose_name = _('prodsys story')$/;"	v	class:ProdStory.Meta
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('applied'),$/;"	v	class:StoryPatch
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('caption'),$/;"	v	class:ProdImage
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('comments'),$/;"	v	class:ProdStory
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('content'),$/;"	v	class:ProdStory
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('contributor'),$/;"	v	class:StoryPatch
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('created'),$/;"	v	class:StoryPatch
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('credit'),$/;"	v	class:ProdByline
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('description'),$/;"	v	class:ProdByline
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('image'),$/;"	v	class:ProdImage
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('index'),$/;"	v	class:ProdByline
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('issue'),$/;"	v	class:ProdStory
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('patch'),$/;"	v	class:StoryPatch
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('position'),$/;"	v	class:ProdImage
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('priority'),$/;"	v	class:ProdImage
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('reverse_patch'),$/;"	v	class:StoryPatch
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('status'),$/;"	v	class:ProdStory
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('story'),$/;"	v	class:ProdImage
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('story'),$/;"	v	class:StoryPatch
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('story_type'),$/;"	v	class:ProdStory
+verbose_name	apps/prodsys/models.py	/^        verbose_name=_('working_title'),$/;"	v	class:ProdStory
 verbose_name	apps/stories/appconf.py	/^    verbose_name = _('Stories')$/;"	v	class:StoriesAppConfig
 verbose_name	apps/stories/models.py	/^        verbose_name = _('Aside')$/;"	v	class:Aside.Meta
 verbose_name	apps/stories/models.py	/^        verbose_name = _('Byline')$/;"	v	class:Byline.Meta
@@ -2785,6 +2979,9 @@ verbose_name_plural	apps/markup/models.py	/^        verbose_name_plural = _('blo
 verbose_name_plural	apps/markup/models.py	/^        verbose_name_plural = _('inline tags')$/;"	v	class:InlineTag.Meta
 verbose_name_plural	apps/photo/models.py	/^        verbose_name_plural = _('ImageFiles')$/;"	v	class:ImageFile.Meta
 verbose_name_plural	apps/photo/models.py	/^        verbose_name_plural = _('Profile Images')$/;"	v	class:ProfileImage.Meta
+verbose_name_plural	apps/prodsys/models.py	/^        verbose_name_plural = _('Bylines')$/;"	v	class:ProdByline.Meta
+verbose_name_plural	apps/prodsys/models.py	/^        verbose_name_plural = _('prodsys images')$/;"	v	class:ProdImage.Meta
+verbose_name_plural	apps/prodsys/models.py	/^        verbose_name_plural = _('prodsys stories')$/;"	v	class:ProdStory.Meta
 verbose_name_plural	apps/stories/models.py	/^        verbose_name_plural = _('Asides')$/;"	v	class:Aside.Meta
 verbose_name_plural	apps/stories/models.py	/^        verbose_name_plural = _('Bylines')$/;"	v	class:Byline.Meta
 verbose_name_plural	apps/stories/models.py	/^        verbose_name_plural = _('Images')$/;"	v	class:StoryImage.Meta
@@ -2803,6 +3000,7 @@ version_no	apps/legacy_db/models.py	/^    version_no = models.IntegerField(edita
 video_host	apps/stories/models.py	/^    video_host = models.CharField($/;"	v	class:StoryVideo
 videos	apps/stories/models.py	/^    def videos(self):$/;"	m	class:ElementQuerySet
 videos	apps/stories/models.py	/^    def videos(self):$/;"	m	class:TextContent
+view_name	api/contributor_serializers.py	/^        view_name='imagefile-detail'$/;"	v	class:ContributorSerializer.Meta
 vignette	apps/frontpage/models.py	/^    vignette = models.CharField($/;"	v	class:FrontpageStory
 visit_page	apps/stories/models.py	/^    def visit_page(self, request):$/;"	m	class:Story
 wait_for	wait-for-it.sh	/^wait_for()$/;"	f
@@ -2817,8 +3015,10 @@ width	apps/adverts/models.py	/^    width = models.PositiveSmallIntegerField()$/;
 width	apps/photo/cropping/boundingbox.py	/^    def width(self) -> float:$/;"	m	class:Box
 width	apps/photo/cropping/boundingbox.py	/^    def width(self, value: float) -> None:$/;"	m	class:Box
 width_field	apps/photo/models.py	/^        width_field='full_width',$/;"	v	class:ImageFile.Meta
+working_title	apps/prodsys/models.py	/^    working_title = models.CharField($/;"	v	class:ProdStory
 xtags_body_text	apps/legacy_db/export_content_and_images.py	/^    def xtags_body_text():$/;"	f	function:_websak_til_xtags
 xtags_fact_asides	apps/legacy_db/export_content_and_images.py	/^    def xtags_fact_asides():$/;"	f	function:_websak_til_xtags
 xtags_header_title_and_bylines	apps/legacy_db/export_content_and_images.py	/^    def xtags_header_title_and_bylines():$/;"	f	function:_websak_til_xtags
 xtags_pull_quotes	apps/legacy_db/export_content_and_images.py	/^    def xtags_pull_quotes():$/;"	f	function:_websak_til_xtags
 xtags_review_aside	apps/legacy_db/export_content_and_images.py	/^    def xtags_review_aside():$/;"	f	function:_websak_til_xtags
+year	apps/issues/models.py	/^    def year(self):$/;"	m	class:Issue

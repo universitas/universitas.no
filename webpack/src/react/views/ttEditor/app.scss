@@ -1,0 +1,72 @@
+@mixin scrollbars(
+  $size, $foreground-color,
+  $background-color: mix($foreground-color, white, 50%))
+{
+  &::-webkit-scrollbar {
+      width:  $size;
+      height: $size;
+  }
+  &::-webkit-scrollbar-thumb {
+      background: $foreground-color;
+      min-height: 20 * $size;
+      &:hover {
+        background: lighten($foreground-color, 10%);
+      }
+  }
+
+  &::-webkit-scrollbar-track {
+      background: $background-color;
+  }
+}
+
+.EditApp {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 90vh;
+}
+
+$scrollbarbg: #bbb;
+.Preview {
+  @include scrollbars(.6em, $scrollbarbg);
+  flex: 1;
+  padding: 1em;
+  // border: 2px solid blue;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  .scrollTo {
+     background: #ff8;
+  }
+  span {
+    &:hover {
+      background: lighten(blue, 40%);
+    }
+  }
+}
+
+.Editor {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  .ToolBar {
+    font-size: 1.2em;
+    flex-direction: row;
+    background: #87a;
+  }
+  $textareabg: #eee;
+
+  .TextArea {
+    padding: .5em;
+    &:active, &:focus {
+      outline: none;
+      background: lighten($textareabg, 4%);
+    }
+    background: $textareabg;
+    border: none;
+    flex: 1;
+    resize: none;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    @include scrollbars(.6em, $scrollbarbg);
+  }
+}

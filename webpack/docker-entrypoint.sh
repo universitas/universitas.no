@@ -2,7 +2,10 @@
 
 case $1 in
   build)
-    exec npm run build
+    exec npm run rebuild
+    ;;
+  stats)
+    exec npm run stats
     ;;
   dev-server)
     exec npm run dev

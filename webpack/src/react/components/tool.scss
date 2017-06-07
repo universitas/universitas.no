@@ -1,0 +1,35 @@
+.ToolBar {
+  display: flex;
+  align-self: stretch;
+  font-size: 1.5em;
+  &.flexrow {
+    flex-direction: row;
+    .Tool {
+      border-right-width: 1px;
+    }
+  }
+  &.flexcolumn {
+    flex-direction: column;
+    .Tool {
+      border-bottom: 1px;
+    }
+  }
+}
+$bwhite: rgba(white, 0.3);
+$bblack: rgba(black, 0.2);
+
+.Tool {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  color: white;
+  cursor: pointer;
+  border: 2px solid;
+  border-color: $bwhite $bblack $bblack $bwhite;
+  border-opacity: 0.3;
+  &:hover{
+    background-color: rgba(white, .2);
+  }
+}

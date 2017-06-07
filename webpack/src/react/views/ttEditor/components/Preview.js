@@ -1,37 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { scrollElement } from './scroll'
+import { scrollElement } from '../../../utils/scroll'
+import { blockParser } from '../../../utils/tagParser'
 
-const parser = text => {
-  const nodes = text
-    .split('\n')
-    .map(l => l.trim())
-    .filter(Boolean)
-    .map(line => {
-      const match = line.match(/^@(\S*):(.*)$/)
-      return match
-        ? { type: match[1], children: match[2] }
-        : { type: 'txt', children: line }
-    })
-  return nodes
-}
-
-const Tittel = props => <h1 {...props} />
-const Ingress = props => <p {...props} style={{ fontSize: '1.5em' }} />
-const MellomTittel = props => <h3 {...props} />
-const Brødtekst = props => <p {...props} />
-const Spørsmål = props => (
-  <p style={{ fontStyle: 'italic', fontWeight: 'bold' }} {...props} />
-)
-const Tingo = ({ n = 0, children, ...props }) => {
+const Tingo = (n = 0, { children, ...props }) => {
   const tingoPattern = n ? `(?:\\S+\\s+){1,${n}}` : '.{1,12}\\S*'
   const fullPattern = RegExp(`^(${tingoPattern})(.*)$`)
   if (typeof children == 'string') {
     const match = children.trim().match(fullPattern)
     if (match) {
       return (
-        <p {...props}>
-          <strong>{match[1]}</strong>{match[2]}
+        <p className="tingo" {...props}>
+          <span className="inngangsord">{match[1]}</span>{match[2]}
         </p>
       )
     }
@@ -39,45 +19,69 @@ const Tingo = ({ n = 0, children, ...props }) => {
   return <p {...props}>{children}</p>
 }
 
+const Link = ({ target, ...props }) => (
+  <a href={target} title={target} {...props} />
+)
+
 const elements = {
-  tit: Tittel,
-  ing: Ingress,
-  txt: Brødtekst,
-  spm: Spørsmål,
-  mt: MellomTittel,
+  tit: props => <h1 {...props} />,
+  ing: props => <p {...props} style={{ fontSize: '1.5em' }} />,
+  txt: props => <p {...props} />,
+  spm: props => <p className="question" {...props} />,
+  //  link: props => <em {...props} />,
+  mt: props => <h3 className="mellomtittel" {...props} />,
+  tingo: Tingo.bind(null, 0),
+  tingo1: Tingo.bind(null, 1),
+  tingo2: Tingo.bind(null, 2),
+  tingo3: Tingo.bind(null, 3),
+  tingo4: Tingo.bind(null, 4),
+  tingo5: Tingo.bind(null, 5),
+  link: Link,
+  ol: props => <ol {...props} />,
+  ul: props => <ul {...props} />,
+  li: props => <li {...props} />,
+  em: props => <em {...props} />,
+  span: props => <span {...props} />,
+  strong: props => <strong {...props} />,
 }
 
-const Node = ({ type, scrollTo, ...props }) => {
-  const isTingo = type.match(/^tingo(\d*)$/)
+const Node = ({ type, children, ...props }) => {
   let Element = elements[type]
-  if (isTingo) {
-    props.n = isTingo[1]
-    Element = Tingo
-  }
   if (Element === undefined) {
-    Element = Brødtekst
-    props.style = { color: 'red' }
-    props.children = `@${type}: ${props.children}`
+    props.style = { fontWeight: 'bolder', color: 'red' }
+    if (typeof children === 'object') {
+      Element = elements.txt
+      children = [{ type: '', children: `@${type}: ` }, ...children]
+    } else {
+      Element = elements.em
+    }
   }
+  //props.title = type || 'span'
+  const renderChild = (props, key) =>
+    props.type ? <Node key={key} {...props} /> : props.children
   return (
-    <div
-      className={scrollTo ? 'block scrollTo' : 'block'}
-      ref={scrollTo ? scrollElement : el => {}}
-    >
-      <Element {...props} />
-    </div>
+    <Element {...props}>
+      {typeof children == 'string' ? children : children.map(renderChild)}
+    </Element>
   )
 }
 
+const NodeWrapper = ({ scrollTo, ...props }) =>
+  scrollTo
+    ? <div className="scrollTo" ref={scrollElement}>
+        <Node {...props} />
+      </div>
+    : <Node {...props} />
+
 const mapStateToProps = ({ text }) => ({
-  nodes: parser(text.content),
+  nodes: blockParser(text.content),
   activeIndex: text.activeIndex,
 })
 const Preview = ({ nodes, activeIndex }) => {
   return (
     <section className="Preview">
-      {nodes.map((node, index) => (
-        <Node key={index} scrollTo={index == activeIndex} {...node} />
+      {nodes.map(({ index, ...props }) => (
+        <NodeWrapper key={index} scrollTo={index == activeIndex} {...props} />
       ))}
     </section>
   )

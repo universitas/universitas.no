@@ -4,104 +4,167 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-App	src/javascripts/components/App.js	/^const App = () => {$/;"	r
-CropBox	src/javascripts/components/CropBox/CropBox.js	/^class CropBox extends React.Component {$/;"	r
-CropBox	src/javascripts/containers/FrontpageCrop.js	/^const CropBox = connect(mapStateToProps)($/;"	r
-CroppedThumb	src/javascripts/components/PhotoList/PhotoList.js	/^const CroppedThumb = ({ thumb, title }) => ($/;"	r
-DEBOUNCE_TIMEOUT	src/javascripts/components/PhotoList/actions.js	/^const DEBOUNCE_TIMEOUT = 500 \/\/ wait n ms before calling api$/;"	r
-Frame	src/javascripts/components/PhotoList/PhotoList.js	/^const Frame = () => <rect className="Frame" width="100%" height="100%" \/>$/;"	r
-FrontpageCrop	src/javascripts/containers/FrontpageCrop.js	/^const FrontpageCrop = () => ($/;"	r
-FullThumb	src/javascripts/components/PhotoList/PhotoList.js	/^const FullThumb = ({ small, title, size }) => ($/;"	r
-FullThumbWithCropBox	src/javascripts/components/PhotoList/PhotoList.js	/^const FullThumbWithCropBox = ({ small, title, size, crop_box }) => {$/;"	r
-Handle	src/javascripts/components/CropBox/Overlay.js	/^const Handle = ({ name, startDragHandle }) => {$/;"	r
-ImageData	src/javascripts/components/EditImage/EditImage.js	/^const ImageData = data => ($/;"	r
-List	src/javascripts/components/PhotoList/PhotoList.js	/^const List = ({ images, style = {} }) => ($/;"	r
-PANEL_STATES	src/javascripts/components/EditImage/reducers.js	/^const PANEL_STATES = 3 \/\/ number of possible states$/;"	r
-PhotoCropApp	src/javascripts/PhotoCropApp.js	/^const PhotoCropApp = () => {$/;"	r
-PhotoList	src/javascripts/components/PhotoList/PhotoList.js	/^const PhotoList = connect(mapImageListStateToProps)(List)$/;"	r
-PhotoListView	src/javascripts/PhotoListView.js	/^const PhotoListView = () => {$/;"	r
-Previews	src/javascripts/components/CropBox/Previews.js	/^const Previews = ({ image, src, aspects = [2], flexDirection = 'row' }) => ($/;"	r
-Spinner	src/javascripts/components/EditImage/EditImage.js	/^const Spinner = () => <div className="spinner">Loading...<\/div>$/;"	r
-Thumb	src/javascripts/components/PhotoList/PhotoList.js	/^  const Thumb = thumbStyles[thumbStyle]$/;"	r
-bindEventToImageFiles	src/javascripts/PhotoCropApp.js	/^const bindEventToImageFiles = () => {$/;"	r
-boxPath	src/javascripts/components/CropBox/Overlay.js	/^  const boxPath = `M${left}, ${top}V${bottom}H${right}V${top}Z`$/;"	r
-boxPath	src/javascripts/components/PhotoList/PhotoList.js	/^  const boxPath = `M0, 0H1V1H0Z M${left}, ${top}V${bottom}H${right}V${top}Z`$/;"	r
-buildUrl	src/javascripts/components/PhotoList/actions.js	/^const buildUrl = (attrs = {}) => {$/;"	r
-circleRadius	src/javascripts/components/CropBox/Overlay.js	/^  const circleRadius = rx => ({ rx, ry: rx * size[0] \/ size[1] || rx })$/;"	r
-clearButtonOnClick	src/javascripts/components/PhotoList/SearchField.js	/^  const clearButtonOnClick = e => {$/;"	r
-closeCrop	src/javascripts/components/CropBox/Previews.js	/^const closeCrop = (x, y, l, r, t, b, A) => {$/;"	r
-composeEnhancers	src/javascripts/containers/store.js	/^const composeEnhancers =$/;"	r
-cropIconOnClick	src/javascripts/PhotoCropApp.js	/^const cropIconOnClick = id => e => {$/;"	r
-cropIcons	src/javascripts/PhotoCropApp.js	/^  const cropIcons = document.querySelectorAll('a[data-imagefile-pk]')$/;"	r
-cropWidget	src/javascripts/components/EditImage/reducers.js	/^const cropWidget = (state = { id: 0, expanded: false, panels: 0 }, action) => {$/;"	r
-cursor	src/javascripts/components/CropBox/Overlay.js	/^const cursor = {$/;"	r
-data	src/javascripts/components/EditImage/EditImage.js	/^  const data = [subset0, subset1, subset2][panels](image)$/;"	r
-data	src/javascripts/containers/middleware.js	/^  const data = store.getState().images[id]$/;"	r
-debouncedDoSearch	src/javascripts/components/PhotoList/actions.js	/^const debouncedDoSearch = debounce(doSearch, DEBOUNCE_TIMEOUT)$/;"	r
-debouncedPatchImage	src/javascripts/containers/middleware.js	/^const debouncedPatchImage = debounce((store, id) => {$/;"	r
-defaultState	src/javascripts/components/PhotoList/reducers.js	/^const defaultState = { images: [], text: '', thumbStyle: 0, fetching: false }$/;"	r
-doSearch	src/javascripts/components/PhotoList/actions.js	/^const doSearch = (dispatch, attrs = {}) => {$/;"	r
-domNode	src/javascripts/PhotoCropApp.js	/^  const domNode = document.getElementById('PhotoCrop')$/;"	r
-domNode	src/javascripts/PhotoListView.js	/^  const domNode = document.getElementById('PhotoApp')$/;"	r
-dx	src/javascripts/components/CropBox/reducers.js	/^      const dx = mx - initialPosition[0]$/;"	r
-dy	src/javascripts/components/CropBox/reducers.js	/^      const dy = my - initialPosition[1]$/;"	r
-empty	src/javascripts/containers/FrontpageCrop.js	/^const empty = {$/;"	r
-fetchImages	src/javascripts/components/PhotoList/actions.js	/^const fetchImages = (dispatch, url) => {$/;"	r
-func	src/javascripts/components/CropBox/reducers.js	/^  const func = (a, b) => a - b$/;"	r
-getStyles	src/javascripts/components/CropBox/Previews.js	/^const getStyles = (src, crop_box, imgRatio, frameRatio) => {$/;"	r
-h_sorted	src/javascripts/components/CropBox/reducers.js	/^  const h_sorted = [0, 0, left, right, 1, 1].sort(func)$/;"	r
-handleSize	src/javascripts/components/CropBox/Overlay.js	/^  const handleSize = 0.1$/;"	r
-height	src/javascripts/components/CropBox/Previews.js	/^  const height = bottom - top$/;"	r
-id	src/javascripts/PhotoCropApp.js	/^    const id = icon.getAttribute('data-imagefile-pk')$/;"	r
-id	src/javascripts/containers/reducers.js	/^    const id = action.payload.id$/;"	r
-imageDefaultState	src/javascripts/components/CropBox/reducers.js	/^const imageDefaultState = {$/;"	r
-imageReducer	src/javascripts/components/CropBox/reducers.js	/^const imageReducer = (state, action) => {$/;"	r
-images	src/javascripts/containers/reducers.js	/^const images = (state = {}, action) => {$/;"	r
-img	src/javascripts/components/CropBox/CropBox.js	/^    const img = e.target$/;"	r
-img	src/javascripts/components/CropBox/CropBox.js	/^    const img = this.masterImg.getBoundingClientRect()$/;"	r
-imgState	src/javascripts/containers/reducers.js	/^    const imgState = imageReducer(state[id], action)$/;"	r
-isFetching	src/javascripts/components/PhotoList/SearchField.js	/^  const isFetching = fetching ? ' isFetching' : ''$/;"	r
-items	src/javascripts/components/CropBox/Previews.js	/^  const items = {$/;"	r
-makePayload	src/javascripts/components/PhotoList/actions.js	/^const makePayload = ({ results, ...data }) => ({$/;"	r
-mapDispatchToProps	src/javascripts/components/CropBox/CropBox.js	/^const mapDispatchToProps = (dispatch, { id }) => ({$/;"	r
-mapDispatchToProps	src/javascripts/components/CropBox/Overlay.js	/^const mapDispatchToProps = (dispatch, { id, getRelativePosition }) => ({$/;"	r
-mapImageDispatchToProps	src/javascripts/components/PhotoList/PhotoList.js	/^const mapImageDispatchToProps = (dispatch, { id }) => ({$/;"	r
-mapImageListStateToProps	src/javascripts/components/PhotoList/PhotoList.js	/^const mapImageListStateToProps = ({ searchField }) => ({$/;"	r
-mapImageStatetoProps	src/javascripts/components/PhotoList/PhotoList.js	/^const mapImageStatetoProps = ({ searchField, images }, { id }) => ({$/;"	r
-mapStateToProps	src/javascripts/components/CropBox/Overlay.js	/^const mapStateToProps = (state, { id }) => state.images[id]$/;"	r
-mapStateToProps	src/javascripts/containers/FrontpageCrop.js	/^const mapStateToProps = state => ({$/;"	r
-mask	src/javascripts/components/CropBox/Overlay.js	/^  const mask = name.split('').map(parseFloat)$/;"	r
-normalize	src/javascripts/components/CropBox/reducers.js	/^const normalize = ({ x, y, left, top, right, bottom }) => {$/;"	r
-numberToPercent	src/javascripts/components/CropBox/Previews.js	/^  const numberToPercent = number => `${(100 * number).toFixed(1)}%`$/;"	r
-outerPath	src/javascripts/components/CropBox/Overlay.js	/^  const outerPath = 'M0, 0H1V1H0Z'$/;"	r
-patch_data	src/javascripts/containers/actions.js	/^  const patch_data = transformImageData2Api(data)$/;"	r
-patch_request	src/javascripts/containers/actions.js	/^  const patch_request = {$/;"	r
-pending	src/javascripts/components/CropBox/CropBox.js	/^    const pending = cropping_method === 1$/;"	r
-prepare	src/javascripts/components/EditImage/EditImage.js	/^const prepare = val => {$/;"	r
-queryString	src/javascripts/components/PhotoList/actions.js	/^  const queryString = Object.entries(attrs)$/;"	r
-ratioOf	src/javascripts/components/CropBox/Previews.js	/^  const ratioOf = (low, val, high) =>$/;"	r
+App	src/react/views/photoCropApp/components/App.js	/^const App = () => {$/;"	r
+Brødtekst	src/react/views/ttEditor/components/Preview.js	/^const Brødtekst = props => <p {...props} \/>$/;"	r
+CropBox	src/react/views/photoCropApp/components/CropBox/CropBox.js	/^class CropBox extends React.Component {$/;"	r
+CropBox	src/react/views/photoCropApp/containers/FrontpageCrop.js	/^const CropBox = connect(mapStateToProps)($/;"	r
+CroppedThumb	src/react/views/photoCropApp/components/PhotoList/PhotoList.js	/^const CroppedThumb = ({ thumb, title }) => ($/;"	r
+DEBOUNCE_TIMEOUT	src/react/views/photoCropApp/components/PhotoList/actions.js	/^const DEBOUNCE_TIMEOUT = 500 \/\/ wait n ms before calling api$/;"	r
+Editor	src/react/views/ttEditor/components/Editor.js	/^class Editor extends React.Component {$/;"	r
+EditorToolbar	src/react/views/ttEditor/components/EditorToolbar.js	/^const EditorToolbar = ({ insertText, changeTag, onClick }) => {$/;"	r
+Frame	src/react/views/photoCropApp/components/PhotoList/PhotoList.js	/^const Frame = () => <rect className="Frame" width="100%" height="100%" \/>$/;"	r
+FrontpageCrop	src/react/views/photoCropApp/containers/FrontpageCrop.js	/^const FrontpageCrop = () => ($/;"	r
+FullThumb	src/react/views/photoCropApp/components/PhotoList/PhotoList.js	/^const FullThumb = ({ small, title, size }) => ($/;"	r
+FullThumbWithCropBox	src/react/views/photoCropApp/components/PhotoList/PhotoList.js	/^const FullThumbWithCropBox = ({ small, title, size, crop_box }) => {$/;"	r
+Handle	src/react/views/photoCropApp/components/CropBox/Overlay.js	/^const Handle = ({ name, startDragHandle }) => {$/;"	r
+Icon	src/react/components/Tool.js	/^  const Icon = Icons[icon] || Icons.Fallback$/;"	r
+ImageData	src/react/views/photoCropApp/components/EditImage/EditImage.js	/^const ImageData = data => ($/;"	r
+Ingress	src/react/views/ttEditor/components/Preview.js	/^const Ingress = props => <p {...props} style={{ fontSize: '1.5em' }} \/>$/;"	r
+List	src/react/views/photoCropApp/components/PhotoList/PhotoList.js	/^const List = ({ images, style = {} }) => ($/;"	r
+MellomTittel	src/react/views/ttEditor/components/Preview.js	/^const MellomTittel = props => <h3 className="mellomtittel" {...props} \/>$/;"	r
+Node	src/react/views/ttEditor/components/Preview.js	/^const Node = ({ type, scrollTo, ...props }) => {$/;"	r
+PANEL_STATES	src/react/views/photoCropApp/components/EditImage/reducers.js	/^const PANEL_STATES = 3 \/\/ number of possible states$/;"	r
+Panel	src/react/components/Panel.js	/^const Panel = ({ children }) =>$/;"	r
+PhotoCropApp	src/react/entry/frontpagecrop.js	/^const PhotoCropApp = () => {$/;"	r
+PhotoList	src/react/views/photoCropApp/components/PhotoList/PhotoList.js	/^const PhotoList = connect(mapImageListStateToProps)(List)$/;"	r
+Preview	src/react/views/ttEditor/components/Preview.js	/^const Preview = ({ nodes, activeIndex }) => {$/;"	r
+Previews	src/react/views/photoCropApp/components/CropBox/Previews.js	/^const Previews = ({ image, src, aspects = [2], flexDirection = 'row' }) => ($/;"	r
+ROOT_ID	src/react/entry/editor.js	/^const ROOT_ID = 'ReactApp'$/;"	r
+ROOT_ID	src/react/entry/photosearch.js	/^const ROOT_ID = 'PhotoApp'$/;"	r
+STEPS	src/react/utils/scroll.js	/^const STEPS = 10$/;"	r
+Spinner	src/react/views/photoCropApp/components/EditImage/EditImage.js	/^const Spinner = () => <div className="spinner">Loading...<\/div>$/;"	r
+Spørsmål	src/react/views/ttEditor/components/Preview.js	/^const Spørsmål = props => <p className="question" {...props} \/>$/;"	r
+TICK	src/react/utils/scroll.js	/^const TICK = 10$/;"	r
+Thumb	src/react/views/photoCropApp/components/PhotoList/PhotoList.js	/^  const Thumb = thumbStyles[thumbStyle]$/;"	r
+Tingo	src/react/views/ttEditor/components/Preview.js	/^const Tingo = (n = 0, { children, ...props }) => {$/;"	r
+Tittel	src/react/views/ttEditor/components/Preview.js	/^const Tittel = props => <h1 {...props} \/>$/;"	r
+Tool	src/react/components/Tool.js	/^const Tool = ({ onClick, icon, active, ...props }) => {$/;"	r
+ToolBar	src/react/components/ToolBar.js	/^const ToolBar = ({ className = '', flexDirection = 'row', tools, onClick }) => ($/;"	r
+bindEventToImageFiles	src/react/entry/frontpagecrop.js	/^const bindEventToImageFiles = () => {$/;"	r
+boxPath	src/react/views/photoCropApp/components/CropBox/Overlay.js	/^  const boxPath = `M${left}, ${top}V${bottom}H${right}V${top}Z`$/;"	r
+boxPath	src/react/views/photoCropApp/components/PhotoList/PhotoList.js	/^  const boxPath = `M0, 0H1V1H0Z M${left}, ${top}V${bottom}H${right}V${top}Z`$/;"	r
+buildUrl	src/react/views/photoCropApp/components/PhotoList/actions.js	/^const buildUrl = (attrs = {}) => {$/;"	r
+change	src/react/views/ttEditor/components/Editor.js	/^    const change = content.length - prevProps.content.length$/;"	r
+changeTag	src/react/views/ttEditor/reducers.js	/^const changeTag = (tag, content, caret = 0) => {$/;"	r
+circleRadius	src/react/views/photoCropApp/components/CropBox/Overlay.js	/^  const circleRadius = rx => ({ rx, ry: rx * size[0] \/ size[1] || rx })$/;"	r
+className	src/react/components/Tool.js	/^  const className = `Tool ${active ? 'active' : 'inactive'}`$/;"	r
+cleanup	src/react/views/ttEditor/components/Editor.js	/^const cleanup = text => {$/;"	r
+clearButtonOnClick	src/react/views/photoCropApp/components/PhotoList/SearchField.js	/^  const clearButtonOnClick = e => {$/;"	r
+closeCrop	src/react/views/photoCropApp/components/CropBox/Previews.js	/^const closeCrop = (x, y, l, r, t, b, A) => {$/;"	r
+composeEnhancers	src/react/views/photoCropApp/containers/store.js	/^const composeEnhancers =$/;"	r
+composeEnhancers	src/react/views/ttEditor/store.js	/^const composeEnhancers =$/;"	r
+container	src/react/utils/scroll.js	/^  const container = element.parentElement$/;"	r
+cropIconOnClick	src/react/entry/frontpagecrop.js	/^const cropIconOnClick = id => e => {$/;"	r
+cropIcons	src/react/entry/frontpagecrop.js	/^  const cropIcons = document.querySelectorAll('a[data-imagefile-pk]')$/;"	r
+cropWidget	src/react/views/photoCropApp/components/EditImage/reducers.js	/^const cropWidget = (state = { id: 0, expanded: false, panels: 0 }, action) => {$/;"	r
+cursor	src/react/views/photoCropApp/components/CropBox/Overlay.js	/^const cursor = {$/;"	r
+data	src/react/views/photoCropApp/components/EditImage/EditImage.js	/^  const data = [subset0, subset1, subset2][panels](image)$/;"	r
+data	src/react/views/photoCropApp/containers/middleware.js	/^  const data = store.getState().images[id]$/;"	r
+debouncedDoSearch	src/react/views/photoCropApp/components/PhotoList/actions.js	/^const debouncedDoSearch = debounce(doSearch, DEBOUNCE_TIMEOUT)$/;"	r
+debouncedPatchImage	src/react/views/photoCropApp/containers/middleware.js	/^const debouncedPatchImage = debounce((store, id) => {$/;"	r
+defaultState	src/react/views/photoCropApp/components/PhotoList/reducers.js	/^const defaultState = { images: [], text: '', thumbStyle: 0, fetching: false }$/;"	r
+defaultState	src/react/views/ttEditor/store.js	/^const defaultState = {}$/;"	r
+defaultTextState	src/react/views/ttEditor/reducers.js	/^const defaultTextState = {$/;"	r
+doSearch	src/react/views/photoCropApp/components/PhotoList/actions.js	/^const doSearch = (dispatch, attrs = {}) => {$/;"	r
+domNode	src/react/entry/editor.js	/^  const domNode = document.getElementById(ROOT_ID)$/;"	r
+domNode	src/react/entry/frontpagecrop.js	/^  const domNode = document.getElementById('PhotoCrop')$/;"	r
+domNode	src/react/entry/photosearch.js	/^  const domNode = document.getElementById(ROOT_ID)$/;"	r
+dx	src/react/views/photoCropApp/components/CropBox/reducers.js	/^      const dx = mx - initialPosition[0]$/;"	r
+dy	src/react/views/photoCropApp/components/CropBox/reducers.js	/^      const dy = my - initialPosition[1]$/;"	r
+elements	src/react/views/ttEditor/components/Preview.js	/^const elements = {$/;"	r
+empty	src/react/views/photoCropApp/containers/FrontpageCrop.js	/^const empty = {$/;"	r
+fetchImages	src/react/views/photoCropApp/components/PhotoList/actions.js	/^const fetchImages = (dispatch, url) => {$/;"	r
+fullPattern	src/react/views/ttEditor/components/Preview.js	/^  const fullPattern = RegExp(`^(${tingoPattern})(.*)$`)$/;"	r
+func	src/react/views/photoCropApp/components/CropBox/reducers.js	/^  const func = (a, b) => a - b$/;"	r
+getStyles	src/react/views/photoCropApp/components/CropBox/Previews.js	/^const getStyles = (src, crop_box, imgRatio, frameRatio) => {$/;"	r
+h_sorted	src/react/views/photoCropApp/components/CropBox/reducers.js	/^  const h_sorted = [0, 0, left, right, 1, 1].sort(func)$/;"	r
+handleSize	src/react/views/photoCropApp/components/CropBox/Overlay.js	/^  const handleSize = 0.1$/;"	r
+head	src/react/views/ttEditor/reducers.js	/^  const head = content.slice(0, caret)$/;"	r
+height	src/react/views/photoCropApp/components/CropBox/Previews.js	/^  const height = bottom - top$/;"	r
+id	src/react/entry/frontpagecrop.js	/^    const id = icon.getAttribute('data-imagefile-pk')$/;"	r
+id	src/react/views/photoCropApp/containers/reducers.js	/^    const id = action.payload.id$/;"	r
+imageDefaultState	src/react/views/photoCropApp/components/CropBox/reducers.js	/^const imageDefaultState = {$/;"	r
+imageReducer	src/react/views/photoCropApp/components/CropBox/reducers.js	/^const imageReducer = (state, action) => {$/;"	r
+images	src/react/views/photoCropApp/containers/reducers.js	/^const images = (state = {}, action) => {$/;"	r
+img	src/react/views/photoCropApp/components/CropBox/CropBox.js	/^    const img = e.target$/;"	r
+img	src/react/views/photoCropApp/components/CropBox/CropBox.js	/^    const img = this.masterImg.getBoundingClientRect()$/;"	r
+imgState	src/react/views/photoCropApp/containers/reducers.js	/^    const imgState = imageReducer(state[id], action)$/;"	r
+insertText	src/react/views/ttEditor/reducers.js	/^const insertText = (text, content, caret = 0) =>$/;"	r
+isFetching	src/react/views/photoCropApp/components/PhotoList/SearchField.js	/^  const isFetching = fetching ? ' isFetching' : ''$/;"	r
+isTingo	src/react/views/ttEditor/components/Preview.js	/^  const isTingo = type.match(\/^tingo(\\d*)$\/)$/;"	r
+items	src/react/views/photoCropApp/components/CropBox/Previews.js	/^  const items = {$/;"	r
+lastIndex	src/react/views/ttEditor/reducers.js	/^  const lastIndex = head.includes('\\n') ? \/[\\s\\S]*\\n\/.exec(head)[0].length : 0$/;"	r
+makePayload	src/react/views/photoCropApp/components/PhotoList/actions.js	/^const makePayload = ({ results, ...data }) => ({$/;"	r
+makeRule	src/react/utils/tagParser.js	/^const makeRule = (type, re) => text => {$/;"	r
+mapDispatchToProps	src/react/components/Panel.js	/^const mapDispatchToProps = (dispatch, ownProps) => ({$/;"	r
+mapDispatchToProps	src/react/views/photoCropApp/components/CropBox/CropBox.js	/^const mapDispatchToProps = (dispatch, { id }) => ({$/;"	r
+mapDispatchToProps	src/react/views/photoCropApp/components/CropBox/Overlay.js	/^const mapDispatchToProps = (dispatch, { id, getRelativePosition }) => ({$/;"	r
+mapDispatchToProps	src/react/views/ttEditor/components/Editor.js	/^const mapDispatchToProps = dispatch => ({$/;"	r
+mapDispatchToProps	src/react/views/ttEditor/components/EditorToolbar.js	/^const mapDispatchToProps = (dispatch, ownProps) => ({$/;"	r
+mapImageDispatchToProps	src/react/views/photoCropApp/components/PhotoList/PhotoList.js	/^const mapImageDispatchToProps = (dispatch, { id }) => ({$/;"	r
+mapImageListStateToProps	src/react/views/photoCropApp/components/PhotoList/PhotoList.js	/^const mapImageListStateToProps = ({ searchField }) => ({$/;"	r
+mapImageStatetoProps	src/react/views/photoCropApp/components/PhotoList/PhotoList.js	/^const mapImageStatetoProps = ({ searchField, images }, { id }) => ({$/;"	r
+mapStateToProps	src/react/components/Panel.js	/^const mapStateToProps = (state, ownProps) => ({$/;"	r
+mapStateToProps	src/react/views/photoCropApp/components/CropBox/Overlay.js	/^const mapStateToProps = (state, { id }) => state.images[id]$/;"	r
+mapStateToProps	src/react/views/photoCropApp/containers/FrontpageCrop.js	/^const mapStateToProps = state => ({$/;"	r
+mapStateToProps	src/react/views/ttEditor/components/Editor.js	/^const mapStateToProps = ({ text }) => ({$/;"	r
+mapStateToProps	src/react/views/ttEditor/components/EditorToolbar.js	/^const mapStateToProps = (state, ownProps) => ({})$/;"	r
+mapStateToProps	src/react/views/ttEditor/components/Preview.js	/^const mapStateToProps = ({ text }) => ({$/;"	r
+mask	src/react/views/photoCropApp/components/CropBox/Overlay.js	/^  const mask = name.split('').map(parseFloat)$/;"	r
+match	src/react/utils/tagParser.js	/^      const match = line.match(\/^@(\\S*):(.*)$\/)$/;"	r
+match	src/react/views/ttEditor/components/Preview.js	/^    const match = children.trim().match(fullPattern)$/;"	r
+middleware	src/react/views/ttEditor/store.js	/^const middleware = composeEnhancers(applyMiddleware(...middleware_list))$/;"	r
+middleware_list	src/react/views/ttEditor/store.js	/^const middleware_list = []$/;"	r
+moveCaret	src/react/views/ttEditor/components/Editor.js	/^    const moveCaret = e => this.props.moveCaret(e.target.selectionStart)$/;"	r
+needle	src/react/views/ttEditor/reducers.js	/^  const needle = \/^(@\\S*: *)?\/$/;"	r
+next_node	src/react/utils/tagParser.js	/^const next_node = (rules, text) => {$/;"	r
+nodes	src/react/utils/tagParser.js	/^  const nodes = []$/;"	r
+nodes	src/react/utils/tagParser.js	/^  const nodes = text$/;"	r
+normalize	src/react/views/photoCropApp/components/CropBox/reducers.js	/^const normalize = ({ x, y, left, top, right, bottom }) => {$/;"	r
+numberToPercent	src/react/views/photoCropApp/components/CropBox/Previews.js	/^  const numberToPercent = number => `${(100 * number).toFixed(1)}%`$/;"	r
+outerPath	src/react/views/photoCropApp/components/CropBox/Overlay.js	/^  const outerPath = 'M0, 0H1V1H0Z'$/;"	r
+paragraphSplits	src/react/views/ttEditor/reducers.js	/^const paragraphSplits = (content = '') => {$/;"	r
+patch_data	src/react/views/photoCropApp/containers/actions.js	/^  const patch_data = transformImageData2Api(data)$/;"	r
+patch_request	src/react/views/photoCropApp/containers/actions.js	/^  const patch_request = {$/;"	r
+pending	src/react/views/photoCropApp/components/CropBox/CropBox.js	/^    const pending = cropping_method === 1$/;"	r
+pos	src/react/utils/scroll.js	/^  const pos = element.scrollTop$/;"	r
+prepare	src/react/views/photoCropApp/components/EditImage/EditImage.js	/^const prepare = val => {$/;"	r
+queryString	src/react/views/photoCropApp/components/PhotoList/actions.js	/^  const queryString = Object.entries(attrs)$/;"	r
+ratioOf	src/react/views/photoCropApp/components/CropBox/Previews.js	/^  const ratioOf = (low, val, high) =>$/;"	r
 regex	src/javascripts/foot.js	/^  const regex = \/(^[^<]{0,10}[^\\s<]*)\/$/;"	r
-render	src/javascripts/PhotoCropApp.js	/^const render = (App, domNode) => {$/;"	r
-render	src/javascripts/PhotoListView.js	/^const render = (App, domNode) => {$/;"	r
+regex	src/react/views/ttEditor/reducers.js	/^  const regex = \/\\s*$\/gm$/;"	r
+render	src/react/entry/editor.js	/^const render = () => {$/;"	r
+render	src/react/entry/frontpagecrop.js	/^const render = (App, domNode) => {$/;"	r
+render	src/react/entry/photosearch.js	/^const render = () => {$/;"	r
+renderTool	src/react/components/ToolBar.js	/^const renderTool = (key, { onClick, active, icon }) => ($/;"	r
 replace	src/javascripts/foot.js	/^  const replace = '<span class=inngangsord>$1<\/span>'$/;"	r
-round	src/javascripts/components/CropBox/reducers.js	/^const round = num => Number(num.toPrecision(4))$/;"	r
-searchInputOnChange	src/javascripts/components/PhotoList/SearchField.js	/^  const searchInputOnChange = e => {$/;"	r
-startMoveCenter	src/javascripts/components/CropBox/Overlay.js	/^  const startMoveCenter = startDragHandle([0, 0, 0, 0, 1])$/;"	r
-startMoveCropBox	src/javascripts/components/CropBox/Overlay.js	/^  const startMoveCropBox = startDragHandle([1, 1, 1, 1, 0])$/;"	r
-style	src/javascripts/components/EditImage/EditImage.js	/^  const style = expanded ? { flex: 3 } : { flex: 1 }$/;"	r
-style	src/javascripts/containers/FrontpageCrop.js	/^const style = {$/;"	r
-styles	src/javascripts/components/CropBox/Previews.js	/^  const styles = getStyles(src, crop_box, size[0] \/ size[1], aspect)$/;"	r
-subset0	src/javascripts/components/EditImage/EditImage.js	/^const subset0 = d => ({$/;"	r
-subset1	src/javascripts/components/EditImage/EditImage.js	/^const subset1 = d => ({$/;"	r
-subset2	src/javascripts/components/EditImage/EditImage.js	/^const subset2 = () => ({})$/;"	r
-thumbStyles	src/javascripts/components/PhotoList/PhotoList.js	/^const thumbStyles = [CroppedThumb, FullThumbWithCropBox, FullThumb]$/;"	r
-transformImageData2Api	src/javascripts/containers/actions.js	/^const transformImageData2Api = ({ crop_box, cropping_method }) => ({$/;"	r
-trunc	src/javascripts/components/CropBox/CropBox.js	/^    const trunc = num => Math.max(0, Math.min(num, 1))$/;"	r
-url	src/javascripts/components/PhotoList/actions.js	/^  const url = buildUrl()$/;"	r
-url	src/javascripts/components/PhotoList/actions.js	/^  const url = buildUrl(attrs)$/;"	r
-url	src/javascripts/components/PhotoList/actions.js	/^  const url = getState().searchField.next$/;"	r
-url	src/javascripts/components/PhotoList/actions.js	/^  const url = getState().searchField.previous$/;"	r
-url	src/javascripts/components/PhotoList/actions.js	/^  const url = getState().searchField.url$/;"	r
-v_sorted	src/javascripts/components/CropBox/reducers.js	/^  const v_sorted = [0, 0, top, bottom, 1, 1].sort(func)$/;"	r
-width	src/javascripts/components/CropBox/Previews.js	/^  const width = right - left$/;"	r
+replacement	src/react/views/ttEditor/reducers.js	/^  const replacement = tag ? `@${tag}: ` : ''$/;"	r
+round	src/react/views/photoCropApp/components/CropBox/reducers.js	/^const round = num => Number(num.toPrecision(4))$/;"	r
+rules	src/react/utils/tagParser.js	/^  const rules = [$/;"	r
+scrollElement	src/react/utils/scroll.js	/^const scrollElement = (element, duration = STEPS) => {$/;"	r
+scrollTo	src/react/utils/scroll.js	/^const scrollTo = (element, target, duration) => {$/;"	r
+searchInputOnChange	src/react/views/photoCropApp/components/PhotoList/SearchField.js	/^  const searchInputOnChange = e => {$/;"	r
+splits	src/react/views/ttEditor/reducers.js	/^  const splits = [0]$/;"	r
+startMoveCenter	src/react/views/photoCropApp/components/CropBox/Overlay.js	/^  const startMoveCenter = startDragHandle([0, 0, 0, 0, 1])$/;"	r
+startMoveCropBox	src/react/views/photoCropApp/components/CropBox/Overlay.js	/^  const startMoveCropBox = startDragHandle([1, 1, 1, 1, 0])$/;"	r
+style	src/react/views/photoCropApp/components/EditImage/EditImage.js	/^  const style = expanded ? { flex: 3 } : { flex: 1 }$/;"	r
+style	src/react/views/photoCropApp/containers/FrontpageCrop.js	/^const style = {$/;"	r
+styles	src/react/views/photoCropApp/components/CropBox/Previews.js	/^  const styles = getStyles(src, crop_box, size[0] \/ size[1], aspect)$/;"	r
+subset0	src/react/views/photoCropApp/components/EditImage/EditImage.js	/^const subset0 = d => ({$/;"	r
+subset1	src/react/views/photoCropApp/components/EditImage/EditImage.js	/^const subset1 = d => ({$/;"	r
+subset2	src/react/views/photoCropApp/components/EditImage/EditImage.js	/^const subset2 = () => ({})$/;"	r
+target	src/react/utils/scroll.js	/^  const target =$/;"	r
+textReducer	src/react/views/ttEditor/reducers.js	/^const textReducer = (state = defaultTextState, { type, payload }) => {$/;"	r
+thumbStyles	src/react/views/photoCropApp/components/PhotoList/PhotoList.js	/^const thumbStyles = [CroppedThumb, FullThumbWithCropBox, FullThumb]$/;"	r
+tingoPattern	src/react/views/ttEditor/components/Preview.js	/^  const tingoPattern = n ? `(?:\\\\S+\\\\s+){1,${n}}` : '.{1,12}\\\\S*'$/;"	r
+tools	src/react/views/ttEditor/components/EditorToolbar.js	/^  const tools = {$/;"	r
+transformImageData2Api	src/react/views/photoCropApp/containers/actions.js	/^const transformImageData2Api = ({ crop_box, cropping_method }) => ({$/;"	r
+trunc	src/react/views/photoCropApp/components/CropBox/CropBox.js	/^    const trunc = num => Math.max(0, Math.min(num, 1))$/;"	r
+url	src/react/views/photoCropApp/components/PhotoList/actions.js	/^  const url = buildUrl()$/;"	r
+url	src/react/views/photoCropApp/components/PhotoList/actions.js	/^  const url = buildUrl(attrs)$/;"	r
+url	src/react/views/photoCropApp/components/PhotoList/actions.js	/^  const url = getState().searchField.next$/;"	r
+url	src/react/views/photoCropApp/components/PhotoList/actions.js	/^  const url = getState().searchField.previous$/;"	r
+url	src/react/views/photoCropApp/components/PhotoList/actions.js	/^  const url = getState().searchField.url$/;"	r
+v_sorted	src/react/views/photoCropApp/components/CropBox/reducers.js	/^  const v_sorted = [0, 0, top, bottom, 1, 1].sort(func)$/;"	r
+width	src/react/views/photoCropApp/components/CropBox/Previews.js	/^  const width = right - left$/;"	r
 wrap_tingo	src/javascripts/foot.js	/^const wrap_tingo = tingo => {$/;"	r

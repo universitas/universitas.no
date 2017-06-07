@@ -2,7 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
 import Preview from './Preview'
-import './Editor.scss'
+import EditorToolBar from './EditorToolBar'
+import * as Icon from '../../../components/Icons'
 
 const mapStateToProps = ({ text }) => ({
   caret: text.caret,
@@ -10,9 +11,8 @@ const mapStateToProps = ({ text }) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  textChanged: (content, caret) =>
-    dispatch(actions.textChanged(content, caret)),
-  indexChanged: index => dispatch(actions.editIndexChanged(index)),
+  textChanged: content => dispatch(actions.textChanged(content)),
+  moveCaret: caret => dispatch(actions.moveCaret(caret)),
 })
 
 const cleanup = text => {
@@ -30,48 +30,37 @@ const cleanup = text => {
 }
 
 class Editor extends React.Component {
-  constructor(props) {
-    super(props)
-    this.onChange = this.onChange.bind(this)
-    this.onKeyUp = this.onKeyUp.bind(this)
+  onChange = e => {
+    let newContent = e.target.value
+    const { content, moveCaret, textChanged } = this.props
+    if (content.length < newContent.length) newContent = cleanup(newContent)
+    textChanged(newContent)
+  }
+  setCaretPosition = position => {
+    this.textArea.selectionEnd = position
+    this.textArea.selectionStart = position
+    this.props.moveCaret(position)
   }
   componentDidUpdate(prevProps) {
     const { content, caret } = this.props
-    if (content == prevProps.content) return
-    const selectionStart = content.length - caret
-    console.log(selectionStart)
-    this.textArea.selectionStart = selectionStart
-    this.textArea.selectionEnd = selectionStart
-  }
-  onKeyUp(e) {
-    const activeIndex = (e.target.value
-      .slice(0, e.target.selectionStart)
-      .match(/\n+/g) || []).length
-    this.props.indexChanged(activeIndex)
-  }
-  onChange(e) {
-    const { content, textChanged } = this.props
-    const newcontent = e.target.value
-    const caret = newcontent.length - e.target.selectionStart
-    const cleancontent = content.length < newcontent.length
-      ? cleanup(newcontent)
-      : newcontent
-    textChanged(cleancontent, caret)
+    const change = content.length - prevProps.content.length
+    if (change !== 0) this.setCaretPosition(caret + change)
   }
   render() {
+    const moveCaret = e => this.props.moveCaret(e.target.selectionStart)
     return (
       <section className="Editor">
+        <EditorToolBar />
         <textArea
+          className="TextArea"
           autoCapitalize="sentences"
           lang="no-nn"
-          className="TextArea"
           onChange={this.onChange}
-          onKeyUp={this.onKeyUp}
-          onMouseUp={this.onKeyUp}
+          onKeyUp={moveCaret}
+          onMouseUp={moveCaret}
           value={this.props.content}
           ref={el => (this.textArea = el)}
         />
-        <Preview />
       </section>
     )
   }

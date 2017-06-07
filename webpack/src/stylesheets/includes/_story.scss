@@ -59,7 +59,7 @@
   display: inline-block;
 }
 
-#story{
+#story, .Preview {
   border-bottom: $separator-line;
 
   header{
@@ -152,6 +152,16 @@
     font-size: 1.4rem;
     margin: 1rem 0 .2rem 0;
 
+  }
+  ul {
+    list-style: none;
+    li:before {
+      display: inline-block;
+      content: "■";
+      width: 1em;
+    }
+  }
+  ol {
   }
 
   .tingo {
