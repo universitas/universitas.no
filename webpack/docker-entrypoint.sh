@@ -1,6 +1,9 @@
 #!/bin/bash
 
 case $1 in
+  test)
+    exec npm run test
+    ;;
   build)
     exec npm run rebuild
     ;;

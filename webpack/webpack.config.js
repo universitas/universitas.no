@@ -55,13 +55,16 @@ module.exports = {
         use: [
           {
             loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+            },
           },
         ],
       },
     ],
   },
   resolve: {
-    modules: ['src', 'node_modules'],
+    modules: ['src', 'src/react', 'node_modules'],
     unsafeCache: true,
     alias: {
       // use unminified jquery source to enable deduping etc.
@@ -74,9 +77,10 @@ module.exports = {
     head: 'javascripts/head.js',
     vendor: 'javascripts/vendor.js',
     foot: 'javascripts/foot.js',
-    photo_crop_app: 'react/entry/frontpagecrop.js',
-    photo_list_view: 'react/entry/photosearch.js',
-    tassen_tags_web_editor: 'react/entry/editor.js',
+    photo_list_view: 'entry/photosearch.js',
+    // photo_crop_app: 'entry/frontpagecrop.js',
+    // tassen_tags_web_editor: 'entry/editor.js',
+    // prodsys: 'entry/prodsys.js',
   },
   output: {
     path: path.join(build_dir, ''),

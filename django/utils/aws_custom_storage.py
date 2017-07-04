@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Custom overrides for the Amazon storage"""
 from storages.backends.s3boto import S3BotoStorage, setting
 

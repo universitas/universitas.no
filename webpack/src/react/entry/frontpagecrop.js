@@ -5,7 +5,7 @@ import { AppContainer } from 'react-hot-loader'
 import {
   FrontpageCrop,
   imageClickHandler,
-} from '../views/photoCropApp/containers/FrontpageCrop'
+} from 'apps/photoCropApp/containers/FrontpageCrop'
 
 const render = (App, domNode) => {
   ReactDOM.render(
@@ -35,7 +35,7 @@ const PhotoCropApp = () => {
     bindEventToImageFiles()
     render(FrontpageCrop, domNode)
     if (module.hot) {
-      module.hot.accept('../views/photoCropApp/containers/FrontpageCrop', () =>
+      module.hot.accept('apps/photoCropApp/containers/FrontpageCrop', () =>
         render(FrontpageCrop, domNode)
       )
     }

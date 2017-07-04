@@ -1,7 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
-import App from 'apps/ttEditor/App'
+// import App from 'apps/ttEditor/App'
+const App = <div />
 
 const ROOT_ID = 'ReactApp'
 
@@ -17,4 +18,4 @@ const render = () => {
 }
 
 render()
-module.hot && module.hot.accept('apps/ttEditor/App', render)
+module.hot && module.hot.accept('../views/ttEditor/App', render)

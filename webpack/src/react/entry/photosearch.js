@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
-import App from '../views/photoCropApp/containers/RootContainer'
+import PhotoCropApp from 'apps/photoCropApp'
 
 const ROOT_ID = 'PhotoApp'
 
@@ -10,12 +10,11 @@ const render = () => {
   if (!domNode) return
   ReactDOM.render(
     <AppContainer>
-      <App />
+      <PhotoCropApp />
     </AppContainer>,
     domNode
   )
 }
 
 render()
-module.hot &&
-  module.hot.accept('../views/photoCropApp/containers/RootContainer', render)
+module.hot && module.hot.accept('apps/photoCropApp', render)

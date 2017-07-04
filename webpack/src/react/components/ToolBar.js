@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Tool from './Tool'
-import { connect } from 'react-redux'
 import cx from 'classnames'
 import './tool.scss'
 

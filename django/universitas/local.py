@@ -24,6 +24,7 @@ STATIC_URL = '/static/'
 
 TEMPLATES[0]['OPTIONS']['string_if_invalid'] = 'INVALID'
 
+
 aws = Environment('AWS')
 try:
     AWS_STORAGE_BUCKET_NAME = aws.storage_bucket_name
@@ -45,7 +46,7 @@ try:
 except AttributeError:
     # Use File system in local development instead of Amanon S3
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-    THUMBNAIL_STORAGE = DEFAULT_FILE_STORAGE
+    THUMBNAIL_STORAGE = 'utils.local_file_storage.OverwriteStorage'
     MEDIA_ROOT = env.MEDIA_DIR or '/media/'
     MEDIA_URL = '/media/'
 
