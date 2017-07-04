@@ -1,14 +1,5 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { connect } from 'react-redux'
-import './overlay.scss'
-import {
-  endDragHandle,
-  moveDragHandle,
-  startDragHandle,
-  startNewCrop,
-  setCenter,
-} from '../../ducks/cropWidget'
 
 const cursor = {
   '1000': 'ew-resize',
@@ -21,12 +12,12 @@ const cursor = {
   '1001': 'sw-resize',
 }
 
-const Handle = ({ name, startDragHandle }) => {
+const Handle = ({ name, startDragHandleFactory }) => {
   const handleSize = 0.1
   const mask = name.split('').map(parseFloat)
   return (
     <rect
-      onMouseDown={startDragHandle(mask)}
+      onMouseDown={startDragHandleFactory(mask)}
       width={1 - mask[0] - mask[2] + handleSize}
       height={1 - mask[1] - mask[3] + handleSize}
       x={mask[2] - handleSize / 2}
@@ -37,16 +28,22 @@ const Handle = ({ name, startDragHandle }) => {
 }
 Handle.propTypes = {
   name: PropTypes.string,
-  startDragHandle: PropTypes.func,
+  startDragHandleFactory: PropTypes.func,
 }
 
-let Overlay = ({ size, pending, crop_box, startDragHandle, startNewCrop }) => {
+const Overlay = ({
+  size,
+  pending,
+  crop_box,
+  startDragHandleFactory,
+  startNewCrop,
+}) => {
   const { left, x, right, top, y, bottom } = crop_box
   const boxPath = `M${left}, ${top}V${bottom}H${right}V${top}Z`
   const outerPath = 'M0, 0H1V1H0Z'
   const circleRadius = rx => ({ rx, ry: rx * size[0] / size[1] || rx })
-  const startMoveCropBox = startDragHandle([1, 1, 1, 1, 0])
-  const startMoveCenter = startDragHandle([0, 0, 0, 0, 1])
+  const startMoveCropBox = startDragHandleFactory([1, 1, 1, 1, 0])
+  const startMoveCenter = startDragHandleFactory([0, 0, 0, 0, 1])
 
   return (
     <svg>
@@ -87,7 +84,7 @@ let Overlay = ({ size, pending, crop_box, startDragHandle, startNewCrop }) => {
               <Handle
                 key={name}
                 name={name}
-                startDragHandle={startDragHandle}
+                startDragHandleFactory={startDragHandleFactory}
               />
             ))}
           </svg>
@@ -112,49 +109,8 @@ Overlay.propTypes = {
   size: PropTypes.array.isRequired,
   crop_box: PropTypes.object.isRequired,
   pending: PropTypes.bool.isRequired,
-  startDragHandle: PropTypes.func.isRequired,
+  startDragHandleFactory: PropTypes.func.isRequired,
   startNewCrop: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = null
-
-const mapDispatchToProps = (dispatch, { id, getRelativePosition }) => ({
-  // setCenter: e => {
-  //   dispatch(setCenter(id, getRelativePosition(e)))
-  // },
-  startNewCrop: e => {
-    dispatch(startNewCrop(id, getRelativePosition(e)))
-  },
-  startDragHandle: dragMask => e => {
-    dispatch(startDragHandle(id, getRelativePosition(e), dragMask))
-  },
-})
-
-Overlay = connect(mapStateToProps, mapDispatchToProps)(Overlay)
-
-let DragKing = ({ isActive, moveDragHandle, endDragHandle }) =>
-  isActive
-    ? <div
-        className="DragKing"
-        onMouseUp={endDragHandle}
-        onMouseLeave={endDragHandle}
-        onMouseMove={moveDragHandle}
-      />
-    : null
-DragKing.propTypes = {
-  id: PropTypes.number.isRequired,
-  isActive: PropTypes.bool.isRequired,
-  getRelativePosition: PropTypes.func.isRequired,
-  moveDragHandle: PropTypes.func.isRequired,
-  endDragHandle: PropTypes.func.isRequired,
-}
-DragKing = connect(null, (dispatch, { id, getRelativePosition }) => ({
-  moveDragHandle: e => {
-    dispatch(moveDragHandle(id, getRelativePosition(e)))
-  },
-  endDragHandle: e => {
-    dispatch(endDragHandle(id))
-  },
-}))(DragKing)
-
-export { DragKing, Overlay }
+export default Overlay

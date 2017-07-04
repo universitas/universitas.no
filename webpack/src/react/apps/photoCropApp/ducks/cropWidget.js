@@ -1,5 +1,6 @@
 import R from 'ramda'
 import { normalize, round } from '../components/CropBox/utils'
+import { SELECT_IMAGE } from './cropPanel'
 // Action constants
 const MOVE_CENTER = 'cropbox/MOVE_CENTER'
 const START_DRAG_HANDLE = 'cropbox/START_DRAG_HANDLE'
@@ -44,6 +45,9 @@ const initialState = {
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case SELECT_IMAGE: {
+      return { ...state, crop_box: action.payload.crop_box }
+    }
     case MOVE_CENTER: {
       const [mx, my] = action.payload.position
       return {

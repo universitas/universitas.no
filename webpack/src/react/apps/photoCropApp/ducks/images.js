@@ -51,6 +51,7 @@ const image = (state = {}, action) => {
       return { ...state, cropping_method: 100 }
     case IMAGE_FILE_PATCHED:
     case ADD_IMAGE:
+      console.log(action)
       return { ...state, ...action.payload }
     default:
       return state

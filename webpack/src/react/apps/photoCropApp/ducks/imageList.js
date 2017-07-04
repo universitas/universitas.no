@@ -5,13 +5,17 @@ import { addImage } from './images'
 
 const DEBOUNCE_TIMEOUT = 500 // wait n ms before calling api
 
-export const TOGGLE_IMAGE_TYPE = 'imagelist/TOGGLE_IMAGE_TYPE'
-export const TOGGLE_THUMB_STYLE = 'imagelist/TOGGLE_THUMB_STYLE'
-export const CLEAR_SEARCH = 'imagelist/CLEAR_SEARCH'
-export const SEARCH_CHANGED = 'imagelist/SEARCH_CHANGED'
-export const FETCHING_IMAGES = 'imagelist/FETCHING_IMAGES'
-export const FETCHED_IMAGES = 'imagelist/FETCHED_IMAGES'
+const TOGGLE_IMAGE_TYPE = 'imagelist/TOGGLE_IMAGE_TYPE'
+const TOGGLE_THUMB_STYLE = 'imagelist/TOGGLE_THUMB_STYLE'
+const SEARCH_CHANGED = 'imagelist/SEARCH_CHANGED'
+const FETCHING_IMAGES = 'imagelist/FETCHING_IMAGES'
+const FETCHED_IMAGES = 'imagelist/FETCHED_IMAGES'
+const CLEAR_SEARCH = 'imagelist/CLEAR_SEARCH'
+const URL_CHANGED = 'imagelist/URL_CHANGED'
 
+const getNext = state => state.ui.imageList.next
+const getUrl = state => state.ui.imageList.url
+const getPrevious = state => state.ui.imageList.previous
 export const getImages = state => state.ui.imageList.ids
 export const getImageList = state => state.ui.imageList
 export const getThumbStyle = state => state.ui.imageList.thumbStyle
@@ -19,6 +23,10 @@ export const getThumbStyle = state => state.ui.imageList.thumbStyle
 export const searchChanged = text => ({
   type: SEARCH_CHANGED,
   payload: { text },
+})
+export const urlChanged = url => ({
+  type: URL_CHANGED,
+  payload: { url },
 })
 export const toggleThumbStyle = () => ({
   type: TOGGLE_THUMB_STYLE,
@@ -37,10 +45,9 @@ export const fetchingImages = () => ({
   payload: {},
 })
 
-const fetchedImages = ({ url, count, next, previous, results }) => ({
+const fetchedImages = ({ count, next, previous, results }) => ({
   type: FETCHED_IMAGES,
   payload: {
-    url,
     count,
     next,
     previous,
@@ -55,17 +62,17 @@ export const searchAction = text => (dispatch, getState) => {
 }
 
 export const nextAction = () => (dispatch, getState) => {
-  const url = getState().searchField.next
+  const url = getNext(getState())
   fetchImages(dispatch, url)
 }
 
 export const refreshAction = () => (dispatch, getState) => {
-  const url = getState().searchField.url
+  const url = getUrl(getState())
   fetchImages(dispatch, url)
 }
 
 export const prevAction = () => (dispatch, getState) => {
-  const url = getState().searchField.previous
+  const url = getPrevious(getState())
   fetchImages(dispatch, url)
 }
 export const fetchAction = () => (dispatch, getState) => {
@@ -84,6 +91,7 @@ const doSearch = (dispatch, attrs = {}) => {
 const debouncedDoSearch = debounce(doSearch, DEBOUNCE_TIMEOUT)
 
 const fetchImages = (dispatch, url) => {
+  dispatch(urlChanged(url))
   apiFetch(dispatch, url).then(data => {
     data.results.forEach(img => dispatch(addImage(img)))
     dispatch(fetchedImages(data))
@@ -91,13 +99,19 @@ const fetchImages = (dispatch, url) => {
 }
 
 // reducers
-const defaultState = { ids: [], text: '', thumbStyle: 0, fetching: false }
+const defaultState = {
+  ids: [],
+  text: '',
+  thumbStyle: 0,
+  fetching: false,
+}
 
 export const reducer = (state = defaultState, action) => {
   switch (action.type) {
     case CLEAR_SEARCH:
       return defaultState
     case SEARCH_CHANGED:
+    case URL_CHANGED:
       return { ...state, ...action.payload }
     case TOGGLE_THUMB_STYLE:
       return { ...state, thumbStyle: (state.thumbStyle + 1) % 3 }

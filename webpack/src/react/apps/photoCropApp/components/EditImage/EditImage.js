@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
-import { CropBox } from '../CropBox/CropBox'
-import { Previews } from '../CropBox/Previews'
+import { CropBox, Previews } from '..'
 import { getImage } from '../../ducks/images'
 import { getCropWidget } from '../../ducks/cropWidget'
 import {
@@ -92,7 +91,7 @@ let EditImage = ({
   }
   const pdata = [subset0, subset1, subset2][data](image)
   const { large: src, size, cropping_method } = image
-  const pending = cropping_method === 0
+  const pending = cropping_method === 1
   const aspects = [1, 0.5, 2.5]
   const cropBoxProps = { id, src, size, dragging, crop_box, pending }
   const previewsProps = { src, size, crop_box, aspects }

@@ -3,7 +3,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { getImages, getThumbStyle } from '../../ducks/imageList'
 import { getImage } from '../../ducks/images'
-import { selectImage } from '../../ducks/cropPanel'
+import { imageSelected } from '../../ducks/cropPanel'
 import './photolist.scss'
 
 const FullThumbWithCropBox = ({ small, title, size, crop_box }) => {
@@ -61,7 +61,7 @@ const mapImageStatetoProps = (state, { id }) => ({
 })
 
 const mapImageDispatchToProps = (dispatch, { id }) => ({
-  onClick: e => dispatch(selectImage(id)),
+  onClick: e => dispatch(imageSelected(id)),
 })
 
 Photo = connect(mapImageStatetoProps, mapImageDispatchToProps)(Photo)
