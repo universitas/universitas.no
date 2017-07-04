@@ -16,21 +16,20 @@ let PreviewImg = ({ src, crop_box, size, aspect, style = {} }) => {
   )
 }
 PreviewImg.propTypes = {
-  src: PropTypes.string.isRequired,
-  size: PropTypes.array.isRequired,
-  crop_box: PropTypes.object.isRequired,
   aspect: PropTypes.number.isRequired,
   style: PropTypes.object,
+  crop_box: PropTypes.object.isRequired,
+  src: PropTypes.string.isRequired,
+  size: PropTypes.array.isRequired,
 }
 
-const Previews = ({ image, src, aspects = [2], flexDirection = 'row' }) => (
+const Previews = ({ aspects = [2], flexDirection = 'row', ...image }) => (
   <div className="Previews" style={{ flexDirection }}>
     {aspects.map((aspect, i) => (
       <PreviewImg
         key={i}
         aspect={aspect}
         style={{ flex: flexDirection === 'row' ? aspect : 1 / aspect }}
-        src={src}
         {...image}
       />
     ))}
@@ -39,7 +38,9 @@ const Previews = ({ image, src, aspects = [2], flexDirection = 'row' }) => (
 Previews.propTypes = {
   aspects: PropTypes.array,
   flexDirection: PropTypes.string,
-  image: PropTypes.object,
+  crop_box: PropTypes.object.isRequired,
+  src: PropTypes.string.isRequired,
+  size: PropTypes.array.isRequired,
 }
 
 export { Previews }

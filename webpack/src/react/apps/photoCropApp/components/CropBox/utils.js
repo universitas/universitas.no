@@ -14,6 +14,20 @@ export const normalize = ({ x, y, left, top, right, bottom }) => {
 
 export const round = num => Number(num.toPrecision(4))
 
+const closeCrop = (x, y, l, r, t, b, A) => {
+  const w = r - l
+  const h = b - t
+  const a = w / h
+  const W = 0.5 * Math.min(A, 1, a > A ? w : h * A)
+  const H = W / A
+  const [X, Y] = [
+    W * 2 > w ? [W, (l + r) / 2, 1 - W] : [l + W, x, r - W],
+    H * 2 > h ? [H, (t + b) / 2, 1 - H] : [t + H, y, b - H],
+  ].map(arr => arr.sort((n, m) => n - m)[1])
+
+  return { left: X - W, right: X + W, top: Y - H, bottom: Y + H }
+}
+
 export const getStyles = (src, crop_box, imgRatio, frameRatio) => {
   const { left, top, right, bottom } = closeCrop(
     crop_box.x,

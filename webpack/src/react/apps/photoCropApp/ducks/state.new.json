@@ -1,11 +1,11 @@
 {
   "ui":{
     "cropPanel": {
+      "image": 32011,
       "expanded": false,
-      "panels": 0
+      "data": 0
     },
     "cropWidget": {
-      "image": 32011,
       "dragging": {},
       "box": {
         "x": 0.4908,

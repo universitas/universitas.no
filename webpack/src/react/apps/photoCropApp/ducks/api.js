@@ -32,8 +32,9 @@ const headBase = {
   },
 }
 
-export const apiFetch = (dispatch, url, head, body = '') => {
-  const payload = R.mergeDeepRight(headBase, { ...head, body })
+export const apiFetch = (dispatch, url, head, body = null) => {
+  const payload = R.mergeDeepRight(headBase, { ...head })
+  if (body) payload.body = body
   const req = { url, cuid: cuid() }
   dispatch(fetching(req))
   return fetch(url, payload)

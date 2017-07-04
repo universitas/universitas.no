@@ -7,8 +7,7 @@ export const REQUEST_IMAGE_FILE = 'images/REQUEST_IMAGE_FILE'
 export const AUTOCROP_IMAGE = 'images/AUTOCROP_IMAGE'
 
 // Selectors
-const getImages = R.prop('images')
-export const getImage = (state, id) => R.prop(id)(R.prop('images')(state))
+export const getImage = (state, id) => state.images[id]
 
 // Action creators
 export const addImage = json => ({
@@ -52,7 +51,7 @@ const image = (state = {}, action) => {
       return { ...state, cropping_method: 100 }
     case IMAGE_FILE_PATCHED:
     case ADD_IMAGE:
-      return { ...state, ...payload }
+      return { ...state, ...action.payload }
     default:
       return state
   }

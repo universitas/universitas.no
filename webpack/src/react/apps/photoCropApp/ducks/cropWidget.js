@@ -1,13 +1,15 @@
 import R from 'ramda'
-import { ADD_IMAGE, IMAGE_FILE_PATCHED, AUTOCROP_IMAGE } from './images'
 import { normalize, round } from '../components/CropBox/utils'
-
 // Action constants
 const MOVE_CENTER = 'cropbox/MOVE_CENTER'
 const START_DRAG_HANDLE = 'cropbox/START_DRAG_HANDLE'
 const START_NEW_CROP = 'cropbox/START_NEW_CROP'
 const MOVE_DRAG_HANDLE = 'cropbox/MOVE_DRAG_HANDLE'
 export const END_DRAG_HANDLE = 'cropbox/END_DRAG_HANDLE'
+
+// Selectors
+
+export const getCropWidget = state => state.ui.cropWidget
 
 // Action creators
 export const setCenter = (id, position) => ({
@@ -34,17 +36,14 @@ export const endDragHandle = id => ({
   type: END_DRAG_HANDLE,
   payload: { id },
 })
-// Selectors
-const getSlice = R.prop('cropbox')
 
-const initialState = { image: 0, dragging: {}, box: {} }
+const initialState = {
+  dragging: {},
+  crop_box: { x: 0.5, y: 0.5, left: 0, top: 0, right: 1, bottom: 1 },
+}
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_IMAGE:
-      return action.payload
-    case IMAGE_FILE_PATCHED:
-      return { ...state, ...action.payload }
     case MOVE_CENTER: {
       const [mx, my] = action.payload.position
       return {
@@ -111,11 +110,8 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         crop_box: normalize(state.crop_box),
-        cropping_method: 100,
         dragging: {},
       }
-    case AUTOCROP_IMAGE:
-      return { ...state, cropping_method: 1 }
     default:
       return state
   }

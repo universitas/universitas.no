@@ -1,6 +1,5 @@
 import R from 'ramda'
-import { combineReducers } from 'redux'
-import { getUi } from './ui'
+// import { getUi } from './ui'
 
 // Action types
 const CYCLE_PANEL_DATA = 'cropPanel/CYCLE_PANEL_DATA'
@@ -11,26 +10,31 @@ const SELECT_IMAGE = 'cropPanel/SELECT_IMAGE'
 // Selectors
 // const getCropPanelData = R.pipe(getUi, R.prop('data'))
 // const getCropPanelSize = R.pipe(getUi, R.prop('expanded'))
-const getCropPanelData = R.always(0)
-const getCropPanelSize = R.T
+export const getCropPanel = state => state.ui.cropPanel
+export const getCropPanelData = state => state.ui.cropPanel.data
+export const getCropPanelSize = state => state.ui.cropPanel.expanded
+export const getSelectedImage = state => state.ui.cropPanel.image
 
 // Action creators
-export const dismissWidget = () => ({
-  type: DISMISS_WIDGET,
+export const dismissPanel = () => ({
+  type: DISMISS_PANEL,
 })
-export const resizeWidget = () => ({
-  type: RESIZE_WIDGET,
+export const resizePanel = () => ({
+  type: RESIZE_PANEL,
 })
-export const cycleWidgetPanels = () => ({
+export const cyclePanelData = () => ({
   type: CYCLE_PANEL_DATA,
+})
+export const selectImage = id => ({
+  type: SELECT_IMAGE,
+  payload: { id },
 })
 
 // Reducers
-export const reducer = (
-  state = { image: 0, expanded: false, data: 0 },
-  action
-) => {
-  const PANEL_STATES = 3 // number of possible states
+const initialState = { image: 0, expanded: false, data: 0 }
+const PANEL_STATES = 3 // number of possible states
+
+export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SELECT_IMAGE:
       return { ...state, image: action.payload.id }

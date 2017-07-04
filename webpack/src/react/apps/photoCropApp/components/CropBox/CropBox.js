@@ -13,9 +13,8 @@ class CropBox extends React.Component {
     ].map(trunc)
   }
   render() {
-    const { id, src, size, dragging, cropping_method } = this.props
+    const { id, src, size, crop_box, pending, dragging } = this.props
     const [width, height] = size || [100, 100]
-    const pending = cropping_method === 1
     return (
       <div className="CropBox">
         <svg
@@ -32,6 +31,8 @@ class CropBox extends React.Component {
           />
           <Overlay
             id={id}
+            crop_box={crop_box}
+            size={size}
             pending={pending}
             getRelativePosition={this.getRelativePosition}
           />
@@ -48,9 +49,10 @@ class CropBox extends React.Component {
 CropBox.propTypes = {
   id: PropTypes.number.isRequired,
   src: PropTypes.string.isRequired,
-  aspects: PropTypes.array,
-  size: PropTypes.array,
-  dragging: PropTypes.object,
+  size: PropTypes.array.isRequired,
+  crop_box: PropTypes.object.isRequired,
+  dragging: PropTypes.object.isRequired,
+  pending: PropTypes.bool.isRequired,
 }
 
 export { CropBox }

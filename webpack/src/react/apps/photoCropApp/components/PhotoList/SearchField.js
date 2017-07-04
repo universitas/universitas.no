@@ -1,7 +1,11 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
-import { searchAction, toggleThumbStyle } from './actions'
+import {
+  getImageList,
+  searchAction,
+  toggleThumbStyle,
+} from '../../ducks/imageList'
 
 let SearchField = ({ text, searchChanged, toggleThumbStyle, fetching }) => {
   const clearButtonOnClick = e => {
@@ -34,7 +38,7 @@ let SearchField = ({ text, searchChanged, toggleThumbStyle, fetching }) => {
   )
 }
 SearchField = connect(
-  store => store.searchField,
+  store => getImageList(store),
   dispatch => ({
     searchChanged: text => dispatch(searchAction(text)),
     toggleThumbStyle: e => dispatch(toggleThumbStyle()),

@@ -1,6 +1,7 @@
 import R from 'ramda'
 import { debounce } from 'lodash'
 import { searchUrl, apiFetch } from './api'
+import { addImage } from './images'
 
 const DEBOUNCE_TIMEOUT = 500 // wait n ms before calling api
 
@@ -12,6 +13,8 @@ export const FETCHING_IMAGES = 'imagelist/FETCHING_IMAGES'
 export const FETCHED_IMAGES = 'imagelist/FETCHED_IMAGES'
 
 export const getImages = state => state.ui.imageList.ids
+export const getImageList = state => state.ui.imageList
+export const getThumbStyle = state => state.ui.imageList.thumbStyle
 
 export const searchChanged = text => ({
   type: SEARCH_CHANGED,
@@ -36,7 +39,13 @@ export const fetchingImages = () => ({
 
 const fetchedImages = ({ url, count, next, previous, results }) => ({
   type: FETCHED_IMAGES,
-  payload: { url, count, next, previous, ids: R.keys(results) },
+  payload: {
+    url,
+    count,
+    next,
+    previous,
+    ids: R.values(R.pluck('id', results)),
+  },
 })
 
 // thunks

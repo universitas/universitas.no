@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
-import { selectImage, getImages } from '../../ducks/imageList'
+import { getImages, getThumbStyle } from '../../ducks/imageList'
+import { getImage } from '../../ducks/images'
+import { selectImage } from '../../ducks/cropPanel'
 import './photolist.scss'
 
 const FullThumbWithCropBox = ({ small, title, size, crop_box }) => {
@@ -53,9 +55,9 @@ let Photo = ({ onClick, original, thumbStyle = 0, ...props }) => {
     </div>
   )
 }
-const mapImageStatetoProps = ({ searchField, images }, { id }) => ({
-  thumbStyle: searchField.thumbStyle,
-  ...images[id],
+const mapImageStatetoProps = (state, { id }) => ({
+  thumbStyle: getThumbStyle(state),
+  ...getImage(state, id),
 })
 
 const mapImageDispatchToProps = (dispatch, { id }) => ({

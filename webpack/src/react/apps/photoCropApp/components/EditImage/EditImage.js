@@ -3,7 +3,15 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { CropBox } from '../CropBox/CropBox'
 import { Previews } from '../CropBox/Previews'
-import * as actions from './actions'
+import { getImage } from '../../ducks/images'
+import { getCropWidget } from '../../ducks/cropWidget'
+import {
+  getCropPanel,
+  dismissPanel,
+  resizePanel,
+  cyclePanelData,
+} from '../../ducks/cropPanel'
+import { autocropImage } from '../../ducks/images'
 import format from 'date-fns/format'
 import './editimage.scss'
 
@@ -18,10 +26,10 @@ let Buttons = ({ dismiss, expanded, resize, cycle, autocrop }) => (
   </div>
 )
 Buttons = connect(null, (dispatch, { id }) => ({
-  dismiss: e => dispatch(actions.dismissWidget()),
-  resize: e => dispatch(actions.resizeWidget()),
-  cycle: e => dispatch(actions.cycleWidgetPanels()),
-  autocrop: e => dispatch(actions.autocropImage(id)),
+  dismiss: e => dispatch(dismissPanel()),
+  resize: e => dispatch(resizePanel()),
+  cycle: e => dispatch(cyclePanelData()),
+  autocrop: e => dispatch(autocropImage(id)),
 }))(Buttons)
 
 const subset1 = d => ({
@@ -64,7 +72,14 @@ const ImageData = data => (
   </table>
 )
 
-let EditImage = ({ id = 0, image = {}, panels, expanded }) => {
+let EditImage = ({
+  id = 0,
+  image = {},
+  data,
+  expanded,
+  crop_box,
+  dragging,
+}) => {
   const style = expanded ? { flex: 3 } : { flex: 1 }
   style.pointerEvents = 'all'
   if (!id) return null
@@ -75,19 +90,26 @@ let EditImage = ({ id = 0, image = {}, panels, expanded }) => {
       </div>
     )
   }
-  const data = [subset0, subset1, subset2][panels](image)
+  const pdata = [subset0, subset1, subset2][data](image)
+  const { large: src, size, cropping_method } = image
+  const pending = cropping_method === 0
+  const aspects = [1, 0.5, 2.5]
+  const cropBoxProps = { id, src, size, dragging, crop_box, pending }
+  const previewsProps = { src, size, crop_box, aspects }
   return (
     <div className="EditImage" style={style}>
-      <Previews image={image} src={image.large} aspects={[1, 0.5, 2.5]} />
-      <CropBox {...image} src={image.large} />
-      <ImageData {...data} />
+      <Previews {...previewsProps} />
+      <CropBox {...cropBoxProps} />
+      <ImageData {...pdata} />
       <Buttons id={id} expanded={expanded} />
     </div>
   )
 }
-EditImage = connect(
-  ({ cropWidget, images }) =>
-    cropWidget ? { ...cropWidget, image: images[cropWidget.id] } : {}
-)(EditImage)
+EditImage = connect(state => {
+  const { image: id, expanded, data } = getCropPanel(state)
+  const { dragging, crop_box } = getCropWidget(state)
+  const image = getImage(state, id)
+  return { id, image, dragging, crop_box, expanded, data }
+})(EditImage)
 
 export { EditImage }

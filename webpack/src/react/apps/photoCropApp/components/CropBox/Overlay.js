@@ -109,14 +109,14 @@ let Overlay = ({ size, pending, crop_box, startDragHandle, startNewCrop }) => {
 }
 
 Overlay.propTypes = {
-  size: PropTypes.array,
-  pending: PropTypes.bool,
+  size: PropTypes.array.isRequired,
   crop_box: PropTypes.object.isRequired,
+  pending: PropTypes.bool.isRequired,
   startDragHandle: PropTypes.func.isRequired,
   startNewCrop: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = (state, { id }) => state.images[id]
+const mapStateToProps = null
 
 const mapDispatchToProps = (dispatch, { id, getRelativePosition }) => ({
   // setCenter: e => {

@@ -1,7 +1,12 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
-import { nextAction, prevAction, refreshAction } from './actions'
+import {
+  getImageList,
+  nextAction,
+  prevAction,
+  refreshAction,
+} from '../../ducks/imageList'
 
 let ResultsPanel = ({
   url = ' ',
@@ -27,7 +32,7 @@ let ResultsPanel = ({
   )
 }
 ResultsPanel = connect(
-  store => store.searchField,
+  store => getImageList(store),
   dispatch => ({
     refreshButtonOnClick: e => dispatch(refreshAction()),
     nextButtonOnClick: e => dispatch(nextAction()),
