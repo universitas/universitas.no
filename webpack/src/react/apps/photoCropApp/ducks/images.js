@@ -1,4 +1,5 @@
 import R from 'ramda'
+import { apiGet } from './api'
 
 // Action constants
 export const ADD_IMAGE = 'images/ADD_IMAGE'
@@ -31,12 +32,9 @@ export const imageFilePatched = json => ({
   },
 })
 
-const requestImageFile = id => ({
-  type: REQUEST_IMAGE_FILE,
-  payload: { id },
-})
-
 // utils
+export const fetchImage = (dispatch, id) =>
+  apiGet('images')(id)(dispatch).then(img => dispatch(addImage(img)))
 
 const transformImageData2Api = ({ crop_box, cropping_method }) => ({
   crop_box,

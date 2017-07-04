@@ -1,4 +1,5 @@
 import { debounce } from 'lodash'
+
 import { persistStore } from 'redux-persist'
 import { END_DRAG_HANDLE, getCropWidget } from './ducks/cropWidget'
 import { AUTOCROP_IMAGE, imageFilePatched } from './ducks/images'

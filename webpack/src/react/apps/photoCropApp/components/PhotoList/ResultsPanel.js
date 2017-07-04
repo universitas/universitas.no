@@ -8,14 +8,18 @@ import {
   refreshAction,
 } from '../../ducks/imageList'
 
+const Button = ({ onClick, children }) => (
+  <button onClick={onClick} disabled={!onClick}> {children}</button>
+)
+
 let ResultsPanel = ({
-  url = ' ',
+  url = '',
   count = '-',
   next,
-  nextButtonOnClick,
+  nextAction,
   previous,
-  previousButtonOnClick,
-  refreshButtonOnClick,
+  prevAction,
+  refreshAction,
 }) => {
   return (
     <section className="ResultsPanel">
@@ -25,19 +29,14 @@ let ResultsPanel = ({
       <div className="countPanel">
         {count}
       </div>
-      {previous && <button onClick={previousButtonOnClick}>previous</button>}
-      {url && <button onClick={refreshButtonOnClick}>refresh</button>}
-      {next && <button onClick={nextButtonOnClick}>next</button>}
+      <Button onClick={previous && prevAction}>previous</Button>
+      <Button onClick={url && refreshAction}>refresh</Button>
+      <Button onClick={next && nextAction}>next</Button>
     </section>
   )
 }
-ResultsPanel = connect(
-  store => getImageList(store),
-  dispatch => ({
-    refreshButtonOnClick: e => dispatch(refreshAction()),
-    nextButtonOnClick: e => dispatch(nextAction()),
-    previousButtonOnClick: e => dispatch(prevAction()),
-  })
-)(ResultsPanel)
+ResultsPanel = connect(getImageList, { refreshAction, nextAction, prevAction })(
+  ResultsPanel
+)
 
 export { ResultsPanel }

@@ -1,8 +1,15 @@
 /* eslint-env browser */
 import React from 'react'
-import { EditImage } from '../components/EditImage'
+import { combineReducers } from 'redux'
+import { EditImage } from '../components'
 import { connect, Provider } from 'react-redux'
-import { rootStore, imageClickHandler } from './store'
+import configureStore from '../configureStore'
+import { imageSelected, getSelectedImage } from '../ducks/cropPanel'
+import { reducer as ui } from '../ducks/ui'
+import { reducer as images } from '../ducks/images'
+
+const rootReducer = combineReducers({ ui, images })
+const rootStore = configureStore(rootReducer)
 
 const style = {
   position: 'fixed',
@@ -22,7 +29,7 @@ const empty = {
 }
 
 const mapStateToProps = state => ({
-  active: state.cropWidget.id != 0,
+  active: getSelectedImage(state) !== 0,
 })
 
 const CropBox = connect(mapStateToProps)(
@@ -34,10 +41,14 @@ const CropBox = connect(mapStateToProps)(
         </section>
       : null
 )
-const FrontpageCrop = () => (
+export const FrontpageCrop = () => (
   <Provider store={rootStore}>
     <CropBox />
   </Provider>
 )
-
-export { FrontpageCrop, imageClickHandler }
+// selects another image
+export const imageClickHandler = id => {
+  console.log('clicked: ', id)
+  rootStore.dispatch(imageSelected(id))
+  //rootStore.dispatch(fetchImageFile(id))
+}

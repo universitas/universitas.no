@@ -1,5 +1,5 @@
 import R from 'ramda'
-import { getImage } from './images'
+import { fetchImage, getImage } from './images'
 
 // Action types
 const CYCLE_PANEL_DATA = 'cropPanel/CYCLE_PANEL_DATA'
@@ -30,8 +30,12 @@ export const cyclePanelData = () => ({
   type: CYCLE_PANEL_DATA,
 })
 export const imageSelected = id => (dispatch, getState) => {
-  const { crop_box } = getImage(getState(), id)
-  dispatch(selectImage(id, crop_box))
+  const image = getImage(getState(), id)
+  if (image === undefined) {
+    fetchImage(dispatch, id).then(() => dispatch(imageSelected(id)))
+  } else {
+    dispatch(selectImage(id, image.crop_box))
+  }
 }
 
 // Reducers

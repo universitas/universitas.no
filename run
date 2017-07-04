@@ -13,7 +13,8 @@ for arg; do case $arg in
 
   lint    ) lint_javascript ; lint_python ;;
   webpack ) docker-compose run --rm webpack build ;;
-  jstest ) docker-compose run --rm webpack test ;;
+  testjs  ) docker-compose run --rm webpack test ;;
+  bashjs  ) docker-compose run --rm webpack bash ;;
   stats   ) docker-compose run --rm webpack stats ;;
   npmi    ) read -p "package? " pack && \
     docker-compose run --rm -u root webpack npm i --upgrade --save $pack;;

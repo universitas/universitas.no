@@ -70,9 +70,17 @@ export const apiPatch = model => (id, data) => dispatch => {
   return apiFetch(dispatch, url, head, body)
 }
 
+const paramPairs = (value, key, _) => `${key}=${value}`
+
+const cleanValues = R.pipe(String, R.replace(/\s+/g, ' '), encodeURIComponent)
+
+export const queryString = R.pipe(
+  R.map(cleanValues),
+  R.mapObjIndexed(paramPairs),
+  R.values,
+  R.join('&')
+)
+
 export const searchUrl = model => (attrs = {}) => {
-  const queryString = Object.entries(attrs)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&')
-  return `${BASE_URL}/${model}/?${queryString}`
+  return `${BASE_URL}/${model}/?${queryString(attrs)}`
 }

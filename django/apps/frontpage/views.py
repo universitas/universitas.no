@@ -145,9 +145,9 @@ def fallback_view(request, slug):
         try:
             # is the slug a legacy base36 short url
             story = Story.objects.get(pk=base36_to_int(slug))
-            return HttpResponsePermanentRedirect(story.get_absolute_url())
+            return HttpResponseRedirect(story.get_absolute_url())
         except (ValueError, Story.DoesNotExist):
-            return search_404_view(request, slug)
+            raise Http404
 
 
 def storytype_frontpage(request, section, storytype):

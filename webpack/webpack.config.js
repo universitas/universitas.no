@@ -78,8 +78,8 @@ module.exports = {
     vendor: 'javascripts/vendor.js',
     foot: 'javascripts/foot.js',
     photo_list_view: 'entry/photosearch.js',
-    // photo_crop_app: 'entry/frontpagecrop.js',
-    // tassen_tags_web_editor: 'entry/editor.js',
+    photo_crop_app: 'entry/frontpagecrop.js',
+    tassen_tags_web_editor: 'entry/editor.js',
     // prodsys: 'entry/prodsys.js',
   },
   output: {

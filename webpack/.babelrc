@@ -5,7 +5,15 @@
     "react"
   ],
   "plugins": [
-    "react-hot-loader/babel",
-    "lodash"
-  ]
+    "lodash", "react-hot-loader/babel"
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        ["env"],
+        "stage-1",
+        "react"
+      ],
+    }
+  }
 }
