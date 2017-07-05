@@ -54,6 +54,7 @@
     "sass-loader": "^6",
     "slick-carousel": "^1",
     "style-loader": "^0",
+    "tern": "^0.21.0",
     "url-loader": "^0",
     "webpack": "^2",
     "webpack-bundle-tracker": "^0",

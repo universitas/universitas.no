@@ -1,0 +1,12 @@
+{
+  "libs": [
+    "browser",
+    "ecmascript"
+  ],
+  "plugins": {
+    "es_modules": {},
+    "webpack": {
+      "configPath": "./webpack.prod.config.js"
+    }
+  }
+}

@@ -1,8 +1,7 @@
 """ Settings for running tests """
 from .local import *  # NOQA
 from .local import DATABASES, DATABASE_ROUTERS
-import logging
-logging.disable(logging.CRITICAL)
+LOGGING = {}  # type: dict
 del DATABASE_ROUTERS
 del DATABASES['prodsys']
 PASSWORD_HASHERS = (

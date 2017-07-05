@@ -22,7 +22,7 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 STATIC_ROOT = env.STATIC_DIR or '/static/'
 STATIC_URL = '/static/'
 
-TEMPLATES[0]['OPTIONS']['string_if_invalid'] = 'INVALID'
+TEMPLATES[0]['OPTIONS']['string_if_invalid'] = 'INVALID'  # type: ignore
 
 
 aws = Environment('AWS')
