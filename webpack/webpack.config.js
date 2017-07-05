@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const BundleTracker = require('webpack-bundle-tracker')
-const build_dir = process.env.BUILD_DIR
+const build_dir = process.env.BUILD_DIR || '../build'
 
 module.exports = {
   plugins: [

@@ -3,6 +3,7 @@
 main(){
 for arg; do case $arg in
   help    ) show_help ;;
+  ps      ) docker-compose ps ;;
   init    ) sudo bash -c "$(declare -f install_docker); install_docker $(whoami)" ;;
 
   dumpdb  ) dump_db ;;
@@ -13,6 +14,7 @@ for arg; do case $arg in
 
   lint    ) lint_javascript ; lint_python ;;
   webpack ) docker-compose run --rm webpack build ;;
+  tern    ) docker-compose run --rm -p 33000:33000 webpack tern ;;
   testjs  ) docker-compose run --rm webpack test ;;
   bashjs  ) docker-compose run --rm webpack bash ;;
   stats   ) docker-compose run --rm webpack stats ;;

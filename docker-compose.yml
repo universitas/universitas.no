@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   django:
-    mem_limit: 1000m  # limit memory usage to 1000 Mb 
+    mem_limit: 1000m  # limit memory usage to 1000 Mb
     cpu_quota: 80000  # 80% of 100000 (I think...)
     image: universitas/django:${IMAGE_VERSION:-1.12}
     volumes:
@@ -80,7 +80,11 @@ services:
 volumes:
   redisdata: {}
   pgdata: {}
-  node_modules: {}
+  node_modules:
+    driver_opts:
+      type: local
+      device: ${PWD}/webpack/node_modules
+      o: bind
   webpack_build: {}
   django_media: {}
   django_static: {}

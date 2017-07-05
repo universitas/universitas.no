@@ -7,7 +7,7 @@ import ToolBar from '../../../components/ToolBar'
 const EditorToolBar = ({ insertText, changeTag, ...props }) => {
   const tools = {
     subheading: {
-      icon: 'Heading',
+      icon: 'heading',
       onClick: e => changeTag('mt'),
     },
     question: {

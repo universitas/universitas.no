@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import * as actions from './actions'
+import R from 'ramda'
 
 const defaultTextState = {
   content: '',

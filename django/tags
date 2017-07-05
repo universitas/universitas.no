@@ -229,6 +229,7 @@ LANGUAGE_CODE	universitas/base.py	/^LANGUAGE_CODE = 'nb'$/;"	v
 LANGUAGE_CORPUS	apps/stories/management/commands/guess_language.py	/^LANGUAGE_CORPUS = {$/;"	v
 LOCALE_PATHS	universitas/base.py	/^LOCALE_PATHS = [path('translation')]$/;"	v
 LOGGING	universitas/logging_settings.py	/^LOGGING = {$/;"	v
+LOGGING	universitas/testing.py	/^LOGGING = {}  # type: dict$/;"	v
 LOGIN_REDIRECT_URL	universitas/base.py	/^LOGIN_REDIRECT_URL = '\/'$/;"	v
 LOGIN_URL	universitas/base.py	/^LOGIN_URL = '\/admin\/login\/'$/;"	v
 LOGOUT_URL	universitas/base.py	/^LOGOUT_URL = '\/'$/;"	v
@@ -394,6 +395,7 @@ OLD_DRAFT	apps/legacy_db/models.py	/^    OLD_DRAFT = 1$/;"	v	class:Prodsak
 ORDER_GAP	apps/frontpage/models.py	/^    ORDER_GAP = 100$/;"	v	class:StoryModule
 ORIGINAL_RATIO	apps/stories/models.py	/^    ORIGINAL_RATIO = 100.0$/;"	v	class:StoryMedia
 OUTPUT_PDF_NAME	apps/issues/tasks.py	/^OUTPUT_PDF_NAME = 'universitas_{issue.year}-{issue.number}{suffix}.pdf'$/;"	v
+OverwriteStorage	utils/local_file_storage.py	/^class OverwriteStorage(FileSystemStorage):$/;"	c
 PAGES_GLOB	apps/issues/tasks.py	/^PAGES_GLOB = 'UNI11VER*.pdf'$/;"	v
 PAGE_ONE	apps/issues/tests/test_tasks.py	/^PAGE_ONE = 'UNI11VER16010101000.pdf'$/;"	v
 PASSWORD_HASHERS	universitas/testing.py	/^PASSWORD_HASHERS = ($/;"	v
@@ -551,7 +553,7 @@ THUMBNAIL_QUALITY	universitas/base.py	/^THUMBNAIL_QUALITY = 75$/;"	v
 THUMBNAIL_REDIS_DB	universitas/base.py	/^THUMBNAIL_REDIS_DB = 1$/;"	v
 THUMBNAIL_REDIS_HOST	universitas/base.py	/^THUMBNAIL_REDIS_HOST = redis_host$/;"	v
 THUMBNAIL_STORAGE	universitas/local.py	/^    THUMBNAIL_STORAGE = 'utils.aws_custom_storage.ThumbStorage'$/;"	v
-THUMBNAIL_STORAGE	universitas/local.py	/^    THUMBNAIL_STORAGE = DEFAULT_FILE_STORAGE$/;"	v
+THUMBNAIL_STORAGE	universitas/local.py	/^    THUMBNAIL_STORAGE = 'utils.local_file_storage.OverwriteStorage'$/;"	v
 THUMBNAIL_STORAGE	universitas/production.py	/^THUMBNAIL_STORAGE = 'utils.aws_custom_storage.ThumbStorage'$/;"	v
 THUMBNAIL_URL_TIMEOUT	universitas/base.py	/^THUMBNAIL_URL_TIMEOUT = 3$/;"	v
 TIME_INPUT_FORMATS	universitas/base.py	/^TIME_INPUT_FORMATS = ('%H:%M', '%H', '%H:%M:%S', '%H.%M')$/;"	v
@@ -1411,6 +1413,7 @@ get_absolute_url	apps/stories/models.py	/^    def get_absolute_url(self):$/;"	m	
 get_absolute_url	watson/models.py	/^    def get_absolute_url(self):$/;"	m	class:SearchEntry
 get_adapter	watson/search.py	/^    def get_adapter(self, model):$/;"	m	class:SearchEngine
 get_adapter	watson/search.py	/^get_adapter = default_search_engine.get_adapter$/;"	v
+get_available_name	utils/local_file_storage.py	/^    def get_available_name(self, name, *args, **kwargs):$/;"	m	class:OverwriteStorage
 get_backend	watson/search.py	/^def get_backend(backend_name=None):$/;"	f
 get_byline_image	apps/contributors/models.py	/^    def get_byline_image(self, force_new=False):$/;"	m	class:Contributor
 get_bylines	apps/stories/models.py	/^    def get_bylines(self):$/;"	m	class:Story

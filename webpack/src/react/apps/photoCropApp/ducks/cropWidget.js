@@ -9,7 +9,6 @@ const MOVE_DRAG_HANDLE = 'cropbox/MOVE_DRAG_HANDLE'
 export const END_DRAG_HANDLE = 'cropbox/END_DRAG_HANDLE'
 
 // Selectors
-
 export const getCropWidget = state => state.ui.cropWidget
 
 // Action creators
