@@ -28,7 +28,7 @@ hiredis
 
 # AMAZON
 awscli
-django-storages-redux
+django-storages
 boto
 # certifi==2015.04.28
 

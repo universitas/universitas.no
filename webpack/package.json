@@ -49,7 +49,7 @@
     "redux": "^3",
     "redux-logger": "^3",
     "redux-persist": "^4.8.0",
-    "redux-saga": "^0.15.3",
+    "redux-saga": "^0.15.4",
     "redux-thunk": "^2",
     "reselect": "^3",
     "sass-loader": "^6",

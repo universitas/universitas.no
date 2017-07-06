@@ -1,12 +1,16 @@
 # overrides for development
 version: '2.1'
 services:
+  django:
+    image: universitas/django:edge
   webpack:
+    image: universitas/webpack:edge
     command: dev-server
     ports:
       - "3000:3000"
 
   web:
+    extends: django
     command: runserver
     ports:
       - "8000:8000"
@@ -20,3 +24,11 @@ services:
       - "5555:5555"
     depends_on:
       - celery
+
+volumes:
+  # mount locally for vim code completion with ternjs
+  node_modules:  
+    driver_opts:
+      type: local
+      device: ${PWD}/webpack/node_modules
+      o: bind
