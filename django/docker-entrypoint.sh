@@ -60,7 +60,8 @@ case $1 in
     run 'celery -A universitas worker --loglevel=INFO'
     ;;
   flower)
-    run "celery -A universitas flower"
+    echo 'starting flower'
+    run "celery -A universitas flower --loglevel=INFO"
     ;;
   *)
     exec "$@"; exit

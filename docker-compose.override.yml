@@ -17,14 +17,15 @@ services:
   celerybeat:
     image: universitas/django:edge
   flower:
+    extends: django
     image: universitas/django:edge
-    # celery monitoring
     command: flower
     restart: always
     ports:
       - "5555:5555"
     depends_on:
       - celery
+      - celerybeat
 
 volumes:
   # mount locally for vim code completion with ternjs
