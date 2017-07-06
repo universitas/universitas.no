@@ -3,8 +3,8 @@
 main(){
 for arg; do case $arg in
   help    ) show_help ;;
-  ps      ) docker-compose ps ;;
   init    ) sudo bash -c "$(declare -f install_docker); install_docker $(whoami)" ;;
+  ps      ) docker-compose ps ;;
 
   dumpdb  ) dump_db ;;
   loaddb  ) load_db ;;
@@ -106,6 +106,8 @@ build_django() {
 }
 
 install_docker() {
+  # install docker and docker-compose on ubuntu
+  [ $UID = 0 ] || { echo 'must run as root' >&2; exit 1; }
   USERNAME=$1
   apt-get install -y \
     apt-transport-https \
@@ -116,7 +118,7 @@ install_docker() {
   pip3 install -U docker-compose
 
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
   apt-get update
   apt-get install -y docker-ce
 
