@@ -24,7 +24,7 @@
           <span class="date">{{ issue.publication_date | date:"l j. F" }}</span>
         </div>
         <div class="frontpage">
-          {% thumbnail pdf.get_thumbnail '300' as thumb  %}
+          {% thumbnail pdf.get_cover_page '300' as thumb  %}
           <img class="faximile" src="{{ thumb.url }}" ></img>
           {% endthumbnail %}
         </div>

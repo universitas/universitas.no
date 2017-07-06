@@ -52,7 +52,7 @@ def test_create_cover(fixture_pdf):
     # valid pdf
     pdf = get_contentfile(fixture_pdf)
     cover = pdf_to_image(pdf)
-    assert cover.size == (495, 701)
+    assert cover.size[1] == 800
 
     # invalid pdf
     cover = error_image('foo', 200, 400)

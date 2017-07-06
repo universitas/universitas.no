@@ -77,25 +77,44 @@ def pdf_to_text(pdf, first_page=1, last_page=None):
     return text
 
 
-def pdf_to_image(pdf, page=1, resolution=60, file_format='jpeg'):
+def get_dims(pdf_page):
+    box = pdf_page.cropBox
+    width, height = (float(a - b)
+                     for a, b in zip(box.upperRight, box.lowerLeft))
+    return (width, height)
+
+
+def pdf_to_image(pdf, page=1, size=800, file_format='jpeg'):
     """Creates a image file from pdf file"""
     try:
         pdf.open()
+    except Exception as e:
+        raise e
+    else:
+        # do this while the pdf is open
         reader = PyPDF2.PdfFileReader(pdf, strict=False)
+        writer = PyPDF2.PdfFileWriter()
         page_content = reader.getPage(page - 1)
+        box = page_content.cropBox
+        dims = [float(a - b) for a, b in zip(box.upperRight, box.lowerLeft)]
+        scaleby = size / max(dims)
+        dims = [int(d * scaleby) for d in dims]
+        # resize_page(page_content, size)
+        writer.addPage(page_content)
+        outputStream = BytesIO()
+        writer.write(outputStream)
+        outputStream.seek(0)
     finally:
         pdf.close()
-    writer = PyPDF2.PdfFileWriter()
-    writer.addPage(page_content)
-    outputStream = BytesIO()
-    writer.write(outputStream)
-    outputStream.seek(0)
     # put content of page in a new image
     foreground = WandImage(
         blob=outputStream,
         format='pdf',
-        resolution=resolution,
+        resolution=int(1.6 * 72 * scaleby),
     )
+    # fix problem with colorspace
+    foreground.type = 'truecolor'
+    foreground.resize(*dims, 25)
     # white background
     background = WandImage(
         width=foreground.width,
@@ -107,7 +126,7 @@ def pdf_to_image(pdf, page=1, resolution=60, file_format='jpeg'):
     return background
 
 
-def error_image(msg, width, height):
+def error_image(msg, width=420, height=600):
     """Creates an error frontpage"""
     img = WandImage(width=width, height=height)
     with Drawing() as draw:
@@ -303,12 +322,12 @@ class PrintIssue(models.Model, Edit_url_mixin):
         if self.pdf and not self.cover_page:
             filename = Path(self.pdf.name).with_suffix('.jpg').name
             try:
-                cover_image = pdf_to_image(self.pdf.file, 1, 60)
+                cover_image = pdf_to_image(self.pdf.file, page=1, size=600)
             except Exception as e:
                 raise e
                 logger.exception('Failed to create cover')
                 msg = 'ERROR:\n{}\nnot found on disk'.format(self.pdf.name)
-                cover_image = error_image(msg, 400, 600)
+                cover_image = error_image(msg, 420, 600)
                 filename = filename.replace('.jpg', '_not_found.jpg')
 
             blob = BytesIO()
