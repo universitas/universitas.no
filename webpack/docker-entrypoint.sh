@@ -7,9 +7,6 @@ case $1 in
   build)
     exec npm run rebuild
     ;;
-  tern)
-    exec npm run tern
-    ;;
   stats)
     exec npm run stats
     ;;

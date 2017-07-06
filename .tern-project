@@ -6,7 +6,7 @@
   "plugins": {
     "es_modules": {},
     "webpack": {
-      "configPath": "./webpack.prod.config.js"
+      "configPath": "webpack/webpack.prod.config.js"
     }
   }
 }

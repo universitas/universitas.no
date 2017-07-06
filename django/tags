@@ -1197,7 +1197,7 @@ env	universitas/base.py	/^env = Environment(strict=False)$/;"	v
 epost	apps/legacy_db/models.py	/^    epost = models.CharField(max_length=255)$/;"	v	class:Eposttinging
 epost	apps/legacy_db/models.py	/^    epost = models.CharField(max_length=255, blank=True)$/;"	v	class:InnleggAbstract
 epost_sendt	apps/legacy_db/models.py	/^    epost_sendt = models.DateTimeField(blank=True, null=True)$/;"	v	class:DiskSvar
-error_image	apps/issues/models.py	/^def error_image(msg, width, height):$/;"	f
+error_image	apps/issues/models.py	/^def error_image(msg, width=420, height=600):$/;"	f
 escape_mysql_boolean_query	watson/backends.py	/^def escape_mysql_boolean_query(search_text):$/;"	f
 escape_postgres_query	watson/backends.py	/^    def escape_postgres_query(self, text):$/;"	m	class:PostgresLegacySearchBackend
 escape_postgres_query	watson/backends.py	/^    def escape_postgres_query(self, text):$/;"	m	class:PostgresSearchBackend
@@ -1430,6 +1430,7 @@ get_cover_page	apps/issues/models.py	/^    def get_cover_page(self):$/;"	m	class
 get_created_engines	watson/search.py	/^    def get_created_engines(cls):$/;"	m	class:SearchEngine
 get_crop_box	apps/photo/cropping/models.py	/^    def get_crop_box(self):$/;"	m	class:AutoCropImage
 get_description	watson/search.py	/^    def get_description(self, obj):$/;"	m	class:SearchAdapter
+get_dims	apps/issues/models.py	/^def get_dims(pdf_page):$/;"	f
 get_edit_url	utils/model_mixins.py	/^    def get_edit_url(self):$/;"	m	class:Edit_url_mixin
 get_empty_query_redirect	apps/search/views.py	/^    def get_empty_query_redirect(self):$/;"	m	class:SearchMixin
 get_empty_query_redirect	watson/views.py	/^    def get_empty_query_redirect(self):$/;"	m	class:SearchMixin
@@ -2386,7 +2387,7 @@ pdf	apps/issues/models.py	/^    pdf = models.FileField($/;"	v	class:PrintIssue
 pdf_links	apps/issues/admin.py	/^    def pdf_links(self, instance):$/;"	m	class:IssueAdmin
 pdf_number_of_pages	apps/issues/models.py	/^def pdf_number_of_pages(pdf):$/;"	f
 pdf_thumb	apps/issues/admin.py	/^    def pdf_thumb(self, pdf, width=250, height=100):$/;"	m	class:IssueAdmin
-pdf_to_image	apps/issues/models.py	/^def pdf_to_image(pdf, page=1, resolution=60, file_format='jpeg'):$/;"	f
+pdf_to_image	apps/issues/models.py	/^def pdf_to_image(pdf, page=1, size=800, file_format='jpeg'):$/;"	f
 pdf_to_text	apps/issues/models.py	/^def pdf_to_text(pdf, first_page=1, last_page=None):$/;"	f
 pdfs	api/issue_serializers.py	/^    pdfs = NestedPDFSerializer($/;"	v	class:IssueSerializer
 pending	apps/photo/models.py	/^    def pending(self):$/;"	m	class:ImageFileQuerySet

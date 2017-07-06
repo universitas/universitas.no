@@ -14,7 +14,6 @@ for arg; do case $arg in
 
   lint    ) lint_javascript ; lint_python ;;
   webpack ) docker-compose run --rm webpack build ;;
-  tern    ) docker-compose run --rm -p 33000:33000 webpack tern ;;
   testjs  ) docker-compose run --rm webpack test ;;
   bashjs  ) docker-compose run --rm webpack bash ;;
   stats   ) docker-compose run --rm webpack stats ;;
