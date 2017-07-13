@@ -1,9 +1,9 @@
 import R from 'ramda'
 import { combineReducers } from 'redux'
-import { getImage } from './images'
-import { reducer as cropWidget } from './cropWidget'
-import { reducer as cropPanel } from './cropPanel'
-import { reducer as imageList } from './imageList'
+import { getImage } from 'ducks/images'
+import { reducer as cropWidget } from 'ducks/cropWidget'
+import { reducer as cropPanel } from 'ducks/cropPanel'
+import { reducer as imageList } from 'ducks/imageList'
 
 // Selectors
 export const getUi = R.prop('ui')

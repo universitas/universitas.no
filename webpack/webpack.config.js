@@ -4,12 +4,30 @@ const BundleTracker = require('webpack-bundle-tracker')
 const build_dir = process.env.BUILD_DIR || '../build'
 
 module.exports = {
+  entry: {
+    stylesheets: 'stylesheets/universitas.scss',
+    head: 'javascripts/head.js',
+    vendor: 'javascripts/vendor.js',
+    foot: 'javascripts/foot.js',
+    photo_list_view: 'entry/photosearch.js',
+    photo_crop_app: 'entry/frontpagecrop.js',
+    tassen_tags_web_editor: 'entry/editor.js',
+    // prodsys: 'entry/prodsys.js',
+  },
   plugins: [
     new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }),
     new BundleTracker({
       indent: ' ',
       path: build_dir,
       filename: 'webpack-stats.json',
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'react-common',
+      chunks: ['photo_list_view', 'photo_crop_app', 'tassen_tags_web_editor'],
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'webpack-bootstrap',
+      minChunks: Infinity,
     }),
   ],
   module: {
@@ -71,16 +89,6 @@ module.exports = {
       // http://stackoverflow.com/a/28989476/1977847
       jquery: 'jquery/src/jquery',
     },
-  },
-  entry: {
-    stylesheets: 'stylesheets/universitas.scss',
-    head: 'javascripts/head.js',
-    vendor: 'javascripts/vendor.js',
-    foot: 'javascripts/foot.js',
-    photo_list_view: 'entry/photosearch.js',
-    photo_crop_app: 'entry/frontpagecrop.js',
-    tassen_tags_web_editor: 'entry/editor.js',
-    // prodsys: 'entry/prodsys.js',
   },
   output: {
     path: path.join(build_dir, ''),

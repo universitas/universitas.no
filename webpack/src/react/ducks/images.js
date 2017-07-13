@@ -55,7 +55,7 @@ export const reducer = (state = {}, action) => {
       }
       return { ...state, ...images }
     }
-    // case ADD_IMAGE:
+    case ADD_IMAGE:
     case IMAGE_FILE_PATCHED:
     case AUTOCROP_IMAGE:
     case REQUEST_IMAGE_FILE: {
