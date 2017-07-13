@@ -1,6 +1,6 @@
 import R from 'ramda'
-import { fetchImage, getImage } from './images'
-import { IMAGE_SELECTED } from './ui'
+import { fetchImage, getImage } from 'ducks/images'
+import { IMAGE_SELECTED } from 'ducks/ui'
 
 // Action types
 const CYCLE_PANEL_DATA = 'cropPanel/CYCLE_PANEL_DATA'
@@ -10,7 +10,7 @@ const DISMISS_PANEL = 'cropPanel/DISMISS_PANEL'
 // Selectors
 // const getCropPanelData = R.pipe(getUi, R.prop('data'))
 // const getCropPanelSize = R.pipe(getUi, R.prop('expanded'))
-export const getCropPanel = R.path(['ui', 'cropPanel'])
+export const getCropPanel = state => state.ui.cropPanel
 export const getCropPanelData = state => state.ui.cropPanel.data
 export const getCropPanelSize = state => state.ui.cropPanel.expanded
 export const getSelectedImage = R.path(['ui', 'cropPanel', 'image'])

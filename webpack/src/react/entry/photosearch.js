@@ -1,20 +1,21 @@
+import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
-import PhotoCropApp from 'apps/photoCropApp'
+import PhotoCropApp from './photoCropApp'
 
 const ROOT_ID = 'PhotoApp'
 
-const render = () => {
+const render = App => {
   const domNode = document.getElementById(ROOT_ID)
   if (!domNode) return
   ReactDOM.render(
     <AppContainer>
-      <PhotoCropApp />
+      <App />
     </AppContainer>,
     domNode
   )
 }
 
-render()
-module.hot && module.hot.accept('apps/photoCropApp', render)
+render(PhotoCropApp)
+module.hot && module.hot.accept('./photoCropApp', () => render(PhotoCropApp))

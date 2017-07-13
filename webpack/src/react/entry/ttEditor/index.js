@@ -1,10 +1,10 @@
 /* eslint-env browser */
 import React from 'react'
 import { Provider } from 'react-redux'
-import rootStore from './store'
-import Editor from './components/Editor'
-import Preview from './components/Preview'
-import './app.scss'
+import configureStore from './configureStore'
+import Editor from 'components/Editor'
+import Preview from 'components/Preview'
+import './editorapp.scss'
 
 const App = () => (
   <section className="EditApp">
@@ -12,6 +12,7 @@ const App = () => (
     <Preview />
   </section>
 )
+const rootStore = configureStore()
 
 export default () => (
   <Provider store={rootStore}>

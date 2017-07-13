@@ -1,11 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
-import {
-  getImageList,
-  searchChanged,
-  thumbStyleCycle,
-} from '../../ducks/imageList'
+import { getImageList, searchChanged, thumbStyleCycle } from 'ducks/imageList'
 
 let SearchField = ({
   searchText,
@@ -50,4 +46,4 @@ SearchField = connect(
   })
 )(SearchField)
 
-export { SearchField }
+export default SearchField

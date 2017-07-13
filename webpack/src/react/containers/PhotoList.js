@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
-import { getImages, getThumbStyle } from '../../ducks/imageList'
-import { getImage } from '../../ducks/images'
-import { imageClicked } from '../../ducks/ui'
+import { getImages, getThumbStyle } from 'ducks/imageList'
+import { getImage } from 'ducks/images'
+import { imageClicked } from 'ducks/ui'
 import './photolist.scss'
 
 const FullThumbWithCropBox = ({ small, title, size, crop_box }) => {
@@ -78,4 +78,4 @@ const mapImageListStateToProps = state => ({
 
 const PhotoList = connect(mapImageListStateToProps)(List)
 
-export { PhotoList }
+export default PhotoList

@@ -1,6 +1,5 @@
 import R from 'ramda'
-import { apiGet } from '../services/api'
-import { IMAGES_FETCH_SUCCESS } from './imageList.js'
+import { IMAGES_FETCH_SUCCESS } from 'ducks/imageList'
 
 // Action constants
 export const ADD_IMAGE = 'images/ADD_IMAGE'

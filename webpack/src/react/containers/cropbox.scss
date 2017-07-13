@@ -1,0 +1,80 @@
+$ant_size: 6;
+$march_speed: 0.5s;
+$march_lunges: 10;
+
+@keyframes marching_ants {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: $ant_size*2;
+  }
+}
+
+%ants {
+  animation: marching_ants $march_speed steps($march_lunges) infinite;
+  stroke-dasharray: $ant_size;
+}
+
+.DragKing {
+  position: fixed;
+  z-index: 100;
+  fill: red;
+  opacity: 0.2;
+  cursor: move;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.Overlay {
+  overflow: visible;
+  height: 100%;
+  z-index: 10;
+  shape-rendering: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  path, rect, ellipse {
+    vector-effect: non-scaling-stroke;
+    fill: rgba(0,0,0,0.0);
+  }
+  .outside {
+    fill: rgba(0,0,0,0.5);
+  }
+  .centerPoint {
+    position: relative;
+    .handle {
+      cursor: crosshair;
+      opacity: 0;
+      &:hover + .cross {
+        stroke: rgba(255,255,0,1.0);
+      }
+    }
+    .cross {
+      pointer-events: none;
+      // shape-rendering: crispEdges;
+      vector-effect: non-scaling-stroke;
+      stroke: rgba(255,255,0,0.5)
+    }
+  }
+  .inside {
+    .box {
+      stroke: rgba(255,255,255,0.3);
+      cursor: move;
+    }
+    &:hover .box {
+      stroke: rgba(255,255,255,0.8);
+    }
+    &.pending .box {
+      @extend %ants;
+      stroke: white;
+      stroke-width: 2px;
+    }
+    .handles {
+      overflow: visible;
+    }
+  }
+}

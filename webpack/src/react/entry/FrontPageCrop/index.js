@@ -1,12 +1,14 @@
 /* eslint-env browser */
 import React from 'react'
 import { combineReducers } from 'redux'
-import { EditImage } from '../components'
 import { connect, Provider } from 'react-redux'
-import configureStore from '../configureStore'
-import { getSelectedImage } from '../ducks/cropPanel'
-import { imageClicked, reducer as ui } from '../ducks/ui'
-import { reducer as images } from '../ducks/images'
+
+import { getSelectedImage } from 'ducks/cropPanel'
+import { reducer as images } from 'ducks/images'
+import { imageClicked, reducer as ui } from 'ducks/ui'
+
+import EditImage from 'containers/EditImage'
+import configureStore from '../photoCropApp/configureStore'
 
 const rootReducer = combineReducers({ ui, images })
 const rootStore = configureStore(rootReducer)
@@ -29,19 +31,19 @@ const empty = {
 }
 
 const mapStateToProps = state => ({
-  active: getSelectedImage(state) !== 0,
+  active: getSelectedImage(state),
 })
 
 const CropBox = connect(mapStateToProps)(
   ({ active }) =>
     active
-      ? <section className="FrontpageCrop" style={style}>
+      ? <section className="FrontPageCrop" style={style}>
           <EditImage />
           <div style={empty} />
         </section>
       : null
 )
-export const FrontpageCrop = () => (
+export const FrontPageCrop = () => (
   <Provider store={rootStore}>
     <CropBox />
   </Provider>

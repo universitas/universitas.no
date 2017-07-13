@@ -1,9 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux'
-// import thunkMiddleware from 'redux-thunk'
-// import { createLogger } from 'redux-logger'
-// import { apiMiddleware } from './middleware'
 import createSagaMiddleware from 'redux-saga'
-import rootSaga from './sagas/index'
+import rootSaga from 'sagas/index'
 
 // import { autoRehydrate, persistStore } from 'redux-persist'
 // import localForage from 'localforage'

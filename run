@@ -24,9 +24,9 @@ for arg; do case $arg in
   bash    ) docker-compose run --rm -u django web bash ;;
   root    ) docker-compose run --rm           django bash ;;
   test    ) docker-compose run --rm -u django web pytest --create-db ;;
-  testf   ) docker-compose run --rm -u django web pytest -f -x --ff ;;
+  testf   ) docker-compose run --rm --name testf -u django web pytest -f -x --ff ;;
 
-  flower  ) docker-compose run --rm -d -p 5555:5555 celery flower ;;
+  flower  ) docker-compose run --rm --name flower -d -p 5555:5555 celery flower ;;
   jupyter ) start_jupyter ;;
 
   fake    ) docker-compose run --rm web django-admin fake_content -c10 -s50 ;;
@@ -95,7 +95,7 @@ enable_service() {
 start_jupyter() {
   echo "starting jupyter on http://localhost:8888"
   ( sleep 10; sensible-browser http://localhost:8888 &> /dev/null)&
-  docker-compose run --rm -d -p 8888:8888 web jupyter
+  docker-compose run --name jupyter --rm -d -p 8888:8888 web jupyter
 }
 
 build_django() {

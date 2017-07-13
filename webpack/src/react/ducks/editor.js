@@ -1,7 +1,28 @@
-import { combineReducers } from 'redux'
-import * as actions from './actions'
 import R from 'ramda'
 
+const TEXT_CHANGED = 'TEXT_CHANGED'
+const INSERT_TEXT = 'INSERT_TEXT'
+const CHANGE_TAG = 'CHANGE_TAG'
+const MOVE_CARET = 'MOVE_CARET'
+
+export const textChanged = content => ({
+  type: TEXT_CHANGED,
+  payload: { content },
+})
+export const insertText = text => ({
+  type: INSERT_TEXT,
+  payload: { text },
+})
+export const changeTag = tag => ({
+  type: CHANGE_TAG,
+  payload: { tag },
+})
+export const moveCaret = caret => ({
+  type: MOVE_CARET,
+  payload: { caret },
+})
+
+// reducers
 const defaultTextState = {
   content: '',
   caret: 0,
@@ -16,10 +37,10 @@ const paragraphSplits = (content = '') => {
     splits.push(regex.lastIndex)
   return splits
 }
-const insertText = (text, content, caret = 0) =>
+const addText = (text, content, caret = 0) =>
   content.slice(0, caret) + content.slice(caret).replace(/$/m, text)
 
-const changeTag = (tag, content, caret = 0) => {
+const replaceTag = (tag, content, caret = 0) => {
   const head = content.slice(0, caret)
   const lastIndex = head.includes('\n') ? /[\s\S]*\n/.exec(head)[0].length : 0
   const needle = /^(@\S*: *)?/
@@ -30,11 +51,11 @@ const changeTag = (tag, content, caret = 0) => {
   )
 }
 
-const textReducer = (state = defaultTextState, { type, payload }) => {
+export const reducer = (state = defaultTextState, { type, payload }) => {
   switch (type) {
-    case actions.TEXT_CHANGED:
+    case TEXT_CHANGED:
       return { ...state, ...payload }
-    case actions.MOVE_CARET:
+    case MOVE_CARET:
       return {
         ...state,
         caret: payload.caret,
@@ -43,21 +64,19 @@ const textReducer = (state = defaultTextState, { type, payload }) => {
           .trim()
           .match(/\n+/g) || []).length,
       }
-    case actions.CHANGE_TAG:
+    case CHANGE_TAG:
       console.log(type, payload)
       return {
         ...state,
-        content: changeTag(payload.tag, state.content, state.caret),
+        content: replaceTag(payload.tag, state.content, state.caret),
       }
-    case actions.INSERT_TEXT:
+    case INSERT_TEXT:
       console.log(type, payload)
       return {
         ...state,
-        content: insertText(payload.text, state.content, state.caret),
+        content: addText(payload.text, state.content, state.caret),
       }
     default:
       return state
   }
 }
-
-export default combineReducers({ text: textReducer })

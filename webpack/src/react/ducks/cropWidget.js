@@ -1,6 +1,6 @@
 import R from 'ramda'
-import { normalize, round } from '../components/CropBox/utils'
-import { IMAGE_SELECTED } from './ui'
+import { normalize, round } from 'utils/cropHelpers'
+import { IMAGE_SELECTED } from 'ducks/ui'
 // Action constants
 const MOVE_CENTER = 'cropbox/MOVE_CENTER'
 const START_DRAG_HANDLE = 'cropbox/START_DRAG_HANDLE'

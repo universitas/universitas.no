@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import * as actions from '../actions'
-import ToolBar from '../../../components/ToolBar'
+import { insertText, changeTag } from 'ducks/editor'
+import ToolBar from 'components/ToolBar'
 
 const EditorToolBar = ({ insertText, changeTag, ...props }) => {
   const tools = {
@@ -31,9 +31,4 @@ EditorToolBar.propTypes = {
   insertText: PropTypes.func.isRequired,
   changeTag: PropTypes.func.isRequired,
 }
-const mapStateToProps = (state, ownProps) => ({})
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  insertText: text => dispatch(actions.insertText(text)),
-  changeTag: tag => dispatch(actions.changeTag(tag)),
-})
-export default connect(mapStateToProps, mapDispatchToProps)(EditorToolBar)
+export default connect(null, { insertText, changeTag })(EditorToolBar)

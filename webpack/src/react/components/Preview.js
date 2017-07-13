@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { scrollElement } from '../../../utils/scroll'
-import { blockParser } from '../../../utils/tagParser'
+import { scrollElement } from 'utils/scroll'
+import { blockParser } from 'utils/tagParser'
 
 const Tingo = (n = 0, { children, ...props }) => {
   const tingoPattern = n ? `(?:\\S+\\s+){1,${n}}` : '.{1,12}\\S*'
@@ -73,9 +73,9 @@ const NodeWrapper = ({ scrollTo, ...props }) =>
       </div>
     : <Node {...props} />
 
-const mapStateToProps = ({ text }) => ({
-  nodes: blockParser(text.content),
-  activeIndex: text.activeIndex,
+const mapStateToProps = ({ editor }) => ({
+  nodes: blockParser(editor.content),
+  activeIndex: editor.activeIndex,
 })
 const Preview = ({ nodes, activeIndex }) => {
   return (

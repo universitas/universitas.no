@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
-import { getImageList, searchUrlChanged } from '../../ducks/imageList'
+import { getImageList, searchUrlChanged } from 'ducks/imageList'
 
 let Button = ({ onClick, children }) => (
   <button onClick={onClick} disabled={!onClick}> {children}</button>
@@ -33,4 +33,4 @@ let ResultsPanel = ({
 }
 ResultsPanel = connect(getImageList)(ResultsPanel)
 
-export { ResultsPanel }
+export default ResultsPanel

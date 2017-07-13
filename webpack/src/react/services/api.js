@@ -1,6 +1,6 @@
 import R from 'ramda'
 import fetch from 'isomorphic-fetch'
-import cuid from 'cuid'
+// import cuid from 'cuid'
 import * as Cookies from 'js-cookie'
 
 const BASE_URL = '/api'
@@ -32,46 +32,32 @@ const headBase = {
   },
 }
 
-export const apiFetch = (dispatch, url, head, body = null) => {
-  const payload = R.mergeDeepRight(headBase, { ...head })
-  if (body) payload.body = body
-  const req = { url, cuid: cuid() }
-  dispatch(fetching(req))
-  return fetch(url, payload)
+export function apiFetch(url, head, body = null) {
+  const init = R.mergeDeepRight(headBase, { ...head })
+  if (body) init.body = body
+  return fetch(url, init)
     .then(response => response.json())
-    .then(dispatch(success(req)))
-    .catch(error => {
-      dispatch(failed(req, error))
-      throw error
-    })
+    .then(response => ({ response }))
+    .catch(error => ({ error }))
 }
 
-export const apiList = model => dispatch => {
-  const url = `${BASE_URL}/${model}/`
-  return apiFetch(dispatch, url)
+export const apiList = model => {
+  return apiFetch(`${BASE_URL}/${model}/`)
 }
 
-export const apiGet = model => id => dispatch => {
+export const apiGet = model => id => {
+  return apiFetch(`${BASE_URL}/${model}/${id}/`)
+}
+
+export const apiPatch = model => (id, data) => {
   const url = `${BASE_URL}/${model}/${id}/`
-  return apiFetch(dispatch, url)
-}
-
-export const apiPatch = model => (id, data) => dispatch => {
-  const url = `${BASE_URL}/${model}/${id}/`
-  const head = {
-    method: 'PATCH',
-    credentials: 'include',
-    // headers: {
-    //   'Content-Type': 'application/json',
-    //   'X-CSRFToken': Cookies.get('csrftoken'),
-    // },
-  }
+  const head = { method: 'PATCH' }
   const body = JSON.stringify(data)
-  return apiFetch(dispatch, url, head, body)
+  return apiFetch(url, head, body)
 }
 
+// helpers
 const paramPairs = (value, key, _) => `${key}=${value}`
-
 const cleanValues = R.pipe(String, R.replace(/\s+/g, ' '), encodeURIComponent)
 
 export const queryString = R.pipe(

@@ -1,13 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
-import App from 'apps/ttEditor/App'
+import App from './ttEditor'
 
 const ROOT_ID = 'ReactApp'
 
-const render = () => {
-  const domNode = document.getElementById(ROOT_ID)
-  if (!domNode) return
+const render = domNode => {
   ReactDOM.render(
     <AppContainer>
       <App />
@@ -16,5 +14,8 @@ const render = () => {
   )
 }
 
-render()
-module.hot && module.hot.accept('apps/ttEditor/App', render)
+const domNode = document.getElementById(ROOT_ID)
+if (domNode) {
+  render(domNode)
+  module.hot && module.hot.accept('./ttEditor', () => render(domNode))
+}

@@ -1,19 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as actions from '../actions'
-import Preview from './Preview'
-import EditorToolBar from './EditorToolBar'
-import * as Icon from '../../../components/Icons'
-
-const mapStateToProps = ({ text }) => ({
-  caret: text.caret,
-  content: text.content,
-})
-
-const mapDispatchToProps = dispatch => ({
-  textChanged: content => dispatch(actions.textChanged(content)),
-  moveCaret: caret => dispatch(actions.moveCaret(caret)),
-})
+import { textChanged, moveCaret } from 'ducks/editor'
+import Preview from 'components/Preview'
+import EditorToolBar from 'components/EditorToolBar'
+import * as Icon from 'components/Icons'
 
 const cleanup = text => {
   return text
@@ -65,6 +55,14 @@ class Editor extends React.Component {
     )
   }
 }
+
+const mapStateToProps = ({ editor: { caret, content } }) => ({
+  caret,
+  content,
+})
+
+const mapDispatchToProps = { textChanged, moveCaret }
+
 Editor = connect(mapStateToProps, mapDispatchToProps)(Editor)
 
 export default Editor

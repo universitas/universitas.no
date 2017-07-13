@@ -1,11 +1,8 @@
-/* eslint-env browser */
+import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
-import {
-  FrontpageCrop,
-  imageClickHandler,
-} from 'apps/photoCropApp/containers/FrontpageCrop'
+import { FrontPageCrop, imageClickHandler } from './FrontPageCrop'
 
 const render = (App, domNode) => {
   ReactDOM.render(
@@ -33,11 +30,9 @@ const PhotoCropApp = () => {
   const domNode = document.getElementById('PhotoCrop')
   if (domNode) {
     bindEventToImageFiles()
-    render(FrontpageCrop, domNode)
+    render(FrontPageCrop, domNode)
     if (module.hot) {
-      module.hot.accept('apps/photoCropApp/containers/FrontpageCrop', () =>
-        render(FrontpageCrop, domNode)
-      )
+      module.hot.accept('./FrontPageCrop', () => render(FrontPageCrop, domNode))
     }
   }
 }
