@@ -10,7 +10,7 @@ const composeEnhancers =
   (typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
   compose
 
-const middleware_list = [createLogger()]
+const middleware_list = []
 const middleware = composeEnhancers(
   applyMiddleware(...middleware_list),
   autoRehydrate({ storage: localForage })

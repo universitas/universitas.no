@@ -1,11 +1,22 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
 import { textChanged, moveCaret } from 'ducks/editor'
-import { cleanup } from 'utils/text'
-import Preview from 'components/Preview'
-import EditorToolBar from 'components/EditorToolBar'
+import EditorToolBar from 'containers/EditorToolBar'
 import * as Icon from 'components/Icons'
+
+const cleanup = text => {
+  return text
+    .replace(/^(@\S+:)/gm, s => s.toLowerCase())
+    .replace(/^ *(@\S+:) *\b/gm, '$1 ')
+    .replace(/^@t: */gm, '@txt: ')
+    .replace(/«([^"»«]*)"/g, '«$1»')
+    .replace(/"/g, '«')
+    .replace(/--/g, '–')
+    .replace(/^[-–] *\b/gm, '– ')
+    .replace(/^@text:/gm, '@txt:')
+    .replace(/\n+@m$/gm, '\n\n@mt: ')
+    .replace(/^./gm, s => s.toUpperCase())
+}
 
 class Editor extends React.Component {
   onChange = e => {

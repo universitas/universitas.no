@@ -1,7 +1,8 @@
 import React from 'react'
+import R from 'ramda'
 import { connect } from 'react-redux'
 import { scrollElement } from 'utils/scroll'
-import { blockParser } from 'utils/tagParser'
+import { getNodes, getActiveIndex } from 'ducks/editor'
 
 const Tingo = (n = 0, { children, ...props }) => {
   const tingoPattern = n ? `(?:\\S+\\s+){1,${n}}` : '.{1,12}\\S*'
@@ -73,10 +74,6 @@ const NodeWrapper = ({ scrollTo, ...props }) =>
       </div>
     : <Node {...props} />
 
-const mapStateToProps = ({ editor }) => ({
-  nodes: blockParser(editor.content),
-  activeIndex: editor.activeIndex,
-})
 const Preview = ({ nodes, activeIndex }) => {
   return (
     <section className="Preview">
@@ -87,4 +84,9 @@ const Preview = ({ nodes, activeIndex }) => {
   )
 }
 
-export default connect(mapStateToProps, null)(Preview)
+const mapStateToProps = R.applySpec({
+  nodes: getNodes,
+  activeIndex: getActiveIndex,
+})
+
+export default connect(mapStateToProps)(Preview)

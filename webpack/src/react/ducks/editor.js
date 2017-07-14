@@ -1,4 +1,5 @@
 import R from 'ramda'
+import { blockParser } from 'utils/tagParser'
 
 const TEXT_CHANGED = 'TEXT_CHANGED'
 const INSERT_TEXT = 'INSERT_TEXT'
@@ -21,6 +22,12 @@ export const moveCaret = caret => ({
   type: MOVE_CARET,
   payload: { caret },
 })
+
+// selectors
+export const getEditor = R.prop('editor')
+export const getContent = R.compose(R.prop('content'), getEditor)
+export const getActiveIndex = R.compose(R.prop('activeIndex'), getEditor)
+export const getNodes = R.compose(blockParser, getContent)
 
 // reducers
 const defaultTextState = {
@@ -65,13 +72,11 @@ export const reducer = (state = defaultTextState, { type, payload }) => {
           .match(/\n+/g) || []).length,
       }
     case CHANGE_TAG:
-      console.log(type, payload)
       return {
         ...state,
         content: replaceTag(payload.tag, state.content, state.caret),
       }
     case INSERT_TEXT:
-      console.log(type, payload)
       return {
         ...state,
         content: addText(payload.text, state.content, state.caret),

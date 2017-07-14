@@ -7,7 +7,7 @@ import './tool.scss'
 const renderTool = (key, { onClick, active, icon, toolTip }) => (
   <Tool
     key={key}
-    onClick={onClick || (e => console.log(key, 'clicked'))}
+    onClick={onClick || (e => console.log(`${key} clicked`))}
     active={active || true}
     icon={icon || 'Fallback'}
     toolTip={toolTip || key}
