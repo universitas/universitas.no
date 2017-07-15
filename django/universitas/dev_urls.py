@@ -11,6 +11,7 @@ from .urls import urlpatterns
 
 experiments = [
     url(r'^editor/', TemplateView.as_view(template_name='editor.html')),
+    url(r'^prodsys/', TemplateView.as_view(template_name='prodsys.html')),
 ]
 
 urlpatterns = [

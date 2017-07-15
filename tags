@@ -45,7 +45,6 @@ ApiAppConfig	django/api/appconf.py	/^class ApiAppConfig(AppConfig):$/;"	c
 App	webpack/src/react/containers/PhotoListView.js	/^const App = () => {$/;"	r
 App	webpack/src/react/containers/ProdSys.js	/^const App = () => ($/;"	r
 App	webpack/src/react/entry/photoCropApp/App.js	/^const App = () => {$/;"	r
-App	webpack/src/react/entry/prodsys.js	/^const App = <div \/>$/;"	r
 App	webpack/src/react/entry/ttEditor/index.js	/^const App = () => ($/;"	r
 Aside	django/apps/stories/models.py	/^class Aside(TextContent, StoryElement):  # type: ignore$/;"	c
 AsideInline	django/apps/stories/admin.py	/^class AsideInline(admin.TabularInline, ):$/;"	c
@@ -150,6 +149,7 @@ DEFAULT_RATIO	django/apps/stories/models.py	/^    DEFAULT_RATIO = 0.0$/;"	v	clas
 DEFAULT_SIZE	django/apps/contributors/templatetags/byline_image.py	/^DEFAULT_SIZE = "300x300"$/;"	v
 DELETED	django/apps/prodsys/models.py	/^    DELETED = 100$/;"	v	class:StoryStatus
 DISMISS_PANEL	webpack/src/react/ducks/cropPanel.js	/^const DISMISS_PANEL = 'cropPanel\/DISMISS_PANEL'$/;"	r
+DOMNode	webpack/src/react/entry/prodsys.js	/^const DOMNode = document.getElementById(ROOT_ID)$/;"	r
 DRAFT	django/apps/adverts/models.py	/^    DRAFT = 1$/;"	v	class:Advert
 DRAFT	django/apps/legacy_db/models.py	/^    DRAFT = 0$/;"	v	class:Prodsak
 DRAFT	django/apps/prodsys/models.py	/^    DRAFT = 10$/;"	v	class:StoryStatus
@@ -998,6 +998,7 @@ comment	django/apps/stories/models.py	/^    comment = models.TextField($/;"	v	cl
 comments	django/apps/prodsys/models.py	/^    comments = models.TextField($/;"	v	class:ProdStory
 complete_apps	django/watson/south_migrations/0001_initial.py	/^    complete_apps = ['watson']$/;"	v	class:Migration
 complete_apps	django/watson/south_migrations/0002_installwatson.py	/^    complete_apps = ['watson']$/;"	v	class:Migration
+compose	webpack/src/react/utils/misc.js	/^export const compose = \/\/ use redux devtools if available$/;"	r
 composeEnhancers	webpack/src/react/entry/photoCropApp/configureStore.js	/^const composeEnhancers =$/;"	r
 composeEnhancers	webpack/src/react/entry/ttEditor/configureStore.js	/^const composeEnhancers =$/;"	r
 configure	django/ptpython_config.py	/^def configure(repl):$/;"	f
@@ -1275,12 +1276,12 @@ do_uninstall	django/watson/backends.py	/^    def do_uninstall(self):$/;"	m	class
 do_uninstall	django/watson/backends.py	/^    def do_uninstall(self):$/;"	m	class:SearchBackend
 domNode	webpack/src/react/entry/photo_crop_app.js	/^  const domNode = document.getElementById('PhotoCrop')$/;"	r
 domNode	webpack/src/react/entry/photo_list_view.js	/^  const domNode = document.getElementById(ROOT_ID)$/;"	r
-domNode	webpack/src/react/entry/prodsys.js	/^  const domNode = document.getElementById(ROOT_ID)$/;"	r
 domNode	webpack/src/react/entry/tassen_tags_web_editor.js	/^const domNode = document.getElementById(ROOT_ID)$/;"	r
 download_from_aws	django/apps/issues/models.py	/^    def download_from_aws(self, dest=Path('\/var\/media\/')):$/;"	m	class:PrintIssue
 download_from_aws	django/apps/photo/models.py	/^    def download_from_aws(self, dest=Path('\/var\/media\/')):$/;"	m	class:ImageFile
 dragKing	webpack/src/react/containers/CropBox.js	/^    const dragKing = dragging.dragMask === undefined$/;"	r
 drop_model_tables	django/apps/legacy_db/export_content_and_images.py	/^def drop_model_tables(*models):$/;"	f
+dummyReducer	webpack/src/react/entry/ProdSys/reducer.js	/^const dummyReducer = (state = { hello: 'world!!!', ui: {} }, action) => state$/;"	r
 dummy_image_advert	django/apps/adverts/dummy_image_advert.py	/^def dummy_image_advert(width, height, watermarktext, labeltext):$/;"	f
 dump_prodsys_db	django/docker-entrypoint.sh	/^function dump_prodsys_db {$/;"	f
 dx	webpack/src/react/ducks/cropWidget.js	/^      const dx = mx - ix$/;"	r
@@ -2134,7 +2135,9 @@ meta	django/watson/models.py	/^    def meta(self):$/;"	m	class:SearchEntry
 meta_encoded	django/watson/models.py	/^    meta_encoded = models.TextField()$/;"	v	class:SearchEntry
 method	django/api/photo_serializers.py	/^    method = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 middleware	webpack/src/react/entry/ttEditor/configureStore.js	/^const middleware = composeEnhancers($/;"	r
+middleware_list	webpack/src/react/entry/ProdSys/configureStore.js	/^  const middleware_list = [sagaMiddleware]$/;"	r
 middleware_list	webpack/src/react/entry/ttEditor/configureStore.js	/^const middleware_list = []$/;"	r
+middlewares	webpack/src/react/entry/ProdSys/configureStore.js	/^  const middlewares = compose(applyMiddleware(...middleware_list))$/;"	r
 migrate_cropboxes	django/apps/photo/migrations/0010_data_imagefile_cropbox.py	/^def migrate_cropboxes(apps, schema_editor):$/;"	f
 minify	django/utils/html.py	/^def minify(source):$/;"	f
 model	django/api/contributor_serializers.py	/^        model = Contributor$/;"	v	class:ContributorSerializer.Meta
@@ -2407,6 +2410,7 @@ new_staging_files	django/apps/core/staging.py	/^def new_staging_files($/;"	f
 new_staging_images	django/apps/core/staging.py	/^def new_staging_images(**kwargs):$/;"	f
 new_staging_pdf_files	django/apps/core/staging.py	/^def new_staging_pdf_files(**kwargs):$/;"	f
 news	django/apps/stories/tests/test_new_story.py	/^def news():$/;"	f
+nextRootReducer	webpack/src/react/entry/ProdSys/configureStore.js	/^      const nextRootReducer = require('.\/reducer').default$/;"	r
 next_issue	django/apps/issues/models.py	/^    def next_issue(self):$/;"	m	class:IssueQueryset
 next_node	webpack/src/react/utils/tagParser.js	/^const next_node = (rules, text) => {$/;"	r
 nodes	webpack/src/react/utils/tagParser.js	/^  const nodes = []$/;"	r
@@ -2774,6 +2778,7 @@ rootReducer	webpack/src/react/entry/FrontPageCrop/index.js	/^const rootReducer =
 rootReducer	webpack/src/react/entry/photoCropApp/index.js	/^const rootReducer = combineReducers({ ui, images })$/;"	r
 rootReducer	webpack/src/react/entry/ttEditor/configureStore.js	/^  const rootReducer = combineReducers({ editor: editorReducer })$/;"	r
 rootStore	webpack/src/react/entry/FrontPageCrop/index.js	/^const rootStore = configureStore(rootReducer)$/;"	r
+rootStore	webpack/src/react/entry/ProdSys/index.js	/^const rootStore = configureStore()$/;"	r
 rootStore	webpack/src/react/entry/photoCropApp/configureStore.js	/^  const rootStore = createStore($/;"	r
 rootStore	webpack/src/react/entry/photoCropApp/index.js	/^const rootStore = configureStore(rootReducer)$/;"	r
 rootStore	webpack/src/react/entry/ttEditor/index.js	/^const rootStore = configureStore()$/;"	r
@@ -2782,6 +2787,7 @@ router	django/api/urls.py	/^router = routers.DefaultRouter()$/;"	v
 rules	webpack/src/react/utils/tagParser.js	/^const rules = [$/;"	r
 run	django/docker-entrypoint.sh	/^function run {$/;"	f
 s3_md5	django/apps/photo/models.py	/^def s3_md5(s3key, blocksize=65536):$/;"	f
+sagaMiddleware	webpack/src/react/entry/ProdSys/configureStore.js	/^  const sagaMiddleware = createSagaMiddleware()$/;"	r
 sagaMiddleware	webpack/src/react/entry/photoCropApp/configureStore.js	/^  const sagaMiddleware = createSagaMiddleware()$/;"	r
 sak	django/apps/legacy_db/models.py	/^    sak = models.ForeignKey(Sak, db_column='id_sak')$/;"	v	class:Fakta
 sak	django/apps/legacy_db/models.py	/^    sak = models.ForeignKey(Sak, db_column='id_sak', blank=True, null=True)$/;"	v	class:Bilde
@@ -2914,6 +2920,7 @@ stikktittel	django/apps/legacy_db/models.py	/^    stikktittel = models.CharField
 stint_set	django/api/contributor_serializers.py	/^    stint_set = StintSerializer(many=True, read_only=True)$/;"	v	class:ContributorSerializer
 stoppa	django/apps/legacy_db/models.py	/^    stoppa = models.DateTimeField(blank=True, null=True)$/;"	v	class:Eposttinging
 store	django/watson/search.py	/^    store = ()$/;"	v	class:SearchAdapter
+store	webpack/src/react/entry/ProdSys/configureStore.js	/^  const store = createStore(rootReducer, initialState, middlewares)$/;"	r
 store	webpack/src/react/entry/ttEditor/configureStore.js	/^  const store = createStore(rootReducer, defaultState, middleware)$/;"	r
 story	django/apps/frontpage/models.py	/^    story = models.ForeignKey($/;"	v	class:FrontpageStory
 story	django/apps/prodsys/models.py	/^    story = models.ForeignKey($/;"	v	class:ProdImage

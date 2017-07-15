@@ -12,7 +12,7 @@ module.exports = {
     photo_list_view: 'entry/photo_list_view.js',
     photo_crop_app: 'entry/photo_crop_app.js',
     tassen_tags_web_editor: 'entry/tassen_tags_web_editor.js',
-    // prodsys: 'entry/prodsys.js',
+    prodsys: 'entry/prodsys.js',
   },
   plugins: [
     new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }),
@@ -23,7 +23,12 @@ module.exports = {
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'react-common',
-      chunks: ['photo_list_view', 'photo_crop_app', 'tassen_tags_web_editor'],
+      chunks: [
+        'prodsys',
+        'photo_list_view',
+        'photo_crop_app',
+        'tassen_tags_web_editor',
+      ],
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'webpack-bootstrap',

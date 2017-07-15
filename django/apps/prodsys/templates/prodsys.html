@@ -1,0 +1,9 @@
+{% extends "base-template.html" %}
+{% load render_bundle from webpack_loader %}
+{% block title %}ProdSys V2{% endblock title %}
+{% block content %}
+  <div id="ReactApp">Mount app here.</div>
+{% endblock content %}
+{% block final %}
+  {% render_bundle "prodsys" %}
+{% endblock final %}
