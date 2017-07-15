@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import * as Icons from './Icons'
-import './tool.scss'
+import 'styles/tool.scss'
 
 const Tool = ({ onClick, icon, active, toolTip, ...props }) => {
   const Icon = Icons[icon] || Icons.Fallback

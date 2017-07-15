@@ -10,7 +10,7 @@ import {
 } from 'ducks/cropWidget'
 import Overlay from 'components/Overlay'
 import DragKing from 'components/DragKing'
-import './cropbox.scss'
+import 'styles/cropbox.scss'
 
 class CropBox extends React.Component {
   getRelativePosition = e => {

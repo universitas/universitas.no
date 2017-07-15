@@ -39,7 +39,7 @@ for arg; do case $arg in
   pull    ) docker-compose pull ;;
   logs    ) docker-compose logs --tail=50 -f ;;
 
-  tags    ) cd django && ctags -R && cd ../webpack && ctags -R src && echo "collected ctags" ;;
+  tags    ) ctags -R ./django ./webpack/src/react && echo "collected ctags" ;;
 
   prod    ) echo "production settings"
             export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml ;;

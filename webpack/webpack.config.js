@@ -9,9 +9,9 @@ module.exports = {
     head: 'javascripts/head.js',
     vendor: 'javascripts/vendor.js',
     foot: 'javascripts/foot.js',
-    photo_list_view: 'entry/photosearch.js',
-    photo_crop_app: 'entry/frontpagecrop.js',
-    tassen_tags_web_editor: 'entry/editor.js',
+    photo_list_view: 'entry/photo_list_view.js',
+    photo_crop_app: 'entry/photo_crop_app.js',
+    tassen_tags_web_editor: 'entry/tassen_tags_web_editor.js',
     // prodsys: 'entry/prodsys.js',
   },
   plugins: [

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { getImages, getThumbStyle } from 'ducks/imageList'
 import { getImage } from 'ducks/images'
 import { imageClicked } from 'ducks/ui'
-import './photolist.scss'
+import 'styles/photolist.scss'
 
 const FullThumbWithCropBox = ({ small, title, size, crop_box }) => {
   const { left, x, right, top, y, bottom } = crop_box

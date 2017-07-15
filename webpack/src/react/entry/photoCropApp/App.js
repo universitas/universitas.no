@@ -3,7 +3,7 @@ import PhotoList from 'containers/PhotoList'
 import SearchField from 'containers/SearchField'
 import ResultsPanel from 'containers/ResultsPanel'
 import React from 'react'
-import './app.scss'
+import 'styles/app.scss'
 
 const App = () => {
   return (

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Tool from './Tool'
 import cx from 'classnames'
-import './tool.scss'
+import 'styles/tool.scss'
 
 const renderTool = (key, { onClick, active, icon, toolTip }) => (
   <Tool

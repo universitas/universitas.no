@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import configureStore from './configureStore'
 import Editor from 'containers/Editor'
 import Preview from 'components/Preview'
-import './editorapp.scss'
+import 'styles/editorapp.scss'
 
 const App = () => (
   <section className="EditApp">
