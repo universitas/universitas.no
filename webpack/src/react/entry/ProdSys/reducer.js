@@ -1,7 +1,5 @@
 import { combineReducers } from 'redux'
 
-// import { reducer as ui } from 'ducks/ui'
-//
-const dummyReducer = (state = { hello: 'world!!!', ui: {} }, action) => state
+import { reducer as issues } from 'ducks/issues'
 
-export default combineReducers({ dummyReducer })
+export default { issues }

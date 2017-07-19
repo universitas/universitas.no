@@ -48,6 +48,7 @@
     "react-icons": "^2",
     "react-redux": "5",
     "redux": "^3",
+    "redux-little-router": "^14.2.0",
     "redux-logger": "^3",
     "redux-persist": "^4.8.0",
     "redux-saga": "^0.15.4",

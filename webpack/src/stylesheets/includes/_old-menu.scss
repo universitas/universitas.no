@@ -36,7 +36,7 @@ $fontsize: $menu-height - $menu-padding * 2;
     z-index: -10;
   }
 }
-body > main{
+header + main{
   margin-top: $menu-height + $menu-padding;
 }
 

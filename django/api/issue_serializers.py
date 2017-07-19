@@ -1,5 +1,5 @@
 from apps.issues.models import Issue, PrintIssue
-from rest_framework import serializers, viewsets, filters
+from rest_framework import serializers, viewsets, filters, pagination
 from django_filters.rest_framework import DjangoFilterBackend
 
 
@@ -26,6 +26,7 @@ class IssueSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Issue
         fields = [
+            'id',
             'url',
             'publication_date',
             'year',
@@ -33,6 +34,10 @@ class IssueSerializer(serializers.HyperlinkedModelSerializer):
             'pdfs',
             'get_issue_type_display',
         ]
+
+
+class LargeLimitPagination(pagination.LimitOffsetPagination):
+    default_limit = 1000
 
 
 class IssueViewSet(viewsets.ModelViewSet):
@@ -44,6 +49,7 @@ class IssueViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
+    pagination_class = LargeLimitPagination
 
 
 class PrintIssueSerializer(serializers.HyperlinkedModelSerializer):

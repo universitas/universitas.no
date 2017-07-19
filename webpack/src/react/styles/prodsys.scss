@@ -1,0 +1,62 @@
+.ProdSys {
+  display: flex;
+  align-items: stretch;
+  height: 100vh;
+  overflow: hidden;
+}
+.SideBar {
+  display: flex;
+  flex-direction: column;
+  font-size: 3em;
+  color: white;
+  background-color: #555;
+}
+.MainPanel {
+  height: 100vh;
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column
+}
+.IssueList {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  tbody {
+    overflow-y: scroll;
+    flex: 1;
+  }
+  tr {
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+  }
+  th {
+  }
+  td {
+  }
+}
+.AppButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 1.8em;
+  height: 1.8em;
+  color: inherit;
+  &:hover, &:visited {
+    color: inherit;
+  }
+  &:hover {
+    background-color: #777;
+  }
+  &.active {
+    color: yellow;
+    background-color: #777;
+  }
+  small {
+    //text-transform: uppercase;
+    //font-weight: bold;
+    font-size: 0.25em;
+  }
+}

@@ -1,7 +1,8 @@
-// import rootSaga from 'sagas/'
+import { all, fork } from 'redux-saga/effects'
+import issuesSaga from 'sagas/issues'
 
 function* rootSaga() {
-  console.log('hello world')
+  yield [fork(issuesSaga)]
 }
 
 export default rootSaga

@@ -17,13 +17,13 @@
   </head>
 
   <body>
-    <header id="sticky-top-menu" class="fixedsticky">
-      {% block topmenu %}
+    {% block topmenu %}
+      <header id="sticky-top-menu" class="fixedsticky">
         {% cache 60 top-menu %}
         {% universitas_menu "" %}
         {% endcache %}
-      {% endblock topmenu %}
-    </header>
+      </header>
+    {% endblock topmenu %}
     <main>
       <div class="content-wrapper">
         {% block columns %}{% endblock %}
