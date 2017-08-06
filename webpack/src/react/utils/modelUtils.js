@@ -9,8 +9,8 @@ export const formatDate = value =>
 // display name from list of choices
 export const getDisplayName = (choices, value) =>
   R.compose(
-    R.propOr('??????', 'display_name'),
-    R.find(R.propEq('value', value))
+    R.propOr(value, 'display_name'),
+    R.find(R.propEq('value', String(value)))
   )(choices)
 
 // fields with defaults

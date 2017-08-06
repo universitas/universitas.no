@@ -10,30 +10,27 @@ import {
   take,
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-import { apiList, apiGet } from '../services/api'
+import { apiPatch, apiList, apiGet } from '../services/api'
 import {
   issuesFetched,
   issueSelected,
+  issuePatched,
   ITEMS_REQUESTED,
   ITEM_SELECTED,
+  FIELD_CHANGED,
   getIssue,
   issueAdded,
 } from './duck'
 
 export default function* rootSaga() {
   yield takeLatest(ITEM_SELECTED, selectIssue)
+  yield takeLatest(FIELD_CHANGED, patchIssue)
   yield takeEvery(ITEMS_REQUESTED, requestIssues)
   yield fork(watchRouteChange)
 }
 
 const getModel = action => {
-  let result = R.path(['payload', 'result'])(action)
-  while (result) {
-    let { parent, model } = result
-    if (model) return model
-    result = parent
-  }
-  return null
+  return R.path(['payload', 'result', 'model'])(action)
 }
 
 function* watchRouteChange() {
@@ -42,17 +39,19 @@ function* watchRouteChange() {
     if (getModel(action) == 'issue') yield fork(requestIssues, action)
     const id = R.path(['payload', 'params', 'id'])(action)
     if (id) {
-      yield put(issueSelected(id))
+      yield put(issueSelected(parseInt(id)))
+    } else {
+      yield put(issueSelected(0))
     }
   }
 }
 
 function* selectIssue(action) {
   const id = action.payload.id
-  let data = yield select(getIssue, id)
+  let data = yield select(getIssue(id))
   if (!data) {
     data = yield call(apiGet('issues'), id)
-    yield put(issueAdded(data))
+    yield put(issueAdded(data.response))
   }
 }
 function* requestIssues(action) {
@@ -60,6 +59,15 @@ function* requestIssues(action) {
   const data = yield call(fetchIssues)
   if (data) {
     yield put(issuesFetched(data))
+  }
+}
+function* patchIssue(action) {
+  // debounce
+  yield call(delay, 500)
+  const { id, field, value } = action.payload
+  const data = yield call(apiPatch('issues'), id, { [field]: value })
+  if (data) {
+    yield put(issuePatched(data))
   }
 }
 

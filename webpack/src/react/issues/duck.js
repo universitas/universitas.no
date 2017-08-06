@@ -2,6 +2,7 @@ import R from 'ramda' // Action constants
 export const ITEM_ADDED = 'issues/ITEM_ADDED'
 export const ITEM_SELECTED = 'issues/ITEM_SELECTED'
 export const ITEM_PATCHED = 'issues/ITEM_PATCHED'
+export const FIELD_CHANGED = 'issues/FIELD_CHANGED'
 export const ITEMS_FETCHED = 'issues/ITEMS_FETCHED'
 export const ITEM_REQUESTED = 'issues/ITEM_REQUESTED'
 export const ITEMS_REQUESTED = 'issues/ITEMS_REQUESTED'
@@ -39,9 +40,13 @@ export const issueDeSelected = () => ({
   type: ITEM_SELECTED,
   payload: { id: 0 },
 })
-export const issuePatched = data => ({
+export const issuePatched = ({ response }) => ({
   type: ITEM_PATCHED,
-  payload: data,
+  payload: { dirty: false, ...response },
+})
+export const fieldChanged = (id, field, value) => ({
+  type: FIELD_CHANGED,
+  payload: { id, field, value },
 })
 export const issueRequested = id => ({
   type: ITEM_REQUESTED,
@@ -73,8 +78,19 @@ const getReducer = ({ type, payload }) => {
       )
     }
     case ITEM_PATCHED:
-    case ITEM_ADDED:
       return R.set(itemLens(payload.id), payload)
+    case ITEM_ADDED:
+      return R.compose(
+        R.over(currentItemsLens, R.pipe(R.append(payload.id), R.uniq)),
+        R.set(itemLens(payload.id), payload)
+      )
+    case FIELD_CHANGED: {
+      const { id, field, value } = payload
+      const mergeData = { dirty: true, [field]: value }
+      const lens = itemLens(id)
+      return R.over(lens, R.mergeDeepLeft(mergeData))
+      // return R.set(itemLens(id), mergeData)
+    }
     case ITEM_SELECTED:
       return R.set(currentItemLens, payload.id)
     default:

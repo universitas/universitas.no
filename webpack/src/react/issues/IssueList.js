@@ -1,15 +1,15 @@
 import R from 'ramda'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'redux-little-router'
+import { Link, push } from 'redux-little-router'
 import { connect } from 'react-redux'
-import { getIssueList, getIssue } from 'issues/duck'
+import { getIssueList, getIssue, getCurrentIssueId } from 'issues/duck'
 import { fields as issueFields } from 'issues/model'
 import { getDisplayName, formatDate } from 'utils/modelUtils'
 
 // render all rows of results
 const renderRows = (items, fields) =>
-  items.map(id => <ListItem key={id} fields={fields} id={id} />)
+  items.map(id => <ListRow key={id} fields={fields} id={id} />)
 
 // render all fields in a row
 const renderFields = (fields, props) =>
@@ -32,15 +32,29 @@ const TableField = ({ type, value, choices }) => {
   }
 }
 
-let ListItem = ({ fields, id, ...props }) => (
-  <Link href={`/issues/${id}`}>
-    <tr className="ListItem">
-      {renderFields(fields, props)}
-    </tr>
-  </Link>
+let ListRow = ({ fields, onClick, ...props }) => (
+  <tr
+    style={{
+      color: props.dirty ? '#888' : 'inherit',
+      fontWeight: props.selected ? 'bold' : 'normal',
+      cursor: 'pointer',
+    }}
+    title={R.toString(props)}
+    className="ListRow"
+    onClick={onClick}
+  >
+    {renderFields(fields, props)}
+  </tr>
 )
 
-ListItem = connect((state, { id }) => getIssue(id)(state) || {})(ListItem)
+ListRow = connect(
+  (state, { id }) => {
+    const data = getIssue(id)(state) || {}
+    const selected = getCurrentIssueId(state) === id
+    return { ...data, selected }
+  },
+  (dispatch, { id }) => ({ onClick: e => dispatch(push(`/issues/${id}`)) })
+)(ListRow)
 
 const IssueList = ({ items = [], fields = issueFields }) => {
   return (

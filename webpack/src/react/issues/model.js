@@ -16,9 +16,9 @@ export const fields = [
     label: 'utgavetype',
     type: 'choice',
     choices: [
-      { value: 1, display_name: 'Vanlig' },
-      { value: 2, display_name: 'Magasin' },
-      { value: 3, display_name: 'Velkomstutgave' },
+      { value: '1', display_name: 'Vanlig' },
+      { value: '2', display_name: 'Magasin' },
+      { value: '3', display_name: 'Velkomstutgave' },
     ],
     editable: true,
   },
