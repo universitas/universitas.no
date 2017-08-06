@@ -2,7 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Fragment, Link } from 'redux-little-router'
 import { Camera, Person, Newspaper } from 'components/Icons'
-import Issues from 'pages/IssueList'
+import { connect } from 'react-redux'
+import IssueList from 'issues/IssueList'
+import IssueDetail from 'issues/IssueDetail'
 import 'styles/prodsys.scss'
 
 const Contributors = ({}) => (
@@ -36,14 +38,19 @@ AppButton.propTypes = {
 export default () => (
   <main className="ProdSys">
     <section className="SideBar">
-      <AppButton href="/photos" Icon={Camera} label="photos" />
       <AppButton href="/issues" Icon={Newspaper} label="issues" />
+      <AppButton href="/photos" Icon={Camera} label="photos" />
       <AppButton href="/contributors" Icon={Person} label="contributors" />
     </section>
-    <section className="MainPanel">
+    <section className="ListPanel">
+      <Fragment forRoute="/issues"><IssueList /></Fragment>
       <Fragment forRoute="/contributors"><Contributors /></Fragment>
-      <Fragment forRoute="/issues"><Issues /></Fragment>
       <Fragment forRoute="/photos"><Photos /></Fragment>
     </section>
+    <Fragment forRoute="/issues/:id">
+      <section className="DetailPanel">
+        <IssueDetail />
+      </section>
+    </Fragment>
   </main>
 )

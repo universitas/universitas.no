@@ -1,27 +1,46 @@
 import R from 'ramda'
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'redux-little-router'
 import { connect } from 'react-redux'
-import { getIssueList, getIssue } from 'ducks/issues'
-import imgdata from 'placeholderImage'
+import { getIssueList, getIssue } from 'issues/duck'
+import { fields as issueFields } from 'issues/model'
+import { getDisplayName, formatDate } from 'utils/modelUtils'
 
+// render all rows of results
 const renderRows = (items, fields) =>
   items.map(id => <ListItem key={id} fields={fields} id={id} />)
 
+// render all fields in a row
 const renderFields = (fields, props) =>
-  fields.map(field => <td key={field}>{props[field]}</td>)
-const renderHeaders = fields =>
-  fields.map((label, key) => <th key={key}>{label}</th>)
+  fields.map(({ key, ...args }) => (
+    <TableField key={key} value={R.prop(key, props)} {...args} />
+  ))
 
-let ListItem = ({ fields, ...props }) => (
-  <tr className="ListItem">
-    {renderFields(fields, props)}
-  </tr>
+// render all headers in table
+const renderHeaders = fields =>
+  fields.map(({ key, label }) => <th key={key}>{label}</th>)
+
+const TableField = ({ type, value, choices }) => {
+  switch (type) {
+    case 'date':
+      return <td>{formatDate(value)}</td>
+    case 'choice':
+      return <td>{getDisplayName(choices, value)}</td>
+    default:
+      return <td>{value}</td>
+  }
+}
+
+let ListItem = ({ fields, id, ...props }) => (
+  <Link href={`/issues/${id}`}>
+    <tr className="ListItem">
+      {renderFields(fields, props)}
+    </tr>
+  </Link>
 )
 
 ListItem = connect((state, { id }) => getIssue(id)(state) || {})(ListItem)
-
-const issueFields = ['year', 'number', 'get_issue_type_display']
 
 const IssueList = ({ items = [], fields = issueFields }) => {
   return (

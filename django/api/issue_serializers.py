@@ -32,7 +32,7 @@ class IssueSerializer(serializers.HyperlinkedModelSerializer):
             'year',
             'number',
             'pdfs',
-            'get_issue_type_display',
+            'issue_type',
         ]
 
 

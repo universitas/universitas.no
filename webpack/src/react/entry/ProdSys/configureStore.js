@@ -8,17 +8,9 @@ import {
 import { compose } from 'utils/misc'
 import reducers from './reducer'
 import rootSaga from './saga'
+import routes from './routes'
 
 const BASENAME = '/dev/prodsys'
-
-const routes = {
-  '/': {
-    title: 'Prodsys',
-    '/photos': { title: 'Photos' },
-    '/contributors': { title: 'Contributors' },
-    '/issues': { title: 'Issues' },
-  },
-}
 
 export default initialState => {
   const router = routerForBrowser({ routes, basename: BASENAME })
@@ -40,10 +32,10 @@ export default initialState => {
       store.replaceReducer(nextRootReducer)
     })
   }
+  sagaMiddleware.run(rootSaga)
   const initialLocation = store.getState().router
   if (initialLocation) {
     store.dispatch(initializeCurrentLocation(initialLocation))
   }
-  sagaMiddleware.run(rootSaga)
   return store
 }

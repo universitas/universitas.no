@@ -10,7 +10,6 @@ export const ITEMS_REQUESTED = 'issues/ITEMS_REQUESTED'
 const lens = R.pipe(R.split('.'), R.lensPath)
 const currentItemLens = lens('currentItem')
 const currentItemsLens = lens('currentItems')
-const urlLens = lens('url')
 const queryLens = lens('query')
 const itemsLens = lens('items')
 const itemLens = id => R.lensPath(['items', id])
@@ -20,10 +19,12 @@ const itemLens = id => R.lensPath(['items', id])
 const selectorFromLens = l => R.view(R.compose(lens('issues'), l))
 
 export const getIssueList = selectorFromLens(currentItemsLens)
-export const getCurrentIssue = selectorFromLens(currentItemLens)
-export const getUrl = selectorFromLens(urlLens)
+export const getCurrentIssueId = selectorFromLens(currentItemLens)
 export const getQuery = selectorFromLens(queryLens)
 export const getIssue = id => selectorFromLens(itemLens(id))
+
+export const getCurrentIssue = state =>
+  getIssue(getCurrentIssueId(state))(state)
 
 // Action creators
 export const issueAdded = data => ({
@@ -56,7 +57,6 @@ export const issuesFetched = data => ({
 
 // reducers
 export const initialState = R.pipe(
-  R.set(urlLens, '/api/issues'),
   R.set(currentItemLens, 0),
   R.set(currentItemsLens, []),
   R.set(queryLens, {})

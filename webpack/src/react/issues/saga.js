@@ -13,11 +13,12 @@ import { delay } from 'redux-saga'
 import { apiList, apiGet } from '../services/api'
 import {
   issuesFetched,
+  issueSelected,
   ITEMS_REQUESTED,
   ITEM_SELECTED,
   getIssue,
   issueAdded,
-} from '../ducks/issues'
+} from './duck'
 
 export default function* rootSaga() {
   yield takeLatest(ITEM_SELECTED, selectIssue)
@@ -25,11 +26,24 @@ export default function* rootSaga() {
   yield fork(watchRouteChange)
 }
 
+const getModel = action => {
+  let result = R.path(['payload', 'result'])(action)
+  while (result) {
+    let { parent, model } = result
+    if (model) return model
+    result = parent
+  }
+  return null
+}
+
 function* watchRouteChange() {
   while (true) {
     const action = yield take('ROUTER_LOCATION_CHANGED')
-    const route = R.path(['payload', 'route'])(action)
-    if (route === '/issues') yield fork(requestIssues, action)
+    if (getModel(action) == 'issue') yield fork(requestIssues, action)
+    const id = R.path(['payload', 'params', 'id'])(action)
+    if (id) {
+      yield put(issueSelected(id))
+    }
   }
 }
 
