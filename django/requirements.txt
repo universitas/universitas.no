@@ -16,6 +16,7 @@ django-model-utils
 djangorestframework
 markdown
 django-filter
+django-url-filter
 django-guardian
 django-crispy-forms
 django-rest-swagger
