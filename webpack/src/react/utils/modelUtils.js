@@ -27,3 +27,6 @@ export const cleanFields = ({
   editable,
   choices,
 })
+
+export const detailFieldFilter = R.filter(R.propEq('detail', false))
+export const listFieldFilter = R.filter(R.propEq('list', false))

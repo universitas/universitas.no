@@ -5,13 +5,12 @@ import { Camera, Person, Newspaper, Edit } from 'components/Icons'
 import { connect } from 'react-redux'
 import IssueList from 'issues/IssueList'
 import IssueDetail from 'issues/IssueDetail'
+import ContributorList from 'contributors/ContributorList'
+import ContributorDetail from 'contributors/ContributorDetail'
+import PhotoList from 'photos/PhotoList'
+import PhotoDetail from 'photos/PhotoDetail'
 import 'styles/prodsys.scss'
 
-const Contributors = ({}) => (
-  <div className="Contributors">
-    Contributors App
-  </div>
-)
 const Photos = ({}) => (
   <div className="Photos">
     Photos App
@@ -51,12 +50,22 @@ export default () => (
     <section className="ListPanel">
       <Fragment forRoute="/stories"><Stories /></Fragment>
       <Fragment forRoute="/issues"><IssueList /></Fragment>
-      <Fragment forRoute="/contributors"><Contributors /></Fragment>
-      <Fragment forRoute="/photos"><Photos /></Fragment>
+      <Fragment forRoute="/contributors"><ContributorList /></Fragment>
+      <Fragment forRoute="/photos"><PhotoList /></Fragment>
     </section>
+    <Fragment forRoute="/contributors/:id">
+      <section className="DetailPanel">
+        <ContributorDetail />
+      </section>
+    </Fragment>
     <Fragment forRoute="/issues/:id">
       <section className="DetailPanel">
         <IssueDetail />
+      </section>
+    </Fragment>
+    <Fragment forRoute="/photos/:id">
+      <section className="DetailPanel">
+        <PhotoDetail />
       </section>
     </Fragment>
   </main>

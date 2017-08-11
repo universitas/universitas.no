@@ -5,9 +5,14 @@ export default {
     },
     '/contributors': {
       model: 'contributor',
+      '/:id': {},
     },
     '/issues': {
       model: 'issue',
+      '/:id': {},
+    },
+    '/photos': {
+      model: 'photo',
       '/:id': {},
     },
   },

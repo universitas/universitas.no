@@ -1,6 +1,6 @@
-from apps.contributors.models import Contributor, Stint, Position
-from rest_framework import serializers, viewsets, filters
-from django_filters.rest_framework import DjangoFilterBackend
+from apps.contributors.models import Contributor, Stint
+from rest_framework import serializers, viewsets
+from url_filter.integrations.drf import DjangoFilterBackend
 
 
 class StintSerializer(serializers.ModelSerializer):
@@ -27,6 +27,7 @@ class ContributorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Contributor
         fields = [
+            'id',
             'url',
             'status',
             'display_name',
@@ -60,3 +61,5 @@ class ContributorViewSet(viewsets.ModelViewSet):
 
     queryset = Contributor.objects.all()
     serializer_class = ContributorSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['status', 'display_name', 'byline_photo']

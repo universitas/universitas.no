@@ -4,6 +4,7 @@ from rest_framework.exceptions import ValidationError
 from apps.photo.cropping.boundingbox import CropBox
 from django_filters.rest_framework import DjangoFilterBackend
 import json
+from pathlib import Path
 
 
 class jsonDict(dict):
@@ -32,6 +33,7 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'id',
             'url',
+            'name',
             'created',
             'cropping_method',
             'method',
@@ -57,7 +59,11 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
     size = serializers.SerializerMethodField()
     method = serializers.SerializerMethodField()
     usage = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
     crop_box = CropBoxField()
+
+    def get_name(self, instance):
+        return Path(instance.source_file.name).name
 
     def get_usage(self, instance):
         return instance.storyimage_set.count()
