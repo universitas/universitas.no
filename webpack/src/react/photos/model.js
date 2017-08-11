@@ -1,6 +1,10 @@
-import { cleanFields } from 'utils/modelUtils'
+import {
+  cleanFields,
+  listFieldFilter,
+  detailFieldFilter,
+} from 'utils/modelUtils'
 
-export const fields = [
+const modelFields = [
   {
     key: 'name',
     label: 'filnavn',
@@ -9,6 +13,13 @@ export const fields = [
   {
     key: 'large',
     label: 'bilde',
+    list: false,
+    type: 'thumb',
+  },
+  {
+    key: 'small',
+    label: 'bilde',
+    detail: false,
     type: 'thumb',
   },
   {
@@ -21,4 +32,8 @@ export const fields = [
     label: 'brukt #',
     type: 'integer',
   },
-].map(cleanFields)
+]
+
+export const fields = modelFields.map(cleanFields)
+export const listFields = listFieldFilter(fields)
+export const detailFields = detailFieldFilter(fields)

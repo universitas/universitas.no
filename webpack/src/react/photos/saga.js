@@ -10,7 +10,7 @@ import {
   take,
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-import { apiPatch, apiList, apiGet } from '../services/api'
+import { apiFetch, apiPatch, apiList, apiGet } from '../services/api'
 import {
   photosFetched,
   photoSelected,
@@ -58,8 +58,15 @@ function* selectPhoto(action) {
   }
 }
 function* requestPhotos(action) {
-  console.log('request Photos')
-  const data = yield call(fetchPhotos)
+  const url = R.path(['payload', 'url'])(action)
+  let data = null
+  if (url) {
+    console.log('request url', url)
+    data = yield call(fetchUrl, url)
+  } else {
+    console.log('request Photos')
+    data = yield call(fetchPhotos)
+  }
   if (data) {
     yield put(photosFetched(data))
   }
@@ -77,6 +84,15 @@ function* patchPhoto(action) {
 function* fetchPhotos() {
   const attrs = yield select(getQuery)
   const { response, error } = yield call(apiList, 'images', attrs)
+  if (response) {
+    return response
+  } else {
+    yield put({ type: 'ERROR', error })
+  }
+}
+
+function* fetchUrl(url) {
+  const { response, error } = yield call(apiFetch, url)
   if (response) {
     return response
   } else {

@@ -15,6 +15,7 @@ const currentItemLens = lens('currentItem')
 const currentItemsLens = lens('currentItems')
 const queryLens = lens('query')
 const itemsLens = lens('items')
+const navigationLens = lens('navigation')
 const itemLens = id => R.lensPath(['items', String(id)])
 
 // Selectors
@@ -23,6 +24,7 @@ const selectorFromLens = l => R.view(R.compose(lens('photos'), l))
 export const getPhotoList = selectorFromLens(currentItemsLens)
 export const getCurrentPhotoId = selectorFromLens(currentItemLens)
 export const getQuery = selectorFromLens(queryLens)
+export const getNavigation = selectorFromLens(navigationLens)
 export const getPhoto = id => selectorFromLens(itemLens(id))
 
 export const getCurrentPhoto = state =>
@@ -53,9 +55,11 @@ export const photoRequested = id => ({
   type: ITEM_REQUESTED,
   payload: { id },
 })
-export const photosRequested = () => ({
+export const photosRequested = url => ({
   type: ITEMS_REQUESTED,
+  payload: { url },
 })
+
 export const photosFetched = data => ({
   type: ITEMS_FETCHED,
   payload: data,
@@ -69,17 +73,20 @@ export const filterToggled = (key, value) => ({
 export const initialState = R.pipe(
   R.set(currentItemLens, 0),
   R.set(currentItemsLens, []),
-  R.set(queryLens, {})
+  R.set(queryLens, {}),
+  R.set(navigationLens, {})
 )({})
 
 const getReducer = ({ type, payload }) => {
   switch (type) {
     case ITEMS_FETCHED: {
-      const ids = R.pluck('id', payload.results)
-      const items = R.zipObj(ids, payload.results)
+      const { results, next, previous, count } = payload
+      const ids = R.pluck('id', results)
+      const items = R.zipObj(ids, results)
       return R.compose(
         R.over(itemsLens, R.merge(items)),
-        R.set(currentItemsLens, ids)
+        R.set(currentItemsLens, ids),
+        R.set(navigationLens, { next, previous })
       )
     }
     case ITEM_PATCHED:

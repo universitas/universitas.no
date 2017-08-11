@@ -32,7 +32,7 @@ const headBase = {
   },
 }
 
-export function apiFetch(url, head, body = null) {
+export const apiFetch = (url, head = {}, body = null) => {
   const init = R.mergeDeepRight(headBase, { ...head })
   if (body) init.body = body
   return fetch(url, init)

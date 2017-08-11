@@ -19,14 +19,16 @@ export const cleanFields = ({
   label,
   type = 'string',
   editable = false,
-  choices = [],
+  ...args
 }) => ({
   key,
   label: label || R.replace(/_/g, ' ', key),
   type,
   editable,
-  choices,
+  ...args,
 })
 
-export const detailFieldFilter = R.filter(R.propEq('detail', false))
-export const listFieldFilter = R.filter(R.propEq('list', false))
+export const detailFieldFilter = R.filter(
+  R.complement(R.propEq('detail', false))
+)
+export const listFieldFilter = R.filter(R.complement(R.propEq('list', false)))

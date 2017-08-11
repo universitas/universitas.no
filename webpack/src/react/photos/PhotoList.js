@@ -9,8 +9,10 @@ import {
   getPhoto,
   getCurrentPhotoId,
   filterToggled,
+  getNavigation,
+  photosRequested,
 } from 'photos/duck'
-import { fields as photoFields } from 'photos/model'
+import { listFields as photoFields } from 'photos/model'
 import { getDisplayName, formatDate } from 'utils/modelUtils'
 
 // render all rows of results
@@ -34,11 +36,7 @@ const TableField = ({ type, value, choices }) => {
     case 'thumb':
       return (
         <td>
-          <img
-            style={{ borderRadius: '50%', height: '2em' }}
-            className="thumb"
-            src={value}
-          />
+          <img style={{ height: '2em' }} className="thumb" src={value} />
         </td>
       )
     case 'choice':
@@ -95,7 +93,6 @@ const getDate = () => new Date().toISOString().slice(0, 10)
 const getYear = () => new Date().toISOString().slice(0, 4)
 
 const PhotoFilters = () => {
-  return <div />
   return (
     <div>
       <Button attr="limit" value="5" label="limit 5" />
@@ -103,10 +100,37 @@ const PhotoFilters = () => {
   )
 }
 
+let PhotoNavigation = ({ previous, next, photosRequested }) => {
+  const nextItems = () => photosRequested(next)
+  const prevItems = () => photosRequested(previous)
+  return (
+    <div>
+      <button
+        className="small button"
+        onClick={prevItems}
+        disabled={!previous}
+        title={previous}
+      >
+        previous
+      </button>
+      <button
+        className="small button"
+        onClick={nextItems}
+        disabled={!next}
+        title={next}
+      >
+        next
+      </button>
+    </div>
+  )
+}
+PhotoNavigation = connect(getNavigation, { photosRequested })(PhotoNavigation)
+
 const PhotoList = ({ items = [], fields = photoFields }) => {
   return (
     <div className="IssueList">
       <PhotoFilters />
+      <PhotoNavigation next="foo" previous="bar" />
       <table>
         <thead>
           <tr>{renderHeaders(fields)}</tr>

@@ -2,7 +2,7 @@ import R from 'ramda'
 import React from 'react'
 import { connect } from 'react-redux'
 import { getCurrentPhoto, fieldChanged } from 'photos/duck'
-import { fields } from 'photos/model'
+import { detailFields as fields } from 'photos/model'
 import { formatDate } from 'utils/modelUtils'
 
 const PdfPreview = ({ cover_page, pdf }) => (
