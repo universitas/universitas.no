@@ -41,8 +41,11 @@ export function apiFetch(url, head, body = null) {
     .catch(error => ({ error }))
 }
 
-export const apiList = model => {
-  return apiFetch(`${BASE_URL}/${model}/`)
+export const apiList = (model, attrs = {}) => {
+  const query = queryString(attrs)
+  return query
+    ? apiFetch(`${BASE_URL}/${model}/?${query}`)
+    : apiFetch(`${BASE_URL}/${model}/`)
 }
 
 export const apiGet = model => id => {

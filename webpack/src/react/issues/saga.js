@@ -17,12 +17,15 @@ import {
   issuePatched,
   ITEMS_REQUESTED,
   ITEM_SELECTED,
+  FILTER_TOGGLED,
   FIELD_CHANGED,
   getIssue,
+  getQuery,
   issueAdded,
 } from './duck'
 
 export default function* rootSaga() {
+  yield takeLatest(FILTER_TOGGLED, requestIssues)
   yield takeLatest(ITEM_SELECTED, selectIssue)
   yield takeLatest(FIELD_CHANGED, patchIssue)
   yield takeEvery(ITEMS_REQUESTED, requestIssues)
@@ -49,7 +52,7 @@ function* watchRouteChange() {
 function* selectIssue(action) {
   const id = action.payload.id
   let data = yield select(getIssue(id))
-  if (!data) {
+  if (id && !data) {
     data = yield call(apiGet('issues'), id)
     yield put(issueAdded(data.response))
   }
@@ -72,7 +75,8 @@ function* patchIssue(action) {
 }
 
 function* fetchIssues() {
-  const { response, error } = yield call(apiList, 'issues')
+  const attrs = yield select(getQuery)
+  const { response, error } = yield call(apiList, 'issues', attrs)
   if (response) {
     return response
   } else {

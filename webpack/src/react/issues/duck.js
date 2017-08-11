@@ -1,4 +1,5 @@
 import R from 'ramda' // Action constants
+import { objectToggle } from '../utils/fp'
 export const ITEM_ADDED = 'issues/ITEM_ADDED'
 export const ITEM_SELECTED = 'issues/ITEM_SELECTED'
 export const ITEM_PATCHED = 'issues/ITEM_PATCHED'
@@ -6,6 +7,7 @@ export const FIELD_CHANGED = 'issues/FIELD_CHANGED'
 export const ITEMS_FETCHED = 'issues/ITEMS_FETCHED'
 export const ITEM_REQUESTED = 'issues/ITEM_REQUESTED'
 export const ITEMS_REQUESTED = 'issues/ITEMS_REQUESTED'
+export const FILTER_TOGGLED = 'issues/FILTER_TOGGLED'
 
 // Lenses
 const lens = R.pipe(R.split('.'), R.lensPath)
@@ -13,8 +15,7 @@ const currentItemLens = lens('currentItem')
 const currentItemsLens = lens('currentItems')
 const queryLens = lens('query')
 const itemsLens = lens('items')
-const itemLens = id => R.lensPath(['items', id])
-// const itemLens = R.pipe(R.flip(R.append)(['items']), R.lensPath)
+const itemLens = id => R.lensPath(['items', String(id)])
 
 // Selectors
 const selectorFromLens = l => R.view(R.compose(lens('issues'), l))
@@ -59,6 +60,10 @@ export const issuesFetched = data => ({
   type: ITEMS_FETCHED,
   payload: data,
 })
+export const filterToggled = (key, value) => ({
+  type: FILTER_TOGGLED,
+  payload: { key, value },
+})
 
 // reducers
 export const initialState = R.pipe(
@@ -81,7 +86,7 @@ const getReducer = ({ type, payload }) => {
       return R.set(itemLens(payload.id), payload)
     case ITEM_ADDED:
       return R.compose(
-        R.over(currentItemsLens, R.pipe(R.append(payload.id), R.uniq)),
+        R.over(currentItemsLens, R.union([payload.id])),
         R.set(itemLens(payload.id), payload)
       )
     case FIELD_CHANGED: {
@@ -93,6 +98,9 @@ const getReducer = ({ type, payload }) => {
     }
     case ITEM_SELECTED:
       return R.set(currentItemLens, payload.id)
+    case FILTER_TOGGLED: {
+      return R.over(queryLens, objectToggle(payload.key, payload.value))
+    }
     default:
       return R.identity
   }

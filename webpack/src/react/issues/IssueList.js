@@ -3,7 +3,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link, push } from 'redux-little-router'
 import { connect } from 'react-redux'
-import { getIssueList, getIssue, getCurrentIssueId } from 'issues/duck'
+import {
+  getQuery,
+  getIssueList,
+  getIssue,
+  getCurrentIssueId,
+  filterToggled,
+} from 'issues/duck'
 import { fields as issueFields } from 'issues/model'
 import { getDisplayName, formatDate } from 'utils/modelUtils'
 
@@ -56,16 +62,51 @@ ListRow = connect(
   (dispatch, { id }) => ({ onClick: e => dispatch(push(`/issues/${id}`)) })
 )(ListRow)
 
+const Button = connect(state => ({ query: getQuery(state) }), {
+  filterToggled,
+})(({ query, label, attr, value, filterToggled }) => {
+  const clickHandler = e => filterToggled(attr, value)
+  const isActive = R.propEq(attr, value, query)
+
+  return (
+    <button
+      type="button"
+      className={`small button ${isActive ? 'primary' : 'secondary'}`}
+      onClick={clickHandler}
+    >
+      {label}
+    </button>
+  )
+})
+
+const getDate = () => new Date().toISOString().slice(0, 10)
+const getYear = () => new Date().toISOString().slice(0, 4)
+
+const IssueFilters = () => {
+  const year = getYear()
+  const date = getDate()
+  return (
+    <div>
+      <Button attr="publication_date__year" value={year} label={year} />
+      <Button attr="publication_date__gte" value={date} label="upcoming" />
+    </div>
+  )
+}
+
 const IssueList = ({ items = [], fields = issueFields }) => {
   return (
-    <table className="IssueList">
-      <thead>
-        <tr>{renderHeaders(fields)}</tr>
-      </thead>
-      <tbody>
-        {renderRows(items, fields)}
-      </tbody>
-    </table>
+    <div className="IssueList">
+      <IssueFilters />
+
+      <table>
+        <thead>
+          <tr>{renderHeaders(fields)}</tr>
+        </thead>
+        <tbody>
+          {renderRows(items, fields)}
+        </tbody>
+      </table>
+    </div>
   )
 }
 IssueList.propTypes = {

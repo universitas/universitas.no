@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Fragment, Link } from 'redux-little-router'
-import { Camera, Person, Newspaper } from 'components/Icons'
+import { Camera, Person, Newspaper, Edit } from 'components/Icons'
 import { connect } from 'react-redux'
 import IssueList from 'issues/IssueList'
 import IssueDetail from 'issues/IssueDetail'
@@ -15,6 +15,11 @@ const Contributors = ({}) => (
 const Photos = ({}) => (
   <div className="Photos">
     Photos App
+  </div>
+)
+const Stories = ({}) => (
+  <div className="Stories">
+    Stories App
   </div>
 )
 
@@ -38,11 +43,13 @@ AppButton.propTypes = {
 export default () => (
   <main className="ProdSys">
     <section className="SideBar">
+      <AppButton href="/stories" Icon={Edit} label="stories" />
       <AppButton href="/issues" Icon={Newspaper} label="issues" />
       <AppButton href="/photos" Icon={Camera} label="photos" />
       <AppButton href="/contributors" Icon={Person} label="contributors" />
     </section>
     <section className="ListPanel">
+      <Fragment forRoute="/stories"><Stories /></Fragment>
       <Fragment forRoute="/issues"><IssueList /></Fragment>
       <Fragment forRoute="/contributors"><Contributors /></Fragment>
       <Fragment forRoute="/photos"><Photos /></Fragment>

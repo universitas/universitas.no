@@ -1,4 +1,4 @@
-import * as issues from './issues'
+import * as issues from './duck'
 
 const fetchData = [
   { results: [{ id: 1 }, { id: 2 }] },
@@ -11,7 +11,6 @@ describe('reducer', () => {
     expect(initialState).toEqual({
       currentItems: [],
       currentItem: 0,
-      url: '/api/issues',
       query: {},
     })
   })
@@ -39,17 +38,25 @@ describe('reducer', () => {
   test('item added', () => {
     const item = { id: 99, url: 'foo' }
     const action = issues.issueAdded(item)
-    const state = { issues: issues.reducer(undefined, action) }
+    const state = { issues: issues.reducer(initialState, action) }
     expect(issues.getIssue(item.id)(state)).toEqual(item)
+  })
+  test('filter toggled', () => {
+    let action = issues.filterToggled('q', 'foo')
+    expect(action.payload).toMatchObject({ key: 'q', value: 'foo' })
+    const state = issues.reducer(initialState, action)
+    // toggle on
+    expect(state).toMatchObject({ query: { q: 'foo' } })
+    // toggle off
+    expect(issues.reducer(state, action)).toMatchObject({ query: {} })
   })
 })
 
 describe('selectors', () => {
   test('initial state', () => {
     const state = { issues: issues.initialState }
-    expect(issues.getUrl(state)).toEqual('/api/issues')
     expect(issues.getIssueList(state)).toEqual([])
-    expect(issues.getCurrentIssue(state)).toEqual(0)
+    expect(issues.getCurrentIssueId(state)).toEqual(0)
     expect(issues.getQuery(state)).toEqual({})
     expect(issues.getIssue(5)(state)).toBeUndefined()
   })
