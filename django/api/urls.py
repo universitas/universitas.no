@@ -4,6 +4,7 @@ from .photo_serializers import ImageFileViewSet
 from .issue_serializers import IssueViewSet, PrintIssueViewSet
 from .contributor_serializers import ContributorViewSet
 from .story_serializers import StoryViewSet
+from .legacy_serializers import ProdStoryViewSet
 
 router = routers.DefaultRouter()
 router.register(r'images', ImageFileViewSet)
@@ -11,6 +12,7 @@ router.register(r'issues', IssueViewSet)
 router.register(r'pdfs', PrintIssueViewSet)
 router.register(r'contributors', ContributorViewSet)
 router.register(r'stories', StoryViewSet)
+router.register(r'legacy', ProdStoryViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),

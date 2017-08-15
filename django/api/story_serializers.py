@@ -42,6 +42,7 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
     def get_public_url(self, instance):
         return self._build_uri(instance.get_absolute_url())
 
+
 class StoryViewSet(viewsets.ModelViewSet):
 
     """

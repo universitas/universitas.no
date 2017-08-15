@@ -351,6 +351,7 @@ Meta	django/api/contributor_serializers.py	/^    class Meta:$/;"	c	class:StintSe
 Meta	django/api/issue_serializers.py	/^    class Meta:$/;"	c	class:IssueSerializer
 Meta	django/api/issue_serializers.py	/^    class Meta:$/;"	c	class:NestedPDFSerializer
 Meta	django/api/issue_serializers.py	/^    class Meta:$/;"	c	class:PrintIssueSerializer
+Meta	django/api/legacy_serializers.py	/^    class Meta:$/;"	c	class:ProdStorySerializer
 Meta	django/api/photo_serializers.py	/^    class Meta:$/;"	c	class:ImageFileSerializer
 Meta	django/api/story_serializers.py	/^    class Meta:$/;"	c	class:BylineSerializer
 Meta	django/api/story_serializers.py	/^    class Meta:$/;"	c	class:StorySerializer
@@ -477,6 +478,8 @@ Migration	django/apps/stories/migrations/0019_auto_20160906_1614.py	/^class Migr
 Migration	django/apps/stories/migrations/0020_auto_20161120_2156.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0021_data_generate_slugs.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0022_auto_20161228_0956.py	/^class Migration(migrations.Migration):$/;"	c
+Migration	django/apps/stories/migrations/0023_auto_20170815_1628.py	/^class Migration(migrations.Migration):$/;"	c
+Migration	django/apps/stories/migrations/0024_auto_20170815_1640.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/watson/migrations/0001_initial.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/watson/south_migrations/0001_initial.py	/^class Migration(SchemaMigration):$/;"	c
 Migration	django/watson/south_migrations/0002_installwatson.py	/^class Migration(DataMigration):$/;"	c
@@ -539,6 +542,8 @@ PrintIssueViewSet	django/api/issue_serializers.py	/^class PrintIssueViewSet(view
 ProdByline	django/apps/prodsys/models.py	/^class ProdByline(models.Model):$/;"	c
 ProdImage	django/apps/prodsys/models.py	/^class ProdImage(models.Model):$/;"	c
 ProdStory	django/apps/prodsys/models.py	/^class ProdStory(models.Model):$/;"	c
+ProdStorySerializer	django/api/legacy_serializers.py	/^class ProdStorySerializer(serializers.HyperlinkedModelSerializer):$/;"	c
+ProdStoryViewSet	django/api/legacy_serializers.py	/^class ProdStoryViewSet(viewsets.ModelViewSet):$/;"	c
 Prodbilde	django/apps/legacy_db/models.py	/^class Prodbilde(models.Model):$/;"	c
 Prodsak	django/apps/legacy_db/models.py	/^class Prodsak(models.Model):$/;"	c
 ProdsakAdmin	django/apps/legacy_db/admin.py	/^class ProdsakAdmin(admin.ModelAdmin):$/;"	c
@@ -608,10 +613,12 @@ STATUS_DESK	django/apps/stories/models.py	/^    STATUS_DESK = 6$/;"	v	class:Stor
 STATUS_DRAFT	django/apps/stories/models.py	/^    STATUS_DRAFT = 0$/;"	v	class:Story
 STATUS_EDITOR	django/apps/stories/models.py	/^    STATUS_EDITOR = 5$/;"	v	class:Story
 STATUS_ERROR	django/apps/stories/models.py	/^    STATUS_ERROR = 500$/;"	v	class:Story
+STATUS_JOURNALIST	django/apps/stories/models.py	/^    STATUS_JOURNALIST = 3$/;"	v	class:Story
 STATUS_NOINDEX	django/apps/stories/models.py	/^    STATUS_NOINDEX = 11$/;"	v	class:Story
 STATUS_PRIVATE	django/apps/stories/models.py	/^    STATUS_PRIVATE = 15$/;"	v	class:Story
 STATUS_PUBLISHED	django/apps/stories/models.py	/^    STATUS_PUBLISHED = 10$/;"	v	class:Story
 STATUS_READY	django/apps/stories/models.py	/^    STATUS_READY = 9$/;"	v	class:Story
+STATUS_SUBEDITOR	django/apps/stories/models.py	/^    STATUS_SUBEDITOR = 4$/;"	v	class:Story
 STATUS_TEMPLATE	django/apps/stories/models.py	/^    STATUS_TEMPLATE = 100$/;"	v	class:Story
 STEPS	webpack/src/react/utils/scroll.js	/^const STEPS = 10$/;"	r
 SUCCESS	webpack/src/react/services/api.js	/^export const SUCCESS = 'api\/SUCCESS'$/;"	r
@@ -809,7 +816,9 @@ _block_append	django/apps/stories/models.py	/^    def _block_append(self, tag, c
 _block_drop	django/apps/stories/models.py	/^    def _block_drop(self, *args, **kwargs):$/;"	m	class:TextContent
 _block_new	django/apps/stories/models.py	/^    def _block_new(self, *args, **kwargs):$/;"	m	class:TextContent
 _block_new	django/apps/stories/models.py	/^    def _block_new(self, tag, content, element):$/;"	m	class:Story
+_build_uri	django/api/legacy_serializers.py	/^    def _build_uri(self, url):$/;"	m	class:ProdStorySerializer
 _build_uri	django/api/photo_serializers.py	/^    def _build_uri(self, url):$/;"	m	class:ImageFileSerializer
+_build_uri	django/api/story_serializers.py	/^    def _build_uri(self, url):$/;"	m	class:StorySerializer
 _bulk_save_search_entries	django/watson/search.py	/^def _bulk_save_search_entries(search_entries, batch_size=100):$/;"	f
 _check_links	django/apps/stories/management/commands/check_links.py	/^    def _check_links(self, links_to_check, timeout):$/;"	m	class:Command
 _clean_up_html	django/apps/legacy_db/export_content_and_images.py	/^def _clean_up_html(html):$/;"	f
@@ -917,6 +926,7 @@ app_label	django/watson/models.py	/^        app_label = 'watson'$/;"	v	class:Sea
 application	django/universitas/wsgi.py	/^application = Sentry(get_wsgi_application())$/;"	v
 applied	django/apps/prodsys/models.py	/^    applied = models.BooleanField($/;"	v	class:StoryPatch
 apply	django/apps/prodsys/models.py	/^    def apply(self, save=True, original_content=None):$/;"	m	class:StoryPatch
+arbeidstittel	django/api/legacy_serializers.py	/^    arbeidstittel = serializers.CharField(source='title')$/;"	v	class:ProdStorySerializer
 arbeidstittel	django/apps/legacy_db/models.py	/^    arbeidstittel = models.CharField(max_length=200, blank=True)$/;"	v	class:Prodsak
 arrayToggle	webpack/src/react/utils/fp.js	/^export const arrayToggle = R.pipe($/;"	r
 article_view	django/apps/stories/views.py	/^def article_view(request, story_id, **section_and_slug):$/;"	f
@@ -1006,7 +1016,7 @@ byline	django/apps/legacy_db/models.py	/^    byline = models.CharField(max_lengt
 byline_image	django/apps/contributors/templatetags/byline_image.py	/^def byline_image(contributor, image_size=None):$/;"	f
 byline_photo	django/api/contributor_serializers.py	/^    byline_photo = serializers.HyperlinkedRelatedField($/;"	v	class:ContributorSerializer
 byline_photo	django/apps/contributors/models.py	/^    byline_photo = models.ForeignKey($/;"	v	class:Contributor
-bylines	django/api/story_serializers.py	/^    bylines = BylineSerializer($/;"	v	class:StorySerializer
+byline_set	django/api/story_serializers.py	/^    byline_set = BylineSerializer($/;"	v	class:StorySerializer
 bylines	django/apps/stories/models.py	/^    bylines = models.ManyToManyField($/;"	v	class:Story
 bylines_count	django/apps/contributors/models.py	/^    def bylines_count(self):$/;"	m	class:Contributor
 bylines_html	django/apps/stories/models.py	/^    bylines_html = models.TextField($/;"	v	class:Story
@@ -1337,6 +1347,8 @@ dependencies	django/apps/stories/migrations/0019_auto_20160906_1614.py	/^    dep
 dependencies	django/apps/stories/migrations/0020_auto_20161120_2156.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0021_data_generate_slugs.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0022_auto_20161228_0956.py	/^    dependencies = [$/;"	v	class:Migration
+dependencies	django/apps/stories/migrations/0023_auto_20170815_1628.py	/^    dependencies = [$/;"	v	class:Migration
+dependencies	django/apps/stories/migrations/0024_auto_20170815_1640.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/watson/migrations/0001_initial.py	/^    dependencies = [$/;"	v	class:Migration
 description	django/apps/adverts/models.py	/^    description = models.CharField($/;"	v	class:Advert
 description	django/apps/adverts/models.py	/^    description = models.TextField($/;"	v	class:AdChannel
@@ -1548,6 +1560,8 @@ field	django/apps/stories/migrations/0018_story_language.py	/^            field=
 field	django/apps/stories/migrations/0019_auto_20160906_1614.py	/^            field=models.FloatField(choices=[(0.0, 'auto'), (0.4, '5:2 landscape'), (0.5, '2:1 landscape'), (0.667, '3:2 landscape'), (0.75, '4:3 landscape'), (1.0, 'square'), ($/;"	v	class:Migration
 field	django/apps/stories/migrations/0020_auto_20161120_2156.py	/^            field=django_extensions.db.fields.AutoSlugField($/;"	v	class:Migration
 field	django/apps/stories/migrations/0022_auto_20161228_0956.py	/^            field=models.IntegerField(choices=[(0, 'Draft'), (5, 'Ready to edit'), (9, 'Ready to publish on website'), (10, 'Published on website'), (11, 'Published, but hidden from search engines'), ($/;"	v	class:Migration
+field	django/apps/stories/migrations/0023_auto_20170815_1628.py	/^            field=models.IntegerField(choices=[(0, 'Draft'), (5, 'Ready to edit'), (6, 'Ready for newsdesk'), (9, 'Ready to publish on website'), (10, 'Published on website'), (11, 'Published, but hidden from search engines'), (15, 'Will not be published'), (100, 'Used as template for new articles'), (500, 'Technical error')], default=0, help_text='publication status.', verbose_name='status'),$/;"	v	class:Migration
+field	django/apps/stories/migrations/0024_auto_20170815_1640.py	/^            field=models.IntegerField(choices=[(0, 'Draft'), (3, 'To Journalist'), (4, 'To Sub Editor'), (5, 'To Editor'), (6, 'Ready for newsdesk'), (9, 'Ready to publish on website'), (10, 'Published on website'), (11, 'Published, but hidden from search engines'), (15, 'Will not be published'), (100, 'Used as template for new articles'), (500, 'Technical error')], default=0, help_text='publication status.', verbose_name='status'),$/;"	v	class:Migration
 fieldChanged	webpack/src/react/contributors/duck.js	/^export const fieldChanged = (id, field, value) => ({$/;"	r
 fieldChanged	webpack/src/react/issues/duck.js	/^export const fieldChanged = (id, field, value) => ({$/;"	r
 fieldChanged	webpack/src/react/photos/duck.js	/^export const fieldChanged = (id, field, value) => ({$/;"	r
@@ -1559,6 +1573,7 @@ fields	django/api/contributor_serializers.py	/^        fields = [$/;"	v	class:St
 fields	django/api/issue_serializers.py	/^        fields = [$/;"	v	class:IssueSerializer.Meta
 fields	django/api/issue_serializers.py	/^        fields = [$/;"	v	class:NestedPDFSerializer.Meta
 fields	django/api/issue_serializers.py	/^        fields = [$/;"	v	class:PrintIssueSerializer.Meta
+fields	django/api/legacy_serializers.py	/^        fields = [$/;"	v	class:ProdStorySerializer.Meta
 fields	django/api/photo_serializers.py	/^        fields = [$/;"	v	class:ImageFileSerializer.Meta
 fields	django/api/story_serializers.py	/^        fields = [$/;"	v	class:BylineSerializer.Meta
 fields	django/api/story_serializers.py	/^        fields = [$/;"	v	class:StorySerializer.Meta
@@ -1600,10 +1615,12 @@ filterToggled	webpack/src/react/photos/duck.js	/^export const filterToggled = (k
 filter_backends	django/api/contributor_serializers.py	/^    filter_backends = [DjangoFilterBackend]$/;"	v	class:ContributorViewSet
 filter_backends	django/api/issue_serializers.py	/^    filter_backends = (filters.SearchFilter, DjangoFilterBackend)$/;"	v	class:PrintIssueViewSet
 filter_backends	django/api/issue_serializers.py	/^    filter_backends = [DjangoFilterBackend]$/;"	v	class:IssueViewSet
+filter_backends	django/api/legacy_serializers.py	/^    filter_backends = [DjangoFilterBackend]$/;"	v	class:ProdStoryViewSet
 filter_backends	django/api/photo_serializers.py	/^    filter_backends = (filters.SearchFilter, DjangoFilterBackend)$/;"	v	class:ImageFileViewSet
 filter_backends	django/api/story_serializers.py	/^    filter_backends = [DjangoFilterBackend]$/;"	v	class:StoryViewSet
 filter_fields	django/api/contributor_serializers.py	/^    filter_fields = ['status', 'display_name', 'byline_photo']$/;"	v	class:ContributorViewSet
 filter_fields	django/api/issue_serializers.py	/^    filter_fields = ['id', 'publication_date']$/;"	v	class:IssueViewSet
+filter_fields	django/api/legacy_serializers.py	/^    filter_fields = ['produsert']$/;"	v	class:ProdStoryViewSet
 filter_fields	django/api/story_serializers.py	/^    filter_fields = ['id', 'publication_status']$/;"	v	class:StoryViewSet
 find_inline_placeholders	django/apps/stories/models.py	/^    def find_inline_placeholders(self, element_class, body):$/;"	m	class:Story
 find_linked_story	django/apps/stories/admin.py	/^def find_linked_story(modeladmin, request, queryset):$/;"	f
@@ -1754,6 +1771,7 @@ get_internal_type	django/apps/photo/cropping/models.py	/^    def get_internal_ty
 get_items	django/apps/stories/templatetags/inline_elements.py	/^def get_items(queryset, argument_string):$/;"	f
 get_large	django/api/photo_serializers.py	/^    def get_large(self, instance):$/;"	m	class:ImageFileSerializer
 get_live_queryset	django/watson/search.py	/^    def get_live_queryset(self):$/;"	m	class:SearchAdapter
+get_mappe	django/api/legacy_serializers.py	/^    def get_mappe(self, instance):$/;"	m	class:ProdStorySerializer
 get_meta	django/watson/search.py	/^    def get_meta(self, obj):$/;"	m	class:SearchAdapter
 get_method	django/api/photo_serializers.py	/^    def get_method(self, instance):$/;"	m	class:ImageFileSerializer
 get_models	django/watson/views.py	/^    def get_models(self):$/;"	m	class:SearchMixin
@@ -1765,6 +1783,7 @@ get_page_text_content	django/apps/issues/models.py	/^    def get_page_text_conte
 get_plaintext	django/apps/stories/models.py	/^    def get_plaintext(self):$/;"	m	class:TextContent
 get_postgresql_version	django/watson/backends.py	/^def get_postgresql_version(connection):$/;"	f
 get_prep_value	django/apps/photo/cropping/models.py	/^    def get_prep_value(self, value):$/;"	m	class:BoxField
+get_public_url	django/api/story_serializers.py	/^    def get_public_url(self, instance):$/;"	m	class:StorySerializer
 get_publication_date	django/apps/issues/models.py	/^    def get_publication_date(self):$/;"	m	class:PrintIssue
 get_query	django/apps/search/views.py	/^    def get_query(self, request):$/;"	m	class:SearchMixin
 get_query	django/watson/views.py	/^    def get_query(self, request):$/;"	m	class:SearchMixin
@@ -1794,6 +1813,7 @@ get_thumb	django/api/photo_serializers.py	/^    def get_thumb(self, instance):$/
 get_title	django/watson/search.py	/^    def get_title(self, obj):$/;"	m	class:SearchAdapter
 get_url	django/watson/search.py	/^    def get_url(self, obj):$/;"	m	class:SearchAdapter
 get_usage	django/api/photo_serializers.py	/^    def get_usage(self, instance):$/;"	m	class:ImageFileSerializer
+get_version_no	django/api/legacy_serializers.py	/^    def get_version_no(self, instance):$/;"	m	class:ProdStorySerializer
 gmail	django/universitas/dev.py	/^gmail = Environment('GOOGLE', strict=False)$/;"	v
 gmail	django/universitas/production.py	/^gmail = Environment('GMAIL')$/;"	v
 groupLi	webpack/src/react/utils/tagParser.js	/^const groupLi = sedon => {$/;"	r
@@ -2285,6 +2305,7 @@ mapStateToProps	webpack/src/react/entry/FrontPageCrop/App.js	/^const mapStateToP
 mapStateToProps	webpack/src/react/issues/IssueList.js	/^const mapStateToProps = (state, ownProps) => ({$/;"	r
 mapStateToProps	webpack/src/react/pages/PhotoList.js	/^const mapStateToProps = (state, ownProps) => ({})$/;"	r
 mapStateToProps	webpack/src/react/photos/PhotoList.js	/^const mapStateToProps = (state, ownProps) => ({$/;"	r
+mappe	django/api/legacy_serializers.py	/^    mappe = serializers.SerializerMethodField()$/;"	v	class:ProdStorySerializer
 mappe	django/apps/legacy_db/models.py	/^    mappe = models.CharField(max_length=100, blank=True)$/;"	v	class:Prodsak
 mappe	django/apps/legacy_db/models.py	/^    mappe = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
 markup_tag	django/apps/stories/models.py	/^    markup_tag = ''  # change in subclasses$/;"	v	class:StoryElement
@@ -2365,6 +2386,7 @@ model	django/api/contributor_serializers.py	/^        model = Stint$/;"	v	class:
 model	django/api/issue_serializers.py	/^        model = Issue$/;"	v	class:IssueSerializer.Meta
 model	django/api/issue_serializers.py	/^        model = PrintIssue$/;"	v	class:NestedPDFSerializer.Meta
 model	django/api/issue_serializers.py	/^        model = PrintIssue$/;"	v	class:PrintIssueSerializer.Meta
+model	django/api/legacy_serializers.py	/^        model = Story$/;"	v	class:ProdStorySerializer.Meta
 model	django/api/photo_serializers.py	/^        model = ImageFile$/;"	v	class:ImageFileSerializer.Meta
 model	django/api/story_serializers.py	/^        model = Byline$/;"	v	class:BylineSerializer.Meta
 model	django/api/story_serializers.py	/^        model = Story$/;"	v	class:StorySerializer.Meta
@@ -2457,6 +2479,8 @@ model_name	django/apps/stories/migrations/0020_auto_20161120_2156.py	/^         
 model_name	django/apps/stories/migrations/0020_auto_20161120_2156.py	/^            model_name='story',$/;"	v	class:Migration
 model_name	django/apps/stories/migrations/0020_auto_20161120_2156.py	/^            model_name='storytype',$/;"	v	class:Migration
 model_name	django/apps/stories/migrations/0022_auto_20161228_0956.py	/^            model_name='story',$/;"	v	class:Migration
+model_name	django/apps/stories/migrations/0023_auto_20170815_1628.py	/^            model_name='story',$/;"	v	class:Migration
+model_name	django/apps/stories/migrations/0024_auto_20170815_1640.py	/^            model_name='story',$/;"	v	class:Migration
 models	django/watson/south_migrations/0001_initial.py	/^    models = {$/;"	v	class:Migration
 models	django/watson/south_migrations/0002_installwatson.py	/^    models = {$/;"	v	class:Migration
 models	django/watson/views.py	/^    models = ()$/;"	v	class:SearchMixin
@@ -2607,6 +2631,8 @@ name	django/apps/stories/migrations/0018_story_language.py	/^            name='l
 name	django/apps/stories/migrations/0019_auto_20160906_1614.py	/^            name='aspect_ratio',$/;"	v	class:Migration
 name	django/apps/stories/migrations/0020_auto_20161120_2156.py	/^            name='slug',$/;"	v	class:Migration
 name	django/apps/stories/migrations/0022_auto_20161228_0956.py	/^            name='publication_status',$/;"	v	class:Migration
+name	django/apps/stories/migrations/0023_auto_20170815_1628.py	/^            name='publication_status',$/;"	v	class:Migration
+name	django/apps/stories/migrations/0024_auto_20170815_1640.py	/^            name='publication_status',$/;"	v	class:Migration
 name	django/apps/stories/models.py	/^    name = models.CharField(unique=True, max_length=50)$/;"	v	class:StoryType
 name	django/universitas/urls.py	/^        name='ad_info',),$/;"	v
 name	django/universitas/urls.py	/^        name='contact_info',),$/;"	v
@@ -2758,6 +2784,8 @@ operations	django/apps/stories/migrations/0019_auto_20160906_1614.py	/^    opera
 operations	django/apps/stories/migrations/0020_auto_20161120_2156.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0021_data_generate_slugs.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0022_auto_20161228_0956.py	/^    operations = [$/;"	v	class:Migration
+operations	django/apps/stories/migrations/0023_auto_20170815_1628.py	/^    operations = [$/;"	v	class:Migration
+operations	django/apps/stories/migrations/0024_auto_20170815_1640.py	/^    operations = [$/;"	v	class:Migration
 operations	django/watson/migrations/0001_initial.py	/^    operations = [$/;"	v	class:Migration
 oppretta	django/apps/legacy_db/models.py	/^    oppretta = models.DateTimeField()$/;"	v	class:Eposttinging
 optimize_staging_pages	django/apps/issues/tasks.py	/^def optimize_staging_pages(**kwargs):$/;"	f
@@ -2886,13 +2914,16 @@ process_exception	django/watson/middleware.py	/^    def process_exception(self, 
 process_request	django/watson/middleware.py	/^    def process_request(self, request):$/;"	m	class:SearchContextMiddleware
 process_response	django/watson/middleware.py	/^    def process_response(self, request, response):$/;"	m	class:SearchContextMiddleware
 prodbilde_id	django/apps/legacy_db/models.py	/^    prodbilde_id = models.IntegerField(primary_key=True)$/;"	v	class:Prodbilde
+prodsak_id	django/api/legacy_serializers.py	/^    prodsak_id = serializers.IntegerField(source='id', read_only=True)$/;"	v	class:ProdStorySerializer
 prodsak_id	django/apps/legacy_db/models.py	/^    prodsak_id = models.IntegerField(blank=True, null=True)$/;"	v	class:Prodbilde
 prodsak_id	django/apps/legacy_db/models.py	/^    prodsak_id = models.IntegerField(editable=False)$/;"	v	class:Prodsak
 prodsak_id	django/apps/stories/models.py	/^    prodsak_id = models.PositiveIntegerField($/;"	v	class:Story
 prodsys_mappe	django/apps/stories/models.py	/^    prodsys_mappe = models.CharField($/;"	v	class:StoryType
+produsert	django/api/legacy_serializers.py	/^    produsert = serializers.IntegerField(source='publication_status')$/;"	v	class:ProdStorySerializer
 produsert	django/apps/legacy_db/models.py	/^    produsert = models.IntegerField($/;"	v	class:Prodsak
 profile_images	django/apps/photo/models.py	/^    def profile_images(self):$/;"	m	class:ImageFileQuerySet
 proxy	django/apps/photo/models.py	/^        proxy = True$/;"	v	class:ProfileImage.Meta
+public_url	django/api/story_serializers.py	/^    public_url = serializers.SerializerMethodField()$/;"	v	class:StorySerializer
 publication_date	django/apps/frontpage/models.py	/^    def publication_date(self):$/;"	m	class:StoryModule
 publication_date	django/apps/issues/models.py	/^    publication_date = models.DateField($/;"	v	class:Issue
 publication_date	django/apps/stories/models.py	/^    publication_date = models.DateTimeField($/;"	v	class:Story
@@ -2921,6 +2952,7 @@ query_param	django/watson/views.py	/^    query_param = "q"$/;"	v	class:SearchMix
 queryset	django/api/contributor_serializers.py	/^    queryset = Contributor.objects.all()$/;"	v	class:ContributorViewSet
 queryset	django/api/issue_serializers.py	/^    queryset = Issue.objects.all()$/;"	v	class:IssueViewSet
 queryset	django/api/issue_serializers.py	/^    queryset = PrintIssue.objects.order_by('-issue__publication_date')$/;"	v	class:PrintIssueViewSet
+queryset	django/api/legacy_serializers.py	/^    queryset = Story.objects.all()$/;"	v	class:ProdStoryViewSet
 queryset	django/api/photo_serializers.py	/^    queryset = ImageFile.objects.order_by('-created')$/;"	v	class:ImageFileViewSet
 queryset	django/api/story_serializers.py	/^    queryset = Story.objects.all()$/;"	v	class:StoryViewSet
 queryset	django/apps/legacy_db/admin.py	/^    def queryset(self, request, queryset):$/;"	m	class:ProdusertFilter
@@ -3130,6 +3162,7 @@ serialize_meta	django/watson/search.py	/^    def serialize_meta(self, obj):$/;"	
 serializer_class	django/api/contributor_serializers.py	/^    serializer_class = ContributorSerializer$/;"	v	class:ContributorViewSet
 serializer_class	django/api/issue_serializers.py	/^    serializer_class = IssueSerializer$/;"	v	class:IssueViewSet
 serializer_class	django/api/issue_serializers.py	/^    serializer_class = PrintIssueSerializer$/;"	v	class:PrintIssueViewSet
+serializer_class	django/api/legacy_serializers.py	/^    serializer_class = ProdStorySerializer$/;"	v	class:ProdStoryViewSet
 serializer_class	django/api/photo_serializers.py	/^    serializer_class = ImageFileSerializer$/;"	v	class:ImageFileViewSet
 serializer_class	django/api/story_serializers.py	/^    serializer_class = StorySerializer$/;"	v	class:StoryViewSet
 serve_ads	django/apps/adverts/models.py	/^    def serve_ads(self):$/;"	m	class:AdChannel
@@ -3222,6 +3255,7 @@ supports_ranking	django/watson/backends.py	/^    supports_ranking = False$/;"	v	
 supports_ranking	django/watson/backends.py	/^    supports_ranking = True$/;"	v	class:MySQLSearchBackend
 supports_ranking	django/watson/backends.py	/^    supports_ranking = True$/;"	v	class:PostgresSearchBackend
 target	webpack/src/react/utils/scroll.js	/^  const target =$/;"	r
+tekst	django/api/legacy_serializers.py	/^    tekst = serializers.CharField(source='bodytext_markup')$/;"	v	class:ProdStorySerializer
 tekst	django/apps/legacy_db/models.py	/^    tekst = models.TextField()$/;"	v	class:Bildetekst
 tekst	django/apps/legacy_db/models.py	/^    tekst = models.TextField()$/;"	v	class:Fakta
 tekst	django/apps/legacy_db/models.py	/^    tekst = models.TextField()$/;"	v	class:InnleggAbstract
@@ -3547,6 +3581,7 @@ verbose_name_plural	django/apps/stories/models.py	/^        verbose_name_plural 
 verbose_name_plural	django/watson/models.py	/^        verbose_name_plural = "search entries"$/;"	v	class:SearchEntry.Meta
 verified	django/apps/contributors/models.py	/^    verified = models.BooleanField($/;"	v	class:Contributor
 version_date	django/apps/legacy_db/models.py	/^    version_date = models.DateTimeField(editable=False, blank=True, null=True)$/;"	v	class:Prodsak
+version_no	django/api/legacy_serializers.py	/^    version_no = serializers.SerializerMethodField()$/;"	v	class:ProdStorySerializer
 version_no	django/apps/legacy_db/models.py	/^    version_no = models.IntegerField(editable=False,)$/;"	v	class:Prodsak
 video_host	django/apps/stories/models.py	/^    video_host = models.CharField($/;"	v	class:StoryVideo
 videos	django/apps/stories/models.py	/^    def videos(self):$/;"	m	class:ElementQuerySet

@@ -724,6 +724,10 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         """ Number of story images related to the story """
         return len(self.images())
 
+    def get_images(self):
+        ids = self.images().values_list('id', flat=True)
+        return StoryImage.objects.filter(id__in=ids)
+
     def main_image(self):
         """ Get the top image if there is any. """
         top_image = self.images().order_by('-top', 'index').first()
@@ -1312,6 +1316,10 @@ class StoryImage(StoryMedia):
         if name:
             needle = name.group(0)
         return needle.strip()[:60] or str(self.imagefile)
+
+    @property
+    def filename(self):
+        return str(self.imagefile)
 
     @property
     def small(self):
