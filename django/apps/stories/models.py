@@ -472,7 +472,10 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     template_name = 'bodytext.html'
 
     STATUS_DRAFT = 0
+    STATUS_JOURNALIST = 3
+    STATUS_SUBEDITOR = 4
     STATUS_EDITOR = 5
+    STATUS_DESK = 6
     STATUS_READY = 9
     STATUS_PUBLISHED = 10
     STATUS_NOINDEX = 11
@@ -481,7 +484,10 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     STATUS_ERROR = 500
     STATUS_CHOICES = [
         (STATUS_DRAFT, _('Draft')),
-        (STATUS_EDITOR, _('Ready to edit')),
+        (STATUS_JOURNALIST, _('To Journalist')),
+        (STATUS_SUBEDITOR, _('To Sub Editor')),
+        (STATUS_EDITOR, _('To Editor')),
+        (STATUS_DESK, _('Ready for newsdesk')),
         (STATUS_READY, _('Ready to publish on website')),
         (STATUS_PUBLISHED, _('Published on website')),
         (STATUS_NOINDEX, _('Published, but hidden from search engines')),
@@ -633,6 +639,13 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         return True
 
     @property
+    def is_published(self):
+        # Is this Story public
+        return (self.publication_status in [Story.STATUS_NOINDEX,
+                                            Story.STATUS_PUBLISHED] and
+                self.publication_date <= timezone.now())
+
+    @property
     def priority(self):
         """ Calculate a number between 1 and 12 to determine initial
         front page priority. """
@@ -647,7 +660,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
     def visit_page(self, request):
         """ Check if visit looks like a human and update hit count """
-        if not self.publication_status == self.STATUS_PUBLISHED:
+        if not self.is_published:
             # Only count hits on published pages.
             return False
         user_agent = request.META.get('HTTP_USER_AGENT', '').lower()
@@ -767,18 +780,19 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
     def clean(self):
         """ Clean user input and populate fields """
-        if not self.title and '@headline:' not in self.bodytext_markup:
-            self.bodytext_markup = self.bodytext_markup.replace(
-                '@tit:',
-                '@headline:',
-                1)
-        self.parse_markup()
+        if self.publication_status >= Story.STATUS_READY:
+            if not self.title and '@headline:' not in self.bodytext_markup:
+                self.bodytext_markup = self.bodytext_markup.replace(
+                    '@tit:', '@headline:', 1)
+            self.parse_markup()
         # self.bodytext_markup = self.reindex_inlines()
         # TODO: Fix redindeksering av placeholders for video og bilder.
         self.bylines_html = self.get_bylines_as_html()
         if (not self.publication_date and
-                self.publication_status == self.STATUS_PUBLISHED):
+                self.publication_status in [Story.STATUS_PUBLISHED,
+                                            Story.STATUS_NOINDEX]):
             self.publication_date = timezone.now()
+        # fix tag typos etc.
         self.bodytext_markup = Alias.objects.replace(
             content=self.bodytext_markup,
             timing=Alias.TIMING_CLEAN)
@@ -1500,6 +1514,7 @@ class InlineLink(TimeStampedModel):
         help_text=_('Status code returned from automatic check.'),
         verbose_name=_('http status code'),
     )
+
     def __str__(self):
         return f'[{self.text}]({self.link})'
 
