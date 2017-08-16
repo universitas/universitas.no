@@ -7,6 +7,7 @@ RUN groupadd --gid 1000 django \
 
 # install pdf utils and database clients
 RUN apt-get install -y \
+  gettext \
   ghostscript \
   poppler-utils \
   postgresql-client \
