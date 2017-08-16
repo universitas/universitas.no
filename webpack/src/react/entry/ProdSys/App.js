@@ -9,18 +9,9 @@ import ContributorList from 'contributors/ContributorList'
 import ContributorDetail from 'contributors/ContributorDetail'
 import PhotoList from 'photos/PhotoList'
 import PhotoDetail from 'photos/PhotoDetail'
+import StoryList from 'stories/StoryList'
+import StoryDetail from 'stories/StoryDetail'
 import 'styles/prodsys.scss'
-
-const Photos = ({}) => (
-  <div className="Photos">
-    Photos App
-  </div>
-)
-const Stories = ({}) => (
-  <div className="Stories">
-    Stories App
-  </div>
-)
 
 const Home = () => <div>home</div>
 
@@ -48,25 +39,22 @@ export default () => (
       <AppButton href="/contributors" Icon={Person} label="contributors" />
     </section>
     <section className="ListPanel">
-      <Fragment forRoute="/stories"><Stories /></Fragment>
+      <Fragment forRoute="/stories"><StoryList /></Fragment>
       <Fragment forRoute="/issues"><IssueList /></Fragment>
       <Fragment forRoute="/contributors"><ContributorList /></Fragment>
       <Fragment forRoute="/photos"><PhotoList /></Fragment>
     </section>
+    <Fragment forRoute="/stories/:id">
+      <section className="DetailPanel"> <StoryDetail /> </section>
+    </Fragment>
     <Fragment forRoute="/contributors/:id">
-      <section className="DetailPanel">
-        <ContributorDetail />
-      </section>
+      <section className="DetailPanel"> <ContributorDetail /> </section>
     </Fragment>
     <Fragment forRoute="/issues/:id">
-      <section className="DetailPanel">
-        <IssueDetail />
-      </section>
+      <section className="DetailPanel"> <IssueDetail /> </section>
     </Fragment>
     <Fragment forRoute="/photos/:id">
-      <section className="DetailPanel">
-        <PhotoDetail />
-      </section>
+      <section className="DetailPanel"> <PhotoDetail /> </section>
     </Fragment>
   </main>
 )

@@ -1,7 +1,8 @@
 export default {
   '/': {
-    '/photos': {
-      model: 'photo',
+    '/stories': {
+      model: 'story',
+      '/:id': {},
     },
     '/contributors': {
       model: 'contributor',

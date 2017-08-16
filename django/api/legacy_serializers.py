@@ -2,8 +2,6 @@ from apps.stories.models import Story, StoryImage
 from apps.photo.models import ImageFile
 from rest_framework import serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
-import json
-from pprint import pprint
 
 
 class ProdBildeSerializer(serializers.ModelSerializer):
@@ -104,6 +102,6 @@ class ProdStorySerializer(serializers.ModelSerializer):
 class ProdStoryViewSet(viewsets.ModelViewSet):
 
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['publication_status']
+    filter_fields = ['publication_status', 'id']
     queryset = Story.objects.all()
     serializer_class = ProdStorySerializer

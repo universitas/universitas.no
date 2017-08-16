@@ -12,7 +12,7 @@ router.register(r'issues', IssueViewSet)
 router.register(r'pdfs', PrintIssueViewSet)
 router.register(r'contributors', ContributorViewSet)
 router.register(r'stories', StoryViewSet)
-router.register(r'legacy', ProdStoryViewSet)
+router.register(r'legacy', ProdStoryViewSet, 'legacy')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

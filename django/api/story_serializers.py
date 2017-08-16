@@ -27,6 +27,8 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'id',
             'url',
+            'modified',
+            'created',
             'title',
             'public_url',
             'publication_status',
