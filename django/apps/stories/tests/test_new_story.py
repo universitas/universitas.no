@@ -45,10 +45,11 @@ def test_create_story_from_xtags(news):
     @tit:Hello World!
     @ing:A test story for you
     @txt:This story will rock the world!
-    """
+    """.strip()
     new_story = Story(
         story_type=news,
         bodytext_markup=source,
+        publication_status=Story.STATUS_READY
     )
     tag_count = BlockTag.objects.count()
     assert tag_count == 20
