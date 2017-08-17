@@ -2,7 +2,7 @@
 {% block content %}
 {% block main_content %}
 {% endblock main_content %}
-  <div class="medium-6 columns">
+  <div class="medium-8 columns">
     <h3>Generell kontaktinfo</h3>
     <table>
     <tr><td>Telefon:<td>{{ office.phone }}
@@ -15,10 +15,12 @@
     <p><a href="{% url 'pub_plan' %}">Se hele planen.</a>
 
     <h3>Annonsering</h3>
-    <p>Kontakt Geir Dorp, eller <a href="{% url 'ad_info' %}">les mer om annonsering.</a>
+    {% with geir=staff.4 %}
+    <p>Kontakt Geir Dorp på mail <a href="mailto:{{ geir.email }}">{{ geir.email }}</a> tlf: {{ geir.phone }}, eller <a href="{% url 'ad_info' %}">les mer om annonsering.</a>
+    {% endwith %}
 
   </div>
-  <div class="medium-6 columns">
+  <div class="medium-8 columns">
     <h3>Redaksjonen</h3>
     <table>
     {% for person in staff %}

@@ -20,7 +20,7 @@ def staff(request):
             {'position': 'Daglig leder', 'name': 'Joakim Stene Preston',
                 'email': 'j.s.preston@universitas.no', },
             {'position': 'Annonseselger', 'name': 'Geir Dorp',
-                'email': 'geir.dorp@universitas.no', },
+             'email': 'geir.dorp@universitas.no', 'phone': '22 85 32 69', },
             {'position': 'Webutvikler', 'name': 'Håken Lid',
                 'email': 'haakenlid@gmail.com', },
         ]

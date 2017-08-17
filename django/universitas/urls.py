@@ -23,21 +23,23 @@ admin.autodiscover()
 urlpatterns = [
     # RSS
     url(r'^rss/$', LatestStories(), name='rss'),
+    # API
+    url(r'^api/', include(api_urls)),
 
-    # Content
+    # Frontpage
     url(r'^$', frontpage_view, name='frontpage'),
+
+    # React apps
+    url(r'^foto/$', PhotoAppView.as_view(), name='photoapp'),
+    url(r'^prodsys/', TemplateView.as_view(template_name='prodsys.html')),
 
     # Flat pages
     url(r'^om_universitas/$',
         TemplateView.as_view(template_name='general-info.html'),
         name='general_info',),
-    url(r'^kontakt/$',
-        TemplateView.as_view(template_name='contact-info.html'),
-        name='contact_info',),
     url(r'^annonser/$',
         TemplateView.as_view(template_name='advert-info.html'),
         name='ad_info',),
-
     url(r'^utgivelsesplan/$',
         PubPlanView.as_view(),
         name='pub_plan'),
@@ -48,18 +50,15 @@ urlpatterns = [
         PdfArchiveView.as_view(),
         name='pdf_archive'),
 
-    url(r'^foto/$', PhotoAppView.as_view(), name='photoapp'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^robots.txt$', RobotsTxtView.as_view(), name='robots.txt'),
     url(r'^humans.txt$', HumansTxtView.as_view(), name='humans.txt'),
 
     url(r'^autocomplete', include(autocomplete_light_urls)),
-    url(r'^autocomplete', include(autocomplete_light_urls)),
     url(r'^autocomplete/menu$', autocomplete_list, name='autocomplete_list'),
 
     url(r'^search/', include(search_urls, namespace='watson')),
     url(r'^', include(redirect_urls, namespace='redirect')),
-    url(r'^api/', include(api_urls)),
 
     url(r'^(?P<section>[a-z0-9-]+)/(?P<story_id>\d+)/(?P<slug>[a-z0-9-]*)/?$',
         article_view, name='article'),
