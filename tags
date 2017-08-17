@@ -50,7 +50,7 @@ AppButton	webpack/src/react/entry/ProdSys/App.js	/^const AppButton = ({ href, Ic
 Aside	django/apps/stories/models.py	/^class Aside(TextContent, StoryElement):  # type: ignore$/;"	c
 AsideInline	django/apps/stories/admin.py	/^class AsideInline(admin.TabularInline, ):$/;"	c
 AutoCropImage	django/apps/photo/cropping/models.py	/^class AutoCropImage(models.Model):$/;"	c
-BASENAME	webpack/src/react/entry/ProdSys/configureStore.js	/^const BASENAME = '\/dev\/prodsys'$/;"	r
+BASENAME	webpack/src/react/entry/ProdSys/configureStore.js	/^const BASENAME = '\/prodsys'$/;"	r
 BASE_DIR	django/universitas/base.py	/^BASE_DIR = path()$/;"	v
 BASE_URL	webpack/src/react/services/api.js	/^const BASE_URL = '\/api'$/;"	r
 BREAKPOINT	django/apps/photo/cropping/crop_detector.py	/^    BREAKPOINT = 0.15$/;"	v	class:HybridDetector
@@ -576,6 +576,7 @@ PubPlanView	django/apps/issues/views.py	/^class PubPlanView(TemplateView):$/;"	c
 PublishedStoryManager	django/apps/stories/models.py	/^class PublishedStoryManager(models.Manager):$/;"	c
 Pullquote	django/apps/stories/models.py	/^class Pullquote(TextContent, StoryElement):  # type: ignore$/;"	c
 PullquoteInline	django/apps/stories/admin.py	/^class PullquoteInline(admin.TabularInline, ):$/;"	c
+QueryOrderableViewSetMixin	django/api/story_serializers.py	/^class QueryOrderableViewSetMixin(object):$/;"	c
 RAVEN_CONFIG	django/universitas/base.py	/^RAVEN_CONFIG = {'dsn': env.raven_dsn, 'site': SITE_URL}$/;"	v
 READY_FOR_PRINT	django/apps/legacy_db/models.py	/^    READY_FOR_PRINT = 3$/;"	v	class:Prodsak
 READY_FOR_PRINT	django/apps/prodsys/models.py	/^    READY_FOR_PRINT = 30$/;"	v	class:StoryStatus
@@ -689,7 +690,7 @@ StoryType	django/apps/stories/models.py	/^class StoryType(models.Model):$/;"	c
 StoryTypeAdmin	django/apps/stories/admin.py	/^class StoryTypeAdmin(admin.ModelAdmin):$/;"	c
 StoryTypeInline	django/apps/stories/admin.py	/^class StoryTypeInline(admin.TabularInline):$/;"	c
 StoryVideo	django/apps/stories/models.py	/^class StoryVideo(StoryMedia):$/;"	c
-StoryViewSet	django/api/story_serializers.py	/^class StoryViewSet(viewsets.ModelViewSet):$/;"	c
+StoryViewSet	django/api/story_serializers.py	/^class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):$/;"	c
 StringField	webpack/src/react/contributors/ContributorDetail.js	/^const StringField = ({ value, editable, choices, ...args }) =>$/;"	r
 StringField	webpack/src/react/issues/IssueDetail.js	/^const StringField = ({ value, editable, choices, ...args }) =>$/;"	r
 StringField	webpack/src/react/photos/PhotoDetail.js	/^const StringField = ({ value, editable, choices, ...args }) =>$/;"	r
@@ -1666,8 +1667,8 @@ filter_backends	django/api/photo_serializers.py	/^    filter_backends = (filters
 filter_backends	django/api/story_serializers.py	/^    filter_backends = [DjangoFilterBackend]$/;"	v	class:StoryViewSet
 filter_fields	django/api/contributor_serializers.py	/^    filter_fields = ['status', 'display_name', 'byline_photo']$/;"	v	class:ContributorViewSet
 filter_fields	django/api/issue_serializers.py	/^    filter_fields = ['id', 'publication_date']$/;"	v	class:IssueViewSet
-filter_fields	django/api/legacy_serializers.py	/^    filter_fields = ['publication_status', 'id']$/;"	v	class:ProdStoryViewSet
-filter_fields	django/api/story_serializers.py	/^    filter_fields = ['id', 'publication_status']$/;"	v	class:StoryViewSet
+filter_fields	django/api/legacy_serializers.py	/^    filter_fields = ['publication_status', 'title', 'bodytext_markup']$/;"	v	class:ProdStoryViewSet
+filter_fields	django/api/story_serializers.py	/^    filter_fields = ['id', 'publication_status', 'modified']$/;"	v	class:StoryViewSet
 find_inline_placeholders	django/apps/stories/models.py	/^    def find_inline_placeholders(self, element_class, body):$/;"	m	class:Story
 find_linked_story	django/apps/stories/admin.py	/^def find_linked_story(modeladmin, request, queryset):$/;"	f
 find_linked_story	django/apps/stories/models.py	/^    def find_linked_story(self):$/;"	m	class:InlineLink
@@ -1847,6 +1848,7 @@ get_query	django/apps/search/views.py	/^    def get_query(self, request):$/;"	m	
 get_query	django/watson/views.py	/^    def get_query(self, request):$/;"	m	class:SearchMixin
 get_query_param	django/watson/views.py	/^    def get_query_param(self):$/;"	m	class:SearchMixin
 get_queryset	django/api/photo_serializers.py	/^    def get_queryset(self):$/;"	m	class:ImageFileViewSet
+get_queryset	django/api/story_serializers.py	/^    def get_queryset(self):$/;"	m	class:QueryOrderableViewSetMixin
 get_queryset	django/apps/issues/views.py	/^    def get_queryset(self):$/;"	m	class:PdfArchiveView
 get_queryset	django/apps/issues/views.py	/^    def get_queryset(self):$/;"	m	class:PubPlanView
 get_queryset	django/apps/legacy_db/models.py	/^    def get_queryset(self):$/;"	m	class:ProdsakManager
@@ -2710,7 +2712,6 @@ name	django/apps/stories/migrations/0023_auto_20170815_1628.py	/^            nam
 name	django/apps/stories/migrations/0024_auto_20170815_1640.py	/^            name='publication_status',$/;"	v	class:Migration
 name	django/apps/stories/models.py	/^    name = models.CharField(unique=True, max_length=50)$/;"	v	class:StoryType
 name	django/universitas/urls.py	/^        name='ad_info',),$/;"	v
-name	django/universitas/urls.py	/^        name='contact_info',),$/;"	v
 name	django/universitas/urls.py	/^        name='general_info',),$/;"	v
 name	django/universitas/urls.py	/^        name='pdf_archive'),$/;"	v
 name	django/universitas/urls.py	/^        name='pub_plan'),$/;"	v

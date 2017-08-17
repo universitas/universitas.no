@@ -51,11 +51,6 @@ const modelFields = [
     editable: true,
     type: 'text',
   },
-  {
-    key: 'created',
-    label: 'dato',
-    type: 'date',
-  },
 ]
 
 export const fields = modelFields.map(cleanFields)

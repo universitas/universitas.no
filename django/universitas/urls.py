@@ -31,7 +31,7 @@ urlpatterns = [
 
     # React apps
     url(r'^foto/$', PhotoAppView.as_view(), name='photoapp'),
-    url(r'^prodsys/', TemplateView.as_view(template_name='prodsys.html')),
+    url(r'^prodsys', TemplateView.as_view(template_name='prodsys.html')),
 
     # Flat pages
     url(r'^om_universitas/$',

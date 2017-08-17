@@ -101,7 +101,7 @@ class ProdStorySerializer(serializers.ModelSerializer):
 
 class ProdStoryViewSet(viewsets.ModelViewSet):
 
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['publication_status', 'id']
-    queryset = Story.objects.all()
     serializer_class = ProdStorySerializer
+    queryset = Story.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['publication_status', 'title', 'bodytext_markup']

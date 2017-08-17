@@ -52,7 +52,7 @@
           <h2>PDF-arkiv</h2>
           <div>
             <a href="{% url 'pdf_archive' %}" >
-              {% thumbnail latest_pdf.get_thumbnail '150' as thumb  %}
+              {% thumbnail latest_pdf.thumbnail '150' as thumb  %}
               <img class="faximile" src="{{ thumb.url }}" ></img>
               {% endthumbnail %}
             </a>

@@ -1,6 +1,7 @@
 from apps.stories.models import Story, Byline
 from rest_framework import serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
+from django.core.exceptions import FieldError
 
 
 class BylineSerializer(serializers.ModelSerializer):
@@ -45,13 +46,28 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
         return self._build_uri(instance.get_absolute_url())
 
 
-class StoryViewSet(viewsets.ModelViewSet):
+class QueryOrderableViewSetMixin(object):
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        order_by = self.request.query_params.get('order_by', '').split(',')
+        if order_by:
+            try:
+                qs = queryset.order_by(*order_by)
+                qs.query.sql_with_params()
+                return qs
+            except FieldError:
+                pass  # invalid sort field
+        return queryset
+
+
+class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
 
     """
     API endpoint that allows Story to be viewed or updated.
     """
 
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['id', 'publication_status']
+    filter_fields = ['id', 'publication_status', 'modified']
     queryset = Story.objects.all()
     serializer_class = StorySerializer

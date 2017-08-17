@@ -73,7 +73,7 @@ export const filterToggled = (key, value) => ({
 export const initialState = R.pipe(
   R.set(currentItemLens, 0),
   R.set(currentItemsLens, []),
-  R.set(queryLens, {}),
+  R.set(queryLens, { order_by: '-modified' }),
   R.set(navigationLens, {})
 )({})
 

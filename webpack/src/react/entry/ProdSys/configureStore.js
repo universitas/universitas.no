@@ -10,7 +10,7 @@ import reducers from './reducer'
 import rootSaga from './saga'
 import routes from './routes'
 
-const BASENAME = '/dev/prodsys'
+const BASENAME = '/prodsys'
 
 export default initialState => {
   const router = routerForBrowser({ routes, basename: BASENAME })
