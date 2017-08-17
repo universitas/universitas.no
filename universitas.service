@@ -10,4 +10,3 @@ ExecStop=/bin/bash -c "cd /srv/tassen; docker-compose down"
 
 [Install]
 WantedBy=multi-user.target
-foo
