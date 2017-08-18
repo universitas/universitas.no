@@ -600,12 +600,20 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         help_text=_('From prodsys. For reference only.'),
         verbose_name=_('Imported xtagged source.'),
     )
+    working_title = models.CharField(
+        max_length=1000,
+        blank=True,
+        help_text=_('Working title'),
+        verbose_name=_('Working title'),
+    )
 
     def __str__(self):
-        if self.publication_date:
-            return '{:%Y-%m-%d}: {}'.format(self.publication_date, self.title)
+        title = self.title or f'({self.working_title})' or '[no title]'
+        date = self.publication_date
+        if date:
+            return '{:%Y-%m-%d}: {}'.format(date, title)
         else:
-            return '{}'.format(self.title,)
+            return title
 
     def save(self, *args, **kwargs):
         new = kwargs.pop('new', (self.pk is None))
@@ -636,7 +644,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     @property
     def disqus_enabled(self):
         # Is Disqus available here?
-        return True
+        return self.is_published
 
     @property
     def is_published(self):
@@ -1047,6 +1055,33 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
         self.bodytext_markup = body
         return body
+
+    @property
+    def tekst(self):
+        output = []
+        head_tags = [('tit', 'title'), ('ing', 'lede'),
+                     ('tema', 'theme_word'), ('stikktit', 'kicker')]
+        for tag, attr in head_tags:
+            text = getattr(self, attr)
+            if text:
+                output.append(f'@{tag}:{text}')
+        for bl in self.byline_set.select_related('contributor'):
+            output.append(str(bl))
+        output.append(self.bodytext_markup)
+        for aside in self.asides():
+            output.append(aside.child.bodytext_markup)
+        for pullquote in self.pullquotes():
+            output.append(pullquote.child.bodytext_markup)
+        return '\n'.join(output)
+
+    @tekst.setter
+    def tekst(self, value):
+        self.title = ''
+        self.lede = ''
+        self.theme_word = ''
+        self.asides().delete()
+        self.pullquotes().delete()
+        self.bodytext_markup = value
 
 
 class ElementQuerySet(models.QuerySet):

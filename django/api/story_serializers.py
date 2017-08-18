@@ -30,20 +30,33 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'modified',
             'created',
-            'title',
+            'working_title',
             'public_url',
             'publication_status',
             'bodytext_markup',
             'byline_set',
+            'edit_url',
         ]
 
     public_url = serializers.SerializerMethodField()
+    edit_url = serializers.SerializerMethodField()
 
     def _build_uri(self, url):
         return self._context['request'].build_absolute_uri(url)
 
     def get_public_url(self, instance):
         return self._build_uri(instance.get_absolute_url())
+
+    def get_edit_url(self, instance):
+        return self._build_uri(instance.get_edit_url())
+
+    def update(self, instance, validated_data):
+        clean_model = validated_data.pop('clean', False)
+        story = super().update(instance, validated_data)
+        if clean_model:
+            story.full_clean()
+            story.save()
+        return story
 
 
 class QueryOrderableViewSetMixin(object):

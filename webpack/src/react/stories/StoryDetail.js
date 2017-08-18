@@ -3,7 +3,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { getCurrentStory, fieldChanged } from 'stories/duck'
 import { detailFields as fields } from 'stories/model'
-import { formatDate } from 'utils/modelUtils'
+import { formatDateTime, formatDate } from 'utils/modelUtils'
 
 const PdfPreview = ({ cover_page, pdf }) => (
   <a href={pdf}>
@@ -35,9 +35,14 @@ const DateField = ({ value, editable, choices, ...args }) =>
     ? <input type="date" value={value} {...args} />
     : <span>{formatDate(value)}</span>
 
+const DateTimeField = ({ value, editable, choices, ...args }) =>
+  editable
+    ? <input type="datetime" value={value} {...args} />
+    : <span>{formatDateTime(value)}</span>
+
 const StringField = ({ value, editable, choices, ...args }) =>
   editable
-    ? <input type="text" value={value} {...args} />
+    ? <input style={{ width: '100%' }} type="text" value={value} {...args} />
     : <span>{value}</span>
 
 const tfstyle = {
@@ -58,6 +63,7 @@ const fieldTypes = {
   integer: IntegerField,
   thumb: ThumbField,
   date: DateField,
+  datetime: DateTimeField,
 }
 
 const DetailField = ({ label, type, ...args }) => {

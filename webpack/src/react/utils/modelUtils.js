@@ -6,6 +6,9 @@ import norwayLocale from 'date-fns/locale/nb'
 export const formatDate = value =>
   format(new Date(value), 'ddd DD. MMM YYYY', { locale: norwayLocale })
 
+export const formatDateTime = value =>
+  format(new Date(value), 'HH:mm ddd DD. MMM', { locale: norwayLocale })
+
 // display name from list of choices
 export const getDisplayName = (choices, value) =>
   R.compose(

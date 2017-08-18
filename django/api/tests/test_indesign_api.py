@@ -1,6 +1,6 @@
 import pytest
-# from django.contrib.auth.models import Group
-from apps.stories.models import StoryType, Story, Section, StoryImage
+from django.contrib.auth.models import Permission
+from apps.stories.models import StoryType, Story, Section
 from apps.photo.models import ImageFile
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
@@ -20,6 +20,19 @@ def editor(request):
 
 
 @pytest.fixture
+def api_user(request):
+    user = get_user_model().objects.create_user(
+        username='api',
+        email='api@marshall.gov',
+        password='api',
+    )
+    change = Permission.objects.get(codename='change_story')
+    create = Permission.objects.get(codename='add_story')
+    user.user_permissions.add(change, create)
+    return user
+
+
+@pytest.fixture
 def news():
     try:
         return StoryType.objects.get(name='News')
@@ -32,7 +45,7 @@ def news():
 def scandal(news):
     story = Story.objects.create(
         story_type=news,
-        title='A shocking scandal!',
+        working_title='A shocking scandal!',
     )
     return story
 
@@ -51,20 +64,22 @@ def test_get_story(scandal):
     response = client.get(api_url)
     stories = response.json().get('results')
     assert len(stories) == 1
-    assert stories[0]['arbeidstittel'] == scandal.title
+    assert stories[0]['arbeidstittel'] == scandal.working_title
     assert stories[0]['bilete'] == []
 
 
 @pytest.mark.django_db
-def test_change_story(scandal, editor):
+def test_change_story(scandal, api_user):
     api_url = f'/api/legacy/{scandal.pk}/'
     text = 'A scandal rocks the university'
     client = APIClient()
 
     response = client.patch(api_url, data={'tekst': text})
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-    client.login(username=editor.username, password='gunsmoke')
+    login = client.login(username='api', password='api')
+    assert login
+
     response = client.patch(api_url, data={'tekst': text})
     assert response.status_code == status.HTTP_200_OK
 
@@ -73,10 +88,30 @@ def test_change_story(scandal, editor):
 
 
 @pytest.mark.django_db
-def test_update_photos(scandal, photo, editor):
+def test_create_story(api_user, photo):
+    api_url = '/api/legacy/'
+    client = APIClient()
+    client.login(username='api', password='api')
+    response = client.post(
+        api_url,
+        format='json',
+        data={
+            'mappe': 'kultur',
+            'tekst': 'test',
+            'arbeidstittel': 'hello',
+            'produsert': 1,
+            'bilete': [
+                {'bildefil': 'sandal.jpg', 'bildetekst': 'one'},
+            ],
+        })
+    assert response.status_code == status.HTTP_201_CREATED
+
+
+@pytest.mark.django_db
+def test_update_photos(scandal, photo, api_user):
     api_url = f'/api/legacy/{scandal.pk}/'
     client = APIClient()
-    client.login(username=editor.username, password='gunsmoke')
+    client.login(username='api', password='api')
     data = {
         'bilete': [
             {'bildefil': 'scandal.jpg', 'bildetekst': 'one'},

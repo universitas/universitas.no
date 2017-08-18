@@ -13,7 +13,7 @@ import {
   storiesRequested,
 } from 'stories/duck'
 import { listFields as storyFields } from 'stories/model'
-import { getDisplayName, formatDate } from 'utils/modelUtils'
+import { getDisplayName, formatDate, formatDateTime } from 'utils/modelUtils'
 
 // render all rows of results
 const renderRows = (items, fields) =>
@@ -33,6 +33,8 @@ const TableField = ({ type, value, choices }) => {
   switch (type) {
     case 'date':
       return <td>{formatDate(value)}</td>
+    case 'datetime':
+      return <td>{formatDateTime(value)}</td>
     case 'thumb':
       return (
         <td>
@@ -53,7 +55,6 @@ let ListRow = ({ fields, onClick, ...props }) => (
       fontWeight: props.selected ? 'bold' : 'normal',
       cursor: 'pointer',
     }}
-    title={R.toString(props)}
     className="ListRow"
     onClick={onClick}
   >

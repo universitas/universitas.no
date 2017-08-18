@@ -1,7 +1,14 @@
-from apps.stories.models import Story, StoryImage
+from apps.stories.models import Story, StoryImage, StoryType
 from apps.photo.models import ImageFile
-from rest_framework import serializers, viewsets
+from rest_framework import serializers, viewsets, authentication
+from rest_framework.exceptions import ValidationError
 from url_filter.integrations.drf import DjangoFilterBackend
+import logging
+logger = logging.getLogger(__name__)
+
+
+class MissingImageFileException(Exception):
+    pass
 
 
 class ProdBildeSerializer(serializers.ModelSerializer):
@@ -15,18 +22,33 @@ class ProdBildeSerializer(serializers.ModelSerializer):
             'bildetekst',
         ]
 
-    prodbilde_id = serializers.IntegerField(source='id')
+    prodbilde_id = serializers.IntegerField(source='id', required=False)
     bildefil = serializers.CharField(source='filename')
-    prioritet = serializers.IntegerField(source='size')
+    prioritet = serializers.IntegerField(source='size', required=False)
     bildetekst = serializers.CharField(source='caption')
 
 
 def get_imagefile(filename):
-    return ImageFile.objects.filter(source_file__endswith=filename).last()
+    img = ImageFile.objects.filter(source_file__endswith=filename).last()
+    if img is None:
+        raise MissingImageFileException(f'ImageFile("{filename}") not found')
+    return img
+
+
+def update_images(images, story):
+    for img_data in images:
+        pk = img_data.get('prodbilde_id', 0)
+        try:
+            if pk:
+                update_story_image(pk, **img_data)
+            else:
+                create_story_image(story, **img_data)
+        except MissingImageFileException as err:
+            logger.warn(f'ignore missing image {err}')
 
 
 def update_story_image(pk, bildefil=None, prioritet=None, bildetekst=None):
-    story_image = StoryImage.object.get(pk)
+    story_image = StoryImage.objects.get_or_create(pk)
     if bildefil and bildefil != story_image.filename:
         story_image.image_file = get_imagefile(bildefil)
     if prioritet is not None:
@@ -63,13 +85,15 @@ class ProdStorySerializer(serializers.ModelSerializer):
             'url',
             'version_no',
         ]
+        extra_kwargs = {'url': {'view_name': 'legacy-detail'}}
 
-    bilete = ProdBildeSerializer(many=True, source='get_images')
-    prodsak_id = serializers.IntegerField(source='id')
+    bilete = ProdBildeSerializer(
+        required=False, many=True, source='get_images')
+    prodsak_id = serializers.IntegerField(source='id', required=False)
     mappe = serializers.SerializerMethodField()
-    arbeidstittel = serializers.CharField(source='title')
+    arbeidstittel = serializers.CharField(source='working_title')
     produsert = serializers.IntegerField(source='publication_status')
-    tekst = serializers.CharField(source='bodytext_markup')
+    tekst = serializers.CharField(style={'base_template': 'textarea.html'})
     version_no = serializers.SerializerMethodField()
 
     def _build_uri(self, url):
@@ -84,24 +108,37 @@ class ProdStorySerializer(serializers.ModelSerializer):
     def to_internal_value(self, data):
         out = super().to_internal_value(data)
         out['get_images'] = data.get('bilete', [])
+        mappe = data.get('mappe')
+        if mappe:
+            out['story_type'] = StoryType.objects.filter(
+                prodsys_mappe=mappe).first()
         return out
 
+    def create(self, validated_data):
+        bilete = validated_data.pop('get_images', [])
+        if Story.objects.filter(pk=validated_data.get('id')):
+            raise ValidationError('Story exists')
+        story = super().create(validated_data)
+        update_images(bilete, story)
+        return story
+
     def update(self, instance, validated_data):
-
-        images = validated_data.pop('get_images', [])
-        for img_data in images:
-            pk = img_data.get('prodbilde_id', 0)
-            if pk:
-                update_story_image(pk, **img_data)
-            else:
-                create_story_image(instance, **img_data)
-
-        return super().update(instance, validated_data)
+        bilete = validated_data.pop('get_images', [])
+        story = super().update(instance, validated_data)
+        update_images(bilete, story)
+        story.full_clean()
+        story.save()
+        return story
 
 
 class ProdStoryViewSet(viewsets.ModelViewSet):
 
+    authentication_classes = (authentication.BasicAuthentication,
+                              authentication.SessionAuthentication)
+    # permission_classes = (permissions.DjangoModelPermissionsOrAnonReadOnly,)
+
     serializer_class = ProdStorySerializer
-    queryset = Story.objects.all()
+    queryset = Story.objects.order_by('publication_status', 'modified').filter(
+        publication_status__lt=Story.STATUS_PUBLISHED)
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['publication_status', 'title', 'bodytext_markup']

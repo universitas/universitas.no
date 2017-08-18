@@ -6,22 +6,29 @@ import {
 
 const modelFields = [
   {
-    key: 'title',
+    key: 'working_title',
     label: 'arbeidstittel',
     type: 'string',
     editable: true,
   },
   {
-    key: 'modified',
-    type: 'date',
+    key: 'created',
+    type: 'datetime',
+    list: false,
   },
   {
-    key: 'created',
-    type: 'date',
+    key: 'modified',
+    type: 'datetime',
   },
   {
     key: 'public_url',
     label: 'lenke',
+    type: 'link',
+    list: false,
+  },
+  {
+    key: 'edit_url',
+    label: 'django',
     type: 'link',
     list: false,
   },
