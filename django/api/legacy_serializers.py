@@ -1,6 +1,7 @@
 from apps.stories.models import Story, StoryImage, StoryType
 from apps.photo.models import ImageFile
 from rest_framework import serializers, viewsets, authentication
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework.exceptions import ValidationError
 from url_filter.integrations.drf import DjangoFilterBackend
 import logging
@@ -131,8 +132,13 @@ class ProdStorySerializer(serializers.ModelSerializer):
         return story
 
 
+class UnicodeJSONRenderer(JSONRenderer):
+    ensure_ascii = True
+
+
 class ProdStoryViewSet(viewsets.ModelViewSet):
 
+    renderer_classes = (UnicodeJSONRenderer, BrowsableAPIRenderer)
     authentication_classes = (authentication.BasicAuthentication,
                               authentication.SessionAuthentication)
     # permission_classes = (permissions.DjangoModelPermissionsOrAnonReadOnly,)
