@@ -498,6 +498,7 @@ Migration	django/apps/stories/migrations/0022_auto_20161228_0956.py	/^class Migr
 Migration	django/apps/stories/migrations/0023_auto_20170815_1628.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0024_auto_20170815_1640.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0025_story_working_title.py	/^class Migration(migrations.Migration):$/;"	c
+Migration	django/apps/stories/migrations/0026_auto_20170822_1613.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/watson/migrations/0001_initial.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/watson/south_migrations/0001_initial.py	/^class Migration(SchemaMigration):$/;"	c
 Migration	django/watson/south_migrations/0002_installwatson.py	/^class Migration(DataMigration):$/;"	c
@@ -525,7 +526,7 @@ PDF_FOLDER	django/apps/issues/management/commands/web_pdf.py	/^PDF_FOLDER = os.p
 PDF_MERGE	django/apps/issues/management/commands/web_pdf.py	/^PDF_MERGE = os.path.join(settings.PROJECT_DIR, 'bin', 'pdf_merge.sh')$/;"	v
 PDF_STAGING	django/apps/issues/management/commands/web_pdf.py	/^PDF_STAGING = os.path.join(settings.STAGING_ROOT, 'STAGING', 'PDF')$/;"	v
 PHOTO	django/apps/prodsys/models.py	/^    PHOTO = 'photo'$/;"	v	class:BylineCredit
-PRINT_DESK	django/apps/prodsys/models.py	/^    PRINT_DESK = 40$/;"	v	class:StoryStatus
+PRINT__DESK	django/apps/prodsys/models.py	/^    PRINT__DESK = 40$/;"	v	class:StoryStatus
 PRIVATE	django/apps/adverts/models.py	/^    PRIVATE = 2$/;"	v	class:Advert
 PRODSYS_PASSWORD	django/universitas/base.py	/^PRODSYS_PASSWORD = env.prodsys_password$/;"	v
 PRODSYS_URL	django/universitas/base.py	/^PRODSYS_URL = env.prodsys_url$/;"	v
@@ -627,20 +628,21 @@ STATIC_ROOT	django/universitas/local.py	/^STATIC_ROOT = env.STATIC_DIR or '\/sta
 STATIC_URL	django/universitas/local.py	/^STATIC_URL = '\/static\/'$/;"	v
 STATIC_URL	django/universitas/production.py	/^STATIC_URL = "http:\/\/{host}\/{static}\/".format($/;"	v
 STATUS	django/apps/prodsys/models.py	/^    STATUS = StoryStatus$/;"	v	class:ProdStory
+STATUS_AT_DESK	django/apps/stories/models.py	/^    STATUS_AT_DESK = 7$/;"	v	class:Story
 STATUS_CHOICES	django/apps/adverts/models.py	/^    STATUS_CHOICES = [$/;"	v	class:Advert
 STATUS_CHOICES	django/apps/contributors/models.py	/^    STATUS_CHOICES = [$/;"	v	class:Contributor
 STATUS_CHOICES	django/apps/stories/models.py	/^    STATUS_CHOICES = [$/;"	v	class:Story
-STATUS_DESK	django/apps/stories/models.py	/^    STATUS_DESK = 6$/;"	v	class:Story
 STATUS_DRAFT	django/apps/stories/models.py	/^    STATUS_DRAFT = 0$/;"	v	class:Story
 STATUS_EDITOR	django/apps/stories/models.py	/^    STATUS_EDITOR = 5$/;"	v	class:Story
 STATUS_ERROR	django/apps/stories/models.py	/^    STATUS_ERROR = 500$/;"	v	class:Story
+STATUS_FROM_DESK	django/apps/stories/models.py	/^    STATUS_FROM_DESK = 9$/;"	v	class:Story
 STATUS_JOURNALIST	django/apps/stories/models.py	/^    STATUS_JOURNALIST = 3$/;"	v	class:Story
 STATUS_NOINDEX	django/apps/stories/models.py	/^    STATUS_NOINDEX = 11$/;"	v	class:Story
 STATUS_PRIVATE	django/apps/stories/models.py	/^    STATUS_PRIVATE = 15$/;"	v	class:Story
 STATUS_PUBLISHED	django/apps/stories/models.py	/^    STATUS_PUBLISHED = 10$/;"	v	class:Story
-STATUS_READY	django/apps/stories/models.py	/^    STATUS_READY = 9$/;"	v	class:Story
 STATUS_SUBEDITOR	django/apps/stories/models.py	/^    STATUS_SUBEDITOR = 4$/;"	v	class:Story
 STATUS_TEMPLATE	django/apps/stories/models.py	/^    STATUS_TEMPLATE = 100$/;"	v	class:Story
+STATUS_TO_DESK	django/apps/stories/models.py	/^    STATUS_TO_DESK = 6$/;"	v	class:Story
 STEPS	webpack/src/react/utils/scroll.js	/^const STEPS = 10$/;"	r
 SUCCESS	webpack/src/react/services/api.js	/^export const SUCCESS = 'api\/SUCCESS'$/;"	r
 Sak	django/apps/legacy_db/models.py	/^class Sak(models.Model):$/;"	c
@@ -1395,6 +1397,7 @@ dependencies	django/apps/stories/migrations/0022_auto_20161228_0956.py	/^    dep
 dependencies	django/apps/stories/migrations/0023_auto_20170815_1628.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0024_auto_20170815_1640.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0025_story_working_title.py	/^    dependencies = [$/;"	v	class:Migration
+dependencies	django/apps/stories/migrations/0026_auto_20170822_1613.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/watson/migrations/0001_initial.py	/^    dependencies = [$/;"	v	class:Migration
 description	django/apps/adverts/models.py	/^    description = models.CharField($/;"	v	class:Advert
 description	django/apps/adverts/models.py	/^    description = models.TextField($/;"	v	class:AdChannel
@@ -1614,6 +1617,7 @@ field	django/apps/stories/migrations/0022_auto_20161228_0956.py	/^            fi
 field	django/apps/stories/migrations/0023_auto_20170815_1628.py	/^            field=models.IntegerField(choices=[(0, 'Draft'), (5, 'Ready to edit'), (6, 'Ready for newsdesk'), (9, 'Ready to publish on website'), (10, 'Published on website'), (11, 'Published, but hidden from search engines'), (15, 'Will not be published'), (100, 'Used as template for new articles'), (500, 'Technical error')], default=0, help_text='publication status.', verbose_name='status'),$/;"	v	class:Migration
 field	django/apps/stories/migrations/0024_auto_20170815_1640.py	/^            field=models.IntegerField(choices=[(0, 'Draft'), (3, 'To Journalist'), (4, 'To Sub Editor'), (5, 'To Editor'), (6, 'Ready for newsdesk'), (9, 'Ready to publish on website'), (10, 'Published on website'), (11, 'Published, but hidden from search engines'), (15, 'Will not be published'), (100, 'Used as template for new articles'), (500, 'Technical error')], default=0, help_text='publication status.', verbose_name='status'),$/;"	v	class:Migration
 field	django/apps/stories/migrations/0025_story_working_title.py	/^            field=models.CharField($/;"	v	class:Migration
+field	django/apps/stories/migrations/0026_auto_20170822_1613.py	/^            field=models.IntegerField(choices=[(0, 'Draft'), (3, 'To Journalist'), (4, 'To Sub Editor'), (5, 'To Editor'), (6, 'Ready for newsdesk'), (7, 'Imported to newsdesk'), (9, 'Exported from newsdesk'), (10, 'Published on website'), (11, 'Published, but hidden from search engines'), (15, 'Will not be published'), (100, 'Used as template for new articles'), (500, 'Technical error')], default=0, help_text='publication status.', verbose_name='status'),$/;"	v	class:Migration
 fieldChanged	webpack/src/react/contributors/duck.js	/^export const fieldChanged = (id, field, value) => ({$/;"	r
 fieldChanged	webpack/src/react/issues/duck.js	/^export const fieldChanged = (id, field, value) => ({$/;"	r
 fieldChanged	webpack/src/react/photos/duck.js	/^export const fieldChanged = (id, field, value) => ({$/;"	r
@@ -2576,6 +2580,7 @@ model_name	django/apps/stories/migrations/0022_auto_20161228_0956.py	/^         
 model_name	django/apps/stories/migrations/0023_auto_20170815_1628.py	/^            model_name='story',$/;"	v	class:Migration
 model_name	django/apps/stories/migrations/0024_auto_20170815_1640.py	/^            model_name='story',$/;"	v	class:Migration
 model_name	django/apps/stories/migrations/0025_story_working_title.py	/^            model_name='story',$/;"	v	class:Migration
+model_name	django/apps/stories/migrations/0026_auto_20170822_1613.py	/^            model_name='story',$/;"	v	class:Migration
 models	django/watson/south_migrations/0001_initial.py	/^    models = {$/;"	v	class:Migration
 models	django/watson/south_migrations/0002_installwatson.py	/^    models = {$/;"	v	class:Migration
 models	django/watson/views.py	/^    models = ()$/;"	v	class:SearchMixin
@@ -2729,6 +2734,7 @@ name	django/apps/stories/migrations/0022_auto_20161228_0956.py	/^            nam
 name	django/apps/stories/migrations/0023_auto_20170815_1628.py	/^            name='publication_status',$/;"	v	class:Migration
 name	django/apps/stories/migrations/0024_auto_20170815_1640.py	/^            name='publication_status',$/;"	v	class:Migration
 name	django/apps/stories/migrations/0025_story_working_title.py	/^            name='working_title',$/;"	v	class:Migration
+name	django/apps/stories/migrations/0026_auto_20170822_1613.py	/^            name='publication_status',$/;"	v	class:Migration
 name	django/apps/stories/models.py	/^    name = models.CharField(unique=True, max_length=50)$/;"	v	class:StoryType
 name	django/universitas/urls.py	/^        name='ad_info',),$/;"	v
 name	django/universitas/urls.py	/^        name='general_info',),$/;"	v
@@ -2886,6 +2892,7 @@ operations	django/apps/stories/migrations/0022_auto_20161228_0956.py	/^    opera
 operations	django/apps/stories/migrations/0023_auto_20170815_1628.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0024_auto_20170815_1640.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0025_story_working_title.py	/^    operations = [$/;"	v	class:Migration
+operations	django/apps/stories/migrations/0026_auto_20170822_1613.py	/^    operations = [$/;"	v	class:Migration
 operations	django/watson/migrations/0001_initial.py	/^    operations = [$/;"	v	class:Migration
 oppretta	django/apps/legacy_db/models.py	/^    oppretta = models.DateTimeField()$/;"	v	class:Eposttinging
 optimize_staging_pages	django/apps/issues/tasks.py	/^def optimize_staging_pages(**kwargs):$/;"	f

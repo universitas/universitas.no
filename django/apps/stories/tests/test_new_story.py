@@ -49,7 +49,7 @@ def test_create_story_from_xtags(news):
     new_story = Story(
         story_type=news,
         bodytext_markup=source,
-        publication_status=Story.STATUS_READY
+        publication_status=Story.STATUS_FROM_DESK
     )
     tag_count = BlockTag.objects.count()
     assert tag_count == 20

@@ -34,7 +34,7 @@ class StoryStatus:
     DRAFT = 10
     WORK_IN_PROGRESS = 20
     READY_FOR_PRINT = 30
-    PRINT_DESK = 40
+    PRINT__DESK = 40
     READY_FOR_WEB = 50
     PUBLISHED_WEB = 60
     SHELVED = 90
@@ -43,7 +43,7 @@ class StoryStatus:
         (DRAFT, _('draft')),
         (WORK_IN_PROGRESS, _('work in progress')),
         (READY_FOR_PRINT, _('ready for print layout')),
-        (PRINT_DESK, _('print layout in progress')),
+        (PRINT__DESK, _('print layout in progress')),
         (READY_FOR_WEB, _('ready for web publishing')),
         (PUBLISHED_WEB, _('published on web site')),
         (SHELVED, _('shelved')),

@@ -475,8 +475,9 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     STATUS_JOURNALIST = 3
     STATUS_SUBEDITOR = 4
     STATUS_EDITOR = 5
-    STATUS_DESK = 6
-    STATUS_READY = 9
+    STATUS_TO_DESK = 6
+    STATUS_AT_DESK = 7
+    STATUS_FROM_DESK = 9
     STATUS_PUBLISHED = 10
     STATUS_NOINDEX = 11
     STATUS_PRIVATE = 15
@@ -487,8 +488,9 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         (STATUS_JOURNALIST, _('To Journalist')),
         (STATUS_SUBEDITOR, _('To Sub Editor')),
         (STATUS_EDITOR, _('To Editor')),
-        (STATUS_DESK, _('Ready for newsdesk')),
-        (STATUS_READY, _('Ready to publish on website')),
+        (STATUS_TO_DESK, _('Ready for newsdesk')),
+        (STATUS_AT_DESK, _('Imported to newsdesk')),
+        (STATUS_FROM_DESK, _('Exported from newsdesk')),
         (STATUS_PUBLISHED, _('Published on website')),
         (STATUS_NOINDEX, _('Published, but hidden from search engines')),
         (STATUS_PRIVATE, _('Will not be published')),
@@ -792,7 +794,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
     def clean(self):
         """ Clean user input and populate fields """
-        if self.publication_status >= Story.STATUS_READY:
+        if self.publication_status >= Story.STATUS_FROM_DESK:
             if not self.title and '@headline:' not in self.bodytext_markup:
                 self.bodytext_markup = self.bodytext_markup.replace(
                     '@tit:', '@headline:', 1)
