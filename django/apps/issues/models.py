@@ -163,11 +163,11 @@ def today():
 class IssueQueryset(models.QuerySet):
 
     def published(self):
-        query = self.filter(publication_date__lte=timezone.now())
+        query = self.filter(publication_date__lte=timezone.localdate())
         return query
 
     def unpublished(self):
-        query = self.filter(publication_date__gt=timezone.now())
+        query = self.filter(publication_date__gt=timezone.localdate())
         return query
 
     def next_issue(self):
