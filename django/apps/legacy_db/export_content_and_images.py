@@ -269,7 +269,7 @@ def _get_xtags_from_prodsys(prodsak_id, status_in=None):
     if "Vellykket eksport fra InDesign!" in (
             final_version.kommentar or '') and '@tit' in (
             final_version.tekst or ''):
-        status = Story.STATUS_READY
+        status = Story.STATUS_FROM_DESK
     else:
         status = Story.STATUS_DRAFT
 

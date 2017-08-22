@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-15 16:43+0200\n"
+"POT-Creation-Date: 2017-08-22 16:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -89,7 +89,7 @@ msgstr ""
 msgid "Dummy or unfinished advert"
 msgstr ""
 
-#: apps/adverts/models.py:207 apps/stories/models.py:486
+#: apps/adverts/models.py:207 apps/stories/models.py:487
 msgid "Draft"
 msgstr ""
 
@@ -303,7 +303,7 @@ msgid "headline"
 msgstr ""
 
 #: apps/frontpage/models.py:265 apps/markup/models.py:175
-#: apps/stories/models.py:529
+#: apps/stories/models.py:531
 msgid "kicker"
 msgstr ""
 
@@ -312,7 +312,7 @@ msgid "vignette"
 msgstr ""
 
 #: apps/frontpage/models.py:275 apps/markup/models.py:176
-#: apps/stories/models.py:534
+#: apps/stories/models.py:536
 msgid "lede"
 msgstr ""
 
@@ -369,7 +369,7 @@ msgid "Move story to archive."
 msgstr ""
 
 #: apps/legacy_db/admin.py:64 apps/prodsys/models.py:61
-#: apps/prodsys/models.py:62 apps/stories/models.py:565
+#: apps/prodsys/models.py:62 apps/stories/models.py:567
 msgid "status"
 msgstr ""
 
@@ -473,11 +473,11 @@ msgstr ""
 msgid "body text"
 msgstr ""
 
-#: apps/markup/models.py:174 apps/stories/models.py:514
+#: apps/markup/models.py:174 apps/stories/models.py:516
 msgid "title"
 msgstr ""
 
-#: apps/markup/models.py:177 apps/stories/models.py:545
+#: apps/markup/models.py:177 apps/stories/models.py:547
 msgid "theme word"
 msgstr ""
 
@@ -517,7 +517,7 @@ msgstr ""
 msgid "extra"
 msgstr ""
 
-#: apps/markup/models.py:375 apps/stories/models.py:550
+#: apps/markup/models.py:375 apps/stories/models.py:552
 msgid "bylines"
 msgstr ""
 
@@ -549,7 +549,7 @@ msgstr ""
 msgid "Autocrop"
 msgstr ""
 
-#: apps/photo/appconf.py:7 apps/stories/models.py:1738
+#: apps/photo/appconf.py:7 apps/stories/models.py:1783
 msgid "Photo"
 msgstr ""
 
@@ -771,7 +771,7 @@ msgid "story_type"
 msgstr ""
 
 #: apps/prodsys/models.py:88 apps/prodsys/models.py:89
-#: apps/stories/models.py:570
+#: apps/stories/models.py:572
 msgid "issue"
 msgstr ""
 
@@ -828,7 +828,7 @@ msgid ""
 msgstr ""
 
 #: apps/prodsys/models.py:210 apps/prodsys/models.py:211
-#: apps/stories/models.py:1241
+#: apps/stories/models.py:1282
 msgid "caption"
 msgstr ""
 
@@ -840,7 +840,7 @@ msgstr ""
 msgid "prodsys images"
 msgstr ""
 
-#: apps/prodsys/models.py:227 apps/stories/models.py:1132
+#: apps/prodsys/models.py:227 apps/stories/models.py:1173
 msgid "index"
 msgstr ""
 
@@ -868,7 +868,7 @@ msgstr ""
 msgid "ProdByline"
 msgstr ""
 
-#: apps/prodsys/models.py:246 apps/stories/models.py:1765
+#: apps/prodsys/models.py:246 apps/stories/models.py:1810
 msgid "Bylines"
 msgstr ""
 
@@ -909,7 +909,7 @@ msgid "section title"
 msgstr ""
 
 #: apps/stories/models.py:171 apps/stories/models.py:203
-#: apps/stories/models.py:517
+#: apps/stories/models.py:519
 msgid "slug"
 msgstr ""
 
@@ -941,380 +941,388 @@ msgstr ""
 msgid "Story"
 msgstr ""
 
-#: apps/stories/models.py:487
+#: apps/stories/models.py:488
 msgid "To Journalist"
 msgstr ""
 
-#: apps/stories/models.py:488
+#: apps/stories/models.py:489
 msgid "To Sub Editor"
 msgstr ""
 
-#: apps/stories/models.py:489
+#: apps/stories/models.py:490
 msgid "To Editor"
 msgstr ""
 
-#: apps/stories/models.py:490
+#: apps/stories/models.py:491
 msgid "Ready for newsdesk"
 msgstr ""
 
-#: apps/stories/models.py:491
-msgid "Ready to publish on website"
-msgstr ""
-
 #: apps/stories/models.py:492
-msgid "Published on website"
+msgid "Imported to newsdesk"
 msgstr ""
 
 #: apps/stories/models.py:493
-msgid "Published, but hidden from search engines"
+msgid "Exported from newsdesk"
 msgstr ""
 
 #: apps/stories/models.py:494
-msgid "Will not be published"
+msgid "Published on website"
 msgstr ""
 
 #: apps/stories/models.py:495
-msgid "Used as template for new articles"
+msgid "Published, but hidden from search engines"
 msgstr ""
 
 #: apps/stories/models.py:496
+msgid "Will not be published"
+msgstr ""
+
+#: apps/stories/models.py:497
+msgid "Used as template for new articles"
+msgstr ""
+
+#: apps/stories/models.py:498
 msgid "Technical error"
 msgstr ""
 
-#: apps/stories/models.py:501
+#: apps/stories/models.py:503
 msgid "primary id in the legacy prodsys database."
 msgstr ""
 
-#: apps/stories/models.py:502
+#: apps/stories/models.py:504
 msgid "prodsak id"
 msgstr ""
 
-#: apps/stories/models.py:506 apps/stories/models.py:507
+#: apps/stories/models.py:508 apps/stories/models.py:509
 msgid "language"
 msgstr ""
 
-#: apps/stories/models.py:513
+#: apps/stories/models.py:515
 msgid "main headline or title"
 msgstr ""
 
-#: apps/stories/models.py:528
+#: apps/stories/models.py:530
 msgid "secondary headline, usually displayed above main headline"
 msgstr ""
 
-#: apps/stories/models.py:533
+#: apps/stories/models.py:535
 msgid "brief introduction or summary of the story"
 msgstr ""
 
-#: apps/stories/models.py:538
+#: apps/stories/models.py:540
 msgid "for internal use only"
 msgstr ""
 
-#: apps/stories/models.py:539
+#: apps/stories/models.py:541
 msgid "comment"
 msgstr ""
 
-#: apps/stories/models.py:544
+#: apps/stories/models.py:546
 msgid "theme, topic, main keyword"
 msgstr ""
 
-#: apps/stories/models.py:549
+#: apps/stories/models.py:551
 msgid "the people who created this content."
 msgstr ""
 
-#: apps/stories/models.py:554
+#: apps/stories/models.py:556
 msgid "the type of story."
 msgstr ""
 
-#: apps/stories/models.py:555
+#: apps/stories/models.py:557
 msgid "article type"
 msgstr ""
 
-#: apps/stories/models.py:559
+#: apps/stories/models.py:561
 msgid "when this story will be published on the web."
 msgstr ""
 
-#: apps/stories/models.py:560
+#: apps/stories/models.py:562
 msgid "publication date"
 msgstr ""
 
-#: apps/stories/models.py:564
+#: apps/stories/models.py:566
 msgid "publication status."
 msgstr ""
 
-#: apps/stories/models.py:569
+#: apps/stories/models.py:571
 msgid "which issue this story was printed in."
 msgstr ""
 
-#: apps/stories/models.py:574
+#: apps/stories/models.py:576
 msgid "which page the story was printed on."
 msgstr ""
 
-#: apps/stories/models.py:575
+#: apps/stories/models.py:577
 msgid "page"
 msgstr ""
 
-#: apps/stories/models.py:580
+#: apps/stories/models.py:582
 msgid "how many time the article has been viewed."
 msgstr ""
 
-#: apps/stories/models.py:581
+#: apps/stories/models.py:583
 msgid "total page views"
 msgstr ""
 
-#: apps/stories/models.py:586
+#: apps/stories/models.py:588
 msgid "calculated value representing recent page views."
 msgstr ""
 
-#: apps/stories/models.py:587
+#: apps/stories/models.py:589
 msgid "recent page views"
 msgstr ""
 
-#: apps/stories/models.py:591
+#: apps/stories/models.py:593
 msgid "all bylines as html."
 msgstr ""
 
-#: apps/stories/models.py:595
+#: apps/stories/models.py:597
 msgid "From old web page. For reference only."
 msgstr ""
 
-#: apps/stories/models.py:596
+#: apps/stories/models.py:598
 msgid "Imported html source."
 msgstr ""
 
-#: apps/stories/models.py:600
+#: apps/stories/models.py:602
 msgid "From prodsys. For reference only."
 msgstr ""
 
-#: apps/stories/models.py:601
+#: apps/stories/models.py:603
 msgid "Imported xtagged source."
 msgstr ""
 
-#: apps/stories/models.py:971
+#: apps/stories/models.py:608 apps/stories/models.py:609
+msgid "Working title"
+msgstr ""
+
+#: apps/stories/models.py:985
 msgid "No such element. Valid indexes: "
 msgstr ""
 
-#: apps/stories/models.py:1131
+#: apps/stories/models.py:1172
 msgid "Leave blank to unpublish"
 msgstr ""
 
-#: apps/stories/models.py:1137
+#: apps/stories/models.py:1178
 msgid "Is this element placed on top?"
 msgstr ""
 
-#: apps/stories/models.py:1141
+#: apps/stories/models.py:1182
 msgid "story element"
 msgstr ""
 
-#: apps/stories/models.py:1142
+#: apps/stories/models.py:1183
 msgid "story elements"
 msgstr ""
 
-#: apps/stories/models.py:1183
+#: apps/stories/models.py:1224
 msgid "Pullquote"
 msgstr ""
 
-#: apps/stories/models.py:1184
+#: apps/stories/models.py:1225
 msgid "Pullquotes"
 msgstr ""
 
-#: apps/stories/models.py:1194
+#: apps/stories/models.py:1235
 msgid "Aside"
 msgstr ""
 
-#: apps/stories/models.py:1195
+#: apps/stories/models.py:1236
 msgid "Asides"
 msgstr ""
 
-#: apps/stories/models.py:1207
+#: apps/stories/models.py:1248
 msgid "Inline HTML block"
 msgstr ""
 
-#: apps/stories/models.py:1208
+#: apps/stories/models.py:1249
 msgid "Inline HTML blocks"
 msgstr ""
 
-#: apps/stories/models.py:1223
+#: apps/stories/models.py:1264
 msgid "auto"
 msgstr ""
 
-#: apps/stories/models.py:1224
+#: apps/stories/models.py:1265
 msgid "5:2 landscape"
 msgstr ""
 
-#: apps/stories/models.py:1225
+#: apps/stories/models.py:1266
 msgid "2:1 landscape"
 msgstr ""
 
-#: apps/stories/models.py:1226
+#: apps/stories/models.py:1267
 msgid "3:2 landscape"
 msgstr ""
 
-#: apps/stories/models.py:1227
+#: apps/stories/models.py:1268
 msgid "4:3 landscape"
 msgstr ""
 
-#: apps/stories/models.py:1228
+#: apps/stories/models.py:1269
 msgid "square"
 msgstr ""
 
-#: apps/stories/models.py:1229
+#: apps/stories/models.py:1270
 msgid "3:4 portrait"
 msgstr ""
 
-#: apps/stories/models.py:1230
+#: apps/stories/models.py:1271
 msgid "2:3 portrait"
 msgstr ""
 
-#: apps/stories/models.py:1231
+#: apps/stories/models.py:1272
 msgid "1:2 portrait"
 msgstr ""
 
-#: apps/stories/models.py:1232
+#: apps/stories/models.py:1273
 msgid "graph (force original ratio)"
 msgstr ""
 
-#: apps/stories/models.py:1240
+#: apps/stories/models.py:1281
 msgid "Text explaining the media."
 msgstr ""
 
-#: apps/stories/models.py:1246
+#: apps/stories/models.py:1287
 msgid "Extra information about media attribution and license."
 msgstr ""
 
-#: apps/stories/models.py:1247
+#: apps/stories/models.py:1288
 msgid "credit line"
 msgstr ""
 
-#: apps/stories/models.py:1252
+#: apps/stories/models.py:1293
 msgid "Relative image size."
 msgstr ""
 
-#: apps/stories/models.py:1253
+#: apps/stories/models.py:1294
 msgid "image size"
 msgstr ""
 
-#: apps/stories/models.py:1257
+#: apps/stories/models.py:1298
 msgid "aspect ratio"
 msgstr ""
 
-#: apps/stories/models.py:1258
+#: apps/stories/models.py:1299
 msgid "height / width"
 msgstr ""
 
-#: apps/stories/models.py:1293
+#: apps/stories/models.py:1334
 msgid "Image"
 msgstr ""
 
-#: apps/stories/models.py:1294
+#: apps/stories/models.py:1335
 msgid "Images"
 msgstr ""
 
-#: apps/stories/models.py:1298
+#: apps/stories/models.py:1339
 msgid "Choose an image by name or upload a new one."
 msgstr ""
 
-#: apps/stories/models.py:1332
+#: apps/stories/models.py:1377
 msgid "vimeo"
 msgstr ""
 
-#: apps/stories/models.py:1333
+#: apps/stories/models.py:1378
 msgid "youtube"
 msgstr ""
 
-#: apps/stories/models.py:1337 apps/stories/models.py:1737
-#: apps/stories/models.py:1739
+#: apps/stories/models.py:1382 apps/stories/models.py:1782
+#: apps/stories/models.py:1784
 msgid "Video"
 msgstr ""
 
-#: apps/stories/models.py:1338
+#: apps/stories/models.py:1383
 msgid "Videos"
 msgstr ""
 
-#: apps/stories/models.py:1348
+#: apps/stories/models.py:1393
 msgid "id for video file."
 msgstr ""
 
-#: apps/stories/models.py:1350
+#: apps/stories/models.py:1395
 msgid "the part of the url that identifies this particular video"
 msgstr ""
 
-#: apps/stories/models.py:1473
+#: apps/stories/models.py:1518
 msgid "inline link"
 msgstr ""
 
-#: apps/stories/models.py:1474
+#: apps/stories/models.py:1519
 msgid "inline links"
 msgstr ""
 
-#: apps/stories/models.py:1482
+#: apps/stories/models.py:1527
 msgid "link label"
 msgstr ""
 
-#: apps/stories/models.py:1487 apps/stories/models.py:1488
+#: apps/stories/models.py:1532 apps/stories/models.py:1533
 msgid "link target"
 msgstr ""
 
-#: apps/stories/models.py:1493
+#: apps/stories/models.py:1538
 msgid "link to story on this website."
 msgstr ""
 
-#: apps/stories/models.py:1494
+#: apps/stories/models.py:1539
 msgid "linked story"
 msgstr ""
 
-#: apps/stories/models.py:1500
+#: apps/stories/models.py:1545
 msgid "alternate link text"
 msgstr ""
 
-#: apps/stories/models.py:1501
+#: apps/stories/models.py:1546
 msgid "alt text"
 msgstr ""
 
-#: apps/stories/models.py:1506 apps/stories/models.py:1507
+#: apps/stories/models.py:1551 apps/stories/models.py:1552
 msgid "link text"
 msgstr ""
 
-#: apps/stories/models.py:1514
+#: apps/stories/models.py:1559
 msgid "Status code returned from automatic check."
 msgstr ""
 
-#: apps/stories/models.py:1515
+#: apps/stories/models.py:1560
 msgid "http status code"
 msgstr ""
 
-#: apps/stories/models.py:1735
+#: apps/stories/models.py:1780
 msgid "By"
 msgstr ""
 
-#: apps/stories/models.py:1736
+#: apps/stories/models.py:1781
 msgid "Text"
 msgstr ""
 
-#: apps/stories/models.py:1740
+#: apps/stories/models.py:1785
 msgid "Illustration"
 msgstr ""
 
-#: apps/stories/models.py:1741
+#: apps/stories/models.py:1786
 msgid "Graphics"
 msgstr ""
 
-#: apps/stories/models.py:1742
+#: apps/stories/models.py:1787
 msgid "Translation"
 msgstr ""
 
-#: apps/stories/models.py:1743
+#: apps/stories/models.py:1788
 msgid "TextPhoto"
 msgstr ""
 
-#: apps/stories/models.py:1744
+#: apps/stories/models.py:1789
 msgid "TextVideo"
 msgstr ""
 
-#: apps/stories/models.py:1745
+#: apps/stories/models.py:1790
 msgid "PhotoVideo"
 msgstr ""
 
-#: apps/stories/models.py:1764
+#: apps/stories/models.py:1809
 msgid "Byline"
 msgstr ""
 
