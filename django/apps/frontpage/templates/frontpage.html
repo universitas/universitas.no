@@ -18,48 +18,51 @@
 {% block content %}
   <div class="main-content">
     <div id="frontpage" class="row">
-    {% advert "frontpage banner" %}
     {% for item in frontpage_items %}
-      <article class="{{ item.css_width }} columns">
-        <div class="story-block {{ item.css_height }} {{ item.story.html_class }}">
-          {% if item.image %}
-            <div class="image-block">
-              {% thumbnail item.image.source_file item.image_size crop_box=item.image.get_crop_box as image %}
-                <a href="{{ item.url }}"><img src="{{ image.url }}" alt="{{ item.alt|strip_tags }}"></img></a>
-              {% endthumbnail %}
-          {% else %}
-            <div class="no-image-block">
-          {% endif %}
-            {% if item.story.vignette %}
-              <div class="vignette">
-              <a href="{{ item.story.story_type_url }}">
-                {{ item.story.vignette }}
-              </a>
-              </div>
+      {% if item.type == "advert" %}
+        {% advert item.channel %}
+      {% else %}
+        <article class="{{ item.css_width }} columns">
+          <div class="story-block {{ item.css_height }} {{ item.story.html_class }}">
+            {% if item.image %}
+              <div class="image-block">
+                {% thumbnail item.image.source_file item.image_size crop_box=item.image.get_crop_box as image %}
+                  <a href="{{ item.url }}"><img src="{{ image.url }}" alt="{{ item.alt|strip_tags }}"></img></a>
+                {% endthumbnail %}
+            {% else %}
+              <div class="no-image-block">
             {% endif %}
-            {% if perms.stories %}
-                {% include "_frontpage-module-edit-menu.html" with item=item %}
-            {% endif %}
-          </div>
-          <div class="text-block">
-            {% if item.story.headline %}
-              <div class="headline-block {{ item.headline_class }}">
-              <a href="{{ item.url }}">
-              {% if item.story.kicker %}
-                <h2 class="frontpage-kicker">{{ item.story.kicker|inline_tags }}</h2>
+              {% if item.story.vignette %}
+                <div class="vignette">
+                <a href="{{ item.story.story_type_url }}">
+                  {{ item.story.vignette }}
+                </a>
+                </div>
               {% endif %}
-                <h1 class="frontpage-headline ">
-                    {{ item.story.headline|inline_tags }}
-                </h1>
-              </a>
+              {% if perms.stories %}
+                  {% include "_frontpage-module-edit-menu.html" with item=item %}
+              {% endif %}
             </div>
-            {% endif %}
-            {% if item.story.lede %}
-              <p class="lede">{{ item.story.lede|inline_tags }}</p>
-            {% endif %}
+            <div class="text-block">
+              {% if item.story.headline %}
+                <div class="headline-block {{ item.headline_class }}">
+                <a href="{{ item.url }}">
+                {% if item.story.kicker %}
+                  <h2 class="frontpage-kicker">{{ item.story.kicker|inline_tags }}</h2>
+                {% endif %}
+                  <h1 class="frontpage-headline ">
+                      {{ item.story.headline|inline_tags }}
+                  </h1>
+                </a>
+              </div>
+              {% endif %}
+              {% if item.story.lede %}
+                <p class="lede">{{ item.story.lede|inline_tags }}</p>
+              {% endif %}
+            </div>
           </div>
-        </div>
-      </article>
+        </article>
+      {% endif %}
     {% endfor %}
     </div>
   </div>

@@ -755,6 +755,7 @@ UPLOAD_FOLDER	django/apps/photo/models.py	/^    UPLOAD_FOLDER = 'byline-photo'$/
 USE_I18N	django/universitas/base.py	/^USE_I18N = True  # Internationalisation (string translation)$/;"	v
 USE_L10N	django/universitas/base.py	/^USE_L10N = True  # Localisation (numbers and stuff)$/;"	v
 USE_TZ	django/universitas/base.py	/^USE_TZ = True  # Use timezone$/;"	v
+UnicodeJSONRenderer	django/api/legacy_serializers.py	/^class UnicodeJSONRenderer(JSONRenderer):$/;"	c
 VIDEO	django/apps/prodsys/models.py	/^    VIDEO = 'video'$/;"	v	class:BylineCredit
 VIDEO_HOSTS	django/apps/stories/models.py	/^    VIDEO_HOSTS = ($/;"	v	class:StoryVideo
 VIDEO_TAG	django/apps/stories/models.py	/^VIDEO_TAG = '@video:'$/;"	v
@@ -1489,6 +1490,7 @@ end_date	django/apps/contributors/models.py	/^    end_date = models.DateField($/
 end_tag	django/apps/markup/models.py	/^    end_tag = models.CharField($/;"	v	class:InlineTag
 end_time	django/apps/adverts/models.py	/^    end_time = models.DateTimeField($/;"	v	class:Advert
 engine_slug	django/watson/models.py	/^    engine_slug = models.CharField($/;"	v	class:SearchEntry
+ensure_ascii	django/api/legacy_serializers.py	/^    ensure_ascii = True$/;"	v	class:UnicodeJSONRenderer
 env	django/universitas/base.py	/^env = Environment(strict=False)$/;"	v
 epost	django/apps/legacy_db/models.py	/^    epost = models.CharField(max_length=255)$/;"	v	class:Eposttinging
 epost	django/apps/legacy_db/models.py	/^    epost = models.CharField(max_length=255, blank=True)$/;"	v	class:InnleggAbstract
@@ -3158,6 +3160,7 @@ render_template	django/apps/frontpage/models.py	/^    render_template = models.B
 render_to_response	django/apps/core/views.py	/^    def render_to_response(self, context, **response_kwargs):$/;"	m	class:TextTemplateView
 render_to_response	django/apps/search/views.py	/^    def render_to_response(self, context, **response_kwargs):$/;"	m	class:SearchApiView
 render_to_response	django/watson/views.py	/^    def render_to_response(self, context, **response_kwargs):$/;"	m	class:SearchApiView
+renderer_classes	django/api/legacy_serializers.py	/^    renderer_classes = (UnicodeJSONRenderer, BrowsableAPIRenderer)$/;"	v	class:ProdStoryViewSet
 replace	django/apps/markup/models.py	/^    def replace(self, content):$/;"	m	class:Alias
 replace	django/apps/markup/models.py	/^    def replace(self, content, timing=1, ):$/;"	m	class:AliasManager
 replaceTag	webpack/src/react/ducks/editor.js	/^const replaceTag = (tag, content, caret = 0) => {$/;"	r

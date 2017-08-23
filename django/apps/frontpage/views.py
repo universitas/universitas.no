@@ -48,9 +48,24 @@ def frontpage_layout(blocks):
     floor = []
     items = []
     columns_used = 0
+    floor_number = 0
+
+    ad_channels = {
+        0: 'forside banner 1',
+        5: 'forside banner 2',
+        10: 'forside banner 3',
+        15: 'forside banner 4',
+    }
 
     for block in blocks:
         if block.columns + columns_used > MAX_COLUMNS:
+            ad_channel = ad_channels.get(floor_number)
+            floor_number += 1
+            if ad_channel:
+                items.append({
+                    'type': 'advert',
+                    'channel': ad_channel,
+                })
             # floor is filled. Finish it.
             floorheight = max(item.height for item in floor)
             ratio = MAX_COLUMNS / columns_used + 0.1
@@ -76,6 +91,7 @@ def frontpage_layout(blocks):
                 # logger.debug('{} {}'.format(headline, headline_size))
 
                 item = {
+                    'type': 'story',
                     'css_width': 'cols-{}'.format(columns),
                     'css_height': 'rows-{}'.format(floorheight),
                     'headline_class': 'headline-{size}'.format(
@@ -119,7 +135,7 @@ def frontpage_view(request, stories=None, frontpage=None):
     if stories is None:
         stories = Story.objects.published()
 
-    blocks = get_frontpage_stories(stories).order_by('-position')[:30]
+    blocks = get_frontpage_stories(stories).order_by('-position')[:40]
 
     context['frontpage_items'] = frontpage_layout(blocks)
 
