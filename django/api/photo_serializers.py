@@ -97,7 +97,7 @@ class ImageFileViewSet(viewsets.ModelViewSet):
     queryset = ImageFile.objects.order_by('-created')
     serializer_class = ImageFileSerializer
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)
-    search_fields = ('source_file', 'description')
+    search_fields = ['source_file', 'description']
 
     def get_queryset(self):
         profile_images = self.request.query_params.get('profile_images', '')

@@ -4,8 +4,9 @@ from rest_framework import serializers, viewsets, authentication
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework.exceptions import ValidationError
 from url_filter.integrations.drf import DjangoFilterBackend
+import json
 import logging
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('apps')
 
 
 class MissingImageFileException(Exception):
@@ -39,28 +40,37 @@ def get_imagefile(filename):
 def update_images(images, story):
     for img_data in images:
         pk = img_data.get('prodbilde_id', 0)
+        logger.debug(json.dumps(img_data))
         try:
             if pk:
-                update_story_image(pk, **img_data)
+                update_story_image(story, pk, **img_data)
             else:
                 create_story_image(story, **img_data)
         except MissingImageFileException as err:
             logger.warn(f'ignore missing image {err}')
 
 
-def update_story_image(pk, bildefil=None, prioritet=None, bildetekst=None):
-    story_image = StoryImage.objects.get_or_create(pk)
+def update_story_image(story, pk, bildefil=None,
+                       prioritet=None, bildetekst=None, **kwargs):
+    try:
+        story_image = StoryImage.objects.get(pk=pk, parent_story=story)
+    except StoryImage.DoesNotExist:
+        story_image = StoryImage(parent_story=story)
     if bildefil and bildefil != story_image.filename:
         story_image.image_file = get_imagefile(bildefil)
     if prioritet is not None:
         story_image.size = prioritet
     if bildetekst is not None:
         story_image.caption = bildetekst
-    story_image.save()
+    try:
+        story_image.save()
+    except Exception:
+        logger.exception('could not save image')
+
     return story_image
 
 
-def create_story_image(story, bildefil, prioritet=0, bildetekst=''):
+def create_story_image(story, bildefil, prioritet=0, bildetekst='', **kwargs):
     image_file = get_imagefile(bildefil)
     return StoryImage.objects.create(
         parent_story=story,
@@ -112,7 +122,7 @@ class ProdStorySerializer(serializers.ModelSerializer):
         mappe = data.get('mappe')
         if mappe:
             out['story_type'] = StoryType.objects.filter(
-                prodsys_mappe=mappe).first()
+                prodsys_mappe=mappe).first() or StoryType.objects.first()
         return out
 
     def create(self, validated_data):

@@ -55,7 +55,6 @@ BASE_DIR	django/universitas/base.py	/^BASE_DIR = path()$/;"	v
 BASE_URL	webpack/src/react/services/api.js	/^const BASE_URL = '\/api'$/;"	r
 BREAKPOINT	django/apps/photo/cropping/crop_detector.py	/^    BREAKPOINT = 0.15$/;"	v	class:HybridDetector
 BUNDLE_TIME	django/apps/issues/tasks.py	/^BUNDLE_TIME = crontab(hour=4, minute=0, day_of_week=3)$/;"	v
-BY	django/apps/prodsys/models.py	/^    BY = 'by'$/;"	v	class:BylineCredit
 BYLINE_CASES	django/notebooks/byline_cases.py	/^BYLINE_CASES = [  # List of cases: ( "Input string", "Expected output" )$/;"	v
 BYLINE_DIR	django/apps/core/staging.py	/^BYLINE_DIR = 'BYLINE'$/;"	v
 BYLINE_PHOTO_DIR	django/universitas/base.py	/^BYLINE_PHOTO_DIR = STAGING_ROOT + 'BYLINE\/'$/;"	v
@@ -72,10 +71,8 @@ BrokenImage	django/apps/photo/models.py	/^class BrokenImage:$/;"	c
 Button	webpack/src/react/contributors/ContributorList.js	/^const Button = connect(state => ({ query: getQuery(state) }), {$/;"	r
 Button	webpack/src/react/issues/IssueList.js	/^const Button = connect(state => ({ query: getQuery(state) }), {$/;"	r
 Button	webpack/src/react/photos/PhotoList.js	/^const Button = connect(state => ({ query: getQuery(state) }), {$/;"	r
-Button	webpack/src/react/stories/StoryList.js	/^const Button = connect(state => ({ query: getQuery(state) }), {$/;"	r
 Byline	django/apps/stories/models.py	/^class Byline(models.Model):$/;"	c
 BylineAdmin	django/apps/stories/admin.py	/^class BylineAdmin(admin.ModelAdmin):$/;"	c
-BylineCredit	django/apps/prodsys/models.py	/^class BylineCredit:$/;"	c
 BylineInline	django/apps/stories/admin.py	/^class BylineInline(admin.TabularInline):$/;"	c
 BylineManager	django/apps/stories/models.py	/^class BylineManager(models.Manager):$/;"	c
 BylineSerializer	django/api/story_serializers.py	/^class BylineSerializer(serializers.ModelSerializer):$/;"	c
@@ -92,8 +89,6 @@ CELERY_RESULT_SERIALIZER	django/universitas/base.py	/^CELERY_RESULT_SERIALIZER =
 CELERY_TASK_DEFAULT_QUEUE	django/universitas/base.py	/^CELERY_TASK_DEFAULT_QUEUE = SITE_URL$/;"	v
 CELERY_TASK_SERIALIZER	django/universitas/base.py	/^CELERY_TASK_SERIALIZER = 'json'$/;"	v
 CHANGE_TAG	webpack/src/react/ducks/editor.js	/^const CHANGE_TAG = 'CHANGE_TAG'$/;"	r
-CHOICES	django/apps/prodsys/models.py	/^    CHOICES = ($/;"	v	class:BylineCredit
-CHOICES	django/apps/prodsys/models.py	/^    CHOICES = ($/;"	v	class:StoryStatus
 CODE_AD	django/apps/adverts/models.py	/^    CODE_AD = 2$/;"	v	class:Advert
 CONVERT	django/apps/issues/tasks.py	/^CONVERT = '\/usr\/bin\/convert'$/;"	v
 CREDIT_CHOICES	django/apps/stories/models.py	/^    CREDIT_CHOICES = [$/;"	v	class:Byline
@@ -160,12 +155,10 @@ DEFAULT_FROM_EMAIL	django/universitas/local.py	/^DEFAULT_FROM_EMAIL = 'localemai
 DEFAULT_HTML_TAG	django/apps/markup/models.py	/^    DEFAULT_HTML_TAG = 'p'$/;"	v	class:BlockTag
 DEFAULT_RATIO	django/apps/stories/models.py	/^    DEFAULT_RATIO = 0.0$/;"	v	class:StoryMedia
 DEFAULT_SIZE	django/apps/contributors/templatetags/byline_image.py	/^DEFAULT_SIZE = "300x300"$/;"	v
-DELETED	django/apps/prodsys/models.py	/^    DELETED = 100$/;"	v	class:StoryStatus
 DISMISS_PANEL	webpack/src/react/ducks/cropPanel.js	/^const DISMISS_PANEL = 'cropPanel\/DISMISS_PANEL'$/;"	r
 DOMNode	webpack/src/react/entry/prodsys.js	/^const DOMNode = document.getElementById(ROOT_ID)$/;"	r
 DRAFT	django/apps/adverts/models.py	/^    DRAFT = 1$/;"	v	class:Advert
 DRAFT	django/apps/legacy_db/models.py	/^    DRAFT = 0$/;"	v	class:Prodsak
-DRAFT	django/apps/prodsys/models.py	/^    DRAFT = 10$/;"	v	class:StoryStatus
 DUMMY_AD	django/apps/adverts/models.py	/^    DUMMY_AD = 3$/;"	v	class:Advert
 DateField	webpack/src/react/contributors/ContributorDetail.js	/^const DateField = ({ value, editable, choices, ...args }) =>$/;"	r
 DateField	webpack/src/react/issues/IssueDetail.js	/^const DateField = ({ value, editable, choices, ...args }) =>$/;"	r
@@ -232,6 +225,7 @@ FaceDetector	django/apps/photo/cropping/crop_detector.py	/^class FaceDetector(Fe
 Fakta	django/apps/legacy_db/models.py	/^class Fakta(models.Model):$/;"	c
 Feature	django/apps/photo/cropping/crop_detector.py	/^class Feature(Box):$/;"	c
 FeatureDetector	django/apps/photo/cropping/crop_detector.py	/^class FeatureDetector(abc.ABC):$/;"	c
+Filter	webpack/src/react/stories/StoryList.js	/^const Filter = connect(state => ({ query: getQuery(state) }), {$/;"	r
 Frame	webpack/src/react/containers/PhotoList.js	/^const Frame = () => <rect className="Frame" width="100%" height="100%" \/>$/;"	r
 FrontPageCrop	webpack/src/react/entry/FrontPageCrop/index.js	/^export const FrontPageCrop = () => ($/;"	r
 FrontPageModule	django/apps/frontpage/models.py	/^class FrontPageModule(TimeStampedModel, Edit_url_mixin):$/;"	c
@@ -245,14 +239,12 @@ FrontpageStoryManager	django/apps/frontpage/models.py	/^class FrontpageStoryMana
 FullThumb	webpack/src/react/containers/PhotoList.js	/^const FullThumb = ({ small, title, size }) => ($/;"	r
 FullThumbWithCropBox	webpack/src/react/containers/PhotoList.js	/^const FullThumbWithCropBox = ({ small, title, size, crop_box }) => {$/;"	r
 GHOSTSCRIPT	django/apps/issues/tasks.py	/^GHOSTSCRIPT = '\/usr\/bin\/ghostscript'$/;"	v
-GRAPHICS	django/apps/prodsys/models.py	/^    GRAPHICS = 'graphics'$/;"	v	class:BylineCredit
 HTTP_STATUS_CODES	django/apps/stories/status_codes.py	/^HTTP_STATUS_CODES = [$/;"	v
 Handle	webpack/src/react/components/Overlay.js	/^const Handle = ({ name, startDragHandleFactory }) => {$/;"	r
 Home	webpack/src/react/entry/ProdSys/App.js	/^const Home = () => <div>home<\/div>$/;"	r
 HtmlInline	django/apps/stories/admin.py	/^class HtmlInline(admin.TabularInline, ):$/;"	c
 HumansTxtView	django/apps/core/views.py	/^class HumansTxtView(TextTemplateView):$/;"	c
 HybridDetector	django/apps/photo/cropping/crop_detector.py	/^class HybridDetector(FeatureDetector):$/;"	c
-ILLUSTRATION	django/apps/prodsys/models.py	/^    ILLUSTRATION = 'illustration'$/;"	v	class:BylineCredit
 IMAGES_DIR	django/apps/core/staging.py	/^IMAGES_DIR = 'IMAGES'$/;"	v
 IMAGES_FETCH_START	webpack/src/react/ducks/imageList.js	/^export const IMAGES_FETCH_START = 'imagelist\/IMAGES_FETCH_START'$/;"	r
 IMAGES_FETCH_SUCCESS	webpack/src/react/ducks/imageList.js	/^export const IMAGES_FETCH_SUCCESS = 'imagelist\/IMAGES_FETCH_SUCCESS'$/;"	r
@@ -403,9 +395,6 @@ Meta	django/apps/markup/models.py	/^    class Meta:$/;"	c	class:MarkupTag
 Meta	django/apps/photo/cropping/models.py	/^    class Meta:$/;"	c	class:AutoCropImage
 Meta	django/apps/photo/models.py	/^    class Meta:$/;"	c	class:ImageFile
 Meta	django/apps/photo/models.py	/^    class Meta:$/;"	c	class:ProfileImage
-Meta	django/apps/prodsys/models.py	/^    class Meta:$/;"	c	class:ProdByline
-Meta	django/apps/prodsys/models.py	/^    class Meta:$/;"	c	class:ProdImage
-Meta	django/apps/prodsys/models.py	/^    class Meta:$/;"	c	class:ProdStory
 Meta	django/apps/stories/models.py	/^    class Meta:$/;"	c	class:Aside
 Meta	django/apps/stories/models.py	/^    class Meta:$/;"	c	class:Byline
 Meta	django/apps/stories/models.py	/^    class Meta:$/;"	c	class:InlineHtml
@@ -472,7 +461,6 @@ Migration	django/apps/photo/migrations/0010_data_imagefile_cropbox.py	/^class Mi
 Migration	django/apps/photo/migrations/0011_auto_20170422_2232.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/photo/migrations/0012_imagefile__imagehash.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/photo/migrations/0013_imagefile_description.py	/^class Migration(migrations.Migration):$/;"	c
-Migration	django/apps/prodsys/migrations/0001_initial.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0001_initial.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0002_auto_20141217_1841.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^class Migration(migrations.Migration):$/;"	c
@@ -525,8 +513,6 @@ PDF_DIR	django/apps/core/staging.py	/^PDF_DIR = 'PDF'$/;"	v
 PDF_FOLDER	django/apps/issues/management/commands/web_pdf.py	/^PDF_FOLDER = os.path.join(settings.STAGING_ROOT, 'pdf')$/;"	v
 PDF_MERGE	django/apps/issues/management/commands/web_pdf.py	/^PDF_MERGE = os.path.join(settings.PROJECT_DIR, 'bin', 'pdf_merge.sh')$/;"	v
 PDF_STAGING	django/apps/issues/management/commands/web_pdf.py	/^PDF_STAGING = os.path.join(settings.STAGING_ROOT, 'STAGING', 'PDF')$/;"	v
-PHOTO	django/apps/prodsys/models.py	/^    PHOTO = 'photo'$/;"	v	class:BylineCredit
-PRINT__DESK	django/apps/prodsys/models.py	/^    PRINT__DESK = 40$/;"	v	class:StoryStatus
 PRIVATE	django/apps/adverts/models.py	/^    PRIVATE = 2$/;"	v	class:Advert
 PRODSYS_PASSWORD	django/universitas/base.py	/^PRODSYS_PASSWORD = env.prodsys_password$/;"	v
 PRODSYS_URL	django/universitas/base.py	/^PRODSYS_URL = env.prodsys_url$/;"	v
@@ -534,7 +520,6 @@ PRODSYS_USER	django/universitas/base.py	/^PRODSYS_USER = env.prodsys_user$/;"	v
 PRODUSERT_CHOICES	django/apps/legacy_db/models.py	/^    PRODUSERT_CHOICES = ($/;"	v	class:Prodsak
 PUBLISHED	django/apps/adverts/models.py	/^    PUBLISHED = 3$/;"	v	class:Advert
 PUBLISHED_ON_WEB	django/apps/legacy_db/models.py	/^    PUBLISHED_ON_WEB = 8$/;"	v	class:Prodsak
-PUBLISHED_WEB	django/apps/prodsys/models.py	/^    PUBLISHED_WEB = 60$/;"	v	class:StoryStatus
 PULLQUOTE_TAG	django/apps/stories/models.py	/^PULLQUOTE_TAG = '@quote:'$/;"	v
 Panel	webpack/src/react/components/Panel.js	/^const Panel = ({ children }) =>$/;"	r
 PdfArchiveView	django/apps/issues/views.py	/^class PdfArchiveView(TemplateView):$/;"	c
@@ -560,9 +545,6 @@ PrintIssueAdmin	django/apps/issues/admin.py	/^class PrintIssueAdmin(AdminImageMi
 PrintIssueSerializer	django/api/issue_serializers.py	/^class PrintIssueSerializer(serializers.HyperlinkedModelSerializer):$/;"	c
 PrintIssueViewSet	django/api/issue_serializers.py	/^class PrintIssueViewSet(viewsets.ModelViewSet):$/;"	c
 ProdBildeSerializer	django/api/legacy_serializers.py	/^class ProdBildeSerializer(serializers.ModelSerializer):$/;"	c
-ProdByline	django/apps/prodsys/models.py	/^class ProdByline(models.Model):$/;"	c
-ProdImage	django/apps/prodsys/models.py	/^class ProdImage(models.Model):$/;"	c
-ProdStory	django/apps/prodsys/models.py	/^class ProdStory(models.Model):$/;"	c
 ProdStorySerializer	django/api/legacy_serializers.py	/^class ProdStorySerializer(serializers.ModelSerializer):$/;"	c
 ProdStoryViewSet	django/api/legacy_serializers.py	/^class ProdStoryViewSet(viewsets.ModelViewSet):$/;"	c
 Prodbilde	django/apps/legacy_db/models.py	/^class Prodbilde(models.Model):$/;"	c
@@ -570,7 +552,6 @@ Prodsak	django/apps/legacy_db/models.py	/^class Prodsak(models.Model):$/;"	c
 ProdsakAdmin	django/apps/legacy_db/admin.py	/^class ProdsakAdmin(admin.ModelAdmin):$/;"	c
 ProdsakManager	django/apps/legacy_db/models.py	/^class ProdsakManager(models.Manager):$/;"	c
 ProdsakQueryset	django/apps/legacy_db/models.py	/^class ProdsakQueryset(models.QuerySet):$/;"	c
-ProdsysAppConfig	django/apps/prodsys/appconf.py	/^class ProdsysAppConfig(AppConfig):$/;"	c
 ProdsysRouter	django/apps/legacy_db/router.py	/^class ProdsysRouter(object):$/;"	c
 ProdusertFilter	django/apps/legacy_db/admin.py	/^class ProdusertFilter(admin.SimpleListFilter):$/;"	c
 ProfileImage	django/apps/photo/models.py	/^class ProfileImage(ImageFile):$/;"	c
@@ -583,9 +564,7 @@ PullquoteInline	django/apps/stories/admin.py	/^class PullquoteInline(admin.Tabul
 QueryOrderableViewSetMixin	django/api/story_serializers.py	/^class QueryOrderableViewSetMixin(object):$/;"	c
 RAVEN_CONFIG	django/universitas/base.py	/^RAVEN_CONFIG = {'dsn': env.raven_dsn, 'site': SITE_URL}$/;"	v
 READY_FOR_PRINT	django/apps/legacy_db/models.py	/^    READY_FOR_PRINT = 3$/;"	v	class:Prodsak
-READY_FOR_PRINT	django/apps/prodsys/models.py	/^    READY_FOR_PRINT = 30$/;"	v	class:StoryStatus
 READY_FOR_WEB	django/apps/legacy_db/models.py	/^    READY_FOR_WEB = 7$/;"	v	class:Prodsak
-READY_FOR_WEB	django/apps/prodsys/models.py	/^    READY_FOR_WEB = 50$/;"	v	class:StoryStatus
 REGULAR	django/apps/issues/models.py	/^    REGULAR = 1$/;"	v	class:Issue
 REQUEST_IMAGE_FILE	webpack/src/react/ducks/images.js	/^export const REQUEST_IMAGE_FILE = 'images\/REQUEST_IMAGE_FILE'$/;"	r
 RESIZE_PANEL	webpack/src/react/ducks/cropPanel.js	/^const RESIZE_PANEL = 'cropPanel\/RESIZE_PANEL'$/;"	r
@@ -608,7 +587,6 @@ SEARCH_CHANGED	webpack/src/react/ducks/imageList.js	/^export const SEARCH_CHANGE
 SEARCH_URL_CHANGED	webpack/src/react/ducks/imageList.js	/^export const SEARCH_URL_CHANGED = 'imagelist\/SEARCH_URL_CHANGED'$/;"	r
 SECRET_KEY	django/universitas/base.py	/^SECRET_KEY = env.secret_key$/;"	v
 SENTRY_CLIENT	django/universitas/base.py	/^SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'$/;"	v
-SHELVED	django/apps/prodsys/models.py	/^    SHELVED = 90$/;"	v	class:StoryStatus
 SHORT_DATETIME_FORMAT	django/universitas/base.py	/^SHORT_DATETIME_FORMAT = 'y-m-d H:i'$/;"	v
 SHORT_DATE_FORMAT	django/universitas/base.py	/^SHORT_DATE_FORMAT = 'Y-m-d'$/;"	v
 SILENCED_SYSTEM_CHECKS	django/universitas/base.py	/^SILENCED_SYSTEM_CHECKS = ["1_8.W001"]$/;"	v
@@ -627,7 +605,6 @@ STATICFILES_STORAGE	django/universitas/production.py	/^STATICFILES_STORAGE = 'ut
 STATIC_ROOT	django/universitas/local.py	/^STATIC_ROOT = env.STATIC_DIR or '\/static\/'$/;"	v
 STATIC_URL	django/universitas/local.py	/^STATIC_URL = '\/static\/'$/;"	v
 STATIC_URL	django/universitas/production.py	/^STATIC_URL = "http:\/\/{host}\/{static}\/".format($/;"	v
-STATUS	django/apps/prodsys/models.py	/^    STATUS = StoryStatus$/;"	v	class:ProdStory
 STATUS_AT_DESK	django/apps/stories/models.py	/^    STATUS_AT_DESK = 7$/;"	v	class:Story
 STATUS_CHOICES	django/apps/adverts/models.py	/^    STATUS_CHOICES = [$/;"	v	class:Advert
 STATUS_CHOICES	django/apps/contributors/models.py	/^    STATUS_CHOICES = [$/;"	v	class:Contributor
@@ -687,10 +664,8 @@ StoryMedia	django/apps/stories/models.py	/^class StoryMedia(StoryElement, Markup
 StoryModule	django/apps/frontpage/models.py	/^class StoryModule(FrontPageModule):$/;"	c
 StoryModuleAdmin	django/apps/frontpage/admin.py	/^class StoryModuleAdmin(admin.ModelAdmin):$/;"	c
 StoryModuleInline	django/apps/frontpage/admin.py	/^class StoryModuleInline(admin.TabularInline):$/;"	c
-StoryPatch	django/apps/prodsys/models.py	/^class StoryPatch(models.Model):$/;"	c
 StoryQuerySet	django/apps/stories/models.py	/^class StoryQuerySet(models.QuerySet):$/;"	c
 StorySerializer	django/api/story_serializers.py	/^class StorySerializer(serializers.HyperlinkedModelSerializer):$/;"	c
-StoryStatus	django/apps/prodsys/models.py	/^class StoryStatus:$/;"	c
 StoryType	django/apps/stories/models.py	/^class StoryType(models.Model):$/;"	c
 StoryTypeAdmin	django/apps/stories/admin.py	/^class StoryTypeAdmin(admin.ModelAdmin):$/;"	c
 StoryTypeInline	django/apps/stories/admin.py	/^class StoryTypeInline(admin.TabularInline):$/;"	c
@@ -702,7 +677,6 @@ StringField	webpack/src/react/photos/PhotoDetail.js	/^const StringField = ({ val
 StringField	webpack/src/react/stories/StoryDetail.js	/^const StringField = ({ value, editable, choices, ...args }) =>$/;"	r
 TEMPLATES	django/universitas/base.py	/^TEMPLATES = [$/;"	v
 TEMPLATE_DEBUG	django/universitas/base.py	/^TEMPLATE_DEBUG = DEBUG$/;"	v
-TEXT	django/apps/prodsys/models.py	/^    TEXT = 'text'$/;"	v	class:BylineCredit
 TEXT_CHANGED	webpack/src/react/ducks/editor.js	/^const TEXT_CHANGED = 'TEXT_CHANGED'$/;"	r
 THUMBNAIL_BACKEND	django/universitas/base.py	/^THUMBNAIL_BACKEND = 'apps.photo.thumb_backend.KeepNameThumbnailBackend'$/;"	v
 THUMBNAIL_DEBUG	django/universitas/production.py	/^THUMBNAIL_DEBUG = DEBUG$/;"	v
@@ -727,7 +701,6 @@ TIMING_CHOICES	django/apps/markup/models.py	/^    TIMING_CHOICES = ($/;"	v	class
 TIMING_CLEAN	django/apps/markup/models.py	/^    TIMING_CLEAN = 4$/;"	v	class:Alias
 TIMING_EXTRA	django/apps/markup/models.py	/^    TIMING_EXTRA = 2$/;"	v	class:Alias
 TIMING_IMPORT	django/apps/markup/models.py	/^    TIMING_IMPORT = 1$/;"	v	class:Alias
-TRANSLATION	django/apps/prodsys/models.py	/^    TRANSLATION = 'translation'$/;"	v	class:BylineCredit
 TableField	webpack/src/react/contributors/ContributorList.js	/^const TableField = ({ type, value, choices }) => {$/;"	r
 TableField	webpack/src/react/issues/IssueList.js	/^const TableField = ({ type, value, choices }) => {$/;"	r
 TableField	webpack/src/react/photos/PhotoList.js	/^const TableField = ({ type, value, choices }) => {$/;"	r
@@ -756,13 +729,11 @@ USE_I18N	django/universitas/base.py	/^USE_I18N = True  # Internationalisation (s
 USE_L10N	django/universitas/base.py	/^USE_L10N = True  # Localisation (numbers and stuff)$/;"	v
 USE_TZ	django/universitas/base.py	/^USE_TZ = True  # Use timezone$/;"	v
 UnicodeJSONRenderer	django/api/legacy_serializers.py	/^class UnicodeJSONRenderer(JSONRenderer):$/;"	c
-VIDEO	django/apps/prodsys/models.py	/^    VIDEO = 'video'$/;"	v	class:BylineCredit
 VIDEO_HOSTS	django/apps/stories/models.py	/^    VIDEO_HOSTS = ($/;"	v	class:StoryVideo
 VIDEO_TAG	django/apps/stories/models.py	/^VIDEO_TAG = '@video:'$/;"	v
 VideoInline	django/apps/stories/admin.py	/^class VideoInline(admin.TabularInline, ):$/;"	c
 WATSON_MIDDLEWARE_FLAG	django/watson/middleware.py	/^WATSON_MIDDLEWARE_FLAG = "watson.search_context_middleware_active"$/;"	v
 WEBPACK_LOADER	django/universitas/base.py	/^WEBPACK_LOADER = {$/;"	v
-WORK_IN_PROGRESS	django/apps/prodsys/models.py	/^    WORK_IN_PROGRESS = 20$/;"	v	class:StoryStatus
 WSGI_APPLICATION	django/universitas/base.py	/^WSGI_APPLICATION = 'universitas.wsgi.application'$/;"	v
 WatsonSearchChangeList	django/watson/admin.py	/^class WatsonSearchChangeList(ChangeList):$/;"	c
 XTAG_PATTERN	django/apps/markup/models.py	/^    XTAG_PATTERN = r'^@[^: ]+:'$/;"	v	class:BlockTag
@@ -828,7 +799,6 @@ __str__	django/apps/markup/models.py	/^    def __str__(self):$/;"	m	class:Markup
 __str__	django/apps/photo/cropping/boundingbox.py	/^    def __str__(self) -> str:$/;"	m	class:Box	file:
 __str__	django/apps/photo/cropping/boundingbox.py	/^    def __str__(self):$/;"	m	class:CropBox	file:
 __str__	django/apps/photo/models.py	/^    def __str__(self):$/;"	m	class:ImageFile	file:
-__str__	django/apps/prodsys/models.py	/^    def __str__(self):$/;"	m	class:ProdByline	file:
 __str__	django/apps/stories/models.py	/^    def __str__(self):$/;"	m	class:Byline	file:
 __str__	django/apps/stories/models.py	/^    def __str__(self):$/;"	m	class:InlineLink	file:
 __str__	django/apps/stories/models.py	/^    def __str__(self):$/;"	m	class:Section	file:
@@ -956,8 +926,6 @@ api_user	django/api/tests/test_indesign_api.py	/^def api_user(request):$/;"	f
 app	django/universitas/celery_settings.py	/^app = Celery('universitas')$/;"	v
 app_label	django/watson/models.py	/^        app_label = 'watson'$/;"	v	class:SearchEntry.Meta
 application	django/universitas/wsgi.py	/^application = Sentry(get_wsgi_application())$/;"	v
-applied	django/apps/prodsys/models.py	/^    applied = models.BooleanField($/;"	v	class:StoryPatch
-apply	django/apps/prodsys/models.py	/^    def apply(self, save=True, original_content=None):$/;"	m	class:StoryPatch
 arbeidstittel	django/api/legacy_serializers.py	/^    arbeidstittel = serializers.CharField(source='working_title')$/;"	v	class:ProdStorySerializer
 arbeidstittel	django/apps/legacy_db/models.py	/^    arbeidstittel = models.CharField(max_length=200, blank=True)$/;"	v	class:Prodsak
 arrayToggle	webpack/src/react/utils/fp.js	/^export const arrayToggle = R.pipe($/;"	r
@@ -981,7 +949,6 @@ attrs	webpack/src/react/photos/saga.js	/^  const attrs = yield select(getQuery)$
 attrs	webpack/src/react/services/api.test.js	/^  const attrs = { search: 'hello world!', limit: 20 }$/;"	r
 attrs	webpack/src/react/stories/saga.js	/^  const attrs = yield select(getQuery)$/;"	r
 authentication_classes	django/api/legacy_serializers.py	/^    authentication_classes = (authentication.BasicAuthentication,$/;"	v	class:ProdStoryViewSet
-auto_now_add	django/apps/prodsys/models.py	/^        auto_now_add=True,$/;"	v	class:StoryPatch
 autocomplete_list	django/apps/core/autocomplete_views.py	/^def autocomplete_list(request):$/;"	f
 autocreate	django/apps/frontpage/models.py	/^    def autocreate(self, story):$/;"	m	class:FrontpageStoryManager
 autocrop	django/apps/photo/admin.py	/^def autocrop(modeladmin, request, queryset):$/;"	f
@@ -1035,7 +1002,6 @@ blank	django/apps/markup/models.py	/^        blank=True,$/;"	v	class:InlineTag.M
 blank	django/apps/markup/models.py	/^        blank=True,$/;"	v	class:MarkupTag.Meta
 blank	django/apps/photo/migrations/0013_imagefile_description.py	/^                blank=True,$/;"	v	class:Migration
 blank	django/apps/photo/models.py	/^        blank=True,$/;"	v	class:ImageFile.Meta
-blank	django/apps/prodsys/models.py	/^        blank=True,$/;"	v	class:ProdByline
 blank	django/apps/stories/migrations/0025_story_working_title.py	/^                blank=True,$/;"	v	class:Migration
 blank	django/apps/stories/models.py	/^        blank=True,$/;"	v	class:Byline
 blank	django/apps/stories/models.py	/^        blank=True,$/;"	v	class:InlineLink.Meta
@@ -1076,10 +1042,8 @@ calculate_flags	django/apps/markup/models.py	/^    def calculate_flags(self):$/;
 calculate_hashes	django/apps/photo/models.py	/^    def calculate_hashes(self):$/;"	m	class:ImageFile
 calculate_image_hash	django/apps/photo/models.py	/^    def calculate_image_hash(self, size=11):$/;"	m	class:ImageFile
 can_import_settings	django/apps/legacy_db/management/commands/importer_fra_prodsys.py	/^    can_import_settings = True,$/;"	v	class:Command
-caption	django/apps/prodsys/models.py	/^    caption = models.CharField($/;"	v	class:ProdImage
 caption	django/apps/stories/models.py	/^    caption = MarkupCharField($/;"	v	class:StoryMedia
 category	django/apps/adverts/models.py	/^    category = models.PositiveSmallIntegerField($/;"	v	class:AdFormat
-celebrity_gossip	django/apps/prodsys/tests/test_models.py	/^def celebrity_gossip():$/;"	f
 center	django/apps/photo/cropping/boundingbox.py	/^    def center(self) -> typing.Tuple[float, float]:$/;"	m	class:Box
 change	webpack/src/react/components/Editor.js	/^    const change = content.length - prevProps.content.length$/;"	r
 change	webpack/src/react/containers/Editor.js	/^    const change = content.length - prevProps.content.length$/;"	r
@@ -1099,8 +1063,6 @@ choices	django/apps/issues/models.py	/^        choices=ISSUE_TYPES,$/;"	v	class:
 choices	django/apps/markup/models.py	/^        choices=ACTION_CHOICES,$/;"	v	class:BlockTag.Meta
 choices	django/apps/markup/models.py	/^        choices=TIMING_CHOICES,$/;"	v	class:Alias.Meta
 choices	django/apps/photo/cropping/models.py	/^        choices=CROP_CHOICES,$/;"	v	class:AutoCropImage.Meta
-choices	django/apps/prodsys/models.py	/^        choices=BylineCredit.CHOICES,$/;"	v	class:ProdByline
-choices	django/apps/prodsys/models.py	/^        choices=StoryStatus.CHOICES,$/;"	v	class:ProdStory
 choices	django/apps/stories/migrations/0001_initial.py	/^                                                choices=[('vimeo', 'vimeo'), ('youtu', 'youtube')])),$/;"	v	class:Migration
 choices	django/apps/stories/models.py	/^        choices=ASPECT_RATIO_CHOICES,$/;"	v	class:StoryMedia.Meta
 choices	django/apps/stories/models.py	/^        choices=CREDIT_CHOICES,$/;"	v	class:Byline
@@ -1133,9 +1095,9 @@ code	django/apps/markup/migrations/0002_load_markup_tags.py	/^            code=l
 code	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^            code=load_fixture(str(fixture)),$/;"	v	class:Migration
 code	django/apps/stories/migrations/0021_data_generate_slugs.py	/^            code=forwards,$/;"	v	class:Migration
 columns	django/apps/frontpage/models.py	/^    columns = models.PositiveSmallIntegerField($/;"	v	class:FrontPageModule
+combinedToggle	webpack/src/react/utils/fp.js	/^export const combinedToggle = R.curry($/;"	r
 comment	django/apps/markup/models.py	/^    comment = models.CharField($/;"	v	class:Alias
 comment	django/apps/stories/models.py	/^    comment = models.TextField($/;"	v	class:Story
-comments	django/apps/prodsys/models.py	/^    comments = models.TextField($/;"	v	class:ProdStory
 complete_apps	django/watson/south_migrations/0001_initial.py	/^    complete_apps = ['watson']$/;"	v	class:Migration
 complete_apps	django/watson/south_migrations/0002_installwatson.py	/^    complete_apps = ['watson']$/;"	v	class:Migration
 compose	webpack/src/react/utils/misc.js	/^export const compose = \/\/ use redux devtools if available$/;"	r
@@ -1147,15 +1109,12 @@ configureStore	webpack/src/react/entry/ttEditor/configureStore.js	/^const config
 contact_info	django/apps/adverts/models.py	/^    contact_info = models.TextField(blank=True)$/;"	v	class:Customer
 container	webpack/src/react/utils/scroll.js	/^  const container = element.parentElement$/;"	r
 content	django/apps/frontpage/models.py	/^    content = models.TextField()$/;"	v	class:StaticModule
-content	django/apps/prodsys/models.py	/^    content = models.TextField($/;"	v	class:ProdStory
 content	django/watson/models.py	/^    content = models.TextField($/;"	v	class:SearchEntry
 content_type	django/watson/models.py	/^    content_type = models.ForeignKey($/;"	v	class:SearchEntry
 context_object_name	django/apps/search/views.py	/^    context_object_name = "search_results"$/;"	v	class:SearchMixin
 context_object_name	django/watson/views.py	/^    context_object_name = "search_results"$/;"	v	class:SearchMixin
 contributor	django/apps/contributors/models.py	/^    contributor = models.ForeignKey(Contributor)$/;"	v	class:Stint
 contributor	django/apps/photo/models.py	/^    contributor = models.ForeignKey($/;"	v	class:ImageFile
-contributor	django/apps/prodsys/models.py	/^    contributor = models.ForeignKey($/;"	v	class:StoryPatch
-contributor	django/apps/prodsys/models.py	/^    contributor = models.ForeignKey(Contributor)$/;"	v	class:ProdByline
 contributor	django/apps/stories/models.py	/^    contributor = models.ForeignKey(Contributor)$/;"	v	class:Byline
 contributorAdded	webpack/src/react/contributors/duck.js	/^export const contributorAdded = data => ({$/;"	r
 contributorDeSelected	webpack/src/react/contributors/duck.js	/^export const contributorDeSelected = () => ({$/;"	r
@@ -1177,15 +1136,12 @@ create_dummy	django/apps/adverts/models.py	/^    def create_dummy(self, adformat
 create_dummy_ads	django/apps/adverts/admin.py	/^def create_dummy_ads(modeladmin, request, queryset):$/;"	f
 create_fake_content	django/apps/core/content_factory.py	/^def create_fake_content(contributors=3, stories=10, delete_existing=False,$/;"	f
 create_from_file	django/apps/photo/models.py	/^    def create_from_file(self, filepath, **kwargs):$/;"	m	class:ImageFileManager
-create_from_story	django/apps/prodsys/models.py	/^    def create_from_story(cls, story, patched_content, applied=False):$/;"	m	class:StoryPatch
 create_from_url	django/apps/stories/models.py	/^    def create_from_url(cls, url, parent_story):$/;"	m	class:StoryVideo
 create_pdf	django/apps/issues/admin.py	/^def create_pdf(modeladmin, request, queryset):$/;"	f
 create_print_issue_pdf	django/apps/issues/tasks.py	/^def create_print_issue_pdf($/;"	f
-create_story_image	django/api/legacy_serializers.py	/^def create_story_image(story, bildefil, prioritet=0, bildetekst=''):$/;"	f
+create_story_image	django/api/legacy_serializers.py	/^def create_story_image(story, bildefil, prioritet=0, bildetekst='', **kwargs):$/;"	f
 create_watermark	django/apps/adverts/dummy_image_advert.py	/^def create_watermark(text='xxx', angle=0, thumb_size=(50, 50)):$/;"	f
 create_web_bundle	django/apps/issues/tasks.py	/^def create_web_bundle(filename, **kwargs):$/;"	f
-created	django/apps/prodsys/models.py	/^    created = models.DateTimeField($/;"	v	class:StoryPatch
-credit	django/apps/prodsys/models.py	/^    credit = models.CharField($/;"	v	class:ProdByline
 credit	django/apps/stories/models.py	/^    credit = models.CharField($/;"	v	class:Byline
 creditline	django/apps/stories/models.py	/^    creditline = MarkupCharField($/;"	v	class:StoryMedia
 crop	django/apps/legacy_db/models.py	/^    crop = models.IntegerField()$/;"	v	class:Bilde
@@ -1276,15 +1232,6 @@ default	django/apps/photo/migrations/0009_imagefile_crop_box.py	/^              
 default	django/apps/photo/migrations/0012_imagefile__imagehash.py	/^                default='',$/;"	v	class:Migration
 default	django/apps/photo/migrations/0013_imagefile_description.py	/^                default='',$/;"	v	class:Migration
 default	django/apps/photo/models.py	/^        default='',$/;"	v	class:ImageFile.Meta
-default	django/apps/prodsys/models.py	/^        default='',$/;"	v	class:StoryPatch
-default	django/apps/prodsys/models.py	/^        default='new story',$/;"	v	class:ProdStory
-default	django/apps/prodsys/models.py	/^        default=0,$/;"	v	class:ProdImage
-default	django/apps/prodsys/models.py	/^        default=1,$/;"	v	class:ProdByline
-default	django/apps/prodsys/models.py	/^        default=1,$/;"	v	class:ProdImage
-default	django/apps/prodsys/models.py	/^        default=BylineCredit.BY,$/;"	v	class:ProdByline
-default	django/apps/prodsys/models.py	/^        default=False,$/;"	v	class:StoryPatch
-default	django/apps/prodsys/models.py	/^        default=None,$/;"	v	class:StoryPatch
-default	django/apps/prodsys/models.py	/^        default=StoryStatus.DRAFT,$/;"	v	class:ProdStory
 default	django/apps/stories/models.py	/^        default='',$/;"	v	class:InlineLink.Meta
 default	django/apps/stories/models.py	/^        default='',$/;"	v	class:TextContent.Meta
 default	django/apps/stories/models.py	/^        default='section-slug',$/;"	v	class:Section.Meta
@@ -1312,7 +1259,6 @@ default_app_config	django/apps/issues/__init__.py	/^default_app_config = 'apps.i
 default_app_config	django/apps/legacy_db/__init__.py	/^default_app_config = 'apps.legacy_db.appconf.LegacyDbAppConfig'$/;"	v
 default_app_config	django/apps/markup/__init__.py	/^default_app_config = 'apps.markup.appconf.MarkupAppConfig'$/;"	v
 default_app_config	django/apps/photo/__init__.py	/^default_app_config = 'apps.photo.appconf.PhotoAppConfig'$/;"	v
-default_app_config	django/apps/prodsys/__init__.py	/^default_app_config = 'apps.prodsys.appconf.ProdsysAppConfig'$/;"	v
 default_app_config	django/apps/stories/__init__.py	/^default_app_config = 'apps.stories.appconf.StoriesAppConfig'$/;"	v
 default_end_time	django/apps/adverts/models.py	/^def default_end_time():$/;"	f
 default_limit	django/api/issue_serializers.py	/^    default_limit = 1000$/;"	v	class:LargeLimitPagination
@@ -1372,7 +1318,6 @@ dependencies	django/apps/photo/migrations/0010_data_imagefile_cropbox.py	/^    d
 dependencies	django/apps/photo/migrations/0011_auto_20170422_2232.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/photo/migrations/0012_imagefile__imagehash.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/photo/migrations/0013_imagefile_description.py	/^    dependencies = [$/;"	v	class:Migration
-dependencies	django/apps/prodsys/migrations/0001_initial.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0001_initial.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0002_auto_20141217_1841.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^    dependencies = [$/;"	v	class:Migration
@@ -1404,7 +1349,6 @@ description	django/apps/adverts/models.py	/^    description = models.CharField($
 description	django/apps/adverts/models.py	/^    description = models.TextField($/;"	v	class:AdChannel
 description	django/apps/photo/cropping/models.py	/^    description = 'Bounding Box field'$/;"	v	class:BoxField
 description	django/apps/photo/models.py	/^    description = models.CharField($/;"	v	class:ImageFile
-description	django/apps/prodsys/models.py	/^    description = models.CharField($/;"	v	class:ProdByline
 description	django/apps/stories/feeds.py	/^    description = "Nyeste publiserte saker fra universitas.no"$/;"	v	class:LatestStories
 description	django/apps/stories/models.py	/^    description = 'subclass of Charfield containing markup.'$/;"	v	class:MarkupCharField
 description	django/apps/stories/models.py	/^    description = 'subclass of Textfield containing markup.'$/;"	v	class:MarkupTextField
@@ -1592,8 +1536,6 @@ field	django/apps/photo/migrations/0008_auto_20170214_1552.py	/^            fiel
 field	django/apps/photo/migrations/0009_imagefile_crop_box.py	/^            field=apps.photo.cropping.models.BoxField($/;"	v	class:Migration
 field	django/apps/photo/migrations/0012_imagefile__imagehash.py	/^            field=models.CharField($/;"	v	class:Migration
 field	django/apps/photo/migrations/0013_imagefile_description.py	/^            field=models.CharField($/;"	v	class:Migration
-field	django/apps/prodsys/migrations/0001_initial.py	/^            field=models.ForeignKey(help_text='story', on_delete=django.db.models.deletion.CASCADE, related_name='images', to='prodsys.ProdStory', verbose_name='story'),$/;"	v	class:Migration
-field	django/apps/prodsys/migrations/0001_initial.py	/^            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='prodsys.ProdStory'),$/;"	v	class:Migration
 field	django/apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey($/;"	v	class:Migration
 field	django/apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey(null=True, help_text='link to story on this website.',$/;"	v	class:Migration
 field	django/apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey(to='stories.Story'),$/;"	v	class:Migration
@@ -1650,7 +1592,6 @@ fields	django/apps/markup/migrations/0001_initial.py	/^            fields=[$/;"	
 fields	django/apps/photo/migrations/0001_initial.py	/^            fields=[$/;"	v	class:Migration
 fields	django/apps/photo/migrations/0001_squashed_0003_auto_20150228_2151.py	/^            fields=[$/;"	v	class:Migration
 fields	django/apps/photo/migrations/0003_profileimage.py	/^            fields=[$/;"	v	class:Migration
-fields	django/apps/prodsys/migrations/0001_initial.py	/^            fields=[$/;"	v	class:Migration
 fields	django/apps/stories/admin.py	/^    fields = ('headline', 'kicker', 'lede', 'imagefile', 'full_thumb',),$/;"	v	class:FrontpageStoryInline
 fields	django/apps/stories/admin.py	/^    fields = ('ordering', 'credit', 'contributor', 'title', )$/;"	v	class:BylineInline
 fields	django/apps/stories/admin.py	/^    fields = [$/;"	v	class:ImageInline
@@ -1681,7 +1622,7 @@ filter_backends	django/api/issue_serializers.py	/^    filter_backends = (filters
 filter_backends	django/api/issue_serializers.py	/^    filter_backends = [DjangoFilterBackend]$/;"	v	class:IssueViewSet
 filter_backends	django/api/legacy_serializers.py	/^    filter_backends = [DjangoFilterBackend]$/;"	v	class:ProdStoryViewSet
 filter_backends	django/api/photo_serializers.py	/^    filter_backends = (filters.SearchFilter, DjangoFilterBackend)$/;"	v	class:ImageFileViewSet
-filter_backends	django/api/story_serializers.py	/^    filter_backends = [DjangoFilterBackend]$/;"	v	class:StoryViewSet
+filter_backends	django/api/story_serializers.py	/^    filter_backends = [DjangoFilterBackend, SearchFilter]$/;"	v	class:StoryViewSet
 filter_fields	django/api/contributor_serializers.py	/^    filter_fields = ['status', 'display_name', 'byline_photo']$/;"	v	class:ContributorViewSet
 filter_fields	django/api/issue_serializers.py	/^    filter_fields = ['id', 'publication_date']$/;"	v	class:IssueViewSet
 filter_fields	django/api/legacy_serializers.py	/^    filter_fields = ['publication_status', 'title', 'bodytext_markup']$/;"	v	class:ProdStoryViewSet
@@ -2002,26 +1943,6 @@ help_text	django/apps/photo/models.py	/^        help_text=_('perceptual hash of 
 help_text	django/apps/photo/models.py	/^        help_text=_('previous path if the image has been moved.'),$/;"	v	class:ImageFile.Meta
 help_text	django/apps/photo/models.py	/^        help_text=_('size of file in bytes'),$/;"	v	class:ImageFile.Meta
 help_text	django/apps/photo/models.py	/^        help_text=_('who made this'),$/;"	v	class:ImageFile.Meta
-help_text	django/apps/prodsys/models.py	/^        help_text=_('How prominent this image should be in the layout.'),$/;"	v	class:ProdImage
-help_text	django/apps/prodsys/models.py	/^        help_text=_('Where this image should be positioned in the layout. '$/;"	v	class:ProdImage
-help_text	django/apps/prodsys/models.py	/^        help_text=_('applied'),$/;"	v	class:StoryPatch
-help_text	django/apps/prodsys/models.py	/^        help_text=_('caption'),$/;"	v	class:ProdImage
-help_text	django/apps/prodsys/models.py	/^        help_text=_('comments'),$/;"	v	class:ProdStory
-help_text	django/apps/prodsys/models.py	/^        help_text=_('contributor'),$/;"	v	class:StoryPatch
-help_text	django/apps/prodsys/models.py	/^        help_text=_('created'),$/;"	v	class:StoryPatch
-help_text	django/apps/prodsys/models.py	/^        help_text=_('image'),$/;"	v	class:ProdImage
-help_text	django/apps/prodsys/models.py	/^        help_text=_('internal ordering of bylines'),$/;"	v	class:ProdByline
-help_text	django/apps/prodsys/models.py	/^        help_text=_('issue'),$/;"	v	class:ProdStory
-help_text	django/apps/prodsys/models.py	/^        help_text=_('patch'),$/;"	v	class:StoryPatch
-help_text	django/apps/prodsys/models.py	/^        help_text=_('person\\'s title, qualification or location'),$/;"	v	class:ProdByline
-help_text	django/apps/prodsys/models.py	/^        help_text=_('raw markup content'),$/;"	v	class:ProdStory
-help_text	django/apps/prodsys/models.py	/^        help_text=_('reverse_patch'),$/;"	v	class:StoryPatch
-help_text	django/apps/prodsys/models.py	/^        help_text=_('status'),$/;"	v	class:ProdStory
-help_text	django/apps/prodsys/models.py	/^        help_text=_('story'),$/;"	v	class:ProdImage
-help_text	django/apps/prodsys/models.py	/^        help_text=_('story'),$/;"	v	class:StoryPatch
-help_text	django/apps/prodsys/models.py	/^        help_text=_('story_type'),$/;"	v	class:ProdStory
-help_text	django/apps/prodsys/models.py	/^        help_text=_('what this person contributed with'),$/;"	v	class:ProdByline
-help_text	django/apps/prodsys/models.py	/^        help_text=_('working_title'),$/;"	v	class:ProdStory
 help_text	django/apps/stories/migrations/0001_initial.py	/^                                                   help_text='the part of the url that identifies this particular video')),$/;"	v	class:Migration
 help_text	django/apps/stories/migrations/0001_initial.py	/^                                            help_text='Is this element placed on top?')),$/;"	v	class:Migration
 help_text	django/apps/stories/migrations/0025_story_working_title.py	/^                help_text='Working title',$/;"	v	class:Migration
@@ -2092,7 +2013,6 @@ ids	webpack/src/react/ducks/imageList.js	/^      const ids = R.values(R.pluck('i
 ids	webpack/src/react/issues/duck.js	/^      const ids = R.pluck('id', payload.results)$/;"	r
 ids	webpack/src/react/photos/duck.js	/^      const ids = R.pluck('id', results)$/;"	r
 ids	webpack/src/react/stories/duck.js	/^      const ids = R.pluck('id', results)$/;"	r
-image	django/apps/prodsys/models.py	/^    image = models.ForeignKey($/;"	v	class:ProdImage
 image	webpack/src/react/containers/EditImage.js	/^  const image = getImage(state, id)$/;"	r
 image	webpack/src/react/ducks/images.js	/^const image = (state = {}, action) => {$/;"	r
 imageClickHandler	webpack/src/react/entry/FrontPageCrop/index.js	/^export const imageClickHandler = id => {$/;"	r
@@ -2118,11 +2038,9 @@ import_legacy_website_content	django/apps/legacy_db/export_content_and_images.py
 import_prodsys_content	django/apps/legacy_db/export_content_and_images.py	/^def import_prodsys_content($/;"	f
 import_staging_images	django/apps/photo/tasks.py	/^def import_staging_images(max_age=timedelta(minutes=10)):$/;"	f
 import_stories_from_prodsys	django/apps/legacy_db/tasks.py	/^def import_stories_from_prodsys(**kwargs):$/;"	f
-index	django/apps/prodsys/models.py	/^    index = models.IntegerField($/;"	v	class:ProdByline
 index	django/apps/stories/models.py	/^    index = models.PositiveSmallIntegerField($/;"	v	class:StoryElement
 ingress	django/apps/legacy_db/models.py	/^    ingress = models.TextField()$/;"	v	class:Sak
 init	webpack/src/react/services/api.js	/^  const init = R.mergeDeepRight(headBase, { ...head })$/;"	r
-initial	django/apps/prodsys/migrations/0001_initial.py	/^    initial = True$/;"	v	class:Migration
 initialLocation	webpack/src/react/entry/ProdSys/configureStore.js	/^  const initialLocation = store.getState().router$/;"	r
 initialState	webpack/src/react/contributors/duck.js	/^export const initialState = R.pipe($/;"	r
 initialState	webpack/src/react/ducks/cropPanel.js	/^const initialState = { image: 0, expanded: false, data: 0 }$/;"	r
@@ -2160,8 +2078,9 @@ ip	django/apps/legacy_db/models.py	/^    ip = models.CharField(max_length=16, bl
 isActive	webpack/src/react/contributors/ContributorList.js	/^  const isActive = R.propEq(attr, value, query)$/;"	r
 isActive	webpack/src/react/issues/IssueList.js	/^  const isActive = R.propEq(attr, value, query)$/;"	r
 isActive	webpack/src/react/photos/PhotoList.js	/^  const isActive = R.propEq(attr, value, query)$/;"	r
-isActive	webpack/src/react/stories/StoryList.js	/^  const isActive = R.propEq(attr, value, query)$/;"	r
+isActive	webpack/src/react/stories/StoryList.js	/^  const isActive = isFilterActive(attr, value, query)$/;"	r
 isFetching	webpack/src/react/containers/SearchField.js	/^  const isFetching = fetching ? ' isFetching' : ''$/;"	r
+isFilterActive	webpack/src/react/stories/StoryList.js	/^const isFilterActive = (attr, value, query) => {$/;"	r
 is_active	django/watson/search.py	/^    def is_active(self):$/;"	m	class:SearchContextManager
 is_installed	django/watson/backends.py	/^    def is_installed(self):$/;"	m	class:MySQLSearchBackend
 is_installed	django/watson/backends.py	/^    def is_installed(self):$/;"	m	class:PostgresSearchBackend
@@ -2174,7 +2093,6 @@ is_published	django/apps/stories/models.py	/^    def is_published(self):$/;"	m	c
 is_registered	django/watson/search.py	/^    def is_registered(self, model):$/;"	m	class:SearchEngine
 is_registered	django/watson/search.py	/^is_registered = default_search_engine.is_registered$/;"	v
 issue	django/apps/issues/models.py	/^    issue = models.ForeignKey($/;"	v	class:PrintIssue
-issue	django/apps/prodsys/models.py	/^    issue = models.ForeignKey($/;"	v	class:ProdStory
 issue	django/apps/stories/models.py	/^    issue = models.ForeignKey($/;"	v	class:Story
 issueAdded	webpack/src/react/issues/duck.js	/^export const issueAdded = data => ({$/;"	r
 issueDeSelected	webpack/src/react/issues/duck.js	/^export const issueDeSelected = () => ({$/;"	r
@@ -2307,6 +2225,7 @@ list_per_page	django/apps/issues/admin.py	/^    list_per_page = 40$/;"	v	class:P
 list_per_page	django/apps/legacy_db/admin.py	/^    list_per_page = 50$/;"	v	class:SakAdmin
 list_per_page	django/apps/photo/admin.py	/^    list_per_page = 25$/;"	v	class:ImageAdmin
 list_per_page	django/apps/stories/admin.py	/^    list_per_page = 25$/;"	v	class:StoryAdmin
+listifyFirstArgument	webpack/src/react/utils/fp.js	/^const listifyFirstArgument = R.useWith(R.__, [v => [v]])$/;"	r
 load_fixture	django/apps/adverts/migrations/0002_data_ad_formats.py	/^def load_fixture(apps, schema_editor):$/;"	f
 load_fixture	django/apps/adverts/migrations/0003_universitas_ad_channels.py	/^def load_fixture(apps, schema_editor):$/;"	f
 load_fixture	django/utils/migration_helpers.py	/^def load_fixture(fixture_file):$/;"	f
@@ -2315,7 +2234,7 @@ location	django/utils/aws_custom_storage.py	/^    location = 'media'$/;"	v	class
 location	django/utils/aws_custom_storage.py	/^    location = 'media'$/;"	v	class:ThumbStorage
 location	django/utils/aws_custom_storage.py	/^    location = 'static'$/;"	v	class:StaticStorage
 logfile_handler	django/universitas/logging_settings.py	/^def logfile_handler(filename, debug=False, **kwargs):$/;"	f
-logger	django/api/legacy_serializers.py	/^logger = logging.getLogger(__name__)$/;"	v
+logger	django/api/legacy_serializers.py	/^logger = logging.getLogger('apps')$/;"	v
 logger	django/apps/adverts/models.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/adverts/templatetags/advert_channel.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/contributors/models.py	/^logger = logging.getLogger(__name__)$/;"	v
@@ -2340,7 +2259,6 @@ logger	django/apps/photo/cropping/models.py	/^logger = logging.getLogger(__name_
 logger	django/apps/photo/models.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/photo/signals.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/photo/tasks.py	/^logger = logging.getLogger(__name__)$/;"	v
-logger	django/apps/prodsys/models.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/stories/management/commands/check_links.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/stories/management/commands/devalue_hotness.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/stories/management/commands/frontpage_stories.py	/^logger = logging.getLogger(__name__)$/;"	v
@@ -2440,10 +2358,6 @@ max_length	django/apps/photo/models.py	/^        max_length=1000,$/;"	v	class:Im
 max_length	django/apps/photo/models.py	/^        max_length=1024,$/;"	v	class:ImageFile.Meta
 max_length	django/apps/photo/models.py	/^        max_length=16,$/;"	v	class:ImageFile.Meta
 max_length	django/apps/photo/models.py	/^        max_length=32,$/;"	v	class:ImageFile.Meta
-max_length	django/apps/prodsys/models.py	/^        max_length=1000,$/;"	v	class:ProdImage
-max_length	django/apps/prodsys/models.py	/^        max_length=200,$/;"	v	class:ProdStory
-max_length	django/apps/prodsys/models.py	/^        max_length=300,$/;"	v	class:ProdByline
-max_length	django/apps/prodsys/models.py	/^        max_length=32,$/;"	v	class:ProdByline
 max_length	django/apps/stories/migrations/0025_story_working_title.py	/^                max_length=1000,$/;"	v	class:Migration
 max_length	django/apps/stories/models.py	/^        max_length=10,$/;"	v	class:Story.Meta
 max_length	django/apps/stories/models.py	/^        max_length=100,$/;"	v	class:Story.Meta
@@ -2542,8 +2456,6 @@ model_name	django/apps/photo/migrations/0009_imagefile_crop_box.py	/^           
 model_name	django/apps/photo/migrations/0011_auto_20170422_2232.py	/^            model_name='imagefile',$/;"	v	class:Migration
 model_name	django/apps/photo/migrations/0012_imagefile__imagehash.py	/^            model_name='imagefile',$/;"	v	class:Migration
 model_name	django/apps/photo/migrations/0013_imagefile_description.py	/^            model_name='imagefile',$/;"	v	class:Migration
-model_name	django/apps/prodsys/migrations/0001_initial.py	/^            model_name='prodbyline',$/;"	v	class:Migration
-model_name	django/apps/prodsys/migrations/0001_initial.py	/^            model_name='prodimage',$/;"	v	class:Migration
 model_name	django/apps/stories/migrations/0001_initial.py	/^            model_name='byline',$/;"	v	class:Migration
 model_name	django/apps/stories/migrations/0001_initial.py	/^            model_name='inlinelink',$/;"	v	class:Migration
 model_name	django/apps/stories/migrations/0001_initial.py	/^            model_name='story',$/;"	v	class:Migration
@@ -2595,6 +2507,7 @@ mtime	django/apps/photo/models.py	/^    def mtime(self):$/;"	m	class:ImageFile
 mtime	django/apps/photo/models.py	/^    def mtime(self, timestamp):$/;"	m	class:ImageFile
 name	django/api/appconf.py	/^    name = 'api'$/;"	v	class:ApiAppConfig
 name	django/api/photo_serializers.py	/^    name = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
+name	django/api/story_serializers.py	/^    name = serializers.StringRelatedField(source='contributor')$/;"	v	class:BylineSerializer
 name	django/apps/adverts/appconf.py	/^    name = 'apps.adverts'$/;"	v	class:AdvertsAppConfig
 name	django/apps/adverts/migrations/0001_initial.py	/^            name='AdChannel',$/;"	v	class:Migration
 name	django/apps/adverts/migrations/0001_initial.py	/^            name='AdFormat',$/;"	v	class:Migration
@@ -2692,12 +2605,6 @@ name	django/apps/photo/migrations/0011_auto_20170422_2232.py	/^            name=
 name	django/apps/photo/migrations/0011_auto_20170422_2232.py	/^            name='from_top',$/;"	v	class:Migration
 name	django/apps/photo/migrations/0012_imagefile__imagehash.py	/^            name='_imagehash',$/;"	v	class:Migration
 name	django/apps/photo/migrations/0013_imagefile_description.py	/^            name='description',$/;"	v	class:Migration
-name	django/apps/prodsys/appconf.py	/^    name = 'apps.prodsys'$/;"	v	class:ProdsysAppConfig
-name	django/apps/prodsys/migrations/0001_initial.py	/^            name='ProdByline',$/;"	v	class:Migration
-name	django/apps/prodsys/migrations/0001_initial.py	/^            name='ProdImage',$/;"	v	class:Migration
-name	django/apps/prodsys/migrations/0001_initial.py	/^            name='ProdStory',$/;"	v	class:Migration
-name	django/apps/prodsys/migrations/0001_initial.py	/^            name='StoryPatch',$/;"	v	class:Migration
-name	django/apps/prodsys/migrations/0001_initial.py	/^            name='story',$/;"	v	class:Migration
 name	django/apps/stories/appconf.py	/^    name = 'apps.stories'$/;"	v	class:StoriesAppConfig
 name	django/apps/stories/migrations/0001_initial.py	/^            name='Aside',$/;"	v	class:Migration
 name	django/apps/stories/migrations/0001_initial.py	/^            name='Byline',$/;"	v	class:Migration
@@ -2785,8 +2692,6 @@ null	django/apps/photo/cropping/models.py	/^        null=True,$/;"	v	class:AutoC
 null	django/apps/photo/migrations/0009_imagefile_crop_box.py	/^                null=True,$/;"	v	class:Migration
 null	django/apps/photo/models.py	/^        null=False,$/;"	v	class:ImageFile.Meta
 null	django/apps/photo/models.py	/^        null=True,$/;"	v	class:ImageFile.Meta
-null	django/apps/prodsys/models.py	/^        null=True,$/;"	v	class:ProdStory
-null	django/apps/prodsys/models.py	/^        null=True,$/;"	v	class:StoryPatch
 null	django/apps/stories/models.py	/^        null=True,$/;"	v	class:Byline
 null	django/watson/models.py	/^        null=True,$/;"	v	class:SearchEntry
 number	django/apps/issues/models.py	/^    def number(self):$/;"	m	class:Issue
@@ -2868,7 +2773,6 @@ operations	django/apps/photo/migrations/0010_data_imagefile_cropbox.py	/^    ope
 operations	django/apps/photo/migrations/0011_auto_20170422_2232.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/photo/migrations/0012_imagefile__imagehash.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/photo/migrations/0013_imagefile_description.py	/^    operations = [$/;"	v	class:Migration
-operations	django/apps/prodsys/migrations/0001_initial.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0001_initial.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0002_auto_20141217_1841.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^    operations = [$/;"	v	class:Migration
@@ -2912,7 +2816,6 @@ options	django/apps/photo/migrations/0001_initial.py	/^            options={$/;"
 options	django/apps/photo/migrations/0001_squashed_0003_auto_20150228_2151.py	/^            options={$/;"	v	class:Migration
 options	django/apps/photo/migrations/0003_profileimage.py	/^            options={$/;"	v	class:Migration
 options	django/apps/photo/migrations/0004_auto_20151014_0004.py	/^            options={'verbose_name_plural': 'Profile Images',$/;"	v	class:Migration
-options	django/apps/prodsys/migrations/0001_initial.py	/^            options={$/;"	v	class:Migration
 options	django/apps/stories/migrations/0001_initial.py	/^            options={$/;"	v	class:Migration
 options	django/apps/stories/migrations/0007_inlinehtml.py	/^            options={$/;"	v	class:Migration
 options	django/watson/migrations/0001_initial.py	/^            options={$/;"	v	class:Migration
@@ -2942,14 +2845,13 @@ pages	django/apps/issues/models.py	/^    pages = models.IntegerField($/;"	v	clas
 paginate_by	django/apps/search/views.py	/^    paginate_by = 10$/;"	v	class:SearchView
 pagination_class	django/api/issue_serializers.py	/^    pagination_class = LargeLimitPagination$/;"	v	class:IssueViewSet
 paragraphSplits	webpack/src/react/ducks/editor.js	/^const paragraphSplits = (content = '') => {$/;"	r
-paramPairs	webpack/src/react/services/api.js	/^const paramPairs = (value, key, _) => `${key}=${value}`$/;"	r
+paramPairs	webpack/src/react/services/api.js	/^const paramPairs = (value, key, _) =>$/;"	r
 parameter_name	django/apps/legacy_db/admin.py	/^    parameter_name = 'status'$/;"	v	class:ProdusertFilter
 parent_story	django/apps/stories/models.py	/^    def parent_story(self):$/;"	m	class:Story
 parent_story	django/apps/stories/models.py	/^    parent_story = models.ForeignKey($/;"	v	class:InlineLink
 parent_story	django/apps/stories/models.py	/^    parent_story = models.ForeignKey(Story)$/;"	v	class:StoryElement
 parse_box_data	django/apps/photo/cropping/models.py	/^def parse_box_data(value):$/;"	f
 parse_markup	django/apps/stories/models.py	/^    def parse_markup(self):$/;"	m	class:TextContent
-patch	django/apps/prodsys/models.py	/^    patch = models.TextField($/;"	v	class:StoryPatch
 patched_timezone_now	django/api/tests/funky.py	/^def patched_timezone_now(monkeypatch):$/;"	f
 path	django/apps/legacy_db/models.py	/^    path = models.CharField(max_length=255)$/;"	v	class:Bilde
 pattern	django/apps/markup/models.py	/^    pattern = models.CharField($/;"	v	class:Alias
@@ -2966,7 +2868,6 @@ pending	django/apps/photo/models.py	/^    def pending(self):$/;"	m	class:ImageFi
 pending	webpack/src/react/containers/EditImage.js	/^  const pending = cropping_method === 1$/;"	r
 permanent	django/universitas/redirect_urls.py	/^                             permanent=False)),$/;"	v
 permanent	django/universitas/redirect_urls.py	/^                             permanent=True)),$/;"	v
-permissions	django/apps/prodsys/models.py	/^        permissions = [$/;"	v	class:ProdStory.Meta
 phone	django/apps/contributors/models.py	/^    phone = models.CharField(blank=True, null=True, max_length=20)$/;"	v	class:Contributor
 photo	django/api/tests/test_indesign_api.py	/^def photo():$/;"	f
 photoAdded	webpack/src/react/photos/duck.js	/^export const photoAdded = data => ({$/;"	r
@@ -2988,7 +2889,6 @@ position	django/api/contributor_serializers.py	/^    position = serializers.Slug
 position	django/apps/contributors/models.py	/^    position = models.ForeignKey(Position)$/;"	v	class:Stint
 position	django/apps/frontpage/models.py	/^    position = models.IntegerField($/;"	v	class:StaticModule
 position	django/apps/frontpage/models.py	/^    position = models.PositiveIntegerField($/;"	v	class:StoryModule
-position	django/apps/prodsys/models.py	/^    position = models.PositiveSmallIntegerField($/;"	v	class:ProdImage
 position_default	django/apps/frontpage/models.py	/^    def position_default(self):$/;"	m	class:StoryModule
 possey	django/api/tests/funky.py	/^def possey(request):$/;"	f
 post_save_task	django/apps/photo/tasks.py	/^def post_save_task(pk):$/;"	f
@@ -3023,7 +2923,6 @@ prioritet	django/api/legacy_serializers.py	/^    prioritet = serializers.Integer
 prioritet	django/apps/legacy_db/models.py	/^    prioritet = models.IntegerField()$/;"	v	class:Sak
 prioritet	django/apps/legacy_db/models.py	/^    prioritet = models.IntegerField(blank=True, null=True)$/;"	v	class:Prodbilde
 prioritetdato	django/apps/legacy_db/models.py	/^    prioritetdato = models.DateTimeField(blank=True, null=True)$/;"	v	class:Sak
-priority	django/apps/prodsys/models.py	/^    priority = models.PositiveSmallIntegerField($/;"	v	class:ProdImage
 priority	django/apps/stories/models.py	/^    def priority(self):$/;"	m	class:Story
 process_exception	django/watson/middleware.py	/^    def process_exception(self, request, exception):$/;"	m	class:SearchContextMiddleware
 process_request	django/watson/middleware.py	/^    def process_request(self, request):$/;"	m	class:SearchContextMiddleware
@@ -3067,6 +2966,7 @@ queryLens	webpack/src/react/stories/duck.js	/^const queryLens = lens('query')$/;
 queryString	webpack/src/react/services/api.js	/^export const queryString = R.pipe($/;"	r
 query_param	django/apps/search/views.py	/^    query_param = "q"$/;"	v	class:SearchMixin
 query_param	django/watson/views.py	/^    query_param = "q"$/;"	v	class:SearchMixin
+query_param	webpack/src/react/stories/StoryList.js	/^  const query_param = R.prop(attr, query)$/;"	r
 queryset	django/api/contributor_serializers.py	/^    queryset = Contributor.objects.all()$/;"	v	class:ContributorViewSet
 queryset	django/api/issue_serializers.py	/^    queryset = Issue.objects.all()$/;"	v	class:IssueViewSet
 queryset	django/api/issue_serializers.py	/^    queryset = PrintIssue.objects.order_by('-issue__publication_date')$/;"	v	class:PrintIssueViewSet
@@ -3131,11 +3031,9 @@ register_model_with_watson	django/watson/admin.py	/^    def register_model_with_
 reindex_inlines	django/apps/stories/models.py	/^    def reindex_inlines(self, element_classes=None, body=None):$/;"	m	class:Story
 related_name	django/apps/contributors/migrations/0010_auto_20151013_2307.py	/^                related_name='person',$/;"	v	class:Migration
 related_name	django/apps/contributors/models.py	/^        related_name='person',$/;"	v	class:Contributor
-related_name	django/apps/prodsys/models.py	/^        related_name='images',$/;"	v	class:ProdImage
-related_name	django/apps/prodsys/models.py	/^        related_name='patches',$/;"	v	class:StoryPatch
-related_name	django/apps/prodsys/models.py	/^        related_name='stories',$/;"	v	class:ProdStory
 related_name	django/apps/stories/models.py	/^        related_name='incoming_links',$/;"	v	class:InlineLink.Meta
 related_name	django/apps/stories/models.py	/^        related_name='inline_links'$/;"	v	class:InlineLink.Meta
+relativeDateTime	webpack/src/react/utils/modelUtils.js	/^export const relativeDateTime = value =>$/;"	r
 remove_control_chars	django/apps/stories/models.py	/^def remove_control_chars(s):$/;"	f
 remove_thumbnail	django/apps/issues/models.py	/^def remove_thumbnail(sender, instance, **kwargs):$/;"	f
 render	webpack/src/react/entry/photo_crop_app.js	/^const render = (App, domNode) => {$/;"	r
@@ -3182,7 +3080,6 @@ reverse_code	django/apps/issues/migrations/0011_data_load_publication_plan.py	/^
 reverse_code	django/apps/markup/migrations/0002_load_markup_tags.py	/^            reverse_code=unload_fixture($/;"	v	class:Migration
 reverse_code	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^            reverse_code=unload_fixture('stories', ['Section', 'StoryType']),$/;"	v	class:Migration
 reverse_code	django/apps/stories/migrations/0021_data_generate_slugs.py	/^            reverse_code=backwards,$/;"	v	class:Migration
-reverse_patch	django/apps/prodsys/models.py	/^    reverse_patch = models.TextField($/;"	v	class:StoryPatch
 root	django/apps/frontpage/models.py	/^    def root(self):$/;"	m	class:FrontpageManager
 rootReducer	webpack/src/react/entry/FrontPageCrop/index.js	/^const rootReducer = combineReducers({ ui, images })$/;"	r
 rootReducer	webpack/src/react/entry/ProdSys/configureStore.js	/^  const rootReducer = combineReducers({ ...reducers, router: router.reducer })$/;"	r
@@ -3252,7 +3149,8 @@ search_config	django/watson/backends.py	/^    search_config = "pg_catalog.englis
 search_context_manager	django/watson/admin.py	/^    def search_context_manager(self):$/;"	m	class:SearchAdmin
 search_context_manager	django/watson/search.py	/^search_context_manager = SearchContextManager()$/;"	v
 search_engine	django/watson/admin.py	/^    search_engine = admin_search_engine$/;"	v	class:SearchAdmin
-search_fields	django/api/photo_serializers.py	/^    search_fields = ('source_file', 'description')$/;"	v	class:ImageFileViewSet
+search_fields	django/api/photo_serializers.py	/^    search_fields = ['source_file', 'description']$/;"	v	class:ImageFileViewSet
+search_fields	django/api/story_serializers.py	/^    search_fields = ['working_title', 'bodytext_markup']$/;"	v	class:StoryViewSet
 search_fields	django/apps/contributors/admin.py	/^    search_fields = ($/;"	v	class:ContributorAdmin
 search_fields	django/apps/contributors/autocomplete_light_registry.py	/^    search_fields=['display_name'],$/;"	v
 search_fields	django/apps/frontpage/admin.py	/^    search_fields = ($/;"	v	class:FrontpageStoryAdmin
@@ -3304,7 +3202,6 @@ size	django/apps/photo/cropping/boundingbox.py	/^    def size(self) -> float:$/;
 size	django/apps/photo/models.py	/^    def size(self):$/;"	m	class:ImageFile
 size	django/apps/photo/models.py	/^    def size(self, value):$/;"	m	class:ImageFile
 size	django/apps/stories/models.py	/^    size = models.PositiveSmallIntegerField($/;"	v	class:StoryMedia
-skandale	django/apps/prodsys/tests/test_models.py	/^def skandale(celebrity_gossip):$/;"	f
 skip_index_update	django/watson/search.py	/^    def skip_index_update(self):$/;"	m	class:SearchContextManager
 skip_index_update	django/watson/search.py	/^skip_index_update = search_context_manager.skip_index_update$/;"	v
 slagord	django/apps/legacy_db/models.py	/^    slagord = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
@@ -3341,7 +3238,7 @@ state	webpack/src/react/issues/duck.test.js	/^    const state = { issues: { item
 status	django/apps/adverts/models.py	/^    status = models.PositiveIntegerField($/;"	v	class:Advert
 status	django/apps/contributors/models.py	/^    status = models.PositiveSmallIntegerField($/;"	v	class:Contributor
 status	django/apps/legacy_db/models.py	/^    status = models.IntegerField()$/;"	v	class:InnleggAbstract
-status	django/apps/prodsys/models.py	/^    status = models.PositiveSmallIntegerField($/;"	v	class:ProdStory
+status_choices	webpack/src/react/stories/StoryList.js	/^const status_choices = storyFields$/;"	r
 status_code	django/apps/stories/models.py	/^    status_code = models.CharField($/;"	v	class:InlineLink
 stikktittel	django/apps/legacy_db/models.py	/^    stikktittel = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
 stint_set	django/api/contributor_serializers.py	/^    stint_set = StintSerializer(many=True, read_only=True)$/;"	v	class:ContributorSerializer
@@ -3352,16 +3249,13 @@ store	webpack/src/react/entry/ttEditor/configureStore.js	/^  const store = creat
 storiesFetched	webpack/src/react/stories/duck.js	/^export const storiesFetched = data => ({$/;"	r
 storiesRequested	webpack/src/react/stories/duck.js	/^export const storiesRequested = url => ({$/;"	r
 story	django/apps/frontpage/models.py	/^    story = models.ForeignKey($/;"	v	class:FrontpageStory
-story	django/apps/prodsys/models.py	/^    story = models.ForeignKey($/;"	v	class:ProdImage
-story	django/apps/prodsys/models.py	/^    story = models.ForeignKey($/;"	v	class:StoryPatch
-story	django/apps/prodsys/models.py	/^    story = models.ForeignKey(ProdStory)$/;"	v	class:ProdByline
 story	django/apps/stories/models.py	/^    story = models.ForeignKey(Story)$/;"	v	class:Byline
 storyAdded	webpack/src/react/stories/duck.js	/^export const storyAdded = data => ({$/;"	r
 storyDeSelected	webpack/src/react/stories/duck.js	/^export const storyDeSelected = () => ({$/;"	r
 storyPatched	webpack/src/react/stories/duck.js	/^export const storyPatched = ({ response }) => ({$/;"	r
 storyRequested	webpack/src/react/stories/duck.js	/^export const storyRequested = id => ({$/;"	r
 storySelected	webpack/src/react/stories/duck.js	/^export const storySelected = id => ({$/;"	r
-story_type	django/apps/prodsys/models.py	/^    story_type = models.ForeignKey($/;"	v	class:ProdStory
+story_type	django/api/story_serializers.py	/^    story_type = serializers.StringRelatedField()$/;"	v	class:StorySerializer
 story_type	django/apps/stories/models.py	/^    story_type = models.ForeignKey($/;"	v	class:Story
 story_type_url	django/apps/frontpage/models.py	/^    def story_type_url(self):$/;"	m	class:FrontpageStory
 storytype_frontpage	django/apps/frontpage/views.py	/^def storytype_frontpage(request, section, storytype):$/;"	f
@@ -3424,7 +3318,6 @@ test_create_cover	django/apps/issues/tests/test_models.py	/^def test_create_cove
 test_create_current_issue_web_bundle	django/apps/issues/tests/test_tasks.py	/^def test_create_current_issue_web_bundle(tmp_fixture_dir):$/;"	f
 test_create_issue	django/apps/issues/tests/test_models.py	/^def test_create_issue():$/;"	f
 test_create_printissue	django/apps/issues/tests/test_models.py	/^def test_create_printissue(fixture_pdf, settings, tempdir):$/;"	f
-test_create_prodstory	django/apps/prodsys/tests/test_models.py	/^def test_create_prodstory(celebrity_gossip):$/;"	f
 test_create_story	django/api/tests/test_indesign_api.py	/^def test_create_story(api_user, photo):$/;"	f
 test_create_story_from_xtags	django/apps/stories/tests/test_new_story.py	/^def test_create_story_from_xtags(news):$/;"	f
 test_cropbox_expansion	django/apps/photo/cropping/boundingbox.py	/^def test_cropbox_expansion():$/;"	f
@@ -3455,7 +3348,6 @@ test_post_save	django/apps/photo/tests/test_tasks.py	/^def test_post_save(fixtur
 test_prettify	django/utils/html.py	/^def test_prettify():$/;"	f
 test_random_image	django/apps/core/tests/test_content_factory.py	/^def test_random_image():$/;"	f
 test_require_binary_decorator	django/apps/issues/tests/test_tasks.py	/^def test_require_binary_decorator():$/;"	f
-test_revisions	django/apps/prodsys/tests/test_models.py	/^def test_revisions(skandale):$/;"	f
 test_serialize_and_deserialize	django/apps/photo/tests/test_cropping.py	/^def test_serialize_and_deserialize():$/;"	f
 test_story_content	django/apps/core/tests/test_content_factory.py	/^def test_story_content():$/;"	f
 test_supervisor_api_access	django/api/tests/funky.py	/^def test_supervisor_api_access(jane, billy, willy, possey):$/;"	f
@@ -3501,6 +3393,7 @@ to_python	django/apps/photo/cropping/models.py	/^    def to_python(self, value):
 to_representation	django/api/photo_serializers.py	/^    def to_representation(self, obj):$/;"	m	class:CropBoxField
 today	django/apps/contributors/models.py	/^def today():$/;"	f
 today	django/apps/issues/models.py	/^def today():$/;"	f
+toggle	webpack/src/react/utils/fp.test.js	/^  const toggle = fp.combinedToggle('a', 1)$/;"	r
 toggle	webpack/src/react/utils/fp.test.js	/^  const toggle = fp.objectToggle('a', 1)$/;"	r
 tools	webpack/src/react/containers/EditorToolBar.js	/^  const tools = {$/;"	r
 top	django/apps/stories/models.py	/^    def top(self):$/;"	m	class:ElementQuerySet
@@ -3511,9 +3404,9 @@ top_stories	django/apps/core/templatetags/universitas_menu.py	/^def top_stories(
 transformImageData2Api	webpack/src/react/ducks/images.js	/^const transformImageData2Api = ({ crop_box, cropping_method }) => ({$/;"	r
 trunc	webpack/src/react/containers/CropBox.js	/^    const trunc = num => Math.max(0, Math.min(num, 1))$/;"	r
 ul	webpack/src/react/utils/tagParser.js	/^const ul = line => {$/;"	r
-unapply	django/apps/prodsys/models.py	/^    def unapply(self, original_content=None):$/;"	m	class:StoryPatch
 undersak	django/apps/legacy_db/models.py	/^    undersak = models.IntegerField(blank=True, null=True)$/;"	v	class:Sak
 uninstall_watson	django/watson/migrations/0001_initial.py	/^def uninstall_watson(apps, schema_editor):$/;"	f
+union	webpack/src/react/utils/fp.js	/^const union = listifyFirstArgument(R.union)$/;"	r
 unique	django/apps/adverts/models.py	/^        unique=True,$/;"	v	class:AdChannel
 unique	django/apps/frontpage/models.py	/^        unique=True,$/;"	v	class:Frontpage
 unique	django/apps/markup/models.py	/^        unique=True,$/;"	v	class:MarkupTag.Meta
@@ -3536,7 +3429,7 @@ update_images	django/api/legacy_serializers.py	/^def update_images(images, story
 update_index	django/watson/search.py	/^    def update_index(self):$/;"	m	class:SearchContextManager
 update_index	django/watson/search.py	/^update_index = search_context_manager.update_index$/;"	v
 update_obj_index	django/watson/search.py	/^    def update_obj_index(self, obj):$/;"	m	class:SearchEngine
-update_story_image	django/api/legacy_serializers.py	/^def update_story_image(pk, bildefil=None, prioritet=None, bildetekst=None):$/;"	f
+update_story_image	django/api/legacy_serializers.py	/^def update_story_image(story, pk, bildefil=None,$/;"	f
 upload_folder	django/apps/adverts/models.py	/^def upload_folder(instance, filename):$/;"	f
 upload_folder	django/apps/photo/models.py	/^    def upload_folder(cls):$/;"	m	class:ImageFile
 upload_folder	django/apps/photo/models.py	/^    def upload_folder(cls):$/;"	m	class:ProfileImage
@@ -3624,30 +3517,6 @@ verbose_name	django/apps/photo/models.py	/^        verbose_name=_('old file path
 verbose_name	django/apps/photo/models.py	/^        verbose_name=_('source file'),$/;"	v	class:ImageFile.Meta
 verbose_name	django/apps/photo/models.py	/^        verbose_name=_('timestamp'),$/;"	v	class:ImageFile.Meta
 verbose_name	django/apps/photo/models.py	/^        verbose_name=_('width'),$/;"	v	class:ImageFile.Meta
-verbose_name	django/apps/prodsys/appconf.py	/^    verbose_name = _('Prodsys')$/;"	v	class:ProdsysAppConfig
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name = _('ProdByline')$/;"	v	class:ProdByline.Meta
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name = _('prodsys image')$/;"	v	class:ProdImage.Meta
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name = _('prodsys story')$/;"	v	class:ProdStory.Meta
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('applied'),$/;"	v	class:StoryPatch
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('caption'),$/;"	v	class:ProdImage
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('comments'),$/;"	v	class:ProdStory
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('content'),$/;"	v	class:ProdStory
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('contributor'),$/;"	v	class:StoryPatch
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('created'),$/;"	v	class:StoryPatch
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('credit'),$/;"	v	class:ProdByline
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('description'),$/;"	v	class:ProdByline
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('image'),$/;"	v	class:ProdImage
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('index'),$/;"	v	class:ProdByline
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('issue'),$/;"	v	class:ProdStory
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('patch'),$/;"	v	class:StoryPatch
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('position'),$/;"	v	class:ProdImage
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('priority'),$/;"	v	class:ProdImage
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('reverse_patch'),$/;"	v	class:StoryPatch
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('status'),$/;"	v	class:ProdStory
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('story'),$/;"	v	class:ProdImage
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('story'),$/;"	v	class:StoryPatch
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('story_type'),$/;"	v	class:ProdStory
-verbose_name	django/apps/prodsys/models.py	/^        verbose_name=_('working_title'),$/;"	v	class:ProdStory
 verbose_name	django/apps/stories/appconf.py	/^    verbose_name = _('Stories')$/;"	v	class:StoriesAppConfig
 verbose_name	django/apps/stories/migrations/0025_story_working_title.py	/^                verbose_name='Working title'$/;"	v	class:Migration
 verbose_name	django/apps/stories/models.py	/^        verbose_name = _('Aside')$/;"	v	class:Aside.Meta
@@ -3720,9 +3589,6 @@ verbose_name_plural	django/apps/markup/models.py	/^        verbose_name_plural =
 verbose_name_plural	django/apps/markup/models.py	/^        verbose_name_plural = _('inline tags')$/;"	v	class:InlineTag.Meta
 verbose_name_plural	django/apps/photo/models.py	/^        verbose_name_plural = _('ImageFiles')$/;"	v	class:ImageFile.Meta
 verbose_name_plural	django/apps/photo/models.py	/^        verbose_name_plural = _('Profile Images')$/;"	v	class:ProfileImage.Meta
-verbose_name_plural	django/apps/prodsys/models.py	/^        verbose_name_plural = _('Bylines')$/;"	v	class:ProdByline.Meta
-verbose_name_plural	django/apps/prodsys/models.py	/^        verbose_name_plural = _('prodsys images')$/;"	v	class:ProdImage.Meta
-verbose_name_plural	django/apps/prodsys/models.py	/^        verbose_name_plural = _('prodsys stories')$/;"	v	class:ProdStory.Meta
 verbose_name_plural	django/apps/stories/models.py	/^        verbose_name_plural = _('Asides')$/;"	v	class:Aside.Meta
 verbose_name_plural	django/apps/stories/models.py	/^        verbose_name_plural = _('Bylines')$/;"	v	class:Byline.Meta
 verbose_name_plural	django/apps/stories/models.py	/^        verbose_name_plural = _('Images')$/;"	v	class:StoryImage.Meta
@@ -3759,7 +3625,7 @@ width	django/apps/photo/cropping/boundingbox.py	/^    def width(self, value: flo
 width	webpack/src/react/utils/cropHelpers.js	/^  const width = right - left$/;"	r
 width_field	django/apps/photo/models.py	/^        width_field='full_width',$/;"	v	class:ImageFile.Meta
 willy	django/api/tests/funky.py	/^def willy(request):$/;"	f
-working_title	django/apps/prodsys/models.py	/^    working_title = models.CharField($/;"	v	class:ProdStory
+without	webpack/src/react/utils/fp.js	/^const without = listifyFirstArgument(R.without)$/;"	r
 working_title	django/apps/stories/models.py	/^    working_title = models.CharField($/;"	v	class:Story
 wyatt	django/api/tests/funky.py	/^def wyatt(request):$/;"	f
 xTag	webpack/src/react/utils/tagParser.js	/^const xTag = line => {$/;"	r

@@ -60,12 +60,17 @@ export const apiPatch = model => (id, data) => {
 }
 
 // helpers
-const paramPairs = (value, key, _) => `${key}=${value}`
+const paramPairs = (value, key, _) =>
+  R.type(value) == 'Array'
+    ? `${key}__in=${value.join(',')}`
+    : `${key}=${cleanValues(value)}`
+
 const cleanValues = R.pipe(String, R.replace(/\s+/g, ' '), encodeURIComponent)
 
 export const queryString = R.pipe(
-  R.map(cleanValues),
   R.mapObjIndexed(paramPairs),
+  // R.map(cleanValues),
+  // R.mapObjIndexed(paramPairs),
   R.values,
   R.join('&')
 )

@@ -1,4 +1,6 @@
+import 'styles/storylist.scss'
 import R from 'ramda'
+import cx from 'classnames'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link, push } from 'redux-little-router'
@@ -13,7 +15,7 @@ import {
   storiesRequested,
 } from 'stories/duck'
 import { listFields as storyFields } from 'stories/model'
-import { getDisplayName, formatDate, formatDateTime } from 'utils/modelUtils'
+import { getDisplayName, formatDate, relativeDateTime } from 'utils/modelUtils'
 
 // render all rows of results
 const renderRows = (items, fields) =>
@@ -34,7 +36,7 @@ const TableField = ({ type, value, choices }) => {
     case 'date':
       return <td>{formatDate(value)}</td>
     case 'datetime':
-      return <td>{formatDateTime(value)}</td>
+      return <td>{relativeDateTime(value)}</td>
     case 'thumb':
       return (
         <td>
@@ -50,12 +52,12 @@ const TableField = ({ type, value, choices }) => {
 
 let ListRow = ({ fields, onClick, ...props }) => (
   <tr
-    style={{
-      color: props.dirty ? '#888' : 'inherit',
-      fontWeight: props.selected ? 'bold' : 'normal',
-      cursor: 'pointer',
-    }}
-    className="ListRow"
+    className={cx({
+      [`status-${props.publication_status}`]: true,
+      ListRow: true,
+      dirty: props.dirty,
+      selected: props.selected,
+    })}
     onClick={onClick}
   >
     {renderFields(fields, props)}
@@ -73,11 +75,18 @@ ListRow = connect(
   })
 )(ListRow)
 
-const Button = connect(state => ({ query: getQuery(state) }), {
+const isFilterActive = (attr, value, query) => {
+  const query_param = R.prop(attr, query)
+  return R.type(query_param) === 'Array'
+    ? R.contains(value, query_param)
+    : R.equals(value, query_param)
+}
+
+const Filter = connect(state => ({ query: getQuery(state) }), {
   filterToggled,
 })(({ query, label, attr, value, filterToggled }) => {
   const clickHandler = e => filterToggled(attr, value)
-  const isActive = R.propEq(attr, value, query)
+  const isActive = isFilterActive(attr, value, query)
 
   return (
     <button
@@ -93,10 +102,20 @@ const Button = connect(state => ({ query: getQuery(state) }), {
 const getDate = () => new Date().toISOString().slice(0, 10)
 const getYear = () => new Date().toISOString().slice(0, 4)
 
+const status_choices = storyFields
+  .filter(el => el.key === 'publication_status')[0]
+  .choices.map(({ value, display_name }) => ({
+    value: parseInt(value),
+    label: display_name,
+  }))
+  .filter(choice => choice.value < 10)
+
 const StoryFilters = () => {
   return (
     <div>
-      <Button attr="limit" value="5" label="limit 5" />
+      {status_choices.map(props => (
+        <Filter attr="publication_status" key={props.value} {...props} />
+      ))}
     </div>
   )
 }
@@ -129,7 +148,7 @@ StoryNavigation = connect(getNavigation, { storiesRequested })(StoryNavigation)
 
 const StoryList = ({ items = [], fields = storyFields }) => {
   return (
-    <div className="IssueList">
+    <div className="StoryList">
       <StoryFilters />
       <StoryNavigation next="foo" previous="bar" />
       <table>

@@ -1,5 +1,5 @@
 import R from 'ramda' // Action constants
-import { objectToggle } from '../utils/fp'
+import { combinedToggle } from '../utils/fp'
 export const ITEM_ADDED = 'stories/ITEM_ADDED'
 export const ITEM_SELECTED = 'stories/ITEM_SELECTED'
 export const ITEM_PATCHED = 'stories/ITEM_PATCHED'
@@ -73,7 +73,11 @@ export const filterToggled = (key, value) => ({
 export const initialState = R.pipe(
   R.set(currentItemLens, 0),
   R.set(currentItemsLens, []),
-  R.set(queryLens, { order_by: '-modified' }),
+  R.set(queryLens, {
+    limit: 100,
+    order_by: 'publication_status,-modified',
+    publication_status: [3, 4, 5],
+  }),
   R.set(navigationLens, {})
 )({})
 
@@ -106,7 +110,7 @@ const getReducer = ({ type, payload }) => {
     case ITEM_SELECTED:
       return R.set(currentItemLens, payload.id)
     case FILTER_TOGGLED: {
-      return R.over(queryLens, objectToggle(payload.key, payload.value))
+      return R.over(queryLens, combinedToggle(payload.key, payload.value))
     }
     default:
       return R.identity

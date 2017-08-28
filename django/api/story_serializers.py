@@ -1,16 +1,21 @@
 from apps.stories.models import Story, Byline
 from rest_framework import serializers, viewsets
+from rest_framework.filters import SearchFilter
 from url_filter.integrations.drf import DjangoFilterBackend
 from django.core.exceptions import FieldError
 
 
 class BylineSerializer(serializers.ModelSerializer):
+
+    name = serializers.StringRelatedField(source='contributor')
+
     class Meta:
         model = Byline
         fields = [
-            'contributor',
             'credit',
+            'name',
             'title',
+            'contributor',
         ]
 
 
@@ -28,16 +33,18 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'id',
             'url',
+            'public_url',
+            'edit_url',
             'modified',
             'created',
             'working_title',
-            'public_url',
             'publication_status',
             'bodytext_markup',
+            'story_type',
             'byline_set',
-            'edit_url',
         ]
 
+    story_type = serializers.StringRelatedField()
     public_url = serializers.SerializerMethodField()
     edit_url = serializers.SerializerMethodField()
 
@@ -51,7 +58,11 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
         return self._build_uri(instance.get_edit_url())
 
     def update(self, instance, validated_data):
-        clean_model = validated_data.pop('clean', False)
+        clean_model = (
+            validated_data.pop('clean', False) or
+            'publication_status' in validated_data
+        )
+
         story = super().update(instance, validated_data)
         if clean_model:
             story.full_clean()
@@ -76,11 +87,10 @@ class QueryOrderableViewSetMixin(object):
 
 class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
 
-    """
-    API endpoint that allows Story to be viewed or updated.
-    """
+    """ API endpoint that allows Story to be viewed or updated.  """
 
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filter_fields = ['id', 'publication_status', 'modified']
+    search_fields = ['working_title', 'bodytext_markup']
     queryset = Story.objects.all()
     serializer_class = StorySerializer

@@ -651,8 +651,9 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     @property
     def is_published(self):
         # Is this Story public
-        return (self.publication_status in [Story.STATUS_NOINDEX,
-                                            Story.STATUS_PUBLISHED] and
+        public = [Story.STATUS_NOINDEX, Story.STATUS_PUBLISHED]
+        return (self.publication_date and
+                self.publication_status in public and
                 self.publication_date <= timezone.now())
 
     @property
@@ -1356,7 +1357,10 @@ class StoryImage(StoryMedia):
 
     @property
     def filename(self):
-        return str(self.imagefile)
+        try:
+            return str(self.imagefile)
+        except ObjectDoesNotExist:
+            return '[no image]'
 
     @property
     def small(self):

@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     'apps.legacy_db',
     'apps.adverts',
     'apps.search',
-    'apps.prodsys',
+    # 'apps.prodsys',
 ]
 
 # THIRD PARTY APPS
