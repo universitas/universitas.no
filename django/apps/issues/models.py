@@ -242,7 +242,7 @@ class Issue(models.Model, Edit_url_mixin):
 
     @property
     def number(self):
-        """Issue number for the giber year"""
+        """Issue number for the given year"""
         return self.__class__.objects.filter(
             publication_date__year=self.year,
             publication_date__lt=self.publication_date,

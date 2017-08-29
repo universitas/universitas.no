@@ -2,15 +2,14 @@
 from django.shortcuts import render
 from django.http import (
     HttpResponseRedirect,
-    HttpResponsePermanentRedirect,
-    Http404
+    Http404,
+    # HttpResponsePermanentRedirect,
 )
 from django.utils.http import base36_to_int
 from django.utils.decorators import available_attrs
 from django.views.decorators.cache import cache_page
 from functools import wraps
 
-from apps.core.views import search_404_view
 from apps.stories.models import Story, Section, StoryType
 from apps.frontpage.models import Frontpage, StoryModule
 import logging
@@ -124,7 +123,10 @@ def get_frontpage_stories(story_queryset, frontpage=None):
     result = StoryModule.objects.filter(
         frontpage=frontpage,
         frontpage_story__story__in=stories
-    ).prefetch_related('frontpage_story__imagefile')
+    ).prefetch_related(
+        'frontpage_story__imagefile',
+        'frontpage_story__story__story_type__section',
+    )
     return result
 
 
@@ -146,7 +148,7 @@ def section_frontpage(request, section):
     try:
         # is the slug a section name?
         section = Section.objects.get(slug=section)
-        stories = Story.objects.filter(story_type__section=section).published()
+        stories = Story.objects.published().filter(story_type__section=section)
         return frontpage_view(request, stories=stories)
     except Section.DoesNotExist:
         return fallback_view(request, slug=section)
@@ -171,5 +173,5 @@ def storytype_frontpage(request, section, storytype):
         story_type = StoryType.objects.get(slug=storytype)
     except StoryType.DoesNotExist:
         raise Http404('No such section and story type')
-    stories = Story.objects.filter(story_type=story_type).published()
+    stories = Story.objects.published().filter(story_type=story_type)
     return frontpage_view(request, stories=stories)

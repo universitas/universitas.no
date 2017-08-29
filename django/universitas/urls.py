@@ -6,7 +6,8 @@ from apps.core.views import RobotsTxtView, HumansTxtView
 from apps.search import urls as search_urls
 from apps.core.autocomplete_views import autocomplete_list
 from apps.frontpage.views import (
-    frontpage_view, section_frontpage, storytype_frontpage, search_404_view)
+    frontpage_view, section_frontpage, storytype_frontpage,)
+from apps.core.views import search_404_view
 from apps.issues.views import PdfArchiveView, PubPlanView
 from apps.stories.views import article_view
 from apps.photo.views import PhotoAppView

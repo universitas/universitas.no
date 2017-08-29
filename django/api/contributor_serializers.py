@@ -59,7 +59,10 @@ class ContributorViewSet(viewsets.ModelViewSet):
 
     """API endpoint that allows Contributor to be viewed or updated."""
 
-    queryset = Contributor.objects.all()
+    queryset = Contributor.objects.all().prefetch_related(
+        'stint_set__position',
+        'byline_photo',
+    )
     serializer_class = ContributorSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['status', 'display_name', 'byline_photo']

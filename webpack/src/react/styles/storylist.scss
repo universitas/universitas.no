@@ -3,6 +3,7 @@ $lightgreen: #ee6;
 $palegreen: #dda;
 $gray: #999;
 $dullgreen: mix($green, $gray);
+$pink: #f3a;
 
 .StoryList {
   user-select: none;
@@ -22,7 +23,8 @@ $dullgreen: mix($green, $gray);
   (5, $green),
   (6, $lightgreen),
   (7, $palegreen),
-  (9, $gray)
+  (9, $gray),
+  (100, $pink),
   {
     .status-#{$status} {
       background-color: $color;

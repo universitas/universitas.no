@@ -108,7 +108,7 @@ const status_choices = storyFields
     value: parseInt(value),
     label: display_name,
   }))
-  .filter(choice => choice.value < 10)
+  .filter(choice => choice.value < 10 || choice.value === 100)
 
 const StoryFilters = () => {
   return (

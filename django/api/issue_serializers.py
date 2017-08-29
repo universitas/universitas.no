@@ -30,7 +30,7 @@ class IssueSerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'publication_date',
             'year',
-            'number',
+            'issue_name',
             'pdfs',
             'issue_type',
         ]
@@ -48,7 +48,7 @@ class IssueViewSet(viewsets.ModelViewSet):
 
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['id', 'publication_date']
-    queryset = Issue.objects.all()
+    queryset = Issue.objects.all().prefetch_related('pdfs')
     serializer_class = IssueSerializer
     pagination_class = LargeLimitPagination
 

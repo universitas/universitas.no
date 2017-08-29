@@ -1,4 +1,4 @@
-from apps.stories.models import Story, Byline
+from apps.stories.models import Story, Byline, StoryType
 from rest_framework import serializers, viewsets
 from rest_framework.filters import SearchFilter
 from url_filter.integrations.drf import DjangoFilterBackend
@@ -17,6 +17,22 @@ class BylineSerializer(serializers.ModelSerializer):
             'title',
             'contributor',
         ]
+
+
+class StoryTypeSerializer(serializers.ModelSerializer):
+
+    """ModelSerializer for StoryType"""
+
+    class Meta:
+        model = StoryType
+        fields = [
+            'id',
+            'url',
+            'name',
+            'section',
+        ]
+
+    section = serializers.StringRelatedField()
 
 
 class StorySerializer(serializers.HyperlinkedModelSerializer):
@@ -85,6 +101,14 @@ class QueryOrderableViewSetMixin(object):
         return queryset
 
 
+class StoryTypeViewSet(viewsets.ModelViewSet):
+
+    """ API endpoint that allows StoryType to be viewed or updated.  """
+
+    queryset = StoryType.objects.all().prefetch_related('section')
+    serializer_class = StoryTypeSerializer
+
+
 class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
 
     """ API endpoint that allows Story to be viewed or updated.  """
@@ -93,4 +117,6 @@ class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
     filter_fields = ['id', 'publication_status', 'modified']
     search_fields = ['working_title', 'bodytext_markup']
     queryset = Story.objects.all()
+    queryset = queryset.prefetch_related('story_type__section')
+    queryset = queryset.prefetch_related('bylines', 'byline_set')
     serializer_class = StorySerializer

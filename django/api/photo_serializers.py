@@ -1,4 +1,5 @@
 from apps.photo.models import ImageFile
+from django.db import models
 from rest_framework import serializers, viewsets, filters
 from rest_framework.exceptions import ValidationError
 from apps.photo.cropping.boundingbox import CropBox
@@ -58,15 +59,12 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
     large = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
     method = serializers.SerializerMethodField()
-    usage = serializers.SerializerMethodField()
+    usage = serializers.IntegerField(read_only=True)
     name = serializers.SerializerMethodField()
     crop_box = CropBoxField()
 
     def get_name(self, instance):
         return Path(instance.source_file.name).name
-
-    def get_usage(self, instance):
-        return instance.storyimage_set.count()
 
     def get_method(self, instance):
         return instance.get_cropping_method_display()
@@ -94,7 +92,9 @@ class ImageFileViewSet(viewsets.ModelViewSet):
 
     """ API endpoint that allows ImageFile to be viewed or updated.  """
 
-    queryset = ImageFile.objects.order_by('-created')
+    queryset = ImageFile.objects.order_by(
+        '-created').annotate(usage=models.Count('storyimage'))
+
     serializer_class = ImageFileSerializer
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)
     search_fields = ['source_file', 'description']

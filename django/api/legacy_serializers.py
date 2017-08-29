@@ -155,6 +155,12 @@ class ProdStoryViewSet(viewsets.ModelViewSet):
 
     serializer_class = ProdStorySerializer
     queryset = Story.objects.order_by('publication_status', 'modified').filter(
-        publication_status__lt=Story.STATUS_PUBLISHED)
+        publication_status__lt=Story.STATUS_PUBLISHED
+    ).prefetch_related(
+        'story_type',
+        'bylines',
+        'byline_set',
+        'storyelement_set',
+    )
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['publication_status', 'title', 'bodytext_markup']

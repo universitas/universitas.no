@@ -427,7 +427,9 @@ class StoryQuerySet(models.QuerySet):
                 Story.STATUS_PUBLISHED,
                 Story.STATUS_NOINDEX,
             ]
-        ).filter(publication_date__lt=now)
+        ).filter(
+            publication_date__lt=now
+        ).select_related('story_type__section')
 
     def is_on_frontpage(self, frontpage):
         return self.filter(frontpagestory__placements=frontpage)
@@ -1068,13 +1070,15 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             text = getattr(self, attr)
             if text:
                 output.append(f'@{tag}:{text}')
-        for bl in self.byline_set.select_related('contributor'):
+        for bl in self.byline_set.all():
             output.append(str(bl))
         output.append(self.bodytext_markup)
-        for aside in self.asides():
-            output.append(aside.child.bodytext_markup)
-        for pullquote in self.pullquotes():
-            output.append(pullquote.child.bodytext_markup)
+        for aside in self.storyelement_set.all():
+            if aside._subclass == 'aside':
+                output.append(aside.child.bodytext_markup)
+        for pullquote in self.storyelement_set.all():
+            if pullquote._subclass == 'pullquote':
+                output.append(pullquote.child.bodytext_markup)
         return '\n'.join(output)
 
     @tekst.setter
