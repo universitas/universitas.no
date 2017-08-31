@@ -30,7 +30,8 @@ for arg; do case $arg in
   jupyter ) start_jupyter ;;
 
   fake    ) docker-compose run --rm web django-admin fake_content -c10 -s50 ;;
-  static  ) docker-compose run --rm web django-admin collectstatic --noinput ;;
+  static  ) docker-compose run --rm web django-admin collectstatic --noinput \
+    -i admin -i debug_toolbar -i rest_framework -i django_extensions ;;
   migrate ) docker-compose run --rm web django-admin migrate ;;
 
   up      ) docker-compose up ;;

@@ -12,6 +12,8 @@ services:
     command: runserver
     ports:
       - "8000:8000"
+    volumes:
+      - ./build:/var/build/
   celery:
     image: universitas/django:edge
   celerybeat:
