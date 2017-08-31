@@ -59,7 +59,6 @@ export const photosRequested = url => ({
   type: ITEMS_REQUESTED,
   payload: { url },
 })
-
 export const photosFetched = data => ({
   type: ITEMS_FETCHED,
   payload: data,

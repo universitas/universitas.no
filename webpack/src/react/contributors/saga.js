@@ -32,19 +32,17 @@ export default function* rootSaga() {
   yield fork(watchRouteChange)
 }
 
-const getModel = action => {
-  return R.path(['payload', 'result', 'model'])(action)
-}
-
 function* watchRouteChange() {
   while (true) {
     const action = yield take('ROUTER_LOCATION_CHANGED')
-    if (getModel(action) == 'contributor') yield fork(requestContributors, action)
-    const id = R.path(['payload', 'params', 'id'])(action)
-    if (id) {
-      yield put(contributorSelected(parseInt(id)))
-    } else {
-      yield put(contributorSelected(0))
+    const { id, model } = R.path(['payload', 'params'])(action)
+    if (model == 'contributors') {
+      if (id) {
+        yield put(contributorSelected(parseInt(id)))
+      } else {
+        yield put(contributorSelected(0))
+        yield fork(requestContributors, action)
+      }
     }
   }
 }

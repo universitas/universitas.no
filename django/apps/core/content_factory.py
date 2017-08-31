@@ -119,7 +119,7 @@ def random_storytype():
 
 def fake_story_content(fake=FAKE):
     sections = "@tit:{title}", "@ing:{lede}", "@txt:{content}"
-    title = fake.sentence(random.choice([1, 2, 3]))[:-1]
+    title = fake.sentence(random.choice([1, 2, 3]), False)[:-1]
     lede = ' '.join(fake.sentences(random.choice([1, 2, 3])))
     content = '\n'.join(fake.paragraphs(random.choice([4, 5, 10, 20, 30])))
     return '\n'.join(sections).format(title=title, lede=lede, content=content)

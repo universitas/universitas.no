@@ -25,26 +25,24 @@ import {
 } from './duck'
 
 export default function* rootSaga() {
-  yield takeLatest(FILTER_TOGGLED, requestStorys)
+  yield takeLatest(FILTER_TOGGLED, requestStories)
   yield takeLatest(ITEM_SELECTED, selectStory)
   yield takeLatest(FIELD_CHANGED, patchStory)
-  yield takeEvery(ITEMS_REQUESTED, requestStorys)
+  yield takeEvery(ITEMS_REQUESTED, requestStories)
   yield fork(watchRouteChange)
-}
-
-const getModel = action => {
-  return R.path(['payload', 'result', 'model'])(action)
 }
 
 function* watchRouteChange() {
   while (true) {
     const action = yield take('ROUTER_LOCATION_CHANGED')
-    if (getModel(action) == 'story') yield fork(requestStorys, action)
-    const id = R.path(['payload', 'params', 'id'])(action)
-    if (id) {
-      yield put(storySelected(parseInt(id)))
-    } else {
-      yield put(storySelected(0))
+    const { id, model } = R.path(['payload', 'params'])(action)
+    if (model == 'stories') {
+      if (id) {
+        yield put(storySelected(parseInt(id)))
+      } else {
+        yield put(storySelected(0))
+        yield fork(requestStories, action)
+      }
     }
   }
 }
@@ -57,7 +55,7 @@ function* selectStory(action) {
     yield put(storyAdded(data.response))
   }
 }
-function* requestStorys(action) {
+function* requestStories(action) {
   const url = R.path(['payload', 'url'])(action)
   let data = null
   if (url) {
@@ -65,7 +63,7 @@ function* requestStorys(action) {
     data = yield call(fetchUrl, url)
   } else {
     console.log('request stories')
-    data = yield call(fetchStorys)
+    data = yield call(fetchStories)
   }
   if (data) {
     yield put(storiesFetched(data))
@@ -81,7 +79,7 @@ function* patchStory(action) {
   }
 }
 
-function* fetchStorys() {
+function* fetchStories() {
   const attrs = yield select(getQuery)
   const { response, error } = yield call(apiList, 'stories', attrs)
   if (response) {

@@ -12,33 +12,6 @@ const modelFields = [
     editable: true,
   },
   {
-    key: 'story_type',
-    label: 'artikkeltype',
-    type: 'string',
-    editable: false,
-  },
-  {
-    key: 'created',
-    type: 'datetime',
-    list: false,
-  },
-  {
-    key: 'modified',
-    type: 'datetime',
-  },
-  {
-    key: 'public_url',
-    label: 'lenke',
-    type: 'link',
-    list: false,
-  },
-  {
-    key: 'edit_url',
-    label: 'django',
-    type: 'link',
-    list: false,
-  },
-  {
     key: 'publication_status',
     label: 'status',
     type: 'choice',
@@ -58,11 +31,47 @@ const modelFields = [
     ],
   },
   {
+    key: 'story_type',
+    label: 'artikkeltype',
+    type: 'storytype',
+    editable: true,
+    list: false,
+  },
+  {
+    key: 'story_type_name',
+    label: 'artikkeltype',
+    type: 'string',
+    detail: false,
+  },
+  {
+    key: 'created',
+    label: 'opprettet',
+    type: 'datetime',
+    list: false,
+  },
+  {
+    key: 'modified',
+    label: 'endret',
+    type: 'datetime',
+  },
+  {
     key: 'bodytext_markup',
     label: 'tekst',
     list: false,
     editable: true,
     type: 'text',
+  },
+  {
+    key: 'public_url',
+    label: 'lenke',
+    type: 'link',
+    list: false,
+  },
+  {
+    key: 'edit_url',
+    label: 'django',
+    type: 'link',
+    list: false,
   },
 ]
 

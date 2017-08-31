@@ -91,7 +91,7 @@ const Filter = connect(state => ({ query: getQuery(state) }), {
   return (
     <button
       type="button"
-      className={`small button ${isActive ? 'primary' : 'secondary'}`}
+      className={`Filter ${isActive ? 'active' : 'inactive'}`}
       onClick={clickHandler}
     >
       {label}
@@ -112,7 +112,7 @@ const status_choices = storyFields
 
 const StoryFilters = () => {
   return (
-    <div>
+    <div className="Filters">
       {status_choices.map(props => (
         <Filter attr="publication_status" key={props.value} {...props} />
       ))}
@@ -121,25 +121,18 @@ const StoryFilters = () => {
 }
 
 let StoryNavigation = ({ previous, next, storiesRequested }) => {
+  if (!(previous || next)) {
+    return null
+  }
   const nextItems = () => storiesRequested(next)
   const prevItems = () => storiesRequested(previous)
   return (
-    <div>
-      <button
-        className="small button"
-        onClick={prevItems}
-        disabled={!previous}
-        title={previous}
-      >
-        previous
+    <div className="Navigation">
+      <button onClick={prevItems} disabled={!previous} title={previous}>
+        bakover
       </button>
-      <button
-        className="small button"
-        onClick={nextItems}
-        disabled={!next}
-        title={next}
-      >
-        next
+      <button onClick={nextItems} disabled={!next} title={next}>
+        fremover
       </button>
     </div>
   )
@@ -149,8 +142,10 @@ StoryNavigation = connect(getNavigation, { storiesRequested })(StoryNavigation)
 const StoryList = ({ items = [], fields = storyFields }) => {
   return (
     <div className="StoryList">
-      <StoryFilters />
-      <StoryNavigation next="foo" previous="bar" />
+      <div className="ListBar">
+        <StoryFilters />
+        <StoryNavigation />
+      </div>
       <table>
         <thead>
           <tr>{renderHeaders(fields)}</tr>

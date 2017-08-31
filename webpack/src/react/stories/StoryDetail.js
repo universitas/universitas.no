@@ -4,12 +4,7 @@ import { connect } from 'react-redux'
 import { getCurrentStory, fieldChanged } from 'stories/duck'
 import { detailFields as fields } from 'stories/model'
 import { formatDateTime, formatDate } from 'utils/modelUtils'
-
-const PdfPreview = ({ cover_page, pdf }) => (
-  <a href={pdf}>
-    <img className="PdfPreview" src={cover_page} alt="pdf" />
-  </a>
-)
+import StoryTypeSelect from 'storytypes/StoryTypeSelect'
 
 const ChoiceField = ({ choices, value, editable, ...args }) =>
   editable
@@ -23,45 +18,39 @@ const ChoiceField = ({ choices, value, editable, ...args }) =>
 const IntegerField = ({ value, editable, choices, ...args }) =>
   editable
     ? <input type="number" value={value} {...args} />
-    : <span>{value}</span>
+    : <span {...args}>{value}</span>
 
-const ThumbField = ({ value, editable, ...args }) =>
-  editable ? <img src={value} /> : <img src={value} />
-
-const LinkField = ({ value, editable, ...args }) => <a href={value}>{value}</a>
+const LinkField = ({ value, editable, label = 'lenke', ...args }) => (
+  <a {...args} href={value}>{label || value}</a>
+)
 
 const DateField = ({ value, editable, choices, ...args }) =>
   editable
     ? <input type="date" value={value} {...args} />
-    : <span>{formatDate(value)}</span>
+    : <span {...args}>{formatDate(value)}</span>
 
 const DateTimeField = ({ value, editable, choices, ...args }) =>
   editable
     ? <input type="datetime" value={value} {...args} />
-    : <span>{formatDateTime(value)}</span>
+    : <span {...args}>{formatDateTime(value)}</span>
 
 const StringField = ({ value, editable, choices, ...args }) =>
   editable
     ? <input style={{ width: '100%' }} type="text" value={value} {...args} />
-    : <span>{value}</span>
-
-const tfstyle = {
-  width: '100%',
-  height: '500px',
-}
+    : <span {...args}>{value}</span>
 
 const TextField = ({ value, editable, choices, ...args }) =>
   editable
-    ? <textarea style={tfstyle} type="text" value={value} {...args} />
-    : <span>{value}</span>
+    ? <textarea type="text" value={value} {...args} />
+    : <span {...args}>{value}</span>
 
 const fieldTypes = {
   choice: ChoiceField,
+  storytype: StoryTypeSelect,
   string: StringField,
   text: TextField,
   link: LinkField,
   integer: IntegerField,
-  thumb: ThumbField,
   date: DateField,
   datetime: DateTimeField,
 }
@@ -69,9 +58,9 @@ const fieldTypes = {
 const DetailField = ({ label, type, ...args }) => {
   const TypeField = fieldTypes[type] || StringField
   return (
-    <div>
-      <span>{label}: </span>
-      <TypeField {...args} />
+    <div className={`DetailField ${type}`}>
+      <span className="label">{label}: </span>
+      <TypeField className="Field" {...args} />
     </div>
   )
 }

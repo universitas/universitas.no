@@ -57,10 +57,15 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
             'publication_status',
             'bodytext_markup',
             'story_type',
+            'story_type_name',
             'byline_set',
         ]
 
-    story_type = serializers.StringRelatedField()
+    story_type = serializers.PrimaryKeyRelatedField(
+        queryset=StoryType.objects.all(),
+        read_only=False,
+    )
+    story_type_name = serializers.StringRelatedField(source='story_type')
     public_url = serializers.SerializerMethodField()
     edit_url = serializers.SerializerMethodField()
 

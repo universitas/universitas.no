@@ -33,10 +33,10 @@ AppButton.propTypes = {
 export default () => (
   <main className="ProdSys">
     <section className="SideBar">
-      <AppButton href="/stories" Icon={Edit} label="stories" />
-      <AppButton href="/issues" Icon={Newspaper} label="issues" />
-      <AppButton href="/photos" Icon={Camera} label="photos" />
-      <AppButton href="/contributors" Icon={Person} label="contributors" />
+      <AppButton href="/stories" Icon={Edit} label="saker" />
+      <AppButton href="/photos" Icon={Camera} label="foto" />
+      <AppButton href="/issues" Icon={Newspaper} label="utgaver" />
+      <AppButton href="/contributors" Icon={Person} label="bidragsytere" />
     </section>
     <section className="ListPanel">
       <Fragment forRoute="/stories"><StoryList /></Fragment>

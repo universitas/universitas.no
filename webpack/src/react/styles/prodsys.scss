@@ -11,9 +11,64 @@
   color: white;
   background-color: #555;
 }
+.ListBar {
+  margin-bottom: .5em;
+  display: flex;
+  flex-wrap: wrap;
+  button {
+    color: white;
+    font-size: 0.8em;
+    padding: 0.5em;
+    margin: 0.2em;
+    border-radius: 0.5em;
+    background-color: lighten(blue, 10%);
+    cursor: pointer;
+    &.inactive {
+      background-color: lighten(grey, 10%);
+    }
+    &:hover {
+      background-color: lighten(blue, 30%);
+    }
+    &:disabled {
+      background-color: lighten(grey, 30%);
+      cursor: inherit;
+    }
+  }
+  .Filters {
+    flex-wrap: wrap;
+    display: flex;
+  }
+  .Navigation {
+    flex-wrap: wrap;
+    display: flex;
+  }
+}
 .DetailPanel> div{
+  background-color: #eee;
+  padding: 0.5em;
   height: 100%;
+  display: flex;
+  flex-direction: column;
   overflow-y: scroll;
+}
+.DetailField {
+  display: flex;
+  .label {
+    font-weight: bold;
+    width: 6em;
+  }
+  .Field {
+    flex: 1;
+  }
+  &.text {
+    flex: 1;
+    flex-direction: column;
+    textarea {
+      padding: 0.5em;
+      resize: none;
+      flex: 1;
+    }
+  }
 }
 .DetailPanel, .ListPanel {
   flex: 1;

@@ -13,6 +13,9 @@ $pink: #f3a;
   .ListRow {
     cursor: pointer;
     td {
+      // overflow-wrap: break-word;
+      word-break: break-word;
+      hyphens: auto;
       padding: .2em .5em;
     }
   }
