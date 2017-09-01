@@ -79,6 +79,8 @@ INSTALLED_APPS = [
     'storages',
     'webpack_loader',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
     'crispy_forms',
     'django_filters',
 ] + INSTALLED_APPS

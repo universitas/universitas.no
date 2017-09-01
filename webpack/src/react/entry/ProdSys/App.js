@@ -11,6 +11,7 @@ import PhotoList from 'photos/PhotoList'
 import PhotoDetail from 'photos/PhotoDetail'
 import StoryList from 'stories/StoryList'
 import StoryDetail from 'stories/StoryDetail'
+import UserTool from 'user/UserTool'
 import 'styles/prodsys.scss'
 
 const Home = () => <div>home</div>
@@ -37,6 +38,8 @@ export default () => (
       <AppButton href="/photos" Icon={Camera} label="foto" />
       <AppButton href="/issues" Icon={Newspaper} label="utgaver" />
       <AppButton href="/contributors" Icon={Person} label="bidragsytere" />
+      <div className="spacer" style={{ flex: 1 }} />
+      <UserTool />
     </section>
     <section className="ListPanel">
       <Fragment forRoute="/stories"><StoryList /></Fragment>

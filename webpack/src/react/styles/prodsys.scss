@@ -4,6 +4,30 @@
   height: 100vh;
   // overflow: hidden;
 }
+.UserTool {
+  .User, .LoginForm {
+    font-size: 0.3em;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+  input, .username, .button {
+    font-size: 0.9em;
+    width: 5.5em;
+    margin-bottom: 0.5em;
+    padding: 0.2em 0.5em;
+  }
+  .button {
+    font-size: 0.9em;
+    background-color: #222;
+    color: white;
+    padding: 0.5em;
+    &:hover {
+      background-color: red;
+    }
+  }
+
+}
 .AppButton {
   display: flex;
   flex-direction: column;
