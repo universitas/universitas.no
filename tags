@@ -343,7 +343,6 @@ LinkField	webpack/src/react/stories/DetailField.js	/^const LinkField = ({ value,
 LinkInline	django/apps/stories/admin.py	/^class LinkInline(admin.TabularInline):$/;"	c
 List	webpack/src/react/containers/PhotoList.js	/^const List = ({ images, style = {} }) => ($/;"	r
 LoginForm	webpack/src/react/user/UserTool.js	/^class LoginForm extends React.Component {$/;"	r
-Logout	webpack/src/react/user/UserTool.js	/^const Logout = ({ onClick }) => <button onClick={onClick}>Log out<\/button>$/;"	r
 MAGAZINE	django/apps/issues/models.py	/^    MAGAZINE = 2$/;"	v	class:Issue
 MAG_PAGES_GLOB	django/apps/issues/tasks.py	/^MAG_PAGES_GLOB = 'UNI12VER*.pdf'$/;"	v
 MEDIA_ROOT	django/universitas/local.py	/^    MEDIA_ROOT = env.MEDIA_DIR or '\/media\/'$/;"	v
@@ -742,7 +741,8 @@ USE_I18N	django/universitas/base.py	/^USE_I18N = True  # Internationalisation (s
 USE_L10N	django/universitas/base.py	/^USE_L10N = True  # Localisation (numbers and stuff)$/;"	v
 USE_TZ	django/universitas/base.py	/^USE_TZ = True  # Use timezone$/;"	v
 UnicodeJSONRenderer	django/api/legacy_serializers.py	/^class UnicodeJSONRenderer(JSONRenderer):$/;"	c
-UserTool	webpack/src/react/user/UserTool.js	/^const UserTool = ({ username, pending }) => ($/;"	r
+User	webpack/src/react/user/UserTool.js	/^const User = ({ name, logOut }) => ($/;"	r
+UserTool	webpack/src/react/user/UserTool.js	/^const UserTool = ({ username, pending, logIn, logOut }) => ($/;"	r
 VIDEO_HOSTS	django/apps/stories/models.py	/^    VIDEO_HOSTS = ($/;"	v	class:StoryVideo
 VIDEO_TAG	django/apps/stories/models.py	/^VIDEO_TAG = '@video:'$/;"	v
 VideoInline	django/apps/stories/admin.py	/^class VideoInline(admin.TabularInline, ):$/;"	c
@@ -1172,6 +1172,7 @@ crop_box	django/apps/photo/cropping/models.py	/^    crop_box = BoxField($/;"	v	c
 cropped_thumb	django/apps/photo/admin.py	/^    def cropped_thumb(self, instance):$/;"	m	class:ThumbAdmin
 cropping_method	django/apps/photo/cropping/models.py	/^    cropping_method = models.PositiveSmallIntegerField($/;"	v	class:AutoCropImage
 cropping_method	webpack/src/react/sagas/images.js	/^  const cropping_method = AUTOCROP$/;"	r
+csrftoken	webpack/src/react/services/api.js	/^const csrftoken = Cookies.get('csrftoken')$/;"	r
 css_classes	django/apps/adverts/models.py	/^    def css_classes(self):$/;"	m	class:AdChannel
 ctrlb	django/ptpython_config.py	/^    def ctrlb(event):$/;"	f	function:configure
 currentItemLens	webpack/src/react/contributors/duck.js	/^const currentItemLens = lens('currentItem')$/;"	r
@@ -2300,6 +2301,7 @@ logger	django/apps/stories/models.py	/^logger = logging.getLogger(__name__)$/;"	
 logger	django/apps/stories/tasks.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/stories/templatetags/inline_elements.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/stories/views.py	/^logger = logging.getLogger(__name__)$/;"	v
+login	webpack/src/react/user/UserTool.js	/^    const login = this.login.value$/;"	r
 loginSuccess	webpack/src/react/user/duck.js	/^export const loginSuccess = ({ key }) => ({ type: LOGGED_IN, payload: { key } })$/;"	r
 lookups	django/apps/legacy_db/admin.py	/^    def lookups(self, request, model_admin):$/;"	m	class:ProdusertFilter
 main	django/apps/legacy_db/export_content_and_images.py	/^    def main(websak):$/;"	f	function:_websak_til_xtags
@@ -2889,6 +2891,7 @@ parent_story	django/apps/stories/models.py	/^    parent_story = models.ForeignKe
 parent_story	django/apps/stories/models.py	/^    parent_story = models.ForeignKey(Story)$/;"	v	class:StoryElement
 parse_box_data	django/apps/photo/cropping/models.py	/^def parse_box_data(value):$/;"	f
 parse_markup	django/apps/stories/models.py	/^    def parse_markup(self):$/;"	m	class:TextContent
+password	webpack/src/react/user/UserTool.js	/^    const password = this.password.value$/;"	r
 patched_timezone_now	django/api/tests/funky.py	/^def patched_timezone_now(monkeypatch):$/;"	f
 path	django/apps/legacy_db/models.py	/^    path = models.CharField(max_length=255)$/;"	v	class:Bilde
 pattern	django/apps/markup/models.py	/^    pattern = models.CharField($/;"	v	class:Alias
