@@ -30,7 +30,7 @@ export default function* rootSaga() {
   yield takeLatest(FILTER_TOGGLED, requestStories)
   yield takeLatest(ITEM_SELECTED, selectStory)
   yield takeLatest(FIELD_CHANGED, patchStory)
-  yield takeEvery(ITEMS_REQUESTED, requestStories)
+  yield takeLatest(ITEMS_REQUESTED, requestStories)
   yield takeEvery(ITEM_CLONED, cloneStory)
   yield fork(watchRouteChange)
 }
@@ -58,13 +58,12 @@ function* selectStory(action) {
   }
 }
 function* requestStories(action) {
+  yield call(delay, 200)
   const url = R.path(['payload', 'url'])(action)
   let data = null
   if (url) {
-    console.log('request url', url)
     data = yield call(fetchUrl, url)
   } else {
-    console.log('request stories')
     data = yield call(fetchStories)
   }
   if (data) {
@@ -73,7 +72,7 @@ function* requestStories(action) {
 }
 function* patchStory(action) {
   // debounce
-  yield call(delay, 500)
+  yield call(delay, 1000)
   const { id, field, value } = action.payload
   const data = yield call(apiPatch('stories'), id, { [field]: value })
   if (data) {

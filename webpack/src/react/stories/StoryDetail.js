@@ -50,21 +50,22 @@ StoryDetailTools = connect(null, (dispatch, props) => ({
   cloneStory: () => dispatch(storyCloned(props.id)),
 }))(StoryDetailTools)
 
-const Detail = ({ pdfs = [], dirty, fieldChanged, ...data }) => (
-  <div className="wrapper">
-    <StoryDetailTools {...data} />
-    <div className="fields">
-      {fields.map(({ key, ...args }) => (
-        <DetailField
-          key={key}
-          name={key}
-          value={data[key]}
-          onChange={e => fieldChanged(data.id, key, e.target.value)}
-          {...args}
-        />
-      ))}
-    </div>
-  </div>
-)
+const Detail = ({ fieldChanged, dirty, ...data }) =>
+  data.id
+    ? <div className="wrapper">
+        <StoryDetailTools {...data} />
+        <div className="fields">
+          {fields.map(({ key, ...args }) => (
+            <DetailField
+              key={key}
+              name={key}
+              value={data[key]}
+              onChange={e => fieldChanged(data.id, key, e.target.value)}
+              {...args}
+            />
+          ))}
+        </div>
+      </div>
+    : <div> ... </div>
 
 export default connect(getCurrentStory, { fieldChanged })(Detail)

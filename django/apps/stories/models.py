@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ Content in the publication. """
 
 # Python standard library
@@ -76,7 +75,6 @@ class MarkupFieldMixin(object):
     def clean(self, value, model_instance):
         value = super().clean(value, model_instance)
         value = remove_control_chars(value)
-        value = re.sub(r'\r\n', '\n', value)
         value = self.clean_links(value, model_instance)
         soup = BeautifulSoup(value, 'html5lib')
         if value != soup.text:
@@ -797,22 +795,27 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
     def clean(self):
         """ Clean user input and populate fields """
-        if self.publication_status >= Story.STATUS_FROM_DESK:
+        cleanup = [Story.STATUS_FROM_DESK, Story.STATUS_PUBLISHED]
+        published = [Story.STATUS_PUBLISHED, Story.STATUS_NOINDEX]
+
+        if self.publication_status in cleanup:
             if not self.title and '@headline:' not in self.bodytext_markup:
                 self.bodytext_markup = self.bodytext_markup.replace(
                     '@tit:', '@headline:', 1)
             self.parse_markup()
-        # self.bodytext_markup = self.reindex_inlines()
-        # TODO: Fix redindeksering av placeholders for video og bilder.
-        self.bylines_html = self.get_bylines_as_html()
-        if (not self.publication_date and
-                self.publication_status in [Story.STATUS_PUBLISHED,
-                                            Story.STATUS_NOINDEX]):
-            self.publication_date = timezone.now()
-        # fix tag typos etc.
+
         self.bodytext_markup = Alias.objects.replace(
             content=self.bodytext_markup,
             timing=Alias.TIMING_CLEAN)
+
+        # self.bodytext_markup = self.reindex_inlines()
+        # TODO: Fix redindeksering av placeholders for video og bilder.
+
+        self.bylines_html = self.get_bylines_as_html()
+        if self.publication_status in published:
+            self.publication_date = self.publication_date or timezone.now()
+
+        # fix tag typos etc.
         super().clean()
 
     def _block_new(self, tag, content, element):

@@ -130,7 +130,7 @@ let StoryNavigation = ({
   storiesRequested,
 }) => {
   const info = (
-    <div className="info">{1 + last - results}–{last} av {count}</div>
+    <div className="info">resultat {1 + last - results}–{last} av {count}</div>
   )
   if (!(previous || next)) {
     return info
@@ -156,7 +156,6 @@ const StoryList = ({ items = [], fields = storyFields }) => {
     <div className="StoryList">
       <div className="ListBar">
         <StoryFilters />
-        <StoryNavigation />
       </div>
       <table>
         <thead>
@@ -166,6 +165,9 @@ const StoryList = ({ items = [], fields = storyFields }) => {
           {renderRows(items, fields)}
         </tbody>
       </table>
+      <div className="ListBar">
+        <StoryNavigation />
+      </div>
     </div>
   )
 }

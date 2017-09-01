@@ -29,7 +29,7 @@ export const getNavigation = selectorFromLens(navigationLens)
 export const getStory = id => selectorFromLens(itemLens(id))
 
 export const getCurrentStory = state =>
-  getStory(getCurrentStoryId(state))(state)
+  getStory(getCurrentStoryId(state))(state) || {}
 
 // Action creators
 export const storyAdded = data => ({
@@ -79,9 +79,9 @@ export const initialState = R.pipe(
   R.set(currentItemLens, 0),
   R.set(currentItemsLens, []),
   R.set(queryLens, {
-    limit: 50,
+    limit: 25,
     order_by: 'publication_status,-modified',
-    publication_status: [3, 4, 5],
+    publication_status: [3, 4, 5, 6, 7],
   }),
   R.set(navigationLens, {})
 )({})

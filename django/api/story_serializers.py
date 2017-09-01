@@ -68,6 +68,8 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
     story_type_name = serializers.StringRelatedField(source='story_type')
     public_url = serializers.SerializerMethodField()
     edit_url = serializers.SerializerMethodField()
+    bodytext_markup = serializers.CharField(trim_whitespace=False)
+    working_title = serializers.CharField(trim_whitespace=False)
 
     def _build_uri(self, url):
         return self._context['request'].build_absolute_uri(url)

@@ -169,7 +169,7 @@ DateTimeField	webpack/src/react/stories/DetailField.js	/^const DateTimeField = (
 Detail	webpack/src/react/contributors/ContributorDetail.js	/^const Detail = ({ pdfs = [], dirty, fieldChanged, ...data }) => ($/;"	r
 Detail	webpack/src/react/issues/IssueDetail.js	/^const Detail = ({ pdfs = [], dirty, fieldChanged, ...data }) => ($/;"	r
 Detail	webpack/src/react/photos/PhotoDetail.js	/^const Detail = ({ pdfs = [], dirty, fieldChanged, ...data }) => ($/;"	r
-Detail	webpack/src/react/stories/StoryDetail.js	/^const Detail = ({ pdfs = [], dirty, fieldChanged, ...data }) => ($/;"	r
+Detail	webpack/src/react/stories/StoryDetail.js	/^const Detail = ({ fieldChanged, dirty, ...data }) =>$/;"	r
 DetailField	webpack/src/react/contributors/ContributorDetail.js	/^const DetailField = ({ label, type, ...args }) => {$/;"	r
 DetailField	webpack/src/react/issues/IssueDetail.js	/^const DetailField = ({ label, type, ...args }) => {$/;"	r
 DetailField	webpack/src/react/photos/PhotoDetail.js	/^const DetailField = ({ label, type, ...args }) => {$/;"	r
@@ -1020,6 +1020,7 @@ blockParser	webpack/src/react/utils/tagParser.js	/^export const blockParser = me
 body	webpack/src/react/services/api.js	/^  const body = JSON.stringify(data)$/;"	r
 bodytext_html	django/apps/stories/models.py	/^    bodytext_html = models.TextField($/;"	v	class:TextContent
 bodytext_html	django/apps/stories/models.py	/^    bodytext_html = models.TextField()$/;"	v	class:InlineHtml
+bodytext_markup	django/api/story_serializers.py	/^    bodytext_markup = serializers.CharField(trim_whitespace=False)$/;"	v	class:StorySerializer
 bodytext_markup	django/apps/stories/models.py	/^    bodytext_markup = MarkupTextField($/;"	v	class:TextContent
 boxPath	webpack/src/react/components/Overlay.js	/^  const boxPath = `M${left}, ${top}V${bottom}H${right}V${top}Z`$/;"	r
 boxPath	webpack/src/react/containers/PhotoList.js	/^  const boxPath = `M0, 0H1V1H0Z M${left}, ${top}V${bottom}H${right}V${top}Z`$/;"	r
@@ -3657,6 +3658,7 @@ width	webpack/src/react/utils/cropHelpers.js	/^  const width = right - left$/;"	
 width_field	django/apps/photo/models.py	/^        width_field='full_width',$/;"	v	class:ImageFile.Meta
 willy	django/api/tests/funky.py	/^def willy(request):$/;"	f
 without	webpack/src/react/utils/fp.js	/^const without = listifyFirstArgument(R.without)$/;"	r
+working_title	django/api/story_serializers.py	/^    working_title = serializers.CharField(trim_whitespace=False)$/;"	v	class:StorySerializer
 working_title	django/apps/stories/models.py	/^    working_title = models.CharField($/;"	v	class:Story
 wyatt	django/api/tests/funky.py	/^def wyatt(request):$/;"	f
 xTag	webpack/src/react/utils/tagParser.js	/^const xTag = line => {$/;"	r
