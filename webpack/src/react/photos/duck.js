@@ -85,7 +85,12 @@ const getReducer = ({ type, payload }) => {
       return R.compose(
         R.over(itemsLens, R.merge(items)),
         R.set(currentItemsLens, ids),
-        R.set(navigationLens, { next, previous })
+        R.set(navigationLens, {
+          results: results.length,
+          count,
+          next,
+          previous,
+        })
       )
     }
     case ITEM_PATCHED:

@@ -2,6 +2,7 @@ import R from 'ramda' // Action constants
 import { combinedToggle } from '../utils/fp'
 export const ITEM_ADDED = 'stories/ITEM_ADDED'
 export const ITEM_SELECTED = 'stories/ITEM_SELECTED'
+export const ITEM_CLONED = 'stories/ITEM_CLONED'
 export const ITEM_PATCHED = 'stories/ITEM_PATCHED'
 export const FIELD_CHANGED = 'stories/FIELD_CHANGED'
 export const ITEMS_FETCHED = 'stories/ITEMS_FETCHED'
@@ -34,6 +35,10 @@ export const getCurrentStory = state =>
 export const storyAdded = data => ({
   type: ITEM_ADDED,
   payload: data,
+})
+export const storyCloned = id => ({
+  type: ITEM_CLONED,
+  payload: { id },
 })
 export const storySelected = id => ({
   type: ITEM_SELECTED,
@@ -74,12 +79,19 @@ export const initialState = R.pipe(
   R.set(currentItemLens, 0),
   R.set(currentItemsLens, []),
   R.set(queryLens, {
-    limit: 100,
+    limit: 50,
     order_by: 'publication_status,-modified',
     publication_status: [3, 4, 5],
   }),
   R.set(navigationLens, {})
 )({})
+
+const offsetFromUrl = R.compose(
+  R.defaultTo(0),
+  parseInt,
+  R.prop(1),
+  R.match(/(?:offset=)(\d+)/)
+)
 
 const getReducer = ({ type, payload }) => {
   switch (type) {
@@ -90,7 +102,13 @@ const getReducer = ({ type, payload }) => {
       return R.compose(
         R.over(itemsLens, R.merge(items)),
         R.set(currentItemsLens, ids),
-        R.set(navigationLens, { next, previous })
+        R.set(navigationLens, {
+          results: results.length,
+          last: next ? offsetFromUrl(next) : results.length,
+          count,
+          next,
+          previous,
+        })
       )
     }
     case ITEM_PATCHED:

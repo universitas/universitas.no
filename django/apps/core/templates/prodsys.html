@@ -3,7 +3,11 @@
 {% block title %}ProdSys V2{% endblock title %}
 {% block topmenu %}{% endblock topmenu %}
 {% block content %}
-  <div id="ReactApp">Mount app here.</div>
+<div id="ReactApp">
+  <div class=loaderWrapper>
+    <div class=loader>Laster inn prodsys...</div>
+  </div>
+</div>
 {% endblock content %}
 {% block final %}
   {% render_bundle "prodsys" %}

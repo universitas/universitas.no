@@ -10,7 +10,7 @@ import {
   take,
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-import { apiFetch, apiPatch, apiList, apiGet } from '../services/api'
+import { apiFetch, apiPatch, apiPost, apiList, apiGet } from '../services/api'
 import {
   storiesFetched,
   storySelected,
@@ -19,16 +19,19 @@ import {
   ITEM_SELECTED,
   FILTER_TOGGLED,
   FIELD_CHANGED,
+  ITEM_CLONED,
   getStory,
   getQuery,
   storyAdded,
 } from './duck'
+import { push } from 'redux-little-router'
 
 export default function* rootSaga() {
   yield takeLatest(FILTER_TOGGLED, requestStories)
   yield takeLatest(ITEM_SELECTED, selectStory)
   yield takeLatest(FIELD_CHANGED, patchStory)
   yield takeEvery(ITEMS_REQUESTED, requestStories)
+  yield takeEvery(ITEM_CLONED, cloneStory)
   yield fork(watchRouteChange)
 }
 
@@ -41,7 +44,6 @@ function* watchRouteChange() {
         yield put(storySelected(parseInt(id)))
       } else {
         yield put(storySelected(0))
-        yield fork(requestStories, action)
       }
     }
   }
@@ -76,6 +78,26 @@ function* patchStory(action) {
   const data = yield call(apiPatch('stories'), id, { [field]: value })
   if (data) {
     yield put(storyPatched(data))
+  }
+}
+function* cloneStory(action) {
+  console.log('cloning')
+  const { id } = action.payload
+  const { working_title, story_type, bodytext_markup } = yield select(
+    getStory(id)
+  )
+  const data = {
+    working_title: 'ny ' + working_title,
+    story_type,
+    bodytext_markup,
+    publication_status: 0,
+  }
+  const { response, error } = yield call(apiPost('stories'), data)
+  if (response) {
+    yield put(storyAdded(response))
+    yield put(push(`/stories/${response.id}`))
+  } else {
+    yield put({ type: 'ERROR', error })
   }
 }
 

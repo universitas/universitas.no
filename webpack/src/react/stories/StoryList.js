@@ -120,14 +120,26 @@ const StoryFilters = () => {
   )
 }
 
-let StoryNavigation = ({ previous, next, storiesRequested }) => {
+let StoryNavigation = ({
+  previous,
+  next,
+  results,
+  last,
+  count,
+  offset,
+  storiesRequested,
+}) => {
+  const info = (
+    <div className="info">{1 + last - results}–{last} av {count}</div>
+  )
   if (!(previous || next)) {
-    return null
+    return info
   }
   const nextItems = () => storiesRequested(next)
   const prevItems = () => storiesRequested(previous)
   return (
     <div className="Navigation">
+      {info}
       <button onClick={prevItems} disabled={!previous} title={previous}>
         bakover
       </button>

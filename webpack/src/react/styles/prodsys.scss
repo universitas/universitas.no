@@ -4,6 +4,31 @@
   height: 100vh;
   // overflow: hidden;
 }
+.AppButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 1.8em;
+  height: 1.8em;
+  color: inherit;
+  cursor: pointer;
+  &:hover, &:visited {
+    color: inherit;
+  }
+  &:hover {
+    background-color: #777;
+  }
+  &.active {
+    color: yellow;
+    background-color: #777;
+  }
+  small {
+    //text-transform: uppercase;
+    //font-weight: bold;
+    font-size: 0.25em;
+  }
+}
 .SideBar {
   display: flex;
   flex-direction: column;
@@ -12,14 +37,23 @@
   background-color: #555;
 }
 .ListBar {
-  margin-bottom: .5em;
+  margin: .2em 0;
   display: flex;
-  flex-wrap: wrap;
-  button {
-    color: white;
+  align-items: center;
+  justify-content: space-between;
+  // flex-wrap: wrap;
+  .info, button {
+    line-height: 1;
     font-size: 0.8em;
     padding: 0.5em;
     margin: 0.2em;
+  }
+  .info {
+    // flex: 1;
+    width: 10em;
+  }
+  button {
+    color: white;
     border-radius: 0.5em;
     background-color: lighten(blue, 10%);
     cursor: pointer;
@@ -34,22 +68,46 @@
       cursor: inherit;
     }
   }
-  .Filters {
+
+  .Filters, .Navigation {
     flex-wrap: wrap;
     display: flex;
-  }
-  .Navigation {
-    flex-wrap: wrap;
-    display: flex;
+    align-content: flex-start;
+    // justify-content: space-around;
   }
 }
-.DetailPanel> div{
-  background-color: #eee;
-  padding: 0.5em;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
+.DetailPanel {
+  .wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .StoryDetailTools {
+    background-color: #ccc;
+    font-size: 1.7em;
+    display: flex;
+    justify-content: flex-end;
+    .Tool {
+      @extend .AppButton;
+      background-color: #aaa;
+      margin-left: 0.1em;
+      height: 1.3em;
+      width: 1.3em;
+      &:hover {
+        color: white;
+      }
+    }
+  }
+
+  .fields{
+    display: flex;
+    flex: 1;
+    background-color: #eee;
+    padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
 }
 .DetailField {
   display: flex;
@@ -100,29 +158,5 @@
     }
     td {
     }
-  }
-}
-.AppButton {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 1.8em;
-  height: 1.8em;
-  color: inherit;
-  &:hover, &:visited {
-    color: inherit;
-  }
-  &:hover {
-    background-color: #777;
-  }
-  &.active {
-    color: yellow;
-    background-color: #777;
-  }
-  small {
-    //text-transform: uppercase;
-    //font-weight: bold;
-    font-size: 0.25em;
   }
 }

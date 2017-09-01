@@ -61,18 +61,6 @@ const modelFields = [
     editable: true,
     type: 'text',
   },
-  {
-    key: 'public_url',
-    label: 'lenke',
-    type: 'link',
-    list: false,
-  },
-  {
-    key: 'edit_url',
-    label: 'django',
-    type: 'link',
-    list: false,
-  },
 ]
 
 export const fields = modelFields.map(cleanFields)

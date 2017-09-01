@@ -59,6 +59,13 @@ export const apiPatch = model => (id, data) => {
   return apiFetch(url, head, body)
 }
 
+export const apiPost = model => data => {
+  const url = `${BASE_URL}/${model}/`
+  const head = { method: 'POST' }
+  const body = JSON.stringify(data)
+  return apiFetch(url, head, body)
+}
+
 // helpers
 const paramPairs = (value, key, _) =>
   R.type(value) == 'Array'
