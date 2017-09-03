@@ -1,4 +1,3 @@
-import React from 'react'
 import { connect } from 'react-redux'
 import EditImage from 'containers/EditImage'
 import { getSelectedImage } from 'ducks/cropPanel'

@@ -659,8 +659,10 @@ StaticModule	django/apps/frontpage/models.py	/^class StaticModule(FrontPageModul
 StaticModuleAdmin	django/apps/frontpage/admin.py	/^class StaticModuleAdmin(admin.ModelAdmin):$/;"	c
 StaticStorage	django/utils/aws_custom_storage.py	/^class StaticStorage(CustomS3BotoStorage):$/;"	c
 Stint	django/apps/contributors/models.py	/^class Stint(models.Model):$/;"	c
+StintActiveFilter	django/apps/contributors/admin.py	/^class StintActiveFilter(admin.SimpleListFilter):$/;"	c
 StintAdmin	django/apps/contributors/admin.py	/^class StintAdmin(admin.ModelAdmin):$/;"	c
 StintInline	django/apps/contributors/admin.py	/^class StintInline(admin.TabularInline,):$/;"	c
+StintQuerySet	django/apps/contributors/models.py	/^class StintQuerySet(models.QuerySet):$/;"	c
 StintSerializer	django/api/contributor_serializers.py	/^class StintSerializer(serializers.ModelSerializer):$/;"	c
 StoriesAppConfig	django/apps/stories/appconf.py	/^class StoriesAppConfig(AppConfig):$/;"	c
 Story	django/apps/stories/models.py	/^class Story(TextContent, TimeStampedModel, Edit_url_mixin):$/;"	c
@@ -905,6 +907,7 @@ actions_on_top	django/apps/issues/admin.py	/^    actions_on_top = True$/;"	v	cla
 actions_on_top	django/apps/photo/admin.py	/^    actions_on_top = True$/;"	v	class:ImageAdmin
 actions_on_top	django/apps/stories/admin.py	/^    actions_on_top = True$/;"	v	class:StoryAdmin
 active	django/apps/contributors/models.py	/^    def active(self, when=None):$/;"	m	class:Position
+active	django/apps/contributors/models.py	/^    def active(self, when=None):$/;"	m	class:StintQuerySet
 active	django/apps/legacy_db/models.py	/^    def active(self):$/;"	m	class:ProdsakManager
 active	django/apps/legacy_db/models.py	/^    def active(self):$/;"	m	class:ProdsakQueryset
 active_ads	django/apps/adverts/models.py	/^    def active_ads(self):$/;"	m	class:AdChannel
@@ -925,6 +928,7 @@ add_arguments	django/apps/stories/management/commands/guess_language.py	/^    de
 add_description	django/apps/photo/models.py	/^    def add_description(self):$/;"	m	class:ImageFile
 add_description	django/apps/photo/models.py	/^    def add_description(self):$/;"	m	class:ProfileImage
 add_to_context	django/watson/search.py	/^    def add_to_context(self, engine, obj):$/;"	m	class:SearchContextManager
+add_to_stint	webpack/src/react/stints.py	/^def add_to_stint(title, name, date):$/;"	f
 admin_search_engine	django/watson/admin.py	/^admin_search_engine = SearchEngine("admin")$/;"	v
 advert	django/apps/adverts/templatetags/advert_channel.py	/^def advert(context, channel_name):$/;"	f
 advert_deadline	django/apps/issues/models.py	/^    def advert_deadline(self):$/;"	m	class:Issue
@@ -1467,7 +1471,6 @@ escape_postgres_query	django/watson/backends.py	/^    def escape_postgres_query(
 escape_postgres_query	django/watson/backends.py	/^    def escape_postgres_query(self, text):$/;"	m	class:PostgresSearchBackend
 escape_query	django/watson/backends.py	/^def escape_query(text):$/;"	f
 exclude	django/apps/contributors/admin.py	/^        exclude=()$/;"	v	class:ContributorAdmin
-exclude	django/apps/contributors/admin.py	/^        exclude=()$/;"	v	class:StintAdmin
 exclude	django/apps/issues/admin.py	/^    exclude = ()$/;"	v	class:ThumbAdmin
 exclude	django/apps/photo/admin.py	/^    exclude = ()$/;"	v	class:ThumbAdmin
 exclude	django/watson/search.py	/^    exclude = ()$/;"	v	class:SearchAdapter
@@ -1654,7 +1657,9 @@ find_inline_placeholders	django/apps/stories/models.py	/^    def find_inline_pla
 find_linked_story	django/apps/stories/admin.py	/^def find_linked_story(modeladmin, request, queryset):$/;"	f
 find_linked_story	django/apps/stories/models.py	/^    def find_linked_story(self):$/;"	m	class:InlineLink
 find_pattern	django/apps/stories/models.py	/^    find_pattern = '\\[(?P<text>.+?)\\]\\((?P<ref>\\S+?)\\)'$/;"	v	class:InlineLink
+find_positions	webpack/src/react/stints.py	/^def find_positions(issue):$/;"	f
 find_single_item_or_none	django/apps/contributors/models.py	/^        def find_single_item_or_none(func):$/;"	f	function:Contributor.get_or_create
+find_stints_from_pdfs	webpack/src/react/stints.py	/^def find_stints_from_pdfs(issues=None):$/;"	f
 fixture	django/apps/issues/migrations/0011_data_load_publication_plan.py	/^fixture = Path(__file__).parent \/ 'pub-plan-2010-2015.json'$/;"	v
 fixture	django/apps/markup/migrations/0002_load_markup_tags.py	/^fixture = Path(__file__).parent \/ 'markup_tags.json'$/;"	v
 fixture	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^fixture = Path(__file__).parent \/ 'sections_and_story_types.json'$/;"	v
@@ -1835,6 +1840,7 @@ get_query	django/watson/views.py	/^    def get_query(self, request):$/;"	m	class
 get_query_param	django/watson/views.py	/^    def get_query_param(self):$/;"	m	class:SearchMixin
 get_queryset	django/api/photo_serializers.py	/^    def get_queryset(self):$/;"	m	class:ImageFileViewSet
 get_queryset	django/api/story_serializers.py	/^    def get_queryset(self):$/;"	m	class:QueryOrderableViewSetMixin
+get_queryset	django/apps/contributors/admin.py	/^    def get_queryset(self, request):$/;"	m	class:StintAdmin
 get_queryset	django/apps/issues/views.py	/^    def get_queryset(self):$/;"	m	class:PdfArchiveView
 get_queryset	django/apps/issues/views.py	/^    def get_queryset(self):$/;"	m	class:PubPlanView
 get_queryset	django/apps/legacy_db/models.py	/^    def get_queryset(self):$/;"	m	class:ProdsakManager
@@ -2245,9 +2251,11 @@ list_editable	django/apps/stories/admin.py	/^    list_editable = ($/;"	v	class:B
 list_editable	django/apps/stories/admin.py	/^    list_editable = ($/;"	v	class:LinkAdmin
 list_editable	django/apps/stories/admin.py	/^    list_editable = ($/;"	v	class:SectionAdmin
 list_editable	django/apps/stories/admin.py	/^    list_editable = ($/;"	v	class:StoryTypeAdmin
+list_filter	django/apps/contributors/admin.py	/^    list_filter = ['position', StintActiveFilter]$/;"	v	class:StintAdmin
 list_filter	django/apps/legacy_db/admin.py	/^    list_filter = (ProdusertFilter, 'produsert')$/;"	v	class:ProdsakAdmin
 list_filter	django/apps/stories/admin.py	/^    list_filter = ('status_code',)$/;"	v	class:LinkAdmin
 list_filter	django/apps/stories/admin.py	/^    list_filter = ['language', 'publication_status']$/;"	v	class:StoryAdmin
+list_per_page	django/apps/contributors/admin.py	/^    list_per_page = 25$/;"	v	class:StintAdmin
 list_per_page	django/apps/frontpage/admin.py	/^    list_per_page = 25$/;"	v	class:FrontpageStoryAdmin
 list_per_page	django/apps/frontpage/admin.py	/^    list_per_page = 25$/;"	v	class:StaticModuleAdmin
 list_per_page	django/apps/frontpage/admin.py	/^    list_per_page = 25$/;"	v	class:StoryModuleAdmin
@@ -2303,6 +2311,7 @@ logger	django/apps/stories/templatetags/inline_elements.py	/^logger = logging.ge
 logger	django/apps/stories/views.py	/^logger = logging.getLogger(__name__)$/;"	v
 login	webpack/src/react/user/UserTool.js	/^    const login = this.login.value$/;"	r
 loginSuccess	webpack/src/react/user/duck.js	/^export const loginSuccess = ({ key }) => ({ type: LOGGED_IN, payload: { key } })$/;"	r
+lookups	django/apps/contributors/admin.py	/^    def lookups(self, request, model_admin):$/;"	m	class:StintActiveFilter
 lookups	django/apps/legacy_db/admin.py	/^    def lookups(self, request, model_admin):$/;"	m	class:ProdusertFilter
 main	django/apps/legacy_db/export_content_and_images.py	/^    def main(websak):$/;"	f	function:_websak_til_xtags
 main	django/apps/legacy_db/image_archive.py	/^def main():$/;"	f
@@ -2739,6 +2748,7 @@ objectToggle	webpack/src/react/utils/fp.js	/^export const objectToggle = R.ifEls
 object_id	django/watson/models.py	/^    object_id = models.TextField()$/;"	v	class:SearchEntry
 object_id_int	django/watson/models.py	/^    object_id_int = models.IntegerField($/;"	v	class:SearchEntry
 objects	django/apps/adverts/models.py	/^    objects = AdvertManager()$/;"	v	class:Advert
+objects	django/apps/contributors/models.py	/^    objects = StintQuerySet.as_manager()$/;"	v	class:Stint
 objects	django/apps/frontpage/models.py	/^    objects = FrontpageManager()$/;"	v	class:Frontpage
 objects	django/apps/frontpage/models.py	/^    objects = FrontpageStoryManager()$/;"	v	class:FrontpageStory
 objects	django/apps/issues/models.py	/^    objects = IssueQueryset.as_manager()$/;"	v	class:Issue
@@ -2885,6 +2895,7 @@ paginate_by	django/apps/search/views.py	/^    paginate_by = 10$/;"	v	class:Searc
 pagination_class	django/api/issue_serializers.py	/^    pagination_class = LargeLimitPagination$/;"	v	class:IssueViewSet
 paragraphSplits	webpack/src/react/ducks/editor.js	/^const paragraphSplits = (content = '') => {$/;"	r
 paramPairs	webpack/src/react/services/api.js	/^const paramPairs = (value, key, _) =>$/;"	r
+parameter_name	django/apps/contributors/admin.py	/^    parameter_name = 'is_active'$/;"	v	class:StintActiveFilter
 parameter_name	django/apps/legacy_db/admin.py	/^    parameter_name = 'status'$/;"	v	class:ProdusertFilter
 parent_story	django/apps/stories/models.py	/^    def parent_story(self):$/;"	m	class:Story
 parent_story	django/apps/stories/models.py	/^    parent_story = models.ForeignKey($/;"	v	class:InlineLink
@@ -3018,6 +3029,7 @@ queryset	django/api/story_serializers.py	/^    queryset = Story.objects.all()$/;
 queryset	django/api/story_serializers.py	/^    queryset = StoryType.objects.all().prefetch_related('section')$/;"	v	class:StoryTypeViewSet
 queryset	django/api/story_serializers.py	/^    queryset = queryset.prefetch_related('bylines', 'byline_set')$/;"	v	class:StoryViewSet
 queryset	django/api/story_serializers.py	/^    queryset = queryset.prefetch_related('story_type__section')$/;"	v	class:StoryViewSet
+queryset	django/apps/contributors/admin.py	/^    def queryset(self, request, queryset):$/;"	m	class:StintActiveFilter
 queryset	django/apps/legacy_db/admin.py	/^    def queryset(self, request, queryset):$/;"	m	class:ProdusertFilter
 random_bands	django/apps/core/content_factory.py	/^def random_bands(sourceimg):$/;"	f
 random_color	django/apps/adverts/dummy_image_advert.py	/^def random_color():$/;"	f
@@ -3435,6 +3447,7 @@ timestamp	django/apps/core/staging.py	/^def timestamp(delta, fallback):$/;"	f
 timing	django/apps/markup/models.py	/^    timing = models.PositiveSmallIntegerField($/;"	v	class:Alias
 tingoPattern	webpack/src/react/components/Preview.js	/^  const tingoPattern = n ? `(?:\\\\S+\\\\s+){1,${n}}` : '.{1,12}\\\\S*'$/;"	r
 tipsninger	django/apps/legacy_db/models.py	/^    tipsninger = models.IntegerField()$/;"	v	class:Sak
+title	django/apps/contributors/admin.py	/^    title = _('active')$/;"	v	class:StintActiveFilter
 title	django/apps/contributors/models.py	/^    title = models.CharField($/;"	v	class:Position
 title	django/apps/legacy_db/admin.py	/^    title = _('status')$/;"	v	class:ProdusertFilter
 title	django/apps/stories/feeds.py	/^    title = "Universitas: Nyeste saker"$/;"	v	class:LatestStories

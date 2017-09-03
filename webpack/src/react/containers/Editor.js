@@ -1,4 +1,3 @@
-import React from 'react'
 import { connect } from 'react-redux'
 import { textChanged, moveCaret } from 'ducks/editor'
 import EditorToolBar from 'containers/EditorToolBar'

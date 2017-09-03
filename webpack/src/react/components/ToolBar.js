@@ -1,5 +1,3 @@
-import React from 'react'
-import PropTypes from 'prop-types'
 import Tool from './Tool'
 import cx from 'classnames'
 import 'styles/tool.scss'

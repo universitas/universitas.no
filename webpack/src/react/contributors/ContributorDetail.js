@@ -1,5 +1,3 @@
-import R from 'ramda'
-import React from 'react'
 import { connect } from 'react-redux'
 import { getCurrentContributor, fieldChanged } from 'contributors/duck'
 import { fields } from 'contributors/model'

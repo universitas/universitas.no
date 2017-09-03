@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
-"""
-Admin for contributors app.
-"""
+""" Admin for contributors app.  """
 
 from django.contrib import admin
-from django.template import Template
-from django.utils.safestring import mark_safe
-# from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
+
+# from django.template import Template
+# from django.utils.safestring import mark_safe
 
 from autocomplete_light.forms import modelform_factory
 
@@ -69,9 +68,44 @@ class PositionAdmin(admin.ModelAdmin):
     ]
 
 
+class StintActiveFilter(admin.SimpleListFilter):
+    title = _('active')
+    parameter_name = 'is_active'
+
+    def lookups(self, request, model_admin):
+        """ what will be shown in the sidebar """
+        return (
+            ('now', _('active')),
+            ('past', _('quit')),
+            ('future', _('not started')),
+            ('noend', _('no end date')),
+        )
+
+    def queryset(self, request, queryset):
+
+        when = timezone.now().date()
+        if self.value() == 'now':
+            return queryset.active()
+
+        if self.value() == 'past':
+            return queryset.filter(end_date__lt=when)
+
+        if self.value() == 'future':
+            return queryset.filter(start_date__gt=when)
+
+        if self.value() == 'noend':
+            return queryset.filter(end_date=None)
+
+
 @admin.register(Stint)
 class StintAdmin(admin.ModelAdmin):
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.order_by('-end_date', '-start_date')
+
+    list_per_page = 25
+    list_filter = ['position', StintActiveFilter]
     form = modelform_factory(
         Stint,
         exclude=()
@@ -85,7 +119,6 @@ class StintAdmin(admin.ModelAdmin):
     )
 
     list_editable = (
-        'position',
         'start_date',
         'end_date',
     )

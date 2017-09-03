@@ -1,5 +1,3 @@
-import React from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { logOut, logIn, getUser } from 'user/duck'
 

@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types'
-import React from 'react'
 import { connect } from 'react-redux'
 import { getImageList, searchUrlChanged } from 'ducks/imageList'
 

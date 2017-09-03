@@ -1,4 +1,3 @@
-import R from 'ramda'
 import { distanceInWordsToNow, format } from 'date-fns'
 // import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
 import norwayLocale from 'date-fns/locale/nb'

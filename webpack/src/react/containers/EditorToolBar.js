@@ -1,5 +1,3 @@
-import React from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { insertText, changeTag } from 'ducks/editor'
 import ToolBar from 'components/ToolBar'

@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types'
-import React from 'react'
 import { connect } from 'react-redux'
 import { getImages, getThumbStyle } from 'ducks/imageList'
 import { getImage } from 'ducks/images'

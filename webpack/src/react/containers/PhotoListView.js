@@ -1,5 +1,4 @@
 import { EditImage, PhotoList, SearchField, ResultsPanel } from './components'
-import React from 'react'
 import 'styles/photolistview.scss'
 
 const App = () => {

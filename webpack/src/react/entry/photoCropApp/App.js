@@ -2,7 +2,6 @@ import EditImage from 'containers/EditImage'
 import PhotoList from 'containers/PhotoList'
 import SearchField from 'containers/SearchField'
 import ResultsPanel from 'containers/ResultsPanel'
-import React from 'react'
 import 'styles/app.scss'
 
 const App = () => {

@@ -1,4 +1,3 @@
-import R from 'ramda'
 import { fetchImage, getImage } from 'ducks/images'
 import { IMAGE_SELECTED } from 'ducks/ui'
 

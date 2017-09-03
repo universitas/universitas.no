@@ -1,5 +1,4 @@
 /* eslint-env browser */
-import React from 'react'
 import { Provider } from 'react-redux'
 import { combineReducers } from 'redux'
 

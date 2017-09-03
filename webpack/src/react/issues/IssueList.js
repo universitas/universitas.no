@@ -1,6 +1,3 @@
-import R from 'ramda'
-import React from 'react'
-import PropTypes from 'prop-types'
 import { Link, push } from 'redux-little-router'
 import { connect } from 'react-redux'
 import {

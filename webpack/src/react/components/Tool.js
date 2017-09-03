@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types'
-import React from 'react'
 import * as Icons from './Icons'
 import 'styles/tool.scss'
 

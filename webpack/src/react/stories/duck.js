@@ -1,4 +1,3 @@
-import R from 'ramda' // Action constants
 import { combinedToggle } from '../utils/fp'
 export const ITEM_ADDED = 'stories/ITEM_ADDED'
 export const ITEM_SELECTED = 'stories/ITEM_SELECTED'

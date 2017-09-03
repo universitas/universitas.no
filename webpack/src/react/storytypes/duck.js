@@ -1,4 +1,3 @@
-import R from 'ramda' // Action constants
 import { objectToggle } from '../utils/fp'
 export const ITEMS_FETCHED = 'storyyypes/ITEMS_FETCHED'
 export const ITEMS_REQUESTED = 'storyTypes/ITEMS_REQUESTED'

@@ -1,4 +1,3 @@
-import R from 'ramda'
 import fetch from 'isomorphic-fetch'
 // import cuid from 'cuid'
 import * as Cookies from 'js-cookie'
