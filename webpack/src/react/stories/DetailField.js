@@ -1,5 +1,3 @@
-import R from 'ramda'
-import React from 'react'
 import { formatDateTime, formatDate } from 'utils/modelUtils'
 import StoryTypeSelect from 'storytypes/StoryTypeSelect'
 

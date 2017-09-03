@@ -1,4 +1,3 @@
-import R from 'ramda'
 import { queryString, searchUrl } from './api'
 
 test('query params', () => {

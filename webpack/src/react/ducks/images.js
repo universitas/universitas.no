@@ -1,4 +1,3 @@
-import R from 'ramda'
 import { IMAGES_FETCH_SUCCESS } from 'ducks/imageList'
 
 // Action constants

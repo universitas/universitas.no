@@ -1,30 +1,33 @@
 #!/bin/bash
 
 main(){
-for arg; do case $arg in
+while (( $# > 0 )); do 
+  rest=${@:2}
+  case $1 in
   help    ) show_help ;;
   init    ) sudo bash -c "$(declare -f install_docker); install_docker $(whoami)" ;;
-  ps      ) docker-compose ps ;;
+  da      ) docker-compose run --rm web django-admin $rest; exit ;;
+  dc      ) docker-compose $rest; exit ;; 
 
   dumpdb  ) dump_db ;;
   loaddb  ) load_db ;;
   mysqldb ) docker-compose run --rm -u django web dump_prodsys_db ;;
-  enable  ) enable_service ;;
-  build   ) build_django ;;
+
+  enable  ) enable_service ;; # init file for production
+  build   ) build_django ;;   # download and build all images
 
   lint    ) lint_javascript ; lint_python ;;
-  webpack ) docker-compose run --rm webpack build ;;
-  testjs  ) docker-compose run --rm webpack test ;;
-  bashjs  ) docker-compose run --rm webpack bash ;;
-  stats   ) docker-compose run --rm webpack stats ;;
+  webpack ) docker-compose run --rm webpack $rest; exit;;
+
   npmi    ) read -p "package? " pack && \
     docker-compose run --rm -u root webpack npm i --upgrade --save $pack;;
 
   repl    ) docker-compose run --rm web django-admin shell_plus --quiet-load ;;
-  bash    ) docker-compose run --rm -u django web bash ;;
-  root    ) docker-compose run --rm           web bash ;;
-  test    ) docker-compose run --rm -u django web pytest --create-db ;;
-  testf   ) docker-compose run --rm --name testf -u django web pytest -f -x --ff ;;
+  django  ) docker-compose run --rm -u django web ${rest:-bash}; exit ;;
+  root    ) docker-compose run --rm           web ${rest:-bash}; exit ;;
+
+  test    ) docker-compose run --rm -u django web pytest --create-db $rest; exit ;;
+  testf   ) docker-compose run --rm --name testf -u django web pytest -f -x --ff $rest; exit ;;
 
   flower  ) docker-compose run --rm --name flower -d -p 5555:5555 celery flower ;;
   jupyter ) start_jupyter ;;
@@ -34,10 +37,7 @@ for arg; do case $arg in
     -i admin -i debug_toolbar -i rest_framework -i django_extensions ;;
   migrate ) docker-compose run --rm web django-admin migrate ;;
 
-  up      ) docker-compose up ;;
   upd     ) docker-compose up -d ;;
-  down    ) docker-compose down ;;
-  pull    ) docker-compose pull ;;
   logs    ) docker-compose logs --tail=50 -f ;;
 
   tags    ) ctags -R ./django ./webpack/src/react && echo "collected ctags" ;;
@@ -45,8 +45,9 @@ for arg; do case $arg in
   prod    ) echo "production settings"
             export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml ;;
   dev     ) echo "development settings"; unset COMPOSE_FILE ;;
+  precommit  ) main prod tags lint webpack build; exit ;;
   *       ) show_help ;;
-esac; done
+esac; shift 1; done
 }
 
 show_help() {

@@ -1,8 +1,5 @@
 import 'styles/storylist.scss'
-import R from 'ramda'
 import cx from 'classnames'
-import React from 'react'
-import PropTypes from 'prop-types'
 import { Link, push } from 'redux-little-router'
 import { connect } from 'react-redux'
 import {

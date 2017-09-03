@@ -1,5 +1,3 @@
-import R from 'ramda'
-
 const listifyFirstArgument = R.useWith(R.__, [v => [v]])
 const without = listifyFirstArgument(R.without)
 const union = listifyFirstArgument(R.union)

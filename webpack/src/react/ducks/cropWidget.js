@@ -1,4 +1,3 @@
-import R from 'ramda'
 import { normalize, round } from 'utils/cropHelpers'
 import { IMAGE_SELECTED } from 'ducks/ui'
 // Action constants

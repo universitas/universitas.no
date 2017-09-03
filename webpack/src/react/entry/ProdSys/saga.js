@@ -1,4 +1,3 @@
-import R from 'ramda'
 import { all, fork, call, put, take } from 'redux-saga/effects'
 import issuesSaga from 'issues/saga'
 import contributorsSaga from 'contributors/saga'

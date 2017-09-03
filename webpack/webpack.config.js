@@ -15,7 +15,13 @@ module.exports = {
     prodsys: 'entry/prodsys.js',
   },
   plugins: [
-    new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      React: 'react',
+      R: 'ramda',
+      PropTypes: 'prop-types',
+    }),
     new BundleTracker({
       indent: ' ',
       path: build_dir,

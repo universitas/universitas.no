@@ -6,6 +6,7 @@
   "description": "frontend universitas",
   "scripts": {
     "test": "jest --watch ./src/react",
+    "testonce": "jest ./src/react",
     "build": "webpack --config webpack.prod.config.js ",
     "tern": "tern --persistent --host 0.0.0.0 --port 33000",
     "rebuild": "rm $BUILD_DIR/* -rf; npm run build",
@@ -15,6 +16,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/universitas/universitas.no/"
+  },
+  "jest": {
+    "verbose": true,
+    "setupFiles": ["<rootDir>/jest.setup.js"]
   },
   "dependencies": {
     "babel-core": "^6",

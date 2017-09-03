@@ -1,4 +1,3 @@
-import R from 'ramda'
 import { combineReducers } from 'redux'
 import { getImage } from 'ducks/images'
 import { reducer as cropWidget } from 'ducks/cropWidget'

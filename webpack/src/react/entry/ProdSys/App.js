@@ -1,5 +1,3 @@
-import React from 'react'
-import PropTypes from 'prop-types'
 import { Fragment, Link } from 'redux-little-router'
 import { Camera, Person, Newspaper, Edit } from 'components/Icons'
 import { connect } from 'react-redux'

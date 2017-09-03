@@ -1,4 +1,3 @@
-import R from 'ramda' // Action constants
 import { objectToggle } from '../utils/fp'
 export const ITEM_ADDED = 'photos/ITEM_ADDED'
 export const ITEM_SELECTED = 'photos/ITEM_SELECTED'
