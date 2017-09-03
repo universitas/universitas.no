@@ -1,6 +1,8 @@
 """ Admin for contributors app.  """
 
 from django.contrib import admin
+from django.utils.safestring import mark_safe
+
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
@@ -54,15 +56,25 @@ class PositionAdmin(admin.ModelAdmin):
     def active_now(self, instance):
         active = instance.active()
         if len(active) == 1:
-            return str(active[0].contributor)
+            text = str(active[0].contributor)
         else:
-            return str(len(active))
+            text = str(len(active))
+        url = ('/admin/contributors/stint/'
+               f'?is_active=now&position__id__exact={instance.pk}')
+        return mark_safe(f'<a href={url}>{text}</a>')
+
+    def total(self, instance):
+        count = instance.stint_set.count()
+        url = ('/admin/contributors/stint/'
+               f'?position__id__exact={instance.pk}')
+        return mark_safe(f'<a href={url}>{count}</a>')
 
     def groups_list(self, instance):
         return ', '.join(str(group) for group in instance.groups.all())
 
     list_display = [
         'title',
+        'total',
         'active_now',
         'groups_list',
     ]
