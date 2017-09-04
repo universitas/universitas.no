@@ -3473,6 +3473,7 @@ top	django/apps/stories/models.py	/^    top = models.BooleanField($/;"	v	class:S
 top_position	django/apps/frontpage/models.py	/^    def top_position(self):$/;"	m	class:Frontpage
 top_right	django/apps/stories/models.py	/^        def top_right(queryset, body, flags='>'):$/;"	f	function:Story.place_all_inline_elements
 top_stories	django/apps/core/templatetags/universitas_menu.py	/^def top_stories(section, number, order_by):$/;"	f
+total	django/apps/contributors/admin.py	/^    def total(self, instance):$/;"	m	class:PositionAdmin
 transformImageData2Api	webpack/src/react/ducks/images.js	/^const transformImageData2Api = ({ crop_box, cropping_method }) => ({$/;"	r
 trunc	webpack/src/react/containers/CropBox.js	/^    const trunc = num => Math.max(0, Math.min(num, 1))$/;"	r
 ul	webpack/src/react/utils/tagParser.js	/^const ul = line => {$/;"	r
