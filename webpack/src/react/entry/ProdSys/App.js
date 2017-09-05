@@ -58,6 +58,7 @@ const ProdSys = () => (
     </Fragment>
   </main>
 )
-const App = ({ username }) => (username ? <ProdSys /> : <LoginForm />)
+const App = ({ username, pending }) =>
+  pending ? null : username ? <ProdSys /> : <LoginForm />
 
 export default connect(getUser)(App)

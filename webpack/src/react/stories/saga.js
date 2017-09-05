@@ -17,6 +17,7 @@ import {
   ITEMS_REQUESTED,
   ITEM_SELECTED,
   FILTER_TOGGLED,
+  FILTER_SET,
   FIELD_CHANGED,
   ITEM_CLONED,
   getStory,
@@ -26,7 +27,7 @@ import {
 import { push } from 'redux-little-router'
 
 export default function* rootSaga() {
-  yield takeLatest(FILTER_TOGGLED, requestStories)
+  yield takeLatest([FILTER_TOGGLED, FILTER_SET], requestStories)
   yield takeLatest(ITEM_SELECTED, selectStory)
   yield takeLatest(FIELD_CHANGED, patchStory)
   yield takeLatest(ITEMS_REQUESTED, requestStories)

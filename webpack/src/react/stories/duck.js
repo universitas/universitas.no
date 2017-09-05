@@ -8,6 +8,7 @@ export const ITEMS_FETCHED = 'stories/ITEMS_FETCHED'
 export const ITEM_REQUESTED = 'stories/ITEM_REQUESTED'
 export const ITEMS_REQUESTED = 'stories/ITEMS_REQUESTED'
 export const FILTER_TOGGLED = 'stories/FILTER_TOGGLED'
+export const FILTER_SET = 'stories/FILTER_SET'
 
 // Lenses
 const lens = R.pipe(R.split('.'), R.lensPath)
@@ -63,7 +64,6 @@ export const storiesRequested = url => ({
   type: ITEMS_REQUESTED,
   payload: { url },
 })
-
 export const storiesFetched = data => ({
   type: ITEMS_FETCHED,
   payload: data,
@@ -71,6 +71,10 @@ export const storiesFetched = data => ({
 export const filterToggled = (key, value) => ({
   type: FILTER_TOGGLED,
   payload: { key, value },
+})
+export const filterSet = (key, value) => ({
+  type: FILTER_SET,
+  payload: { [key]: value },
 })
 
 // reducers
@@ -80,7 +84,7 @@ export const initialState = R.pipe(
   R.set(queryLens, {
     limit: 25,
     order_by: 'publication_status,-modified',
-    publication_status: [3, 4, 5, 6, 7],
+    publication_status__in: [3, 4, 5, 6, 7],
   }),
   R.set(navigationLens, {})
 )({})
@@ -89,13 +93,14 @@ const offsetFromUrl = R.compose(
   R.defaultTo(0),
   parseInt,
   R.prop(1),
-  R.match(/(?:offset=)(\d+)/)
+  R.match(/(?:offset=)(\d+)/),
+  R.defaultTo('')
 )
 
 const getReducer = ({ type, payload }) => {
   switch (type) {
     case ITEMS_FETCHED: {
-      const { results, next, previous, count } = payload
+      const { results, next, previous, count, url } = payload
       const ids = R.pluck('id', results)
       const items = R.zipObj(ids, results)
       return R.compose(
@@ -103,7 +108,7 @@ const getReducer = ({ type, payload }) => {
         R.set(currentItemsLens, ids),
         R.set(navigationLens, {
           results: results.length,
-          last: next ? offsetFromUrl(next) : results.length,
+          last: offsetFromUrl(next) || offsetFromUrl(url) + results.length,
           count,
           next,
           previous,
@@ -126,9 +131,11 @@ const getReducer = ({ type, payload }) => {
     }
     case ITEM_SELECTED:
       return R.set(currentItemLens, payload.id)
-    case FILTER_TOGGLED: {
+    case FILTER_SET:
+      return R.over(queryLens, R.merge(R.__, payload))
+    case FILTER_TOGGLED:
       return R.over(queryLens, combinedToggle(payload.key, payload.value))
-    }
+
     default:
       return R.identity
   }

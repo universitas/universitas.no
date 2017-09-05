@@ -1,6 +1,7 @@
 import 'styles/storylist.scss'
 import cx from 'classnames'
 import { Link, push } from 'redux-little-router'
+import { Clear } from 'components/Icons'
 import { connect } from 'react-redux'
 import {
   getQuery,
@@ -8,6 +9,7 @@ import {
   getStory,
   getCurrentStoryId,
   filterToggled,
+  filterSet,
   getNavigation,
   storiesRequested,
 } from 'stories/duck'
@@ -81,23 +83,43 @@ const isFilterActive = (attr, value, query) => {
 
 const Filter = connect(state => ({ query: getQuery(state) }), {
   filterToggled,
-})(({ query, label, attr, value, filterToggled }) => {
-  const clickHandler = e => filterToggled(attr, value)
+  filterSet,
+})(({ query, label, attr, value, toggle = true, filterSet, filterToggled }) => {
+  const clickHandler = toggle
+    ? e => filterToggled(attr, value)
+    : e => filterSet(attr, value)
   const isActive = isFilterActive(attr, value, query)
+  const disabled = toggle ? false : isActive
 
   return (
     <button
       type="button"
       className={`Filter ${isActive ? 'active' : 'inactive'}`}
+      disabled={disabled}
       onClick={clickHandler}
     >
       {label}
     </button>
   )
 })
-
-const getDate = () => new Date().toISOString().slice(0, 10)
-const getYear = () => new Date().toISOString().slice(0, 4)
+let SearchBar = ({
+  value = '',
+  label = 'search',
+  attr = 'search',
+  filterSet,
+}) => (
+  <input
+    className="SearchBar"
+    type="text"
+    onChange={e => filterSet(attr, e.target.value)}
+    placeholder={label}
+    value={value}
+  />
+)
+SearchBar = connect(
+  (state, { attr = 'search' }) => ({ value: R.prop(attr, getQuery(state)) }),
+  { filterSet }
+)(SearchBar)
 
 const status_choices = storyFields
   .filter(el => el.key === 'publication_status')[0]
@@ -111,8 +133,16 @@ const StoryFilters = () => {
   return (
     <div className="Filters">
       {status_choices.map(props => (
-        <Filter attr="publication_status" key={props.value} {...props} />
+        <Filter attr="publication_status__in" key={props.value} {...props} />
       ))}
+      <Filter
+        attr="publication_status__in"
+        value={[]}
+        toggle={false}
+        label={<Clear />}
+      />
+      <SearchBar label="søk i saker" attr="search" />
+      <Filter attr="search" value="" toggle={false} label={<Clear />} />
     </div>
   )
 }

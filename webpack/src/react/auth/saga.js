@@ -19,26 +19,20 @@ export default function* rootSaga() {
 function* logInSaga(action) {
   const { response, error } = yield call(apiLogin, action.payload)
   if (error) {
-    yield put({ type: 'ERROR', error })
+    yield put(loginFailed(error))
   } else {
-    // reload page on success.
-    window.location = '/prodsys/'
-    yield call(fetchUserSaga, action)
-    yield put(loginSuccess(response))
+    // login successful reload page to get new csrf token
+    window.location = window.location
+    // yield fetchUserSaga()
   }
 }
 function* logOutSaga(action) {
-  const { response, error } = yield call(apiLogout)
-  if (error) {
-    yield put({ type: 'ERROR', error })
-  }
+  yield call(apiLogout)
 }
 function* fetchUserSaga(action) {
-  console.log('fetch user')
-  console.dir(action)
   const { response, error } = yield call(apiUser)
   if (error) {
-    yield put({ type: 'ERROR', error })
+    yield put(requestUserFailed(error))
   } else {
     yield put(requestUserSuccess(response))
   }

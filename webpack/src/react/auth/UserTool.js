@@ -1,9 +1,11 @@
 import { connect } from 'react-redux'
 import { logOut, logIn, getUser } from 'auth/duck'
 
-const UserTool = ({ username, logOut }) => (
-  <div className="User">
-    <span className="username">{username}</span>
+const UserTool = ({ first_name, last_name, username, logOut }) => (
+  <div className="UserTool">
+    <span className="username">
+      {first_name ? `${first_name} ${last_name}` : username}
+    </span>
     <button className="button" onClick={logOut}>Logg ut</button>
   </div>
 )

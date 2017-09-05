@@ -4,14 +4,36 @@
   height: 100vh;
   // overflow: hidden;
 }
-.UserTool {
-  .User, .LoginForm {
-    font-size: 0.3em;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
+.SearchBar {
+  flex: 1;
+  border: 1px solid #999;
+  padding: 0.1em 0.3em;
+  border-radius: 0.2em;
+  margin: 0.1em 0.2em;
+}
+
+.LoginForm {
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  input, button {
+    font-size: 1.5em;
+    width: 20em;
+    padding: .5em;
+    margin: .2em;
+    border-radius: .2em;
+    border: 1px solid #999;
   }
-  input, .username, .button {
+
+}
+.UserTool {
+  font-size: 0.3em;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  .username, .button {
     font-size: 0.9em;
     width: 5.5em;
     margin-bottom: 0.5em;
@@ -26,8 +48,8 @@
       background-color: red;
     }
   }
-
 }
+
 .AppButton {
   display: flex;
   flex-direction: column;
@@ -61,7 +83,7 @@
   background-color: #555;
 }
 .ListBar {
-  margin: .2em 0;
+  margin: .5em 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -96,8 +118,9 @@
   .Filters, .Navigation {
     flex-wrap: wrap;
     display: flex;
-    align-content: flex-start;
-    // justify-content: space-around;
+    flex: 1;
+    align-content: space-between;
+    justify-content: stretch;
   }
 }
 .DetailPanel {

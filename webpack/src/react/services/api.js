@@ -45,6 +45,7 @@ export const apiLogout = () =>
 export const apiUser = () =>
   apiFetch(`${BASE_URL}/rest-auth/user/`, { method: 'GET' })
 
+// where the magic happens
 export const apiFetch = (url, head = {}, body = null) => {
   const init = R.mergeDeepRight(headBase, { ...head })
   if (body) {
@@ -53,23 +54,19 @@ export const apiFetch = (url, head = {}, body = null) => {
       : (init.body = JSON.stringify(body))
   }
   return fetch(url, init)
-    .then(response => ({
-      data: response.json(),
-      ok: response.ok,
-      status: response.status,
-    }))
-    .then(
-      ({ ok, data, status }) =>
-        ok ? { response: data, status } : { error: data, status }
+    .then(res =>
+      res
+        .json()
+        .then(data => ({ HTTPstatus: res.status, url, ...data }))
+        .then(data => (res.ok ? { response: data } : { error: data }))
     )
     .catch(error => ({ error }))
 }
 
 export const apiList = (model, attrs = {}) => {
   const query = queryString(attrs)
-  return query
-    ? apiFetch(`${BASE_URL}/${model}/?${query}`)
-    : apiFetch(`${BASE_URL}/${model}/`)
+  const url = query ? `${BASE_URL}/${model}/?${query}` : `${BASE_URL}/${model}/`
+  return apiFetch(url)
 }
 
 export const apiGet = model => id => {
@@ -90,17 +87,18 @@ export const apiPost = model => data => {
 
 // helpers
 const paramPairs = (value, key, _) =>
-  R.type(value) == 'Array'
-    ? `${key}__in=${value.join(',')}`
-    : `${key}=${cleanValues(value)}`
+  value
+    ? R.type(value) == 'Array'
+        ? `${key}=${value.join(',')}`
+        : `${key}=${cleanValues(value)}`
+    : null
 
 const cleanValues = R.pipe(String, R.replace(/\s+/g, ' '), encodeURIComponent)
 
 export const queryString = R.pipe(
   R.mapObjIndexed(paramPairs),
-  // R.map(cleanValues),
-  // R.mapObjIndexed(paramPairs),
   R.values,
+  R.filter(Boolean),
   R.join('&')
 )
 

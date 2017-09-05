@@ -44,6 +44,7 @@ AliasManager	django/apps/markup/models.py	/^class AliasManager(TagManager):$/;"	
 ApiAppConfig	django/api/appconf.py	/^class ApiAppConfig(AppConfig):$/;"	c
 App	webpack/src/react/containers/PhotoListView.js	/^const App = () => {$/;"	r
 App	webpack/src/react/containers/ProdSys.js	/^const App = () => ($/;"	r
+App	webpack/src/react/entry/ProdSys/App.js	/^const App = ({ username, pending }) =>$/;"	r
 App	webpack/src/react/entry/photoCropApp/App.js	/^const App = () => {$/;"	r
 App	webpack/src/react/entry/ttEditor/index.js	/^const App = () => ($/;"	r
 AppButton	webpack/src/react/entry/ProdSys/App.js	/^const AppButton = ({ href, Icon, label }) => ($/;"	r
@@ -212,6 +213,7 @@ FIELD_CHANGED	webpack/src/react/stories/duck.js	/^export const FIELD_CHANGED = '
 FILENAME_PATTERN	django/apps/issues/management/commands/web_pdf.py	/^FILENAME_PATTERN = 'universitas_{issue.date.year}-{issue.number}{suffix}.pdf'$/;"	v
 FILE_UPLOAD_DIRECTORY_PERMISSIONS	django/universitas/base.py	/^FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770$/;"	v
 FILE_UPLOAD_PERMISSIONS	django/universitas/base.py	/^FILE_UPLOAD_PERMISSIONS = 0o664$/;"	v
+FILTER_SET	webpack/src/react/stories/duck.js	/^export const FILTER_SET = 'stories\/FILTER_SET'$/;"	r
 FILTER_TOGGLED	webpack/src/react/contributors/duck.js	/^export const FILTER_TOGGLED = 'contributors\/FILTER_TOGGLED'$/;"	r
 FILTER_TOGGLED	webpack/src/react/issues/duck.js	/^export const FILTER_TOGGLED = 'issues\/FILTER_TOGGLED'$/;"	r
 FILTER_TOGGLED	webpack/src/react/photos/duck.js	/^export const FILTER_TOGGLED = 'photos\/FILTER_TOGGLED'$/;"	r
@@ -326,15 +328,16 @@ LANGUAGES	django/universitas/base.py	/^LANGUAGES = [$/;"	v
 LANGUAGE_CODE	django/universitas/base.py	/^LANGUAGE_CODE = 'nb'$/;"	v
 LANGUAGE_CORPUS	django/apps/stories/management/commands/guess_language.py	/^LANGUAGE_CORPUS = {$/;"	v
 LOCALE_PATHS	django/universitas/base.py	/^LOCALE_PATHS = [path('translation')]$/;"	v
-LOGGED_IN	webpack/src/react/user/duck.js	/^export const LOGGED_IN = 'user\/LOGGED_IN'$/;"	r
 LOGGING	django/universitas/logging_settings.py	/^LOGGING = {$/;"	v
 LOGGING	django/universitas/testing.py	/^LOGGING = {}  # type: dict$/;"	v
 LOGIN_REDIRECT_URL	django/universitas/base.py	/^LOGIN_REDIRECT_URL = '\/'$/;"	v
 LOGIN_URL	django/universitas/base.py	/^LOGIN_URL = '\/admin\/login\/'$/;"	v
 LOGOUT_URL	django/universitas/base.py	/^LOGOUT_URL = '\/'$/;"	v
 LOG_FOLDER	django/universitas/logging_settings.py	/^LOG_FOLDER = Environment().LOG_DIR or path('..', 'logs')$/;"	v
-LOG_IN	webpack/src/react/user/duck.js	/^export const LOG_IN = 'user\/LOG_IN'$/;"	r
-LOG_OUT	webpack/src/react/user/duck.js	/^export const LOG_OUT = 'user\/LOG_OUT'$/;"	r
+LOG_IN	webpack/src/react/auth/duck.js	/^export const LOG_IN = 'auth\/LOG_IN'$/;"	r
+LOG_IN_FAILED	webpack/src/react/auth/duck.js	/^export const LOG_IN_FAILED = 'auth\/LOG_IN_FAILED'$/;"	r
+LOG_IN_SUCCESS	webpack/src/react/auth/duck.js	/^export const LOG_IN_SUCCESS = 'auth\/LOG_IN_SUCCESS'$/;"	r
+LOG_OUT	webpack/src/react/auth/duck.js	/^export const LOG_OUT = 'auth\/LOG_OUT'$/;"	r
 LargeLimitPagination	django/api/issue_serializers.py	/^class LargeLimitPagination(pagination.LimitOffsetPagination):$/;"	c
 LatestStories	django/apps/stories/feeds.py	/^class LatestStories(Feed):$/;"	c
 LegacyDbAppConfig	django/apps/legacy_db/appconf.py	/^class LegacyDbAppConfig(AppConfig):$/;"	c
@@ -343,7 +346,7 @@ LinkAdmin	django/apps/stories/admin.py	/^class LinkAdmin(admin.ModelAdmin):$/;"	
 LinkField	webpack/src/react/stories/DetailField.js	/^const LinkField = ({ value, editable, label = 'lenke', ...args }) => ($/;"	r
 LinkInline	django/apps/stories/admin.py	/^class LinkInline(admin.TabularInline):$/;"	c
 List	webpack/src/react/containers/PhotoList.js	/^const List = ({ images, style = {} }) => ($/;"	r
-LoginForm	webpack/src/react/user/UserTool.js	/^class LoginForm extends React.Component {$/;"	r
+LoginForm	webpack/src/react/auth/LoginForm.js	/^class LoginForm extends React.Component {$/;"	r
 MAGAZINE	django/apps/issues/models.py	/^    MAGAZINE = 2$/;"	v	class:Issue
 MAG_PAGES_GLOB	django/apps/issues/tasks.py	/^MAG_PAGES_GLOB = 'UNI12VER*.pdf'$/;"	v
 MEDIA_ROOT	django/universitas/local.py	/^    MEDIA_ROOT = env.MEDIA_DIR or '\/media\/'$/;"	v
@@ -555,6 +558,7 @@ PrintIssueViewSet	django/api/issue_serializers.py	/^class PrintIssueViewSet(view
 ProdBildeSerializer	django/api/legacy_serializers.py	/^class ProdBildeSerializer(serializers.ModelSerializer):$/;"	c
 ProdStorySerializer	django/api/legacy_serializers.py	/^class ProdStorySerializer(serializers.ModelSerializer):$/;"	c
 ProdStoryViewSet	django/api/legacy_serializers.py	/^class ProdStoryViewSet(viewsets.ModelViewSet):$/;"	c
+ProdSys	webpack/src/react/entry/ProdSys/App.js	/^const ProdSys = () => ($/;"	r
 Prodbilde	django/apps/legacy_db/models.py	/^class Prodbilde(models.Model):$/;"	c
 Prodsak	django/apps/legacy_db/models.py	/^class Prodsak(models.Model):$/;"	c
 ProdsakAdmin	django/apps/legacy_db/admin.py	/^class ProdsakAdmin(admin.ModelAdmin):$/;"	c
@@ -575,8 +579,9 @@ READY_FOR_PRINT	django/apps/legacy_db/models.py	/^    READY_FOR_PRINT = 3$/;"	v	
 READY_FOR_WEB	django/apps/legacy_db/models.py	/^    READY_FOR_WEB = 7$/;"	v	class:Prodsak
 REGULAR	django/apps/issues/models.py	/^    REGULAR = 1$/;"	v	class:Issue
 REQUEST_IMAGE_FILE	webpack/src/react/ducks/images.js	/^export const REQUEST_IMAGE_FILE = 'images\/REQUEST_IMAGE_FILE'$/;"	r
-REQUEST_USER	webpack/src/react/user/duck.js	/^export const REQUEST_USER = 'user\/REQUEST_USER'$/;"	r
-REQUEST_USER_SUCCESS	webpack/src/react/user/duck.js	/^export const REQUEST_USER_SUCCESS = 'user\/REQUEST_USER_SUCCESS'$/;"	r
+REQUEST_USER	webpack/src/react/auth/duck.js	/^export const REQUEST_USER = 'auth\/REQUEST_USER'$/;"	r
+REQUEST_USER_FAILED	webpack/src/react/auth/duck.js	/^export const REQUEST_USER_FAILED = 'auth\/REQUEST_USER_FAILED'$/;"	r
+REQUEST_USER_SUCCESS	webpack/src/react/auth/duck.js	/^export const REQUEST_USER_SUCCESS = 'auth\/REQUEST_USER_SUCCESS'$/;"	r
 RESIZE_PANEL	webpack/src/react/ducks/cropPanel.js	/^const RESIZE_PANEL = 'cropPanel\/RESIZE_PANEL'$/;"	r
 REST_FRAMEWORK	django/universitas/base.py	/^REST_FRAMEWORK = {$/;"	v
 RETIRED	django/apps/contributors/models.py	/^    RETIRED = 2$/;"	v	class:Contributor
@@ -744,8 +749,7 @@ USE_I18N	django/universitas/base.py	/^USE_I18N = True  # Internationalisation (s
 USE_L10N	django/universitas/base.py	/^USE_L10N = True  # Localisation (numbers and stuff)$/;"	v
 USE_TZ	django/universitas/base.py	/^USE_TZ = True  # Use timezone$/;"	v
 UnicodeJSONRenderer	django/api/legacy_serializers.py	/^class UnicodeJSONRenderer(JSONRenderer):$/;"	c
-User	webpack/src/react/user/UserTool.js	/^const User = ({ name, logOut }) => ($/;"	r
-UserTool	webpack/src/react/user/UserTool.js	/^const UserTool = ({ username, pending, logIn, logOut }) => ($/;"	r
+UserTool	webpack/src/react/auth/UserTool.js	/^const UserTool = ({ first_name, last_name, username, logOut }) => ($/;"	r
 VIDEO_HOSTS	django/apps/stories/models.py	/^    VIDEO_HOSTS = ($/;"	v	class:StoryVideo
 VIDEO_TAG	django/apps/stories/models.py	/^VIDEO_TAG = '@video:'$/;"	v
 VideoInline	django/apps/stories/admin.py	/^class VideoInline(admin.TabularInline, ):$/;"	c
@@ -929,7 +933,6 @@ add_arguments	django/apps/stories/management/commands/guess_language.py	/^    de
 add_description	django/apps/photo/models.py	/^    def add_description(self):$/;"	m	class:ImageFile
 add_description	django/apps/photo/models.py	/^    def add_description(self):$/;"	m	class:ProfileImage
 add_to_context	django/watson/search.py	/^    def add_to_context(self, engine, obj):$/;"	m	class:SearchContextManager
-add_to_stint	webpack/src/react/stints.py	/^def add_to_stint(title, name, date):$/;"	f
 admin_search_engine	django/watson/admin.py	/^admin_search_engine = SearchEngine("admin")$/;"	v
 advert	django/apps/adverts/templatetags/advert_channel.py	/^def advert(context, channel_name):$/;"	f
 advert_deadline	django/apps/issues/models.py	/^    def advert_deadline(self):$/;"	m	class:Issue
@@ -1111,7 +1114,7 @@ clear_html	django/apps/stories/models.py	/^    def clear_html(self):$/;"	m	class
 clickHandler	webpack/src/react/contributors/ContributorList.js	/^  const clickHandler = e => filterToggled(attr, value)$/;"	r
 clickHandler	webpack/src/react/issues/IssueList.js	/^  const clickHandler = e => filterToggled(attr, value)$/;"	r
 clickHandler	webpack/src/react/photos/PhotoList.js	/^  const clickHandler = e => filterToggled(attr, value)$/;"	r
-clickHandler	webpack/src/react/stories/StoryList.js	/^  const clickHandler = e => filterToggled(attr, value)$/;"	r
+clickHandler	webpack/src/react/stories/StoryList.js	/^  const clickHandler = toggle$/;"	r
 closeCrop	webpack/src/react/utils/cropHelpers.js	/^const closeCrop = (x, y, l, r, t, b, A) => {$/;"	r
 close_crop	django/apps/photo/cropping/crop_engine.py	/^def close_crop(x, y, left, right, top, bottom, aspect_ratio):$/;"	f
 code	django/apps/issues/migrations/0011_data_load_publication_plan.py	/^            code=load_fixture(str(fixture)),$/;"	v	class:Migration
@@ -1396,6 +1399,7 @@ devalue_hotness	django/apps/stories/models.py	/^    def devalue_hotness(self, fa
 devalue_hotness	django/apps/stories/tasks.py	/^def devalue_hotness():$/;"	f
 diagonal	django/apps/photo/cropping/boundingbox.py	/^    def diagonal(self) -> float:$/;"	m	class:Box
 dimension	django/apps/adverts/models.py	/^    def dimension(self, axis, fallback=300):$/;"	m	class:Advert
+disabled	webpack/src/react/stories/StoryList.js	/^  const disabled = toggle ? false : isActive$/;"	r
 diskusjon	django/apps/legacy_db/models.py	/^    diskusjon = models.IntegerField()$/;"	v	class:Sak
 dismissPanel	webpack/src/react/ducks/cropPanel.js	/^export const dismissPanel = () => ({$/;"	r
 display_bylines	django/apps/stories/admin.py	/^    def display_bylines(self, instance):$/;"	m	class:StoryAdmin
@@ -1466,6 +1470,7 @@ env	django/universitas/base.py	/^env = Environment(strict=False)$/;"	v
 epost	django/apps/legacy_db/models.py	/^    epost = models.CharField(max_length=255)$/;"	v	class:Eposttinging
 epost	django/apps/legacy_db/models.py	/^    epost = models.CharField(max_length=255, blank=True)$/;"	v	class:InnleggAbstract
 epost_sendt	django/apps/legacy_db/models.py	/^    epost_sendt = models.DateTimeField(blank=True, null=True)$/;"	v	class:DiskSvar
+errorLens	webpack/src/react/auth/duck.js	/^const errorLens = lens('error')$/;"	r
 error_image	django/apps/issues/models.py	/^def error_image(msg, width=420, height=600):$/;"	f
 escape_mysql_boolean_query	django/watson/backends.py	/^def escape_mysql_boolean_query(search_text):$/;"	f
 escape_postgres_query	django/watson/backends.py	/^    def escape_postgres_query(self, text):$/;"	m	class:PostgresLegacySearchBackend
@@ -1641,6 +1646,7 @@ filename	django/apps/stories/models.py	/^    def filename(self):$/;"	m	class:Sto
 filnavn	django/apps/legacy_db/models.py	/^    filnavn = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
 filter	django/watson/search.py	/^    def filter(self, queryset, search_text, ranking=True, backend_name=None):$/;"	m	class:SearchEngine
 filter	django/watson/search.py	/^filter = default_search_engine.filter$/;"	v
+filterSet	webpack/src/react/stories/duck.js	/^export const filterSet = (key, value) => ({$/;"	r
 filterToggled	webpack/src/react/contributors/duck.js	/^export const filterToggled = (key, value) => ({$/;"	r
 filterToggled	webpack/src/react/issues/duck.js	/^export const filterToggled = (key, value) => ({$/;"	r
 filterToggled	webpack/src/react/photos/duck.js	/^export const filterToggled = (key, value) => ({$/;"	r
@@ -1659,9 +1665,7 @@ find_inline_placeholders	django/apps/stories/models.py	/^    def find_inline_pla
 find_linked_story	django/apps/stories/admin.py	/^def find_linked_story(modeladmin, request, queryset):$/;"	f
 find_linked_story	django/apps/stories/models.py	/^    def find_linked_story(self):$/;"	m	class:InlineLink
 find_pattern	django/apps/stories/models.py	/^    find_pattern = '\\[(?P<text>.+?)\\]\\((?P<ref>\\S+?)\\)'$/;"	v	class:InlineLink
-find_positions	webpack/src/react/stints.py	/^def find_positions(issue):$/;"	f
 find_single_item_or_none	django/apps/contributors/models.py	/^        def find_single_item_or_none(func):$/;"	f	function:Contributor.get_or_create
-find_stints_from_pdfs	webpack/src/react/stints.py	/^def find_stints_from_pdfs(issues=None):$/;"	f
 fixture	django/apps/issues/migrations/0011_data_load_publication_plan.py	/^fixture = Path(__file__).parent \/ 'pub-plan-2010-2015.json'$/;"	v
 fixture	django/apps/markup/migrations/0002_load_markup_tags.py	/^fixture = Path(__file__).parent \/ 'markup_tags.json'$/;"	v
 fixture	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^fixture = Path(__file__).parent \/ 'sections_and_story_types.json'$/;"	v
@@ -1718,7 +1722,7 @@ generate_thumbnails	django/apps/issues/tasks.py	/^def generate_thumbnails(**kwar
 get	django/apps/search/views.py	/^    def get(self, request, *args, **kwargs):$/;"	m	class:SearchMixin
 get	django/watson/views.py	/^    def get(self, request, *args, **kwargs):$/;"	m	class:SearchMixin
 getActiveIndex	webpack/src/react/ducks/editor.js	/^export const getActiveIndex = R.compose(R.prop('activeIndex'), getEditor)$/;"	r
-getAuthToken	webpack/src/react/user/duck.js	/^export const getAuthToken = selectorFromLens(tokenLens)$/;"	r
+getAuthToken	webpack/src/react/auth/duck.js	/^export const getAuthToken = selectorFromLens(tokenLens)$/;"	r
 getContent	webpack/src/react/ducks/editor.js	/^export const getContent = R.compose(R.prop('content'), getEditor)$/;"	r
 getContributor	webpack/src/react/contributors/duck.js	/^export const getContributor = id => selectorFromLens(itemLens(id))$/;"	r
 getContributorList	webpack/src/react/contributors/duck.js	/^export const getContributorList = selectorFromLens(currentItemsLens)$/;"	r
@@ -1737,7 +1741,6 @@ getCurrentStoryId	webpack/src/react/stories/duck.js	/^export const getCurrentSto
 getDate	webpack/src/react/contributors/ContributorList.js	/^const getDate = () => new Date().toISOString().slice(0, 10)$/;"	r
 getDate	webpack/src/react/issues/IssueList.js	/^const getDate = () => new Date().toISOString().slice(0, 10)$/;"	r
 getDate	webpack/src/react/photos/PhotoList.js	/^const getDate = () => new Date().toISOString().slice(0, 10)$/;"	r
-getDate	webpack/src/react/stories/StoryList.js	/^const getDate = () => new Date().toISOString().slice(0, 10)$/;"	r
 getDisplayName	webpack/src/react/utils/modelUtils.js	/^export const getDisplayName = (choices, value) =>$/;"	r
 getEditor	webpack/src/react/ducks/editor.js	/^export const getEditor = R.prop('editor')$/;"	r
 getImage	webpack/src/react/ducks/images.js	/^export const getImage = (state, id) => state.images[id]$/;"	r
@@ -1756,12 +1759,12 @@ getQuery	webpack/src/react/contributors/duck.js	/^export const getQuery = select
 getQuery	webpack/src/react/issues/duck.js	/^export const getQuery = selectorFromLens(queryLens)$/;"	r
 getQuery	webpack/src/react/photos/duck.js	/^export const getQuery = selectorFromLens(queryLens)$/;"	r
 getQuery	webpack/src/react/stories/duck.js	/^export const getQuery = selectorFromLens(queryLens)$/;"	r
+getReducer	webpack/src/react/auth/duck.js	/^const getReducer = ({ type, payload, error }) => {$/;"	r
 getReducer	webpack/src/react/contributors/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
 getReducer	webpack/src/react/issues/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
 getReducer	webpack/src/react/photos/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
 getReducer	webpack/src/react/stories/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
 getReducer	webpack/src/react/storytypes/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
-getReducer	webpack/src/react/user/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
 getSelectedImage	webpack/src/react/ducks/cropPanel.js	/^export const getSelectedImage = R.path(['ui', 'cropPanel', 'image'])$/;"	r
 getStory	webpack/src/react/stories/duck.js	/^export const getStory = id => selectorFromLens(itemLens(id))$/;"	r
 getStoryList	webpack/src/react/stories/duck.js	/^export const getStoryList = selectorFromLens(currentItemsLens)$/;"	r
@@ -1772,11 +1775,10 @@ getStyles	webpack/src/react/utils/cropHelpers.js	/^export const getStyles = (src
 getThumbStyle	webpack/src/react/ducks/imageList.js	/^export const getThumbStyle = state => state.ui.imageList.thumbStyle$/;"	r
 getUi	webpack/src/react/ducks/ui.js	/^export const getUi = R.prop('ui')$/;"	r
 getUrl	webpack/src/react/ducks/imageList.js	/^export const getUrl = state => state.ui.imageList.url$/;"	r
-getUser	webpack/src/react/user/duck.js	/^export const getUser = R.view(sliceLens)$/;"	r
+getUser	webpack/src/react/auth/duck.js	/^export const getUser = R.view(sliceLens)$/;"	r
 getYear	webpack/src/react/contributors/ContributorList.js	/^const getYear = () => new Date().toISOString().slice(0, 4)$/;"	r
 getYear	webpack/src/react/issues/IssueList.js	/^const getYear = () => new Date().toISOString().slice(0, 4)$/;"	r
 getYear	webpack/src/react/photos/PhotoList.js	/^const getYear = () => new Date().toISOString().slice(0, 4)$/;"	r
-getYear	webpack/src/react/stories/StoryList.js	/^const getYear = () => new Date().toISOString().slice(0, 4)$/;"	r
 get_absolute_url	django/apps/issues/models.py	/^    def get_absolute_url(self):$/;"	m	class:PrintIssue
 get_absolute_url	django/apps/stories/models.py	/^    def get_absolute_url(self):$/;"	m	class:Section
 get_absolute_url	django/apps/stories/models.py	/^    def get_absolute_url(self):$/;"	m	class:Story
@@ -2074,6 +2076,7 @@ info	webpack/src/react/stories/StoryList.js	/^  const info = ($/;"	r
 ingress	django/apps/legacy_db/models.py	/^    ingress = models.TextField()$/;"	v	class:Sak
 init	webpack/src/react/services/api.js	/^  const init = R.mergeDeepRight(headBase, { ...head })$/;"	r
 initialLocation	webpack/src/react/entry/ProdSys/configureStore.js	/^  const initialLocation = store.getState().router$/;"	r
+initialState	webpack/src/react/auth/duck.js	/^const initialState = { pending: true, error: {} }$/;"	r
 initialState	webpack/src/react/contributors/duck.js	/^export const initialState = R.pipe($/;"	r
 initialState	webpack/src/react/ducks/cropPanel.js	/^const initialState = { image: 0, expanded: false, data: 0 }$/;"	r
 initialState	webpack/src/react/ducks/cropWidget.js	/^const initialState = {$/;"	r
@@ -2082,7 +2085,6 @@ initialState	webpack/src/react/issues/duck.test.js	/^  const initialState = issu
 initialState	webpack/src/react/photos/duck.js	/^export const initialState = R.pipe($/;"	r
 initialState	webpack/src/react/stories/duck.js	/^export const initialState = R.pipe($/;"	r
 initialState	webpack/src/react/storytypes/duck.js	/^const initialState = {}$/;"	r
-initialState	webpack/src/react/user/duck.js	/^const initialState = { pending: false }$/;"	r
 initials	django/apps/contributors/models.py	/^    initials = models.CharField(blank=True, null=True, max_length=5)$/;"	v	class:Contributor
 inline	django/apps/stories/models.py	/^    def inline(self):$/;"	m	class:ElementQuerySet
 inline_aside	django/apps/stories/templatetags/inline_elements.py	/^def inline_aside(context, argument_string):$/;"	f
@@ -2184,6 +2186,7 @@ lede	django/apps/stories/models.py	/^    lede = MarkupTextField($/;"	v	class:Sto
 legacy_data	django/apps/contributors/models.py	/^    def legacy_data(self):$/;"	m	class:Contributor
 legacy_html_source	django/apps/stories/models.py	/^    legacy_html_source = models.TextField($/;"	v	class:Story
 legacy_prodsys_source	django/apps/stories/models.py	/^    legacy_prodsys_source = models.TextField($/;"	v	class:Story
+lens	webpack/src/react/auth/duck.js	/^const lens = R.pipe(R.split('.'), R.lensPath)$/;"	r
 lens	webpack/src/react/contributors/duck.js	/^      const lens = itemLens(id)$/;"	r
 lens	webpack/src/react/contributors/duck.js	/^const lens = R.pipe(R.split('.'), R.lensPath)$/;"	r
 lens	webpack/src/react/issues/duck.js	/^      const lens = itemLens(id)$/;"	r
@@ -2193,7 +2196,6 @@ lens	webpack/src/react/photos/duck.js	/^const lens = R.pipe(R.split('.'), R.lens
 lens	webpack/src/react/stories/duck.js	/^      const lens = itemLens(id)$/;"	r
 lens	webpack/src/react/stories/duck.js	/^const lens = R.pipe(R.split('.'), R.lensPath)$/;"	r
 lens	webpack/src/react/storytypes/duck.js	/^const lens = R.pipe(R.split('.'), R.lensPath)$/;"	r
-lens	webpack/src/react/user/duck.js	/^const lens = R.pipe(R.split('.'), R.lensPath)$/;"	r
 lesninger	django/apps/legacy_db/models.py	/^    lesninger = models.IntegerField()$/;"	v	class:Sak
 lesninger	django/apps/legacy_db/models.py	/^    lesninger = models.IntegerField(blank=True, null=True)$/;"	v	class:DiskInnlegg
 lineParser	webpack/src/react/utils/tagParser.js	/^export const lineParser = memoize(text => {$/;"	r
@@ -2275,8 +2277,8 @@ location	django/utils/aws_custom_storage.py	/^    location = 'media'$/;"	v	class
 location	django/utils/aws_custom_storage.py	/^    location = 'media'$/;"	v	class:ThumbStorage
 location	django/utils/aws_custom_storage.py	/^    location = 'static'$/;"	v	class:StaticStorage
 log	webpack/src/react/stories/StoryDetail.js	/^const log = msg => () => alert(msg)$/;"	r
-logIn	webpack/src/react/user/duck.js	/^export const logIn = (username, password) => ({$/;"	r
-logOut	webpack/src/react/user/duck.js	/^export const logOut = () => ({ type: LOG_OUT, payload: {} })$/;"	r
+logIn	webpack/src/react/auth/duck.js	/^export const logIn = (username, password) => ({$/;"	r
+logOut	webpack/src/react/auth/duck.js	/^export const logOut = () => ({ type: LOG_OUT, payload: {} })$/;"	r
 logfile_handler	django/universitas/logging_settings.py	/^def logfile_handler(filename, debug=False, **kwargs):$/;"	f
 logger	django/api/legacy_serializers.py	/^logger = logging.getLogger('apps')$/;"	v
 logger	django/apps/adverts/models.py	/^logger = logging.getLogger(__name__)$/;"	v
@@ -2311,8 +2313,9 @@ logger	django/apps/stories/models.py	/^logger = logging.getLogger(__name__)$/;"	
 logger	django/apps/stories/tasks.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/stories/templatetags/inline_elements.py	/^logger = logging.getLogger(__name__)$/;"	v
 logger	django/apps/stories/views.py	/^logger = logging.getLogger(__name__)$/;"	v
-login	webpack/src/react/user/UserTool.js	/^    const login = this.login.value$/;"	r
-loginSuccess	webpack/src/react/user/duck.js	/^export const loginSuccess = ({ key }) => ({ type: LOGGED_IN, payload: { key } })$/;"	r
+login	webpack/src/react/auth/LoginForm.js	/^    const login = this.login.value$/;"	r
+loginFailed	webpack/src/react/auth/duck.js	/^export const loginFailed = error => ({ type: LOG_IN_FAILED, error })$/;"	r
+loginSuccess	webpack/src/react/auth/duck.js	/^export const loginSuccess = ({ key }) => ({$/;"	r
 lookups	django/apps/contributors/admin.py	/^    def lookups(self, request, model_admin):$/;"	m	class:StintActiveFilter
 lookups	django/apps/legacy_db/admin.py	/^    def lookups(self, request, model_admin):$/;"	m	class:ProdusertFilter
 main	django/apps/legacy_db/export_content_and_images.py	/^    def main(websak):$/;"	f	function:_websak_til_xtags
@@ -2904,7 +2907,7 @@ parent_story	django/apps/stories/models.py	/^    parent_story = models.ForeignKe
 parent_story	django/apps/stories/models.py	/^    parent_story = models.ForeignKey(Story)$/;"	v	class:StoryElement
 parse_box_data	django/apps/photo/cropping/models.py	/^def parse_box_data(value):$/;"	f
 parse_markup	django/apps/stories/models.py	/^    def parse_markup(self):$/;"	m	class:TextContent
-password	webpack/src/react/user/UserTool.js	/^    const password = this.password.value$/;"	r
+password	webpack/src/react/auth/LoginForm.js	/^    const password = this.password.value$/;"	r
 patched_timezone_now	django/api/tests/funky.py	/^def patched_timezone_now(monkeypatch):$/;"	f
 path	django/apps/legacy_db/models.py	/^    path = models.CharField(max_length=255)$/;"	v	class:Bilde
 pattern	django/apps/markup/models.py	/^    pattern = models.CharField($/;"	v	class:Alias
@@ -2919,7 +2922,7 @@ pdf_to_text	django/apps/issues/models.py	/^def pdf_to_text(pdf, first_page=1, la
 pdfs	django/api/issue_serializers.py	/^    pdfs = NestedPDFSerializer($/;"	v	class:IssueSerializer
 pending	django/apps/photo/models.py	/^    def pending(self):$/;"	m	class:ImageFileQuerySet
 pending	webpack/src/react/containers/EditImage.js	/^  const pending = cropping_method === 1$/;"	r
-pendingLens	webpack/src/react/user/duck.js	/^const pendingLens = lens('pending')$/;"	r
+pendingLens	webpack/src/react/auth/duck.js	/^const pendingLens = lens('pending')$/;"	r
 permanent	django/universitas/redirect_urls.py	/^                             permanent=True)),$/;"	v
 phone	django/apps/contributors/models.py	/^    phone = models.CharField(blank=True, null=True, max_length=20)$/;"	v	class:Contributor
 photo	django/api/tests/test_indesign_api.py	/^def photo():$/;"	f
@@ -3064,6 +3067,7 @@ rebuild_index_for_model	django/watson/management/commands/buildwatson.py	/^def r
 redis_host	django/universitas/base.py	/^redis_host = env.redis_host or 'redis'$/;"	v
 redis_port	django/universitas/base.py	/^redis_port = env.redis_port or 6379$/;"	v
 reduce_opacity	django/apps/adverts/dummy_image_advert.py	/^def reduce_opacity(im, opacity):$/;"	f
+reducer	webpack/src/react/auth/duck.js	/^export const reducer = (state = initialState, action) =>$/;"	r
 reducer	webpack/src/react/contributors/duck.js	/^export const reducer = (state = initialState, action) =>$/;"	r
 reducer	webpack/src/react/ducks/cropPanel.js	/^export const reducer = (state = initialState, action) => {$/;"	r
 reducer	webpack/src/react/ducks/cropWidget.js	/^export const reducer = (state = initialState, action) => {$/;"	r
@@ -3075,7 +3079,6 @@ reducer	webpack/src/react/issues/duck.js	/^export const reducer = (state = initi
 reducer	webpack/src/react/photos/duck.js	/^export const reducer = (state = initialState, action) =>$/;"	r
 reducer	webpack/src/react/stories/duck.js	/^export const reducer = (state = initialState, action) =>$/;"	r
 reducer	webpack/src/react/storytypes/duck.js	/^export const reducer = (state = initialState, action) =>$/;"	r
-reducer	webpack/src/react/user/duck.js	/^export const reducer = (state = initialState, action) =>$/;"	r
 reducers	webpack/src/react/entry/ProdSys/configureStore.js	/^      const reducers = require('.\/reducer').default$/;"	r
 regex	webpack/src/react/ducks/editor.js	/^  const regex = \/\\s*$\/gm$/;"	r
 regex_from_word	django/watson/backends.py	/^def regex_from_word(word):$/;"	f
@@ -3127,8 +3130,9 @@ replacement	django/apps/markup/models.py	/^    replacement = models.CharField($/
 replacement	django/apps/markup/models.py	/^    replacement = models.CharField($/;"	v	class:InlineTag
 replacement	webpack/src/react/ducks/editor.js	/^  const replacement = tag ? `@${tag}: ` : ''$/;"	r
 replaces	django/apps/photo/migrations/0001_squashed_0003_auto_20150228_2151.py	/^    replaces = [('photo', '0001_initial'), ('photo',$/;"	v	class:Migration
-requestUser	webpack/src/react/user/duck.js	/^export const requestUser = () => ({ type: REQUEST_USER, payload: {} })$/;"	r
-requestUserSuccess	webpack/src/react/user/duck.js	/^export const requestUserSuccess = data => ({$/;"	r
+requestUser	webpack/src/react/auth/duck.js	/^export const requestUser = () => ({ type: REQUEST_USER, payload: {} })$/;"	r
+requestUserFailed	webpack/src/react/auth/duck.js	/^export const requestUserFailed = error => ({ type: REQUEST_USER_FAILED, error })$/;"	r
+requestUserSuccess	webpack/src/react/auth/duck.js	/^export const requestUserSuccess = data => ({$/;"	r
 require_binary	django/apps/issues/tasks.py	/^def require_binary(binary):$/;"	f
 requires_installation	django/watson/backends.py	/^    requires_installation = False$/;"	v	class:SearchBackend
 requires_installation	django/watson/backends.py	/^    requires_installation = True$/;"	v	class:MySQLSearchBackend
@@ -3239,12 +3243,12 @@ selected	webpack/src/react/contributors/ContributorList.js	/^    const selected 
 selected	webpack/src/react/issues/IssueList.js	/^    const selected = getCurrentIssueId(state) === id$/;"	r
 selected	webpack/src/react/photos/PhotoList.js	/^    const selected = getCurrentPhotoId(state) === id$/;"	r
 selected	webpack/src/react/stories/StoryList.js	/^    const selected = getCurrentStoryId(state) === id$/;"	r
+selectorFromLens	webpack/src/react/auth/duck.js	/^const selectorFromLens = l => R.view(R.compose(sliceLens, l))$/;"	r
 selectorFromLens	webpack/src/react/contributors/duck.js	/^const selectorFromLens = l => R.view(R.compose(lens('contributors'), l))$/;"	r
 selectorFromLens	webpack/src/react/issues/duck.js	/^const selectorFromLens = l => R.view(R.compose(lens('issues'), l))$/;"	r
 selectorFromLens	webpack/src/react/photos/duck.js	/^const selectorFromLens = l => R.view(R.compose(lens('photos'), l))$/;"	r
 selectorFromLens	webpack/src/react/stories/duck.js	/^const selectorFromLens = l => R.view(R.compose(lens('stories'), l))$/;"	r
 selectorFromLens	webpack/src/react/storytypes/duck.js	/^const selectorFromLens = l => R.view(R.compose(lens('storytypes'), l))$/;"	r
-selectorFromLens	webpack/src/react/user/duck.js	/^const selectorFromLens = l => R.view(R.compose(sliceLens, l))$/;"	r
 sensurert	django/apps/legacy_db/models.py	/^    sensurert = models.IntegerField(blank=True, null=True)$/;"	v	class:InnleggAbstract
 serialize	django/apps/photo/cropping/boundingbox.py	/^    def serialize(self, precision: int=4) -> typing.Mapping[str, float]:$/;"	m	class:Box
 serialize	django/apps/photo/cropping/crop_detector.py	/^    def serialize(self, precision: int=3) -> OrderedDict:$/;"	m	class:Feature
@@ -3272,7 +3276,7 @@ size	django/apps/stories/models.py	/^    size = models.PositiveSmallIntegerField
 skip_index_update	django/watson/search.py	/^    def skip_index_update(self):$/;"	m	class:SearchContextManager
 skip_index_update	django/watson/search.py	/^skip_index_update = search_context_manager.skip_index_update$/;"	v
 slagord	django/apps/legacy_db/models.py	/^    slagord = models.CharField(max_length=255, blank=True)$/;"	v	class:Sak
-sliceLens	webpack/src/react/user/duck.js	/^const sliceLens = lens('user')$/;"	r
+sliceLens	webpack/src/react/auth/duck.js	/^const sliceLens = lens('auth')$/;"	r
 slug	django/apps/stories/models.py	/^    slug = AutoSlugField($/;"	v	class:Section
 slug	django/apps/stories/models.py	/^    slug = AutoSlugField($/;"	v	class:Story
 slug	django/apps/stories/models.py	/^    slug = AutoSlugField($/;"	v	class:StoryType
@@ -3466,7 +3470,7 @@ today	django/apps/contributors/models.py	/^def today():$/;"	f
 today	django/apps/issues/models.py	/^def today():$/;"	f
 toggle	webpack/src/react/utils/fp.test.js	/^  const toggle = fp.combinedToggle('a', 1)$/;"	r
 toggle	webpack/src/react/utils/fp.test.js	/^  const toggle = fp.objectToggle('a', 1)$/;"	r
-tokenLens	webpack/src/react/user/duck.js	/^const tokenLens = lens('key')$/;"	r
+tokenLens	webpack/src/react/auth/duck.js	/^const tokenLens = lens('key')$/;"	r
 tools	webpack/src/react/containers/EditorToolBar.js	/^  const tools = {$/;"	r
 top	django/apps/stories/models.py	/^    def top(self):$/;"	m	class:ElementQuerySet
 top	django/apps/stories/models.py	/^    top = models.BooleanField($/;"	v	class:StoryElement
@@ -3521,6 +3525,7 @@ url	webpack/src/react/photos/saga.js	/^  const url = R.path(['payload', 'url'])(
 url	webpack/src/react/sagas/images.js	/^    const url = searchUrl('images')({ search })$/;"	r
 url	webpack/src/react/services/api.js	/^  const url = `${BASE_URL}\/${model}\/${id}\/`$/;"	r
 url	webpack/src/react/services/api.js	/^  const url = `${BASE_URL}\/${model}\/`$/;"	r
+url	webpack/src/react/services/api.js	/^  const url = query ? `${BASE_URL}\/${model}\/?${query}` : `${BASE_URL}\/${model}\/`$/;"	r
 url	webpack/src/react/services/api.test.js	/^  const url = searchUrl('people')(attrs)$/;"	r
 url	webpack/src/react/stories/saga.js	/^  const url = R.path(['payload', 'url'])(action)$/;"	r
 urlTail	webpack/src/react/services/api.test.js	/^  const urlTail = 'search=hello%20world!&limit=20'$/;"	r
