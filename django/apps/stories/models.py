@@ -746,10 +746,12 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             return top_image.child
 
     def facebook_thumb(self):
-        size = '600x315'
-        image = self.main_image()
-        if image:
-            return image.imagefile.thumbnail(size)
+        if self.main_image():
+            imagefile = self.main_image().imagefile
+            return imagefile.thumbnail(
+                size='800x420',
+                crop_box=imagefile.get_crop_box(),
+            )
 
     @property
     def section(self):

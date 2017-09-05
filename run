@@ -17,7 +17,6 @@ while (( $# > 0 )); do
   enable  ) enable_service ;; # enable systemd service file for web server - starts all docker images
   build   ) build_django ;;   # download and build all images, migrate database
 
-  lint    ) lint_javascript ; lint_python ;; # lint all files commited
   webpack ) docker-compose run --rm webpack ${rest:-bash}; exit;;
 
   npmi    ) docker-compose run --rm -u root webpack npm i --upgrade --save $rest; exit ;; # npm install [packages...]
@@ -26,7 +25,6 @@ while (( $# > 0 )); do
   django  ) docker-compose run --rm -u django web ${rest:-bash}; exit ;;
   root    ) docker-compose run --rm           web ${rest:-bash}; exit ;;
 
-  test    ) run_tests ;;  # run pytest and jest
   pytest  ) docker-compose run --rm --name testf -u django web pytest -f -x --ff $rest; exit ;;
 
   flower  ) docker-compose run --rm --name flower -d -p 5555:5555 celery flower ;;  # start celery flower on port 5555
@@ -39,13 +37,16 @@ while (( $# > 0 )); do
   upd     ) docker-compose up -d ;;  # start all docker images in daemon mode
   logs    ) docker-compose logs --tail=50 -f $rest ; exit ;;
 
-  tag    ) ctags -R ./django ./webpack/src/react && echo "collected ctags" ;; # collect ctags for python and js
 
   prod    ) # production settings
             export IMAGE_VERSION=$(git tag --merged | tail -n1)
             echo 'production settings' $IMAGE_VERSION
             export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml ;;
   dev     ) echo "development settings"; unset COMPOSE_FILE ;;  # development settings
+
+  lint    ) lint_javascript ; lint_python ;; # lint all files commited
+  test    ) run_tests ;;  # run pytest and jest
+  tags    ) ctags -R ./django ./webpack/src/react && echo "collected ctags" ;; # collect ctags for python and js
   precom  ) main prod tag lint webpack build; exit ;; # run before git commit
   *       ) show_help ;;
   esac;

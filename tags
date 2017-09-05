@@ -203,6 +203,7 @@ Environment	django/universitas/setting_helpers.py	/^class Environment:$/;"	c
 Eposttinging	django/apps/legacy_db/models.py	/^class Eposttinging(models.Model):$/;"	c
 FAILED	webpack/src/react/services/api.js	/^export const FAILED = 'api\/FAILED'$/;"	r
 FAKE	django/apps/core/content_factory.py	/^FAKE = Factory.create('no')$/;"	v
+FAVICON_URL	django/universitas/redirect_urls.py	/^FAVICON_URL = 'favicon\/favicon.ico'$/;"	v
 FETCHING	webpack/src/react/services/api.js	/^export const FETCHING = 'api\/FETCHING'$/;"	r
 FIELD_CHANGED	webpack/src/react/contributors/duck.js	/^export const FIELD_CHANGED = 'contributors\/FIELD_CHANGED'$/;"	r
 FIELD_CHANGED	webpack/src/react/issues/duck.js	/^export const FIELD_CHANGED = 'issues\/FIELD_CHANGED'$/;"	r
@@ -1492,6 +1493,7 @@ extra_classes	django/apps/adverts/models.py	/^    extra_classes = models.CharFie
 extra_classes	django/apps/adverts/models.py	/^    extra_classes = models.CharField($/;"	v	class:Advert
 extra_context	django/watson/views.py	/^    extra_context = {}$/;"	v	class:SearchMixin
 extra_kwargs	django/api/legacy_serializers.py	/^        extra_kwargs = {'url': {'view_name': 'legacy-detail'}}$/;"	v	class:ProdStorySerializer.Meta
+facebook_thumb	django/apps/stories/models.py	/^    def facebook_thumb(self):$/;"	m	class:Story
 failed	webpack/src/react/services/api.js	/^const failed = (request, error) => ({$/;"	r
 fake	django/utils/content_factory.py	/^fake = Factory.create('no')$/;"	v
 fake_contributor	django/apps/core/content_factory.py	/^def fake_contributor(fake=FAKE, **kwargs):$/;"	f
@@ -2918,7 +2920,6 @@ pdfs	django/api/issue_serializers.py	/^    pdfs = NestedPDFSerializer($/;"	v	cla
 pending	django/apps/photo/models.py	/^    def pending(self):$/;"	m	class:ImageFileQuerySet
 pending	webpack/src/react/containers/EditImage.js	/^  const pending = cropping_method === 1$/;"	r
 pendingLens	webpack/src/react/user/duck.js	/^const pendingLens = lens('pending')$/;"	r
-permanent	django/universitas/redirect_urls.py	/^                             permanent=False)),$/;"	v
 permanent	django/universitas/redirect_urls.py	/^                             permanent=True)),$/;"	v
 phone	django/apps/contributors/models.py	/^    phone = models.CharField(blank=True, null=True, max_length=20)$/;"	v	class:Contributor
 photo	django/api/tests/test_indesign_api.py	/^def photo():$/;"	f
@@ -3435,7 +3436,6 @@ through	django/apps/frontpage/models.py	/^        through=StoryModule,$/;"	v	cla
 thumb	django/api/contributor_serializers.py	/^    thumb = serializers.SerializerMethodField()$/;"	v	class:ContributorSerializer
 thumb	django/api/photo_serializers.py	/^    thumb = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 thumb	django/apps/photo/cropping/models.py	/^    def thumb(self, height=315, width=600):$/;"	m	class:AutoCropImage
-thumb	django/apps/stories/models.py	/^    def thumb(self):$/;"	m	class:Story
 thumbStyleCycle	webpack/src/react/ducks/imageList.js	/^export const thumbStyleCycle = () => ({$/;"	r
 thumbStyles	webpack/src/react/containers/PhotoList.js	/^const thumbStyles = [CroppedThumb, FullThumbWithCropBox, FullThumb]$/;"	r
 thumbnail	django/apps/issues/admin.py	/^    def thumbnail(self, instance, width=200, height=200):$/;"	m	class:ThumbAdmin
@@ -3515,6 +3515,7 @@ upload_to	django/apps/photo/models.py	/^        upload_to=upload_image_to,$/;"	v
 url	django/apps/frontpage/models.py	/^    def url(self):$/;"	m	class:FrontpageStory
 url	django/apps/issues/models.py	/^    url = settings.STATIC_URL + 'admin\/img\/icon-no.svg'$/;"	v	class:BrokenImage
 url	django/apps/photo/models.py	/^    url = settings.STATIC_URL + 'admin\/img\/icon-no.svg'$/;"	v	class:BrokenImage
+url	django/universitas/redirect_urls.py	/^        url=static(FAVICON_URL), permanent=False)),$/;"	v
 url	django/watson/models.py	/^    url = models.CharField($/;"	v	class:SearchEntry
 url	webpack/src/react/photos/saga.js	/^  const url = R.path(['payload', 'url'])(action)$/;"	r
 url	webpack/src/react/sagas/images.js	/^    const url = searchUrl('images')({ search })$/;"	r
