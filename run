@@ -39,8 +39,7 @@ while (( $# > 0 )); do
 
 
   prod    ) # production settings
-            export IMAGE_VERSION=$(git tag --merged | tail -n1)
-            export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml 
+            production_settings 
             echo 'production settings' $IMAGE_VERSION ;;
   dev     ) # development settings
             export IMAGE_VERSION=edge
@@ -66,6 +65,16 @@ collect_static_files() {
     args="$@"
   fi
   docker-compose run --rm web django-admin collectstatic --noinput $args
+}
+
+production_settings() {
+  branch=$(git status | awk '/On branch/{print $3}')
+  if [[ $branch == 'master' ]]; then
+    export IMAGE_VERSION=$(git tag --merged | tail -n1)
+  else 
+    export IMAGE_VERSION=edge
+  fi
+  export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml 
 }
 
 run_tests() {
