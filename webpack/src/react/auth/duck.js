@@ -1,12 +1,12 @@
-export const LOG_IN = 'user/LOG_IN'
-export const LOGGED_IN = 'user/LOGGED_IN'
-export const LOG_OUT = 'user/LOG_OUT'
-export const REQUEST_USER = 'user/REQUEST_USER'
-export const REQUEST_USER_SUCCESS = 'user/REQUEST_USER_SUCCESS'
+export const LOG_IN = 'auth/LOG_IN'
+export const LOGGED_IN = 'auth/LOGGED_IN'
+export const LOG_OUT = 'auth/LOG_OUT'
+export const REQUEST_USER = 'auth/REQUEST_USER'
+export const REQUEST_USER_SUCCESS = 'auth/REQUEST_USER_SUCCESS'
 
 // Lenses
 const lens = R.pipe(R.split('.'), R.lensPath)
-const sliceLens = lens('user')
+const sliceLens = lens('auth')
 const tokenLens = lens('key')
 const pendingLens = lens('pending')
 
@@ -38,7 +38,7 @@ const getReducer = ({ type, payload }) => {
     case LOG_IN:
       return R.always({ pending: true })
     case LOGGED_IN:
-      return R.compose(R.set(keyLens(payload.key)), R.set(pendingLens(false)))
+      return R.compose(R.set(tokenLens(payload.key)), R.set(pendingLens(false)))
     case REQUEST_USER_SUCCESS:
       return R.mergeDeepRight(payload)
     case LOG_OUT:

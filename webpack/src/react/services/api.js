@@ -53,8 +53,15 @@ export const apiFetch = (url, head = {}, body = null) => {
       : (init.body = JSON.stringify(body))
   }
   return fetch(url, init)
-    .then(response => response.json())
-    .then(response => ({ response }))
+    .then(response => ({
+      data: response.json(),
+      ok: response.ok,
+      status: response.status,
+    }))
+    .then(
+      ({ ok, data, status }) =>
+        ok ? { response: data, status } : { error: data, status }
+    )
     .catch(error => ({ error }))
 }
 

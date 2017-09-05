@@ -5,8 +5,10 @@ import {
   LOG_OUT,
   REQUEST_USER,
   loginSuccess,
+  loginFailed,
   requestUserSuccess,
-} from './duck'
+  requestUserFailed,
+} from 'auth/duck'
 
 export default function* rootSaga() {
   yield takeEvery(LOG_OUT, logOutSaga)

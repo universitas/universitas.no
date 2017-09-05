@@ -9,17 +9,16 @@ import PhotoList from 'photos/PhotoList'
 import PhotoDetail from 'photos/PhotoDetail'
 import StoryList from 'stories/StoryList'
 import StoryDetail from 'stories/StoryDetail'
-import UserTool from 'user/UserTool'
+import UserTool from 'auth/UserTool'
+import LoginForm from 'auth/LoginForm'
+import { getUser } from 'auth/duck'
 import 'styles/prodsys.scss'
 
 const Home = () => <div>home</div>
 
+// activeProps={{ className: 'AppButton active' }}
 const AppButton = ({ href, Icon, label }) => (
-  <Link
-    className="AppButton"
-    href={href}
-    activeProps={{ className: 'AppButton active' }}
-  >
+  <Link className="AppButton" href={href}>
     <Icon /><small>{label}</small>
   </Link>
 )
@@ -29,7 +28,7 @@ AppButton.propTypes = {
   label: PropTypes.string.isRequired,
 }
 
-export default () => (
+const ProdSys = () => (
   <main className="ProdSys">
     <section className="SideBar">
       <AppButton href="/stories" Icon={Edit} label="saker" />
@@ -59,3 +58,6 @@ export default () => (
     </Fragment>
   </main>
 )
+const App = ({ username }) => (username ? <ProdSys /> : <LoginForm />)
+
+export default connect(getUser)(App)

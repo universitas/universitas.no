@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { logOut, logIn, getUser } from 'user/duck'
+import { logOut, logIn, getUser } from 'auth/duck'
 
 class LoginForm extends React.Component {
   handleSubmit = e => {
@@ -7,7 +7,7 @@ class LoginForm extends React.Component {
     const login = this.login.value
     const password = this.password.value
     console.log('login', login, password)
-    this.props.onSubmit(login, password)
+    this.props.logIn(login, password)
   }
   render() {
     return (
@@ -24,24 +24,8 @@ class LoginForm extends React.Component {
   }
 }
 
-const User = ({ name, logOut }) => (
-  <div className="User">
-    <span className="username">{name}</span>
-    <button className="button" onClick={logOut}>Logg ut</button>
-  </div>
-)
-
-const UserTool = ({ username, pending, logIn, logOut }) => (
-  <div className="UserTool">
-    {username
-      ? <User name={username} logOut={logOut} />
-      : <LoginForm onSubmit={logIn} />}
-  </div>
-)
-UserTool.propTypes = {
-  username: PropTypes.string,
+LoginForm.propTypes = {
   pending: PropTypes.bool.isRequired,
   logIn: PropTypes.func.isRequired,
-  logOut: PropTypes.func.isRequired,
 }
-export default connect(getUser, { logIn, logOut })(UserTool)
+export default connect(getUser, { logIn })(LoginForm)
