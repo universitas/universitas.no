@@ -10,7 +10,6 @@ before_install:
   - sudo pip install docker-compose
   - touch django/local.env
   - git fetch --tags
-  - ./run prod build
 
 script:
   - ./run prod test

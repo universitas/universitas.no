@@ -42,8 +42,6 @@ while (( $# > 0 )); do
             production_settings 
             echo 'production settings' $IMAGE_VERSION ;;
   dev     ) # development settings
-            export IMAGE_VERSION=edge
-            unset COMPOSE_FILE   
             echo "development settings" ;;
   lint    ) lint_javascript ; lint_python ;; # lint all files commited
   test    ) run_tests ;;  # run pytest and jest
@@ -68,13 +66,13 @@ collect_static_files() {
 }
 
 production_settings() {
-  branch=$(git status | awk '/On branch/{print $3}')
-  if [[ $branch == 'master' ]]; then
-    export IMAGE_VERSION=$(git tag --merged | tail -n1)
-  else 
-    export IMAGE_VERSION=edge
-  fi
   export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml 
+  BRANCH=$(git status | awk '/On branch/{print $3}')
+  if [[ $BRANCH == 'master' ]]; then
+    export IMAGE_VERSION=$(git tag --merged | tail -n1)
+  fi
+  git tag --merged
+  echo branch: $BRANCH image version $IMAGE_VERSION
 }
 
 run_tests() {
@@ -181,4 +179,6 @@ install_docker() {
 cd $(dirname $(readlink -f $0))
 [[ ! -f django/local.env ]] && echo "# Add environment variables here" > django/local.env
 
+export IMAGE_VERSION=edge
+export COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml
 main $@
