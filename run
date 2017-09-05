@@ -1,13 +1,13 @@
 #!/bin/bash
 
 main(){
-while (( $# > 0 )); do 
+while (( $# > 0 )); do
   rest=${@:2}
   case $1 in
   help    ) show_help ;; # show help for commands
   init    ) # install docker and docker-compose on ubuntu ( must be run as sudo )
-            sudo bash -c "$(declare -f install_docker); install_docker $(whoami)" ;; 
-  dc      ) docker-compose $rest; exit ;; # docker-compose [args] 
+            sudo bash -c "$(declare -f install_docker); install_docker $(whoami)" ;;
+  dc      ) docker-compose $rest; exit ;; # docker-compose [args]
   da      ) docker-compose run --rm web django-admin $rest; exit ;; # django-admin [args]
 
   dumpdb  ) dump_db ;;  # dump postgresql database
@@ -17,7 +17,7 @@ while (( $# > 0 )); do
   enable  ) enable_service ;; # enable systemd service file for web server - starts all docker images
   build   ) build_django ;;   # download and build all images, migrate database
 
-  lint    ) lint_javascript ; lint_python ;; # lint all files commited  
+  lint    ) lint_javascript ; lint_python ;; # lint all files commited
   webpack ) docker-compose run --rm webpack ${rest:-bash}; exit;;
 
   npmi    ) docker-compose run --rm -u root webpack npm i --upgrade --save $rest; exit ;; # npm install [packages...]
@@ -33,22 +33,36 @@ while (( $# > 0 )); do
   jupyter ) start_jupyter ;;  # start jupyter server for django on port 8888
 
   fake    ) docker-compose run --rm web django-admin fake_content -c10 -s50 ;;  # create fake data in django database
-  static  ) docker-compose run --rm web django-admin collectstatic --noinput \  # run django collectstatic
-    -i admin -i debug_toolbar -i rest_framework -i django_extensions ;;
+  static  ) collect_static_files --ignore ;;  # run django collectstatic
   migrate ) docker-compose run --rm web django-admin migrate ;;  # migrate django apps
 
   upd     ) docker-compose up -d ;;  # start all docker images in daemon mode
   logs    ) docker-compose logs --tail=50 -f $rest ; exit ;;
 
-  tags    ) ctags -R ./django ./webpack/src/react && echo "collected ctags" ;; # collect ctags for python and js
+  tag    ) ctags -R ./django ./webpack/src/react && echo "collected ctags" ;; # collect ctags for python and js
 
-  prod    ) export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml ;; # production settings
+  prod    ) # production settings
+            export IMAGE_VERSION=$(git tag --merged | tail -n1)
+            echo 'production settings' $IMAGE_VERSION
+            export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml ;;
   dev     ) echo "development settings"; unset COMPOSE_FILE ;;  # development settings
-  precom  ) main prod tags lint webpack build; exit ;; # run before git commit
+  precom  ) main prod tag lint webpack build; exit ;; # run before git commit
   *       ) show_help ;;
-  esac; 
-  shift 1; 
+  esac;
+  shift 1;
 done
+}
+
+collect_static_files() {
+  if [[ $1 == '--ignore' ]]; then
+    # ignore some apps that probably already are collected
+    IGNORE='admin debug_toolbar rest_framework django_extensions core'
+    shift
+    args="$(printf -- "-i%s " $IGNORE)$@"
+  else
+    args="$@"
+  fi
+  docker-compose run --rm web django-admin collectstatic --noinput $args
 }
 
 run_tests() {
@@ -87,7 +101,7 @@ load_db() {
   dumpfile=${1:-$dumpfile}
   [[ -e $dumpfile ]] || exit 1
   echo "found database dump: $dumpfile"
-  exit 
+  exit
   cp $dumpfile django/dbdump.sql
 
   # loading data

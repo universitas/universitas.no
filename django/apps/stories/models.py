@@ -745,10 +745,11 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         if top_image:
             return top_image.child
 
-    def thumb(self):
+    def facebook_thumb(self):
+        size = '1200x630'
         image = self.main_image()
         if image:
-            return image.imagefile.thumb()
+            return image.imagefile.thumbnail(size)
 
     @property
     def section(self):
@@ -783,7 +784,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             kwargs={
                 'story_id': str(self.id),
             },)
-        return 'http://universitas.no' + url
+        return url
 
     def children_modified(self):
         """ check if any related objects have been
