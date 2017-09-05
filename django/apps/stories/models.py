@@ -746,7 +746,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             return top_image.child
 
     def facebook_thumb(self):
-        size = '1200x630'
+        size = '600x315'
         image = self.main_image()
         if image:
             return image.imagefile.thumbnail(size)
