@@ -1,0 +1,9 @@
+# overrides for testing
+version: '2.1'
+services:
+
+  web:
+    environment:
+      - DEBUG=False
+    volumes:
+      - ./build:/var/build/

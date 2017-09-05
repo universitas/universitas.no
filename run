@@ -7,8 +7,8 @@ while (( $# > 0 )); do
   help    ) show_help ;; # show help for commands
   init    ) # install docker and docker-compose on ubuntu ( must be run as sudo )
             sudo bash -c "$(declare -f install_docker); install_docker $(whoami)" ;;
-  dc      ) docker-compose $rest; exit ;; # docker-compose [args]
-  da      ) docker-compose run --rm web django-admin $rest; exit ;; # django-admin [args]
+  dc      ) docker-compose $rest; exit ;; # docker-compose [...args]
+  da      ) docker-compose run --rm web django-admin $rest; exit ;; # django-admin [...args]
 
   dumpdb  ) dump_db ;;  # dump postgresql database
   loaddb  ) load_db $rest; exit;;  # load database from dump file [filename]
@@ -40,15 +40,17 @@ while (( $# > 0 )); do
 
   prod    ) # production settings
             export IMAGE_VERSION=$(git tag --merged | tail -n1)
-            echo 'production settings' $IMAGE_VERSION
-            export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml ;;
-  dev     ) echo "development settings"; unset COMPOSE_FILE ;;  # development settings
-
+            export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml 
+            echo 'production settings' $IMAGE_VERSION ;;
+  dev     ) # development settings
+            export IMAGE_VERSION=edge
+            unset COMPOSE_FILE   
+            echo "development settings" ;;
   lint    ) lint_javascript ; lint_python ;; # lint all files commited
   test    ) run_tests ;;  # run pytest and jest
   tags    ) ctags -R ./django ./webpack/src/react && echo "collected ctags" ;; # collect ctags for python and js
   precom  ) main prod tags lint webpack build; exit ;; # run before git commit
-  *       ) show_help ;;
+  *       ) printf "\nunknown command \"$@\"\n" >&2; show_help; exit 1 ;;
   esac;
   shift 1;
 done
@@ -67,8 +69,9 @@ collect_static_files() {
 }
 
 run_tests() {
-  docker-compose run --rm -u django web pytest --create-db
-  docker-compose run --rm webpack test
+  export COMPOSE_FILE=docker-compose.yml:docker-compose.testing.yml
+  docker-compose run --rm -u django web pytest --create-db || exit 1
+  docker-compose run --rm webpack test || exit 1
 }
 
 show_help() {
@@ -168,5 +171,5 @@ install_docker() {
 
 cd $(dirname $(readlink -f $0))
 [[ ! -f django/local.env ]] && echo "# Add environment variables here" > django/local.env
+
 main $@
-# [[ $(tput cols) -lt 80 ]] || docker-compose ps
