@@ -1,13 +1,14 @@
-import R from 'ramda' // Action constants
-import { objectToggle } from '../utils/fp'
+import { combinedToggle } from '../utils/fp'
 export const ITEM_ADDED = 'stories/ITEM_ADDED'
 export const ITEM_SELECTED = 'stories/ITEM_SELECTED'
+export const ITEM_CLONED = 'stories/ITEM_CLONED'
 export const ITEM_PATCHED = 'stories/ITEM_PATCHED'
 export const FIELD_CHANGED = 'stories/FIELD_CHANGED'
 export const ITEMS_FETCHED = 'stories/ITEMS_FETCHED'
 export const ITEM_REQUESTED = 'stories/ITEM_REQUESTED'
 export const ITEMS_REQUESTED = 'stories/ITEMS_REQUESTED'
 export const FILTER_TOGGLED = 'stories/FILTER_TOGGLED'
+export const FILTER_SET = 'stories/FILTER_SET'
 
 // Lenses
 const lens = R.pipe(R.split('.'), R.lensPath)
@@ -28,12 +29,16 @@ export const getNavigation = selectorFromLens(navigationLens)
 export const getStory = id => selectorFromLens(itemLens(id))
 
 export const getCurrentStory = state =>
-  getStory(getCurrentStoryId(state))(state)
+  getStory(getCurrentStoryId(state))(state) || {}
 
 // Action creators
 export const storyAdded = data => ({
   type: ITEM_ADDED,
   payload: data,
+})
+export const storyCloned = id => ({
+  type: ITEM_CLONED,
+  payload: { id },
 })
 export const storySelected = id => ({
   type: ITEM_SELECTED,
@@ -59,7 +64,6 @@ export const storiesRequested = url => ({
   type: ITEMS_REQUESTED,
   payload: { url },
 })
-
 export const storiesFetched = data => ({
   type: ITEMS_FETCHED,
   payload: data,
@@ -68,25 +72,47 @@ export const filterToggled = (key, value) => ({
   type: FILTER_TOGGLED,
   payload: { key, value },
 })
+export const filterSet = (key, value) => ({
+  type: FILTER_SET,
+  payload: { [key]: value },
+})
 
 // reducers
 export const initialState = R.pipe(
   R.set(currentItemLens, 0),
   R.set(currentItemsLens, []),
-  R.set(queryLens, { order_by: '-modified' }),
+  R.set(queryLens, {
+    limit: 25,
+    order_by: 'publication_status,-modified',
+    publication_status__in: [3, 4, 5, 6, 7],
+  }),
   R.set(navigationLens, {})
 )({})
+
+const offsetFromUrl = R.compose(
+  R.defaultTo(0),
+  parseInt,
+  R.prop(1),
+  R.match(/(?:offset=)(\d+)/),
+  R.defaultTo('')
+)
 
 const getReducer = ({ type, payload }) => {
   switch (type) {
     case ITEMS_FETCHED: {
-      const { results, next, previous, count } = payload
+      const { results, next, previous, count, url } = payload
       const ids = R.pluck('id', results)
       const items = R.zipObj(ids, results)
       return R.compose(
         R.over(itemsLens, R.merge(items)),
         R.set(currentItemsLens, ids),
-        R.set(navigationLens, { next, previous })
+        R.set(navigationLens, {
+          results: results.length,
+          last: offsetFromUrl(next) || offsetFromUrl(url) + results.length,
+          count,
+          next,
+          previous,
+        })
       )
     }
     case ITEM_PATCHED:
@@ -105,9 +131,11 @@ const getReducer = ({ type, payload }) => {
     }
     case ITEM_SELECTED:
       return R.set(currentItemLens, payload.id)
-    case FILTER_TOGGLED: {
-      return R.over(queryLens, objectToggle(payload.key, payload.value))
-    }
+    case FILTER_SET:
+      return R.over(queryLens, R.merge(R.__, payload))
+    case FILTER_TOGGLED:
+      return R.over(queryLens, combinedToggle(payload.key, payload.value))
+
     default:
       return R.identity
   }

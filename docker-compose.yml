@@ -3,7 +3,7 @@ services:
   django:
     mem_limit: 1000m  # limit memory usage to 1000 Mb
     cpu_quota: 80000  # 80% of 100000 (I think...)
-    image: universitas/django:${IMAGE_VERSION:-1.13}
+    image: universitas/django:${IMAGE_VERSION:-edge}
     volumes:
       - ./django:/app
       - ./logs:/var/logs
@@ -52,7 +52,7 @@ services:
       - "${NGINX_PORT:-8080}:80"
 
   webpack:
-    image: universitas/webpack:${IMAGE_VERSION:-1.13}
+    image: universitas/webpack:${IMAGE_VERSION:-edge}
     volumes:
       - ./webpack:/app/
       - webpack_build:/var/build/

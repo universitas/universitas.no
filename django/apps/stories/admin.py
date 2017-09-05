@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Admin for stories app.
-"""
+""" Admin for stories app.  """
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
@@ -229,8 +226,8 @@ class StoryAdmin(admin.ModelAdmin):
     def display_bylines(self, instance):
         return mark_safe(instance.bylines_html) or " -- "
 
-    display_bylines.short_description = 'Bylines'
-    display_bylines.allow_tags = True
+    display_bylines.short_description = 'Bylines'  # type: ignore
+    display_bylines.allow_tags = True  # type: ignore
 
 
 @admin.register(Section)

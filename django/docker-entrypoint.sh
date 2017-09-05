@@ -22,7 +22,7 @@ function dump_prodsys_db {
 
 case $1 in
   load_db)
-    /app/wait-for-it.sh postgres:5432
+    /app/wait-for-it.sh -q postgres:5432
     run "django-admin reset_db --noinput && django-admin dbshell < dbdump.sql"
     ;;
   migrate)
@@ -32,7 +32,7 @@ case $1 in
     run "django-admin shell_plus --notebook"
     ;;
   django-admin)
-    /app/wait-for-it.sh postgres:5432
+    /app/wait-for-it.sh -q postgres:5432
     echo "command: $*"
     run "$*"
     ;;
@@ -64,7 +64,9 @@ case $1 in
     run "celery -A universitas flower --loglevel=INFO"
     ;;
   *)
-    exec "$@"; exit
+    echo 'just executing'
+    exec "$@"
+    exit
     ;;
 esac
 

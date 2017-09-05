@@ -1,4 +1,3 @@
-import R from 'ramda' // Action constants
 import { objectToggle } from '../utils/fp'
 export const ITEM_ADDED = 'photos/ITEM_ADDED'
 export const ITEM_SELECTED = 'photos/ITEM_SELECTED'
@@ -59,7 +58,6 @@ export const photosRequested = url => ({
   type: ITEMS_REQUESTED,
   payload: { url },
 })
-
 export const photosFetched = data => ({
   type: ITEMS_FETCHED,
   payload: data,
@@ -86,7 +84,12 @@ const getReducer = ({ type, payload }) => {
       return R.compose(
         R.over(itemsLens, R.merge(items)),
         R.set(currentItemsLens, ids),
-        R.set(navigationLens, { next, previous })
+        R.set(navigationLens, {
+          results: results.length,
+          count,
+          next,
+          previous,
+        })
       )
     }
     case ITEM_PATCHED:

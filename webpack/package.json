@@ -6,6 +6,7 @@
   "description": "frontend universitas",
   "scripts": {
     "test": "jest --watch ./src/react",
+    "testonce": "jest ./src/react",
     "build": "webpack --config webpack.prod.config.js ",
     "tern": "tern --persistent --host 0.0.0.0 --port 33000",
     "rebuild": "rm $BUILD_DIR/* -rf; npm run build",
@@ -15,6 +16,12 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/universitas/universitas.no/"
+  },
+  "jest": {
+    "verbose": true,
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ]
   },
   "dependencies": {
     "babel-core": "^6",
@@ -53,7 +60,7 @@
     "redux-persist": "^4.8.0",
     "redux-saga": "^0.15.4",
     "redux-thunk": "^2",
-    "reselect": "^3",
+    "reselect": "^3.0.1",
     "sass-loader": "^6",
     "slick-carousel": "^1",
     "style-loader": "^0",

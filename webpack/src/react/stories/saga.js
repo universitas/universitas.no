@@ -1,4 +1,3 @@
-import R from 'ramda'
 import {
   takeLatest,
   takeEvery,
@@ -10,7 +9,7 @@ import {
   take,
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-import { apiFetch, apiPatch, apiList, apiGet } from '../services/api'
+import { apiFetch, apiPatch, apiPost, apiList, apiGet } from '../services/api'
 import {
   storiesFetched,
   storySelected,
@@ -18,33 +17,34 @@ import {
   ITEMS_REQUESTED,
   ITEM_SELECTED,
   FILTER_TOGGLED,
+  FILTER_SET,
   FIELD_CHANGED,
+  ITEM_CLONED,
   getStory,
   getQuery,
   storyAdded,
 } from './duck'
+import { push } from 'redux-little-router'
 
 export default function* rootSaga() {
-  yield takeLatest(FILTER_TOGGLED, requestStorys)
+  yield takeLatest([FILTER_TOGGLED, FILTER_SET], requestStories)
   yield takeLatest(ITEM_SELECTED, selectStory)
   yield takeLatest(FIELD_CHANGED, patchStory)
-  yield takeEvery(ITEMS_REQUESTED, requestStorys)
+  yield takeLatest(ITEMS_REQUESTED, requestStories)
+  yield takeEvery(ITEM_CLONED, cloneStory)
   yield fork(watchRouteChange)
-}
-
-const getModel = action => {
-  return R.path(['payload', 'result', 'model'])(action)
 }
 
 function* watchRouteChange() {
   while (true) {
     const action = yield take('ROUTER_LOCATION_CHANGED')
-    if (getModel(action) == 'story') yield fork(requestStorys, action)
-    const id = R.path(['payload', 'params', 'id'])(action)
-    if (id) {
-      yield put(storySelected(parseInt(id)))
-    } else {
-      yield put(storySelected(0))
+    const { id, model } = R.path(['payload', 'params'])(action)
+    if (model == 'stories') {
+      if (id) {
+        yield put(storySelected(parseInt(id)))
+      } else {
+        yield put(storySelected(0))
+      }
     }
   }
 }
@@ -57,15 +57,14 @@ function* selectStory(action) {
     yield put(storyAdded(data.response))
   }
 }
-function* requestStorys(action) {
+function* requestStories(action) {
+  yield call(delay, 200)
   const url = R.path(['payload', 'url'])(action)
   let data = null
   if (url) {
-    console.log('request url', url)
     data = yield call(fetchUrl, url)
   } else {
-    console.log('request stories')
-    data = yield call(fetchStorys)
+    data = yield call(fetchStories)
   }
   if (data) {
     yield put(storiesFetched(data))
@@ -73,15 +72,35 @@ function* requestStorys(action) {
 }
 function* patchStory(action) {
   // debounce
-  yield call(delay, 500)
+  yield call(delay, 1000)
   const { id, field, value } = action.payload
   const data = yield call(apiPatch('stories'), id, { [field]: value })
   if (data) {
     yield put(storyPatched(data))
   }
 }
+function* cloneStory(action) {
+  console.log('cloning')
+  const { id } = action.payload
+  const { working_title, story_type, bodytext_markup } = yield select(
+    getStory(id)
+  )
+  const data = {
+    working_title: 'ny ' + working_title,
+    story_type,
+    bodytext_markup,
+    publication_status: 0,
+  }
+  const { response, error } = yield call(apiPost('stories'), data)
+  if (response) {
+    yield put(storyAdded(response))
+    yield put(push(`/stories/${response.id}`))
+  } else {
+    yield put({ type: 'ERROR', error })
+  }
+}
 
-function* fetchStorys() {
+function* fetchStories() {
   const attrs = yield select(getQuery)
   const { response, error } = yield call(apiList, 'stories', attrs)
   if (response) {

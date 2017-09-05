@@ -1,4 +1,3 @@
-import R from 'ramda'
 import { cleanFields, detailFieldFilter, listFieldFilter } from './modelUtils'
 
 test('clean and default field values', () => {

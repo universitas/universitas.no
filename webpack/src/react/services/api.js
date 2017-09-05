@@ -1,4 +1,3 @@
-import R from 'ramda'
 import fetch from 'isomorphic-fetch'
 // import cuid from 'cuid'
 import * as Cookies from 'js-cookie'
@@ -28,24 +27,46 @@ const headBase = {
   credentials: 'same-origin',
   headers: {
     'Content-Type': 'application/json',
-    'X-CSRFToken': Cookies.get('csrftoken'),
   },
 }
+const csrftoken = Cookies.get('csrftoken')
+if (csrftoken) headBase.headers['X-CSRFToken'] = csrftoken
 
+export const apiLogin = ({ username, password }) =>
+  apiFetch(
+    `${BASE_URL}/rest-auth/login/`,
+    { method: 'POST' },
+    { username, password }
+  )
+
+export const apiLogout = () =>
+  apiFetch(`${BASE_URL}/rest-auth/logout/`, { method: 'POST' })
+
+export const apiUser = () =>
+  apiFetch(`${BASE_URL}/rest-auth/user/`, { method: 'GET' })
+
+// where the magic happens
 export const apiFetch = (url, head = {}, body = null) => {
   const init = R.mergeDeepRight(headBase, { ...head })
-  if (body) init.body = body
+  if (body) {
+    R.type(body) == 'String'
+      ? (init.body = body)
+      : (init.body = JSON.stringify(body))
+  }
   return fetch(url, init)
-    .then(response => response.json())
-    .then(response => ({ response }))
+    .then(res =>
+      res
+        .json()
+        .then(data => ({ HTTPstatus: res.status, url, ...data }))
+        .then(data => (res.ok ? { response: data } : { error: data }))
+    )
     .catch(error => ({ error }))
 }
 
 export const apiList = (model, attrs = {}) => {
   const query = queryString(attrs)
-  return query
-    ? apiFetch(`${BASE_URL}/${model}/?${query}`)
-    : apiFetch(`${BASE_URL}/${model}/`)
+  const url = query ? `${BASE_URL}/${model}/?${query}` : `${BASE_URL}/${model}/`
+  return apiFetch(url)
 }
 
 export const apiGet = model => id => {
@@ -55,18 +76,29 @@ export const apiGet = model => id => {
 export const apiPatch = model => (id, data) => {
   const url = `${BASE_URL}/${model}/${id}/`
   const head = { method: 'PATCH' }
-  const body = JSON.stringify(data)
-  return apiFetch(url, head, body)
+  return apiFetch(url, head, data)
+}
+
+export const apiPost = model => data => {
+  const url = `${BASE_URL}/${model}/`
+  const head = { method: 'POST' }
+  return apiFetch(url, head, data)
 }
 
 // helpers
-const paramPairs = (value, key, _) => `${key}=${value}`
+const paramPairs = (value, key, _) =>
+  value
+    ? R.type(value) == 'Array'
+        ? `${key}=${value.join(',')}`
+        : `${key}=${cleanValues(value)}`
+    : null
+
 const cleanValues = R.pipe(String, R.replace(/\s+/g, ' '), encodeURIComponent)
 
 export const queryString = R.pipe(
-  R.map(cleanValues),
   R.mapObjIndexed(paramPairs),
   R.values,
+  R.filter(Boolean),
   R.join('&')
 )
 

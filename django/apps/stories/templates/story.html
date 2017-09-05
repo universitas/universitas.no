@@ -5,17 +5,18 @@
 {% load advert_channel %}
 {% block title %}{{ story.title }} | universitas.no{% endblock title %}
 {% block head %}
-  {% if story.publication_status != story.STATUS_PUBLISHED %}
-  <meta name="robots" content="noindex" />{% endif %}
+  <link rel="canonical" href="{{request.build_absolute_uri}}" />
+  <link rel="shortlink" href="{{request.scheme}}://{{request.get_host}}{{ story.get_shortlink }}" />
   <meta name="description" content="{{ story.lede }}" />
   <meta name="author" content="{{ story.get_bylines }}" />
+  <meta property="og:fb:app_id" content = "1936304073248701" />
+  <meta property="og:type" content="article" />
   <meta property="og:title" content="{{ story.title }}" />
   <meta property="og:description" content="{{ story.lede }}" />
-  <meta property="og:type" content="article" />
-  <meta property="og:section" content="{{ story.section }}" />
-  <meta property="og:image" content="http://universitas.no{{ story.thumb }}" />
-  <link rel="canonical" href="http://universitas.no{{ story.get_absolute_url }}">
-  <link rel="shortlink" href="{{ story.get_shortlink }}">
+  <meta property="og:locale" content="{{ story.language }}" />
+  <meta property="og:url" content="{{request.build_absolute_uri}}" />
+  {% if story.facebook_thumb %}<meta property="og:image" content="{{ story.facebook_thumb.url }}" />{% endif %}
+  {% if story.publication_status != story.STATUS_PUBLISHED %}<meta name="robots" content="noindex" />{% endif %}
 {% endblock head %}
 {% block columns %}
   {% advert "story column left" %}

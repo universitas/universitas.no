@@ -2,14 +2,9 @@ import { cleanFields } from 'utils/modelUtils'
 
 export const fields = [
   {
-    key: 'year',
-    label: 'år',
-    type: 'integer',
-  },
-  {
-    key: 'number',
+    key: 'issue_name',
     label: 'utgave',
-    type: 'integer',
+    type: 'string',
   },
   {
     key: 'issue_type',

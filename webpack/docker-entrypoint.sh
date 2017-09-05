@@ -1,25 +1,22 @@
 #!/bin/bash
 
 case $1 in
+  jest)
+    exec npm run test ;;
   test)
-    exec npm run test
-    ;;
+    exec npm run testonce ;;
   build)
-    exec npm run rebuild
-    ;;
+    exec npm run rebuild ;;
   stats)
-    exec npm run stats
-    ;;
+    exec npm run stats ;;
   dev-server)
-    exec npm run dev
-    ;;
+    exec npm run dev ;;
   install)
     [[ $UID == 0 ]] || { echo "must be root" >&2; exit 1; }
     shift
     exec npm install --save $@
     ;;
   *)
-    exec "$@"
-    ;;
+    exec "$@" ;;
 esac
 

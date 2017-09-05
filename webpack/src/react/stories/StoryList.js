@@ -1,7 +1,7 @@
-import R from 'ramda'
-import React from 'react'
-import PropTypes from 'prop-types'
+import 'styles/storylist.scss'
+import cx from 'classnames'
 import { Link, push } from 'redux-little-router'
+import { Clear } from 'components/Icons'
 import { connect } from 'react-redux'
 import {
   getQuery,
@@ -9,11 +9,12 @@ import {
   getStory,
   getCurrentStoryId,
   filterToggled,
+  filterSet,
   getNavigation,
   storiesRequested,
 } from 'stories/duck'
 import { listFields as storyFields } from 'stories/model'
-import { getDisplayName, formatDate } from 'utils/modelUtils'
+import { getDisplayName, formatDate, relativeDateTime } from 'utils/modelUtils'
 
 // render all rows of results
 const renderRows = (items, fields) =>
@@ -33,6 +34,8 @@ const TableField = ({ type, value, choices }) => {
   switch (type) {
     case 'date':
       return <td>{formatDate(value)}</td>
+    case 'datetime':
+      return <td>{relativeDateTime(value)}</td>
     case 'thumb':
       return (
         <td>
@@ -48,13 +51,12 @@ const TableField = ({ type, value, choices }) => {
 
 let ListRow = ({ fields, onClick, ...props }) => (
   <tr
-    style={{
-      color: props.dirty ? '#888' : 'inherit',
-      fontWeight: props.selected ? 'bold' : 'normal',
-      cursor: 'pointer',
-    }}
-    title={R.toString(props)}
-    className="ListRow"
+    className={cx({
+      [`status-${props.publication_status}`]: true,
+      ListRow: true,
+      dirty: props.dirty,
+      selected: props.selected,
+    })}
     onClick={onClick}
   >
     {renderFields(fields, props)}
@@ -72,54 +74,104 @@ ListRow = connect(
   })
 )(ListRow)
 
-const Button = connect(state => ({ query: getQuery(state) }), {
+const isFilterActive = (attr, value, query) => {
+  const query_param = R.prop(attr, query)
+  return R.type(query_param) === 'Array'
+    ? R.contains(value, query_param)
+    : R.equals(value, query_param)
+}
+
+const Filter = connect(state => ({ query: getQuery(state) }), {
   filterToggled,
-})(({ query, label, attr, value, filterToggled }) => {
-  const clickHandler = e => filterToggled(attr, value)
-  const isActive = R.propEq(attr, value, query)
+  filterSet,
+})(({ query, label, attr, value, toggle = true, filterSet, filterToggled }) => {
+  const clickHandler = toggle
+    ? e => filterToggled(attr, value)
+    : e => filterSet(attr, value)
+  const isActive = isFilterActive(attr, value, query)
+  const disabled = toggle ? false : isActive
 
   return (
     <button
       type="button"
-      className={`small button ${isActive ? 'primary' : 'secondary'}`}
+      className={`Filter ${isActive ? 'active' : 'inactive'}`}
+      disabled={disabled}
       onClick={clickHandler}
     >
       {label}
     </button>
   )
 })
+let SearchBar = ({
+  value = '',
+  label = 'search',
+  attr = 'search',
+  filterSet,
+}) => (
+  <input
+    className="SearchBar"
+    type="text"
+    onChange={e => filterSet(attr, e.target.value)}
+    placeholder={label}
+    value={value}
+  />
+)
+SearchBar = connect(
+  (state, { attr = 'search' }) => ({ value: R.prop(attr, getQuery(state)) }),
+  { filterSet }
+)(SearchBar)
 
-const getDate = () => new Date().toISOString().slice(0, 10)
-const getYear = () => new Date().toISOString().slice(0, 4)
+const status_choices = storyFields
+  .filter(el => el.key === 'publication_status')[0]
+  .choices.map(({ value, display_name }) => ({
+    value: parseInt(value),
+    label: display_name,
+  }))
+  .filter(choice => choice.value < 10 || choice.value === 100)
 
 const StoryFilters = () => {
   return (
-    <div>
-      <Button attr="limit" value="5" label="limit 5" />
+    <div className="Filters">
+      {status_choices.map(props => (
+        <Filter attr="publication_status__in" key={props.value} {...props} />
+      ))}
+      <Filter
+        attr="publication_status__in"
+        value={[]}
+        toggle={false}
+        label={<Clear />}
+      />
+      <SearchBar label="søk i saker" attr="search" />
+      <Filter attr="search" value="" toggle={false} label={<Clear />} />
     </div>
   )
 }
 
-let StoryNavigation = ({ previous, next, storiesRequested }) => {
+let StoryNavigation = ({
+  previous,
+  next,
+  results,
+  last,
+  count,
+  offset,
+  storiesRequested,
+}) => {
+  const info = (
+    <div className="info">resultat {1 + last - results}–{last} av {count}</div>
+  )
+  if (!(previous || next)) {
+    return info
+  }
   const nextItems = () => storiesRequested(next)
   const prevItems = () => storiesRequested(previous)
   return (
-    <div>
-      <button
-        className="small button"
-        onClick={prevItems}
-        disabled={!previous}
-        title={previous}
-      >
-        previous
+    <div className="Navigation">
+      {info}
+      <button onClick={prevItems} disabled={!previous} title={previous}>
+        bakover
       </button>
-      <button
-        className="small button"
-        onClick={nextItems}
-        disabled={!next}
-        title={next}
-      >
-        next
+      <button onClick={nextItems} disabled={!next} title={next}>
+        fremover
       </button>
     </div>
   )
@@ -128,9 +180,10 @@ StoryNavigation = connect(getNavigation, { storiesRequested })(StoryNavigation)
 
 const StoryList = ({ items = [], fields = storyFields }) => {
   return (
-    <div className="IssueList">
-      <StoryFilters />
-      <StoryNavigation next="foo" previous="bar" />
+    <div className="StoryList">
+      <div className="ListBar">
+        <StoryFilters />
+      </div>
       <table>
         <thead>
           <tr>{renderHeaders(fields)}</tr>
@@ -139,6 +192,9 @@ const StoryList = ({ items = [], fields = storyFields }) => {
           {renderRows(items, fields)}
         </tbody>
       </table>
+      <div className="ListBar">
+        <StoryNavigation />
+      </div>
     </div>
   )
 }

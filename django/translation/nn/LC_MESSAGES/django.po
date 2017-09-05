@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-15 16:43+0200\n"
+"POT-Creation-Date: 2017-09-03 17:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,7 +90,7 @@ msgstr "HTML-annonse"
 msgid "Dummy or unfinished advert"
 msgstr "Skisse"
 
-#: apps/adverts/models.py:207 apps/stories/models.py:486
+#: apps/adverts/models.py:207 apps/stories/models.py:487
 msgid "Draft"
 msgstr "Skisse"
 
@@ -177,6 +177,23 @@ msgstr "Bileteannonser må ha alternativ tekst"
 #: apps/adverts/models.py:325
 msgid "End time must be after start time."
 msgstr "Sluttid må være etter starttid"
+
+#: apps/contributors/admin.py:72 apps/contributors/admin.py:78
+#: apps/legacy_db/admin.py:71
+msgid "active"
+msgstr "aktiv"
+
+#: apps/contributors/admin.py:79
+msgid "quit"
+msgstr ""
+
+#: apps/contributors/admin.py:80
+msgid "not started"
+msgstr ""
+
+#: apps/contributors/admin.py:81
+msgid "no end date"
+msgstr ""
 
 #: apps/contributors/appconf.py:7 apps/contributors/models.py:68
 msgid "Contributors"
@@ -294,8 +311,7 @@ msgstr "Framsideoppslag"
 msgid "position and size of story element."
 msgstr "plassering og storleik på elementet"
 
-#: apps/frontpage/models.py:255 apps/prodsys/models.py:199
-#: apps/prodsys/models.py:200
+#: apps/frontpage/models.py:255
 msgid "image"
 msgstr "bilete"
 
@@ -304,7 +320,7 @@ msgid "headline"
 msgstr "tittel / overskrift"
 
 #: apps/frontpage/models.py:265 apps/markup/models.py:175
-#: apps/stories/models.py:529
+#: apps/stories/models.py:531
 msgid "kicker"
 msgstr "stikktittel"
 
@@ -313,7 +329,7 @@ msgid "vignette"
 msgstr "vignett"
 
 #: apps/frontpage/models.py:275 apps/markup/models.py:176
-#: apps/stories/models.py:534
+#: apps/stories/models.py:536
 msgid "lede"
 msgstr "ingress"
 
@@ -369,14 +385,9 @@ msgstr "Henta frå fila"
 msgid "Move story to archive."
 msgstr "Flytt artikkel til arkivet"
 
-#: apps/legacy_db/admin.py:64 apps/prodsys/models.py:61
-#: apps/prodsys/models.py:62 apps/stories/models.py:565
+#: apps/legacy_db/admin.py:64 apps/stories/models.py:567
 msgid "status"
 msgstr "status"
-
-#: apps/legacy_db/admin.py:71
-msgid "active"
-msgstr "aktiv"
 
 #: apps/legacy_db/admin.py:72
 msgid "archived"
@@ -386,67 +397,67 @@ msgstr "arkivert"
 msgid "Legacy Website"
 msgstr "Gamal nettside"
 
-#: apps/legacy_db/models.py:58
+#: apps/legacy_db/models.py:46
 msgid "websak"
 msgstr "websak"
 
-#: apps/legacy_db/models.py:59
+#: apps/legacy_db/models.py:47
 msgid "websaker"
 msgstr "websaker"
 
-#: apps/legacy_db/models.py:74
+#: apps/legacy_db/models.py:62
 msgid "bildetekst"
 msgstr "biletetekst"
 
-#: apps/legacy_db/models.py:75
+#: apps/legacy_db/models.py:63
 msgid "bildetekster"
 msgstr "biletetekstar"
 
-#: apps/legacy_db/models.py:96
+#: apps/legacy_db/models.py:84
 msgid "bilde"
 msgstr "bilete"
 
-#: apps/legacy_db/models.py:97
+#: apps/legacy_db/models.py:85
 msgid "bilder"
 msgstr "bilete"
 
-#: apps/legacy_db/models.py:124 apps/legacy_db/models.py:125
+#: apps/legacy_db/models.py:112 apps/legacy_db/models.py:113
 msgid "diskusjon innlegg"
 msgstr "nettdebattinnlegg"
 
-#: apps/legacy_db/models.py:138 apps/legacy_db/models.py:139
+#: apps/legacy_db/models.py:126 apps/legacy_db/models.py:127
 msgid "diskusjon svar"
 msgstr "nettdebattsvar"
 
-#: apps/legacy_db/models.py:153
+#: apps/legacy_db/models.py:141
 msgid "eposttinging"
 msgstr "eposttinging"
 
-#: apps/legacy_db/models.py:154
+#: apps/legacy_db/models.py:142
 msgid "eposttingingar"
 msgstr "eposttingingar"
 
-#: apps/legacy_db/models.py:167
+#: apps/legacy_db/models.py:155
 msgid "faktaboks"
 msgstr "faktaboks"
 
-#: apps/legacy_db/models.py:168
+#: apps/legacy_db/models.py:156
 msgid "faktabokser"
 msgstr "faktaboksar"
 
-#: apps/legacy_db/models.py:253
+#: apps/legacy_db/models.py:241
 msgid "prodsys sak"
 msgstr "sak i prodsys"
 
-#: apps/legacy_db/models.py:254
+#: apps/legacy_db/models.py:242
 msgid "prodsys saker"
 msgstr "saker i prodsys"
 
-#: apps/legacy_db/models.py:277
+#: apps/legacy_db/models.py:265
 msgid "prodsys bilde"
 msgstr "bilete i prodsys"
 
-#: apps/legacy_db/models.py:278
+#: apps/legacy_db/models.py:266
 msgid "prodsys bilder"
 msgstr "bilete i prodsys"
 
@@ -474,11 +485,11 @@ msgstr "alias"
 msgid "body text"
 msgstr "brødtekst"
 
-#: apps/markup/models.py:174 apps/stories/models.py:514
+#: apps/markup/models.py:174 apps/stories/models.py:516
 msgid "title"
 msgstr "tittel"
 
-#: apps/markup/models.py:177 apps/stories/models.py:545
+#: apps/markup/models.py:177 apps/stories/models.py:547
 msgid "theme word"
 msgstr "temaord"
 
@@ -518,7 +529,7 @@ msgstr "importer"
 msgid "extra"
 msgstr "ekstra"
 
-#: apps/markup/models.py:375 apps/stories/models.py:550
+#: apps/markup/models.py:375 apps/stories/models.py:552
 msgid "bylines"
 msgstr "bylines"
 
@@ -552,7 +563,7 @@ msgstr "beskjæringsmetode"
 msgid "Autocrop"
 msgstr "Automatisk beskjæring"
 
-#: apps/photo/appconf.py:7 apps/stories/models.py:1738
+#: apps/photo/appconf.py:7 apps/stories/models.py:1794
 msgid "Photo"
 msgstr "Foto"
 
@@ -662,8 +673,7 @@ msgstr "gamal filplassering"
 msgid "previous path if the image has been moved."
 msgstr "logg av tidligere filplasseringer"
 
-#: apps/photo/models.py:169 apps/prodsys/models.py:116
-#: apps/prodsys/models.py:117
+#: apps/photo/models.py:169
 msgid "contributor"
 msgstr "opphavsperson"
 
@@ -693,241 +703,11 @@ msgstr "Profilbilete"
 msgid "Profile Images"
 msgstr "Profilbileter"
 
-#: apps/prodsys/appconf.py:7
-#, fuzzy
-#| msgid "prodsys sak"
-msgid "Prodsys"
-msgstr "sak i prodsys"
-
-#: apps/prodsys/models.py:23
-msgid "by"
-msgstr ""
-
-#: apps/prodsys/models.py:24
-#, fuzzy
-#| msgid "alt text"
-msgid "text"
-msgstr "alt text"
-
-#: apps/prodsys/models.py:25
-#, fuzzy
-#| msgid "Photo"
-msgid "photo"
-msgstr "Foto"
-
-#: apps/prodsys/models.py:26
-#, fuzzy
-#| msgid "Video"
-msgid "video"
-msgstr "Video"
-
-#: apps/prodsys/models.py:27
-#, fuzzy
-#| msgid "Illustration"
-msgid "illustration"
-msgstr "Illustrasjon"
-
-#: apps/prodsys/models.py:28
-#, fuzzy
-#| msgid "Translation"
-msgid "translation"
-msgstr "Oversettelse"
-
-#: apps/prodsys/models.py:29
-#, fuzzy
-#| msgid "Graphics"
-msgid "graphics"
-msgstr "Grafikk"
-
-#: apps/prodsys/models.py:43
-#, fuzzy
-#| msgid "Draft"
-msgid "draft"
-msgstr "Skisse"
-
-#: apps/prodsys/models.py:44
-msgid "work in progress"
-msgstr ""
-
-#: apps/prodsys/models.py:45
-msgid "ready for print layout"
-msgstr ""
-
-#: apps/prodsys/models.py:46
-msgid "print layout in progress"
-msgstr ""
-
-#: apps/prodsys/models.py:47
-msgid "ready for web publishing"
-msgstr ""
-
-#: apps/prodsys/models.py:48
-#, fuzzy
-#| msgid "Published on website"
-msgid "published on web site"
-msgstr "Publisert"
-
-#: apps/prodsys/models.py:49
-msgid "shelved"
-msgstr ""
-
-#: apps/prodsys/models.py:50
-#, fuzzy
-#| msgid "delete"
-msgid "deleted"
-msgstr "slett"
-
-#: apps/prodsys/models.py:68 apps/prodsys/models.py:69
-msgid "working_title"
-msgstr ""
-
-#: apps/prodsys/models.py:72
-msgid "content"
-msgstr ""
-
-#: apps/prodsys/models.py:73
-msgid "raw markup content"
-msgstr ""
-
-#: apps/prodsys/models.py:76 apps/prodsys/models.py:77
-#, fuzzy
-#| msgid "comment"
-msgid "comments"
-msgstr "kommentar"
-
-#: apps/prodsys/models.py:81 apps/prodsys/models.py:82
-#, fuzzy
-#| msgid "StoryType"
-msgid "story_type"
-msgstr "Artikkeltype"
-
-#: apps/prodsys/models.py:88 apps/prodsys/models.py:89
-#: apps/stories/models.py:570
-msgid "issue"
-msgstr "Papirutgave"
-
-#: apps/prodsys/models.py:93
-#, fuzzy
-#| msgid "prodsys saker"
-msgid "prodsys story"
-msgstr "saker i prodsys"
-
-#: apps/prodsys/models.py:94
-#, fuzzy
-#| msgid "prodsys saker"
-msgid "prodsys stories"
-msgstr "saker i prodsys"
-
-#: apps/prodsys/models.py:96
-msgid "can change story status"
-msgstr ""
-
-#: apps/prodsys/models.py:104 apps/prodsys/models.py:105
-#: apps/prodsys/models.py:205 apps/prodsys/models.py:206
-#, fuzzy
-#| msgid "Story"
-msgid "story"
-msgstr "Artikkel"
-
-#: apps/prodsys/models.py:109 apps/prodsys/models.py:110
-#, fuzzy
-#| msgid "create aside"
-msgid "created"
-msgstr "ny faktaramme"
-
-#: apps/prodsys/models.py:120 apps/prodsys/models.py:121
-msgid "patch"
-msgstr ""
-
-#: apps/prodsys/models.py:125 apps/prodsys/models.py:126
-msgid "reverse_patch"
-msgstr ""
-
-#: apps/prodsys/models.py:130 apps/prodsys/models.py:131
-msgid "applied"
-msgstr ""
-
-#: apps/prodsys/models.py:186
-msgid "priority"
-msgstr ""
-
-#: apps/prodsys/models.py:187
-msgid "How prominent this image should be in the layout."
-msgstr ""
-
-#: apps/prodsys/models.py:191
-#, fuzzy
-#| msgid "Position"
-msgid "position"
-msgstr "Stilling"
-
-#: apps/prodsys/models.py:192
-msgid ""
-"Where this image should be positioned in the layout. 0 is used for header "
-"images, other images that should be grouped together should have the same "
-"position value"
-msgstr ""
-
-#: apps/prodsys/models.py:210 apps/prodsys/models.py:211
-#: apps/stories/models.py:1241
-msgid "caption"
-msgstr "biletetekst"
-
-#: apps/prodsys/models.py:215
-#, fuzzy
-#| msgid "prodsys saker"
-msgid "prodsys image"
-msgstr "saker i prodsys"
-
-#: apps/prodsys/models.py:216
-#, fuzzy
-#| msgid "prodsys saker"
-msgid "prodsys images"
-msgstr "saker i prodsys"
-
-#: apps/prodsys/models.py:227 apps/stories/models.py:1132
-msgid "index"
-msgstr "indeks"
-
-#: apps/prodsys/models.py:228
-msgid "internal ordering of bylines"
-msgstr ""
-
-#: apps/prodsys/models.py:234
-#, fuzzy
-#| msgid "credit line"
-msgid "credit"
-msgstr "akreditering"
-
-#: apps/prodsys/models.py:235
-msgid "what this person contributed with"
-msgstr ""
-
-#: apps/prodsys/models.py:240
-#, fuzzy
-#| msgid "caption"
-msgid "description"
-msgstr "biletetekst"
-
-#: apps/prodsys/models.py:241
-msgid "person's title, qualification or location"
-msgstr ""
-
-#: apps/prodsys/models.py:245
-#, fuzzy
-#| msgid "Byline"
-msgid "ProdByline"
-msgstr "Byline"
-
-#: apps/prodsys/models.py:246 apps/stories/models.py:1765
-msgid "Bylines"
-msgstr "Bylines"
-
-#: apps/stories/admin.py:154
+#: apps/stories/admin.py:151
 msgid "make frontpage story"
 msgstr "lag eit framsideoppslag"
 
-#: apps/stories/admin.py:297 apps/stories/admin.py:304
+#: apps/stories/admin.py:294 apps/stories/admin.py:301
 msgid "find linked stories"
 msgstr "finn lenkede artikler"
 
@@ -939,52 +719,52 @@ msgstr "Artikler"
 msgid "Story headline or lede."
 msgstr "Tittel eller ingress i saken"
 
-#: apps/stories/models.py:84
+#: apps/stories/models.py:82
 msgid "HTML tags found in text: "
 msgstr "HTML funnet i teksten: "
 
-#: apps/stories/models.py:160
+#: apps/stories/models.py:158
 msgid "Section"
 msgstr "Seksjon"
 
-#: apps/stories/models.py:161
+#: apps/stories/models.py:159
 msgid "Sections"
 msgstr "Seksjoner"
 
-#: apps/stories/models.py:166
+#: apps/stories/models.py:164
 msgid "Section title"
 msgstr "Seksjonstittel"
 
-#: apps/stories/models.py:167
+#: apps/stories/models.py:165
 msgid "section title"
 msgstr "Seksjonstittel"
 
-#: apps/stories/models.py:171 apps/stories/models.py:203
-#: apps/stories/models.py:517
+#: apps/stories/models.py:169 apps/stories/models.py:201
+#: apps/stories/models.py:519
 msgid "slug"
 msgstr "slug"
 
-#: apps/stories/models.py:212
+#: apps/stories/models.py:210
 msgid "StoryType"
 msgstr "Artikkeltype"
 
-#: apps/stories/models.py:213
+#: apps/stories/models.py:211
 msgid "StoryTypes"
 msgstr "Artikkeltyper"
 
-#: apps/stories/models.py:238
+#: apps/stories/models.py:236
 msgid "Content with xtags markup."
 msgstr "Innhold som har xtags"
 
-#: apps/stories/models.py:239
+#: apps/stories/models.py:237
 msgid "bodytext tagged text"
 msgstr "brødtekst kilde"
 
-#: apps/stories/models.py:246
+#: apps/stories/models.py:244
 msgid "HTML tagged content"
 msgstr "Innhold formattert som html"
 
-#: apps/stories/models.py:247
+#: apps/stories/models.py:245
 msgid "bodytext html tagged"
 msgstr "brødtekst html"
 
@@ -992,384 +772,414 @@ msgstr "brødtekst html"
 msgid "Story"
 msgstr "Artikkel"
 
-#: apps/stories/models.py:487
+#: apps/stories/models.py:488
 msgid "To Journalist"
 msgstr ""
 
-#: apps/stories/models.py:488
+#: apps/stories/models.py:489
 msgid "To Sub Editor"
 msgstr ""
 
-#: apps/stories/models.py:489
+#: apps/stories/models.py:490
 msgid "To Editor"
 msgstr ""
 
-#: apps/stories/models.py:490
+#: apps/stories/models.py:491
 #, fuzzy
 #| msgid "Ready to edit"
 msgid "Ready for newsdesk"
 msgstr "Klar for redigering"
 
-#: apps/stories/models.py:491
-msgid "Ready to publish on website"
-msgstr "Klar for nettpublisering"
-
 #: apps/stories/models.py:492
+#, fuzzy
+#| msgid "Ready to edit"
+msgid "Imported to newsdesk"
+msgstr "Klar for redigering"
+
+#: apps/stories/models.py:493
+#, fuzzy
+#| msgid "Ready to edit"
+msgid "Exported from newsdesk"
+msgstr "Klar for redigering"
+
+#: apps/stories/models.py:494
 msgid "Published on website"
 msgstr "Publisert"
 
-#: apps/stories/models.py:493
+#: apps/stories/models.py:495
 msgid "Published, but hidden from search engines"
 msgstr "Publisert, men skjult for søkemotorar"
 
-#: apps/stories/models.py:494
+#: apps/stories/models.py:496
 msgid "Will not be published"
 msgstr "Skal ikke publiseres"
 
-#: apps/stories/models.py:495
+#: apps/stories/models.py:497
 msgid "Used as template for new articles"
 msgstr "Brukt som mal for nye artikler"
 
-#: apps/stories/models.py:496
+#: apps/stories/models.py:498
 msgid "Technical error"
 msgstr "Teknisk feil"
 
-#: apps/stories/models.py:501
+#: apps/stories/models.py:503
 msgid "primary id in the legacy prodsys database."
 msgstr "Primærnøkkel i prodsysdatabasen"
 
-#: apps/stories/models.py:502
+#: apps/stories/models.py:504
 msgid "prodsak id"
 msgstr "bilete i prodsys"
 
-#: apps/stories/models.py:506 apps/stories/models.py:507
+#: apps/stories/models.py:508 apps/stories/models.py:509
 msgid "language"
 msgstr "språk"
 
-#: apps/stories/models.py:513
+#: apps/stories/models.py:515
 msgid "main headline or title"
 msgstr "Hovedtittel eller overskrift"
 
-#: apps/stories/models.py:528
+#: apps/stories/models.py:530
 msgid "secondary headline, usually displayed above main headline"
 msgstr "supplerende tittel, vanligvis over hovedtittelen"
 
-#: apps/stories/models.py:533
+#: apps/stories/models.py:535
 msgid "brief introduction or summary of the story"
 msgstr "Kort sammendrag eller introduksjon"
 
-#: apps/stories/models.py:538
+#: apps/stories/models.py:540
 msgid "for internal use only"
 msgstr "for intern bruk"
 
-#: apps/stories/models.py:539
+#: apps/stories/models.py:541
 msgid "comment"
 msgstr "kommentar"
 
-#: apps/stories/models.py:544
+#: apps/stories/models.py:546
 msgid "theme, topic, main keyword"
 msgstr "tema"
 
-#: apps/stories/models.py:549
+#: apps/stories/models.py:551
 msgid "the people who created this content."
 msgstr "Opphavspersoner for redaksjonellt innhold"
 
-#: apps/stories/models.py:554
+#: apps/stories/models.py:556
 msgid "the type of story."
 msgstr "Kategori som artikkelen hører til."
 
-#: apps/stories/models.py:555
+#: apps/stories/models.py:557
 msgid "article type"
 msgstr "artikkeltype"
 
-#: apps/stories/models.py:559
+#: apps/stories/models.py:561
 msgid "when this story will be published on the web."
 msgstr "tidspunkt som denne saken blir eller ble publisert på nett"
 
-#: apps/stories/models.py:560
+#: apps/stories/models.py:562
 msgid "publication date"
 msgstr "publiseringsdato"
 
-#: apps/stories/models.py:564
+#: apps/stories/models.py:566
 msgid "publication status."
 msgstr "publiseringsstatus"
 
-#: apps/stories/models.py:569
+#: apps/stories/models.py:571
 msgid "which issue this story was printed in."
 msgstr "artikkelen sto på trykk i denne papirutgaven"
 
-#: apps/stories/models.py:574
+#: apps/stories/models.py:572
+msgid "issue"
+msgstr "Papirutgave"
+
+#: apps/stories/models.py:576
 msgid "which page the story was printed on."
 msgstr "artikkelen sto på trykk på dette sidetallet"
 
-#: apps/stories/models.py:575
+#: apps/stories/models.py:577
 msgid "page"
 msgstr "side"
 
-#: apps/stories/models.py:580
+#: apps/stories/models.py:582
 msgid "how many time the article has been viewed."
 msgstr "hvor mange ganger denne artikkelen har blitt lest"
 
-#: apps/stories/models.py:581
+#: apps/stories/models.py:583
 msgid "total page views"
 msgstr "hits"
 
-#: apps/stories/models.py:586
+#: apps/stories/models.py:588
 msgid "calculated value representing recent page views."
 msgstr "beregnet ut frå nylige besøk"
 
-#: apps/stories/models.py:587
+#: apps/stories/models.py:589
 msgid "recent page views"
 msgstr "hotness"
 
-#: apps/stories/models.py:591
+#: apps/stories/models.py:593
 msgid "all bylines as html."
 msgstr "alle bylines som html"
 
-#: apps/stories/models.py:595
+#: apps/stories/models.py:597
 msgid "From old web page. For reference only."
 msgstr "Fra den gamle nettsida. For referanse."
 
-#: apps/stories/models.py:596
+#: apps/stories/models.py:598
 msgid "Imported html source."
 msgstr "Importert kildekode html"
 
-#: apps/stories/models.py:600
+#: apps/stories/models.py:602
 msgid "From prodsys. For reference only."
 msgstr "Fra prodsys. Kun for referanse."
 
-#: apps/stories/models.py:601
+#: apps/stories/models.py:603
 msgid "Imported xtagged source."
 msgstr "Importert xtag kilde."
 
-#: apps/stories/models.py:971
+#: apps/stories/models.py:608 apps/stories/models.py:609
+#, fuzzy
+#| msgid "Section title"
+msgid "Working title"
+msgstr "Seksjonstittel"
+
+#: apps/stories/models.py:991
 msgid "No such element. Valid indexes: "
 msgstr "Fant ikke index. Gyldige indekser: "
 
-#: apps/stories/models.py:1131
+#: apps/stories/models.py:1180
 msgid "Leave blank to unpublish"
 msgstr "tomt felt for å avpublisere"
 
-#: apps/stories/models.py:1137
+#: apps/stories/models.py:1181
+msgid "index"
+msgstr "indeks"
+
+#: apps/stories/models.py:1186
 msgid "Is this element placed on top?"
 msgstr "Plassert helt først i artikkelen"
 
-#: apps/stories/models.py:1141
+#: apps/stories/models.py:1190
 msgid "story element"
 msgstr "artikkel-element"
 
-#: apps/stories/models.py:1142
+#: apps/stories/models.py:1191
 msgid "story elements"
 msgstr "artikkel-elementer"
 
-#: apps/stories/models.py:1183
+#: apps/stories/models.py:1232
 msgid "Pullquote"
 msgstr "Uthevet sitat"
 
-#: apps/stories/models.py:1184
+#: apps/stories/models.py:1233
 msgid "Pullquotes"
 msgstr "Uthevede sitater"
 
-#: apps/stories/models.py:1194
+#: apps/stories/models.py:1243
 msgid "Aside"
 msgstr "Faktaramme"
 
-#: apps/stories/models.py:1195
+#: apps/stories/models.py:1244
 msgid "Asides"
 msgstr "Faktarammer"
 
-#: apps/stories/models.py:1207
+#: apps/stories/models.py:1256
 msgid "Inline HTML block"
 msgstr "html-avsnitt"
 
-#: apps/stories/models.py:1208
+#: apps/stories/models.py:1257
 msgid "Inline HTML blocks"
 msgstr "html-avsnitt"
 
-#: apps/stories/models.py:1223
+#: apps/stories/models.py:1272
 msgid "auto"
 msgstr "auto"
 
-#: apps/stories/models.py:1224
+#: apps/stories/models.py:1273
 msgid "5:2 landscape"
 msgstr "5:2 breddeformat"
 
-#: apps/stories/models.py:1225
+#: apps/stories/models.py:1274
 msgid "2:1 landscape"
 msgstr "2:1 breddeformat"
 
-#: apps/stories/models.py:1226
+#: apps/stories/models.py:1275
 msgid "3:2 landscape"
 msgstr "3:2 breddeformat"
 
-#: apps/stories/models.py:1227
+#: apps/stories/models.py:1276
 msgid "4:3 landscape"
 msgstr "4:3 breddeformat"
 
-#: apps/stories/models.py:1228
+#: apps/stories/models.py:1277
 msgid "square"
 msgstr "kvadratisk"
 
-#: apps/stories/models.py:1229
+#: apps/stories/models.py:1278
 msgid "3:4 portrait"
 msgstr "3:4 høgdeformat"
 
-#: apps/stories/models.py:1230
+#: apps/stories/models.py:1279
 msgid "2:3 portrait"
 msgstr "2:3 høgdeformat"
 
-#: apps/stories/models.py:1231
+#: apps/stories/models.py:1280
 msgid "1:2 portrait"
 msgstr "1:2 høgdeformat"
 
-#: apps/stories/models.py:1232
+#: apps/stories/models.py:1281
 msgid "graph (force original ratio)"
 msgstr "grafikk"
 
-#: apps/stories/models.py:1240
+#: apps/stories/models.py:1289
 msgid "Text explaining the media."
 msgstr "Tekst som hører med biletet"
 
-#: apps/stories/models.py:1246
+#: apps/stories/models.py:1290
+msgid "caption"
+msgstr "biletetekst"
+
+#: apps/stories/models.py:1295
 msgid "Extra information about media attribution and license."
 msgstr "Supplerende informasjon om opphavsrett"
 
-#: apps/stories/models.py:1247
+#: apps/stories/models.py:1296
 msgid "credit line"
 msgstr "akreditering"
 
-#: apps/stories/models.py:1252
+#: apps/stories/models.py:1301
 msgid "Relative image size."
 msgstr "relativ biletestorleik"
 
-#: apps/stories/models.py:1253
+#: apps/stories/models.py:1302
 msgid "image size"
 msgstr "biletestorleik"
 
-#: apps/stories/models.py:1257
+#: apps/stories/models.py:1306
 msgid "aspect ratio"
 msgstr "bileteformat"
 
-#: apps/stories/models.py:1258
+#: apps/stories/models.py:1307
 msgid "height / width"
 msgstr "høgde / bredde"
 
-#: apps/stories/models.py:1293
+#: apps/stories/models.py:1342
 msgid "Image"
 msgstr "Bilete"
 
-#: apps/stories/models.py:1294
+#: apps/stories/models.py:1343
 msgid "Images"
 msgstr "Bileter"
 
-#: apps/stories/models.py:1298
+#: apps/stories/models.py:1347
 msgid "Choose an image by name or upload a new one."
 msgstr "Velg eit bilete eller last opp eit nytt bilete"
 
-#: apps/stories/models.py:1332
+#: apps/stories/models.py:1388
 msgid "vimeo"
 msgstr "vimeo"
 
-#: apps/stories/models.py:1333
+#: apps/stories/models.py:1389
 msgid "youtube"
 msgstr "youtube"
 
-#: apps/stories/models.py:1337 apps/stories/models.py:1737
-#: apps/stories/models.py:1739
+#: apps/stories/models.py:1393 apps/stories/models.py:1793
+#: apps/stories/models.py:1795
 msgid "Video"
 msgstr "Video"
 
-#: apps/stories/models.py:1338
+#: apps/stories/models.py:1394
 msgid "Videos"
 msgstr "Videoer"
 
-#: apps/stories/models.py:1348
+#: apps/stories/models.py:1404
 msgid "id for video file."
 msgstr "id for videofila"
 
-#: apps/stories/models.py:1350
+#: apps/stories/models.py:1406
 msgid "the part of the url that identifies this particular video"
 msgstr "delen av urlen som identifiserar denne videoen."
 
-#: apps/stories/models.py:1473
+#: apps/stories/models.py:1529
 msgid "inline link"
 msgstr "lenke i teksten"
 
-#: apps/stories/models.py:1474
+#: apps/stories/models.py:1530
 msgid "inline links"
 msgstr "lenke"
 
-#: apps/stories/models.py:1482
+#: apps/stories/models.py:1538
 msgid "link label"
 msgstr "markør for lenken"
 
-#: apps/stories/models.py:1487 apps/stories/models.py:1488
+#: apps/stories/models.py:1543 apps/stories/models.py:1544
 msgid "link target"
 msgstr "mål for lenken"
 
-#: apps/stories/models.py:1493
+#: apps/stories/models.py:1549
 msgid "link to story on this website."
 msgstr "lenke som går til ein anna artikkel på denne nettsida."
 
-#: apps/stories/models.py:1494
+#: apps/stories/models.py:1550
 msgid "linked story"
 msgstr "artikkel som blir lenket til"
 
-#: apps/stories/models.py:1500
+#: apps/stories/models.py:1556
 msgid "alternate link text"
 msgstr "alternativ lenketekst"
 
-#: apps/stories/models.py:1501
+#: apps/stories/models.py:1557
 msgid "alt text"
 msgstr "alt text"
 
-#: apps/stories/models.py:1506 apps/stories/models.py:1507
+#: apps/stories/models.py:1562 apps/stories/models.py:1563
 msgid "link text"
 msgstr "lenketekst"
 
-#: apps/stories/models.py:1514
+#: apps/stories/models.py:1570
 msgid "Status code returned from automatic check."
 msgstr "Statuskode frå automatisk sjekk."
 
-#: apps/stories/models.py:1515
+#: apps/stories/models.py:1571
 msgid "http status code"
 msgstr "http statuskode"
 
-#: apps/stories/models.py:1735
+#: apps/stories/models.py:1791
 msgid "By"
 msgstr "Av"
 
-#: apps/stories/models.py:1736
+#: apps/stories/models.py:1792
 msgid "Text"
 msgstr "Tekst"
 
-#: apps/stories/models.py:1740
+#: apps/stories/models.py:1796
 msgid "Illustration"
 msgstr "Illustrasjon"
 
-#: apps/stories/models.py:1741
+#: apps/stories/models.py:1797
 msgid "Graphics"
 msgstr "Grafikk"
 
-#: apps/stories/models.py:1742
+#: apps/stories/models.py:1798
 msgid "Translation"
 msgstr "Oversettelse"
 
-#: apps/stories/models.py:1743
+#: apps/stories/models.py:1799
 msgid "TextPhoto"
 msgstr "Tekst og foto"
 
-#: apps/stories/models.py:1744
+#: apps/stories/models.py:1800
 msgid "TextVideo"
 msgstr "Tekst og video"
 
-#: apps/stories/models.py:1745
+#: apps/stories/models.py:1801
 msgid "PhotoVideo"
 msgstr "Foto og video"
 
-#: apps/stories/models.py:1764
+#: apps/stories/models.py:1820
 msgid "Byline"
 msgstr "Byline"
+
+#: apps/stories/models.py:1821
+msgid "Bylines"
+msgstr "Bylines"
 
 #: templates/admin/base_site.html:59
 msgid "Django site admin"
@@ -1546,17 +1356,130 @@ msgstr ""
 msgid "Reset my password"
 msgstr ""
 
-#: universitas/base.py:191
+#: universitas/base.py:193
 msgid "Norwegian Bokmal"
 msgstr "Bokmål"
 
-#: universitas/base.py:192
+#: universitas/base.py:194
 msgid "Norwegian Nynorsk"
 msgstr "Nynorsk"
 
-#: universitas/base.py:193
+#: universitas/base.py:195
 msgid "English"
 msgstr "Engelsk"
+
+#, fuzzy
+#~| msgid "prodsys sak"
+#~ msgid "Prodsys"
+#~ msgstr "sak i prodsys"
+
+#, fuzzy
+#~| msgid "alt text"
+#~ msgid "text"
+#~ msgstr "alt text"
+
+#, fuzzy
+#~| msgid "Photo"
+#~ msgid "photo"
+#~ msgstr "Foto"
+
+#, fuzzy
+#~| msgid "Video"
+#~ msgid "video"
+#~ msgstr "Video"
+
+#, fuzzy
+#~| msgid "Illustration"
+#~ msgid "illustration"
+#~ msgstr "Illustrasjon"
+
+#, fuzzy
+#~| msgid "Translation"
+#~ msgid "translation"
+#~ msgstr "Oversettelse"
+
+#, fuzzy
+#~| msgid "Graphics"
+#~ msgid "graphics"
+#~ msgstr "Grafikk"
+
+#, fuzzy
+#~| msgid "Draft"
+#~ msgid "draft"
+#~ msgstr "Skisse"
+
+#, fuzzy
+#~| msgid "Published on website"
+#~ msgid "published on web site"
+#~ msgstr "Publisert"
+
+#, fuzzy
+#~| msgid "delete"
+#~ msgid "deleted"
+#~ msgstr "slett"
+
+#, fuzzy
+#~| msgid "comment"
+#~ msgid "comments"
+#~ msgstr "kommentar"
+
+#, fuzzy
+#~| msgid "StoryType"
+#~ msgid "story_type"
+#~ msgstr "Artikkeltype"
+
+#, fuzzy
+#~| msgid "prodsys saker"
+#~ msgid "prodsys story"
+#~ msgstr "saker i prodsys"
+
+#, fuzzy
+#~| msgid "prodsys saker"
+#~ msgid "prodsys stories"
+#~ msgstr "saker i prodsys"
+
+#, fuzzy
+#~| msgid "Story"
+#~ msgid "story"
+#~ msgstr "Artikkel"
+
+#, fuzzy
+#~| msgid "create aside"
+#~ msgid "created"
+#~ msgstr "ny faktaramme"
+
+#, fuzzy
+#~| msgid "Position"
+#~ msgid "position"
+#~ msgstr "Stilling"
+
+#, fuzzy
+#~| msgid "prodsys saker"
+#~ msgid "prodsys image"
+#~ msgstr "saker i prodsys"
+
+#, fuzzy
+#~| msgid "prodsys saker"
+#~ msgid "prodsys images"
+#~ msgstr "saker i prodsys"
+
+#, fuzzy
+#~| msgid "credit line"
+#~ msgid "credit"
+#~ msgstr "akreditering"
+
+#, fuzzy
+#~| msgid "caption"
+#~ msgid "description"
+#~ msgstr "biletetekst"
+
+#, fuzzy
+#~| msgid "Byline"
+#~ msgid "ProdByline"
+#~ msgstr "Byline"
+
+#~ msgid "Ready to publish on website"
+#~ msgstr "Klar for nettpublisering"
 
 #~ msgid "from top"
 #~ msgstr "frå toppen"

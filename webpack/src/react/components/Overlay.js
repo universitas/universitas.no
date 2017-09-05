@@ -1,6 +1,3 @@
-import PropTypes from 'prop-types'
-import React from 'react'
-
 const cursor = {
   '1000': 'ew-resize',
   '0010': 'ew-resize',

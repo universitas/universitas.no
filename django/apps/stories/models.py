@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ Content in the publication. """
 
 # Python standard library
@@ -76,7 +75,6 @@ class MarkupFieldMixin(object):
     def clean(self, value, model_instance):
         value = super().clean(value, model_instance)
         value = remove_control_chars(value)
-        value = re.sub(r'\r\n', '\n', value)
         value = self.clean_links(value, model_instance)
         soup = BeautifulSoup(value, 'html5lib')
         if value != soup.text:
@@ -427,7 +425,9 @@ class StoryQuerySet(models.QuerySet):
                 Story.STATUS_PUBLISHED,
                 Story.STATUS_NOINDEX,
             ]
-        ).filter(publication_date__lt=now)
+        ).filter(
+            publication_date__lt=now
+        ).select_related('story_type__section')
 
     def is_on_frontpage(self, frontpage):
         return self.filter(frontpagestory__placements=frontpage)
@@ -475,8 +475,9 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     STATUS_JOURNALIST = 3
     STATUS_SUBEDITOR = 4
     STATUS_EDITOR = 5
-    STATUS_DESK = 6
-    STATUS_READY = 9
+    STATUS_TO_DESK = 6
+    STATUS_AT_DESK = 7
+    STATUS_FROM_DESK = 9
     STATUS_PUBLISHED = 10
     STATUS_NOINDEX = 11
     STATUS_PRIVATE = 15
@@ -487,8 +488,9 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         (STATUS_JOURNALIST, _('To Journalist')),
         (STATUS_SUBEDITOR, _('To Sub Editor')),
         (STATUS_EDITOR, _('To Editor')),
-        (STATUS_DESK, _('Ready for newsdesk')),
-        (STATUS_READY, _('Ready to publish on website')),
+        (STATUS_TO_DESK, _('Ready for newsdesk')),
+        (STATUS_AT_DESK, _('Imported to newsdesk')),
+        (STATUS_FROM_DESK, _('Exported from newsdesk')),
         (STATUS_PUBLISHED, _('Published on website')),
         (STATUS_NOINDEX, _('Published, but hidden from search engines')),
         (STATUS_PRIVATE, _('Will not be published')),
@@ -600,12 +602,20 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         help_text=_('From prodsys. For reference only.'),
         verbose_name=_('Imported xtagged source.'),
     )
+    working_title = models.CharField(
+        max_length=1000,
+        blank=True,
+        help_text=_('Working title'),
+        verbose_name=_('Working title'),
+    )
 
     def __str__(self):
-        if self.publication_date:
-            return '{:%Y-%m-%d}: {}'.format(self.publication_date, self.title)
+        title = self.title or f'({self.working_title})' or '[no title]'
+        date = self.publication_date
+        if date:
+            return '{:%Y-%m-%d}: {}'.format(date, title)
         else:
-            return '{}'.format(self.title,)
+            return title
 
     def save(self, *args, **kwargs):
         new = kwargs.pop('new', (self.pk is None))
@@ -636,13 +646,14 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     @property
     def disqus_enabled(self):
         # Is Disqus available here?
-        return True
+        return self.is_published
 
     @property
     def is_published(self):
         # Is this Story public
-        return (self.publication_status in [Story.STATUS_NOINDEX,
-                                            Story.STATUS_PUBLISHED] and
+        public = [Story.STATUS_NOINDEX, Story.STATUS_PUBLISHED]
+        return (self.publication_date and
+                self.publication_status in public and
                 self.publication_date <= timezone.now())
 
     @property
@@ -734,10 +745,13 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         if top_image:
             return top_image.child
 
-    def thumb(self):
-        image = self.main_image()
-        if image:
-            return image.imagefile.thumb()
+    def facebook_thumb(self):
+        if self.main_image():
+            imagefile = self.main_image().imagefile
+            return imagefile.thumbnail(
+                size='800x420',
+                crop_box=imagefile.get_crop_box(),
+            )
 
     @property
     def section(self):
@@ -772,7 +786,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             kwargs={
                 'story_id': str(self.id),
             },)
-        return 'http://universitas.no' + url
+        return url
 
     def children_modified(self):
         """ check if any related objects have been
@@ -784,22 +798,27 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
     def clean(self):
         """ Clean user input and populate fields """
-        if self.publication_status >= Story.STATUS_READY:
+        cleanup = [Story.STATUS_FROM_DESK, Story.STATUS_PUBLISHED]
+        published = [Story.STATUS_PUBLISHED, Story.STATUS_NOINDEX]
+
+        if self.publication_status in cleanup:
             if not self.title and '@headline:' not in self.bodytext_markup:
                 self.bodytext_markup = self.bodytext_markup.replace(
                     '@tit:', '@headline:', 1)
             self.parse_markup()
-        # self.bodytext_markup = self.reindex_inlines()
-        # TODO: Fix redindeksering av placeholders for video og bilder.
-        self.bylines_html = self.get_bylines_as_html()
-        if (not self.publication_date and
-                self.publication_status in [Story.STATUS_PUBLISHED,
-                                            Story.STATUS_NOINDEX]):
-            self.publication_date = timezone.now()
-        # fix tag typos etc.
+
         self.bodytext_markup = Alias.objects.replace(
             content=self.bodytext_markup,
             timing=Alias.TIMING_CLEAN)
+
+        # self.bodytext_markup = self.reindex_inlines()
+        # TODO: Fix redindeksering av placeholders for video og bilder.
+
+        self.bylines_html = self.get_bylines_as_html()
+        if self.publication_status in published:
+            self.publication_date = self.publication_date or timezone.now()
+
+        # fix tag typos etc.
         super().clean()
 
     def _block_new(self, tag, content, element):
@@ -1047,6 +1066,35 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
         self.bodytext_markup = body
         return body
+
+    @property
+    def tekst(self):
+        output = []
+        head_tags = [('tit', 'title'), ('ing', 'lede'),
+                     ('tema', 'theme_word'), ('stikktit', 'kicker')]
+        for tag, attr in head_tags:
+            text = getattr(self, attr)
+            if text:
+                output.append(f'@{tag}:{text}')
+        for bl in self.byline_set.all():
+            output.append(str(bl))
+        output.append(self.bodytext_markup)
+        for aside in self.storyelement_set.all():
+            if aside._subclass == 'aside':
+                output.append(aside.child.bodytext_markup)
+        for pullquote in self.storyelement_set.all():
+            if pullquote._subclass == 'pullquote':
+                output.append(pullquote.child.bodytext_markup)
+        return '\n'.join(output)
+
+    @tekst.setter
+    def tekst(self, value):
+        self.title = ''
+        self.lede = ''
+        self.theme_word = ''
+        self.asides().delete()
+        self.pullquotes().delete()
+        self.bodytext_markup = value
 
 
 class ElementQuerySet(models.QuerySet):
@@ -1319,7 +1367,10 @@ class StoryImage(StoryMedia):
 
     @property
     def filename(self):
-        return str(self.imagefile)
+        try:
+            return str(self.imagefile)
+        except ObjectDoesNotExist:
+            return '[no image]'
 
     @property
     def small(self):

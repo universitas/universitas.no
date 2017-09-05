@@ -1,4 +1,3 @@
-import R from 'ramda'
 import { blockParser } from 'utils/tagParser'
 
 const TEXT_CHANGED = 'TEXT_CHANGED'

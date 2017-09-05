@@ -2,15 +2,14 @@
 from django.shortcuts import render
 from django.http import (
     HttpResponseRedirect,
-    HttpResponsePermanentRedirect,
-    Http404
+    Http404,
+    # HttpResponsePermanentRedirect,
 )
 from django.utils.http import base36_to_int
 from django.utils.decorators import available_attrs
 from django.views.decorators.cache import cache_page
 from functools import wraps
 
-from apps.core.views import search_404_view
 from apps.stories.models import Story, Section, StoryType
 from apps.frontpage.models import Frontpage, StoryModule
 import logging
@@ -48,9 +47,24 @@ def frontpage_layout(blocks):
     floor = []
     items = []
     columns_used = 0
+    floor_number = 0
+
+    ad_channels = {
+        0: 'forside banner 1',
+        5: 'forside banner 2',
+        10: 'forside banner 3',
+        15: 'forside banner 4',
+    }
 
     for block in blocks:
         if block.columns + columns_used > MAX_COLUMNS:
+            ad_channel = ad_channels.get(floor_number)
+            floor_number += 1
+            if ad_channel:
+                items.append({
+                    'type': 'advert',
+                    'channel': ad_channel,
+                })
             # floor is filled. Finish it.
             floorheight = max(item.height for item in floor)
             ratio = MAX_COLUMNS / columns_used + 0.1
@@ -76,6 +90,7 @@ def frontpage_layout(blocks):
                 # logger.debug('{} {}'.format(headline, headline_size))
 
                 item = {
+                    'type': 'story',
                     'css_width': 'cols-{}'.format(columns),
                     'css_height': 'rows-{}'.format(floorheight),
                     'headline_class': 'headline-{size}'.format(
@@ -108,7 +123,10 @@ def get_frontpage_stories(story_queryset, frontpage=None):
     result = StoryModule.objects.filter(
         frontpage=frontpage,
         frontpage_story__story__in=stories
-    ).prefetch_related('frontpage_story__imagefile')
+    ).prefetch_related(
+        'frontpage_story__imagefile',
+        'frontpage_story__story__story_type__section',
+    )
     return result
 
 
@@ -119,7 +137,7 @@ def frontpage_view(request, stories=None, frontpage=None):
     if stories is None:
         stories = Story.objects.published()
 
-    blocks = get_frontpage_stories(stories).order_by('-position')[:30]
+    blocks = get_frontpage_stories(stories).order_by('-position')[:40]
 
     context['frontpage_items'] = frontpage_layout(blocks)
 
@@ -130,7 +148,7 @@ def section_frontpage(request, section):
     try:
         # is the slug a section name?
         section = Section.objects.get(slug=section)
-        stories = Story.objects.filter(story_type__section=section).published()
+        stories = Story.objects.published().filter(story_type__section=section)
         return frontpage_view(request, stories=stories)
     except Section.DoesNotExist:
         return fallback_view(request, slug=section)
@@ -155,5 +173,5 @@ def storytype_frontpage(request, section, storytype):
         story_type = StoryType.objects.get(slug=storytype)
     except StoryType.DoesNotExist:
         raise Http404('No such section and story type')
-    stories = Story.objects.filter(story_type=story_type).published()
+    stories = Story.objects.published().filter(story_type=story_type)
     return frontpage_view(request, stories=stories)

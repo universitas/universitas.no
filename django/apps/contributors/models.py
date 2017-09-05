@@ -278,18 +278,22 @@ class Position(models.Model):
         return '{}'.format(self.title)
 
     def active(self, when=None):
-        if when is None:
-            when = today()
-        results = Stint.objects.filter(
-            position=self, start_date__gte=when
-        ).exclude(end_date__lt=when)
-        return results
+        return Stint.objects.filter(position=self).active(when)
+
+
+class StintQuerySet(models.QuerySet):
+
+    def active(self, when=None):
+        """ active stints today """
+        when = when or today()
+        return self.filter(start_date__lte=when).exclude(end_date__lt=when)
 
 
 class Stint(models.Model):
 
     """ The period a Contributor serves in a Position. """
 
+    objects = StintQuerySet.as_manager()
     position = models.ForeignKey(Position)
     contributor = models.ForeignKey(Contributor)
     start_date = models.DateField(

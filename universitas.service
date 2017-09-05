@@ -5,8 +5,8 @@ After=docker.service
 
 [Service]
 Restart=always
-ExecStart=/bin/bash -c "cd /srv/tassen; ./run prod up"
-ExecStop=/bin/bash -c "cd /srv/tassen; docker-compose down"
+ExecStart=/bin/bash -c "cd /srv/tassen; ./run prod dc up"
+ExecStop=/bin/bash -c "cd /srv/tassen; ./run prod dc down"
 
 [Install]
 WantedBy=multi-user.target

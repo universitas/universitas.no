@@ -21,6 +21,10 @@ django-guardian
 django-crispy-forms
 django-rest-swagger
 
+# AUTHENTICATION
+django-rest-auth
+django-allauth
+
 # DATABASE LIBRARIES
 mysqlclient
 psycopg2
@@ -31,7 +35,6 @@ hiredis
 awscli
 django-storages
 boto
-# certifi==2015.04.28
 
 # OTHER LIBRARIES
 Pillow

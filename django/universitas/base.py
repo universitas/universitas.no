@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     'apps.legacy_db',
     'apps.adverts',
     'apps.search',
-    'apps.prodsys',
+    # 'apps.prodsys',
 ]
 
 # THIRD PARTY APPS
@@ -79,6 +79,8 @@ INSTALLED_APPS = [
     'storages',
     'webpack_loader',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
     'crispy_forms',
     'django_filters',
 ] + INSTALLED_APPS

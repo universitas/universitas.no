@@ -18,6 +18,7 @@ def dummy_image_advert(width, height, watermarktext, labeltext):
     img = watermark(img, label, (0, 0), 1)
 
     img_io = io.BytesIO()
+    img.mode = 'RGB'
     img.save(img_io, format='JPEG')
     filename = '{name:_<18}{w}x{h}.jpg'.format(
         name=labeltext,

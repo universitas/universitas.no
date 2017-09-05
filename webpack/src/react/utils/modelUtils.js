@@ -1,10 +1,19 @@
-import R from 'ramda'
-import { format } from 'date-fns'
+import { distanceInWordsToNow, format } from 'date-fns'
+// import distanceInWordsToNow from 'date-fns/distance_in_words_to_now'
 import norwayLocale from 'date-fns/locale/nb'
 
 // human readable date format
 export const formatDate = value =>
   format(new Date(value), 'ddd DD. MMM YYYY', { locale: norwayLocale })
+
+export const relativeDateTime = value =>
+  distanceInWordsToNow(new Date(value), {
+    addSuffix: true,
+    locale: norwayLocale,
+  })
+
+export const formatDateTime = value =>
+  format(new Date(value), 'HH:mm ddd DD. MMM', { locale: norwayLocale })
 
 // display name from list of choices
 export const getDisplayName = (choices, value) =>

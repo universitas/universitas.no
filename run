@@ -1,55 +1,90 @@
 #!/bin/bash
 
 main(){
-for arg; do case $arg in
-  help    ) show_help ;;
-  init    ) sudo bash -c "$(declare -f install_docker); install_docker $(whoami)" ;;
-  ps      ) docker-compose ps ;;
+while (( $# > 0 )); do
+  rest=${@:2}
+  case $1 in
+  help    ) show_help ;; # show help for commands
+  init    ) # install docker and docker-compose on ubuntu ( must be run as sudo )
+            sudo bash -c "$(declare -f install_docker); install_docker $(whoami)" ;;
+  dc      ) docker-compose $rest; exit ;; # docker-compose [args]
+  da      ) docker-compose run --rm web django-admin $rest; exit ;; # django-admin [args]
 
-  dumpdb  ) dump_db ;;
-  loaddb  ) load_db ;;
-  mysqldb ) docker-compose run --rm -u django web dump_prodsys_db ;;
-  enable  ) enable_service ;;
-  build   ) build_django ;;
+  dumpdb  ) dump_db ;;  # dump postgresql database
+  loaddb  ) load_db $rest; exit;;  # load database from dump file [filename]
+  mysqldb ) docker-compose run --rm -u django web dump_prodsys_db ;;  # dump legacy mysql database
 
-  lint    ) lint_javascript ; lint_python ;;
-  webpack ) docker-compose run --rm webpack build ;;
-  testjs  ) docker-compose run --rm webpack test ;;
-  bashjs  ) docker-compose run --rm webpack bash ;;
-  stats   ) docker-compose run --rm webpack stats ;;
-  npmi    ) read -p "package? " pack && \
-    docker-compose run --rm -u root webpack npm i --upgrade --save $pack;;
+  enable  ) enable_service ;; # enable systemd service file for web server - starts all docker images
+  build   ) build_django ;;   # download and build all images, migrate database
 
-  repl    ) docker-compose run --rm web django-admin shell_plus --quiet-load ;;
-  bash    ) docker-compose run --rm -u django web bash ;;
-  root    ) docker-compose run --rm           web bash ;;
-  test    ) docker-compose run --rm -u django web pytest --create-db ;;
-  testf   ) docker-compose run --rm --name testf -u django web pytest -f -x --ff ;;
+  webpack ) docker-compose run --rm webpack ${rest:-bash}; exit;;
 
-  flower  ) docker-compose run --rm --name flower -d -p 5555:5555 celery flower ;;
-  jupyter ) start_jupyter ;;
+  npmi    ) docker-compose run --rm -u root webpack npm i --upgrade --save $rest; exit ;; # npm install [packages...]
 
-  fake    ) docker-compose run --rm web django-admin fake_content -c10 -s50 ;;
-  static  ) docker-compose run --rm web django-admin collectstatic --noinput ;;
-  migrate ) docker-compose run --rm web django-admin migrate ;;
+  repl    ) docker-compose run --rm web django-admin shell_plus --quiet-load ;; # django repl shell
+  django  ) docker-compose run --rm -u django web ${rest:-bash}; exit ;;
+  root    ) docker-compose run --rm           web ${rest:-bash}; exit ;;
 
-  up      ) docker-compose up ;;
-  upd     ) docker-compose up -d ;;
-  down    ) docker-compose down ;;
-  pull    ) docker-compose pull ;;
-  logs    ) docker-compose logs --tail=50 -f ;;
+  pytest  ) docker-compose run --rm --name testf -u django web pytest -f -x --ff $rest; exit ;;
 
-  tags    ) ctags -R ./django ./webpack/src/react && echo "collected ctags" ;;
+  flower  ) docker-compose run --rm --name flower -d -p 5555:5555 celery flower ;;  # start celery flower on port 5555
+  jupyter ) start_jupyter ;;  # start jupyter server for django on port 8888
 
-  prod    ) echo "production settings"
+  fake    ) docker-compose run --rm web django-admin fake_content -c10 -s50 ;;  # create fake data in django database
+  static  ) collect_static_files --ignore ;;  # run django collectstatic
+  migrate ) docker-compose run --rm web django-admin migrate ;;  # migrate django apps
+
+  upd     ) docker-compose up -d ;;  # start all docker images in daemon mode
+  logs    ) docker-compose logs --tail=50 -f $rest ; exit ;;
+
+
+  prod    ) # production settings
+            export IMAGE_VERSION=$(git tag --merged | tail -n1)
+            echo 'production settings' $IMAGE_VERSION
             export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml ;;
-  dev     ) echo "development settings"; unset COMPOSE_FILE ;;
+  dev     ) echo "development settings"; unset COMPOSE_FILE ;;  # development settings
+
+  lint    ) lint_javascript ; lint_python ;; # lint all files commited
+  test    ) run_tests ;;  # run pytest and jest
+  tags    ) ctags -R ./django ./webpack/src/react && echo "collected ctags" ;; # collect ctags for python and js
+  precom  ) main prod tags lint webpack build; exit ;; # run before git commit
   *       ) show_help ;;
-esac; done
+  esac;
+  shift 1;
+done
+}
+
+collect_static_files() {
+  if [[ $1 == '--ignore' ]]; then
+    # ignore some apps that probably already are collected
+    IGNORE='admin debug_toolbar rest_framework django_extensions core'
+    shift
+    args="$(printf -- "-i%s " $IGNORE)$@"
+  else
+    args="$@"
+  fi
+  docker-compose run --rm web django-admin collectstatic --noinput $args
+}
+
+run_tests() {
+  docker-compose run --rm -u django web pytest --create-db
+  docker-compose run --rm webpack test
 }
 
 show_help() {
-  awk '/esac/{exit}p && /\w  *) /{print}/case/{p=1}' run
+  echo
+  esc=$(printf '\033')
+  yellow="$esc[33;1m"
+  purple="$esc[35;1m"
+  bold="$esc[37;1m"
+  reset="$esc[0m"
+  cat run \
+    | sed -n '/^main()/,$p;/^}/q'\
+    | awk '/\w  *) /{print}/case/{p=1}'\
+    | sed 's/; exit//' | sed 's/;;//'\
+    | sed "s/).*#\(.*\)$/)$yellow\1$reset/"\
+    | sed "s/^ *\(\w* *\))/  $bold\1$reset/"\
+    | sort
   exit 0
 }
 
@@ -63,9 +98,11 @@ lint_python() {
 }
 
 load_db() {
-  dumpfile=$(ls *.sql -1t | head -n1)
-  [[ "" = $dumpfile ]] && exit 1
+  dumpfile=$(ls *.sql -1t 2>/dev/null | head -n1)
+  dumpfile=${1:-$dumpfile}
+  [[ -e $dumpfile ]] || exit 1
   echo "found database dump: $dumpfile"
+  exit
   cp $dumpfile django/dbdump.sql
 
   # loading data

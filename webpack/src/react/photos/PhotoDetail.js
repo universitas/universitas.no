@@ -1,5 +1,3 @@
-import R from 'ramda'
-import React from 'react'
 import { connect } from 'react-redux'
 import { getCurrentPhoto, fieldChanged } from 'photos/duck'
 import { detailFields as fields } from 'photos/model'

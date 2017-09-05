@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types'
-import React from 'react'
 import { getStyles } from 'utils/cropHelpers'
 
 let PreviewImg = ({ src, crop_box, size, aspect, style = {} }) => {
