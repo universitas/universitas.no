@@ -8,10 +8,6 @@ services:
 before_install:
   - sudo rm /usr/local/bin/docker-compose
   - sudo pip install docker-compose
-  - touch django/local.env
-  - git fetch --tags
-  - git status
-  - ./run prod
   - ./run prod dc pull
 
 script:
