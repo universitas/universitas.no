@@ -81,11 +81,7 @@ volumes:
   redisdata: {}
   pgdata: {}
   django_logs: {}
-  node_modules:
-    driver_opts:
-      type: local
-      device: ${PWD}/webpack/node_modules
-      o: bind
+  node_modules: {}
   webpack_build: {}
   django_media: {}
   django_static: {}
