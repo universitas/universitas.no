@@ -6,7 +6,7 @@ services:
     image: universitas/django:${IMAGE_VERSION:-edge}
     volumes:
       - ./django:/app
-      - ./logs:/var/logs
+      - django_logs:/var/logs
       - webpack_build:/var/build/
       - django_static:/var/static/
       - django_media:/var/media/
@@ -80,6 +80,7 @@ services:
 volumes:
   redisdata: {}
   pgdata: {}
+  django_logs: {}
   node_modules:
     driver_opts:
       type: local

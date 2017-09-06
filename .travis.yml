@@ -10,6 +10,8 @@ before_install:
   - sudo pip install docker-compose
   - touch django/local.env
   - git fetch --tags
+  - git tags --merged
+  - echo $TRAVIS_TAG
 
 script:
-  - ./run prod test
+  - ./run test

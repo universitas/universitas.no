@@ -69,10 +69,12 @@ production_settings() {
   export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml 
   BRANCH=$(git status | awk '/On branch/{print $3}')
   if [[ $BRANCH == 'master' ]]; then
-    export IMAGE_VERSION=$(git tag --merged | tail -n1)
+    IMAGE_VERSION=$(git tag --merged | tail -n1)
+    IMAGE_VERSION=${TRAVIS_TAG:-$IMAGE_VERSION}
+  else 
+    IMAGE_VERSION=edge
   fi
-  git tag --merged
-  echo branch: $BRANCH image version $IMAGE_VERSION
+  export IMAGE_VERSION
 }
 
 run_tests() {
@@ -179,6 +181,5 @@ install_docker() {
 cd $(dirname $(readlink -f $0))
 [[ ! -f django/local.env ]] && echo "# Add environment variables here" > django/local.env
 
-export IMAGE_VERSION=edge
 export COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml
 main $@
