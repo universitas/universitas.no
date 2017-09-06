@@ -79,8 +79,8 @@ production_settings() {
 
 run_tests() {
   export COMPOSE_FILE=docker-compose.yml:docker-compose.testing.yml
-  docker-compose run --rm -u django web pytest --create-db || exit 1
   docker-compose run --rm webpack test || exit 1
+  docker-compose run --rm -u django web pytest --create-db || exit 1
 }
 
 show_help() {
