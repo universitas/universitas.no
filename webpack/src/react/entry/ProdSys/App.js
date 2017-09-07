@@ -10,6 +10,7 @@ import PhotoDetail from 'photos/PhotoDetail'
 import StoryList from 'stories/StoryList'
 import StoryDetail from 'stories/StoryDetail'
 import UserTool from 'auth/UserTool'
+import ErrorTool from 'error/ErrorTool'
 import LoginForm from 'auth/LoginForm'
 import { getUser } from 'auth/duck'
 import 'styles/prodsys.scss'
@@ -36,6 +37,7 @@ const ProdSys = () => (
       <AppButton href="/issues" Icon={Newspaper} label="utgaver" />
       <AppButton href="/contributors" Icon={Person} label="bidragsytere" />
       <div className="spacer" style={{ flex: 1 }} />
+      <ErrorTool />
       <UserTool />
     </section>
     <section className="ListPanel">

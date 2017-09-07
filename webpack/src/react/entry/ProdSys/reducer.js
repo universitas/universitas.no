@@ -6,5 +6,14 @@ import { reducer as photos } from 'photos/duck'
 import { reducer as stories } from 'stories/duck'
 import { reducer as storytypes } from 'storytypes/duck'
 import { reducer as auth } from 'auth/duck'
+import { reducer as errors } from 'error/duck'
 
-export default { issues, contributors, photos, stories, storytypes, auth }
+export default {
+  auth,
+  issues,
+  contributors,
+  photos,
+  stories,
+  storytypes,
+  errors,
+}

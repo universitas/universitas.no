@@ -5,6 +5,7 @@ import { reducer as cropPanel } from 'ducks/cropPanel'
 import { reducer as imageList } from 'ducks/imageList'
 
 // Selectors
+//
 export const getUi = R.prop('ui')
 
 // Action creators

@@ -1,0 +1,43 @@
+{
+  "!name": "prop-types",
+  "PropTypes": {
+    "array": {
+      "isRequired": {
+        "!type": "fn(props: ?, propName: ?, componentName: string, location: ?, propFullName: ?, secret: ?) -> ?|bool"
+      },
+      "!type": "fn(props: ?, propName: ?, componentName: string, location: ?, propFullName: ?, secret: ?) -> ?|bool"
+    },
+    "arrayOf": {
+      "!type": "fn(typeChecker: ?) -> fn(props: ?, propName: ?, componentName: string, location: ?, propFullName: ?, secret: ?) -> ?|bool"
+    },
+    "instanceOf": {
+      "!type": "fn(expectedClass: ?) -> fn(props: ?, propName: ?, componentName: string, location: ?, propFullName: ?, secret: ?) -> ?|bool"
+    },
+    "objectOf": {
+      "!type": "fn(typeChecker: ?) -> fn(props: ?, propName: ?, componentName: string, location: ?, propFullName: ?, secret: ?) -> ?|bool"
+    },
+    "oneOf": {
+      "!type": "fn(expectedValues: ?) -> fn(props: ?, propName: ?, componentName: string, location: ?, propFullName: ?, secret: ?) -> ?|bool|fn() -> bool"
+    },
+    "oneOfType": {
+      "!type": "fn(arrayOfTypeCheckers: ?) -> fn(props: ?, propName: ?, componentName: string, location: ?, propFullName: ?, secret: ?) -> ?|bool|fn() -> bool"
+    },
+    "shape": {
+      "!type": "fn(shapeTypes: ?) -> fn(props: ?, propName: ?, componentName: string, location: ?, propFullName: ?, secret: ?) -> ?|bool"
+    },
+    "checkPropTypes": {
+      "!type": "fn(typeSpecs: ?, values: ?, location: string, componentName: string, getStack: +Function)"
+    },
+    "bool": "PropTypes",
+    "func": "PropTypes",
+    "number": "PropTypes",
+    "object": "PropTypes",
+    "string": "PropTypes",
+    "symbol": "PropTypes",
+    "any": "PropTypes",
+    "element": "PropTypes",
+    "node": "PropTypes",
+    "PropTypes": "PropTypes"
+  }
+}
+

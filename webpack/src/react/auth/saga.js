@@ -22,8 +22,9 @@ function* logInSaga(action) {
     yield put(loginFailed(error))
   } else {
     // login successful reload page to get new csrf token
-    window.location = window.location
-    // yield fetchUserSaga()
+    // window.location = window.location
+    // csrf token checked for each request
+    yield fetchUserSaga()
   }
 }
 function* logOutSaga(action) {

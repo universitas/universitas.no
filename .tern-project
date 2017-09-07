@@ -1,0 +1,14 @@
+{
+  "libs": [
+    "browser",
+    "ecmascript",
+    "webpack/tern_definitions/ramda",
+    "webpack/tern_definitions/react"
+  ],
+  "plugins": {
+    "es_modules": {},
+    "webpack": {
+      "configPath": "webpack/webpack.prod.config.js"
+    }
+  }
+}
