@@ -1,10 +1,16 @@
 #!/bin/bash
+esc=$(printf '\033')
+yellow="$esc[33;1m"
+red="$esc[31;1m"
+purple="$esc[35;1m"
+bold="$esc[37;1m"
+reset="$esc[0m"
 
 main(){
 while (( $# > 0 )); do
   rest=${@:2}
   case $1 in
-  help    ) show_help ;; # show help for commands
+  help    ) show_help; exit 0 ;; # show help for commands
   init    ) # install docker and docker-compose on ubuntu ( must be run as sudo )
             sudo bash -c "$(declare -f install_docker); install_docker $(whoami)" ;;
   dc      ) docker-compose $rest; exit ;; # docker-compose [...args]
@@ -39,7 +45,7 @@ while (( $# > 0 )); do
 
 
   prod    ) # production settings
-            production_settings 
+            production_settings
             echo 'production settings' $IMAGE_VERSION $BRANCH;;
   dev     ) # development settings
             echo "development settings" ;;
@@ -47,7 +53,7 @@ while (( $# > 0 )); do
   test    ) run_tests ;;  # run pytest and jest
   tags    ) ctags -R ./django ./webpack/src/react && echo "collected ctags" ;; # collect ctags for python and js
   precom  ) main prod tags lint webpack build; exit ;; # run before git commit
-  *       ) printf "\nunknown command \"$@\"\n" >&2; show_help; exit 1 ;;
+  *       ) show_help ; printf >&2 "\n  %sunknown command:  %s%s%s\n" "$red" "$bold" "$*" "$reset" ; exit 1 ;;
   esac;
   shift 1;
 done
@@ -70,10 +76,10 @@ production_settings() {
   BRANCH=${TRAVIS_BRANCH:-$BRANCH}
   if [[ $BRANCH == 'master' ]]; then
     IMAGE_VERSION=$(git tag --merged | tail -n1)
-  else 
+  else
     IMAGE_VERSION=edge
   fi
-  COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml 
+  COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml
   export IMAGE_VERSION BRANCH COMPOSE_FILE
 }
 
@@ -84,12 +90,7 @@ run_tests() {
 }
 
 show_help() {
-  echo
-  esc=$(printf '\033')
-  yellow="$esc[33;1m"
-  purple="$esc[35;1m"
-  bold="$esc[37;1m"
-  reset="$esc[0m"
+  printf "\n%s  usage:   %s [...commmands]%s\n\n" "$bold" "run" "$reset"
   cat run \
     | sed -n '/^main()/,$p;/^}/q'\
     | awk '/\w  *) /{print}/case/{p=1}'\
@@ -97,7 +98,6 @@ show_help() {
     | sed "s/).*#\(.*\)$/)$yellow\1$reset/"\
     | sed "s/^ *\(\w* *\))/  $bold\1$reset/"\
     | sort
-  exit 0
 }
 
 lint_javascript() {
@@ -180,6 +180,7 @@ install_docker() {
 
 cd $(dirname $(readlink -f $0))
 [[ ! -f django/local.env ]] && echo "# Add environment variables here" > django/local.env
+mkdir -p ./webpack/node_modules/ ./django/venv/
 
 export COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml
 main $@

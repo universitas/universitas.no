@@ -28,6 +28,7 @@
   }
 
 }
+
 .UserTool {
   font-size: 0.3em;
   align-items: center;
@@ -46,6 +47,52 @@
     padding: 0.5em;
     &:hover {
       background-color: red;
+    }
+  }
+}
+.ErrorTool {
+  position: relative;
+  > svg {
+    color: yellow;
+  }
+  .errorItems {
+    cursor: default;
+    $bg: red;
+    $dbg: rgba(black, 0.3);
+    font-size: 0.3em;
+    background-color: $bg;
+    position: absolute;
+    display: flex;
+    flex-direction: column-reverse;
+    left: 100%;
+    bottom: 0;
+    min-width: 20em;
+    .ErrorItem {
+      display: flex;
+      align-items: center;
+      &:hover {
+        background-color: lighten($bg, 10%);
+      }
+      .text {
+        flex: 1;
+        padding-right: 1em;
+      }
+      .dismiss {
+        font-size: 1.5em;
+        cursor: pointer;
+        color: $dbg;
+      }
+      padding: 0.5em;
+      border-top: 1px solid $dbg;
+      &:last-child {
+        border-top: none;
+      }
+    }
+    display: none;
+  }
+  &:hover {
+    .errorItems {
+      display: flex;
     }
   }
 }

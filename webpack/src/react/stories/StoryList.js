@@ -132,15 +132,15 @@ const status_choices = storyFields
 const StoryFilters = () => {
   return (
     <div className="Filters">
-      {status_choices.map(props => (
-        <Filter attr="publication_status__in" key={props.value} {...props} />
-      ))}
       <Filter
         attr="publication_status__in"
         value={[]}
         toggle={false}
         label={<Clear />}
       />
+      {status_choices.map(props => (
+        <Filter attr="publication_status__in" key={props.value} {...props} />
+      ))}
       <SearchBar label="søk i saker" attr="search" />
       <Filter attr="search" value="" toggle={false} label={<Clear />} />
     </div>

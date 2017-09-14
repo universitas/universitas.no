@@ -1,22 +1,39 @@
 import { connect } from 'react-redux'
-import { Error } from 'components/Icons'
+import { Error, Clear } from 'components/Icons'
 import { getErrors, clearError } from 'error/duck'
 
+const errorToString = R.cond([
+  [R.has('detail'), R.prop('detail')],
+  [R.is(String), R.identity],
+  [R.is(Object), JSON.stringify],
+  [R.T, R.type],
+])
+
 const ErrorItem = ({ message, onClick }) => (
-  <div onClick={onClick} className="ErrorItem">{JSON.stringify(message)}</div>
+  <div className="ErrorItem">
+    <span className="text">
+      {errorToString(message)}
+    </span>
+    <span className="dismiss" onClick={onClick}>
+      <Clear />
+    </span>
+  </div>
 )
 
 const ErrorTool = ({ errors, clearError }) =>
   errors.length
-    ? <div className="ErrorTool">
+    ? <div className="AppButton ErrorTool">
         <Error />
-        {errors.map((err, index) => (
-          <ErrorItem
-            message={err}
-            key={index}
-            onClick={e => clearError(index)}
-          />
-        ))}
+        <small>{errors.length} feil</small>
+        <div className="errorItems">
+          {errors.map((err, index) => (
+            <ErrorItem
+              message={err}
+              key={index}
+              onClick={e => clearError(index)}
+            />
+          ))}
+        </div>
       </div>
     : null
 

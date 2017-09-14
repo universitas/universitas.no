@@ -65,9 +65,13 @@ function* patchIssue(action) {
   // debounce
   yield call(delay, 500)
   const { id, field, value } = action.payload
-  const data = yield call(apiPatch('issues'), id, { [field]: value })
-  if (data) {
-    yield put(issuePatched(data))
+  const { error, response } = yield call(apiPatch('issues'), id, {
+    [field]: value,
+  })
+  if (response) {
+    yield put(issuePatched(response))
+  } else {
+    yield put({ type: 'ERROR', error })
   }
 }
 

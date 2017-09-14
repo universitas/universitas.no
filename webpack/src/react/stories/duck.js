@@ -82,9 +82,10 @@ export const initialState = R.pipe(
   R.set(currentItemLens, 0),
   R.set(currentItemsLens, []),
   R.set(queryLens, {
+    search: '',
     limit: 25,
-    order_by: 'publication_status,-modified',
     publication_status__in: [3, 4, 5, 6, 7],
+    order_by: ['publication_status', '-modified'],
   }),
   R.set(navigationLens, {})
 )({})
