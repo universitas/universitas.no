@@ -6,6 +6,8 @@ import norwayLocale from 'date-fns/locale/nb'
 export const formatDate = value =>
   format(new Date(value), 'ddd DD. MMM YYYY', { locale: norwayLocale })
 
+export const timestamp = value => format(new Date(value), 'HH:mm:ss')
+
 export const relativeDateTime = value =>
   distanceInWordsToNow(new Date(value), {
     addSuffix: true,

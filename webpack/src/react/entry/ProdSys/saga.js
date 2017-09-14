@@ -5,6 +5,7 @@ import photosSaga from 'photos/saga'
 import storiesSaga from 'stories/saga'
 import storyTypesSaga from 'storytypes/saga'
 import authSaga from 'auth/saga'
+import errorSaga from 'error/saga'
 import { requestUser } from 'auth/duck'
 import { storiesRequested } from 'stories/duck'
 import { issuesRequested } from 'issues/duck'
@@ -15,6 +16,7 @@ import { push, LOCATION_CHANGED } from 'redux-little-router'
 
 function* rootSaga() {
   yield [
+    fork(errorSaga),
     fork(authSaga),
     fork(storiesSaga),
     fork(issuesSaga),

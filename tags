@@ -6,6 +6,7 @@
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 ACTION_CHOICES	django/apps/markup/models.py	/^    ACTION_CHOICES = ($/;"	v	class:BlockTag
 ACTIVE	django/apps/contributors/models.py	/^    ACTIVE = 1$/;"	v	class:Contributor
+ADD_ERROR	webpack/src/react/error/duck.js	/^export const ADD_ERROR = 'errors\/ADD_ERROR'$/;"	r
 ADD_IMAGE	webpack/src/react/ducks/images.js	/^export const ADD_IMAGE = 'images\/ADD_IMAGE'$/;"	r
 ADTYPE_CHOICES	django/apps/adverts/models.py	/^    ADTYPE_CHOICES = [$/;"	v	class:Advert
 ALIAS_ACTION	django/apps/markup/models.py	/^    ALIAS_ACTION = 'alias'$/;"	v	class:BlockTag
@@ -204,8 +205,8 @@ ElementManager	django/apps/stories/models.py	/^class ElementManager(models.Manag
 ElementQuerySet	django/apps/stories/models.py	/^class ElementQuerySet(models.QuerySet):$/;"	c
 Environment	django/universitas/setting_helpers.py	/^class Environment:$/;"	c
 Eposttinging	django/apps/legacy_db/models.py	/^class Eposttinging(models.Model):$/;"	c
-ErrorItem	webpack/src/react/error/ErrorTool.js	/^const ErrorItem = ({ message, onClick }) => ($/;"	r
-ErrorTool	webpack/src/react/error/ErrorTool.js	/^const ErrorTool = ({ errors, clearError }) =>$/;"	r
+ErrorItem	webpack/src/react/error/ErrorTool.js	/^const ErrorItem = ({ detail, timestamp, onClick }) => ($/;"	r
+ErrorTool	webpack/src/react/error/ErrorTool.js	/^const ErrorTool = ({ errors, clearError }, index) =>$/;"	r
 FAKE	django/apps/core/content_factory.py	/^FAKE = Factory.create('no')$/;"	v
 FAVICON_URL	django/universitas/redirect_urls.py	/^FAVICON_URL = 'favicon\/favicon.ico'$/;"	v
 FIELD_CHANGED	webpack/src/react/contributors/duck.js	/^export const FIELD_CHANGED = 'contributors\/FIELD_CHANGED'$/;"	r
@@ -922,6 +923,7 @@ ad_channels	django/apps/adverts/models.py	/^    ad_channels = models.ManyToManyF
 ad_formats	django/apps/adverts/models.py	/^    ad_formats = models.ManyToManyField($/;"	v	class:AdChannel
 ad_type	django/apps/adverts/models.py	/^    ad_type = models.PositiveIntegerField($/;"	v	class:Advert
 add	webpack/src/react/containers/ProdSys.test.js	/^const add = (a, b) => a + b$/;"	r
+addError	webpack/src/react/error/duck.js	/^export const addError = error => ({ type: ADD_ERROR, payload: { error } })$/;"	r
 addImage	webpack/src/react/ducks/images.js	/^export const addImage = json => ({$/;"	r
 addText	webpack/src/react/ducks/editor.js	/^const addText = (text, content, caret = 0) =>$/;"	r
 add_arguments	django/apps/core/management/commands/fake_content.py	/^    def add_arguments(self, parser):$/;"	m	class:Command
@@ -1110,7 +1112,7 @@ clean_up_pending_autocrop	django/apps/photo/tasks.py	/^def clean_up_pending_auto
 cleanup	webpack/src/react/containers/Editor.js	/^const cleanup = text => {$/;"	r
 cleanup	webpack/src/react/utils/text.js	/^export const cleanup = text => {$/;"	r
 clearButtonOnClick	webpack/src/react/containers/SearchField.js	/^  const clearButtonOnClick = e => {$/;"	r
-clearError	webpack/src/react/error/duck.js	/^export const clearError = index => ({$/;"	r
+clearError	webpack/src/react/error/duck.js	/^export const clearError = index => ({ type: CLEAR_ERROR, payload: { index } })$/;"	r
 clearErrors	webpack/src/react/error/duck.js	/^export const clearErrors = () => ({ type: CLEAR_ERRORS })$/;"	r
 clear_html	django/apps/stories/models.py	/^    def clear_html(self):$/;"	m	class:Story
 clickHandler	webpack/src/react/contributors/ContributorList.js	/^  const clickHandler = e => filterToggled(attr, value)$/;"	r
@@ -1761,7 +1763,7 @@ getQuery	webpack/src/react/photos/duck.js	/^export const getQuery = selectorFrom
 getQuery	webpack/src/react/stories/duck.js	/^export const getQuery = selectorFromLens(queryLens)$/;"	r
 getReducer	webpack/src/react/auth/duck.js	/^const getReducer = ({ type, payload, error }) => {$/;"	r
 getReducer	webpack/src/react/contributors/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
-getReducer	webpack/src/react/error/duck.js	/^const getReducer = ({ type, payload, error }) => {$/;"	r
+getReducer	webpack/src/react/error/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
 getReducer	webpack/src/react/issues/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
 getReducer	webpack/src/react/photos/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
 getReducer	webpack/src/react/stories/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
@@ -2079,7 +2081,7 @@ initialState	webpack/src/react/auth/duck.js	/^const initialState = { pending: tr
 initialState	webpack/src/react/contributors/duck.js	/^export const initialState = R.pipe($/;"	r
 initialState	webpack/src/react/ducks/cropPanel.js	/^const initialState = { image: 0, expanded: false, data: 0 }$/;"	r
 initialState	webpack/src/react/ducks/cropWidget.js	/^const initialState = {$/;"	r
-initialState	webpack/src/react/error/duck.js	/^const initialState = ['a', 'b', 'c']$/;"	r
+initialState	webpack/src/react/error/duck.js	/^const initialState = []$/;"	r
 initialState	webpack/src/react/issues/duck.js	/^export const initialState = R.pipe($/;"	r
 initialState	webpack/src/react/issues/duck.test.js	/^  const initialState = issues.reducer(undefined, {})$/;"	r
 initialState	webpack/src/react/photos/duck.js	/^export const initialState = R.pipe($/;"	r
@@ -3454,6 +3456,7 @@ thumbnail	django/apps/photo/models.py	/^    def thumbnail(self, size='x150', **o
 tid	django/apps/legacy_db/models.py	/^    tid = models.DateTimeField()$/;"	v	class:InnleggAbstract
 timelock	django/apps/legacy_db/models.py	/^    timelock = models.DateTimeField(editable=False, blank=True, null=True)$/;"	v	class:Prodsak
 timestamp	django/apps/core/staging.py	/^def timestamp(delta, fallback):$/;"	f
+timestamp	webpack/src/react/utils/modelUtils.js	/^export const timestamp = value => format(new Date(value), 'HH:mm:ss')$/;"	r
 timing	django/apps/markup/models.py	/^    timing = models.PositiveSmallIntegerField($/;"	v	class:Alias
 tingoPattern	webpack/src/react/components/Preview.js	/^  const tingoPattern = n ? `(?:\\\\S+\\\\s+){1,${n}}` : '.{1,12}\\\\S*'$/;"	r
 tipsninger	django/apps/legacy_db/models.py	/^    tipsninger = models.IntegerField()$/;"	v	class:Sak
