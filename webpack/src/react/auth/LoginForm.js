@@ -22,6 +22,8 @@ class LoginForm extends React.Component {
         />
         <input className="button" type="submit" value="Logg inn" />
         {non_field_errors && <span>{non_field_errors}</span>}
+        {this.props.error.password &&
+          <span>passord: {this.props.error.password}</span>}
       </form>
     )
   }

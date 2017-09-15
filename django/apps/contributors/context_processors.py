@@ -1,4 +1,26 @@
 """ Contributors context processor """
+from .models import Stint
+
+
+def get_staff():
+    positions = ['redaktør', 'nyhetsleder', 'nettredaktør', 'daglig leder',
+                 'annonseselger', 'webutvikler']
+    active = Stint.objects.active().select_related('contributor', 'position')
+    staff = []
+    for position in positions:
+        person = active.filter(position__title=position).first()
+        if person:
+            name = person.contributor.display_name
+            email = person.contributor.email
+            phone = person.contributor.phone
+        else:
+            name = '[ingen]'
+            email = None
+            phone = None
+
+        staff.append(
+            dict(position=position, email=email, phone=phone, name=name))
+    return staff
 
 
 def staff(request):
@@ -9,19 +31,6 @@ def staff(request):
             'mail': 'Boks 89 Blindern, 0314 Oslo',
             'address': 'Moltke Moes vei 33',
         },
-        'staff': [
-            {'position': 'Redaktør', 'name': 'Torgeir Mortensen',
-                'email': 'torgeirm3b@gmail.com', },
-            {'position': 'Nyhetsredaktør', 'name': 'Birk Tjeldflaat Helle',
-                'email': 'birktjeldflaathelle@gmail.com', },
-            {'position': 'Nettredaktør', 'name': 'Sondre Moen Myhre',
-                'email': 'sondre.myhre1@gmail.com', },
-            {'position': 'Daglig leder', 'name': 'Joakim Stene Preston',
-                'email': 'j.s.preston@universitas.no', },
-            {'position': 'Annonseselger', 'name': 'Geir Dorp',
-             'email': 'geir.dorp@universitas.no', 'phone': '22 85 32 69', },
-            {'position': 'Webutvikler', 'name': 'Håken Lid',
-                'email': 'haakenlid@gmail.com', },
-        ]
+        'staff': get_staff,
     }
     return context

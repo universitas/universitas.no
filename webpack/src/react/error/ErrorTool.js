@@ -4,17 +4,21 @@ import { getErrors, clearError } from 'error/duck'
 import { timestamp as formatTimestamp } from 'utils/modelUtils'
 
 const errorToString = R.cond([
-  [R.has('detail'), R.prop('detail')],
   [R.is(String), R.identity],
+  [R.has('detail'), R.prop('detail')],
+  [
+    R.has('non_field_errors'),
+    R.compose(R.join(', '), R.prop('non_field_errors')),
+  ],
   [R.is(Object), JSON.stringify],
   [R.T, R.type],
 ])
 
-const ErrorItem = ({ detail, timestamp, onClick }) => (
+const ErrorItem = ({ error, onClick }) => (
   <div className="ErrorItem">
     <span className="text">
-      <div className="timestamp">{formatTimestamp(timestamp)}</div>
-      <div className="detail">{detail}</div>
+      <div className="timestamp">{formatTimestamp(error.timestamp)}</div>
+      <div className="detail">{errorToString(error)}</div>
     </span>
     <span className="dismiss" onClick={onClick}><Clear /></span>
   </div>
@@ -26,11 +30,10 @@ const ErrorTool = ({ errors, clearError }, index) =>
         <Error />
         <small>{errors.length} feil</small>
         <div className="errorItems">
-          {errors.map(({ detail, timestamp }, index) => (
+          {errors.map((error, index) => (
             <ErrorItem
-              detail={detail}
-              timestamp={timestamp}
               key={index}
+              error={error}
               onClick={e => clearError(index)}
             />
           ))}

@@ -1,7 +1,9 @@
 {% extends "base-template.html" %}
+{% load cache %}
 {% block content %}
 {% block main_content %}
 {% endblock main_content %}
+{% cache 60 * 60 staff %}
   <div class="medium-8 columns">
     <h3>Generell kontaktinfo</h3>
     <table>
@@ -15,8 +17,8 @@
     <p><a href="{% url 'pub_plan' %}">Se hele planen.</a>
 
     <h3>Annonsering</h3>
-    {% with geir=staff.4 %}
-    <p>Kontakt Geir Dorp på mail <a href="mailto:{{ geir.email }}">{{ geir.email }}</a> tlf: {{ geir.phone }}, eller <a href="{% url 'ad_info' %}">les mer om annonsering.</a>
+    {% with seller=staff.4 %}
+    <p>Kontakt {{ seller.name }} på mail <a href="mailto:{{ seller.email }}">{{ seller.email }}</a> tlf: {{ seller.phone }}, eller <a href="{% url 'ad_info' %}">les mer om annonsering.</a>
     {% endwith %}
 
   </div>
@@ -27,7 +29,9 @@
       <tr>
         <td>{{ person.position }}:
         <td><a href="mailto:{{ person.email }}">{{ person.name }}</a>
+        <td>{{ person.phone }}
     {% endfor %}
     </table>
   </div>
+{% endcache %}
 {% endblock content %}

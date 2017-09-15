@@ -1,3 +1,4 @@
+import { LOG_IN_SUCCESS, LOG_OUT } from 'auth/duck'
 // Lenses
 const lens = R.pipe(R.split('.'), R.lensPath)
 const sliceLens = lens('errors')
@@ -24,8 +25,10 @@ const getReducer = ({ type, payload }) => {
       return R.append(payload.error)
     case CLEAR_ERROR:
       return R.remove(payload.index, 1)
+    case LOG_IN_SUCCESS:
+    case LOG_OUT:
     case CLEAR_ERRORS:
-      return initialState
+      return R.always(initialState)
     default:
       return R.identity
   }

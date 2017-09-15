@@ -205,7 +205,7 @@ ElementManager	django/apps/stories/models.py	/^class ElementManager(models.Manag
 ElementQuerySet	django/apps/stories/models.py	/^class ElementQuerySet(models.QuerySet):$/;"	c
 Environment	django/universitas/setting_helpers.py	/^class Environment:$/;"	c
 Eposttinging	django/apps/legacy_db/models.py	/^class Eposttinging(models.Model):$/;"	c
-ErrorItem	webpack/src/react/error/ErrorTool.js	/^const ErrorItem = ({ detail, timestamp, onClick }) => ($/;"	r
+ErrorItem	webpack/src/react/error/ErrorTool.js	/^const ErrorItem = ({ error, onClick }) => ($/;"	r
 ErrorTool	webpack/src/react/error/ErrorTool.js	/^const ErrorTool = ({ errors, clearError }, index) =>$/;"	r
 FAKE	django/apps/core/content_factory.py	/^FAKE = Factory.create('no')$/;"	v
 FAVICON_URL	django/universitas/redirect_urls.py	/^FAVICON_URL = 'favicon\/favicon.ico'$/;"	v
@@ -1455,6 +1455,7 @@ editable	django/apps/stories/models.py	/^        editable=False,$/;"	v	class:Rem
 editable	django/apps/stories/models.py	/^        editable=False,$/;"	v	class:Story.Meta
 editable	django/apps/stories/models.py	/^        editable=False,$/;"	v	class:TextContent.Meta
 editor	django/api/tests/test_indesign_api.py	/^def editor(request):$/;"	f
+editors	django/apps/contributors/tests/test_context_processor.py	/^def editors():$/;"	f
 elements	webpack/src/react/components/Preview.js	/^const elements = {$/;"	r
 email	django/apps/contributors/models.py	/^    email = models.EmailField(blank=True, null=True)$/;"	v	class:Contributor
 embed	django/apps/stories/models.py	/^    def embed(self, width="100%", height="auto"):$/;"	m	class:StoryVideo
@@ -1864,6 +1865,7 @@ get_shortlink	django/apps/stories/models.py	/^    def get_shortlink(self):$/;"	m
 get_size	django/api/photo_serializers.py	/^    def get_size(self, instance):$/;"	m	class:ImageFileSerializer
 get_small	django/api/photo_serializers.py	/^    def get_small(self, instance):$/;"	m	class:ImageFileSerializer
 get_sourcefile_modification_time	django/apps/photo/models.py	/^    def get_sourcefile_modification_time(self):$/;"	m	class:ImageFile
+get_staff	django/apps/contributors/context_processors.py	/^def get_staff():$/;"	f
 get_staging_pdf_files	django/apps/issues/management/commands/web_pdf.py	/^def get_staging_pdf_files(magazine='1'):$/;"	f
 get_staging_pdf_files	django/apps/issues/tasks.py	/^def get_staging_pdf_files($/;"	f
 get_tag	django/apps/stories/models.py	/^    def get_tag(self, ref=None):$/;"	m	class:InlineLink
@@ -3433,6 +3435,7 @@ test_prettify	django/utils/html.py	/^def test_prettify():$/;"	f
 test_random_image	django/apps/core/tests/test_content_factory.py	/^def test_random_image():$/;"	f
 test_require_binary_decorator	django/apps/issues/tests/test_tasks.py	/^def test_require_binary_decorator():$/;"	f
 test_serialize_and_deserialize	django/apps/photo/tests/test_cropping.py	/^def test_serialize_and_deserialize():$/;"	f
+test_staff_context_processor	django/apps/contributors/tests/test_context_processor.py	/^def test_staff_context_processor(editors):$/;"	f
 test_story_content	django/apps/core/tests/test_content_factory.py	/^def test_story_content():$/;"	f
 test_supervisor_api_access	django/api/tests/funky.py	/^def test_supervisor_api_access(jane, billy, willy, possey):$/;"	f
 test_that_both_file_and_bytes_work	django/apps/photo/tests/test_cropping.py	/^def test_that_both_file_and_bytes_work(testimage):$/;"	f

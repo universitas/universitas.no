@@ -21,6 +21,7 @@ function* logInSaga(action) {
   if (error) {
     yield put(loginFailed(error))
   } else {
+    yield put(loginSuccess(response))
     // login successful reload page to get new csrf token
     // window.location = window.location
     // csrf token checked for each request
