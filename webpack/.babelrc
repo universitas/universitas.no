@@ -8,12 +8,7 @@
     "lodash", "react-hot-loader/babel"
   ],
   "env": {
-    "test": {
-      "presets": [
-        ["env"],
-        "stage-1",
-        "react"
-      ],
-    }
+    "development": { "plugins": ["import-asserts"] },
+    "test": { "presets": [["env"], "stage-1", "react"]}
   }
 }

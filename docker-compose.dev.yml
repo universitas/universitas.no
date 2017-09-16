@@ -4,6 +4,7 @@ services:
   webpack:
     image: universitas/webpack:edge
     command: dev-server
+    tty: true
     ports:
       - "3000:3000"
 

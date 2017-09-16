@@ -79,8 +79,16 @@ function* patchStory(action) {
     yield put(storyPatched(data))
   }
 }
+function* fetchStories() {
+  const attrs = yield select(getQuery)
+  const { response, error } = yield call(apiList, 'stories', attrs)
+  if (response) {
+    return response
+  } else {
+    yield put({ type: 'ERROR', error })
+  }
+}
 function* cloneStory(action) {
-  console.log('cloning')
   const { id } = action.payload
   const { working_title, story_type, bodytext_markup } = yield select(
     getStory(id)
@@ -99,17 +107,6 @@ function* cloneStory(action) {
     yield put({ type: 'ERROR', error })
   }
 }
-
-function* fetchStories() {
-  const attrs = yield select(getQuery)
-  const { response, error } = yield call(apiList, 'stories', attrs)
-  if (response) {
-    return response
-  } else {
-    yield put({ type: 'ERROR', error })
-  }
-}
-
 function* fetchUrl(url) {
   const { response, error } = yield call(apiFetch, url)
   if (response) {

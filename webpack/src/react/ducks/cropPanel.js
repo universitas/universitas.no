@@ -1,4 +1,4 @@
-import { fetchImage, getImage } from 'ducks/images'
+import { getImage } from 'ducks/images'
 import { IMAGE_SELECTED } from 'ducks/ui'
 
 // Action types
