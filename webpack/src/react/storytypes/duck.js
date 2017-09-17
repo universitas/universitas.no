@@ -1,5 +1,5 @@
 import { objectToggle } from '../utils/fp'
-export const ITEMS_FETCHED = 'storyyypes/ITEMS_FETCHED'
+export const ITEMS_FETCHED = 'storyTypes/ITEMS_FETCHED'
 export const ITEMS_REQUESTED = 'storyTypes/ITEMS_REQUESTED'
 
 // Lenses

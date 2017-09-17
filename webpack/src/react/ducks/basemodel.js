@@ -1,14 +1,14 @@
 import { combinedToggle } from '../utils/fp'
-export const ITEM_ADDED = 'modelName/ITEM_ADDED'
-export const ITEM_SELECTED = 'modelName/ITEM_SELECTED'
-export const ITEM_CLONED = 'modelName/ITEM_CLONED'
-export const ITEM_PATCHED = 'modelName/ITEM_PATCHED'
-export const FIELD_CHANGED = 'modelName/FIELD_CHANGED'
-export const ITEMS_FETCHED = 'modelName/ITEMS_FETCHED'
-export const ITEM_REQUESTED = 'modelName/ITEM_REQUESTED'
-export const ITEMS_REQUESTED = 'modelName/ITEMS_REQUESTED'
-export const FILTER_TOGGLED = 'modelName/FILTER_TOGGLED'
-export const FILTER_SET = 'modelName/FILTER_SET'
+export const ITEM_ADDED = 'model/ITEM_ADDED'
+export const ITEM_SELECTED = 'model/ITEM_SELECTED'
+export const ITEM_CLONED = 'model/ITEM_CLONED'
+export const ITEM_PATCHED = 'model/ITEM_PATCHED'
+export const FIELD_CHANGED = 'model/FIELD_CHANGED'
+export const ITEMS_FETCHED = 'model/ITEMS_FETCHED'
+export const ITEM_REQUESTED = 'model/ITEM_REQUESTED'
+export const ITEMS_REQUESTED = 'model/ITEMS_REQUESTED'
+export const FILTER_TOGGLED = 'model/FILTER_TOGGLED'
+export const FILTER_SET = 'model/FILTER_SET'
 
 // Lenses
 const currentItemLens = R.lensProp('currentItem')
@@ -18,23 +18,13 @@ const itemsLens = R.lensProp('items')
 const navigationLens = R.lensProp('navigation')
 const itemLens = id => R.lensPath(['items', String(id)])
 
-const modelLens = R.lensPath(['meta', 'modelName'])
+// set and view model from action
+export const actionModelLens = R.lensPath(['meta', 'modelName'])
 
 // Selectors
 const getSelector = R.curry((lens, modelName) =>
-  R.view(R.compose(R.lensPath(modelName), lens))
+  R.view(R.compose(R.lensProp(modelName), lens))
 )
-
-// Action creators
-const getActionCreator = R.curryN(3, (type, payloadTransform, modelName) =>
-  R.pipe(
-    payloadTransform,
-    R.objOf('payload'),
-    R.assoc('type', type),
-    R.set(modelLens, modelName)
-  )
-)
-
 const selectors = {
   getItemList: getSelector(currentItemsLens),
   getCurrentItemId: getSelector(currentItemLens),
@@ -47,6 +37,16 @@ const selectors = {
   getItem: id => getSelector(itemLens(id)),
 }
 
+// Action creators
+const getActionCreator = R.curryN(3, (type, payloadTransform, modelName) =>
+  R.pipe(
+    R.curry(payloadTransform),
+    R.objOf('payload'),
+    R.assoc('type', type),
+    R.set(actionModelLens, modelName)
+  )
+)
+
 const actionCreators = {
   itemAdded: getActionCreator(ITEM_ADDED, data => data),
   itemCloned: getActionCreator(ITEM_CLONED, id => ({ id })),
@@ -56,10 +56,11 @@ const actionCreators = {
     dirty: false,
     ...response,
   })),
-  fieldChanged: getActionCreator(
-    FIELD_CHANGED,
-    R.curryN(3, (id, field, value) => ({ id, field, value }))
-  ),
+  fieldChanged: getActionCreator(FIELD_CHANGED, (id, field, value) => ({
+    id,
+    field,
+    value,
+  })),
   itemRequested: getActionCreator(ITEM_REQUESTED, id => ({ id })),
   itemsRequested: getActionCreator(ITEMS_REQUESTED, url => ({ url })),
   itemsFetched: getActionCreator(ITEMS_FETCHED, data => data),
@@ -134,7 +135,9 @@ export const baseInitialState = R.pipe(
 export const modelReducer = (modelName, initialState = {}) => {
   const mergedState = R.mergeDeepRight(baseInitialState(), initialState)
   return (state = mergedState, action) =>
-    R.view(modelLens, action) !== modelName ? state : getReducer(action)(state)
+    R.view(actionModelLens, action) !== modelName
+      ? state
+      : getReducer(action)(state)
 }
 
 export const modelActions = modelName => R.applySpec(actionCreators)(modelName)
