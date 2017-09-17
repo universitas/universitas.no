@@ -94,11 +94,13 @@
         border-top: none;
       }
     }
-    display: none;
+    display: flex;
+    visibility: hidden;
+    transition: visibility .3s;
   }
   &:hover {
     .errorItems {
-      display: flex;
+      visibility: visible;
     }
   }
 }

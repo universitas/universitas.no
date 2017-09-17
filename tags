@@ -210,14 +210,17 @@ ErrorTool	webpack/src/react/error/ErrorTool.js	/^const ErrorTool = ({ errors, cl
 FAKE	django/apps/core/content_factory.py	/^FAKE = Factory.create('no')$/;"	v
 FAVICON_URL	django/universitas/redirect_urls.py	/^FAVICON_URL = 'favicon\/favicon.ico'$/;"	v
 FIELD_CHANGED	webpack/src/react/contributors/duck.js	/^export const FIELD_CHANGED = 'contributors\/FIELD_CHANGED'$/;"	r
+FIELD_CHANGED	webpack/src/react/ducks/basemodel.js	/^export const FIELD_CHANGED = 'modelName\/FIELD_CHANGED'$/;"	r
 FIELD_CHANGED	webpack/src/react/issues/duck.js	/^export const FIELD_CHANGED = 'issues\/FIELD_CHANGED'$/;"	r
 FIELD_CHANGED	webpack/src/react/photos/duck.js	/^export const FIELD_CHANGED = 'photos\/FIELD_CHANGED'$/;"	r
 FIELD_CHANGED	webpack/src/react/stories/duck.js	/^export const FIELD_CHANGED = 'stories\/FIELD_CHANGED'$/;"	r
 FILENAME_PATTERN	django/apps/issues/management/commands/web_pdf.py	/^FILENAME_PATTERN = 'universitas_{issue.date.year}-{issue.number}{suffix}.pdf'$/;"	v
 FILE_UPLOAD_DIRECTORY_PERMISSIONS	django/universitas/base.py	/^FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770$/;"	v
 FILE_UPLOAD_PERMISSIONS	django/universitas/base.py	/^FILE_UPLOAD_PERMISSIONS = 0o664$/;"	v
+FILTER_SET	webpack/src/react/ducks/basemodel.js	/^export const FILTER_SET = 'modelName\/FILTER_SET'$/;"	r
 FILTER_SET	webpack/src/react/stories/duck.js	/^export const FILTER_SET = 'stories\/FILTER_SET'$/;"	r
 FILTER_TOGGLED	webpack/src/react/contributors/duck.js	/^export const FILTER_TOGGLED = 'contributors\/FILTER_TOGGLED'$/;"	r
+FILTER_TOGGLED	webpack/src/react/ducks/basemodel.js	/^export const FILTER_TOGGLED = 'modelName\/FILTER_TOGGLED'$/;"	r
 FILTER_TOGGLED	webpack/src/react/issues/duck.js	/^export const FILTER_TOGGLED = 'issues\/FILTER_TOGGLED'$/;"	r
 FILTER_TOGGLED	webpack/src/react/photos/duck.js	/^export const FILTER_TOGGLED = 'photos\/FILTER_TOGGLED'$/;"	r
 FILTER_TOGGLED	webpack/src/react/stories/duck.js	/^export const FILTER_TOGGLED = 'stories\/FILTER_TOGGLED'$/;"	r
@@ -266,29 +269,36 @@ INSERT_TEXT	webpack/src/react/ducks/editor.js	/^const INSERT_TEXT = 'INSERT_TEXT
 INSTALLED_APPS	django/universitas/base.py	/^INSTALLED_APPS = [$/;"	v
 ISSUE_TYPES	django/apps/issues/models.py	/^    ISSUE_TYPES = [$/;"	v	class:Issue
 ITEMS_FETCHED	webpack/src/react/contributors/duck.js	/^export const ITEMS_FETCHED = 'contributors\/ITEMS_FETCHED'$/;"	r
+ITEMS_FETCHED	webpack/src/react/ducks/basemodel.js	/^export const ITEMS_FETCHED = 'modelName\/ITEMS_FETCHED'$/;"	r
 ITEMS_FETCHED	webpack/src/react/issues/duck.js	/^export const ITEMS_FETCHED = 'issues\/ITEMS_FETCHED'$/;"	r
 ITEMS_FETCHED	webpack/src/react/photos/duck.js	/^export const ITEMS_FETCHED = 'photos\/ITEMS_FETCHED'$/;"	r
 ITEMS_FETCHED	webpack/src/react/stories/duck.js	/^export const ITEMS_FETCHED = 'stories\/ITEMS_FETCHED'$/;"	r
 ITEMS_FETCHED	webpack/src/react/storytypes/duck.js	/^export const ITEMS_FETCHED = 'storyyypes\/ITEMS_FETCHED'$/;"	r
 ITEMS_REQUESTED	webpack/src/react/contributors/duck.js	/^export const ITEMS_REQUESTED = 'contributors\/ITEMS_REQUESTED'$/;"	r
+ITEMS_REQUESTED	webpack/src/react/ducks/basemodel.js	/^export const ITEMS_REQUESTED = 'modelName\/ITEMS_REQUESTED'$/;"	r
 ITEMS_REQUESTED	webpack/src/react/issues/duck.js	/^export const ITEMS_REQUESTED = 'issues\/ITEMS_REQUESTED'$/;"	r
 ITEMS_REQUESTED	webpack/src/react/photos/duck.js	/^export const ITEMS_REQUESTED = 'photos\/ITEMS_REQUESTED'$/;"	r
 ITEMS_REQUESTED	webpack/src/react/stories/duck.js	/^export const ITEMS_REQUESTED = 'stories\/ITEMS_REQUESTED'$/;"	r
 ITEMS_REQUESTED	webpack/src/react/storytypes/duck.js	/^export const ITEMS_REQUESTED = 'storyTypes\/ITEMS_REQUESTED'$/;"	r
 ITEM_ADDED	webpack/src/react/contributors/duck.js	/^export const ITEM_ADDED = 'contributors\/ITEM_ADDED'$/;"	r
+ITEM_ADDED	webpack/src/react/ducks/basemodel.js	/^export const ITEM_ADDED = 'modelName\/ITEM_ADDED'$/;"	r
 ITEM_ADDED	webpack/src/react/issues/duck.js	/^export const ITEM_ADDED = 'issues\/ITEM_ADDED'$/;"	r
 ITEM_ADDED	webpack/src/react/photos/duck.js	/^export const ITEM_ADDED = 'photos\/ITEM_ADDED'$/;"	r
 ITEM_ADDED	webpack/src/react/stories/duck.js	/^export const ITEM_ADDED = 'stories\/ITEM_ADDED'$/;"	r
+ITEM_CLONED	webpack/src/react/ducks/basemodel.js	/^export const ITEM_CLONED = 'modelName\/ITEM_CLONED'$/;"	r
 ITEM_CLONED	webpack/src/react/stories/duck.js	/^export const ITEM_CLONED = 'stories\/ITEM_CLONED'$/;"	r
 ITEM_PATCHED	webpack/src/react/contributors/duck.js	/^export const ITEM_PATCHED = 'contributors\/ITEM_PATCHED'$/;"	r
+ITEM_PATCHED	webpack/src/react/ducks/basemodel.js	/^export const ITEM_PATCHED = 'modelName\/ITEM_PATCHED'$/;"	r
 ITEM_PATCHED	webpack/src/react/issues/duck.js	/^export const ITEM_PATCHED = 'issues\/ITEM_PATCHED'$/;"	r
 ITEM_PATCHED	webpack/src/react/photos/duck.js	/^export const ITEM_PATCHED = 'photos\/ITEM_PATCHED'$/;"	r
 ITEM_PATCHED	webpack/src/react/stories/duck.js	/^export const ITEM_PATCHED = 'stories\/ITEM_PATCHED'$/;"	r
 ITEM_REQUESTED	webpack/src/react/contributors/duck.js	/^export const ITEM_REQUESTED = 'contributors\/ITEM_REQUESTED'$/;"	r
+ITEM_REQUESTED	webpack/src/react/ducks/basemodel.js	/^export const ITEM_REQUESTED = 'modelName\/ITEM_REQUESTED'$/;"	r
 ITEM_REQUESTED	webpack/src/react/issues/duck.js	/^export const ITEM_REQUESTED = 'issues\/ITEM_REQUESTED'$/;"	r
 ITEM_REQUESTED	webpack/src/react/photos/duck.js	/^export const ITEM_REQUESTED = 'photos\/ITEM_REQUESTED'$/;"	r
 ITEM_REQUESTED	webpack/src/react/stories/duck.js	/^export const ITEM_REQUESTED = 'stories\/ITEM_REQUESTED'$/;"	r
 ITEM_SELECTED	webpack/src/react/contributors/duck.js	/^export const ITEM_SELECTED = 'contributors\/ITEM_SELECTED'$/;"	r
+ITEM_SELECTED	webpack/src/react/ducks/basemodel.js	/^export const ITEM_SELECTED = 'modelName\/ITEM_SELECTED'$/;"	r
 ITEM_SELECTED	webpack/src/react/issues/duck.js	/^export const ITEM_SELECTED = 'issues\/ITEM_SELECTED'$/;"	r
 ITEM_SELECTED	webpack/src/react/photos/duck.js	/^export const ITEM_SELECTED = 'photos\/ITEM_SELECTED'$/;"	r
 ITEM_SELECTED	webpack/src/react/stories/duck.js	/^export const ITEM_SELECTED = 'stories\/ITEM_SELECTED'$/;"	r
@@ -896,11 +906,13 @@ abstract	django/apps/stories/models.py	/^        abstract = True$/;"	v	class:Sto
 abstract	django/apps/stories/models.py	/^        abstract = True$/;"	v	class:TextContent.Meta
 action	django/apps/markup/models.py	/^    action = models.CharField($/;"	v	class:BlockTag
 action	webpack/src/react/contributors/saga.js	/^    const action = yield take('ROUTER_LOCATION_CHANGED')$/;"	r
+action	webpack/src/react/ducks/basemodel.test.js	/^        const action = R.ifElse($/;"	r
 action	webpack/src/react/entry/ProdSys/saga.js	/^  const action = yield take(LOCATION_CHANGED)$/;"	r
 action	webpack/src/react/issues/duck.test.js	/^    const action = issues.issueAdded(item)$/;"	r
 action	webpack/src/react/issues/saga.js	/^    const action = yield take('ROUTER_LOCATION_CHANGED')$/;"	r
 action	webpack/src/react/photos/saga.js	/^    const action = yield take('ROUTER_LOCATION_CHANGED')$/;"	r
 action	webpack/src/react/stories/saga.js	/^    const action = yield take('ROUTER_LOCATION_CHANGED')$/;"	r
+actionCreators	webpack/src/react/ducks/basemodel.js	/^const actionCreators = {$/;"	r
 actions	django/apps/adverts/admin.py	/^    actions = [create_dummy_ads, ]$/;"	v	class:ChannelAdmin
 actions	django/apps/issues/admin.py	/^    actions = [create_pdf]$/;"	v	class:PrintIssueAdmin
 actions	django/apps/legacy_db/admin.py	/^    actions = [move_to_archive]$/;"	v	class:ProdsakAdmin
@@ -990,6 +1002,7 @@ backwards	django/apps/frontpage/migrations/0002_ensure_one_frontpage.py	/^def ba
 backwards	django/apps/stories/migrations/0021_data_generate_slugs.py	/^def backwards(*args):$/;"	f
 backwards	django/watson/south_migrations/0001_initial.py	/^    def backwards(self, orm):$/;"	m	class:Migration
 backwards	django/watson/south_migrations/0002_installwatson.py	/^    def backwards(self, orm):$/;"	m	class:Migration
+baseInitialState	webpack/src/react/ducks/basemodel.js	/^export const baseInitialState = R.pipe($/;"	r
 bases	django/apps/adverts/migrations/0001_initial.py	/^            bases=(models.Model,),$/;"	v	class:Migration
 bases	django/apps/contributors/migrations/0001_initial.py	/^            bases=(models.Model,),$/;"	v	class:Migration
 bases	django/apps/contributors/migrations/0004_auto_20150512_2248.py	/^            bases=(models.Model,),$/;"	v	class:Migration
@@ -1072,6 +1085,7 @@ calculate_hashes	django/apps/photo/models.py	/^    def calculate_hashes(self):$/
 calculate_image_hash	django/apps/photo/models.py	/^    def calculate_image_hash(self, size=11):$/;"	m	class:ImageFile
 can_import_settings	django/apps/legacy_db/management/commands/importer_fra_prodsys.py	/^    can_import_settings = True,$/;"	v	class:Command
 caption	django/apps/stories/models.py	/^    caption = MarkupCharField($/;"	v	class:StoryMedia
+cases	webpack/src/react/ducks/basemodel.test.js	/^  const cases = [$/;"	r
 category	django/apps/adverts/models.py	/^    category = models.PositiveSmallIntegerField($/;"	v	class:AdFormat
 center	django/apps/photo/cropping/boundingbox.py	/^    def center(self) -> typing.Tuple[float, float]:$/;"	m	class:Box
 change	webpack/src/react/components/Editor.js	/^    const change = content.length - prevProps.content.length$/;"	r
@@ -1187,10 +1201,12 @@ cropping_method	webpack/src/react/sagas/images.js	/^  const cropping_method = AU
 css_classes	django/apps/adverts/models.py	/^    def css_classes(self):$/;"	m	class:AdChannel
 ctrlb	django/ptpython_config.py	/^    def ctrlb(event):$/;"	f	function:configure
 currentItemLens	webpack/src/react/contributors/duck.js	/^const currentItemLens = lens('currentItem')$/;"	r
+currentItemLens	webpack/src/react/ducks/basemodel.js	/^const currentItemLens = R.lensProp('currentItem')$/;"	r
 currentItemLens	webpack/src/react/issues/duck.js	/^const currentItemLens = lens('currentItem')$/;"	r
 currentItemLens	webpack/src/react/photos/duck.js	/^const currentItemLens = lens('currentItem')$/;"	r
 currentItemLens	webpack/src/react/stories/duck.js	/^const currentItemLens = lens('currentItem')$/;"	r
 currentItemsLens	webpack/src/react/contributors/duck.js	/^const currentItemsLens = lens('currentItems')$/;"	r
+currentItemsLens	webpack/src/react/ducks/basemodel.js	/^const currentItemsLens = R.lensProp('currentItems')$/;"	r
 currentItemsLens	webpack/src/react/issues/duck.js	/^const currentItemsLens = lens('currentItems')$/;"	r
 currentItemsLens	webpack/src/react/photos/duck.js	/^const currentItemsLens = lens('currentItems')$/;"	r
 currentItemsLens	webpack/src/react/stories/duck.js	/^const currentItemsLens = lens('currentItems')$/;"	r
@@ -1203,6 +1219,7 @@ cyclePanelData	webpack/src/react/ducks/cropPanel.js	/^export const cyclePanelDat
 data	webpack/src/react/contributors/ContributorList.js	/^    const data = getContributor(id)(state) || {}$/;"	r
 data	webpack/src/react/contributors/saga.js	/^  const data = yield call(apiPatch('contributors'), id, { [field]: value })$/;"	r
 data	webpack/src/react/contributors/saga.js	/^  const data = yield call(fetchContributors)$/;"	r
+data	webpack/src/react/ducks/basemodel.test.js	/^  const data = { id: 100, data: { foo: null } }$/;"	r
 data	webpack/src/react/issues/IssueList.js	/^    const data = getIssue(id)(state) || {}$/;"	r
 data	webpack/src/react/issues/saga.js	/^  const data = yield call(fetchIssues)$/;"	r
 data	webpack/src/react/photos/PhotoList.js	/^    const data = getPhoto(id)(state) || {}$/;"	r
@@ -1723,6 +1740,7 @@ generate_pdf_preview	django/apps/issues/tasks.py	/^def generate_pdf_preview(inpu
 generate_thumbnails	django/apps/issues/tasks.py	/^def generate_thumbnails(**kwargs):$/;"	f
 get	django/apps/search/views.py	/^    def get(self, request, *args, **kwargs):$/;"	m	class:SearchMixin
 get	django/watson/views.py	/^    def get(self, request, *args, **kwargs):$/;"	m	class:SearchMixin
+getActionCreator	webpack/src/react/ducks/basemodel.js	/^const getActionCreator = R.curryN(3, (type, payloadTransform, modelName) =>$/;"	r
 getActiveIndex	webpack/src/react/ducks/editor.js	/^export const getActiveIndex = R.compose(R.prop('activeIndex'), getEditor)$/;"	r
 getAuthToken	webpack/src/react/auth/duck.js	/^export const getAuthToken = selectorFromLens(tokenLens)$/;"	r
 getContent	webpack/src/react/ducks/editor.js	/^export const getContent = R.compose(R.prop('content'), getEditor)$/;"	r
@@ -1764,12 +1782,14 @@ getQuery	webpack/src/react/photos/duck.js	/^export const getQuery = selectorFrom
 getQuery	webpack/src/react/stories/duck.js	/^export const getQuery = selectorFromLens(queryLens)$/;"	r
 getReducer	webpack/src/react/auth/duck.js	/^const getReducer = ({ type, payload, error }) => {$/;"	r
 getReducer	webpack/src/react/contributors/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
+getReducer	webpack/src/react/ducks/basemodel.js	/^const getReducer = ({ type, payload }) => {$/;"	r
 getReducer	webpack/src/react/error/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
 getReducer	webpack/src/react/issues/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
 getReducer	webpack/src/react/photos/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
 getReducer	webpack/src/react/stories/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
 getReducer	webpack/src/react/storytypes/duck.js	/^const getReducer = ({ type, payload }) => {$/;"	r
 getSelectedImage	webpack/src/react/ducks/cropPanel.js	/^export const getSelectedImage = R.path(['ui', 'cropPanel', 'image'])$/;"	r
+getSelector	webpack/src/react/ducks/basemodel.js	/^const getSelector = R.curry((lens, modelName) =>$/;"	r
 getStory	webpack/src/react/stories/duck.js	/^export const getStory = id => selectorFromLens(itemLens(id))$/;"	r
 getStoryList	webpack/src/react/stories/duck.js	/^export const getStoryList = selectorFromLens(currentItemsLens)$/;"	r
 getStoryType	webpack/src/react/storytypes/duck.js	/^export const getStoryType = id => selectorFromLens(itemLens(id))$/;"	r
@@ -2045,6 +2065,7 @@ id_sak	django/apps/legacy_db/models.py	/^    id_sak = models.ForeignKey(Sak, db_
 id_sak	django/apps/legacy_db/models.py	/^    id_sak = models.IntegerField(primary_key=True)$/;"	v	class:Sak
 id_svar	django/apps/legacy_db/models.py	/^    id_svar = models.IntegerField(primary_key=True)$/;"	v	class:DiskSvar
 ids	webpack/src/react/contributors/duck.js	/^      const ids = R.pluck('id', payload.results)$/;"	r
+ids	webpack/src/react/ducks/basemodel.js	/^      const ids = R.pluck('id', results)$/;"	r
 ids	webpack/src/react/ducks/imageList.js	/^      const ids = R.values(R.pluck('id', results))$/;"	r
 ids	webpack/src/react/issues/duck.js	/^      const ids = R.pluck('id', payload.results)$/;"	r
 ids	webpack/src/react/photos/duck.js	/^      const ids = R.pluck('id', results)$/;"	r
@@ -2149,6 +2170,7 @@ issuesRequested	webpack/src/react/issues/duck.js	/^export const issuesRequested 
 item	webpack/src/react/issues/duck.test.js	/^    const item = { id: 5, name: 'foo' }$/;"	r
 item	webpack/src/react/issues/duck.test.js	/^    const item = { id: 99, url: 'foo' }$/;"	r
 itemLens	webpack/src/react/contributors/duck.js	/^const itemLens = id => R.lensPath(['items', String(id)])$/;"	r
+itemLens	webpack/src/react/ducks/basemodel.js	/^const itemLens = id => R.lensPath(['items', String(id)])$/;"	r
 itemLens	webpack/src/react/issues/duck.js	/^const itemLens = id => R.lensPath(['items', String(id)])$/;"	r
 itemLens	webpack/src/react/photos/duck.js	/^const itemLens = id => R.lensPath(['items', String(id)])$/;"	r
 itemLens	webpack/src/react/stories/duck.js	/^const itemLens = id => R.lensPath(['items', String(id)])$/;"	r
@@ -2158,11 +2180,13 @@ item_title	django/apps/stories/feeds.py	/^    def item_title(self, item):$/;"	m	
 items	django/apps/stories/feeds.py	/^    def items(self):$/;"	m	class:LatestStories
 items	webpack/src/react/components/CropPreview.js	/^  const items = {$/;"	r
 items	webpack/src/react/contributors/duck.js	/^      const items = R.zipObj(ids, payload.results)$/;"	r
+items	webpack/src/react/ducks/basemodel.js	/^      const items = R.zipObj(ids, results)$/;"	r
 items	webpack/src/react/issues/duck.js	/^      const items = R.zipObj(ids, payload.results)$/;"	r
 items	webpack/src/react/photos/duck.js	/^      const items = R.zipObj(ids, results)$/;"	r
 items	webpack/src/react/stories/duck.js	/^      const items = R.zipObj(ids, results)$/;"	r
 items	webpack/src/react/storytypes/duck.js	/^      const items = R.zipObj(ids, payload.results)$/;"	r
 itemsLens	webpack/src/react/contributors/duck.js	/^const itemsLens = lens('items')$/;"	r
+itemsLens	webpack/src/react/ducks/basemodel.js	/^const itemsLens = R.lensProp('items')$/;"	r
 itemsLens	webpack/src/react/issues/duck.js	/^const itemsLens = lens('items')$/;"	r
 itemsLens	webpack/src/react/photos/duck.js	/^const itemsLens = lens('items')$/;"	r
 itemsLens	webpack/src/react/stories/duck.js	/^const itemsLens = lens('items')$/;"	r
@@ -2195,6 +2219,7 @@ legacy_prodsys_source	django/apps/stories/models.py	/^    legacy_prodsys_source 
 lens	webpack/src/react/auth/duck.js	/^const lens = R.pipe(R.split('.'), R.lensPath)$/;"	r
 lens	webpack/src/react/contributors/duck.js	/^      const lens = itemLens(id)$/;"	r
 lens	webpack/src/react/contributors/duck.js	/^const lens = R.pipe(R.split('.'), R.lensPath)$/;"	r
+lens	webpack/src/react/ducks/basemodel.js	/^      const lens = itemLens(id)$/;"	r
 lens	webpack/src/react/error/duck.js	/^const lens = R.pipe(R.split('.'), R.lensPath)$/;"	r
 lens	webpack/src/react/issues/duck.js	/^      const lens = itemLens(id)$/;"	r
 lens	webpack/src/react/issues/duck.js	/^const lens = R.pipe(R.split('.'), R.lensPath)$/;"	r
@@ -2438,9 +2463,11 @@ max_num	django/apps/stories/admin.py	/^    max_num = 20$/;"	v	class:BylineInline
 md5	django/apps/photo/models.py	/^    def md5(self):$/;"	m	class:ImageFile
 md5	django/apps/photo/models.py	/^    def md5(self, value):$/;"	m	class:ImageFile
 mergeData	webpack/src/react/contributors/duck.js	/^      const mergeData = { dirty: true, [field]: value }$/;"	r
+mergeData	webpack/src/react/ducks/basemodel.js	/^      const mergeData = { dirty: true, [field]: value }$/;"	r
 mergeData	webpack/src/react/issues/duck.js	/^      const mergeData = { dirty: true, [field]: value }$/;"	r
 mergeData	webpack/src/react/photos/duck.js	/^      const mergeData = { dirty: true, [field]: value }$/;"	r
 mergeData	webpack/src/react/stories/duck.js	/^      const mergeData = { dirty: true, [field]: value }$/;"	r
+mergedState	webpack/src/react/ducks/basemodel.js	/^  const mergedState = R.mergeDeepRight(baseInitialState(), initialState)$/;"	r
 meta	django/watson/models.py	/^    def meta(self):$/;"	m	class:SearchEntry
 meta_encoded	django/watson/models.py	/^    meta_encoded = models.TextField()$/;"	v	class:SearchEntry
 method	django/api/photo_serializers.py	/^    method = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
@@ -2472,8 +2499,13 @@ model	django/apps/stories/admin.py	/^    model = Pullquote$/;"	v	class:Pullquote
 model	django/apps/stories/admin.py	/^    model = StoryImage$/;"	v	class:ImageInline
 model	django/apps/stories/admin.py	/^    model = StoryType$/;"	v	class:StoryTypeInline
 model	django/apps/stories/admin.py	/^    model = StoryVideo$/;"	v	class:VideoInline
+modelActions	webpack/src/react/ducks/basemodel.js	/^export const modelActions = modelName => R.applySpec(actionCreators)(modelName)$/;"	r
 modelFields	webpack/src/react/photos/model.js	/^const modelFields = [$/;"	r
 modelFields	webpack/src/react/stories/model.js	/^const modelFields = [$/;"	r
+modelLens	webpack/src/react/ducks/basemodel.js	/^const modelLens = R.lensPath(['meta', 'modelName'])$/;"	r
+modelName	webpack/src/react/ducks/basemodel.test.js	/^  const modelName = 'sausages'$/;"	r
+modelReducer	webpack/src/react/ducks/basemodel.js	/^export const modelReducer = (modelName, initialState = {}) => {$/;"	r
+modelSelectors	webpack/src/react/ducks/basemodel.js	/^export const modelSelectors = modelName => R.applySpec(selectors)(modelName)$/;"	r
 model_name	django/apps/adverts/migrations/0001_initial.py	/^            model_name='adchannel',$/;"	v	class:Migration
 model_name	django/apps/adverts/migrations/0001_initial.py	/^            model_name='advert',$/;"	v	class:Migration
 model_name	django/apps/adverts/migrations/0004_advert_extra_classes.py	/^            model_name='advert',$/;"	v	class:Migration
@@ -2711,6 +2743,7 @@ name	django/universitas/urls.py	/^        name='pub_plan_year'),$/;"	v
 name	django/watson/migrations/0001_initial.py	/^            name='SearchEntry',$/;"	v	class:Migration
 namespace	django/api/urls.py	/^                               namespace='rest_framework')),$/;"	v
 natural_key	django/apps/issues/models.py	/^    def natural_key(self):$/;"	m	class:Issue
+navigationLens	webpack/src/react/ducks/basemodel.js	/^const navigationLens = R.lensProp('navigation')$/;"	r
 navigationLens	webpack/src/react/photos/duck.js	/^const navigationLens = lens('navigation')$/;"	r
 navigationLens	webpack/src/react/stories/duck.js	/^const navigationLens = lens('navigation')$/;"	r
 navn	django/apps/legacy_db/models.py	/^    navn = models.CharField(max_length=128)$/;"	v	class:InnleggAbstract
@@ -2774,6 +2807,7 @@ objects	django/apps/stories/models.py	/^    objects = BylineManager()$/;"	v	clas
 objects	django/apps/stories/models.py	/^    objects = ElementManager()$/;"	v	class:StoryElement
 objects	django/apps/stories/models.py	/^    objects = InlineLinkManager()$/;"	v	class:InlineLink
 objects	django/apps/stories/models.py	/^    objects = PublishedStoryManager()$/;"	v	class:Story
+offsetFromUrl	webpack/src/react/ducks/basemodel.js	/^const offsetFromUrl = R.compose($/;"	r
 offsetFromUrl	webpack/src/react/stories/duck.js	/^const offsetFromUrl = R.compose($/;"	r
 ol	webpack/src/react/utils/tagParser.js	/^const ol = line => {$/;"	r
 old_file_path	django/apps/photo/models.py	/^    old_file_path = models.CharField($/;"	v	class:ImageFile
@@ -3023,6 +3057,7 @@ pullquotes	django/apps/stories/models.py	/^    def pullquotes(self):$/;"	m	class
 qs_methods	django/apps/stories/models.py	/^    qs_methods = [attr for attr in dir(ElementQuerySet) if not$/;"	v	class:ElementManager
 query	webpack/src/react/services/api.js	/^  const query = queryString(attrs)$/;"	r
 queryLens	webpack/src/react/contributors/duck.js	/^const queryLens = lens('query')$/;"	r
+queryLens	webpack/src/react/ducks/basemodel.js	/^const queryLens = R.lensProp('query')$/;"	r
 queryLens	webpack/src/react/issues/duck.js	/^const queryLens = lens('query')$/;"	r
 queryLens	webpack/src/react/photos/duck.js	/^const queryLens = lens('query')$/;"	r
 queryLens	webpack/src/react/stories/duck.js	/^const queryLens = lens('query')$/;"	r
@@ -3259,6 +3294,7 @@ selectorFromLens	webpack/src/react/issues/duck.js	/^const selectorFromLens = l =
 selectorFromLens	webpack/src/react/photos/duck.js	/^const selectorFromLens = l => R.view(R.compose(lens('photos'), l))$/;"	r
 selectorFromLens	webpack/src/react/stories/duck.js	/^const selectorFromLens = l => R.view(R.compose(lens('stories'), l))$/;"	r
 selectorFromLens	webpack/src/react/storytypes/duck.js	/^const selectorFromLens = l => R.view(R.compose(lens('storytypes'), l))$/;"	r
+selectors	webpack/src/react/ducks/basemodel.js	/^const selectors = {$/;"	r
 sensurert	django/apps/legacy_db/models.py	/^    sensurert = models.IntegerField(blank=True, null=True)$/;"	v	class:InnleggAbstract
 serialize	django/apps/photo/cropping/boundingbox.py	/^    def serialize(self, precision: int=4) -> typing.Mapping[str, float]:$/;"	m	class:Box
 serialize	django/apps/photo/cropping/crop_detector.py	/^    def serialize(self, precision: int=3) -> OrderedDict:$/;"	m	class:Feature
