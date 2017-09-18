@@ -1,16 +1,17 @@
 import { Link, push } from 'redux-little-router'
 import { connect } from 'react-redux'
-import {
-  getQuery,
-  getPhotoList,
-  getPhoto,
-  getCurrentPhotoId,
-  filterToggled,
-  getNavigation,
-  photosRequested,
-} from 'photos/duck'
 import { listFields as photoFields } from 'photos/model'
 import { getDisplayName, formatDate } from 'utils/modelUtils'
+
+import { modelActions, modelSelectors } from 'ducks/basemodel'
+const {
+  getQuery,
+  getItemList,
+  getItem,
+  getCurrentItemId,
+  getNavigation,
+} = modelSelectors('images')
+const { filterToggled, itemsRequested } = modelActions('images')
 
 // render all rows of results
 const renderRows = (items, fields) =>
@@ -60,12 +61,12 @@ let ListRow = ({ fields, onClick, ...props }) => (
 
 ListRow = connect(
   (state, { id }) => {
-    const data = getPhoto(id)(state) || {}
-    const selected = getCurrentPhotoId(state) === id
+    const data = getItem(id)(state) || {}
+    const selected = getCurrentItemId(state) === id
     return { ...data, selected }
   },
   (dispatch, { id }) => ({
-    onClick: e => dispatch(push(`/photos/${id}`)),
+    onClick: e => dispatch(push(`/images/${id}`)),
   })
 )(ListRow)
 
@@ -97,9 +98,9 @@ const PhotoFilters = () => {
   )
 }
 
-let PhotoNavigation = ({ previous, next, photosRequested }) => {
-  const nextItems = () => photosRequested(next)
-  const prevItems = () => photosRequested(previous)
+let PhotoNavigation = ({ previous, next, itemsRequested }) => {
+  const nextItems = () => itemsRequested(next)
+  const prevItems = () => itemsRequested(previous)
   return (
     <div>
       <button
@@ -121,7 +122,7 @@ let PhotoNavigation = ({ previous, next, photosRequested }) => {
     </div>
   )
 }
-PhotoNavigation = connect(getNavigation, { photosRequested })(PhotoNavigation)
+PhotoNavigation = connect(getNavigation, { itemsRequested })(PhotoNavigation)
 
 const PhotoList = ({ items = [], fields = photoFields }) => {
   return (
@@ -144,7 +145,7 @@ PhotoList.propTypes = {
   fields: PropTypes.array,
 }
 const mapStateToProps = (state, ownProps) => ({
-  items: getPhotoList(state),
+  items: getItemList(state),
 })
 const mapDispatchToProps = (dispatch, ownProps) => ({})
 export default connect(mapStateToProps, mapDispatchToProps)(PhotoList)

@@ -93,7 +93,7 @@ module.exports = {
     ],
   },
   resolve: {
-    modules: ['src', 'src/react', 'node_modules'],
+    modules: ['src/react', 'src', 'node_modules'],
     unsafeCache: true,
     alias: {
       // use unminified jquery source to enable deduping etc.

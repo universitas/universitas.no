@@ -3,18 +3,18 @@ import cx from 'classnames'
 import { Link, push } from 'redux-little-router'
 import { Clear } from 'components/Icons'
 import { connect } from 'react-redux'
-import {
-  getQuery,
-  getStoryList,
-  getStory,
-  getCurrentStoryId,
-  filterToggled,
-  filterSet,
-  getNavigation,
-  storiesRequested,
-} from 'stories/duck'
 import { listFields as storyFields } from 'stories/model'
 import { getDisplayName, formatDate, relativeDateTime } from 'utils/modelUtils'
+import { modelSelectors, modelActions } from 'ducks/basemodel'
+
+const { filterToggled, filterSet, itemsRequested } = modelActions('stories')
+const {
+  getQuery,
+  getItemList,
+  getItem,
+  getCurrentItemId,
+  getNavigation,
+} = modelSelectors('stories')
 
 // render all rows of results
 const renderRows = (items, fields) =>
@@ -65,8 +65,8 @@ let ListRow = ({ fields, onClick, ...props }) => (
 
 ListRow = connect(
   (state, { id }) => {
-    const data = getStory(id)(state) || {}
-    const selected = getCurrentStoryId(state) === id
+    const data = getItem(id)(state) || {}
+    const selected = getCurrentItemId(state) === id
     return { ...data, selected }
   },
   (dispatch, { id }) => ({
@@ -154,7 +154,7 @@ let StoryNavigation = ({
   last,
   count,
   offset,
-  storiesRequested,
+  itemsRequested,
 }) => {
   const info = (
     <div className="info">resultat {1 + last - results}–{last} av {count}</div>
@@ -162,8 +162,8 @@ let StoryNavigation = ({
   if (!(previous || next)) {
     return info
   }
-  const nextItems = () => storiesRequested(next)
-  const prevItems = () => storiesRequested(previous)
+  const nextItems = () => itemsRequested(next)
+  const prevItems = () => itemsRequested(previous)
   return (
     <div className="Navigation">
       {info}
@@ -176,7 +176,7 @@ let StoryNavigation = ({
     </div>
   )
 }
-StoryNavigation = connect(getNavigation, { storiesRequested })(StoryNavigation)
+StoryNavigation = connect(getNavigation, { itemsRequested })(StoryNavigation)
 
 const StoryList = ({ items = [], fields = storyFields }) => {
   return (
@@ -203,7 +203,7 @@ StoryList.propTypes = {
   fields: PropTypes.array,
 }
 const mapStateToProps = (state, ownProps) => ({
-  items: getStoryList(state),
+  items: getItemList(state),
 })
 const mapDispatchToProps = (dispatch, ownProps) => ({})
 export default connect(mapStateToProps, mapDispatchToProps)(StoryList)

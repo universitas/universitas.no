@@ -182,5 +182,6 @@ cd $(dirname $(readlink -f $0))
 [[ ! -f django/local.env ]] && echo "# Add environment variables here" > django/local.env
 mkdir -p ./webpack/node_modules/ ./django/venv/
 
+export COMPOSE_HTTP_TIMEOUT=6000
 export COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml
 main $@

@@ -47,27 +47,27 @@ export const apiLogout = () =>
 export const apiUser = () =>
   apiFetch(`${BASE_URL}/rest-auth/user/`, { method: 'GET' })
 
-export const apiList = (model, attrs = {}) => {
+export const apiList = R.curry((model, attrs) => {
   const query = queryString(attrs)
   const url = query ? `${BASE_URL}/${model}/?${query}` : `${BASE_URL}/${model}/`
   return apiFetch(url)
-}
+})
 
-export const apiGet = model => id => {
+export const apiGet = R.curry((model, id) => {
   return apiFetch(`${BASE_URL}/${model}/${id}/`)
-}
+})
 
-export const apiPatch = model => (id, data) => {
+export const apiPatch = R.curry((model, id, data) => {
   const url = `${BASE_URL}/${model}/${id}/`
   const head = { method: 'PATCH' }
   return apiFetch(url, head, data)
-}
+})
 
-export const apiPost = model => data => {
+export const apiPost = R.curry((model, data) => {
   const url = `${BASE_URL}/${model}/`
   const head = { method: 'POST' }
   return apiFetch(url, head, data)
-}
+})
 
 // helpers
 const paramPairs = (value, key, _) =>
@@ -85,7 +85,7 @@ export const queryString = R.pipe(
   R.values,
   R.join('&')
 )
-export const searchUrl = R.curryN(2, (model, attrs) => {
+export const searchUrl = R.curryN(2, (model, attrs = {}) => {
   const query = queryString(attrs)
   return query ? `${BASE_URL}/${model}/?${query}` : `${BASE_URL}/${model}/`
 })
