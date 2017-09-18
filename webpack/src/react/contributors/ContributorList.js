@@ -1,14 +1,13 @@
 import { Link, push } from 'redux-little-router'
 import { connect } from 'react-redux'
-import {
-  getQuery,
-  getContributorList,
-  getContributor,
-  getCurrentContributorId,
-  filterToggled,
-} from 'contributors/duck'
 import { fields as contributorFields } from 'contributors/model'
 import { getDisplayName, formatDate } from 'utils/modelUtils'
+
+import { modelSelectors, modelActions } from 'ducks/basemodel'
+const { getQuery, getItemList, getItem, getCurrentItemId } = modelSelectors(
+  'contributors'
+)
+const { filterToggled } = modelActions('contributors')
 
 // render all rows of results
 const renderRows = (items, fields) =>
@@ -62,8 +61,8 @@ let ListRow = ({ fields, onClick, ...props }) => (
 
 ListRow = connect(
   (state, { id }) => {
-    const data = getContributor(id)(state) || {}
-    const selected = getCurrentContributorId(state) === id
+    const data = getItem(id)(state) || {}
+    const selected = getCurrentItemId(state) === id
     return { ...data, selected }
   },
   (dispatch, { id }) => ({
@@ -123,7 +122,7 @@ ContributorList.propTypes = {
   fields: PropTypes.array,
 }
 const mapStateToProps = (state, ownProps) => ({
-  items: getContributorList(state),
+  items: getItemList(state),
 })
 const mapDispatchToProps = (dispatch, ownProps) => ({})
 export default connect(mapStateToProps, mapDispatchToProps)(ContributorList)

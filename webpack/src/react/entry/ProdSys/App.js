@@ -33,7 +33,7 @@ const ProdSys = () => (
   <main className="ProdSys">
     <section className="SideBar">
       <AppButton href="/stories" Icon={Edit} label="saker" />
-      <AppButton href="/photos" Icon={Camera} label="foto" />
+      <AppButton href="/images" Icon={Camera} label="foto" />
       <AppButton href="/issues" Icon={Newspaper} label="utgaver" />
       <AppButton href="/contributors" Icon={Person} label="bidragsytere" />
       <div className="spacer" style={{ flex: 1 }} />
@@ -44,7 +44,7 @@ const ProdSys = () => (
       <Fragment forRoute="/stories"><StoryList /></Fragment>
       <Fragment forRoute="/issues"><IssueList /></Fragment>
       <Fragment forRoute="/contributors"><ContributorList /></Fragment>
-      <Fragment forRoute="/photos"><PhotoList /></Fragment>
+      <Fragment forRoute="/images"><PhotoList /></Fragment>
     </section>
     <Fragment forRoute="/stories/:id">
       <section className="DetailPanel"> <StoryDetail /> </section>
@@ -55,7 +55,7 @@ const ProdSys = () => (
     <Fragment forRoute="/issues/:id">
       <section className="DetailPanel"> <IssueDetail /> </section>
     </Fragment>
-    <Fragment forRoute="/photos/:id">
+    <Fragment forRoute="/images/:id">
       <section className="DetailPanel"> <PhotoDetail /> </section>
     </Fragment>
   </main>

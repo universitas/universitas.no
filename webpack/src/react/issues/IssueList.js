@@ -1,14 +1,12 @@
 import { Link, push } from 'redux-little-router'
 import { connect } from 'react-redux'
-import {
-  getQuery,
-  getIssueList,
-  getIssue,
-  getCurrentIssueId,
-  filterToggled,
-} from 'issues/duck'
 import { fields as issueFields } from 'issues/model'
 import { getDisplayName, formatDate } from 'utils/modelUtils'
+import { modelSelectors, modelActions } from 'ducks/basemodel'
+const { getQuery, getItemList, getItem, getCurrentItemId } = modelSelectors(
+  'issues'
+)
+const { filterToggled } = modelActions('issues')
 
 // render all rows of results
 const renderRows = (items, fields) =>
@@ -52,8 +50,8 @@ let ListRow = ({ fields, onClick, ...props }) => (
 
 ListRow = connect(
   (state, { id }) => {
-    const data = getIssue(id)(state) || {}
-    const selected = getCurrentIssueId(state) === id
+    const data = getItem(id)(state) || {}
+    const selected = getCurrentItemId(state) === id
     return { ...data, selected }
   },
   (dispatch, { id }) => ({ onClick: e => dispatch(push(`/issues/${id}`)) })
@@ -111,7 +109,7 @@ IssueList.propTypes = {
   fields: PropTypes.array,
 }
 const mapStateToProps = (state, ownProps) => ({
-  items: getIssueList(state),
+  items: getItemList(state),
 })
 const mapDispatchToProps = (dispatch, ownProps) => ({})
 export default connect(mapStateToProps, mapDispatchToProps)(IssueList)

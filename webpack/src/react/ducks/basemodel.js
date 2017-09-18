@@ -1,4 +1,4 @@
-import { combinedToggle } from '../utils/fp'
+import { combinedToggle, partialMap } from '../utils/fp'
 export const ITEM_ADDED = 'model/ITEM_ADDED'
 export const ITEM_SELECTED = 'model/ITEM_SELECTED'
 export const ITEM_CLONED = 'model/ITEM_CLONED'
@@ -18,27 +18,35 @@ const itemsLens = R.lensProp('items')
 const navigationLens = R.lensProp('navigation')
 const itemLens = id => R.lensPath(['items', String(id)])
 
-// set and view model from action
+// Lens for accessing model name from action
 export const actionModelLens = R.lensPath(['meta', 'modelName'])
 
-// Selectors
-const getSelector = R.curry((lens, modelName) =>
-  R.view(R.compose(R.lensProp(modelName), lens))
+// :: Lens -> ModelName (String) -> State (Object) -> Any -- (create redux selector)
+const getSelector = R.curry((lens, modelName, state) =>
+  R.view(R.compose(R.lensProp(modelName), lens), state)
 )
-const selectors = {
-  getItemList: getSelector(currentItemsLens),
-  getCurrentItemId: getSelector(currentItemLens),
-  getCurrentItem: modelName => state =>
-    getSelector(itemLens(getSelector(currentItemLens)(state)), modelName)(
-      state
-    ) || {},
+// :: modelName => {k: selector} -- (redux selector factory)
+export const modelSelectors = partialMap({
   getQuery: getSelector(queryLens),
   getNavigation: getSelector(navigationLens),
-  getItem: id => getSelector(itemLens(id)),
-}
+  getItemList: getSelector(currentItemsLens),
+  getItems: getSelector(itemsLens),
+  getCurrentItemId: getSelector(currentItemLens),
+  getItem: modelName => id => getSelector(itemLens(id), modelName),
+  getCurrentItem: modelName => state =>
+    R.defaultTo(
+      {},
+      getSelector(
+        itemLens(getSelector(currentItemLens, modelName, state)),
+        modelName,
+        state
+      )
+    ),
+})
 
-// Action creators
-const getActionCreator = R.curryN(3, (type, payloadTransform, modelName) =>
+// :: ActionType -> ( * -> Payload ) -> ModelName -> ActionCreator (fn)
+// -- (create redux action creator)
+const getActionCreator = R.curry((type, payloadTransform, modelName) =>
   R.pipe(
     R.curry(payloadTransform),
     R.objOf('payload'),
@@ -46,8 +54,8 @@ const getActionCreator = R.curryN(3, (type, payloadTransform, modelName) =>
     R.set(actionModelLens, modelName)
   )
 )
-
-const actionCreators = {
+// :: modelName => {k: actionCreator} -- (redux action creators factory)
+export const modelActions = partialMap({
   itemAdded: getActionCreator(ITEM_ADDED, data => data),
   itemCloned: getActionCreator(ITEM_CLONED, id => ({ id })),
   itemSelected: getActionCreator(ITEM_SELECTED, id => ({ id })),
@@ -69,9 +77,9 @@ const actionCreators = {
     value,
   })),
   filterSet: getActionCreator(FILTER_SET, (key, value) => ({ key, value })),
-}
+})
 
-// reducers
+// :: Url -> Int -- ( Extract pagination offset from DRF url with url attributes )
 const offsetFromUrl = R.compose(
   R.defaultTo(0),
   parseInt,
@@ -80,6 +88,16 @@ const offsetFromUrl = R.compose(
   R.defaultTo('')
 )
 
+// :: () => State
+export const baseInitialState = R.pipe(
+  R.always({}),
+  R.set(currentItemLens, 0),
+  R.set(currentItemsLens, []),
+  R.set(queryLens, {}),
+  R.set(navigationLens, {})
+)
+
+// :: Action -> State -> State -- (pointfree redux reducer)
 const getReducer = ({ type, payload }) => {
   switch (type) {
     case ITEMS_FETCHED: {
@@ -118,27 +136,15 @@ const getReducer = ({ type, payload }) => {
       return R.set(R.compose(queryLens, R.lensProp(payload.key)), payload.value)
     case FILTER_TOGGLED:
       return R.over(queryLens, combinedToggle(payload.key, payload.value))
-
     default:
       return R.identity
   }
 }
 
-export const baseInitialState = R.pipe(
-  R.always({}),
-  R.set(currentItemLens, 0),
-  R.set(currentItemsLens, []),
-  R.set(queryLens, {}),
-  R.set(navigationLens, {})
-)
-
-export const modelReducer = (modelName, initialState = {}) => {
-  const mergedState = R.mergeDeepRight(baseInitialState(), initialState)
-  return (state = mergedState, action) =>
-    R.view(actionModelLens, action) !== modelName
-      ? state
-      : getReducer(action)(state)
+// :: (String, State) -> (Action -> State -> State) -- (redux reducer factory)
+export const modelReducer = (modelName, modelState = {}) => {
+  const initialState = R.mergeDeepRight(baseInitialState(), modelState)
+  const isModelAction = R.pipe(R.view(actionModelLens), R.equals(modelName))
+  return (state = initialState, action) =>
+    R.ifElse(isModelAction, getReducer, R.always(R.identity))(action)(state)
 }
-
-export const modelActions = modelName => R.applySpec(actionCreators)(modelName)
-export const modelSelectors = modelName => R.applySpec(selectors)(modelName)

@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
-import { getStoryTypeList } from 'storytypes/duck'
+import { modelSelectors } from 'ducks/basemodel'
+const { getItems } = modelSelectors('storytypes')
 
 const ChoiceField = ({ choices, value, editable, ...args }) =>
   editable
@@ -19,7 +20,7 @@ const StoryTypeSelect = ({ items, dispatch, ...args }) => (
 
 export default connect(
   state => ({
-    items: getStoryTypeList(state),
+    items: R.values(getItems(state)),
   }),
   null
 )(StoryTypeSelect)

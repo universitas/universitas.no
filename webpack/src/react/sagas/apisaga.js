@@ -32,9 +32,16 @@ export default function* rootSaga() {
   yield fork(watchRouteChange)
 }
 
+const errorAction = error => ({
+  type: 'api/ERROR',
+  error,
+})
+
 const modelFuncs = action => {
   const modelName = R.view(actionModelLens, action)
   const apiFuncs = {
+    detailView: id => push(`/${modelName}/${id}`),
+    listView: () => push(`/${modelName}/`),
     apiGet: apiGet(modelName),
     apiPost: apiPost(modelName),
     apiList: apiList(modelName),
@@ -88,9 +95,11 @@ function* patchItem(action) {
   yield call(delay, 1000)
   const { itemPatched, apiPatch } = modelFuncs(action)
   const { id, field, value } = action.payload
-  const data = yield call(apiPatch, id, { [field]: value })
-  if (data) {
-    yield put(itemPatched(data))
+  const { error, response } = yield call(apiPatch, id, { [field]: value })
+  if (response) {
+    yield put(itemPatched(response))
+  } else {
+    yield put(errorAction(error))
   }
 }
 function* fetchItems(action) {
@@ -101,12 +110,11 @@ function* fetchItems(action) {
   if (response) {
     return response
   } else {
-    console.log(error)
-    yield put({ type: 'ERROR', error })
+    yield put(errorAction(error))
   }
 }
 function* cloneItem(action) {
-  const { getItem, itemAdded, apiPost } = modelFuncs(action)
+  const { getItem, itemAdded, apiPost, detailView } = modelFuncs(action)
   const { id } = action.payload
   const { working_title, item_type, bodytext_markup } = yield select(
     getItem(id)
@@ -120,7 +128,7 @@ function* cloneItem(action) {
   const { response, error } = yield call(apiPost, data)
   if (response) {
     yield put(itemAdded(response))
-    yield put(push(`/items/${response.id}`))
+    yield put(detailView(response.id))
   } else {
     yield put({ type: 'ERROR', error })
   }

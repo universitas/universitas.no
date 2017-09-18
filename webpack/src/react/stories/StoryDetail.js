@@ -1,14 +1,12 @@
 import { connect } from 'react-redux'
-import {
-  getCurrentStory,
-  fieldChanged,
-  storyCloned,
-  storyDeSelected,
-} from 'stories/duck'
 import { detailFields as fields } from 'stories/model'
 import DetailField from './DetailField'
 import { Add, Delete, Laptop, Tune, Close } from 'components/Icons'
 import { push } from 'redux-little-router'
+import { modelSelectors, modelActions } from 'ducks/basemodel'
+
+const { fieldChanged, itemCloned, itemDeSelected } = modelActions('stories')
+const { getCurrentItem } = modelSelectors('stories')
 
 const Tool = ({ Icon, ...props }) => (
   <div className="Tool" {...props}>
@@ -45,7 +43,7 @@ let StoryDetailTools = ({
 StoryDetailTools = connect(null, (dispatch, props) => ({
   trashStory: () => dispatch(fieldChanged(props.id, 'publication_status', 15)),
   closeStory: () => dispatch(push('/stories')),
-  cloneStory: () => dispatch(storyCloned(props.id)),
+  cloneStory: () => dispatch(itemCloned(props.id)),
 }))(StoryDetailTools)
 
 const Detail = ({ fieldChanged, dirty, ...data }) =>
@@ -66,4 +64,4 @@ const Detail = ({ fieldChanged, dirty, ...data }) =>
       </div>
     : <div> ... </div>
 
-export default connect(getCurrentStory, { fieldChanged })(Detail)
+export default connect(getCurrentItem, { fieldChanged })(Detail)

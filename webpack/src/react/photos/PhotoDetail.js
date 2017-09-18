@@ -1,7 +1,11 @@
 import { connect } from 'react-redux'
-import { getCurrentPhoto, fieldChanged } from 'photos/duck'
+// import { getCurrentPhoto, fieldChanged } from 'photos/duck'
 import { detailFields as fields } from 'photos/model'
 import { formatDate } from 'utils/modelUtils'
+import { modelActions, modelSelectors } from 'ducks/basemodel'
+
+const { getCurrentItem } = modelSelectors('images')
+const { fieldChanged } = modelActions('images')
 
 const PdfPreview = ({ cover_page, pdf }) => (
   <a href={pdf}>
@@ -73,4 +77,4 @@ const Detail = ({ pdfs = [], dirty, fieldChanged, ...data }) => (
   </div>
 )
 
-export default connect(getCurrentPhoto, { fieldChanged })(Detail)
+export default connect(getCurrentItem, { fieldChanged })(Detail)

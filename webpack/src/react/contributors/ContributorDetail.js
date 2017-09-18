@@ -1,7 +1,10 @@
 import { connect } from 'react-redux'
-import { getCurrentContributor, fieldChanged } from 'contributors/duck'
 import { fields } from 'contributors/model'
 import { formatDate } from 'utils/modelUtils'
+
+import { modelSelectors, modelActions } from 'ducks/basemodel'
+const { getCurrentItem } = modelSelectors('contributors')
+const { fieldChanged } = modelActions('contributors')
 
 const PdfPreview = ({ cover_page, pdf }) => (
   <a href={pdf}>
@@ -73,4 +76,4 @@ const Detail = ({ pdfs = [], dirty, fieldChanged, ...data }) => (
   </div>
 )
 
-export default connect(getCurrentContributor, { fieldChanged })(Detail)
+export default connect(getCurrentItem, { fieldChanged })(Detail)

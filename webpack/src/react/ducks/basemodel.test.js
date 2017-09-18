@@ -102,13 +102,32 @@ describe('reducer', () => {
 })
 
 describe('selectors', () => {
-  const state = R.objOf(modelName, baseInitialState())
-  test('query selector', () => {
+  test('empty state', () => {
+    const state = R.objOf(modelName, baseInitialState())
     expect(getQuery(state)).toEqual({})
     expect(getItemList(state)).toEqual([])
     expect(getCurrentItemId(state)).toEqual(0)
     expect(getNavigation(state)).toEqual({})
     expect(getCurrentItem(state)).toEqual({})
     expect(getItem(5)(state)).toEqual(undefined)
+  })
+  test('populated state', () => {
+    const modelState = {
+      query: { foo: [1, 2, 3] },
+      navigation: { next: 'a', previous: 'b' },
+      currentItem: 100,
+      currentItems: [100, 101],
+      items: {
+        '100': { id: 100 },
+        '101': { id: 101 },
+      },
+    }
+    const state = R.objOf(modelName, modelState)
+    expect(getQuery(state)).toEqual(modelState.query)
+    expect(getItemList(state)).toEqual([100, 101])
+    expect(getCurrentItemId(state)).toEqual(100)
+    expect(getNavigation(state)).toEqual(modelState.navigation)
+    expect(getCurrentItem(state)).toEqual({ id: 100 })
+    expect(getItem(101)(state)).toEqual({ id: 101 })
   })
 })
