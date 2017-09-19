@@ -1,67 +1,60 @@
 import { connect } from 'react-redux'
-import { detailFields as fields } from 'stories/model'
-import DetailField from './DetailField'
-import { Add, Delete, Laptop, Tune, Close } from 'components/Icons'
-import { push } from 'redux-little-router'
-import { modelSelectors, modelActions } from 'ducks/basemodel'
+import { detailFields } from 'stories/model'
+import StoryTools from 'stories/StoryTools'
+import ModelField from 'components/ModelField'
+import { modelSelectors } from 'ducks/basemodel'
 
-const { fieldChanged, itemCloned, itemDeSelected } = modelActions('stories')
-const { getCurrentItem } = modelSelectors('stories')
+const model = 'stories'
+const { getCurrentItemId } = modelSelectors(model)
+const { getItems: getStoryTypes } = modelSelectors('storytypes')
 
-const Tool = ({ Icon, ...props }) => (
-  <div className="Tool" {...props}>
-    <Icon />
+const fields = {}
+for (const f of detailFields) {
+  const { key, ...props } = f
+  fields[key] = { name: key, ...props }
+}
+
+const Field = ({ label, type, ...props }) => (
+  <div className={`DetailField ${type}`}>
+    <span className="label">{label}: </span>
+    <ModelField className="Field" type={type} {...props} />
   </div>
 )
 
-const log = msg => () => alert(msg)
-const openUrl = url => () => window.open(url)
-
-let StoryDetailTools = ({
-  trashStory,
-  cloneStory,
-  closeStory,
-  edit_url,
-  public_url,
-}) => (
-  <div className="StoryDetailTools">
-    <Tool Icon={Close} title="lukk saken" onClick={closeStory} />
-    <Tool Icon={Add} title="kopier saken" onClick={cloneStory} />
-    <Tool Icon={Delete} title="slett saken" onClick={trashStory} />
-    <Tool
-      Icon={Laptop}
-      title="se saken på universitas.no"
-      onClick={openUrl(public_url)}
-    />
-    <Tool
-      Icon={Tune}
-      title="rediger i django-admin"
-      onClick={openUrl(edit_url)}
-    />
-  </div>
+const getChoices = R.pipe(
+  R.values,
+  R.map(({ id, name }) => ({
+    value: R.toString(id),
+    display_name: name,
+  }))
 )
-StoryDetailTools = connect(null, (dispatch, props) => ({
-  trashStory: () => dispatch(fieldChanged(props.id, 'publication_status', 15)),
-  closeStory: () => dispatch(push('/stories')),
-  cloneStory: () => dispatch(itemCloned(props.id)),
-}))(StoryDetailTools)
 
-const Detail = ({ fieldChanged, dirty, ...data }) =>
-  data.id
-    ? <div className="wrapper">
-        <StoryDetailTools {...data} />
-        <div className="fields">
-          {fields.map(({ key, ...args }) => (
-            <DetailField
-              key={key}
-              name={key}
-              value={data[key]}
-              onChange={e => fieldChanged(data.id, key, e.target.value)}
-              {...args}
-            />
-          ))}
-        </div>
+const Detail = ({ pk, storytypechoices }) => {
+  const props = { pk, model }
+  return (
+    <div className="wrapper">
+      <StoryTools pk={pk} />
+      <div className="fields">
+        <Field {...{ pk, model, ...fields.working_title }} />
+        <Field {...{ pk, model, ...fields.publication_status }} />
+        <Field
+          {...{
+            pk,
+            model,
+            ...fields.story_type,
+            choices: storytypechoices,
+            type: 'choice',
+          }}
+        />
+        <Field {...{ pk, model, ...fields.created }} />
+        <Field {...{ pk, model, ...fields.modified }} />
+        <Field {...{ pk, model, ...fields.bodytext_markup }} />
       </div>
-    : <div> ... </div>
+    </div>
+  )
+}
 
-export default connect(getCurrentItem, { fieldChanged })(Detail)
+export default connect(state => ({
+  storytypechoices: getChoices(getStoryTypes(state)),
+  pk: getCurrentItemId(state),
+}))(Detail)

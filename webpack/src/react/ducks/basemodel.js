@@ -22,9 +22,12 @@ const itemLens = id => R.lensPath(['items', String(id)])
 export const actionModelLens = R.lensPath(['meta', 'modelName'])
 
 // :: Lens -> ModelName (String) -> State (Object) -> Any -- (create redux selector)
-const getSelector = R.curry((lens, modelName, state) =>
+const getSelector = R.curryN(3, (lens, modelName, state) =>
   R.view(R.compose(R.lensProp(modelName), lens), state)
 )
+const defaultSelector = fallback =>
+  R.curryN(3, R.pipe(getSelector, R.defaultTo(fallback)))
+
 // :: modelName => {k: selector} -- (redux selector factory)
 export const modelSelectors = partialMap({
   getQuery: getSelector(queryLens),
@@ -32,15 +35,12 @@ export const modelSelectors = partialMap({
   getItemList: getSelector(currentItemsLens),
   getItems: getSelector(itemsLens),
   getCurrentItemId: getSelector(currentItemLens),
-  getItem: modelName => id => getSelector(itemLens(id), modelName),
+  getItem: modelName => id => defaultSelector({})(itemLens(id), modelName),
   getCurrentItem: modelName => state =>
-    R.defaultTo(
-      {},
-      getSelector(
-        itemLens(getSelector(currentItemLens, modelName, state)),
-        modelName,
-        state
-      )
+    defaultSelector({})(
+      itemLens(getSelector(currentItemLens, modelName, state)),
+      modelName,
+      state
     ),
 })
 
@@ -93,6 +93,7 @@ export const baseInitialState = R.pipe(
   R.always({}),
   R.set(currentItemLens, 0),
   R.set(currentItemsLens, []),
+  R.set(itemsLens, {}),
   R.set(queryLens, {}),
   R.set(navigationLens, {})
 )

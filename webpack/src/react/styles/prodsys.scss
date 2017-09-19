@@ -4,12 +4,17 @@
   height: 100vh;
   // overflow: hidden;
 }
-.SearchBar {
+.SearchField {
   flex: 1;
-  border: 1px solid #999;
-  padding: 0.1em 0.3em;
-  border-radius: 0.2em;
-  margin: 0.1em 0.2em;
+  display: flex;
+  align-items: stretch;
+  input {
+    flex: 1;
+    border: 1px solid #999;
+    padding: 0.1em 0.3em;
+    border-radius: 0.2em;
+    margin: 0.1em 0.2em;
+  }
 }
 
 .LoginForm {
@@ -184,7 +189,7 @@
     display: flex;
     flex-direction: column;
   }
-  .StoryDetailTools {
+  .StoryTools {
     background-color: #ccc;
     font-size: 1.7em;
     display: flex;

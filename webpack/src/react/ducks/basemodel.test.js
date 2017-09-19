@@ -23,20 +23,12 @@ const {
   filterSet,
 } = modelActions(modelName)
 
-const {
-  getItem,
-  getCurrentItemId,
-  getCurrentItem,
-  getItemList,
-  getNavigation,
-  getQuery,
-} = modelSelectors(modelName)
-
 describe('setup', () => {
   test('initial state', () => {
     expect(baseInitialState()).toEqual({
       currentItem: 0,
       currentItems: [],
+      items: {},
       query: {},
       navigation: {},
     })
@@ -102,32 +94,36 @@ describe('reducer', () => {
 })
 
 describe('selectors', () => {
-  test('empty state', () => {
-    const state = R.objOf(modelName, baseInitialState())
-    expect(getQuery(state)).toEqual({})
-    expect(getItemList(state)).toEqual([])
-    expect(getCurrentItemId(state)).toEqual(0)
-    expect(getNavigation(state)).toEqual({})
-    expect(getCurrentItem(state)).toEqual({})
-    expect(getItem(5)(state)).toEqual(undefined)
-  })
-  test('populated state', () => {
-    const modelState = {
-      query: { foo: [1, 2, 3] },
-      navigation: { next: 'a', previous: 'b' },
-      currentItem: 100,
-      currentItems: [100, 101],
-      items: {
-        '100': { id: 100 },
-        '101': { id: 101 },
-      },
-    }
-    const state = R.objOf(modelName, modelState)
-    expect(getQuery(state)).toEqual(modelState.query)
-    expect(getItemList(state)).toEqual([100, 101])
-    expect(getCurrentItemId(state)).toEqual(100)
-    expect(getNavigation(state)).toEqual(modelState.navigation)
-    expect(getCurrentItem(state)).toEqual({ id: 100 })
-    expect(getItem(101)(state)).toEqual({ id: 101 })
-  })
+  const selectors = modelSelectors(modelName)
+  const modelData = {
+    query: { foo: [1, 2, 3] },
+    navigation: { next: 'a', previous: 'b' },
+    currentItem: 100,
+    currentItems: [100, 101],
+    items: { '100': { id: 100 }, '101': { id: 101 } },
+  }
+  const initialState = R.objOf(modelName, baseInitialState())
+  const modelState = R.objOf(modelName, modelData)
+
+  const cases = [
+    ['getQuery', {}, modelData.query],
+    ['getItemList', [], modelData.currentItems],
+    ['getItems', {}, modelData.items],
+    ['getCurrentItemId', 0, modelData.currentItem],
+    ['getNavigation', {}, modelData.navigation],
+    ['getCurrentItem', {}, modelData.items['100']],
+    ['getItem', {}, modelData.items['101'], 101],
+  ]
+  R.map(
+    R.apply((funcname, data0, data1, args) => {
+      let selector = selectors[funcname]
+      if (args) selector = selector(args)
+      test(`selector: ${funcname} intialState`, () => {
+        expect(selector(initialState)).toEqual(data0)
+      })
+      test(`selector: ${funcname} modelState`, () => {
+        expect(selector(modelState)).toEqual(data1)
+      })
+    })
+  )(cases)
 })
