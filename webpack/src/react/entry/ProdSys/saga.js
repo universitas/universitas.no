@@ -1,9 +1,9 @@
 import { all, fork, call, put, take } from 'redux-saga/effects'
-import authSaga from 'auth/saga'
-import errorSaga from 'error/saga'
+import authSaga from 'sagas/auth'
+import errorSaga from 'sagas/error'
 import apiSaga from 'sagas/apisaga'
 import { modelActions } from 'ducks/basemodel'
-import { requestUser } from 'auth/duck'
+import { requestUser } from 'ducks/auth'
 import { push, LOCATION_CHANGED } from 'redux-little-router'
 
 function* rootSaga() {

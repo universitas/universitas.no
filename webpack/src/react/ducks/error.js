@@ -1,4 +1,4 @@
-import { LOG_IN_SUCCESS, LOG_OUT } from 'auth/duck'
+import { LOG_IN_SUCCESS, LOG_OUT } from 'ducks/auth'
 // Lenses
 const lens = R.pipe(R.split('.'), R.lensPath)
 const sliceLens = lens('errors')

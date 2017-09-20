@@ -114,7 +114,6 @@ load_db() {
   dumpfile=${1:-$dumpfile}
   [[ -e $dumpfile ]] || exit 1
   echo "found database dump: $dumpfile"
-  exit
   cp $dumpfile django/dbdump.sql
 
   # loading data

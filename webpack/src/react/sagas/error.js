@@ -1,5 +1,5 @@
 import { takeEvery, put } from 'redux-saga/effects'
-import { addError } from './duck'
+import { addError } from 'ducks/error'
 
 export default function* rootSaga() {
   yield takeEvery('*', errorWatcher)

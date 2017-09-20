@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import { modelReducer } from 'ducks/basemodel'
-import { reducer as auth } from 'auth/duck'
-import { reducer as errors } from 'error/duck'
+import { reducer as auth } from 'ducks/auth'
+import { reducer as errors } from 'ducks/error'
 
 const storyInitialState = {
   query: {

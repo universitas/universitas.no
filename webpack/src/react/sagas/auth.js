@@ -1,5 +1,5 @@
 import { takeEvery, select, call, put } from 'redux-saga/effects'
-import { apiLogin, apiLogout, apiUser } from '../services/api'
+import { apiLogin, apiLogout, apiUser } from 'services/api'
 import {
   LOG_IN,
   LOG_OUT,
@@ -8,7 +8,7 @@ import {
   loginFailed,
   requestUserSuccess,
   requestUserFailed,
-} from 'auth/duck'
+} from 'ducks/auth'
 
 export default function* rootSaga() {
   yield takeEvery(LOG_OUT, logOutSaga)

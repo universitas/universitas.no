@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { Error, Clear } from 'components/Icons'
-import { getErrors, clearError } from 'error/duck'
+import { getErrors, clearError } from 'ducks/error'
 import { timestamp as formatTimestamp } from 'utils/modelUtils'
 
 const errorToString = R.cond([

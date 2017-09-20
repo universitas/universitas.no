@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { logOut, logIn, getUser } from 'auth/duck'
+import { logOut, logIn, getUser } from 'ducks/auth'
 
 const UserTool = ({ first_name, last_name, username, logOut }) => (
   <div className="UserTool">

@@ -12,6 +12,7 @@ from pathlib import Path
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+from django.core.validators import FileExtensionValidator
 from django.core.files import File
 from django.conf import settings
 
@@ -29,6 +30,8 @@ from apps.issues.models import current_issue
 from .cropping.models import AutoCropImage
 
 logger = logging.getLogger(__name__)
+
+image_file_validator = FileExtensionValidator(['jpg', 'jpeg', 'png'])
 
 
 class BrokenImage:
@@ -116,6 +119,7 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
 
     source_file = thumbnail.ImageField(
         verbose_name=_('source file'),
+        validators=[image_file_validator],
         upload_to=upload_image_to,
         height_field='full_height',
         width_field='full_width',
