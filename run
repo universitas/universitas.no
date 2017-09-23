@@ -18,7 +18,6 @@ while (( $# > 0 )); do
 
   dumpdb  ) dump_db ;;  # dump postgresql database
   loaddb  ) load_db $rest; exit;;  # load database from dump file [filename]
-  mysqldb ) docker-compose run --rm -u django web dump_prodsys_db ;;  # dump legacy mysql database
 
   enable  ) enable_service ;; # enable systemd service file for web server - starts all docker images
   build   ) build_django ;;   # download and build all images, migrate database

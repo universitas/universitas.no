@@ -1,4 +1,4 @@
-"""Celery tasks for legacy db / prodsys"""
+"""Celery tasks for stories"""
 
 import logging
 from datetime import timedelta

@@ -26,7 +26,6 @@ django-rest-auth
 django-allauth
 
 # DATABASE LIBRARIES
-mysqlclient
 psycopg2
 redis
 hiredis
@@ -64,8 +63,6 @@ pytest
 pytest-xdist
 pytest-django
 selenium
-pylint
-pylint-django
 
 # DEBUGGING AND DEVELOPMENT
 Werkzeug

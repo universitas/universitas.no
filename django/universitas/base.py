@@ -66,7 +66,6 @@ INSTALLED_APPS = [
     'apps.frontpage',
     'apps.contributors',
     'apps.markup',
-    'apps.legacy_db',
     'apps.adverts',
     'apps.search',
 ]
@@ -107,11 +106,6 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Prodsys for universitas.
-PRODSYS_USER = env.prodsys_user
-PRODSYS_PASSWORD = env.prodsys_password
-PRODSYS_URL = env.prodsys_url
-
 WSGI_APPLICATION = 'universitas.wsgi.application'
 ROOT_URLCONF = 'universitas.urls'
 
@@ -137,7 +131,6 @@ THUMBNAIL_KEY_PREFIX = SITE_URL
 THUMBNAIL_URL_TIMEOUT = 3
 
 # DATABASE
-DATABASE_ROUTERS = ['apps.legacy_db.router.ProdsysRouter']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -146,14 +139,6 @@ DATABASES = {
         'PASSWORD': env.pg_password or 'postgres',
         'HOST': env.pg_host or 'postgres',
         'PORT': env.pg_port or '',  # Set to empty string for default.
-    },
-    'prodsys': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': env.prodsys_db_name,
-        'USER': env.prodsys_db_user,
-        'PASSWORD': env.prodsys_db_password,
-        'HOST': env.prodsys_db_host,
-        'PORT': env.prodsys_db_port or '',
     }
 }
 # CACHE

@@ -2,13 +2,11 @@
 
 from .dev import *  # noqa
 from .dev import (
-    DATABASES, DEBUG, INSTALLED_APPS, MIDDLEWARE_CLASSES, TEMPLATES,
-    WEBPACK_LOADER, env
+    DEBUG, INSTALLED_APPS, MIDDLEWARE_CLASSES, TEMPLATES, WEBPACK_LOADER, env
 )
 from .setting_helpers import Environment
 
 DEFAULT_FROM_EMAIL = 'localemail@localhost'
-# DATABASES['prodsys'].update({'HOST': 'localhost', })
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8000'
@@ -66,12 +64,6 @@ if DEBUG:
         },
         "SHOW_TOOLBAR_CALLBACK": lambda request: True
     }
-
-# DATABASE_ROUTERS = []
-DATABASES['prodsys'] = {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': 'prodsys.sqlite3.db',
-}
 
 WEBPACK_LOADER['DEFAULT'].update({
     'CACHE': not DEBUG,
