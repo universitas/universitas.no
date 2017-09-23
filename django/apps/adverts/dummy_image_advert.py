@@ -2,8 +2,10 @@
 import io
 import os
 import random
-from PIL import Image, ImageEnhance, ImageDraw, ImageFont
 from colorsys import hls_to_rgb
+
+from PIL import Image, ImageDraw, ImageEnhance, ImageFont
+
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 FONT_FILE = os.path.join(os.path.dirname(__file__), 'arial.ttf')
@@ -21,11 +23,8 @@ def dummy_image_advert(width, height, watermarktext, labeltext):
     img.mode = 'RGB'
     img.save(img_io, format='JPEG')
     filename = '{name:_<18}{w}x{h}.jpg'.format(
-        name=labeltext,
-        w=width,
-        h=height).replace(
-        ' ',
-        '-').lower()
+        name=labeltext, w=width, h=height
+    ).replace(' ', '-').lower()
     # print(filename)
 
     django_file = InMemoryUploadedFile(
@@ -44,8 +43,9 @@ def random_color():
     hue = random.randint(0, 256) / 256
     lightness = random.randint(100, 150) / 256
     saturation = random.randint(50, 220) / 256
-    rgb = tuple(int(value * 256)
-                for value in hls_to_rgb(hue, lightness, saturation))
+    rgb = tuple(
+        int(value * 256) for value in hls_to_rgb(hue, lightness, saturation)
+    )
     return rgb
 
 
@@ -88,10 +88,7 @@ def watermark(img, mark, position, opacity=1):
                 layer.paste(mark, (x, y))
     elif position == 'scale':
         # scale, but preserve the aspect ratio
-        ratio = min(
-            img.size[0] / mark.size[0],
-            img.size[1] / mark.size[1]
-        )
+        ratio = min(img.size[0] / mark.size[0], img.size[1] / mark.size[1])
         w = int(mark.size[0] * ratio)
         h = int(mark.size[1] * ratio)
         mark = mark.resize((w, h))

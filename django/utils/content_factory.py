@@ -1,19 +1,17 @@
 """Populate app with randomly generated content"""
 import random
-
-from PIL import Image, ImageOps, ImageFilter, ImageChops
 from io import BytesIO
-from faker import Factory
+from math import sqrt
 from pathlib import Path
 
+from PIL import Image, ImageChops, ImageFilter, ImageOps
+
+from apps.contributors.models import Contributor
+from apps.photo.models import ImageFile, ProfileImage
+from apps.stories.models import Story, StoryImage, StoryType
 from django.core.files import File
 from django.utils import timezone
-from math import sqrt
-
-from apps.photo.models import ImageFile, ProfileImage
-from apps.stories.models import Story, StoryType, StoryImage
-from apps.contributors.models import Contributor
-
+from faker import Factory
 
 IMG = Image.open(Path(__file__).parent / 'triptych.jpg')
 fake = Factory.create('no')
@@ -123,7 +121,8 @@ def fake_story():
     photo_by = random_contributor()
     text_by = random_contributor()
     markup = '{}\n@bl: text: {}\n@bl: photo:{}'.format(
-        fake_story_content(), text_by, photo_by)
+        fake_story_content(), text_by, photo_by
+    )
 
     story = Story(
         story_type=random_storytype(),

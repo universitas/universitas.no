@@ -1,0 +1,22 @@
+.ItemGrid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  .GridItem {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    cursor: pointer;
+    padding: .5em;
+    border: 1px solid #ddd;
+    font-size: .8em;
+    min-height: 15em;
+    min-width: 15em;
+    img {
+      align-self: center;
+    }
+    &:hover {
+      background-color: #ddd;
+    }
+  }
+}

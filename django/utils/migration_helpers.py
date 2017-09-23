@@ -15,6 +15,7 @@ def reset_primary_key_index(table, pk="id"):
 
 def load_fixture(fixture_file):
     """load all items from fixture file"""
+
     def _load(apps, schema_editor):
         original_apps = serializers.python.apps
         serializers.python.apps = apps
@@ -22,7 +23,8 @@ def load_fixture(fixture_file):
         try:
             with open(fixture_file) as fixture:
                 objects = serializers.deserialize(
-                    'json', fixture, ignorenonexistent=True)
+                    'json', fixture, ignorenonexistent=True
+                )
                 for obj in objects:
                     obj.save()
                     tables.add(obj.object._meta.db_table)

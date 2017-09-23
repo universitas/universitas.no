@@ -1,17 +1,17 @@
 """ Photography and image files in the publication  """
 
+import json
 # Python standard library
 import logging
-import json
 
+from django.core.exceptions import ValidationError
 # Django core
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.core.exceptions import ValidationError
-from .boundingbox import CropBox
-
 # Third party apps
 from sorl import thumbnail
+
+from .boundingbox import CropBox
 
 logger = logging.getLogger(__name__)
 
@@ -104,9 +104,11 @@ class AutoCropImage(models.Model):
         except cls.DoesNotExist:
             pass
         else:
-            if all((self.cropping_method != self.CROP_PENDING,
-                    saved.cropping_method != self.CROP_PENDING,
-                    saved.crop_box != self.crop_box)):
+            if all((
+                self.cropping_method != self.CROP_PENDING,
+                saved.cropping_method != self.CROP_PENDING,
+                saved.crop_box != self.crop_box
+            )):
                 self.cropping_method = self.CROP_MANUAL
 
         super().save(*args, **kwargs)
@@ -115,9 +117,8 @@ class AutoCropImage(models.Model):
         geometry = '{}x{}'.format(width, height)
         try:
             return thumbnail.get_thumbnail(
-                self.source_file,
-                geometry,
-                crop_box=self.get_crop_box()).url
+                self.source_file, geometry, crop_box=self.get_crop_box()
+            ).url
         except Exception as e:
             msg = 'Thumbnail failed: {} {}'.format(e, self.source_file)
             logger.warn(msg)

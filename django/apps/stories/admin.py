@@ -1,93 +1,104 @@
 """ Admin for stories app.  """
 
-from django.utils.translation import ugettext_lazy as _
+from apps.frontpage.models import FrontpageStory
+from apps.photo.admin import ThumbAdmin
+from autocomplete_light.forms import modelform_factory
 from django.contrib import admin
 from django.db import models
 from django.forms import Textarea, TextInput
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
+
+from .models import (
+    Aside, Byline, InlineHtml, InlineLink, Pullquote, Section, Story,
+    StoryImage, StoryType, StoryVideo
+)
+
 # from django.utils.html import format_html_join
 # from apps.photo.models import ImageFile
 # from sorl.thumbnail.admin import AdminImageMixin
 
-from autocomplete_light.forms import modelform_factory
-
-from apps.photo.admin import ThumbAdmin
-from apps.frontpage.models import FrontpageStory
-
-from .models import (
-    Byline,
-    Aside,
-    Pullquote,
-    Story,
-    StoryType,
-    Section,
-    StoryImage,
-    InlineLink,
-    StoryVideo,
-    InlineHtml)
-
 
 class SmallTextArea:
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})},
-        models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})},
+        models.TextField: {
+            'widget': Textarea(attrs={'rows': 5,
+                                      'cols': 30})
+        },
+        models.CharField: {
+            'widget': Textarea(attrs={'rows': 5,
+                                      'cols': 30})
+        },
     }
 
 
 class BylineInline(admin.TabularInline):
     form = modelform_factory(Byline, exclude=())
     model = Byline
-    fields = ('ordering', 'credit', 'contributor', 'title', )
+    fields = (
+        'ordering',
+        'credit',
+        'contributor',
+        'title',
+    )
     extra = 0
     max_num = 20
     formfield_overrides = {
         models.CharField: {
-            'widget': TextInput(
-                attrs={
-                    'style': 'width:400px;'})},
+            'widget': TextInput(attrs={'style': 'width:400px;'})
+        },
     }
 
 
 class FrontpageStoryInline(SmallTextArea, admin.TabularInline, ThumbAdmin):
     form = modelform_factory(FrontpageStory, exclude=())
     model = FrontpageStory
-    fields = ('headline', 'kicker', 'lede', 'imagefile', 'full_thumb',),
+    fields = (
+        'headline',
+        'kicker',
+        'lede',
+        'imagefile',
+        'full_thumb',
+    ),
     readonly_fields = ('full_thumb', )
     extra = 0
 
 
-class AsideInline(admin.TabularInline, ):
+class AsideInline(
+    admin.TabularInline,
+):
     model = Aside
     formfield_overrides = {
         models.TextField: {
-            'widget': Textarea(
-                attrs={
-                    'rows': 6,
-                    'cols': 80})},
+            'widget': Textarea(attrs={'rows': 6,
+                                      'cols': 80})
+        },
     }
     extra = 0
 
 
-class HtmlInline(admin.TabularInline, ):
+class HtmlInline(
+    admin.TabularInline,
+):
     model = InlineHtml
     formfield_overrides = {
         models.TextField: {
-            'widget': Textarea(
-                attrs={
-                    'rows': 6,
-                    'cols': 80})},
+            'widget': Textarea(attrs={'rows': 6,
+                                      'cols': 80})
+        },
     }
     extra = 0
 
 
-class PullquoteInline(admin.TabularInline, ):
+class PullquoteInline(
+    admin.TabularInline,
+):
     model = Pullquote
     formfield_overrides = {
         models.TextField: {
-            'widget': Textarea(
-                attrs={
-                    'rows': 2,
-                    'cols': 80})},
+            'widget': Textarea(attrs={'rows': 2,
+                                      'cols': 80})
+        },
     }
     extra = 0
 
@@ -99,14 +110,15 @@ class LinkInline(admin.TabularInline):
     extra = 0
 
 
-class VideoInline(admin.TabularInline, ):
+class VideoInline(
+    admin.TabularInline,
+):
     model = StoryVideo
     formfield_overrides = {
         models.CharField: {
-            'widget': Textarea(
-                attrs={
-                    'rows': 5,
-                    'cols': 30})},
+            'widget': Textarea(attrs={'rows': 5,
+                                      'cols': 30})
+        },
     }
     fields = [
         'top',
@@ -120,11 +132,15 @@ class VideoInline(admin.TabularInline, ):
     extra = 0
 
 
-class ImageInline(admin.TabularInline, ThumbAdmin, ):
+class ImageInline(
+    admin.TabularInline,
+    ThumbAdmin,
+):
     form = modelform_factory(StoryImage, exclude=())
     formfield_overrides = {
         models.CharField: {
-            'widget': Textarea(attrs={'rows': 5, 'cols': 30})
+            'widget': Textarea(attrs={'rows': 5,
+                                      'cols': 30})
         },
     }
     model = StoryImage
@@ -155,7 +171,9 @@ def make_frontpage_story(modeladmin, request, queryset):
 
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
-    actions = [make_frontpage_story, ]
+    actions = [
+        make_frontpage_story,
+    ]
     date_hierarchy = 'publication_date'
     actions_on_top = True
     actions_on_bottom = True
@@ -163,45 +181,78 @@ class StoryAdmin(admin.ModelAdmin):
     list_per_page = 25
     list_filter = ['language', 'publication_status']
     list_display = [
-        'id', 'modified', 'title', 'kicker', 'lede',
+        'id',
+        'modified',
+        'title',
+        'kicker',
+        'lede',
         # 'theme_word',
-        'hot_count', 'hit_count', 'language',
-        'story_type', 'publication_date', 'publication_status',
+        'hot_count',
+        'hit_count',
+        'language',
+        'story_type',
+        'publication_date',
+        'publication_status',
         # 'display_bylines', 'image_count'
     ]
 
     # list_editable = [ 'publication_status', ]
 
     readonly_fields = [
-        'legacy_html_source',
-        'legacy_prodsys_source',
-        'get_html'
+        'legacy_html_source', 'legacy_prodsys_source', 'get_html'
     ]
 
     formfield_overrides = {
-        models.CharField: {'widget': Textarea(attrs={'rows': 2, 'cols': 30})},
-        models.TextField: {'widget': Textarea(attrs={'rows': 20, 'cols': 60})},
+        models.CharField: {
+            'widget': Textarea(attrs={'rows': 2,
+                                      'cols': 30})
+        },
+        models.TextField: {
+            'widget': Textarea(attrs={'rows': 20,
+                                      'cols': 60})
+        },
     }
 
     fieldsets = (
-        ('header', {
-            'fields': (
-                ('title', 'kicker', 'theme_word', 'language', ),
-                ('story_type', 'publication_date', 'publication_status',),
-            ),
-        }),
-        ('content', {
-            'classes': ('collapsible',),
-            'fields': (('lede', 'bodytext_markup',), ),
-        }),
+        (
+            'header', {
+                'fields': (
+                    (
+                        'title',
+                        'kicker',
+                        'theme_word',
+                        'language',
+                    ),
+                    (
+                        'story_type',
+                        'publication_date',
+                        'publication_status',
+                    ),
+                ),
+            }
+        ),
+        (
+            'content', {
+                'classes': ('collapsible', ),
+                'fields': ((
+                    'lede',
+                    'bodytext_markup',
+                ), ),
+            }
+        ),
         ('preview', {
-            'classes': ('collapse',),
+            'classes': ('collapse', ),
             'fields': (('get_html'), ),
         }),
-        ('source', {
-            'classes': ('collapse',),
-            'fields': (('legacy_html_source', 'legacy_prodsys_source', ), ),
-        }),
+        (
+            'source', {
+                'classes': ('collapse', ),
+                'fields': ((
+                    'legacy_html_source',
+                    'legacy_prodsys_source',
+                ), ),
+            }
+        ),
     )
 
     inlines = [
@@ -238,13 +289,9 @@ class SectionAdmin(admin.ModelAdmin):
         'title',
     )
 
-    list_editable = (
-        'title',
-    )
+    list_editable = ('title', )
 
-    inlines = (
-        StoryTypeInline,
-    )
+    inlines = (StoryTypeInline, )
 
 
 @admin.register(StoryType)
@@ -264,8 +311,7 @@ class StoryTypeAdmin(admin.ModelAdmin):
         # 'prodsys_mappe',
     )
 
-    raw_id_fields = (
-        # 'template',
+    raw_id_fields = (  # 'template',
     )
 
 
@@ -284,8 +330,7 @@ class BylineAdmin(admin.ModelAdmin):
         'title',
     )
 
-    raw_id_fields = (
-        # 'story',
+    raw_id_fields = (  # 'story',
         # 'contributor',
     )
 
@@ -323,4 +368,4 @@ class LinkAdmin(admin.ModelAdmin):
         'alt_text',
         # 'href',
     )
-    list_filter = ('status_code',)
+    list_filter = ('status_code', )

@@ -1,9 +1,10 @@
 """ Django settings for universitas_no project. """
 
 from django.utils.translation import ugettext_lazy as _
-from .setting_helpers import Environment, joinpath as path
-from .logging_settings import LOGGING  # NOQA
 
+from .logging_settings import LOGGING  # NOQA
+from .setting_helpers import joinpath as path
+from .setting_helpers import Environment
 
 env = Environment(strict=False)
 redis_host = env.redis_host or 'redis'
@@ -21,12 +22,15 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PAGINATION_CLASS': (
-        'rest_framework.pagination.LimitOffsetPagination'),
+        'rest_framework.pagination.LimitOffsetPagination'
+    ),
     'PAGE_SIZE': 50,
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',),
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ),
     'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',),
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
 }
 
 # SENTRY
@@ -53,7 +57,6 @@ CELERY_BROKER_CONNECTION_TIMEOUT = 10
 # STATIC_ROOT = 'static'
 # MEDIA_ROOT = 'media'
 
-
 # CUSTOM APPS
 INSTALLED_APPS = [
     'apps.issues',
@@ -66,7 +69,6 @@ INSTALLED_APPS = [
     'apps.legacy_db',
     'apps.adverts',
     'apps.search',
-    # 'apps.prodsys',
 ]
 
 # THIRD PARTY APPS
@@ -143,7 +145,7 @@ DATABASES = {
         'USER': env.pg_user or 'postgres',
         'PASSWORD': env.pg_password or 'postgres',
         'HOST': env.pg_host or 'postgres',
-        'PORT': env.pg_port or '',       # Set to empty string for default.
+        'PORT': env.pg_port or '',  # Set to empty string for default.
     },
     'prodsys': {
         'ENGINE': 'django.db.backends.mysql',
@@ -209,7 +211,9 @@ FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [path('templates'), ],
+        'DIRS': [
+            path('templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'debug': DEBUG,
@@ -241,12 +245,8 @@ WEBPACK_LOADER = {
     }
 }
 
-
 NOTEBOOK_ARGUMENTS = [
-    '--no-browser',
-    '--port=8888',
-    '--ip=0.0.0.0',
-    '--NotebookApp.token=""',
+    '--no-browser', '--port=8888', '--ip=0.0.0.0', '--NotebookApp.token=""',
     '--NotebookApp.password="{}"'.format(env.NOTEBOOK_PASSWORD),
     '--notebook-dir',
     path('notebooks')

@@ -1,16 +1,15 @@
 # pylint: disable=logging-format-interpolation
 
+import logging
 import re
 
 from django.utils.text import slugify
 from django.utils.timezone import datetime
 
-import logging
 logger = logging.getLogger(__name__)
 
 
 class ImageFile(object):
-
     def __init__(self, fullpath, filesize, filedate, issue, year):
         self.created_date = filedate
         self.year = int(year)
@@ -61,12 +60,12 @@ def main():
         # logger.debug("{} {} {}".format(size, unix_timestamp, path))
         year_issue_match = (
             re.match(
-                r'\./(?P<year>\d{4})/(?P<issue>\d{1,2})/(?P=issue)\D',
-                filepath) or re.match(
-                r'\./(?P<year>\d{4})/(?P<issue>\d{1,2})/',
-                filepath) or re.match(
-                r'\./(?P<year>\d{4})/(?P<issue>\d{2})[^\d/]',
-                filepath) or None)
+                r'\./(?P<year>\d{4})/(?P<issue>\d{1,2})/(?P=issue)\D', filepath
+            ) or re.match(r'\./(?P<year>\d{4})/(?P<issue>\d{1,2})/', filepath)
+            or
+            re.match(r'\./(?P<year>\d{4})/(?P<issue>\d{2})[^\d/]', filepath)
+            or None
+        )
         if year_issue_match:
             # matchvalue = 1
             year = year_issue_match.group('year')
@@ -84,11 +83,8 @@ def main():
 
         if year and issue:
             image_file = ImageFile(
-                filepath,
-                filesize_in_bytes,
-                filedate,
-                issue,
-                year)
+                filepath, filesize_in_bytes, filedate, issue, year
+            )
             if filename in imagedict:
                 # old_filepath = imagedict[filename]
                 duplicates += 1
@@ -99,7 +95,8 @@ def main():
             logger.debug(msg)
 
     msg = 'all: {0} placed: {1} duplicates: {2}'.format(
-        len(images), len(imagedict), duplicates)
+        len(images), len(imagedict), duplicates
+    )
     logger.debug(msg)
 
 

@@ -2,10 +2,11 @@
 
 from .dev import *  # noqa
 from .dev import (
-    TEMPLATES,
-    WEBPACK_LOADER, DEBUG, INSTALLED_APPS, MIDDLEWARE_CLASSES, DATABASES, env
+    DATABASES, DEBUG, INSTALLED_APPS, MIDDLEWARE_CLASSES, TEMPLATES,
+    WEBPACK_LOADER, env
 )
 from .setting_helpers import Environment
+
 DEFAULT_FROM_EMAIL = 'localemail@localhost'
 # DATABASES['prodsys'].update({'HOST': 'localhost', })
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -13,8 +14,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8000'
 ALLOWED_HOSTS = '*'
 # TOOLBAR CONFIGURATION
-INSTALLED_APPS += ['debug_toolbar', ]
-MIDDLEWARE_CLASSES += ['debug_toolbar.middleware.DebugToolbarMiddleware', ]
+INSTALLED_APPS += [
+    'debug_toolbar',
+]
+MIDDLEWARE_CLASSES += [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+]
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
@@ -23,7 +28,6 @@ STATIC_ROOT = env.STATIC_DIR or '/static/'
 STATIC_URL = '/static/'
 
 TEMPLATES[0]['OPTIONS']['string_if_invalid'] = 'INVALID'  # type: ignore
-
 
 aws = Environment('AWS')
 try:
@@ -41,7 +45,9 @@ try:
     AWS_S3_USE_SSL = False
 
     MEDIA_URL = "http://{host}/{media}/".format(
-        host=AWS_S3_CUSTOM_DOMAIN, media='media', )
+        host=AWS_S3_CUSTOM_DOMAIN,
+        media='media',
+    )
 
 except AttributeError:
     # Use File system in local development instead of Amanon S3
@@ -49,7 +55,6 @@ except AttributeError:
     THUMBNAIL_STORAGE = 'utils.local_file_storage.OverwriteStorage'
     MEDIA_ROOT = env.MEDIA_DIR or '/media/'
     MEDIA_URL = '/media/'
-
 
 if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {

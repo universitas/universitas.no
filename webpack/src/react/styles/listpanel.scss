@@ -1,0 +1,85 @@
+@import 'storylist';
+$darkgrey: #555;
+.ListPanel {
+  flex: 1;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  .itemList {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    overflow-y: scroll;
+  }
+  table{
+    thead {
+      width: calc(100% - 16px);
+    }
+    tbody {
+      flex: 1;
+      overflow-y: scroll;
+    }
+    tr {
+      width: 100%;
+      display: table;
+      table-layout: fixed;
+    }
+  }
+  .TopBar, .BottomBar {
+    background-color: lighten($darkgrey, 40%);
+    // align-content: flex-start;
+    // align-items: space-around;
+    // justify-content: space-between;
+    .Filters, .Navigation {
+      flex-wrap: wrap;
+      display: flex;
+      margin: 0.2em;
+      // align-content: center;
+      // justify-content: stretch;
+      align-items: center;
+    }
+    .info, button {
+      font-size: 0.8em;
+      padding: 0.5em;
+      margin: 0.2em;
+    }
+    .info {
+      flex: 1;
+      min-width: 10em;
+    }
+    button {
+      $color: lighten(blue, 15);
+      outline: none;
+      color: white;
+      border-radius: 0.5em;
+      background-color: $color;
+      cursor: pointer;
+      &.inactive {
+        background-color: scale_color($color, $lightness: -20, $saturation: -60);
+      }
+      &:hover {
+        background-color: scale_color($color, $saturation: 100, $lightness: 15);
+      }
+      &:disabled {
+        background-color: scale_color($color, $lightness: 20, $saturation: -90);
+        cursor: inherit;
+      }
+    }
+  }
+  .SearchField {
+    flex: 1;
+    display: flex;
+    // align-items: stretch;
+    button {
+      flex-grow: 0;
+    }
+    input {
+      flex: 1;
+      border: 1px solid #999;
+      padding: 0.1em 0.3em;
+      border-radius: 0.2em;
+      margin: 0.1em 0.2em;
+    }
+  }
+}

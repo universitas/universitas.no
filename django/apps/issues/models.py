@@ -1,37 +1,36 @@
 """ Content in the publication. """
 
+import collections
+import datetime
+import logging
+import os
+import os.path
 # pylint: disable=no-member
 # Python standard library
 import re
-import os
-import datetime
-from io import BytesIO
-import logging
-import collections
 import subprocess
 import unicodedata
 import uuid
+from io import BytesIO
 from pathlib import Path
 
+import boto
+# Installed apps
+import PyPDF2
+from django.conf import settings
+from django.core.files.base import ContentFile
+from django.db import models
+from django.db.models.signals import pre_delete, pre_save
+from django.dispatch.dispatcher import receiver
 # Django core
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django.db import models
-from django.conf import settings
-from django.db.models.signals import pre_delete, pre_save
-from django.dispatch.dispatcher import receiver
-from django.core.files.base import ContentFile
-
-# Installed apps
-import PyPDF2
-import boto
 from sorl import thumbnail
-from wand.image import Image as WandImage
+from utils.model_mixins import Edit_url_mixin
 from wand.color import Color
 from wand.drawing import Drawing
-import os.path
+from wand.image import Image as WandImage
 
-from utils.model_mixins import Edit_url_mixin
 logger = logging.getLogger('universitas')
 IssueTuple = collections.namedtuple('IssueTuple', ['number', 'date'])
 
@@ -70,7 +69,10 @@ def pdf_to_text(pdf, first_page=1, last_page=None):
     finally:
         pdf.close()
     text = subprocess.run(
-        args, check=True, stdout=subprocess.PIPE, input=pdf_data,
+        args,
+        check=True,
+        stdout=subprocess.PIPE,
+        input=pdf_data,
     ).stdout.decode()
     text = unicodedata.normalize('NFKD', text).strip()
     text = re.sub(r'\s*\n[\r\n \t]*', '\n', text)
@@ -79,8 +81,9 @@ def pdf_to_text(pdf, first_page=1, last_page=None):
 
 def get_dims(pdf_page):
     box = pdf_page.cropBox
-    width, height = (float(a - b)
-                     for a, b in zip(box.upperRight, box.lowerLeft))
+    width, height = (
+        float(a - b) for a, b in zip(box.upperRight, box.lowerLeft)
+    )
     return (width, height)
 
 
@@ -128,6 +131,7 @@ def pdf_to_image(pdf, page=1, size=800, file_format='jpeg'):
 
 def error_image(msg, width=420, height=600):
     """Creates an error frontpage"""
+    width, height = int(width), int(height)
     img = WandImage(width=width, height=height)
     with Drawing() as draw:
         draw.text_alignment = 'center'
@@ -161,7 +165,6 @@ def today():
 
 
 class IssueQueryset(models.QuerySet):
-
     def published(self):
         query = self.filter(publication_date__lte=timezone.localdate())
         return query
@@ -184,7 +187,6 @@ class IssueQueryset(models.QuerySet):
 
 
 class Issue(models.Model, Edit_url_mixin):
-
     """ Past or future print issue """
 
     objects = IssueQueryset.as_manager()
@@ -199,25 +201,18 @@ class Issue(models.Model, Edit_url_mixin):
         (SPECIAL, _('Welcome special')),
     ]
 
-    publication_date = models.DateField(
-        default=today,
-        blank=True,
-        null=True)
-    issue_name = models.CharField(
-        max_length=100,
-        editable=False,
-        blank=True)
+    publication_date = models.DateField(default=today, blank=True, null=True)
+    issue_name = models.CharField(max_length=100, editable=False, blank=True)
     issue_type = models.PositiveSmallIntegerField(
-        choices=ISSUE_TYPES,
-        default=REGULAR)
+        choices=ISSUE_TYPES, default=REGULAR
+    )
 
     class Meta:
         ordering = ['-publication_date']
 
     def __str__(self):
         if self.issue_type != Issue.REGULAR:
-            description = ' ({})'.format(
-                self.get_issue_type_display())
+            description = ' ({})'.format(self.get_issue_type_display())
         else:
             description = ''
 
@@ -259,7 +254,6 @@ class Issue(models.Model, Edit_url_mixin):
 
 
 class PrintIssue(models.Model, Edit_url_mixin):
-
     """ PDF file of a printed newspaper. """
 
     class Meta:
@@ -267,13 +261,12 @@ class PrintIssue(models.Model, Edit_url_mixin):
         verbose_name = _('Pdf issue')
         verbose_name_plural = _('Pdf issues')
 
-    issue = models.ForeignKey(
-        Issue, related_name='pdfs'
-    )
+    issue = models.ForeignKey(Issue, related_name='pdfs')
 
     pages = models.IntegerField(
         help_text='Number of pages',
-        editable=False,)
+        editable=False,
+    )
 
     pdf = models.FileField(
         help_text=_('Pdf file for this issue.'),
@@ -317,25 +310,23 @@ class PrintIssue(models.Model, Edit_url_mixin):
 
         super().save(*args, **kwargs)
 
-    def get_cover_page(self):
+    def get_cover_page(self, size=800):
         """ Get or create a jpg version of the pdf frontpage """
         if self.pdf and not self.cover_page:
             filename = Path(self.pdf.name).with_suffix('.jpg').name
             try:
-                cover_image = pdf_to_image(self.pdf.file, page=1, size=600)
+                cover_image = pdf_to_image(self.pdf.file, page=1, size=size)
             except Exception as e:
                 raise e
                 logger.exception('Failed to create cover')
                 msg = 'ERROR:\n{}\nnot found on disk'.format(self.pdf.name)
-                cover_image = error_image(msg, 420, 600)
+                cover_image = error_image(msg, (size * 70 / 100), size)
                 filename = filename.replace('.jpg', '_not_found.jpg')
 
             blob = BytesIO()
             cover_image.save(blob)
             self.cover_page.save(
-                filename,
-                ContentFile(blob.getvalue()),
-                save=True
+                filename, ContentFile(blob.getvalue()), save=True
             )
         return self.cover_page
 
@@ -359,10 +350,21 @@ class PrintIssue(models.Model, Edit_url_mixin):
     def get_publication_date(self):
         dateline_regex = (
             r'^\d(?P<day>\w+) (?P<date>\d{1,2})\.'
-            r' (?P<month>\w+) (?P<year>\d{4})')
+            r' (?P<month>\w+) (?P<year>\d{4})'
+        )
         MONTHS = [
-            'januar', 'februar', 'mars', 'april', 'mai', 'juni',
-            'juli', 'august', 'september', 'oktober', 'november', 'desember',
+            'januar',
+            'februar',
+            'mars',
+            'april',
+            'mai',
+            'juni',
+            'juli',
+            'august',
+            'september',
+            'oktober',
+            'november',
+            'desember',
         ]
         page_2_text = self.get_page_text_content(2)
         dateline = re.match(dateline_regex, page_2_text)
@@ -375,13 +377,15 @@ class PrintIssue(models.Model, Edit_url_mixin):
             # Finds creation date.
             try:
                 created = datetime.date.fromtimestamp(
-                    os.path.getmtime(self.pdf.path))
+                    os.path.getmtime(self.pdf.path)
+                )
             except NotImplementedError:
                 key = self.pdf.file.key
                 created = boto.utils.parse_ts(key.last_modified)
             # Sets creation date as a Wednesday, if needed.
             created = created + datetime.timedelta(
-                days=3 - created.isoweekday())
+                days=3 - created.isoweekday()
+            )
         return created
 
     def get_absolute_url(self):

@@ -1,8 +1,8 @@
-from apps.stories.models import Story, Byline, StoryType
+from apps.stories.models import Byline, Story, StoryType
+from django.core.exceptions import FieldError
 from rest_framework import serializers, viewsets
 from rest_framework.filters import SearchFilter
 from url_filter.integrations.drf import DjangoFilterBackend
-from django.core.exceptions import FieldError
 
 
 class BylineSerializer(serializers.ModelSerializer):
@@ -20,7 +20,6 @@ class BylineSerializer(serializers.ModelSerializer):
 
 
 class StoryTypeSerializer(serializers.ModelSerializer):
-
     """ModelSerializer for StoryType"""
 
     class Meta:
@@ -36,7 +35,6 @@ class StoryTypeSerializer(serializers.ModelSerializer):
 
 
 class StorySerializer(serializers.HyperlinkedModelSerializer):
-
     """ModelSerializer for Story"""
 
     byline_set = BylineSerializer(
@@ -82,8 +80,8 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
 
     def update(self, instance, validated_data):
         clean_model = (
-            validated_data.pop('clean', False) or
-            'publication_status' in validated_data
+            validated_data.pop('clean', False)
+            or 'publication_status' in validated_data
         )
 
         story = super().update(instance, validated_data)
@@ -94,7 +92,6 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class QueryOrderableViewSetMixin(object):
-
     def get_queryset(self):
         queryset = super().get_queryset()
         order_by = self.request.query_params.get('order_by', '').split(',')
@@ -109,7 +106,6 @@ class QueryOrderableViewSetMixin(object):
 
 
 class StoryTypeViewSet(viewsets.ModelViewSet):
-
     """ API endpoint that allows StoryType to be viewed or updated.  """
 
     queryset = StoryType.objects.all().prefetch_related('section')
@@ -117,7 +113,6 @@ class StoryTypeViewSet(viewsets.ModelViewSet):
 
 
 class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
-
     """ API endpoint that allows Story to be viewed or updated.  """
 
     filter_backends = [DjangoFilterBackend, SearchFilter]

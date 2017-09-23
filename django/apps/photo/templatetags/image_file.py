@@ -2,6 +2,7 @@
 
 from django import template
 from sorl import thumbnail
+
 register = template.Library()
 
 

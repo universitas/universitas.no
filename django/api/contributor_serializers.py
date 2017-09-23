@@ -4,7 +4,6 @@ from url_filter.integrations.drf import DjangoFilterBackend
 
 
 class StintSerializer(serializers.ModelSerializer):
-
     """ModelSerializer for Stint"""
 
     class Meta:
@@ -14,6 +13,7 @@ class StintSerializer(serializers.ModelSerializer):
             'start_date',
             'end_date',
         ]
+
     position = serializers.SlugRelatedField(
         read_only=True,
         slug_field='title',
@@ -21,7 +21,6 @@ class StintSerializer(serializers.ModelSerializer):
 
 
 class ContributorSerializer(serializers.HyperlinkedModelSerializer):
-
     """ModelSerializer for Contributor"""
 
     class Meta:
@@ -42,7 +41,7 @@ class ContributorSerializer(serializers.HyperlinkedModelSerializer):
     byline_photo = serializers.HyperlinkedRelatedField(
         many=False,
         read_only=True,
-        view_name='imagefile-detail'
+        view_name='imagefile-detail',
     )
     stint_set = StintSerializer(many=True, read_only=True)
     thumb = serializers.SerializerMethodField()
@@ -56,12 +55,10 @@ class ContributorSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ContributorViewSet(viewsets.ModelViewSet):
-
     """API endpoint that allows Contributor to be viewed or updated."""
 
     queryset = Contributor.objects.all().prefetch_related(
-        'stint_set__position',
-        'byline_photo',
+        'stint_set__position', 'byline_photo'
     )
     serializer_class = ContributorSerializer
     filter_backends = [DjangoFilterBackend]

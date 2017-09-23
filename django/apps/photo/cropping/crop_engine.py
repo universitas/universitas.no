@@ -1,7 +1,9 @@
+import logging
+
 from sorl.thumbnail.engines.wand_engine import Engine as WandEngine
+
 from .boundingbox import Box, CropBox
 
-import logging
 logger = logging.getLogger(__name__)
 
 
@@ -11,10 +13,15 @@ def close_crop(x, y, left, right, top, bottom, aspect_ratio):
     a = w / h
     W = 0.5 * min(A, 1, w if a > A else h * A)
     H = W / A
-    X, Y = [sorted(c)[1] for c in (
-        ((W, (l + r) / 2, 1 - W), (l + W, x, r - W))[W * 2 < w],
-        ((H, (t + b) / 2, 1 - H), (t + H, y, b - H))[H * 2 < h]
-    )]
+    X, Y = [
+        sorted(c)[1]
+        for c in (((W,
+                    (l + r) / 2, 1 - W),
+                   (l + W, x, r - W))[W * 2 < w], ((H,
+                                                    (t + b) / 2, 1 - H),
+                                                   (t + H, y,
+                                                    b - H))[H * 2 < h])
+    ]
     return Box(X - W, Y - H, X + W, Y + H)
 
 
@@ -41,7 +48,6 @@ def calculate_crop(width, height, crop_width, crop_height, crop_box, exp):
 
 
 class CloseCropEngine(WandEngine):
-
     def create(self, image, geometry, options):
         cropbox = options.pop('crop_box', None)
         try:
@@ -53,9 +59,12 @@ class CloseCropEngine(WandEngine):
 
         if cropbox:
             new_geometry = calculate_crop(
-                image.width, image.height,
-                geometry[0], geometry[1],
-                cropbox, expand,
+                image.width,
+                image.height,
+                geometry[0],
+                geometry[1],
+                cropbox,
+                expand,
             )
             image.crop(*new_geometry)
 

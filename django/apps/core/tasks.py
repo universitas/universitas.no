@@ -1,9 +1,10 @@
 """Celery tasks"""
-from celery.task import periodic_task
-from datetime import timedelta
-import subprocess
-
 import logging
+import subprocess
+from datetime import timedelta
+
+from celery.task import periodic_task
+
 logger = logging.getLogger(__name__)
 
 # @periodic_task(run_every=timedelta(seconds=10))

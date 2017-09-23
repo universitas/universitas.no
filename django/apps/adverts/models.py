@@ -1,34 +1,32 @@
+import logging
 import re
-from django.db import models
-from slugify import Slugify
 
-# from model_utils.models import TimeStampedModel
-from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.utils import timezone
 from django.utils.safestring import mark_safe
-
+from django.utils.translation import ugettext_lazy as _
+from slugify import Slugify
 from sorl.thumbnail import ImageField, get_thumbnail
 
 from .dummy_image_advert import dummy_image_advert
 
-import logging
 logger = logging.getLogger(__name__)
 
 
 class AdFormat(models.Model):
-
     """ Size and shape of ad. """
 
     PRINT, WEB = 1, 2
-    CATEGORY_CHOICES = [(PRINT, _('print')), (WEB, _('web')), ]
+    CATEGORY_CHOICES = [
+        (PRINT, _('print')),
+        (WEB, _('web')),
+    ]
 
     name = models.CharField(unique=True, max_length=50)
     width = models.PositiveSmallIntegerField()
     height = models.PositiveSmallIntegerField()
-    price = models.PositiveIntegerField(
-        help_text=_('display price'),
-    )
+    price = models.PositiveIntegerField(help_text=_('display price'), )
     published = models.BooleanField(default=True)
     category = models.PositiveSmallIntegerField(
         default=WEB,
@@ -43,12 +41,10 @@ class AdFormat(models.Model):
 
     def __str__(self):
         unit = 'px' if self.category == self.WEB else 'mm'
-        return '{s.name} ({s.width}{u} × {s.height}{u})'.format(
-            s=self, u=unit)
+        return '{s.name} ({s.width}{u} × {s.height}{u})'.format(s=self, u=unit)
 
 
 class AdChannel(models.Model):
-
     """ Location for ads to be placed. """
 
     name = models.CharField(
@@ -58,7 +54,6 @@ class AdChannel(models.Model):
     description = models.TextField(
         blank=True,
         null=True,
-
     )
     ad_formats = models.ManyToManyField(
         AdFormat,
@@ -117,7 +112,6 @@ class AdChannel(models.Model):
 
 
 class Customer(models.Model):
-
     """ Buyer of the ad """
 
     name = models.CharField(max_length=500)
@@ -132,7 +126,6 @@ class Customer(models.Model):
 
 
 class AdvertManager(models.Manager):
-
     def published_at(self, at_time=None):
         if at_time is None:
             at_time = timezone.now()
@@ -146,7 +139,8 @@ class AdvertManager(models.Manager):
         dummy_customer, new = Customer.objects.get_or_create(name='dummy')
 
         new_image = dummy_image_advert(
-            adformat.width, adformat.height,
+            adformat.width,
+            adformat.height,
             watermarktext='reklame',
             labeltext=adformat.name,
         )
@@ -166,12 +160,8 @@ class AdvertManager(models.Manager):
 
 def upload_folder(instance, filename):
     slugify = Slugify(to_lower=True)
-    customer_name = re.sub(
-        r'\s+',
-        '',
-        slugify(
-            instance.customer.name))[
-        :15].lower()
+    customer_name = re.sub(r'\s+', '',
+                           slugify(instance.customer.name))[:15].lower()
     path = '/'.join(['adverts', customer_name, filename])
     logger.debug(path)
     return path
@@ -186,7 +176,6 @@ def default_end_time():
 
 
 class Advert(models.Model):
-
     """ Individual ads """
 
     IMAGE_AD = 1
@@ -203,20 +192,17 @@ class Advert(models.Model):
     PUBLISHED = 3
     DEFAULT = 4
     STATUS_CHOICES = [
-        (DRAFT, _(
-            "Draft")),
-        (PRIVATE, _(
-            "Private")),
-        (PUBLISHED, _(
-            "Published")),
-        (DEFAULT, _(
-            "Fallback")),
+        (DRAFT, _("Draft")),
+        (PRIVATE, _("Private")),
+        (PUBLISHED, _("Published")),
+        (DEFAULT, _("Fallback")),
     ]
     description = models.CharField(
         help_text=_('Short description of this ad.'),
         blank=True,
         null=True,
-        max_length=100)
+        max_length=100
+    )
 
     customer = models.ForeignKey(
         Customer,
@@ -245,7 +231,6 @@ class Advert(models.Model):
     start_time = models.DateTimeField(
         help_text=_('When to start serving this ad'),
         default=default_start_time,
-
     )
     end_time = models.DateTimeField(
         help_text=_('When to stop serving this ad'),
@@ -259,7 +244,8 @@ class Advert(models.Model):
     )
     link = models.URLField(
         help_text=_('Image Ad: url that ad links to'),
-        blank=True, null=True,
+        blank=True,
+        null=True,
     )
     alt_text = models.CharField(
         help_text=_('Image ad: alternative text for image'),
@@ -269,7 +255,8 @@ class Advert(models.Model):
     )
     html_source = models.TextField(
         help_text=_('HTML to use for ad instead of serving an image ad.'),
-        blank=True, null=True,
+        blank=True,
+        null=True,
     )
     extra_classes = models.CharField(
         blank=True,
@@ -284,7 +271,8 @@ class Advert(models.Model):
     def __str__(self):
         try:
             return self.description or '{s.customer}: {s.start_time}'.format(
-                s=self)
+                s=self
+            )
         except Exception:
             return 'New Advert'
 
@@ -302,13 +290,15 @@ class Advert(models.Model):
         # if self.ad_type != self.DUMMY_AD:
         if self.status in [self.PUBLISHED, self.DEFAULT]:
             if self.ad_channels.count() == 0:
-                raise ValidationError(
-                    {'ad_channels': _(
+                raise ValidationError({
+                    'ad_channels': _(
                         'Choose one or more ad channels before publishing.'
-                    )})
+                    )
+                })
             if self.ad_type == self.DUMMY_AD:
                 raise ValidationError(
-                    _('Published ad must contain an image or html code.'))
+                    _('Published ad must contain an image or html code.')
+                )
 
             if self.ad_type == self.IMAGE_AD:
                 if not self.link:
@@ -337,7 +327,8 @@ class Advert(models.Model):
         except (AttributeError, FileNotFoundError):
             try:
                 value = getattr(
-                    self.ad_channels.first().ad_formats.first(), axis)
+                    self.ad_channels.first().ad_formats.first(), axis
+                )
             except AttributeError:
                 value = None
 
@@ -368,9 +359,7 @@ class Advert(models.Model):
             '<img src="{src}">'
             '</a>'
         )
-        div_template = (
-            '<div class="{html_class}">{content}</div>'
-        )
+        div_template = ('<div class="{html_class}">{content}</div>')
         if self.ad_type == self.CODE_AD:
             content = self.html_source
         elif self.ad_type == self.IMAGE_AD:
@@ -383,11 +372,10 @@ class Advert(models.Model):
         elif self.ad_type == self.DUMMY_AD:
             content = str(self)
         html_source = div_template.format(
-            html_class=html_class,
-            this=self,
-            content=content)
+            html_class=html_class, this=self, content=content
+        )
         return mark_safe(html_source)
 
     def channels(self):
-        return ','.join(
-            channel.name for channel in self.ad_channels.all()) or '-'
+        return ','.join(channel.name
+                        for channel in self.ad_channels.all()) or '-'

@@ -3,14 +3,13 @@
 
 import re
 
-from django.http import HttpResponseRedirect
 from django.conf import settings
-from django.views.generic.base import TemplateView
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.views.generic.base import TemplateView
 
 
 class TextTemplateView(TemplateView):
-
     """ Render plain text file. """
 
     def render_to_response(self, context, **response_kwargs):
@@ -19,14 +18,12 @@ class TextTemplateView(TemplateView):
 
 
 class HumansTxtView(TextTemplateView):
-
     """ humans.txt contains information about who made the site. """
 
     template_name = 'humans.txt'
 
 
 class RobotsTxtView(TextTemplateView):
-
     """ robots.txt contains instructions for webcrawler bots. """
 
     if settings.DEBUG:

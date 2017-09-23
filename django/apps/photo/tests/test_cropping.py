@@ -1,12 +1,13 @@
 """Tests of the cropping detectors."""
 
-import pytest
 import json
 from pathlib import PosixPath as Path
-from apps.photo.cropping.crop_detector import (
-    FeatureDetector, MockFeatureDetector, Feature, KeypointDetector, Cascade
-)
+
+import pytest
 from apps.photo.cropping.boundingbox import Box
+from apps.photo.cropping.crop_detector import (
+    Cascade, Feature, FeatureDetector, KeypointDetector, MockFeatureDetector
+)
 
 
 @pytest.fixture
@@ -49,8 +50,12 @@ def test_serialize_and_deserialize():
     dump = json.dumps(feature.serialize())
     data = json.loads(dump)
     assert data == {
-        "label": "hello", "x": 1, "y": 2,
-        "width": 3, "height": 7, "weight": 5
+        "label": "hello",
+        "x": 1,
+        "y": 2,
+        "width": 3,
+        "height": 7,
+        "weight": 5
     }
     clone = Feature.deserialize(data)
     assert clone == feature

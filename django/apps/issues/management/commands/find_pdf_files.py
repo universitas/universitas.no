@@ -2,15 +2,15 @@
 Find and add existing pdf issues to the database.
 """
 
-from django.core.management.base import BaseCommand  # ,CommandError
-from django.conf import settings
-
+import logging
 import os
 import re
 from glob import glob
-from apps.issues.models import PrintIssue
 
-import logging
+from apps.issues.models import PrintIssue
+from django.conf import settings
+from django.core.management.base import BaseCommand  # ,CommandError
+
 logger = logging.getLogger(__name__)
 
 
@@ -19,7 +19,8 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--replace_existing', '-x',
+            '--replace_existing',
+            '-x',
             action='store_true',
             dest='replace existing',
             default=False,
@@ -38,7 +39,8 @@ class Command(BaseCommand):
         os.chdir(settings.MEDIA_ROOT)
         files = glob('pdf/uni*.pdf')
         msg = 'found {} files in pdf folder {}/pdf'.format(
-            len(files), os.curdir)
+            len(files), os.curdir
+        )
         self.stdout.write(msg)
         counter = 0
 
@@ -47,7 +49,8 @@ class Command(BaseCommand):
             if new:
                 counter += 1
                 match = re.match(
-                    r'^.*(?P<year>\d{4})-(?P<number>.*)\.pdf$', path)
+                    r'^.*(?P<year>\d{4})-(?P<number>.*)\.pdf$', path
+                )
                 if match:
                     name = '{number}/{year}'.format(**match.groupdict())
                 else:
@@ -57,9 +60,9 @@ class Command(BaseCommand):
                 issue.get_thumbnail()
 
                 logger.info(
-                    'new pdf found {name} {filename}'.format(
-                        filename=path,
-                        name=name))
+                    'new pdf found {name} {filename}'.
+                    format(filename=path, name=name)
+                )
 
         if counter:
             msg = 'Successfully imported {} pdf files'.format(counter)

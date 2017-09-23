@@ -42,6 +42,11 @@ export const modelSelectors = partialMap({
       modelName,
       state
     ),
+  getChoices: R.pipe(
+    getSelector(itemsLens),
+    R.values,
+    R.map(({ id, name }) => ({ value: id, display_name: name }))
+  ),
 })
 
 // :: ActionType -> ( * -> Payload ) -> ModelName -> ActionCreator (fn)

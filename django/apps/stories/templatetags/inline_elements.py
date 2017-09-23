@@ -3,6 +3,7 @@ Template tags for inline story elements such as images, asides and pullquotes
 """
 
 import logging
+
 from django import template
 
 register = template.Library()
@@ -107,14 +108,15 @@ def get_items(queryset, argument_string):
             classes.append(FLAGS[arg])
         else:
             error_message = 'Unknown argument: {} in {}'.format(
-                arg,
-                argument_string)
+                arg, argument_string
+            )
             logger.warn(error_message)
             # raise template.TemplateSyntaxError(error_message)
 
     for index in indexes:
-        context['elements'].extend(
-            [i.child for i in queryset.filter(index=index)])
+        context['elements'].extend([
+            i.child for i in queryset.filter(index=index)
+        ])
 
     # context['css_classes'] = ' '.join(classes) or FLAGS['=']
     context['css_classes'] = ' '.join(classes) or 'inline-regular'

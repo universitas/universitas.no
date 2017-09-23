@@ -1,11 +1,13 @@
-from django.db.models.signals import pre_delete, post_save
+import logging
+
+from apps.photo import tasks
 from django.conf import settings
+from django.db.models.signals import post_save, pre_delete
 from sorl import thumbnail
+
 # from celery import chain
 # from apps.photo import tasks
 
-import logging
-from apps.photo import tasks
 logger = logging.getLogger(__name__)
 
 

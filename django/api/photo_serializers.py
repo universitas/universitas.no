@@ -1,11 +1,12 @@
-from apps.photo.models import ImageFile
-from django.db import models
-from rest_framework import serializers, viewsets, filters
-from rest_framework.exceptions import ValidationError
-from apps.photo.cropping.boundingbox import CropBox
-from django_filters.rest_framework import DjangoFilterBackend
 import json
 from pathlib import Path
+
+from apps.photo.cropping.boundingbox import CropBox
+from apps.photo.models import ImageFile
+from django.db import models
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, serializers, viewsets
+from rest_framework.exceptions import ValidationError
 
 
 class jsonDict(dict):
@@ -14,7 +15,6 @@ class jsonDict(dict):
 
 
 class CropBoxField(serializers.Field):
-
     def to_representation(self, obj):
         return jsonDict(obj.serialize())
 
@@ -28,7 +28,6 @@ class CropBoxField(serializers.Field):
 
 
 class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = ImageFile
         fields = [
@@ -89,11 +88,11 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ImageFileViewSet(viewsets.ModelViewSet):
-
     """ API endpoint that allows ImageFile to be viewed or updated.  """
 
-    queryset = ImageFile.objects.order_by(
-        '-created').annotate(usage=models.Count('storyimage'))
+    queryset = ImageFile.objects.order_by('-created').annotate(
+        usage=models.Count('storyimage')
+    )
 
     serializer_class = ImageFileSerializer
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)

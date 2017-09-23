@@ -1,7 +1,8 @@
 """URLs for the built-in site search functionality."""
 
 from django.conf.urls import url
-from .views import SearchView, SearchApiView
+
+from .views import SearchApiView, SearchView
 
 urlpatterns = [
     url("^$", SearchView.as_view(), name="search"),

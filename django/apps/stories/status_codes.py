@@ -1,13 +1,28 @@
 """ HTTP Status Codes """
 HTTP_STATUS_CODES = [
-    ('', 'Not checked yet', ),
-    ('DNS', 'DNS lookup error', ),
-    ('URL', 'Malformed http url', ),
-    ('INT', 'Internal link', ),
+    (
+        '',
+        'Not checked yet',
+    ),
+    (
+        'DNS',
+        'DNS lookup error',
+    ),
+    (
+        'URL',
+        'Malformed http url',
+    ),
+    (
+        'INT',
+        'Internal link',
+    ),
     # ('100', '100 Continue', ),
     # ('101', '101 Switching Protocols', ),
     # ('102', '102 Processing (WebDAV; RFC 2518)', ),
-    ('200', '200 OK', ),
+    (
+        '200',
+        '200 OK',
+    ),
     # ('201', '201 Created', ),
     # ('202', '202 Accepted', ),
     # ('203', '203 Non-Authoritative Information (since HTTP/1.1)', ),
@@ -29,14 +44,26 @@ HTTP_STATUS_CODES = [
     # ('400', '400 Bad Request', ),
     # ('401', '401 Unauthorized', ),
     # ('402', '402 Payment Required', ),
-    ('403', '403 Forbidden', ),
-    ('404', '404 Not Found', ),
+    (
+        '403',
+        '403 Forbidden',
+    ),
+    (
+        '404',
+        '404 Not Found',
+    ),
     # ('405', '405 Method Not Allowed', ),
     # ('406', '406 Not Acceptable', ),
     # ('407', '407 Proxy Authentication Required', ),
-    ('408', '408 Request Timeout', ),
+    (
+        '408',
+        '408 Request Timeout',
+    ),
     # ('409', '409 Conflict', ),
-    ('410', '410 Gone', ),
+    (
+        '410',
+        '410 Gone',
+    ),
     # ('411', '411 Length Required', ),
     # ('412', '412 Precondition Failed', ),
     # ('413', '413 Request Entity Too Large', ),
@@ -44,7 +71,10 @@ HTTP_STATUS_CODES = [
     # ('415', '415 Unsupported Media Type', ),
     # ('416', '416 Requested Range Not Satisfiable', ),
     # ('417', '417 Expectation Failed', ),
-    ('418', '418 I\'m a teapot (RFC 2324)', ),
+    (
+        '418',
+        '418 I\'m a teapot (RFC 2324)',
+    ),
     # ('419', '419 Authentication Timeout (not in RFC 2616)', ),
     # ('420', '420 Enhance Your Calm (Twitter)', ),
     # ('420', '420 Method Failure (Spring Framework)', ),
@@ -68,7 +98,10 @@ HTTP_STATUS_CODES = [
     # ('498', '498 Token expired/invalid (Esri)', ),
     # ('499', '499 Client Closed Request (Nginx)', ),
     # ('499', '499 Token required (Esri)', ),
-    ('500', '500 Internal Server Error', ),
+    (
+        '500',
+        '500 Internal Server Error',
+    ),
     # ('501', '501 Not Implemented', ),
     # ('502', '502 Bad Gateway', ),
     # ('503', '503 Service Unavailable', ),

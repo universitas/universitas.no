@@ -1,9 +1,10 @@
 """ Top megamenu for Universitas """
 
 import logging
-from django import template
-from apps.stories.models import Section, Story
+
 from apps.issues.models import PrintIssue
+from apps.stories.models import Section, Story
+from django import template
 
 register = template.Library()
 logger = logging.getLogger(__name__)
@@ -13,7 +14,8 @@ logger = logging.getLogger(__name__)
 def universitas_menu(context, active_section):
 
     sections = [
-        Section.objects.get(title__iexact=title) for title in [
+        Section.objects.get(title__iexact=title)
+        for title in [
             'nyheter',
             'kultur',
             'debatt',
@@ -22,7 +24,8 @@ def universitas_menu(context, active_section):
     ]
 
     latest_pdf = PrintIssue.objects.exclude(pdf=None).order_by(
-        'issue__publication_date', 'pk').last()
+        'issue__publication_date', 'pk'
+    ).last()
 
     return {
         'sections': sections,
@@ -35,9 +38,8 @@ def universitas_menu(context, active_section):
 
 @register.inclusion_tag('top-stories.html')
 def top_stories(section, number, order_by):
-    stories = Story.objects.published().filter(
-        story_type__section=section
-    ).order_by(order_by)[:number]
+    stories = Story.objects.published().filter(story_type__section=section
+                                               ).order_by(order_by)[:number]
 
     context = {
         "stories": stories,

@@ -1,19 +1,19 @@
 """Tasks for issues and pdfs"""
 
+import logging
+import pathlib
 import shutil
 import subprocess
-import pathlib
-from datetime import datetime
 import tempfile
+from datetime import datetime
 
+from apps.issues.models import PrintIssue, current_issue
+from celery import shared_task
+from celery.schedules import crontab
+from celery.task import periodic_task
 from django.conf import settings
 from django.core.files.base import ContentFile
-from apps.issues.models import current_issue, PrintIssue
-from celery import shared_task
-from celery.task import periodic_task
-from celery.schedules import crontab
 
-import logging
 logger = logging.getLogger(__name__)
 
 # Paths and glob pattersn
@@ -48,15 +48,18 @@ def require_binary(binary):
                 return fn(*args, **kwargs)
             msg = 'Required binary "{}" is not installed'.format(binary)
             raise MissingBinary(msg)
+
         return fn_wrapper
+
     return binary_decorator
 
 
 def get_staging_pdf_files(
-        globpattern='*.pdf',
-        directory=None,
-        delete_expired=False,
-        expiration_days=0):
+    globpattern='*.pdf',
+    directory=None,
+    delete_expired=False,
+    expiration_days=0
+):
     """Find pages for latest issue in pdf staging directory."""
 
     if directory is None:
@@ -67,8 +70,7 @@ def get_staging_pdf_files(
     now = datetime.now()
     output = []
     for pdf_file in pages:
-        age = now - datetime.fromtimestamp(
-            pdf_file.stat().st_mtime)
+        age = now - datetime.fromtimestamp(pdf_file.stat().st_mtime)
         if expiration_days and age.days > expiration_days:
             if delete_expired:
                 pdf_file.unlink()
@@ -89,8 +91,8 @@ def get_output_file(input_file, subfolder, suffix=None):
     output_file = output_file.with_suffix(suffix)
 
     no_change = (
-        output_file.exists() and
-        output_file.stat().st_mtime > input_file.stat().st_mtime
+        output_file.exists()
+        and output_file.stat().st_mtime > input_file.stat().st_mtime
     )
     return output_file, no_change
 
@@ -124,7 +126,8 @@ def convert_pdf_to_web(input_file):
         '-dColorImageResolution=120',
         '-dGrayImageResolution=120',
         '-dMonoImageResolution=120',
-        '-o', output_file,
+        '-o',
+        output_file,
         input_file,
     ]
     subprocess.run(map(str, args))
@@ -136,20 +139,27 @@ def generate_pdf_preview(input_file, img_format='png', size=300):
     input_file = pathlib.Path(input_file)
     input_file.resolve()  # Raises FileNotFound
     output_file, no_change = get_output_file(
-        input_file, img_format.upper(), img_format)
+        input_file, img_format.upper(), img_format
+    )
     if no_change:
         return output_file
 
     args = [
         CONVERT,
-        '-density', 160,
-        '-colorspace', 'CMYK',
+        '-density',
+        160,
+        '-colorspace',
+        'CMYK',
         input_file,
-        '-background', 'white',
+        '-background',
+        'white',
         '-flatten',
-        '-resize', '{}x'.format(size),
-        '-format', img_format.strip('.'),
-        '-colorspace', 'sRGB',
+        '-resize',
+        '{}x'.format(size),
+        '-format',
+        img_format.strip('.'),
+        '-colorspace',
+        'sRGB',
         output_file,
     ]
     subprocess.run(map(str, args))
@@ -174,8 +184,7 @@ def create_web_bundle(filename, **kwargs):
     output_file = pathlib.Path(filename)
     output_file.touch()
 
-    pages = [str(p) for p in
-             optimize_staging_pages(**kwargs)]
+    pages = [str(p) for p in optimize_staging_pages(**kwargs)]
 
     number_of_pages = len(pages)
     if number_of_pages == 0:
@@ -189,7 +198,8 @@ def create_web_bundle(filename, **kwargs):
     args = [
         GHOSTSCRIPT,
         '-q',
-        '-o', output_file,
+        '-o',
+        output_file,
         '-dFirstPage=1',
         '-dBATCH',
         '-dNOPAUSE',
@@ -209,7 +219,8 @@ def create_web_bundle(filename, **kwargs):
 
 @shared_task
 def create_print_issue_pdf(
-        expiration_days=0, delete_expired=not settings.DEBUG):
+    expiration_days=0, delete_expired=not settings.DEBUG
+):
     """Create or update pdf for the current issue"""
 
     issue = current_issue()

@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from apps.photo.admin import ThumbAdmin
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-
-from apps.photo.admin import ThumbAdmin
 from sorl.thumbnail.admin import AdminImageMixin
 
-from .models import Customer, AdChannel, Advert, AdFormat
+from .models import AdChannel, AdFormat, Advert, Customer
 
 
 @admin.register(Customer)
@@ -41,8 +40,7 @@ class AdvertAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
 
 
 def create_dummy_ads(modeladmin, request, queryset):
-    create_dummy_ads.short_description = _(
-        'Create dummy adverts.')
+    create_dummy_ads.short_description = _('Create dummy adverts.')
     for channel in queryset:
         for adformat in channel.ad_formats.all():
             dummy_ad = Advert.objects.create_dummy(adformat)
@@ -65,7 +63,9 @@ class ChannelAdmin(admin.ModelAdmin):
         'description',
         'max_at_once',
     ]
-    actions = [create_dummy_ads, ]
+    actions = [
+        create_dummy_ads,
+    ]
 
 
 @admin.register(AdFormat)

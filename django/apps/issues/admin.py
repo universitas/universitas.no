@@ -2,15 +2,15 @@
 """
 Admin for printissues app
 """
-from django.contrib import admin
-from .models import PrintIssue, Issue
-from .tasks import create_print_issue_pdf
-from sorl.thumbnail.admin import AdminImageMixin
-from sorl.thumbnail import get_thumbnail
+from django.contrib import admin, messages
 # import autocomplete_light
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from django.contrib import messages
+from sorl.thumbnail import get_thumbnail
+from sorl.thumbnail.admin import AdminImageMixin
+
+from .models import Issue, PrintIssue
+from .tasks import create_print_issue_pdf
 
 
 def create_pdf(modeladmin, request, queryset):
@@ -109,12 +109,19 @@ class PrintIssueAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
         'text',
         'pdf',
     )
-    fieldsets = (
-        ('', {'fields': (
-            ('pdf', 'cover_page', 'pages', 'issue', ),
-            ('large_thumbnail', 'text')
-        ), }, ),
-    )
+    fieldsets = ((
+        '',
+        {
+            'fields': ((
+                'pdf',
+                'cover_page',
+                'pages',
+                'issue',
+            ), ('large_thumbnail', 'text')),
+        },
+    ), )
     readonly_fields = (
-        'large_thumbnail', 'text', 'pages',
+        'large_thumbnail',
+        'text',
+        'pages',
     )

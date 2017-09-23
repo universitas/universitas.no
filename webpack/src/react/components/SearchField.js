@@ -15,7 +15,7 @@ const SearchField = ({
       placeholder={label}
       value={value}
     />
-    <button disabled={!value} onClick={clearSearch} ClassName="clear">
+    <button disabled={!value} onClick={clearSearch} className="clear">
       <Clear />
     </button>
   </div>

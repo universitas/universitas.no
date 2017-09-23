@@ -3,13 +3,16 @@
 Admin for photo app.
 """
 
-from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
-from django.utils.safestring import mark_safe
-from sorl.thumbnail.admin import AdminImageMixin
-from autocomplete_light.forms import modelform_factory
-from .models import ImageFile, ProfileImage
 import logging
+
+from autocomplete_light.forms import modelform_factory
+from django.contrib import admin
+from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
+from sorl.thumbnail.admin import AdminImageMixin
+
+from .models import ImageFile, ProfileImage
+
 logger = logging.getLogger(__name__)
 
 
@@ -47,7 +50,11 @@ def autocrop(modeladmin, request, queryset):
 autocrop.short_description = _('Autocrop')  # type: ignore
 
 
-class ImageAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin, ):
+class ImageAdmin(
+    AdminImageMixin,
+    ThumbAdmin,
+    admin.ModelAdmin,
+):
 
     form = modelform_factory(ImageFile, exclude=())
     actions = [autocrop]
@@ -66,8 +73,7 @@ class ImageAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin, ):
         'cropped_thumb',
         'full_thumb',
     ]
-    list_editable = (
-    )
+    list_editable = ()
     search_fields = (
         'source_file',
         'storyimage__caption',
@@ -77,7 +83,6 @@ class ImageAdmin(AdminImageMixin, ThumbAdmin, admin.ModelAdmin, ):
 
 @admin.register(ImageFile)
 class ImageFileAdmin(ImageAdmin):
-
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.exclude(source_file__startswith=ProfileImage.UPLOAD_FOLDER)

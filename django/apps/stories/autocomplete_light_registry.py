@@ -1,10 +1,14 @@
 import autocomplete_light.shortcuts as autocomplete_light
-from .models import Story
 from django.utils.translation import ugettext_lazy as _
+
+from .models import Story
 
 autocomplete_light.register(
     Story,
-    search_fields=['title', 'lede', ],
+    search_fields=[
+        'title',
+        'lede',
+    ],
     order_by=['-publication_date'],
     attrs={
         # This will set the input placeholder attribute:

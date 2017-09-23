@@ -1,13 +1,15 @@
 """Tests for models in the Issues app"""
 
-import pytest
-import tempfile
 import os
+import tempfile
 from datetime import date
-from django.utils.timezone import datetime
-from django.core.files.base import ContentFile
+
+import pytest
 from apps.issues.models import (
-    PrintIssue, Issue, pdf_to_text, pdf_to_image, error_image)
+    Issue, PrintIssue, error_image, pdf_to_image, pdf_to_text
+)
+from django.core.files.base import ContentFile
+from django.utils.timezone import datetime
 
 
 def get_contentfile(filepath):
@@ -32,9 +34,7 @@ def fixture_pdf():
 
 @pytest.mark.django_db
 def test_create_issue():
-    new_issue = Issue.objects.create(
-        publication_date=datetime(2020, 1, 1),
-    )
+    new_issue = Issue.objects.create(publication_date=datetime(2020, 1, 1), )
     new_issue.full_clean()
     assert str(new_issue) == '1/2020 01. Jan'
 
@@ -93,4 +93,5 @@ def test_create_printissue(fixture_pdf, settings, tempdir):
     # Create thumbnail of cover page
     print_issue.get_cover_page()
     assert print_issue.cover_page.path.endswith(
-        '/covers/fixture_universitas.jpg')
+        '/covers/fixture_universitas.jpg'
+    )

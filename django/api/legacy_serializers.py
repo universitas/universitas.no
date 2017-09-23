@@ -1,11 +1,13 @@
-from apps.stories.models import Story, StoryImage, StoryType
-from apps.photo.models import ImageFile
-from rest_framework import serializers, viewsets, authentication
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
-from rest_framework.exceptions import ValidationError
-from url_filter.integrations.drf import DjangoFilterBackend
 import json
 import logging
+
+from apps.photo.models import ImageFile
+from apps.stories.models import Story, StoryImage, StoryType
+from rest_framework import authentication, serializers, viewsets
+from rest_framework.exceptions import ValidationError
+from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
+from url_filter.integrations.drf import DjangoFilterBackend
+
 logger = logging.getLogger('apps')
 
 
@@ -14,7 +16,6 @@ class MissingImageFileException(Exception):
 
 
 class ProdBildeSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = StoryImage
         fields = [
@@ -33,7 +34,7 @@ class ProdBildeSerializer(serializers.ModelSerializer):
 def get_imagefile(filename):
     img = ImageFile.objects.filter(source_file__endswith=filename).last()
     if img is None:
-        raise MissingImageFileException(f'ImageFile("{filename}") not found')
+        raise MissingImageFileException('ImageFile("%s") not found' % filename)
     return img
 
 
@@ -50,8 +51,9 @@ def update_images(images, story):
             logger.warn(f'ignore missing image {err}')
 
 
-def update_story_image(story, pk, bildefil=None,
-                       prioritet=None, bildetekst=None, **kwargs):
+def update_story_image(
+    story, pk, bildefil=None, prioritet=None, bildetekst=None, **kwargs
+):
     try:
         story_image = StoryImage.objects.get(pk=pk, parent_story=story)
     except StoryImage.DoesNotExist:
@@ -81,7 +83,6 @@ def create_story_image(story, bildefil, prioritet=0, bildetekst='', **kwargs):
 
 
 class ProdStorySerializer(serializers.ModelSerializer):
-
     """ModelSerializer for Story based on legacy prodsys"""
 
     class Meta:
@@ -99,7 +100,8 @@ class ProdStorySerializer(serializers.ModelSerializer):
         extra_kwargs = {'url': {'view_name': 'legacy-detail'}}
 
     bilete = ProdBildeSerializer(
-        required=False, many=True, source='get_images')
+        required=False, many=True, source='get_images'
+    )
     prodsak_id = serializers.IntegerField(source='id', required=False)
     mappe = serializers.SerializerMethodField()
     arbeidstittel = serializers.CharField(source='working_title')
@@ -122,7 +124,8 @@ class ProdStorySerializer(serializers.ModelSerializer):
         mappe = data.get('mappe')
         if mappe:
             out['story_type'] = StoryType.objects.filter(
-                prodsys_mappe=mappe).first() or StoryType.objects.first()
+                prodsys_mappe=mappe
+            ).first() or StoryType.objects.first()
         return out
 
     def create(self, validated_data):
@@ -149,8 +152,10 @@ class UnicodeJSONRenderer(JSONRenderer):
 class ProdStoryViewSet(viewsets.ModelViewSet):
 
     renderer_classes = (UnicodeJSONRenderer, BrowsableAPIRenderer)
-    authentication_classes = (authentication.BasicAuthentication,
-                              authentication.SessionAuthentication)
+    authentication_classes = (
+        authentication.BasicAuthentication,
+        authentication.SessionAuthentication
+    )
     # permission_classes = (permissions.DjangoModelPermissionsOrAnonReadOnly,)
 
     serializer_class = ProdStorySerializer

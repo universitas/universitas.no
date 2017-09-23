@@ -1,12 +1,13 @@
-import pytest
-from django.contrib.auth.models import Permission
-from apps.stories.models import StoryType, Story, Section
-from apps.photo.models import ImageFile
-from django.contrib.auth import get_user_model
-from rest_framework.test import APIClient
-from rest_framework import status
-from pathlib import Path
 import shutil
+from pathlib import Path
+
+import pytest
+from apps.photo.models import ImageFile
+from apps.stories.models import Section, Story, StoryType
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
+from rest_framework import status
+from rest_framework.test import APIClient
 
 
 @pytest.fixture
@@ -101,9 +102,13 @@ def test_create_story(api_user, photo):
             'arbeidstittel': 'hello',
             'produsert': 1,
             'bilete': [
-                {'bildefil': 'sandal.jpg', 'bildetekst': 'one'},
+                {
+                    'bildefil': 'sandal.jpg',
+                    'bildetekst': 'one'
+                },
             ],
-        })
+        }
+    )
     assert response.status_code == status.HTTP_201_CREATED
 
 
@@ -113,10 +118,13 @@ def test_update_photos(scandal, photo, api_user):
     client = APIClient()
     client.login(username='api', password='api')
     data = {
-        'bilete': [
-            {'bildefil': 'scandal.jpg', 'bildetekst': 'one'},
-            {'bildefil': 'scandal.jpg', 'bildetekst': 'two'}
-        ]
+        'bilete': [{
+            'bildefil': 'scandal.jpg',
+            'bildetekst': 'one'
+        }, {
+            'bildefil': 'scandal.jpg',
+            'bildetekst': 'two'
+        }]
     }
     response = client.patch(api_url, data=data, format='json')
     assert response.status_code == status.HTTP_200_OK

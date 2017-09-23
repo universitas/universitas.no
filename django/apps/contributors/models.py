@@ -1,23 +1,22 @@
 """ Contributors to the thing """
 
-import os
-from slugify import Slugify
 import glob
-import re
 import json
-
-from fuzzywuzzy import fuzz
-
-from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
-from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.contrib.auth.models import Group
-from django.core.files import File
+import logging
+import os
+import re
 
 from apps.photo.models import ProfileImage
-import logging
+from django.conf import settings
+from django.contrib.auth.models import Group
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+from django.core.files import File
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
+from fuzzywuzzy import fuzz
+from slugify import Slugify
+
 logger = logging.getLogger(__name__)
 
 
@@ -26,7 +25,6 @@ def today():
 
 
 class Contributor(models.Model):
-
     """ Someone who contributes content to the newspaper or other staff. """
 
     UNKNOWN = 0
@@ -58,7 +56,8 @@ class Contributor(models.Model):
     byline_photo = models.ForeignKey(
         ProfileImage,
         related_name='person',
-        blank=True, null=True,
+        blank=True,
+        null=True,
         help_text=_('photo used for byline credit.'),
         on_delete=models.SET_NULL,
     )
@@ -82,7 +81,8 @@ class Contributor(models.Model):
         if not force_new and self.byline_photo:
             return self.byline_photo
         imagefiles = glob.glob(
-            os.path.join(settings.BYLINE_PHOTO_DIR, '*.jpg'))
+            os.path.join(settings.BYLINE_PHOTO_DIR, '*.jpg')
+        )
         name = self.name
         name_last_first = re.sub(r'^(.*) (\S+)$', r'\2 \1', name)
         name_slug_title = slugify(name) + '.jpg'
@@ -103,7 +103,8 @@ class Contributor(models.Model):
                     break
         if bestmatch:
             msg = 'found match: name:{}, img:{}, ratio:{} '.format(
-                name_slug, bestmatch, ratio)
+                name_slug, bestmatch, ratio
+            )
             logger.debug(msg)
             with open(bestmatch, 'rb') as source:
                 content = File(source)
@@ -157,6 +158,7 @@ class Contributor(models.Model):
                 except MultipleObjectsReturned:
                     # TODO: Make sure two people can have the same name.
                     return None
+
             return inner_func
 
         @find_single_item_or_none
@@ -169,7 +171,8 @@ class Contributor(models.Model):
                 return None
             return base_query.get(
                 display_name__istartswith=first_name,
-                display_name__iendswith=last_name)
+                display_name__iendswith=last_name
+            )
 
         @find_single_item_or_none
         def search_for_alias():
@@ -191,10 +194,8 @@ class Contributor(models.Model):
 
         # Variuous queries to look for contributor in the database.
         contributor = (
-            search_for_full_name() or
-            search_for_first_plus_last_name() or
-            fuzzy_search() or
-            None
+            search_for_full_name() or search_for_first_plus_last_name()
+            or fuzzy_search() or None
             # search_for_alias() or
             # search_for_initials() or
         )
@@ -203,7 +204,10 @@ class Contributor(models.Model):
             combined_byline = ' '.join([c.display_name for c in contributor])
             ratio = fuzz.token_sort_ratio(combined_byline, full_name)
             msg = 'ratio: {ratio} {combined} -> {full_name}'.format(
-                ratio=ratio, combined=combined_byline, full_name=full_name,)
+                ratio=ratio,
+                combined=combined_byline,
+                full_name=full_name,
+            )
             logger.debug(msg)
             if ratio >= 80:
                 return contributor
@@ -258,12 +262,13 @@ class Contributor(models.Model):
 
 
 class Position(models.Model):
-
     """ A postion or job in the publication. """
 
     title = models.CharField(
         help_text=_('Job title at the publication.'),
-        unique=True, max_length=50)
+        unique=True,
+        max_length=50
+    )
 
     groups = models.ManyToManyField(
         Group,
@@ -282,7 +287,6 @@ class Position(models.Model):
 
 
 class StintQuerySet(models.QuerySet):
-
     def active(self, when=None):
         """ active stints today """
         when = when or today()
@@ -290,18 +294,13 @@ class StintQuerySet(models.QuerySet):
 
 
 class Stint(models.Model):
-
     """ The period a Contributor serves in a Position. """
 
     objects = StintQuerySet.as_manager()
     position = models.ForeignKey(Position)
     contributor = models.ForeignKey(Contributor)
-    start_date = models.DateField(
-        default=today,
-    )
-    end_date = models.DateField(
-        blank=True, null=True
-    )
+    start_date = models.DateField(default=today, )
+    end_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return '{} {}'.format(self.position, self.contributor)

@@ -1,21 +1,21 @@
 """ Admin for contributors app.  """
 
+from apps.stories.admin import BylineInline
+from autocomplete_light.forms import modelform_factory
 from django.contrib import admin
-from django.utils.safestring import mark_safe
-
 from django.utils import timezone
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+
+from .models import Contributor, Position, Stint
 
 # from django.template import Template
 # from django.utils.safestring import mark_safe
 
-from autocomplete_light.forms import modelform_factory
 
-from .models import Contributor, Position, Stint
-from apps.stories.admin import BylineInline
-
-
-class StintInline(admin.TabularInline,):
+class StintInline(
+    admin.TabularInline,
+):
     model = Stint
     fields = ['position', 'start_date', 'end_date']
     extra = 1
@@ -24,10 +24,7 @@ class StintInline(admin.TabularInline,):
 @admin.register(Contributor)
 class ContributorAdmin(admin.ModelAdmin):
 
-    form = modelform_factory(
-        Contributor,
-        exclude=()
-    )
+    form = modelform_factory(Contributor, exclude=())
 
     list_display = (
         'display_name',
@@ -36,13 +33,9 @@ class ContributorAdmin(admin.ModelAdmin):
         'status',
     )
 
-    list_editable = (
-        'verified',
-    )
+    list_editable = ('verified', )
 
-    search_fields = (
-        'display_name',
-    )
+    search_fields = ('display_name', )
 
     inlines = [
         StintInline,
@@ -52,21 +45,24 @@ class ContributorAdmin(admin.ModelAdmin):
 
 @admin.register(Position)
 class PositionAdmin(admin.ModelAdmin):
-
     def active_now(self, instance):
         active = instance.active()
         if len(active) == 1:
             text = str(active[0].contributor)
         else:
             text = str(len(active))
-        url = ('/admin/contributors/stint/'
-               f'?is_active=now&position__id__exact={instance.pk}')
+        url = (
+            '/admin/contributors/stint/'
+            f'?is_active=now&position__id__exact={instance.pk}'
+        )
         return mark_safe(f'<a href={url}>{text}</a>')
 
     def total(self, instance):
         count = instance.stint_set.count()
-        url = ('/admin/contributors/stint/'
-               f'?position__id__exact={instance.pk}')
+        url = (
+            '/admin/contributors/stint/'
+            f'?position__id__exact={instance.pk}'
+        )
         return mark_safe(f'<a href={url}>{count}</a>')
 
     def groups_list(self, instance):
@@ -111,17 +107,13 @@ class StintActiveFilter(admin.SimpleListFilter):
 
 @admin.register(Stint)
 class StintAdmin(admin.ModelAdmin):
-
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.order_by('-end_date', '-start_date')
 
     list_per_page = 25
     list_filter = ['position', StintActiveFilter]
-    form = modelform_factory(
-        Stint,
-        exclude=()
-    )
+    form = modelform_factory(Stint, exclude=())
 
     list_display = (
         '__str__',

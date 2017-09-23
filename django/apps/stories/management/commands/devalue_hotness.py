@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """Devalue hotness by 10%"""
-from django.core.management.base import BaseCommand
-from apps.stories.models import Story
 import logging
+
+from apps.stories.models import Story
+from django.core.management.base import BaseCommand
+
 logger = logging.getLogger(__name__)
 
 

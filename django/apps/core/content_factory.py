@@ -1,16 +1,15 @@
 import random
-from PIL import Image, ImageOps, ImageFilter, ImageChops
-from faker import Factory
-from pathlib import Path
 from io import BytesIO
+from pathlib import Path
 
+from PIL import Image, ImageChops, ImageFilter, ImageOps
+
+from apps.contributors.models import Contributor
+from apps.photo.models import ImageFile, ProfileImage
+from apps.stories.models import Story, StoryImage, StoryType
 from django.core.files import File
 from django.utils import timezone
-
-from apps.stories.models import Story, StoryImage, StoryType
-from apps.photo.models import ImageFile, ProfileImage
-from apps.contributors.models import Contributor
-
+from faker import Factory
 
 SOURCE_IMG = Path(__file__).parent / 'judgement2.jpg'
 FAKE = Factory.create('no')
@@ -21,7 +20,7 @@ def random_image(sourceimg=None, size=(200, 100)):
     if sourceimg is None:
         sourceimg = Image.open(str(SOURCE_IMG))
     width, height = size
-    sqrt2 = 2 ** .5
+    sqrt2 = 2**.5
     regionsize = int(min(
         max(width, height) * sqrt2,
         min(sourceimg.size),
@@ -129,7 +128,8 @@ def fake_story():
     photo_by = random_contributor()
     text_by = random_contributor()
     markup = '{}\n@bl: text: {}\n@bl: photo:{}'.format(
-        fake_story_content(), text_by, photo_by)
+        fake_story_content(), text_by, photo_by
+    )
     story = Story(
         story_type=random_storytype(),
         bodytext_markup=markup,
@@ -147,8 +147,9 @@ def fake_story():
     return story
 
 
-def create_fake_content(contributors=3, stories=10, delete_existing=False,
-                        verbosity=0):
+def create_fake_content(
+    contributors=3, stories=10, delete_existing=False, verbosity=0
+):
     if delete_existing:
         Story.objects.all().delete()
         Contributor.objects.all().delete()

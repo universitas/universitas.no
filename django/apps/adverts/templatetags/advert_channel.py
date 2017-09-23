@@ -1,8 +1,10 @@
 """ Tags for placement of ad channels in templates. """
 
 import logging
+
 from django import template
-from ..models import AdChannel, Advert, AdFormat
+
+from ..models import AdChannel, AdFormat, Advert
 
 register = template.Library()
 logger = logging.getLogger(__name__)

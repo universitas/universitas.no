@@ -1,7 +1,8 @@
 import logging
-from django.core.management.base import BaseCommand
 
 from apps.core import content_factory
+from django.core.management.base import BaseCommand
+
 logger = logging.getLogger(__name__)
 
 
@@ -10,29 +11,34 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--stories', '-s',
+            '--stories',
+            '-s',
             type=int,
             dest='stories',
             default=1,
             help='Number of stories.'
         )
         parser.add_argument(
-            '--contributors', '-c',
+            '--contributors',
+            '-c',
             type=int,
             dest='contributors',
             default=0,
             help='Number of contributors'
         )
         parser.add_argument(
-            '--delete', '-d',
+            '--delete',
+            '-d',
             action='store_true',
             dest='delete_existing',
             default=False,
             help='Delete existing content'
         )
 
-    def handle(self, contributors, stories, delete_existing, verbosity,
-               **options):
+    def handle(
+        self, contributors, stories, delete_existing, verbosity, **options
+    ):
 
-        content_factory.create_fake_content(contributors, stories,
-                                            delete_existing, verbosity)
+        content_factory.create_fake_content(
+            contributors, stories, delete_existing, verbosity
+        )

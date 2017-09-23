@@ -1,9 +1,9 @@
-from django import shortcuts
-# from django.db.models import Q
-
-from apps.stories.models import Story
 from apps.contributors.models import Contributor
 from apps.photo.models import ImageFile
+from apps.stories.models import Story
+from django import shortcuts
+
+# from django.db.models import Q
 
 
 def autocomplete_list(request):

@@ -1,18 +1,16 @@
 """Frontpage views"""
-from django.shortcuts import render
-from django.http import (
-    HttpResponseRedirect,
-    Http404,
-    # HttpResponsePermanentRedirect,
-)
-from django.utils.http import base36_to_int
-from django.utils.decorators import available_attrs
-from django.views.decorators.cache import cache_page
+import logging
 from functools import wraps
 
-from apps.stories.models import Story, Section, StoryType
 from apps.frontpage.models import Frontpage, StoryModule
-import logging
+from apps.stories.models import Section, Story, StoryType
+from django.http import Http404  # HttpResponsePermanentRedirect,
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.utils.decorators import available_attrs
+from django.utils.http import base36_to_int
+from django.views.decorators.cache import cache_page
+
 logger = logging.getLogger(__name__)
 
 # from django.contrib.auth.decorators import login_required
@@ -27,7 +25,9 @@ def anonymous_cache(timeout):
                 return (view_func)(request, *args, **kwargs)
             else:
                 return cache_page(timeout)(view_func)(request, *args, **kwargs)
+
         return _wrapped_view
+
     return decorator
 
 
@@ -94,7 +94,8 @@ def frontpage_layout(blocks):
                     'css_width': 'cols-{}'.format(columns),
                     'css_height': 'rows-{}'.format(floorheight),
                     'headline_class': 'headline-{size}'.format(
-                        size=headline_size),
+                        size=headline_size
+                    ),
                     'image_size': '{width:.0f}x{height:.0f}'.format(
                         width=PIX_C * columns,
                         height=MIN_H + PIX_H * floorheight,
@@ -121,8 +122,7 @@ def get_frontpage_stories(story_queryset, frontpage=None):
 
     stories = story_queryset.is_on_frontpage(frontpage)
     result = StoryModule.objects.filter(
-        frontpage=frontpage,
-        frontpage_story__story__in=stories
+        frontpage=frontpage, frontpage_story__story__in=stories
     ).prefetch_related(
         'frontpage_story__imagefile',
         'frontpage_story__story__story_type__section',

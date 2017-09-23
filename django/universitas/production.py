@@ -37,7 +37,11 @@ AWS_S3_USE_SSL = False
 # if changed, md5 hashes for large files might be wrong
 
 STATIC_URL = "http://{host}/{static}/".format(
-    host=AWS_S3_CUSTOM_DOMAIN, static='static', )
+    host=AWS_S3_CUSTOM_DOMAIN,
+    static='static',
+)
 
 MEDIA_URL = "http://{host}/{media}/".format(
-    host=AWS_S3_CUSTOM_DOMAIN, media='media', )
+    host=AWS_S3_CUSTOM_DOMAIN,
+    media='media',
+)

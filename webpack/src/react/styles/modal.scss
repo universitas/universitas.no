@@ -1,0 +1,15 @@
+.LoginForm {
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  input, button {
+    font-size: 1.5em;
+    width: 20em;
+    padding: .5em;
+    margin: .2em;
+    border-radius: .2em;
+    border: 1px solid #999;
+  }
+}

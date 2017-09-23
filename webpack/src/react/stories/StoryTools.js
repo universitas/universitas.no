@@ -24,7 +24,7 @@ const StoryTools = ({
   edit_url,
   public_url,
 }) => (
-  <ToolBar className="StoryTools">
+  <ToolBar className="DetailToolBar">
     <Tool Icon={Close} title="lukk saken" onClick={closeStory} />
     <Tool Icon={Add} title="kopier saken" onClick={cloneStory} />
     <Tool Icon={Delete} title="slett saken" onClick={trashStory} />

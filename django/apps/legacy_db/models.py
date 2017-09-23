@@ -1,7 +1,7 @@
 """Prodsys legacy models"""
 
-from django.utils.translation import ugettext_lazy as _
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 
 class Sak(models.Model):
@@ -71,7 +71,8 @@ class Bilde(models.Model):
     path = models.CharField(max_length=255)
     sak = models.ForeignKey(Sak, db_column='id_sak', blank=True, null=True)
     bildetekst = models.ForeignKey(
-        Bildetekst, db_column='id_bildetekst', blank=True, null=True)
+        Bildetekst, db_column='id_bildetekst', blank=True, null=True
+    )
     size = models.IntegerField(db_column='str', blank=True, null=True)
     crop = models.IntegerField()
 
@@ -116,7 +117,8 @@ class DiskInnlegg(InnleggAbstract):
 class DiskSvar(InnleggAbstract):
     id_svar = models.IntegerField(primary_key=True)
     innlegg = models.ForeignKey(
-        DiskInnlegg, db_column='id_innlegg', blank=True, null=True)
+        DiskInnlegg, db_column='id_innlegg', blank=True, null=True
+    )
     sak = models.ForeignKey(Sak, db_column='sak_id', blank=True, null=True)
     epost_sendt = models.DateTimeField(blank=True, null=True)
 
@@ -157,7 +159,6 @@ class Fakta(models.Model):
 
 
 class ProdsakQueryset(models.QuerySet):
-
     def single(self):
         latest = self.extra(
             where=[
@@ -175,7 +176,6 @@ class ProdsakQueryset(models.QuerySet):
 
 
 class ProdsakManager(models.Manager):
-
     def get_queryset(self):
         return ProdsakQueryset(self.model, using=self._db)
 
@@ -183,10 +183,7 @@ class ProdsakManager(models.Manager):
         return self.get_queryset().single()
 
     def active(self):
-        return self.get_queryset(
-        ).active(
-        ).order_by('-prodsak_id'
-                   ).single()
+        return self.get_queryset().active().order_by('-prodsak_id').single()
 
 
 class Prodsak(models.Model):
@@ -201,14 +198,38 @@ class Prodsak(models.Model):
     ARCHIVED = 9
 
     PRODUSERT_CHOICES = (
-        (DRAFT, 'i arbeid',),
-        (OLD_DRAFT, 'overligger',),
-        (READY_FOR_PRINT, 'til desk',),
-        (IMPORTED_TO_INDESIGN, 'gammel desk',),
-        (EXPORTED_FROM_INDESIGN, 'edit2web',),
-        (READY_FOR_WEB, 'til web',),
-        (PUBLISHED_ON_WEB, 'gammel web',),
-        (ARCHIVED, 'slettet',),
+        (
+            DRAFT,
+            'i arbeid',
+        ),
+        (
+            OLD_DRAFT,
+            'overligger',
+        ),
+        (
+            READY_FOR_PRINT,
+            'til desk',
+        ),
+        (
+            IMPORTED_TO_INDESIGN,
+            'gammel desk',
+        ),
+        (
+            EXPORTED_FROM_INDESIGN,
+            'edit2web',
+        ),
+        (
+            READY_FOR_WEB,
+            'til web',
+        ),
+        (
+            PUBLISHED_ON_WEB,
+            'gammel web',
+        ),
+        (
+            ARCHIVED,
+            'slettet',
+        ),
     )
 
     FLAGG_CHOICES = (
@@ -228,9 +249,10 @@ class Prodsak(models.Model):
     mappe = models.CharField(max_length=100, blank=True)
     flagg = models.IntegerField(blank=True, null=True, choices=FLAGG_CHOICES)
     produsert = models.IntegerField(
-        blank=True, null=True, choices=PRODUSERT_CHOICES)
+        blank=True, null=True, choices=PRODUSERT_CHOICES
+    )
     dato = models.DateTimeField()
-    version_no = models.IntegerField(editable=False,)
+    version_no = models.IntegerField(editable=False, )
     version_date = models.DateTimeField(editable=False, blank=True, null=True)
     timelock = models.DateTimeField(editable=False, blank=True, null=True)
 
@@ -248,7 +270,8 @@ class Prodsak(models.Model):
 
     def __str__(self):
         return '{s.prodsak_id}({s.version_no}) {s.arbeidstittel}'.format(
-            s=self)
+            s=self
+        )
 
 
 class Prodbilde(models.Model):

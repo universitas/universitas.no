@@ -2,16 +2,16 @@
 """
 Views for use with django-watson
 """
-from django.views.generic.list import BaseListView
-from django.views.generic import ListView
-import watson
 import json
+
+import watson
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.views.generic import ListView
+from django.views.generic.list import BaseListView
 
 
 class SearchMixin:
-
     """Base mixin for search views."""
 
     context_object_name = "search_results"
@@ -52,7 +52,6 @@ class SearchMixin:
 
 
 class SearchView(SearchMixin, ListView):
-
     """View that performs a search and returns the search results."""
 
     paginate_by = 10
@@ -60,7 +59,6 @@ class SearchView(SearchMixin, ListView):
 
 
 class SearchApiView(SearchMixin, BaseListView):
-
     """A JSON-based search API."""
 
     def render_to_response(self, context, **response_kwargs):
@@ -72,9 +70,9 @@ class SearchApiView(SearchMixin, BaseListView):
                     "description": result.description,
                     "url": result.url,
                     "meta": result.meta,
-                } for result in context[
-                    self.get_context_object_name(self.get_queryset())
-                ]
+                }
+                for result in
+                context[self.get_context_object_name(self.get_queryset())]
             ]
         }).encode("utf-8")
         # Generate the response.

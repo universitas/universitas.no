@@ -1,21 +1,23 @@
 """Test API Views"""
 
+import base64
+import json
+import os
+import re
+from datetime import timedelta
+
+import pytest
+from apps.cv.models import CVEntry, CVHost
+from apps.participants.models import (
+    Department, Participant, Person, Supervisor
+)
+from apps.schedule.models import Agendum
+from apps.timeclock.models import Punch
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from datetime import timedelta
-from rest_framework.test import APIClient
 from rest_framework import status
-from apps.participants.models import Participant, Supervisor, Department, Person
-from apps.timeclock.models import Punch
-from apps.schedule.models import Agendum
-from apps.cv.models import CVEntry, CVHost
-
-import os
-import pytest
-import json
-import base64
-import re
+from rest_framework.test import APIClient
 
 
 @pytest.fixture()
@@ -43,9 +45,11 @@ def possey(request):
 @pytest.fixture()
 def cvhosts(request):
     nav = CVHost.objects.create(
-        name='nav', is_default=True, base_url='http://nav.no/')
+        name='nav', is_default=True, base_url='http://nav.no/'
+    )
     linkedin = CVHost.objects.create(
-        name='linkedin', is_default=True, base_url='https://no.linkedin.com')
+        name='linkedin', is_default=True, base_url='https://no.linkedin.com'
+    )
     return nav, linkedin
 
 
@@ -63,7 +67,8 @@ def billy(request):
     return Participant.objects.create(
         name='Bill Wilson',
         email='billyboy@dodgecity.com',
-        password='hunter2',)
+        password='hunter2',
+    )
 
 
 @pytest.fixture()
@@ -71,7 +76,8 @@ def willy(request):
     return Participant.objects.create(
         name='Will Wilson',
         email='will@dodgecity.com',
-        password='letmein',)
+        password='letmein',
+    )
 
 
 @pytest.fixture()
@@ -79,13 +85,15 @@ def jane(request):
     return Supervisor.objects.create(
         name='Calamity Jane',
         email='calamity@dodgecity.com',
-        password='deadoralive')
+        password='deadoralive'
+    )
 
 
 def basic_auth(username, password):
     """Convert username & password to valid basic auth header"""
     credentials = base64.b64encode(
-        bytes('{}:{}'.format(username, password), 'utf-8'))
+        bytes('{}:{}'.format(username, password), 'utf-8')
+    )
     return {'HTTP_AUTHORIZATION': b'Basic ' + credentials}
 
 
@@ -93,7 +101,8 @@ def basic_auth(username, password):
 def test_all_endpoints():
     """Ensure no endpoint raises exceptions"""
     jsonfile = os.path.join(
-        settings.PROJECT_DIR, 'src', 'javascript', 'api-urls.json')
+        settings.PROJECT_DIR, 'src', 'javascript', 'api-urls.json'
+    )
     with open(jsonfile) as urldump:
         endpoints = json.load(urldump)
     assert endpoints != {}
@@ -113,7 +122,8 @@ def test_nested_supervisor_serializer(jane):
     client = APIClient()
     # Jane checks in today
     todays_agendum = Agendum.objects.create_dropin(
-            jane, duration=120, description="start a lynch mob")
+        jane, duration=120, description="start a lynch mob"
+    )
 
     client.login(username=jane.email, password='deadoralive')
     response = client.get(person_api_url)
@@ -126,6 +136,7 @@ def test_nested_supervisor_serializer(jane):
     assert data['id'] == jane.id
     assert data['agendum_today']['id'] == todays_agendum.id
     assert data['agendum_today']['description'] == todays_agendum.description
+
 
 @pytest.mark.django_db
 def test_nested_participant_serializer(jane, willy):
@@ -135,7 +146,8 @@ def test_nested_participant_serializer(jane, willy):
     client = APIClient()
     # Jane checks in today
     todays_agendum = Agendum.objects.create_dropin(
-            willy, duration=120, description="start a lynch mob")
+        willy, duration=120, description="start a lynch mob"
+    )
 
     client.login(username=jane.email, password='deadoralive')
 
@@ -150,6 +162,7 @@ def test_nested_participant_serializer(jane, willy):
     assert data['id'] == willy.id
     assert data['agendum_today']['id'] == todays_agendum.id
     assert data['agendum_today']['description'] == todays_agendum.description
+
 
 @pytest.mark.django_db
 def test_participant_can_change_own_cv(billy, willy, cvhosts):
@@ -179,8 +192,8 @@ def test_participant_can_change_own_cv(billy, willy, cvhosts):
     registered_cvs = json.loads(response.content.decode()).get('results')
 
     # He has some empty cvs
-    assert len(registered_cvs) == CVHost.objects.filter(
-        is_default=True).count()
+    assert len(registered_cvs) == CVHost.objects.filter(is_default=True
+                                                        ).count()
     for cv in registered_cvs:
         assert cv['url'] == ''
 
@@ -188,7 +201,9 @@ def test_participant_can_change_own_cv(billy, willy, cvhosts):
     response = client.post(cv_api_url, data={'owner': billy.pk, 'url': nav_cv})
     assert response.status_code == status.HTTP_201_CREATED
     response = client.post(
-        cv_api_url, data={'owner': billy.pk, 'url': linkedin_cv})
+        cv_api_url, data={'owner': billy.pk,
+                          'url': linkedin_cv}
+    )
     assert response.status_code == status.HTTP_201_CREATED
 
     # He then checks that both cvs have been saved.
@@ -217,8 +232,7 @@ def test_participant_can_checkin(billy, patched_timezone_now):
     response = client.post(checkin_url)
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
     # He tries to check in with correct username and password (basic auth)
-    client.credentials(**basic_auth(
-        billy.user.username, password='hunter2'))
+    client.credentials(**basic_auth(billy.user.username, password='hunter2'))
     response = client.post(checkin_url)
 
     # This also fails, because Billy has not been approved yet.
@@ -343,7 +357,8 @@ def test_participant_api_access(billy, willy, monkeypatch):
     # Will tries to log into the application, but can't remember the password.
     # The login fails.
     assert client.login(
-        username=willy.user.username, password='iforgot!!') is False
+        username=willy.user.username, password='iforgot!!'
+    ) is False
 
     # Even though Billy's not logged in, he tries to access the api.
     response = client.get('/api/', format='json')
@@ -358,12 +373,14 @@ def test_participant_api_access(billy, willy, monkeypatch):
 
     # Then will remembers the password, and logs in successfully
     assert client.login(
-        username='will@dodgecity.com', password='letmein') is True
+        username='will@dodgecity.com', password='letmein'
+    ) is True
     # He tries to access the api again
     response = client.get('/api/participants/', format='json')
     # Everything is OK!!!
     assert response.status_code == status.HTTP_200_OK
-    assert 'Allow: GET, POST, HEAD, OPTIONS' in response.serialize_headers().decode()
+    assert 'Allow: GET, POST, HEAD, OPTIONS' in response.serialize_headers(
+    ).decode()
 
     # In the data returned from the api there is only one participant
     content = json.loads(response.content.decode())
@@ -385,7 +402,8 @@ def test_supervisor_api_access(jane, billy, willy, possey):
     client.login(username=jane.email, password='deadoralive')
     # She accesses the api to view the participants
     content = json.loads(
-        client.get('/api/participants/', format='json').content.decode())
+        client.get('/api/participants/', format='json').content.decode()
+    )
     # There are two participants visible
     assert content['count'] == 2
     # That's Willy and Billy!
@@ -408,7 +426,8 @@ def test_supervisor_api_access(jane, billy, willy, possey):
     assert data['supervisor'] is None
 
     # And the api can be used to change Billy.
-    assert 'Allow: GET, PUT, PATCH, DELETE' in response.serialize_headers().decode()
+    assert 'Allow: GET, PUT, PATCH, DELETE' in response.serialize_headers(
+    ).decode()
 
     # Jane decides to make a better Billy
     better_billy = {
@@ -460,7 +479,8 @@ def supervisor_can_assign_schedule_to_participant(billy, jane, possey):
 
     # She finds Billy's schedule api.
     schedule_url = '/api/weeklyschedules/{}/'.format(
-        response_data['assigned_weekly_schedule'])
+        response_data['assigned_weekly_schedule']
+    )
 
     response = client.get(schedule_url, format='json')
 
@@ -469,8 +489,7 @@ def supervisor_can_assign_schedule_to_participant(billy, jane, possey):
 
     # Jane updates Billy's schedule, so he doesn't have to be idle all the
     # time.
-    response = client.patch(
-        schedule_url, data=billys_schedule, format='json')
+    response = client.patch(schedule_url, data=billys_schedule, format='json')
     assert response.status_code == status.HTTP_200_OK
     updated_schedule = json.loads(response.content.decode())
     assert len(updated_schedule['days']) == 7

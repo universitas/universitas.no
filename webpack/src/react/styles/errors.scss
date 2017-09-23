@@ -1,0 +1,54 @@
+@keyframes jump {
+  0% { transform: scale(0,0); }
+  70% { transform: scale(1.2,1.2); }
+  100% { transform: scale(1,1); }
+}
+.ErrorTool {
+  position: relative;
+  > svg {
+    color: yellow;
+    animation: .2s ease-out 0s 1 jump;
+  }
+  .errorItems {
+    cursor: default;
+    $bg: red;
+    $dbg: rgba(black, 0.3);
+    font-size: 0.3em;
+    background-color: $bg;
+    position: absolute;
+    display: flex;
+    flex-direction: column-reverse;
+    left: 100%;
+    bottom: 0;
+    min-width: 20em;
+    .ErrorItem {
+      display: flex;
+      align-items: center;
+      &:hover {
+        background-color: lighten($bg, 10%);
+      }
+      .text {
+        flex: 1;
+        padding-right: 1em;
+      }
+      .dismiss {
+        font-size: 1.5em;
+        cursor: pointer;
+        color: $dbg;
+      }
+      padding: 0.5em;
+      border-top: 1px solid $dbg;
+      &:last-child {
+        border-top: none;
+      }
+    }
+    display: flex;
+    visibility: hidden;
+    transition: visibility .3s;
+  }
+  &:hover {
+    .errorItems {
+      visibility: visible;
+    }
+  }
+}

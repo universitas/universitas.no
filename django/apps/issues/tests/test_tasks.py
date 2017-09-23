@@ -1,25 +1,22 @@
 """Tests for issue and pdf tasks"""
 
-from PIL import Image
-import pytest
-import tempfile
 import os
 import shutil
+import tempfile
 from pathlib import PosixPath as Path
-# from django.utils.timezone import datetime
-from django.core.files.base import ContentFile
+
+from PIL import Image
+
+import pytest
 from apps.issues.models import Issue, PrintIssue
 # from apps.issues.models import extract_pdf_text
 from apps.issues.tasks import (
-    MissingBinary,
-    require_binary,
-    convert_pdf_to_web,
-    get_staging_pdf_files,
-    optimize_staging_pages,
-    generate_pdf_preview,
-    create_web_bundle,
-    create_print_issue_pdf,
+    MissingBinary, convert_pdf_to_web, create_print_issue_pdf,
+    create_web_bundle, generate_pdf_preview, get_staging_pdf_files,
+    optimize_staging_pages, require_binary
 )
+# from django.utils.timezone import datetime
+from django.core.files.base import ContentFile
 
 PAGE_ONE = 'UNI11VER16010101000.pdf'
 
@@ -50,18 +47,17 @@ def tmp_fixture_dir(settings):
 
 def test_get_staging_pdf_files(tmp_fixture_dir):
     globpattern = 'UNI11VER*.pdf'
-    pages = get_staging_pdf_files(
-        globpattern)
+    pages = get_staging_pdf_files(globpattern)
     assert len(pages) == 4
 
     # Exclude pages that are older than tomorrow
-    future_pages = get_staging_pdf_files(
-        globpattern, expiration_days=-1)
+    future_pages = get_staging_pdf_files(globpattern, expiration_days=-1)
     assert len(future_pages) == 0
     # Files should exist
     assert all(os.path.exists(pdf) for pdf in pages)
     future_pages = get_staging_pdf_files(
-        globpattern, expiration_days=-1, delete_expired=True)
+        globpattern, expiration_days=-1, delete_expired=True
+    )
     assert len(future_pages) == 0
     # Files should be deleted
     assert all(not os.path.exists(pdf) for pdf in pages)
@@ -131,8 +127,9 @@ def test_convert_pdf_page_to_image(tmp_fixture_dir):
 
 
 def test_require_binary_decorator():
+    def fn():
+        return 'spam'
 
-    def fn(): return 'spam'
     assert fn() == 'spam'
 
     # Try to decorate fn() with a valid binary

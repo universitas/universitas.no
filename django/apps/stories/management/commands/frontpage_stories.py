@@ -1,8 +1,9 @@
 import logging
+
+from apps.frontpage.models import FrontpageStory
+from apps.stories.models import Story
 from django.core.management.base import BaseCommand
 
-from apps.stories.models import Story
-from apps.frontpage.models import FrontpageStory
 logger = logging.getLogger(__name__)
 
 
@@ -11,14 +12,16 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--number', '-n',
+            '--number',
+            '-n',
             type=int,
             dest='number',
             default=0,
             help='Number of stories.'
         )
         parser.add_argument(
-            '--delete', '-d',
+            '--delete',
+            '-d',
             action='store_true',
             dest='delete',
             default=False,

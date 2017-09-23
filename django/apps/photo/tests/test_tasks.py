@@ -1,7 +1,10 @@
-import pytest
 from pathlib import Path
-from apps.photo.tasks import autocrop_image_file, new_staging_images, post_save_task
+
+import pytest
 from apps.photo.models import ImageFile
+from apps.photo.tasks import (
+    autocrop_image_file, new_staging_images, post_save_task
+)
 from django.core.files import File
 
 

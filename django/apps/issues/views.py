@@ -3,14 +3,15 @@
     Issues views
 """
 
-from django.views.generic.base import TemplateView
 from django.utils import timezone
+from django.views.generic.base import TemplateView
+
 from .models import Issue
+
 # from django.conf import settings
 
 
 class PdfArchiveView(TemplateView):
-
     """ PDF archive """
 
     template_name = 'pdf-archive.html'
@@ -26,7 +27,6 @@ class PdfArchiveView(TemplateView):
 
 
 class PubPlanView(TemplateView):
-
     """ Publication plan """
 
     template_name = 'publication-plan.html'

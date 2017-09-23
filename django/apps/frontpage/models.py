@@ -1,23 +1,20 @@
 # pylint: disable=no-member
-import random
 import logging
-
-# Django core
-from django.db import models
-from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
-
-from model_utils.models import TimeStampedModel
+import random
 
 # Project apps
 from apps.photo.models import ImageFile
+from django.core.exceptions import ValidationError
+# Django core
+from django.db import models
+from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
 from utils.model_mixins import Edit_url_mixin
 
 logger = logging.getLogger(__name__)
 
 
 class FrontpageManager(models.Manager):
-
     def root(self):
         return super().get_queryset().first()
 
@@ -37,8 +34,8 @@ class Frontpage(TimeStampedModel):
     )
 
     published = models.BooleanField(
-        help_text=_('This page is published.'),
-        default=False)
+        help_text=_('This page is published.'), default=False
+    )
 
     # draft_of = models.ForeignKey(
     #     'Frontpage',
@@ -69,19 +66,20 @@ class Frontpage(TimeStampedModel):
 def validate_columns(value, minvalue=1, maxvalue=12):
     if not minvalue <= value <= maxvalue:
         raise ValidationError(
-            _('{} is not a number between {} and {}').format(
-                value, minvalue, maxvalue))
+            _('{} is not a number between {} and {}')
+            .format(value, minvalue, maxvalue)
+        )
 
 
 def validate_height(value, minvalue=1, maxvalue=12):
     if not minvalue <= value <= maxvalue:
         raise ValidationError(
-            _('{} is not a number between {} and {}').format(
-                value, minvalue, maxvalue))
+            _('{} is not a number between {} and {}')
+            .format(value, minvalue, maxvalue)
+        )
 
 
 class FrontPageModule(TimeStampedModel, Edit_url_mixin):
-
     """ A single item on the front page """
 
     class Meta:
@@ -96,21 +94,25 @@ class FrontPageModule(TimeStampedModel, Edit_url_mixin):
     height = models.PositiveSmallIntegerField(
         help_text=_('height - minimum 1 maximum 12'),
         default=2,
-        validators=[validate_height, ],
+        validators=[
+            validate_height,
+        ],
     )
 
     columns = models.PositiveSmallIntegerField(
         help_text=_('width - minimum 1 maximum 12'),
         default=6,
-        validators=[validate_columns, ],
+        validators=[
+            validate_columns,
+        ],
     )
 
 
 class StoryModule(FrontPageModule):
-
     """ Frontpage Story placement module """
 
     ORDER_GAP = 100
+
     # positions have free space inbetween to
     # make reordering possible without changing many objects in the database.
 
@@ -152,7 +154,6 @@ class StoryModule(FrontPageModule):
 
 
 class StaticModule(FrontPageModule):
-
     """ Block with static placement containing special content """
 
     class Meta:
@@ -163,13 +164,11 @@ class StaticModule(FrontPageModule):
     name = models.CharField(max_length=50)
     content = models.TextField()
 
-    position = models.IntegerField(
-        help_text=_('Placement on front page'),
-    )
+    position = models.IntegerField(help_text=_('Placement on front page'), )
 
     render_template = models.BooleanField(
-        help_text=_('Use django template rendering'),
-        default=False)
+        help_text=_('Use django template rendering'), default=False
+    )
 
     def save(self, *args, **kwargs):
         if '{' in self.content or '}' in self.content:
@@ -178,10 +177,24 @@ class StaticModule(FrontPageModule):
 
 
 class FrontpageStoryManager(models.Manager):
-    SIZES = [(3, 1), (3, 1), (3, 1), (3, 2),
-             (3, 1), (3, 2), (3, 2), (4, 1),
-             (4, 2), (4, 2), (6, 1), (6, 2),
-             (9, 2), (9, 2), (12, 1), (12, 2), ]
+    SIZES = [
+        (3, 1),
+        (3, 1),
+        (3, 1),
+        (3, 2),
+        (3, 1),
+        (3, 2),
+        (3, 2),
+        (4, 1),
+        (4, 2),
+        (4, 2),
+        (6, 1),
+        (6, 2),
+        (9, 2),
+        (9, 2),
+        (12, 1),
+        (12, 2),
+    ]
 
     def published(self):
 
@@ -234,16 +247,13 @@ class FrontpageStoryManager(models.Manager):
 
 
 class FrontpageStory(TimeStampedModel, Edit_url_mixin):
-
     class Meta:
         verbose_name = _('Frontpage Story')
         verbose_name_plural = _('Frontpage Stories')
 
     objects = FrontpageStoryManager()
 
-    story = models.ForeignKey(
-        'stories.Story'
-    )
+    story = models.ForeignKey('stories.Story')
     placements = models.ManyToManyField(
         Frontpage,
         through=StoryModule,
@@ -251,7 +261,8 @@ class FrontpageStory(TimeStampedModel, Edit_url_mixin):
     )
     imagefile = models.ForeignKey(
         ImageFile,
-        null=True, blank=True,
+        null=True,
+        blank=True,
         help_text=_('image'),
     )
     headline = models.CharField(

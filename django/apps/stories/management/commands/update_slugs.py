@@ -1,5 +1,5 @@
+from apps.stories.models import Section, Story, StoryType
 from django.core.management.base import BaseCommand
-from apps.stories.models import Story, Section, StoryType
 
 
 class Command(BaseCommand):

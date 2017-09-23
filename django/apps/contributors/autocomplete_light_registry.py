@@ -1,6 +1,7 @@
 import autocomplete_light.shortcuts as autocomplete_light
-from .models import Contributor
 from django.utils.translation import ugettext_lazy as _
+
+from .models import Contributor
 
 # This will generate a PersonAutocomplete class
 autocomplete_light.register(

@@ -5,27 +5,29 @@ Export content from old website and the
 production system to the new website.
 """
 
-import os
 import errno
-import re
-from datetime import datetime, date, time
 import logging
+import os
+import re
+from datetime import date, datetime, time
 # from html.parser import HTMLParser
 from html import unescape
+
 from bs4 import BeautifulSoup
+
+from apps.legacy_db.models import Bildetekst, Prodbilde, Prodsak, Sak
+from apps.photo.models import ImageFile, upload_image_to
+from apps.stories.models import (
+    InlineLink, Section, Story, StoryImage, StoryType
+)
+from django.conf import settings
+from django.core import serializers
+from django.db import connection
+from django.utils import timezone
+from slugify import Slugify
+
 # from PyPDF2 import PdfFileReader
 
-from django.utils import timezone
-from django.conf import settings
-from django.db import connection
-from django.core import serializers
-
-from apps.legacy_db.models import (
-    Sak, Prodsak, Bildetekst, Prodbilde)
-from apps.stories.models import (
-    Story, StoryType, Section, StoryImage, InlineLink)
-from apps.photo.models import ImageFile, upload_image_to
-from slugify import Slugify
 slugify_filename = Slugify(safe_chars='.-', separator='-')
 
 STAGING_FOLDER = os.path.join(settings.STAGING_ROOT, 'STAGING', 'IMAGES')
@@ -49,10 +51,9 @@ def reset_db_autoincrement():
     """
     cursor = connection.cursor()
     tables = [
-        'photo_imagefile',
-        'stories_story',
-        'stories_storytype',
-        'django_migrations']
+        'photo_imagefile', 'stories_story', 'stories_storytype',
+        'django_migrations'
+    ]
     sql_pattern = (
         "SELECT setval('{table}_id_seq'"
         ", (SELECT MAX(id) FROM {table})+1)"
@@ -67,18 +68,20 @@ def reset_db_autoincrement():
 def drop_model_tables(*models):
     """ Empty tables before importing from legacy database """
     for model in models:
-        logger.debug('sletter {model_label}'.format(
-            model_label=model.__name__))
+        logger.debug(
+            'sletter {model_label}'.format(model_label=model.__name__)
+        )
         model.objects.all().delete()
 
 
 def import_legacy_website_content(
-        first=0,
-        last=None,
-        reverse=False,
-        text_only=False,
-        replace_existing=False,
-        autocrop=False):
+    first=0,
+    last=None,
+    reverse=False,
+    text_only=False,
+    replace_existing=False,
+    autocrop=False
+):
     """ Import old content from legacy website. """
     order_by = 'id_sak' if not reverse else '-id_sak'
     websaker = Sak.objects.exclude(publisert=0).order_by(order_by)[first:last]
@@ -87,7 +90,7 @@ def import_legacy_website_content(
         if replace_existing:
             this_story = Story.objects.filter(pk=websak.pk)
             if this_story.exists():
-                logger.debug('sak %s finnes' % (websak.pk,))
+                logger.debug('sak %s finnes' % (websak.pk, ))
                 this_story.delete()
 
         new_story = _importer_websak(websak)
@@ -99,16 +102,16 @@ def import_legacy_website_content(
     return len(websaker)
 
 
-def import_prodsys_content(
-        replace_existing=False,
-        autocrop=False):
+def import_prodsys_content(replace_existing=False, autocrop=False):
     """ Import all new stories from prodsys. """
-    status = [Prodsak.READY_FOR_WEB, ]
+    status = [
+        Prodsak.READY_FOR_WEB,
+    ]
     # status = list(range(Prodsak.READY_FOR_WEB, Prodsak.ARCHIVED))
 
-    prodsak_ids = Prodsak.objects.filter(
-        produsert__in=status).values_list(
-        'prodsak_id', flat=True)
+    prodsak_ids = Prodsak.objects.filter(produsert__in=status).values_list(
+        'prodsak_id', flat=True
+    )
     prodsak_ids = sorted(set(prodsak_ids))
 
     logger.info('Found {} stories to import'.format(len(prodsak_ids)))
@@ -117,9 +120,9 @@ def import_prodsys_content(
         _importer_prodsak(prodsak_id, replace_existing, autocrop)
         if not settings.DEBUG:
             # update prodsys
-            Prodsak.objects.filter(
-                prodsak_id=prodsak_id
-            ).update(produsert=Prodsak.PUBLISHED_ON_WEB)
+            Prodsak.objects.filter(prodsak_id=prodsak_id).update(
+                produsert=Prodsak.PUBLISHED_ON_WEB
+            )
 
     return len(prodsak_ids)
 
@@ -133,10 +136,9 @@ def _importer_websak(websak):
     try:
         old_story = Story.objects.get(id=websak.id_sak)
         logger.warn(
-            '{:>5} story already exists: {} {}'.format(
-                count,
-                old_story,
-                old_story.pk))
+            '{:>5} story already exists: {} {}'.
+            format(count, old_story, old_story.pk)
+        )
         return old_story
     except Story.DoesNotExist:
         pass
@@ -145,10 +147,8 @@ def _importer_websak(websak):
     try:
         new_websak = Sak.objects.get(undersak=websak.pk)
         logger.warn(
-            '{:>5} Has parent: {} {}'.format(
-                count,
-                new_websak.pk,
-                websak.pk))
+            '{:>5} Has parent: {} {}'.format(count, new_websak.pk, websak.pk)
+        )
         return _importer_websak(new_websak)
     except Sak.DoesNotExist:
         pass
@@ -160,7 +160,7 @@ def _importer_websak(websak):
         id=websak.id_sak,
         publication_date=_make_aware(websak.dato),
         story_type=_get_story_type(websak.mappe),
-        legacy_html_source=serializers.serialize('json', (websak,)),
+        legacy_html_source=serializers.serialize('json', (websak, )),
         hit_count=websak.lesninger,
     )
 
@@ -179,7 +179,8 @@ def _importer_websak(websak):
                 Prodsak.READY_FOR_WEB,
                 Prodsak.PUBLISHED_ON_WEB,
                 Prodsak.ARCHIVED,
-            ])
+            ]
+        )
     except Prodsak.DoesNotExist:  # couldn't find the story in prodsys
         pass
     else:
@@ -197,13 +198,12 @@ def _importer_websak(websak):
             try:
                 undersak = Sak.objects.get(pk=websak.undersak)
                 xtags = _websak_til_xtags(undersak).replace(
-                    '@tit:',
-                    '@undersaktit:')
+                    '@tit:', '@undersaktit:'
+                )
                 new_story.bodytext_markup += '\n' + xtags
                 logger.debug(
-                    'undersak: {} len:{}'.format(
-                        websak.undersak,
-                        len(xtags)))
+                    'undersak: {} len:{}'.format(websak.undersak, len(xtags))
+                )
             except Sak.DoesNotExist:
                 # Dangling reference in database.
                 pass
@@ -211,18 +211,14 @@ def _importer_websak(websak):
     new_story.clean()
     new_story.save()
     logger.debug(
-        '{:>5} story saved: {} {}'.format(
-            count,
-            new_story,
-            new_story.pk))
+        '{:>5} story saved: {} {}'.format(count, new_story, new_story.pk)
+    )
     return new_story
 
 
 def _importer_prodsak(
-        prodsak_id,
-        replace_existing=False,
-        autocrop=False,
-        import_images=True):
+    prodsak_id, replace_existing=False, autocrop=False, import_images=True
+):
     """
     Create a Story with images from a prodsak object in the prodsys database.
     """
@@ -267,14 +263,14 @@ def _get_xtags_from_prodsys(prodsak_id, status_in=None):
 
     # Check whether the story has been edited in InDesign.
     if "Vellykket eksport fra InDesign!" in (
-            final_version.kommentar or '') and '@tit' in (
-            final_version.tekst or ''):
+        final_version.kommentar or ''
+    ) and '@tit' in (final_version.tekst or ''):
         status = Story.STATUS_FROM_DESK
     else:
         status = Story.STATUS_DRAFT
 
     # Prepare content data.
-    json = serializers.serialize('json', (final_version,))
+    json = serializers.serialize('json', (final_version, ))
     xtags = _clean_up_prodsys_encoding(final_version.tekst or '')
     xtags = _clean_up_html(xtags)
 
@@ -347,14 +343,15 @@ def _importer_bilder_fra_webside(websak, story, autocrop):
 
 
 def _create_image_file(
-        filepath, publication_date=None, pk=None, prodsys=False):
+    filepath, publication_date=None, pk=None, prodsys=False
+):
     """ Create an ImageFile object from a filepath. """
     current_filepath = upload_image_to(ImageFile, os.path.basename(filepath))
 
     existing_image = (
-        ImageFile.objects.filter(pk=pk) |
-        ImageFile.objects.filter(source_file=filepath) |
-        ImageFile.objects.filter(source_file=current_filepath)
+        ImageFile.objects.filter(pk=pk)
+        | ImageFile.objects.filter(source_file=filepath)
+        | ImageFile.objects.filter(source_file=current_filepath)
     )
     try:
         image = existing_image.get()
@@ -372,16 +369,15 @@ def _create_image_file(
             return None
 
         creation_time = _make_aware(
-            datetime.fromtimestamp(os.path.getmtime(staging_image)))
+            datetime.fromtimestamp(os.path.getmtime(staging_image))
+        )
 
         if publication_date:
             publication_datetime = _make_aware(publication_date)
             creation_time = min(creation_time, publication_datetime)
 
         image_file = ImageFile.objects.create_from_file(
-            pk=pk,
-            filepath=staging_image,
-            created=creation_time
+            pk=pk, filepath=staging_image, created=creation_time
         )
         logger.debug('New image file created: %s' % image_file)
         return image_file
@@ -394,7 +390,8 @@ def _make_aware(time_input):
     if type(time_input) == date:
         time_input = datetime.combine(time_input, time())
     return timezone.make_aware(
-        time_input, timezone=timezone.get_current_timezone())
+        time_input, timezone=timezone.get_current_timezone()
+    )
 
 
 def _get_story_type(prodsys_mappe):
@@ -403,7 +400,8 @@ def _get_story_type(prodsys_mappe):
         story_type = StoryType.objects.filter(prodsys_mappe=prodsys_mappe)[0]
     except IndexError:
         generic_section, exists = Section.objects.get_or_create(
-            title='New Section')
+            title='New Section'
+        )
         story_type = StoryType.objects.create(
             prodsys_mappe=prodsys_mappe,
             name="New Story Type ({label})".format(label=prodsys_mappe),
@@ -448,7 +446,8 @@ def _websak_til_xtags(websak):
 
     def xtags_body_text():
         content_list.append(
-            '@txt:{text_content}'.format(text_content=websak.brodtekst.strip())
+            '@txt:{text_content}'.
+            format(text_content=websak.brodtekst.strip())
         )
 
     def xtags_pull_quotes():
@@ -458,22 +457,19 @@ def _websak_til_xtags(websak):
             quote = re.sub(r'<.*class.*?>', '\n@sitatbyline:', quote)
             # remove html tags
             quote = re.sub(r'<.*?>', '\n', quote)
-            content_list.append(
-                '@sitat:{quote}'.format(quote=quote)
-            )
+            content_list.append('@sitat:{quote}'.format(quote=quote))
 
     def xtags_review_aside():
         if websak.subtittel1:
             content_list.append('\n@fakta: Anmeldelse')
             for item in (
-                    websak.subtittel1,
-                    websak.subtittel2,
-                    websak.subtittel3,
-                    websak.subtittel4):
+                websak.subtittel1, websak.subtittel2, websak.subtittel3,
+                websak.subtittel4
+            ):
                 if item:
                     content_list.append(
-                        '# {text_content}'.format(
-                            text_content=item))
+                        '# {text_content}'.format(text_content=item)
+                    )
 
     def xtags_fact_asides():
         for aside in websak.fakta_set.all():

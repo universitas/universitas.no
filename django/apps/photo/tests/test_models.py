@@ -1,5 +1,6 @@
-import pytest
 from pathlib import PosixPath as Path
+
+import pytest
 from apps.photo.models import ImageFile
 from django.core.files import File
 

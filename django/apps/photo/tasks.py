@@ -1,16 +1,16 @@
 """Celery tasks for photos"""
+import logging
 import os
 from datetime import timedelta
 
-from celery.task import periodic_task
-from celery import shared_task
-
 from apps.core.staging import new_staging_images
-from .models import upload_image_to, ImageFile
+from celery import shared_task
+from celery.task import periodic_task
+
 from .cropping.boundingbox import CropBox
 from .cropping.crop_detector import HybridDetector
+from .models import ImageFile, upload_image_to
 
-import logging
 logger = logging.getLogger(__name__)
 
 
@@ -41,8 +41,10 @@ def autocrop_image_file(pk):
         cropping_method = determine_cropping_method(features)
     instance.crop_box = crop_box
     instance.cropping_method = cropping_method
-    logger.debug('%s %s %s' % (instance, crop_box,
-                               instance.get_cropping_method_display()))
+    logger.debug(
+        '%s %s %s' %
+        (instance, crop_box, instance.get_cropping_method_display())
+    )
     instance.save(update_fields=['crop_box', 'cropping_method'])
 
 
@@ -59,7 +61,9 @@ def clean_up_pending_autocrop():
     limit = 200  # do in batches
     image_pks = ImageFile.objects.filter(
         cropping_method=ImageFile.CROP_PENDING
-    ).order_by('?').values_list('pk', flat=True)
+    ).order_by('?').values_list(
+        'pk', flat=True
+    )
 
     for image_pk in image_pks[:limit]:
         try:
@@ -68,7 +72,8 @@ def clean_up_pending_autocrop():
         except Exception as err:
             logger.exception(f'pending autocrop broke: {image_pk}')
             ImageFile.objects.filter(pk=image_pk).update(
-                cropping_method=ImageFile.CROP_NONE)
+                cropping_method=ImageFile.CROP_NONE
+            )
 
 
 @periodic_task(run_every=timedelta(minutes=1))
@@ -86,7 +91,8 @@ def import_staging_images(max_age=timedelta(minutes=10)):
         try:
             try:
                 img = ImageFile.objects.get(
-                    source_file__endswith='/' + os.path.basename(dest))
+                    source_file__endswith='/' + os.path.basename(dest)
+                )
             except ImageFile.MultipleObjectsReturned:
                 img = ImageFile.objects.get(source_file=dest)
         except ImageFile.DoesNotExist:

@@ -1,6 +1,7 @@
 """ Template tag for contributor byline image """
 
 import logging
+
 from django import template
 
 register = template.Library()

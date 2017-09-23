@@ -1,5 +1,5 @@
 from apps.issues.models import Issue, PrintIssue
-from rest_framework import serializers, viewsets, filters, pagination
+from rest_framework import filters, pagination, serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
 
 
@@ -15,7 +15,6 @@ class NestedPDFSerializer(serializers.ModelSerializer):
 
 
 class IssueSerializer(serializers.HyperlinkedModelSerializer):
-
     """ModelSerializer for Issue"""
 
     pdfs = NestedPDFSerializer(
@@ -41,7 +40,6 @@ class LargeLimitPagination(pagination.LimitOffsetPagination):
 
 
 class IssueViewSet(viewsets.ModelViewSet):
-
     """
     API endpoint that allows Issue to be viewed or updated.
     """
@@ -54,7 +52,6 @@ class IssueViewSet(viewsets.ModelViewSet):
 
 
 class PrintIssueSerializer(serializers.HyperlinkedModelSerializer):
-
     """ModelSerializer for PrintIssue"""
 
     class Meta:
@@ -69,7 +66,6 @@ class PrintIssueSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class PrintIssueViewSet(viewsets.ModelViewSet):
-
     """
     API endpoint that allows PrintIssue to be viewed or updated.
     """

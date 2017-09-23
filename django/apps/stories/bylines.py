@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """ Byline cleanup magic. """
-import re
 import logging
+import re
+
 bylines_logger = logging.getLogger('bylines')
 
 
@@ -48,8 +49,8 @@ def clean_up_bylines(raw_bylines):
         # (r'^(.*?) *\(([^)]*)\) *$', r'\2: \1', re.M),
         (
             r'^(.*?) *\((\w*(?:fot|vid|pho|tex|tek|ill|gra)[^)]*)\) *$',
-            r'\2: \1',
-            re.M | re.I),
+            r'\2: \1', re.M | re.I
+        ),
 
         # Oversatt = translation
         (r'^(oversatt av|translated by):? ', 'translation: ', re.I | re.M),
@@ -131,7 +132,5 @@ def clean_up_bylines(raw_bylines):
     if 'photo:' in bylines:
         bylines = bylines.replace('by:', 'text:')
 
-    bylines_logger.info(
-        '("%s",\n"%s"),' % (raw_bylines, bylines)
-    )
+    bylines_logger.info('("%s",\n"%s"),' % (raw_bylines, bylines))
     return bylines

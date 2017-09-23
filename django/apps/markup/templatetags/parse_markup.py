@@ -1,5 +1,6 @@
-from django import template
 import re
+
+from django import template
 from django.utils.safestring import mark_safe
 
 register = template.Library()
@@ -27,7 +28,8 @@ def insert_span_to(value, marker=':'):
     if marker in value:
         find = r'^(.*?){}'.format(marker)
         replace = r'<span class="{}">\1{}</span>'.format(
-            html_class, '' if strip else marker)
+            html_class, '' if strip else marker
+        )
         value = re.sub(find, replace, value, re.M)
     return mark_safe(value)
 

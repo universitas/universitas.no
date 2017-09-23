@@ -3,10 +3,12 @@
 Views for articles
 """
 import logging
-from django.shortcuts import render
-from django.http import HttpResponseRedirect, Http404
+
 from apps.core.views import search_404_view
+from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import render
 from django.utils import translation
+
 from .models import Story
 
 logger = logging.getLogger(__name__)
@@ -34,7 +36,13 @@ def article_view(request, story_id, **section_and_slug):
 
     translation.activate(story.language)
 
-    context = {'story': story, }
-    response = render(request, template, context,)
+    context = {
+        'story': story,
+    }
+    response = render(
+        request,
+        template,
+        context,
+    )
     story.visit_page(request)
     return response

@@ -1,14 +1,19 @@
 """ Admin for frontpage app.  """
 
-from django.contrib import admin
-from .models import StoryModule, FrontpageStory, StaticModule
 from apps.photo.admin import ThumbAdmin
 from autocomplete_light.forms import modelform_factory
+from django.contrib import admin
+
+from .models import FrontpageStory, StaticModule, StoryModule
 
 
 class StoryModuleInline(admin.TabularInline):
     model = StoryModule
-    fields = ('position', 'columns', 'height',),
+    fields = (
+        'position',
+        'columns',
+        'height',
+    ),
     extra = 0
 
 
@@ -36,9 +41,7 @@ class FrontpageStoryAdmin(admin.ModelAdmin, ThumbAdmin):
         # 'kicker',
         # 'lede',
     )
-    inlines = (
-        StoryModuleInline,
-    )
+    inlines = (StoryModuleInline, )
     search_fields = (
         'headline',
         'kicker',

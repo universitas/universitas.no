@@ -1,17 +1,18 @@
-import typing
-import pytest
-import numbers
 import json
+import numbers
+import typing
+
+import pytest
 
 
 class Box:
-
     """Rectangular bounding box"""
 
     _attrs = ['left', 'top', 'bottom', 'right']
 
-    def __init__(self, left: float, top: float,
-                 right: float, bottom: float) -> None:
+    def __init__(
+        self, left: float, top: float, right: float, bottom: float
+    ) -> None:
         if top > bottom or left > right:
             raise ValueError('Width and height must be greater than zero')
         self.left = left
@@ -33,8 +34,10 @@ class Box:
 
     def __eq__(self, other: typing.Any) -> bool:
         """Equality check"""
-        return (self.__class__ == other.__class__ and
-                self.__dict__ == other.__dict__)
+        return (
+            self.__class__ == other.__class__
+            and self.__dict__ == other.__dict__
+        )
 
     def __add__(self, other: typing.Any) -> 'Box':
         """Returns a Box containing both input boxes"""
@@ -88,7 +91,8 @@ class Box:
     @width.setter
     def width(self, value: float) -> None:
         self.left, self.right = (
-            self.center[0] + x * value * .5 for x in [-1, 1])
+            self.center[0] + x * value * .5 for x in [-1, 1]
+        )
 
     @property
     def height(self) -> float:
@@ -97,7 +101,8 @@ class Box:
     @height.setter
     def height(self, value: float) -> None:
         self.top, self.bottom = (
-            self.center[1] + x * value * .5 for x in [-1, 1])
+            self.center[1] + x * value * .5 for x in [-1, 1]
+        )
 
     @property
     def diagonal(self) -> float:
@@ -117,17 +122,13 @@ class Box:
     @property
     def center(self) -> typing.Tuple[float, float]:
         """Center point of box (x, y)"""
-        return (
-            (self.left + self.right) / 2,
-            (self.top + self.bottom) / 2
-        )
+        return ((self.left + self.right) / 2, (self.top + self.bottom) / 2)
 
-    def serialize(self, precision: int=4) -> typing.Mapping[str, float]:
+    def serialize(self, precision: int = 4) -> typing.Mapping[str, float]:
         """Build a json serializable dictionary for the box"""
 
-        return dict(
-            (a, round(getattr(self, a), precision)) for a in self._attrs
-        )
+        return dict((a, round(getattr(self, a), precision))
+                    for a in self._attrs)
 
 
 class CropBox(Box):
@@ -181,7 +182,7 @@ def test_box_properties():
     width, height = 7, 11
     box = Box(0, 0, width, height)
     # test getters
-    assert box.diagonal == (width ** 2 + height ** 2) ** 0.5
+    assert box.diagonal == (width**2 + height**2)**0.5
     assert (box.width, box.height) == (width, height)
     assert box.size == width * height
     assert box.ratio == width / height
@@ -192,7 +193,7 @@ def test_box_properties():
     center = box.center
     box.width, box.height = width, height
     assert box.center == center  # unchanged
-    assert box.diagonal == (width ** 2 + height ** 2) ** 0.5
+    assert box.diagonal == (width**2 + height**2)**0.5
     assert (box.width, box.height) == (width, height)
     assert box.size == width * height
     assert box.ratio == width / height

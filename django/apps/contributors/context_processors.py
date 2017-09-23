@@ -3,8 +3,10 @@ from .models import Stint
 
 
 def get_staff():
-    positions = ['redaktør', 'nyhetsleder', 'nettredaktør', 'daglig leder',
-                 'annonseselger', 'webutvikler']
+    positions = [
+        'redaktør', 'nyhetsleder', 'nettredaktør', 'daglig leder',
+        'annonseselger', 'webutvikler'
+    ]
     active = Stint.objects.active().select_related('contributor', 'position')
     staff = []
     for position in positions:
@@ -19,7 +21,8 @@ def get_staff():
             phone = None
 
         staff.append(
-            dict(position=position, email=email, phone=phone, name=name))
+            dict(position=position, email=email, phone=phone, name=name)
+        )
     return staff
 
 

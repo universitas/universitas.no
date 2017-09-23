@@ -3,20 +3,16 @@ and production system. """
 
 import logging
 
-from django.conf import settings
-from django.core.management.base import BaseCommand  # ,CommandError
-
+from apps.contributors.models import Contributor
 # from apps.stories.models import Story
 from apps.legacy_db.export_content_and_images import (
-    import_legacy_website_content,
-    import_prodsys_content,
-    drop_model_tables,
-    reset_db_autoincrement,
+    drop_model_tables, import_legacy_website_content, import_prodsys_content,
+    reset_db_autoincrement
 )
-
-from apps.stories.models import Story
-from apps.contributors.models import Contributor
 from apps.photo.models import ImageFile
+from apps.stories.models import Story
+from django.conf import settings
+from django.core.management.base import BaseCommand  # ,CommandError
 
 logger = logging.getLogger(__name__)
 
@@ -28,56 +24,64 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--replace_existing', '-x',
+            '--replace_existing',
+            '-x',
             action='store_true',
             dest='replace existing',
             default=False,
             help='Replace existing content from previous imports.'
         )
         parser.add_argument(
-            '--first', '-f',
+            '--first',
+            '-f',
             type=int,
             dest='first',
             default=0,
             help='Number of stories to skip at beginning of import.'
         )
         parser.add_argument(
-            '--number', '-n',
+            '--number',
+            '-n',
             type=int,
             dest='number',
             default=0,
             help='Number of stories to import'
         )
         parser.add_argument(
-            '--reverse', '-r',
+            '--reverse',
+            '-r',
             action='store_true',
             dest='reverse',
             default=False,
             help='Start with newest stories.'
         )
         parser.add_argument(
-            '--textonly', '-t',
+            '--textonly',
+            '-t',
             action='store_true',
             dest='text only',
             default=False,
             help='Only import text.'
         )
         parser.add_argument(
-            '--drop', '-d',
+            '--drop',
+            '-d',
             action='store_true',
             dest='drop',
             default=False,
             help='Drop old content from the database.'
         )
         parser.add_argument(
-            '--prodsys', '-p',
+            '--prodsys',
+            '-p',
             action='store_true',
             dest='prodsys only',
             default=False,
             help='Import articles from prodsys.'
         )
         parser.add_argument(
-            '--crop', '-c',
+            '--crop',
+            '-c',
             action='store_true',
             dest='autocrop',
             default=False,
@@ -100,7 +104,8 @@ class Command(BaseCommand):
             )
             if status:
                 self.stdout.write(
-                    'Successfully imported content from prodsys.')
+                    'Successfully imported content from prodsys.'
+                )
             else:
                 self.stdout.write('No content to import.')
 
@@ -109,7 +114,8 @@ class Command(BaseCommand):
             if settings.DEBUG:
                 self.stderr.write(
                     'WARNING: Django running with in DEBUG mode.\n'
-                    'This command might run out of memory.')
+                    'This command might run out of memory.'
+                )
 
             if options['drop'] and not options['replace existing']:
                 drop_model_tables(Story, Contributor, ImageFile)
@@ -126,6 +132,7 @@ class Command(BaseCommand):
             reset_db_autoincrement()
             if status:
                 self.stdout.write(
-                    'Successfully imported content from website.')
+                    'Successfully imported content from website.'
+                )
             else:
                 self.stdout.write('No content to import.')

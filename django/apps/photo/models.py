@@ -1,32 +1,32 @@
 """ Photography and image files in the publication  """
 
+import hashlib
+import logging
 # Python standard library
 import os
 import re
-import hashlib
-import logging
 from io import BytesIO
 from pathlib import Path
 
-# Django core
-from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
-from django.core.validators import FileExtensionValidator
-from django.core.files import File
-from django.conf import settings
-
-# Installed apps
-from model_utils.models import TimeStampedModel
-from utils.model_mixins import Edit_url_mixin
-from sorl import thumbnail
-from slugify import Slugify
-import boto
-import imagehash
 import PIL
 
+import boto
+import imagehash
 # Project apps
 from apps.issues.models import current_issue
+from django.conf import settings
+from django.core.files import File
+from django.core.validators import FileExtensionValidator
+# Django core
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
+# Installed apps
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from utils.model_mixins import Edit_url_mixin
+
 from .cropping.models import AutoCropImage
 
 logger = logging.getLogger(__name__)
@@ -73,24 +73,18 @@ def s3_md5(s3key, blocksize=65536):
 
 def upload_image_to(instance, filename):
     """Image folder name based on issue number and year"""
-    return os.path.join(
-        instance.upload_folder(),
-        instance.slugify(filename)
-    )
+    return os.path.join(instance.upload_folder(), instance.slugify(filename))
 
 
 class ImageFileQuerySet(models.QuerySet):
     def pending(self):
-        return self.filter(
-            cropping_method=self.model.CROP_PENDING)
+        return self.filter(cropping_method=self.model.CROP_PENDING)
 
     def photos(self):
-        return self.exclude(
-            source_file__startswith=ProfileImage.UPLOAD_FOLDER)
+        return self.exclude(source_file__startswith=ProfileImage.UPLOAD_FOLDER)
 
     def profile_images(self):
-        return self.filter(
-            source_file__startswith=ProfileImage.UPLOAD_FOLDER)
+        return self.filter(source_file__startswith=ProfileImage.UPLOAD_FOLDER)
 
     def update_descriptions(self):
         count = 0
@@ -102,7 +96,6 @@ class ImageFileQuerySet(models.QuerySet):
 
 
 class ImageFileManager(models.Manager):
-
     def create_from_file(self, filepath, **kwargs):
         image = self.model(**kwargs)
         image.save_local_image_as_source(filepath)
@@ -110,7 +103,6 @@ class ImageFileManager(models.Manager):
 
 
 class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
-
     class Meta:
         verbose_name = _('ImageFile')
         verbose_name_plural = _('ImageFiles')
@@ -128,12 +120,14 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     full_height = models.PositiveIntegerField(
         verbose_name=_('height'),
         help_text=_('full height in pixels'),
-        null=True, editable=False,
+        null=True,
+        editable=False,
     )
     full_width = models.PositiveIntegerField(
         verbose_name=_('width'),
         help_text=_('full height in pixels'),
-        null=True, editable=False,
+        null=True,
+        editable=False,
     )
     _md5 = models.CharField(
         verbose_name=_('md5'),
@@ -165,14 +159,16 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     old_file_path = models.CharField(
         verbose_name=_('old file path'),
         help_text=_('previous path if the image has been moved.'),
-        blank=True, null=True,
+        blank=True,
+        null=True,
         max_length=1000,
     )
     contributor = models.ForeignKey(
         'contributors.Contributor',
         verbose_name=_('contributor'),
         help_text=_('who made this'),
-        blank=True, null=True,
+        blank=True,
+        null=True,
     )
     description = models.CharField(
         verbose_name=_('copyright information'),
@@ -185,7 +181,8 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
     copyright_information = models.CharField(
         verbose_name=_('copyright information'),
         help_text=_(
-            'extra information about license and attribution if needed.'),
+            'extra information about license and attribution if needed.'
+        ),
         blank=True,
         null=True,
         max_length=1000,
@@ -373,8 +370,11 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         self.imagehash
         if self.pk is not None:
             # save unless instance does not exist already in db.
-            self.save(update_fields=[
-                'modified', '_mtime', '_md5', '_size', '_imagehash'])
+            self.save(
+                update_fields=[
+                    'modified', '_mtime', '_md5', '_size', '_imagehash'
+                ]
+            )
             logger.info(f'updated hashes {self}')
         return True
 
@@ -394,7 +394,6 @@ class ProfileImageManager(ImageFileManager):
 
 
 class ProfileImage(ImageFile):
-
     class Meta:
         proxy = True
         verbose_name = _('Profile Image')

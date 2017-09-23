@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 """ Content in the publication. """
 
+import difflib
+import logging
 # Python standard library
 import re
-import difflib
 
-# Django core
-from django.utils.translation import ugettext_lazy as _
-from django.db import models
 from django.core.cache import cache
+from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
-import logging
 logger = logging.getLogger(__name__)
 
 # Installed apps
@@ -19,7 +18,6 @@ logger = logging.getLogger(__name__)
 
 
 class CachedTag(models.Model):
-
     class Meta:
         abstract = True
 
@@ -29,7 +27,6 @@ class CachedTag(models.Model):
 
 
 class MarkupTag(CachedTag):
-
     class Meta:
         abstract = True
 
@@ -65,9 +62,8 @@ class TagManager(models.Manager):
     cache_key = 'tags'
 
     def cache_query(self):
-        return self.extra(select={
-            'taglength': 'Length(start_tag)'
-        }).order_by('-taglength')
+        return self.extra(select={'taglength': 'Length(start_tag)'}
+                          ).order_by('-taglength')
 
     def cached(self):
         memo = cache.get(self.cache_key)
@@ -112,20 +108,19 @@ class BlockTagManager(TagManager):
             # Found the empty tag, but there is a xtag in content.
             similar_tag = self.similar_tag(start_tag=start_tag)
             if similar_tag:
-                BlockTag(
-                    start_tag=start_tag).make_new_alias(
-                    change_to=similar_tag.start_tag)
+                BlockTag(start_tag=start_tag).make_new_alias(
+                    change_to=similar_tag.start_tag
+                )
                 paragraph = paragraph.replace(
-                    start_tag,
-                    similar_tag.start_tag,
-                    1)
+                    start_tag, similar_tag.start_tag, 1
+                )
                 blocktag = similar_tag
             else:
                 start_tag = start_tag.lower()
                 html_class = re.sub(r'\W', '', start_tag)
                 blocktag = self.create(
-                    start_tag=start_tag,
-                    html_class=html_class)
+                    start_tag=start_tag, html_class=html_class
+                )
         return blocktag, paragraph
 
     def similar_tag(self, start_tag, cutoff=0.6):
@@ -135,16 +130,16 @@ class BlockTagManager(TagManager):
         best_candidate = None
         for candidate in blocktags:
             diffratio = difflib.SequenceMatcher(
-                None,
-                candidate.start_tag.lower(),
-                start_tag.lower()).ratio()
+                None, candidate.start_tag.lower(), start_tag.lower()
+            ).ratio()
             if best_diffratio < diffratio:
                 best_diffratio = diffratio
                 best_candidate = candidate
         if best_diffratio < cutoff and best_candidate:
-            error_message = ('Looked for {} with cutoff {}.'
-                             'Best candidate is {} with ratio {}'
-                             ).format(
+            error_message = (
+                'Looked for {} with cutoff {}.'
+                'Best candidate is {} with ratio {}'
+            ).format(
                 start_tag,
                 cutoff,
                 best_candidate.start_tag,
@@ -165,20 +160,54 @@ class BlockTag(MarkupTag):
     class Meta:
         verbose_name = _('block tag')
         verbose_name_plural = _('block tags')
+
     # TODO: Should maybe not be hard coded, but imported from
     # apps.stories.Story
     ACTION_CHOICES = (
-        ('append:', _('add'),),
-        (ALIAS_ACTION, _('alias'),),
-        ('append:bodytext', _('body text'),),
-        ('append:title', _('title'),),
-        ('append:kicker', _('kicker'),),
-        ('append:lede', _('lede'),),
-        ('append:theme_word', _('theme word'),),
-        ('new:byline', _('byline'),),
-        ('new:aside', _('create aside'),),
-        ('new:pullquote', _('create pullquote'),),
-        ('drop:', _('delete'),),
+        (
+            'append:',
+            _('add'),
+        ),
+        (
+            ALIAS_ACTION,
+            _('alias'),
+        ),
+        (
+            'append:bodytext',
+            _('body text'),
+        ),
+        (
+            'append:title',
+            _('title'),
+        ),
+        (
+            'append:kicker',
+            _('kicker'),
+        ),
+        (
+            'append:lede',
+            _('lede'),
+        ),
+        (
+            'append:theme_word',
+            _('theme word'),
+        ),
+        (
+            'new:byline',
+            _('byline'),
+        ),
+        (
+            'new:aside',
+            _('create aside'),
+        ),
+        (
+            'new:pullquote',
+            _('create pullquote'),
+        ),
+        (
+            'drop:',
+            _('delete'),
+        ),
     )
 
     action = models.CharField(
@@ -253,7 +282,8 @@ class BlockTag(MarkupTag):
 
         if not change_to or change_to == self.DEFAULT_HTML_TAG:
             similar_blocktag = self.__class__.objects.similar_tag(
-                self.start_tag)
+                self.start_tag
+            )
             change_to = (
                 similar_blocktag.start_tag
                 if similar_blocktag else self.start_tag
@@ -287,9 +317,7 @@ class InlineTag(MarkupTag):
         verbose_name = _('inline tag')
         verbose_name_plural = _('inline tags')
 
-    end_tag = models.CharField(
-        max_length=50,
-    )
+    end_tag = models.CharField(max_length=50, )
 
     pattern = models.CharField(
         blank=True,
@@ -335,12 +363,10 @@ class InlineTag(MarkupTag):
         if self.pk:
             saved_self = type(self).objects.get(pk=self.pk)
             if (saved_self.start_tag,
-                saved_self.end_tag) != (self.start_tag,
-                                        self.end_tag):
+                saved_self.end_tag) != (self.start_tag, self.end_tag):
                 self.pattern = None
             if (saved_self.html_tag,
-                saved_self.html_class) != (self.html_tag,
-                                           self.html_class):
+                saved_self.html_class) != (self.html_tag, self.html_class):
                 self.replacement = None
         if not self.pattern:
             self.pattern = self.make_pattern()
@@ -355,7 +381,11 @@ class AliasManager(TagManager):
     def cache_query(self):
         return self.order_by('ordering')
 
-    def replace(self, content, timing=1, ):
+    def replace(
+        self,
+        content,
+        timing=1,
+    ):
         for tag in self.cached():
             if tag.timing == timing:
                 content = tag.replace(content)
@@ -370,45 +400,45 @@ class Alias(CachedTag):
     TIMING_CLEAN = 4
 
     TIMING_CHOICES = (
-        (TIMING_IMPORT, _('import'),),
-        (TIMING_EXTRA, _('extra'),),
-        (TIMING_BYLINES, _('bylines'),),
-        (TIMING_CLEAN, _('clean'),),
+        (
+            TIMING_IMPORT,
+            _('import'),
+        ),
+        (
+            TIMING_EXTRA,
+            _('extra'),
+        ),
+        (
+            TIMING_BYLINES,
+            _('bylines'),
+        ),
+        (
+            TIMING_CLEAN,
+            _('clean'),
+        ),
     )
 
     class Meta:
-        ordering = ('ordering',)
+        ordering = ('ordering', )
         verbose_name = _('Alias')
         verbose_name_plural = _('Aliases')
 
     objects = AliasManager()
 
-    pattern = models.CharField(
-        max_length=100,
-    )
+    pattern = models.CharField(max_length=100, )
     replacement = models.CharField(
         blank=True,
         max_length=100,
     )
-    flags = models.CharField(
-        blank=True,
-        max_length=5,
-        default='ILM'
-    )
-    flags_sum = models.PositiveSmallIntegerField(
-        editable=False,
-    )
+    flags = models.CharField(blank=True, max_length=5, default='ILM')
+    flags_sum = models.PositiveSmallIntegerField(editable=False, )
     timing = models.PositiveSmallIntegerField(
         default=TIMING_CHOICES[0][0],
         choices=TIMING_CHOICES,
     )
-    ordering = models.PositiveSmallIntegerField(
-        default=1,
-    )
+    ordering = models.PositiveSmallIntegerField(default=1, )
     comment = models.CharField(
-        max_length=1000,
-        blank=True,
-        default=_('explain this pattern')
+        max_length=1000, blank=True, default=_('explain this pattern')
     )
 
     def calculate_flags(self):
@@ -430,4 +460,5 @@ class Alias(CachedTag):
             self.pattern,
             self.replacement,
             content,
-            flags=self.flags_sum & ~ re.LOCALE)
+            flags=self.flags_sum & ~re.LOCALE
+        )

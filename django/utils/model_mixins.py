@@ -2,7 +2,6 @@ from django.core.urlresolvers import reverse
 
 
 class Edit_url_mixin:
-
     def get_edit_url(self):
         """ Url to django admin for this object """
         url = reverse(

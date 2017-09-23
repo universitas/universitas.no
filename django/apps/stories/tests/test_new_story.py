@@ -1,16 +1,15 @@
 """Tests for creating stories and parsing stuff"""
 
 import pytest
-from apps.stories.models import (
-    Story, StoryType, Section)
 from apps.markup.models import BlockTag
-
+from apps.stories.models import Section, Story, StoryType
 
 # @pytest.fixture(scope='session')
 # def django_db_setup(django_db_setup, django_db_blocker):
 #     with django_db_blocker.unblock():
 #         news = StoryType.objects.create('News')
 #         # call_command('loaddata', 'your_data_fixture.json')
+
 
 @pytest.fixture
 def news():

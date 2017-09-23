@@ -3,7 +3,7 @@ import { distanceInWordsToNow, format } from 'date-fns'
 import norwayLocale from 'date-fns/locale/nb'
 
 const LOCALE = norwayLocale
-const TIMEFORMAT = 'HH:mm ddd DD. MMM YY'
+const TIMEFORMAT = 'HH:mm ddd DD. MMM YYYY'
 
 const formatDateTime = (
   value,

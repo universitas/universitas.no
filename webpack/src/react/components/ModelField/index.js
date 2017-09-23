@@ -6,6 +6,7 @@ import * as datetime from './DateTimeField'
 import * as text from './TextField'
 import * as link from './LinkField'
 import * as thumb from './ThumbField'
+import * as image from './ImageField'
 import { connect } from 'react-redux'
 import { modelActions, modelSelectors } from 'ducks/basemodel'
 
@@ -18,6 +19,7 @@ const fields = {
   text,
   link,
   thumb,
+  image,
 }
 
 export const Field = ({

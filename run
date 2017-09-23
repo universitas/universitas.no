@@ -105,8 +105,8 @@ lint_javascript() {
   [[ -n $js_files ]] && prettier --write --semi false --single-quote --trailing-comma es5 $js_files
 }
 lint_python() {
-  py_files=$(git diff --staged --name-status | awk '/^[AM].*\.py$/ {print $2}')
-  [[ -n $py_files ]] && autopep8 --experimental -vvv -a -j 0 --in-place $py_files
+  py_files=$(git diff --staged --name-status | awk '/^[AM].*\.py$/ {print $2}' | grep -v 'migrations')
+  [[ -n $py_files ]] && exists isort && isort --verbose $py_files && exists yapf && python3 -m yapf --verbose --in-place $py_files
 }
 
 load_db() {
@@ -130,6 +130,10 @@ dump_db() {
   docker-compose up -d postgres
   echo "dumping database to $DUMP"
   docker-compose exec postgres pg_dump --no-owner -U postgres -d postgres > $DUMP
+}
+
+exists() {
+  command -v "$1" >/dev/null 2>&1
 }
 
 enable_service() {

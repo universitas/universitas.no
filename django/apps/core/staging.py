@@ -2,11 +2,13 @@
 """
 Utilities for synchronising staging files between home server, S3 and database
 """
-from datetime import timedelta, datetime
-from django.conf import settings
-import os
 import glob
+import os
 import time
+from datetime import datetime, timedelta
+
+from django.conf import settings
+
 # import logging
 
 IMAGES_DIR = 'IMAGES'
@@ -28,19 +30,23 @@ def timestamp(delta, fallback):
 
 
 def new_staging_files(
-        staging_subdirectory, fileglob='*.*',
-        min_age=timedelta.min, max_age=timedelta.max):
+    staging_subdirectory,
+    fileglob='*.*',
+    min_age=timedelta.min,
+    max_age=timedelta.max
+):
     """Check for new or updated files in staging area."""
-    directory = os.path.join(
-        settings.STAGING_ROOT, staging_subdirectory)
+    directory = os.path.join(settings.STAGING_ROOT, staging_subdirectory)
     if not os.path.exists(directory):
         os.makedirs(directory)
     os.chdir(directory)
     all_files = glob.glob(fileglob)
     min_mtime = timestamp(min_age, fallback=datetime.max)
     max_mtime = timestamp(max_age, fallback=datetime.min)
-    files = [file for file in all_files
-             if min_mtime > os.path.getmtime(file) > max_mtime]
+    files = [
+        file for file in all_files
+        if min_mtime > os.path.getmtime(file) > max_mtime
+    ]
     return directory, sorted(files)
 
 

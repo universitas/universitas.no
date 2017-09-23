@@ -1,6 +1,7 @@
-from bs4 import BeautifulSoup as bs
-from lxml import html, etree
 import re
+
+from bs4 import BeautifulSoup as bs
+from lxml import etree, html
 
 
 def minify(source):
@@ -15,9 +16,7 @@ def prettify(source):
     """Prettify HTML"""
     minified = minify(source)
     root = html.fromstring(minified)
-    return etree.tostring(
-        root, encoding='unicode', pretty_print=True
-    ).strip()
+    return etree.tostring(root, encoding='unicode', pretty_print=True).strip()
 
 
 data = """

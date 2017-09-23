@@ -1,10 +1,12 @@
 """Celery tasks for legacy db / prodsys"""
 
+import logging
 from datetime import timedelta
+
 from celery.task import periodic_task
+
 from .models import Story
 
-import logging
 logger = logging.getLogger(__name__)
 
 

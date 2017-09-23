@@ -1,6 +1,8 @@
-from ..setting_helpers import Environment, joinpath
-import pytest
 import os
+
+import pytest
+
+from ..setting_helpers import Environment, joinpath
 
 
 def test_path():

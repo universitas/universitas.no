@@ -2,18 +2,17 @@
 Create pdf issue from pages.
 """
 
-import os
 import logging
-from datetime import datetime
+import os
 import subprocess
+from datetime import datetime
 # import re
 from glob import glob
 
-from django.core.management.base import BaseCommand  # ,CommandError
+from apps.issues.models import PrintIssue, current_issue
 from django.conf import settings
 from django.core.files.base import ContentFile
-
-from apps.issues.models import PrintIssue, current_issue
+from django.core.management.base import BaseCommand  # ,CommandError
 
 PDF_STAGING = os.path.join(settings.STAGING_ROOT, 'STAGING', 'PDF')
 PDF_FOLDER = os.path.join(settings.STAGING_ROOT, 'pdf')
@@ -28,7 +27,8 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--replace_existing', '-x',
+            '--replace_existing',
+            '-x',
             action='store_true',
             dest='replace existing',
             default=False,
@@ -71,8 +71,8 @@ def bundle_pdf(for_issue, logger):
 
         if len(files) % 4:
             logger.info(
-                'Incorrect number of pages (%d), %s' %
-                (len(files), code))
+                'Incorrect number of pages (%d), %s' % (len(files), code)
+            )
             continue
 
         pdf_path = os.path.join(PDF_FOLDER, filename)
@@ -87,7 +87,8 @@ def bundle_pdf(for_issue, logger):
             issue = PrintIssue()
 
         name = '{issue.number}/{issue.date.year}{suffix}'.format(
-            suffix=suffix, issue=for_issue)
+            suffix=suffix, issue=for_issue
+        )
         with open(pdf_path, 'rb') as src:
             content = ContentFile(src.read())
         issue.pdf.save(filename, content)

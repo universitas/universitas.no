@@ -1,47 +1,45 @@
 """ Content in the publication. """
 
-# Python standard library
-import re
 import difflib
 import json
 import logging
+# Python standard library
+import re
 import unicodedata
 
-# Django core
-from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
-from django.utils import timezone
-from django.db import models
-from django.core.cache import cache
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.validators import URLValidator, ValidationError
-from django.utils.safestring import mark_safe
-from django.core.urlresolvers import reverse
-from django.template import Template, Context
-from django.template.loader import get_template
-# from django.contrib.postgres.fields import JSONField
-
-# Installed apps
-from django_extensions.db.fields import AutoSlugField
-
 from bs4 import BeautifulSoup
-from diff_match_patch import diff_match_patch
 from requests import request
-from requests.exceptions import Timeout, MissingSchema, ConnectionError
-from model_utils.models import TimeStampedModel
-from utils.model_mixins import Edit_url_mixin
-from slugify import Slugify
-
+from requests.exceptions import ConnectionError, MissingSchema, Timeout
 
 # Project apps
 from apps.contributors.models import Contributor
-from apps.markup.models import BlockTag, InlineTag, Alias
-from apps.photo.models import ImageFile
 from apps.frontpage.models import FrontpageStory
-# from apps.issues.models import PrintIssue
+from apps.markup.models import Alias, BlockTag, InlineTag
+from apps.photo.models import ImageFile
+from diff_match_patch import diff_match_patch
+from django.conf import settings
+from django.core.cache import cache
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
+from django.core.validators import URLValidator, ValidationError
+from django.db import models
+from django.template import Context, Template
+from django.template.loader import get_template
+from django.utils import timezone
+from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
+# Installed apps
+from django_extensions.db.fields import AutoSlugField
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from utils.model_mixins import Edit_url_mixin
 
-from .status_codes import HTTP_STATUS_CODES
 from .bylines import clean_up_bylines
+from .status_codes import HTTP_STATUS_CODES
+
+# from django.contrib.postgres.fields import JSONField
+
+# from apps.issues.models import PrintIssue
 
 # Hardcoded tags for special content
 PULLQUOTE_TAG = '@quote:'
@@ -49,11 +47,14 @@ ASIDE_TAG = '@box:'
 IMAGE_TAG = '@image:'
 VIDEO_TAG = '@video:'
 INLINE_HTML_TAG = '@html:'
-NON_PRINTING_CHARS = re.compile('[{}]'.format(''.join(
-    c for c in (chr(o) for o in range(256))
-    if unicodedata.category(c) == 'Cc' and
-    c not in '\t\n'
-)))
+NON_PRINTING_CHARS = re.compile(
+    '[{}]'.format(
+        ''.join(
+            c for c in (chr(o) for o in range(256))
+            if unicodedata.category(c) == 'Cc' and c not in '\t\n'
+        )
+    )
+)
 
 slugify = Slugify(max_length=50, to_lower=True)
 logger = logging.getLogger(__name__)
@@ -64,7 +65,6 @@ def remove_control_chars(s):
 
 
 class MarkupFieldMixin(object):
-
     def __init__(self, *args, **kwargs):
         kwargs.update(
             blank=True,
@@ -79,10 +79,12 @@ class MarkupFieldMixin(object):
         soup = BeautifulSoup(value, 'html5lib')
         if value != soup.text:
             error_message = '{warning} {tags}'.format(
-                warning=_('HTML tags found in text: '), tags=soup.find_all())
+                warning=_('HTML tags found in text: '), tags=soup.find_all()
+            )
             raise ValidationError(error_message)
         value = Alias.objects.replace(
-            content=value, timing=Alias.TIMING_IMPORT)
+            content=value, timing=Alias.TIMING_IMPORT
+        )
         value = Alias.objects.replace(content=value, timing=Alias.TIMING_EXTRA)
         return value
 
@@ -90,8 +92,7 @@ class MarkupFieldMixin(object):
         """ Clean up links into markup format """
         text = InlineLink.convert_html_links(text)
         text = InlineLink.clean_and_create_links(
-            body=text,
-            parent_story=model_instance.parent_story
+            body=text, parent_story=model_instance.parent_story
         )
         return text
 
@@ -100,12 +101,14 @@ class MarkupTextField(MarkupFieldMixin, models.TextField):
     description = 'subclass of Textfield containing markup.'
 
 
-class MarkupCharField(MarkupFieldMixin, models.CharField, ):
+class MarkupCharField(
+    MarkupFieldMixin,
+    models.CharField,
+):
     description = 'subclass of Charfield containing markup.'
 
 
 class MarkupModelMixin(object):
-
     """ adds the 'html' property to a Model
     Lets regular django models be louder!
 
@@ -123,7 +126,6 @@ class MarkupModelMixin(object):
         return self._HTML(self)
 
     class _HTML(object):
-
         def __init__(self, parent):
             self.parent = parent
 
@@ -151,7 +153,6 @@ class MarkupModelMixin(object):
 
 
 class Section(models.Model):
-
     """ A Section in the publication containing one kind of content. """
 
     class Meta:
@@ -167,7 +168,7 @@ class Section(models.Model):
 
     slug = AutoSlugField(
         _('slug'),
-        populate_from=('title',),
+        populate_from=('title', ),
         default='section-slug',
         max_length=50,
         overwrite=True,
@@ -182,25 +183,23 @@ class Section(models.Model):
             viewname='section',
             kwargs={
                 'section': self.slug,
-            },)
+            },
+        )
         return url
 
 
 class StoryType(models.Model):
-
     """ A type of story in the publication. """
 
     name = models.CharField(unique=True, max_length=50)
     section = models.ForeignKey(Section)
     template = models.ForeignKey('Story', blank=True, null=True)
-    prodsys_mappe = models.CharField(
-        blank=True, null=True,
-        max_length=20)
+    prodsys_mappe = models.CharField(blank=True, null=True, max_length=20)
 
     slug = AutoSlugField(
         _('slug'),
         default='storytype-slug',
-        populate_from=('name',),
+        populate_from=('name', ),
         max_length=50,
         overwrite=True,
         slugify_function=slugify,
@@ -219,12 +218,12 @@ class StoryType(models.Model):
             kwargs={
                 'storytype': self.slug,
                 'section': self.section.slug,
-            },)
+            },
+        )
         return url
 
 
 class TextContent(models.Model, MarkupModelMixin):
-
     """ Abstract superclass for stories and related text elements. """
 
     class Meta:
@@ -307,7 +306,10 @@ class TextContent(models.Model, MarkupModelMixin):
             else:  # Inline element.
                 sections.append(main_body)
                 paragraph = Template(paragraph).render(
-                    Context({"story": self, "index": index})
+                    Context({
+                        "story": self,
+                        "index": index
+                    })
                 )
                 sections.append(paragraph)
                 main_body = []
@@ -322,10 +324,7 @@ class TextContent(models.Model, MarkupModelMixin):
             else:
                 inline = True
             if section:
-                blocks.append({
-                    'inline': inline,
-                    'html': mark_safe(section)
-                })
+                blocks.append({'inline': inline, 'html': mark_safe(section)})
 
         t = get_template(self.template_name)
         html = t.render({"blocks": blocks})
@@ -361,7 +360,8 @@ class TextContent(models.Model, MarkupModelMixin):
             # that are in use. Actions are "_block_append", "_block_new" and
             # "_block_drop".
             action = getattr(
-                target, '_block_{func}'.format(func=function_name))
+                target, '_block_{func}'.format(func=function_name)
+            )
             # do action on
             new_target = action(tag, text_content, target_field)
             # new target could be newly created object or a parent element.
@@ -395,7 +395,7 @@ class TextContent(models.Model, MarkupModelMixin):
         except (AttributeError):
             # No such field. Try the main story instead.
             return self.parent_story._block_append(tag, content, modelfield)
-        except (AssertionError,) as errormsg:
+        except (AssertionError, ) as errormsg:
             msg = (
                 'Tried to append text to field '
                 '{class_name}.{field}\n{errormsg}'
@@ -417,7 +417,6 @@ class TextContent(models.Model, MarkupModelMixin):
 
 
 class StoryQuerySet(models.QuerySet):
-
     def published(self):
         now = timezone.now()
         return self.filter(
@@ -425,16 +424,14 @@ class StoryQuerySet(models.QuerySet):
                 Story.STATUS_PUBLISHED,
                 Story.STATUS_NOINDEX,
             ]
-        ).filter(
-            publication_date__lt=now
-        ).select_related('story_type__section')
+        ).filter(publication_date__lt=now
+                 ).select_related('story_type__section')
 
     def is_on_frontpage(self, frontpage):
         return self.filter(frontpagestory__placements=frontpage)
 
 
 class PublishedStoryManager(models.Manager):
-
     def get_queryset(self):
         return StoryQuerySet(self.model, using=self._db)
 
@@ -461,7 +458,6 @@ class PublishedStoryManager(models.Manager):
 
 
 class Story(TextContent, TimeStampedModel, Edit_url_mixin):
-
     """ An article or story in the newspaper. """
 
     class Meta:
@@ -499,7 +495,9 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     ]
 
     prodsak_id = models.PositiveIntegerField(
-        blank=True, null=True, editable=False,
+        blank=True,
+        null=True,
+        editable=False,
         help_text=_('primary id in the legacy prodsys database.'),
         verbose_name=_('prodsak id')
     )
@@ -518,7 +516,8 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     slug = AutoSlugField(
         _('slug'),
         default='story-slug',
-        allow_duplicates=True, populate_from=('title',),
+        allow_duplicates=True,
+        populate_from=('title', ),
         max_length=50,
         overwrite=True,
         slugify_function=slugify,
@@ -527,7 +526,8 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         max_length=1000,
         blank=True,
         help_text=_(
-            'secondary headline, usually displayed above main headline'),
+            'secondary headline, usually displayed above main headline'
+        ),
         verbose_name=_('kicker'),
     )
     lede = MarkupTextField(
@@ -536,7 +536,8 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         verbose_name=_('lede'),
     )
     comment = models.TextField(
-        default='', blank=True,
+        default='',
+        blank=True,
         help_text=_('for internal use only'),
         verbose_name=_('comment'),
     )
@@ -547,7 +548,8 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         verbose_name=_('theme word'),
     )
     bylines = models.ManyToManyField(
-        Contributor, through='Byline',
+        Contributor,
+        through='Byline',
         help_text=_('the people who created this content.'),
         verbose_name=_('bylines'),
     )
@@ -557,22 +559,27 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         verbose_name=_('article type'),
     )
     publication_date = models.DateTimeField(
-        null=True, blank=True,
+        null=True,
+        blank=True,
         help_text=_('when this story will be published on the web.'),
         verbose_name=_('publication date'),
     )
     publication_status = models.IntegerField(
-        default=STATUS_DRAFT, choices=STATUS_CHOICES,
+        default=STATUS_DRAFT,
+        choices=STATUS_CHOICES,
         help_text=_('publication status.'),
         verbose_name=_('status'),
     )
     issue = models.ForeignKey(
-        'issues.PrintIssue', blank=True, null=True,
+        'issues.PrintIssue',
+        blank=True,
+        null=True,
         help_text=_('which issue this story was printed in.'),
         verbose_name=_('issue'),
     )
     page = models.IntegerField(
-        blank=True, null=True,
+        blank=True,
+        null=True,
         help_text=_('which page the story was printed on.'),
         verbose_name=_('page'),
     )
@@ -589,16 +596,21 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         verbose_name=_('recent page views')
     )
     bylines_html = models.TextField(
-        default='', editable=False,
+        default='',
+        editable=False,
         verbose_name=_('all bylines as html.'),
     )
     legacy_html_source = models.TextField(
-        blank=True, null=True, editable=False,
+        blank=True,
+        null=True,
+        editable=False,
         help_text=_('From old web page. For reference only.'),
         verbose_name=_('Imported html source.'),
     )
     legacy_prodsys_source = models.TextField(
-        blank=True, null=True, editable=False,
+        blank=True,
+        null=True,
+        editable=False,
         help_text=_('From prodsys. For reference only.'),
         verbose_name=_('Imported xtagged source.'),
     )
@@ -652,9 +664,10 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     def is_published(self):
         # Is this Story public
         public = [Story.STATUS_NOINDEX, Story.STATUS_PUBLISHED]
-        return (self.publication_date and
-                self.publication_status in public and
-                self.publication_date <= timezone.now())
+        return (
+            self.publication_date and self.publication_status in public
+            and self.publication_date <= timezone.now()
+        )
 
     @property
     def priority(self):
@@ -761,12 +774,12 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     def clear_html(self):
         """ clears html after child is changed """
         if self.bodytext_html != '':
-            Aside.objects.filter(
-                parent_story__pk=self.pk).update(
-                bodytext_html='')
-            Pullquote.objects.filter(
-                parent_story__pk=self.pk).update(
-                bodytext_html='')
+            Aside.objects.filter(parent_story__pk=self.pk).update(
+                bodytext_html=''
+            )
+            Pullquote.objects.filter(parent_story__pk=self.pk).update(
+                bodytext_html=''
+            )
             self.bodytext_html = ''
             self.save(update_fields=['bodytext_html'])
 
@@ -777,7 +790,8 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
                 'story_id': str(self.id),
                 'section': self.section.slug,
                 'slug': self.slug,
-            },)
+            },
+        )
         return url
 
     def get_shortlink(self):
@@ -785,14 +799,16 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             viewname='article_short',
             kwargs={
                 'story_id': str(self.id),
-            },)
+            },
+        )
         return url
 
     def children_modified(self):
         """ check if any related objects have been
         modified after self was last saved. """
         changed_elements = self.storyelement_set.filter(
-            modified__gt=self.modified)
+            modified__gt=self.modified
+        )
         changed_links = self.links().filter(modified__gt=self.modified)
         return bool(changed_elements or changed_links)
 
@@ -804,12 +820,13 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         if self.publication_status in cleanup:
             if not self.title and '@headline:' not in self.bodytext_markup:
                 self.bodytext_markup = self.bodytext_markup.replace(
-                    '@tit:', '@headline:', 1)
+                    '@tit:', '@headline:', 1
+                )
             self.parse_markup()
 
         self.bodytext_markup = Alias.objects.replace(
-            content=self.bodytext_markup,
-            timing=Alias.TIMING_CLEAN)
+            content=self.bodytext_markup, timing=Alias.TIMING_CLEAN
+        )
 
         # self.bodytext_markup = self.reindex_inlines()
         # TODO: Fix redindeksering av placeholders for video og bilder.
@@ -911,7 +928,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         def fuzzy_search(queryset, body, flags=''):
             """ Place elements according to fuzzy text search. """
             diff = diff_match_patch(
-            )   # Google's diff-match-patch library for fuzzy matching
+            )  # Google's diff-match-patch library for fuzzy matching
             # default is 1000 characters match distance
             diff.Match_Distance = 5000
             # default is 0.5 ; 1.0 matches everything, 0.0 matches only perfect
@@ -939,9 +956,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
                     item.save()  # reset index
 
                 line = '{tag} {flags} {index}'.format(
-                    tag=item.markup_tag,
-                    flags=flags,
-                    index=item.index
+                    tag=item.markup_tag, flags=flags, index=item.index
                 )
                 new_paragraphs = []
                 for paragraph in paragraphs:
@@ -973,16 +988,14 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
         placeholders = []
         for match in matches:
             elements = re.split(r'[\s,]+', match.group(1))
-            placeholders.append(
-                {
-                    'elements': elements,  # for bugtesting
-                    'line': match.group(0),  # full match
-                    'flags': [item for item in elements if item in FLAGS],
-                    'indexes': [
-                        int(index) for index in elements if index.isdigit()
-                    ],
-                }
-            )
+            placeholders.append({
+                'elements': elements,  # for bugtesting
+                'line': match.group(0),  # full match
+                'flags': [item for item in elements if item in FLAGS],
+                'indexes': [
+                    int(index) for index in elements if index.isdigit()
+                ],
+            })
         return placeholders
 
     def reindex_inlines(self, element_classes=None, body=None):
@@ -1011,8 +1024,8 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
             subclass = element_class.__name__.lower()
             placeholders = self.find_inline_placeholders(element_class, body)
             queryset = self.storyelement_set.filter(
-                _subclass=subclass,
-                top=False)
+                _subclass=subclass, top=False
+            )
             indexes = list(queryset.values_list('index', flat=True))
             for placeholder in placeholders:
                 replace = []
@@ -1029,8 +1042,7 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
                             top_index += 1
                             this_index = top_index
                             if (element.index,
-                                element.top) != (this_index,
-                                                 False):
+                                element.top) != (this_index, False):
                                 elements_changed = True
                                 element.index = this_index
                                 element.top = False
@@ -1070,8 +1082,8 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
     @property
     def tekst(self):
         output = []
-        head_tags = [('tit', 'title'), ('ing', 'lede'),
-                     ('tema', 'theme_word'), ('stikktit', 'kicker')]
+        head_tags = [('tit', 'title'), ('ing', 'lede'), ('tema', 'theme_word'),
+                     ('stikktit', 'kicker')]
         for tag, attr in head_tags:
             text = getattr(self, attr)
             if text:
@@ -1098,7 +1110,6 @@ class Story(TextContent, TimeStampedModel, Edit_url_mixin):
 
 
 class ElementQuerySet(models.QuerySet):
-
     def top(self):
         """ Elements that are placed at the start of the parent article """
         return self.published().filter(top=True)
@@ -1131,8 +1142,9 @@ class ElementQuerySet(models.QuerySet):
 
 class ElementManager(models.Manager):
 
-    qs_methods = [attr for attr in dir(ElementQuerySet) if not
-                  attr.startswith('_')]
+    qs_methods = [
+        attr for attr in dir(ElementQuerySet) if not attr.startswith('_')
+    ]
 
     def get_queryset(self):
         return ElementQuerySet(self.model, using=self._db)
@@ -1145,7 +1157,6 @@ class ElementManager(models.Manager):
 
 
 class RemembersSubClass(models.Model):
-
     """ Mixin for storyelements. Saves their class name in a field. """
 
     _subclass = models.CharField(
@@ -1170,7 +1181,6 @@ class RemembersSubClass(models.Model):
 
 
 class StoryElement(TimeStampedModel, RemembersSubClass):
-
     """ Models that are placed somewhere inside an article """
 
     markup_tag = ''  # change in subclasses
@@ -1179,7 +1189,8 @@ class StoryElement(TimeStampedModel, RemembersSubClass):
     parent_story = models.ForeignKey(Story)
     index = models.PositiveSmallIntegerField(
         default=0,
-        blank=True, null=True,
+        blank=True,
+        null=True,
         help_text=_('Leave blank to unpublish'),
         verbose_name=_('index'),
     )
@@ -1207,8 +1218,8 @@ class StoryElement(TimeStampedModel, RemembersSubClass):
     def save(self, *args, **kwargs):
         if self.pk is None:
             if self.index == 0:
-                last_item = self.siblings().filter(
-                    index__isnull=False).order_by('index').last()
+                last_item = self.siblings().filter(index__isnull=False
+                                                   ).order_by('index').last()
                 if last_item:
                     # Set index to be higher than the previous object of the
                     # same class.
@@ -1221,7 +1232,6 @@ class StoryElement(TimeStampedModel, RemembersSubClass):
 
 
 class Pullquote(TextContent, StoryElement):  # type: ignore
-
     """ A quote that is that is pulled out of the content. """
 
     markup_tag = PULLQUOTE_TAG
@@ -1237,7 +1247,6 @@ class Pullquote(TextContent, StoryElement):  # type: ignore
 
 
 class Aside(TextContent, StoryElement):  # type: ignore
-
     """ Fact box or other information typically placed in side bar """
 
     markup_tag = ASIDE_TAG
@@ -1248,7 +1257,6 @@ class Aside(TextContent, StoryElement):  # type: ignore
 
 
 class InlineHtml(StoryElement):
-
     """ Inline html code """
 
     markup_tag = INLINE_HTML_TAG
@@ -1265,7 +1273,6 @@ class InlineHtml(StoryElement):
 
 
 class StoryMedia(StoryElement, MarkupModelMixin):
-
     """ Video, photo or illustration connected to a story """
 
     ORIGINAL_RATIO = 100.0
@@ -1336,7 +1343,6 @@ class StoryMedia(StoryElement, MarkupModelMixin):
 
 
 class StoryImage(StoryMedia):
-
     """ Photo or illustration connected to a story """
 
     markup_tag = IMAGE_TAG
@@ -1382,14 +1388,19 @@ class StoryImage(StoryMedia):
 
 
 class StoryVideo(StoryMedia):
-
     """ Video content connected to a story """
 
     markup_tag = VIDEO_TAG
 
     VIDEO_HOSTS = (
-        ('vimeo', _('vimeo'),),
-        ('youtu', _('youtube'),),
+        (
+            'vimeo',
+            _('vimeo'),
+        ),
+        (
+            'youtu',
+            _('youtube'),
+        ),
     )
 
     class Meta:
@@ -1406,7 +1417,8 @@ class StoryVideo(StoryMedia):
         max_length=100,
         verbose_name=_('id for video file.'),
         help_text=_(
-            'the part of the url that identifies this particular video')
+            'the part of the url that identifies this particular video'
+        )
     )
 
     def embed(self, width="100%", height="auto"):
@@ -1423,7 +1435,8 @@ class StoryVideo(StoryMedia):
                 'byline=0&amp;portrait=0&amp;color=f00008" '
                 'width="{width}" frameborder="0" '
                 'webkitallowfullscreen mozallowfullscreen allowfullscreen>'
-                '</iframe>')
+                '</iframe>'
+            )
         elif self.video_host == 'youtu':
             # <iframe width="1280" height="720"
             # src="//www.youtube-nocookie.com/embed/HBk1GdcdALU?rel=0"
@@ -1437,7 +1450,9 @@ class StoryVideo(StoryMedia):
             raise Exception('unknown hosting site.')
 
         return embed_pattern.format(
-            height=height, width=width, host_video_id=self.host_video_id,
+            height=height,
+            width=width,
+            host_video_id=self.host_video_id,
         )
 
     @property
@@ -1452,6 +1467,7 @@ class StoryVideo(StoryMedia):
     @classmethod
     def create_from_url(cls, url, parent_story):
         """ create video object from input url """
+
         # url formats:
         # https://www.youtube.com/watch?v=roHl3PJsZPk
         # http://youtu.be/roHl3PJsZPk
@@ -1463,10 +1479,8 @@ class StoryVideo(StoryMedia):
             # InlineLink
             try:
                 status_code = str(
-                    request(
-                        method,
-                        url,
-                        timeout=timeout).status_code)
+                    request(method, url, timeout=timeout).status_code
+                )
             except Timeout:
                 status_code = 408  # HTTP Timout
             except MissingSchema:
@@ -1503,7 +1517,6 @@ class StoryVideo(StoryMedia):
 
 
 class InlineLinkManager(models.Manager):
-
     def markup_to_html(self, text):
         """ replace markup version of tag with html version """
         for link in self.all():
@@ -1532,10 +1545,7 @@ class InlineLink(TimeStampedModel):
         verbose_name = _('inline link')
         verbose_name_plural = _('inline links')
 
-    parent_story = models.ForeignKey(
-        Story,
-        related_name='inline_links'
-    )
+    parent_story = models.ForeignKey(Story, related_name='inline_links')
     number = models.PositiveSmallIntegerField(
         default=1,
         help_text=_('link label'),
@@ -1548,7 +1558,8 @@ class InlineLink(TimeStampedModel):
     )
     linked_story = models.ForeignKey(
         Story,
-        blank=True, null=True,
+        blank=True,
+        null=True,
         help_text=_('link to story on this website.'),
         verbose_name=_('linked story'),
         related_name='incoming_links',
@@ -1590,16 +1601,16 @@ class InlineLink(TimeStampedModel):
     def insert_url(self, text):
         """ insert url as reference in link """
         text = re.sub(
-            re.escape(
-                self.get_tag()), self.get_tag(
-                ref=self.link), text)
+            re.escape(self.get_tag()), self.get_tag(ref=self.link), text
+        )
         return text
 
     def get_html(self):
         """ get <a> html tag for the link """
         pattern = self.html_pattern
         html = pattern.format(
-            text=self.text, href=self.link, alt=self.alt_text)
+            text=self.text, href=self.link, alt=self.alt_text
+        )
         return mark_safe(html)
 
     get_html.allow_tags = True  # type: ignore
@@ -1623,7 +1634,8 @@ class InlineLink(TimeStampedModel):
         if not self.linked_story:
             try:
                 match = re.search(
-                    r'universitas.no/.+?/(?P<id>\d+)/', self.href)
+                    r'universitas.no/.+?/(?P<id>\d+)/', self.href
+                )
                 story_id = int(match.group('id'))
                 self.linked_story = Story.objects.get(pk=story_id)
             except (AttributeError, ObjectDoesNotExist):
@@ -1651,9 +1663,8 @@ class InlineLink(TimeStampedModel):
                 status_code = request(method, url, timeout=timeout).status_code
                 if status_code == 410:
                     status_code = request(
-                        'get',
-                        url,
-                        timeout=timeout).status_code
+                        'get', url, timeout=timeout
+                    ).status_code
                 if status_code > 500:
                     status_code = 500
                 status_code = str(status_code)
@@ -1750,7 +1761,7 @@ class InlineLink(TimeStampedModel):
                 )
             else:
                 # <a> element with no href
-                replacement = '{text}'.format(text=text,)
+                replacement = '{text}'.format(text=text, )
 
             # change the link from html to markup
             link.replace_with(replacement)
@@ -1781,13 +1792,11 @@ class InlineLink(TimeStampedModel):
 
 
 class BylineManager(models.Manager):
-
     def ordered(self):
         return self.order_by('ordering', 'pk')
 
 
 class Byline(models.Model):
-
     """ Credits the people who created content for a story. """
 
     CREDIT_CHOICES = [
@@ -1858,17 +1867,20 @@ class Byline(models.Model):
             title = d['title'] or ''
             credit = d['credit'].lower()
             initials = ''.join(
-                letters[0] for letters in full_name.replace(
-                    '-',
-                    ' ').split())
+                letters[0] for letters in full_name.replace('-', ' ').split()
+            )
             assert initials == initials.upper(
             ), 'All names should be capitalised'
             assert len(
-                initials) <= 5, 'Five names probably means something is wrong.'
+                initials
+            ) <= 5, 'Five names probably means something is wrong.'
             if len(initials) == 1:
                 initials = full_name.upper()
 
-        except (AssertionError, AttributeError, ) as e:
+        except (
+            AssertionError,
+            AttributeError,
+        ) as e:
             # Malformed byline
             p_org = w_org = ' -- '
             if story.legacy_prodsys_source:
@@ -1881,7 +1893,8 @@ class Byline(models.Model):
 
             warning = ((
                 'Malformed byline: "{byline}" error: {error} id: {id}'
-                ' p_id: {p_id}\n{p_org} | {w_org} ').format(
+                ' p_id: {p_id}\n{p_org} | {w_org} '
+            ).format(
                 id=story.id,
                 p_id=story.prodsak_id,
                 # story=story,
@@ -1914,10 +1927,7 @@ class Byline(models.Model):
         else:
             credit = cls.DEFAULT_CREDIT
 
-        contributors = Contributor.get_or_create(
-            full_name,
-            initials
-        )
+        contributors = Contributor.get_or_create(full_name, initials)
 
         for contributor in contributors:
             new_byline = cls(
@@ -1941,4 +1951,4 @@ def needle_in_haystack(needle, haystack):
         value = diff.match_main(line2, needle, 0)
         if value is not -1:
             return line
-    return 'no match in %d lines' % (len(lines),)
+    return 'no match in %d lines' % (len(lines), )

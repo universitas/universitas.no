@@ -1,10 +1,13 @@
 import autocomplete_light.shortcuts as autocomplete_light
-from .models import ImageFile, ProfileImage
 from django.utils.translation import ugettext_lazy as _
+
+from .models import ImageFile, ProfileImage
 
 # This will generate a PersonAutocomplete class
 kwargs = dict(
-    search_fields=['source_file', ],
+    search_fields=[
+        'source_file',
+    ],
     order_by='-modified',
     attrs={
         # This will set the input placeholder attribute:
