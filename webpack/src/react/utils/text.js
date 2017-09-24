@@ -1,3 +1,6 @@
+import { distanceInWordsToNow, format } from 'date-fns'
+import norwayLocale from 'date-fns/locale/nb'
+
 export const cleanup = text => {
   return text
     .replace(/^(@\S+:)/gm, s => s.toLowerCase())
@@ -18,3 +21,17 @@ export const stringify = R.cond([
   [R.isNil, R.always('')],
   [R.T, R.toString],
 ])
+
+// :: int|string -> string
+export const phoneFormat = R.pipe(stringify, s => 'tlf: ' + s)
+
+// :: string|Date -> string
+export const formatDate = (
+  value,
+  dateformat = 'ddd DD. MMM YYYY',
+  locale = norwayLocale,
+  relative = false
+) =>
+  relative
+    ? distanceInWordsToNow(new Date(value), { addSuffix: true, locale })
+    : format(new Date(value), dateformat, { locale })

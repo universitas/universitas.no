@@ -5,9 +5,24 @@ $darkgrey: #555;
 @import 'listpanel';
 @import 'detailpanel';
 @import 'gridview';
+@import 'errors';
 
 .ProdSys {
   display: flex;
   align-items: stretch;
   height: 100vh;
+}
+
+.Stint {
+  &.past {
+    color: grey;
+  }
+  display: flex;
+  .position {
+    flex: 1;
+    padding-right: 1em;
+  }
+  .fromdate {
+  }
+  .todate { &:before { content: '\0000a0–\0000a0'; } }
 }

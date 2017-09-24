@@ -32,7 +32,7 @@
   .DetailField {
     display: flex;
     padding-bottom: .5em;
-    &.image, &.pdfs {
+    &.image {
       flex: 1
     }
     &.thumb {

@@ -122,7 +122,7 @@ ContributorDetail	webpack/src/react/contributors/ContributorDetail.js	/^const Co
 ContributorField	webpack/src/react/contributors/ContributorGrid.js	/^const ContributorField = ({ editable, ...props }) => ($/;"	r
 ContributorList	webpack/src/react/contributors/ContributorList.js	/^const ContributorList = ({ model = MODEL }) => {$/;"	r
 ContributorSerializer	django/api/contributor_serializers.py	/^class ContributorSerializer(serializers.HyperlinkedModelSerializer):$/;"	c
-ContributorTools	webpack/src/react/contributors/ContributorTools.js	/^const ContributorTools = ({ autocrop, close, edit_url = 'http:\/\/example.com' }) => ($/;"	r
+ContributorTools	webpack/src/react/contributors/ContributorTools.js	/^const ContributorTools = ({$/;"	r
 ContributorViewSet	django/api/contributor_serializers.py	/^class ContributorViewSet(viewsets.ModelViewSet):$/;"	c
 ContributorsAppConfig	django/apps/contributors/appconf.py	/^class ContributorsAppConfig(AppConfig):$/;"	c
 CropBox	django/apps/photo/cropping/boundingbox.py	/^class CropBox(Box):$/;"	c
@@ -135,7 +135,6 @@ CustomS3BotoStorage	django/utils/aws_custom_storage.py	/^class CustomS3BotoStora
 Customer	django/apps/adverts/models.py	/^class Customer(models.Model):$/;"	c
 CustomerAdmin	django/apps/adverts/admin.py	/^class CustomerAdmin(admin.ModelAdmin):$/;"	c
 DATABASES	django/universitas/base.py	/^DATABASES = {$/;"	v
-DATEFORMAT	webpack/src/react/components/ModelField/DateField.js	/^const DATEFORMAT = 'ddd DD. MMM YYYY'$/;"	r
 DATETIME_FORMAT	django/universitas/base.py	/^DATETIME_FORMAT = 'Y-m-d H:i'$/;"	v
 DATE_FORMAT	django/universitas/base.py	/^DATE_FORMAT = 'j. F, Y'$/;"	v
 DEBOUNCE_TIMEOUT	webpack/src/react/sagas/images.js	/^const DEBOUNCE_TIMEOUT = 500$/;"	r
@@ -159,10 +158,13 @@ DUMMY_AD	django/apps/adverts/models.py	/^    DUMMY_AD = 3$/;"	v	class:Advert
 DetailField	webpack/src/react/components/ModelField/ChoiceField.js	/^export const DetailField = ({ choices, value, ...args }) => ($/;"	r
 DetailField	webpack/src/react/components/ModelField/DateField.js	/^export const DetailField = ({$/;"	r
 DetailField	webpack/src/react/components/ModelField/DateTimeField.js	/^export const DetailField = ({$/;"	r
+DetailField	webpack/src/react/components/ModelField/EmailField.js	/^export const DetailField = ({ value, ...args }) => ($/;"	r
 DetailField	webpack/src/react/components/ModelField/ImageField.js	/^export const DetailField = ({ value, className, ...args }) => ($/;"	r
 DetailField	webpack/src/react/components/ModelField/IntegerField.js	/^export const DetailField = ({ choices, value, editable, ...args }) => ($/;"	r
 DetailField	webpack/src/react/components/ModelField/LinkField.js	/^export const DetailField = ({ value, label = LABEL, ...args }) => ($/;"	r
-DetailField	webpack/src/react/components/ModelField/PdfField.js	/^export const DetailField = ({ value, ...args }) => ($/;"	r
+DetailField	webpack/src/react/components/ModelField/PdfField.js	/^export const DetailField = ({ value = [], ...args }) => ($/;"	r
+DetailField	webpack/src/react/components/ModelField/PhoneField.js	/^export const DetailField = ({ value, ...args }) => ($/;"	r
+DetailField	webpack/src/react/components/ModelField/StintsField.js	/^export const DetailField = ({ value = [], ...args }) => ($/;"	r
 DetailField	webpack/src/react/components/ModelField/StringField.js	/^export const DetailField = ({ value, ...args }) => ($/;"	r
 DetailField	webpack/src/react/components/ModelField/TextField.js	/^export const DetailField = ({ value, ...args }) => <div {...args}>{value}<\/div>$/;"	r
 DetailField	webpack/src/react/components/ModelField/ThumbField.js	/^export const DetailField = ({ value, className, ...args }) => ($/;"	r
@@ -186,10 +188,13 @@ Edit_url_mixin	django/utils/model_mixins.py	/^class Edit_url_mixin:$/;"	c
 EditableField	webpack/src/react/components/ModelField/ChoiceField.js	/^export const EditableField = ({ choices, value, ...args }) => ($/;"	r
 EditableField	webpack/src/react/components/ModelField/DateField.js	/^export const EditableField = ({ value, ...args }) => ($/;"	r
 EditableField	webpack/src/react/components/ModelField/DateTimeField.js	/^export const EditableField = ({ value, ...args }) => ($/;"	r
+EditableField	webpack/src/react/components/ModelField/EmailField.js	/^export const EditableField = ({ value, ...args }) => ($/;"	r
 EditableField	webpack/src/react/components/ModelField/ImageField.js	/^export const EditableField = DetailField$/;"	r
 EditableField	webpack/src/react/components/ModelField/IntegerField.js	/^export const EditableField = ({ choices, value, editable, ...args }) => ($/;"	r
 EditableField	webpack/src/react/components/ModelField/LinkField.js	/^export const EditableField = ({ value, ...args }) => ($/;"	r
 EditableField	webpack/src/react/components/ModelField/PdfField.js	/^export const EditableField = DetailField$/;"	r
+EditableField	webpack/src/react/components/ModelField/PhoneField.js	/^export const EditableField = ({ value, ...args }) => ($/;"	r
+EditableField	webpack/src/react/components/ModelField/StintsField.js	/^export const EditableField = ({ value = [], ...args }) => ($/;"	r
 EditableField	webpack/src/react/components/ModelField/StringField.js	/^export const EditableField = ({ value, ...args }) => ($/;"	r
 EditableField	webpack/src/react/components/ModelField/TextField.js	/^export const EditableField = ({ value, ...args }) => ($/;"	r
 EditableField	webpack/src/react/components/ModelField/ThumbField.js	/^export const EditableField = DetailField$/;"	r
@@ -303,7 +308,6 @@ LABEL	webpack/src/react/components/ModelField/LinkField.js	/^const LABEL = 'lenk
 LANGUAGES	django/universitas/base.py	/^LANGUAGES = [$/;"	v
 LANGUAGE_CODE	django/universitas/base.py	/^LANGUAGE_CODE = 'nb'$/;"	v
 LANGUAGE_CORPUS	django/apps/stories/management/commands/guess_language.py	/^LANGUAGE_CORPUS = {$/;"	v
-LOCALE	webpack/src/react/components/ModelField/DateField.js	/^const LOCALE = norwayLocale$/;"	r
 LOCALE	webpack/src/react/components/ModelField/DateTimeField.js	/^const LOCALE = norwayLocale$/;"	r
 LOCALE_PATHS	django/universitas/base.py	/^LOCALE_PATHS = [path('translation')]$/;"	v
 LOGGING	django/universitas/logging_settings.py	/^LOGGING = {$/;"	v
@@ -510,7 +514,7 @@ PRIVATE	django/apps/adverts/models.py	/^    PRIVATE = 2$/;"	v	class:Advert
 PUBLISHED	django/apps/adverts/models.py	/^    PUBLISHED = 3$/;"	v	class:Advert
 PULLQUOTE_TAG	django/apps/stories/models.py	/^PULLQUOTE_TAG = '@quote:'$/;"	v
 PdfArchiveView	django/apps/issues/views.py	/^class PdfArchiveView(TemplateView):$/;"	c
-PdfThumb	webpack/src/react/components/ModelField/PdfField.js	/^const PdfThumb = ({ cover_page, pages }) => ($/;"	r
+PdfThumb	webpack/src/react/components/ModelField/PdfField.js	/^const PdfThumb = ({ cover_page, pages, pdf }) => ($/;"	r
 PhotoAppConfig	django/apps/photo/appconf.py	/^class PhotoAppConfig(AppConfig):$/;"	c
 PhotoAppView	django/apps/photo/views.py	/^class PhotoAppView(LoginRequiredMixin, TemplateView):$/;"	c
 PhotoCropApp	webpack/src/react/entry/photo_crop_app.js	/^const PhotoCropApp = () => {$/;"	r
@@ -631,6 +635,7 @@ StaticModule	django/apps/frontpage/models.py	/^class StaticModule(FrontPageModul
 StaticModuleAdmin	django/apps/frontpage/admin.py	/^class StaticModuleAdmin(admin.ModelAdmin):$/;"	c
 StaticStorage	django/utils/aws_custom_storage.py	/^class StaticStorage(CustomS3BotoStorage):$/;"	c
 Stint	django/apps/contributors/models.py	/^class Stint(models.Model):$/;"	c
+Stint	webpack/src/react/components/ModelField/StintsField.js	/^const Stint = ({ position, start_date, end_date }) => ($/;"	r
 StintActiveFilter	django/apps/contributors/admin.py	/^class StintActiveFilter(admin.SimpleListFilter):$/;"	c
 StintAdmin	django/apps/contributors/admin.py	/^class StintAdmin(admin.ModelAdmin):$/;"	c
 StintInline	django/apps/contributors/admin.py	/^):$/;"	c
@@ -1564,8 +1569,9 @@ form	django/apps/stories/admin.py	/^    form = modelform_factory(InlineLink, exc
 form	django/apps/stories/admin.py	/^    form = modelform_factory(InlineLink, exclude=())$/;"	v	class:LinkInline
 form	django/apps/stories/admin.py	/^    form = modelform_factory(StoryImage, exclude=())$/;"	v	class:ImageInline
 form	django/apps/stories/admin.py	/^    form = modelform_factory(StoryType, exclude=[])$/;"	v	class:StoryTypeAdmin
-formatDate	webpack/src/react/components/ModelField/DateField.js	/^const formatDate = ($/;"	r
+formatDate	webpack/src/react/components/ModelField/StintsField.js	/^const formatDate = d => text.formatDate(d, 'DD. MMM YY')$/;"	r
 formatDate	webpack/src/react/utils/modelUtils.js	/^export const formatDate = value =>$/;"	r
+formatDate	webpack/src/react/utils/text.js	/^export const formatDate = ($/;"	r
 formatDateTime	webpack/src/react/components/ModelField/DateTimeField.js	/^const formatDateTime = ($/;"	r
 formatDateTime	webpack/src/react/utils/modelUtils.js	/^export const formatDateTime = value =>$/;"	r
 formats	django/apps/adverts/models.py	/^    def formats(self):$/;"	m	class:AdChannel
@@ -1942,6 +1948,7 @@ isEmpty	webpack/src/react/services/api.js	/^const isEmpty = R.contains(R.__, [{}
 isFetching	webpack/src/react/containers/SearchField.js	/^  const isFetching = fetching ? ' isFetching' : ''$/;"	r
 isFilterActive	webpack/src/react/components/Filter.js	/^const isFilterActive = (attr, value, query) => {$/;"	r
 isModelAction	webpack/src/react/ducks/basemodel.js	/^  const isModelAction = R.pipe(R.view(actionModelLens), R.equals(modelName))$/;"	r
+isPast	webpack/src/react/components/ModelField/StintsField.js	/^const isPast = d => new Date(d) < new Date()$/;"	r
 is_active	django/watson/search.py	/^    def is_active(self):$/;"	m	class:SearchContextManager
 is_installed	django/watson/backends.py	/^    def is_installed(self):$/;"	m	class:MySQLSearchBackend
 is_installed	django/watson/backends.py	/^    def is_installed(self):$/;"	m	class:PostgresSearchBackend
@@ -2715,6 +2722,7 @@ pending	webpack/src/react/containers/EditImage.js	/^  const pending = cropping_m
 pendingLens	webpack/src/react/ducks/.auth.js@neomake_18802_44.js	/^const pendingLens = lens('pending')$/;"	r
 pendingLens	webpack/src/react/ducks/auth.js	/^const pendingLens = lens('pending')$/;"	r
 phone	django/apps/contributors/models.py	/^    phone = models.CharField(blank=True, null=True, max_length=20)$/;"	v	class:Contributor
+phoneFormat	webpack/src/react/utils/text.js	/^export const phoneFormat = R.pipe(stringify, s => 'tlf: ' + s)$/;"	r
 photo	django/api/tests/test_indesign_api.py	/^def photo():$/;"	f
 photos	django/apps/photo/models.py	/^    def photos(self):$/;"	m	class:ImageFileQuerySet
 place_all_inline_elements	django/apps/stories/models.py	/^    def place_all_inline_elements(self):$/;"	m	class:Story
@@ -3037,6 +3045,7 @@ slugify_function	django/apps/stories/models.py	/^        slugify_function=slugif
 small	django/api/photo_serializers.py	/^    small = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 small	django/apps/photo/models.py	/^    def small(self):$/;"	m	class:ImageFile
 small	django/apps/stories/models.py	/^    def small(self):$/;"	m	class:StoryImage
+sortBy	webpack/src/react/components/ModelField/StintsField.js	/^const sortBy = prop => R.sort(R.descend(R.prop(prop)))$/;"	r
 source_file	django/apps/photo/models.py	/^    source_file = thumbnail.ImageField($/;"	v	class:ImageFile
 spec	webpack/src/react/utils/fp.test.js	/^  const spec = {$/;"	r
 split	django/apps/markup/models.py	/^    def split(self, content):$/;"	m	class:BlockTag

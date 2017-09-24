@@ -8,20 +8,26 @@ import * as link from './LinkField'
 import * as thumb from './ThumbField'
 import * as image from './ImageField'
 import * as pdfs from './PdfField'
+import * as email from './EmailField'
+import * as phone from './PhoneField'
+import * as stints from './StintsField'
 import { connect } from 'react-redux'
 import { modelActions, modelSelectors } from 'ducks/basemodel'
 
 const fields = {
   choice,
-  string,
-  integer,
   date,
   datetime,
-  text,
-  link,
-  thumb,
+  email,
   image,
+  integer,
+  link,
   pdfs,
+  phone,
+  stints,
+  string,
+  text,
+  thumb,
 }
 
 export const Field = ({
