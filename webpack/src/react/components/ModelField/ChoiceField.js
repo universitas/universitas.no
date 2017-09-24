@@ -1,13 +1,10 @@
 // Choice field
 // display name from list of choices
-export const getDisplayName = (choices, value) =>
-  R.compose(
-    R.propOr(value, 'display_name'),
-    R.find(R.propEq('value', String(value)))
-  )(choices)
+export const getDisplayName = value =>
+  R.compose(R.propOr(value, 'display_name'), R.find(R.propEq('value', value)))
 
 export const DetailField = ({ choices, value, ...args }) => (
-  <span {...args}>{getDisplayName(choices, value)}</span>
+  <span {...args}>{getDisplayName(value)(choices)}</span>
 )
 
 export const EditableField = ({ choices, value, ...args }) => (
