@@ -1,79 +1,32 @@
 import { connect } from 'react-redux'
-import { fields } from 'contributors/model'
-import { formatDate } from 'utils/modelUtils'
+import { detailFields as fields } from 'contributors/model'
+import ContributorTools from 'contributors/ContributorTools'
+import ModelField from 'components/ModelField'
+import { modelSelectors } from 'ducks/basemodel'
+import cx from 'classnames'
 
-import { modelSelectors, modelActions } from 'ducks/basemodel'
-const { getCurrentItem } = modelSelectors('contributors')
-const { fieldChanged } = modelActions('contributors')
+const model = 'contributors'
 
-const PdfPreview = ({ cover_page, pdf }) => (
-  <a href={pdf}>
-    <img className="PdfPreview" src={cover_page} alt="pdf" />
-  </a>
-)
-
-const ChoiceField = ({ choices, value, editable, ...args }) =>
-  editable
-    ? <select value={value} {...args}>
-        {choices.map(({ value, display_name }) => (
-          <option key={value} value={value}> {display_name} </option>
-        ))}
-      </select>
-    : <span>{value}</span>
-
-const IntegerField = ({ value, editable, choices, ...args }) =>
-  editable
-    ? <input type="number" value={value} {...args} />
-    : <span>{value}</span>
-
-const ThumbField = ({ value, editable, ...args }) =>
-  editable ? <img src={value} /> : <img src={value} />
-
-const DateField = ({ value, editable, choices, ...args }) =>
-  editable
-    ? <input type="date" value={value} {...args} />
-    : <span>{formatDate(value)}</span>
-
-const StringField = ({ value, editable, choices, ...args }) =>
-  editable
-    ? <input type="text" value={value} {...args} />
-    : <span>{value}</span>
-
-const fieldTypes = {
-  choice: ChoiceField,
-  string: StringField,
-  integer: IntegerField,
-  thumb: ThumbField,
-  date: DateField,
-}
-
-const DetailField = ({ label, type, ...args }) => {
-  const TypeField = fieldTypes[type] || StringField
-  return (
-    <div>
-      <span>{label}: </span>
-      <TypeField {...args} />
-    </div>
-  )
-}
-
-const Detail = ({ pdfs = [], dirty, fieldChanged, ...data }) => (
-  <div>
-    {fields.map(({ key, ...args }) => (
-      <DetailField
-        key={key}
-        name={key}
-        value={data[key]}
-        onChange={e => fieldChanged(data.id, key, e.target.value)}
-        {...args}
-      />
-    ))}
-    <div>
-      {pdfs.map((props, index) => (
-        <PdfPreview key={index} name={props.url} {...props} />
-      ))}
-    </div>
+const Field = ({ label, type, ...props }) => (
+  <div className={cx('DetailField', type)}>
+    <span className="label">{label}: </span>
+    <ModelField className="Field" type={type} {...props} />
   </div>
 )
 
-export default connect(getCurrentItem, { fieldChanged })(Detail)
+const ContributorDetail = ({ pk }) => (
+  <section className="DetailPanel">
+    <ContributorTools pk={pk} />
+    <div className="panelContent">
+      <Field {...{ pk, model, ...fields.display_name }} />
+      <Field {...{ pk, model, ...fields.status }} />
+      <Field {...{ pk, model, ...fields.email }} />
+      <Field {...{ pk, model, ...fields.phone }} />
+      <Field {...{ pk, model, ...fields.thumb }} />
+      <Field {...{ pk, model, ...fields.stint_set }} />
+    </div>
+  </section>
+)
+
+const { getCurrentItemId: pk } = modelSelectors(model)
+export default connect(R.applySpec({ pk }))(ContributorDetail)

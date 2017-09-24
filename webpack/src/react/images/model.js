@@ -1,4 +1,4 @@
-const rawFields = {
+const optionsFields = {
   id: {
     type: 'integer',
     required: false,
@@ -115,4 +115,4 @@ const cleanFields = R.pipe(
   R.omit(['required', 'read_only', 'max_length'])
 )
 
-export const detailFields = cleanFields(rawFields)
+export const detailFields = cleanFields(optionsFields)

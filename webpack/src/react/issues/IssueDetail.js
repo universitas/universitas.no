@@ -1,74 +1,30 @@
 import { connect } from 'react-redux'
-import { fields } from 'issues/model'
-import { formatDate } from 'utils/modelUtils'
-import { modelSelectors, modelActions } from 'ducks/basemodel'
-const { getCurrentItem } = modelSelectors('issues')
-const { fieldChanged } = modelActions('issues')
+import { detailFields as fields } from 'issues/model'
+import IssueTools from 'issues/IssueTools'
+import ModelField from 'components/ModelField'
+import { modelSelectors } from 'ducks/basemodel'
+import cx from 'classnames'
 
-const PdfPreview = ({ cover_page, pdf }) => (
-  <a href={pdf}>
-    <img className="PdfPreview" src={cover_page} alt="pdf" />
-  </a>
-)
+const model = 'issues'
 
-const ChoiceField = ({ choices, value, editable, ...args }) =>
-  editable
-    ? <select value={value} {...args}>
-        {choices.map(({ value, display_name }) => (
-          <option key={value} value={value}> {display_name} </option>
-        ))}
-      </select>
-    : <span>{value}</span>
-
-const IntegerField = ({ value, editable, choices, ...args }) =>
-  editable
-    ? <input type="number" value={value} {...args} />
-    : <span>{value}</span>
-
-const DateField = ({ value, editable, choices, ...args }) =>
-  editable
-    ? <input type="date" value={value} {...args} />
-    : <span>{formatDate(value)}</span>
-
-const StringField = ({ value, editable, choices, ...args }) =>
-  editable
-    ? <input type="text" value={value} {...args} />
-    : <span>{value}</span>
-
-const fieldTypes = {
-  choice: ChoiceField,
-  string: StringField,
-  integer: IntegerField,
-  date: DateField,
-}
-
-const DetailField = ({ label, type, ...args }) => {
-  const TypeField = fieldTypes[type] || StringField
-  return (
-    <div>
-      <span>{label}: </span>
-      <TypeField {...args} />
-    </div>
-  )
-}
-
-const Detail = ({ pdfs = [], dirty, fieldChanged, ...data }) => (
-  <div>
-    {fields.map(({ key, ...args }) => (
-      <DetailField
-        key={key}
-        name={key}
-        value={data[key]}
-        onChange={e => fieldChanged(data.id, key, e.target.value)}
-        {...args}
-      />
-    ))}
-    <div>
-      {pdfs.map((props, index) => (
-        <PdfPreview key={index} name={props.url} {...props} />
-      ))}
-    </div>
+const Field = ({ label, type, ...props }) => (
+  <div className={cx('DetailField', type)}>
+    <span className="label">{label}: </span>
+    <ModelField className="Field" type={type} {...props} />
   </div>
 )
 
-export default connect(getCurrentItem, { fieldChanged })(Detail)
+const IssueDetail = ({ pk }) => (
+  <section className="DetailPanel">
+    <IssueTools pk={pk} />
+    <div className="panelContent">
+      <Field {...{ pk, model, ...fields.issue_name }} />
+      <Field {...{ pk, model, ...fields.issue_type }} />
+      <Field {...{ pk, model, ...fields.publication_date }} />
+      <Field {...{ pk, model, ...fields.pdfs }} />
+    </div>
+  </section>
+)
+
+const { getCurrentItemId: pk } = modelSelectors(model)
+export default connect(R.applySpec({ pk }))(IssueDetail)
