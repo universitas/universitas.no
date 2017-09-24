@@ -1,5 +1,5 @@
 from apps.contributors.models import Contributor, Stint
-from rest_framework import serializers, viewsets
+from rest_framework import filters, serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
 
 
@@ -61,5 +61,6 @@ class ContributorViewSet(viewsets.ModelViewSet):
         'stint_set__position', 'byline_photo'
     )
     serializer_class = ContributorSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     filter_fields = ['status', 'display_name', 'byline_photo']
+    search_fields = ['display_name']

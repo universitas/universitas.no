@@ -31,12 +31,25 @@
   }
   .DetailField {
     display: flex;
+    padding-bottom: .5em;
+    &.image, &.pdfs {
+      flex: 1
+    }
+    &.thumb {
+      .Field {
+        flex-grow: 0;
+      }
+    }
     .label {
       font-weight: bold;
       width: 6em;
     }
     .Field {
       flex: 1;
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
     }
     &.text {
       flex: 1;

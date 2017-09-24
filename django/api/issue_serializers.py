@@ -40,15 +40,14 @@ class LargeLimitPagination(pagination.LimitOffsetPagination):
 
 
 class IssueViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows Issue to be viewed or updated.
-    """
+    """ API endpoint that allows Issue to be viewed or updated.  """
 
-    filter_backends = [DjangoFilterBackend]
     filter_fields = ['id', 'publication_date']
     queryset = Issue.objects.all().prefetch_related('pdfs')
     serializer_class = IssueSerializer
     pagination_class = LargeLimitPagination
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend)
+    search_fields = ['issue_name']
 
 
 class PrintIssueSerializer(serializers.HyperlinkedModelSerializer):
@@ -66,10 +65,8 @@ class PrintIssueSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class PrintIssueViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows PrintIssue to be viewed or updated.
-    """
+    """ API endpoint that allows PrintIssue to be viewed or updated.  """
 
-    filter_backends = (filters.SearchFilter, DjangoFilterBackend)
     queryset = PrintIssue.objects.order_by('-issue__publication_date')
     serializer_class = PrintIssueSerializer
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend)

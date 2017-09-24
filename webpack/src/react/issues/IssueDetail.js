@@ -21,6 +21,7 @@ const IssueDetail = ({ pk }) => (
       <Field {...{ pk, model, ...fields.issue_name }} />
       <Field {...{ pk, model, ...fields.issue_type }} />
       <Field {...{ pk, model, ...fields.publication_date }} />
+      <Field {...{ pk, model, ...fields.pdfs }} />
     </div>
   </section>
 )

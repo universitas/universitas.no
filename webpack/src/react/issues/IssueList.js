@@ -7,10 +7,24 @@ import IssueGrid from 'issues/IssueGrid'
 import ListPanel from 'containers/ListPanel'
 
 const MODEL = 'issues'
+const date = new Date().toISOString().slice(0, 10)
+const year = new Date().toISOString().slice(0, 4)
 
 const filters = [
-  { toggle: true, attr: 'limit', model: MODEL, value: 5, label: 'limit 5' },
-  { toggle: true, attr: 'limit', model: MODEL, value: 10, label: 'limit 10' },
+  {
+    toggle: true,
+    attr: 'publication_date__year',
+    model: MODEL,
+    value: year,
+    label: year,
+  },
+  {
+    toggle: true,
+    attr: 'publication_date__gte',
+    model: MODEL,
+    value: date,
+    label: 'kommende',
+  },
 ]
 
 const IssueList = ({ model = MODEL }) => {

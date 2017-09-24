@@ -3,8 +3,8 @@ import { stringify } from 'utils/text'
 
 const PdfThumb = ({ cover_page, pages }) => (
   <div className="PdfThumb">
-    <span>pages: {pages}</span>
     <img src={cover_page} alt="" />
+    <span className="pages">pages: {pages}</span>
   </div>
 )
 

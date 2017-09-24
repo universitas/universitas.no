@@ -13,4 +13,8 @@ export const cleanup = text => {
 }
 
 // :: * -> string
-export const stringify = R.ifElse(R.is(String), R.identity, R.toString)
+export const stringify = R.cond([
+  [R.is(String), R.identity],
+  [R.isNil, R.always('')],
+  [R.T, R.toString],
+])
