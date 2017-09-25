@@ -116,12 +116,12 @@ function* fetchItems(action) {
 function* cloneItem(action) {
   const { getItem, itemAdded, apiPost, detailView } = modelFuncs(action)
   const { id } = action.payload
-  const { working_title, item_type, bodytext_markup } = yield select(
+  const { working_title, story_type, bodytext_markup } = yield select(
     getItem(id)
   )
   const data = {
     working_title: 'ny ' + working_title,
-    item_type,
+    story_type,
     bodytext_markup,
     publication_status: 0,
   }
