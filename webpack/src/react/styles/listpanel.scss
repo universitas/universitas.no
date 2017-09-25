@@ -55,14 +55,17 @@ $darkgrey: #555;
       border-radius: 0.5em;
       background-color: $color;
       cursor: pointer;
-      &.inactive {
-        background-color: scale_color($color, $lightness: -20, $saturation: -60);
-      }
       &:hover {
         background-color: scale_color($color, $saturation: 100, $lightness: 15);
       }
+      &.inactive {
+        background-color: scale_color($color, $lightness: -50, $saturation: -70);
+        &:hover {
+          background-color: scale_color($color, $lightness: -30, $saturation: -50);
+        }
+      }
       &:disabled {
-        background-color: scale_color($color, $lightness: 20, $saturation: -90);
+        background-color: scale_color($color, $lightness: 00, $saturation: -90);
         cursor: inherit;
       }
     }

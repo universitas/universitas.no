@@ -1,12 +1,25 @@
 // String Field
 import { stringify } from 'utils/text'
 import { Pdf } from 'components/Icons'
+import cx from 'classnames'
+
+const openUrl = url => () => window.open(url)
+
+const PdfLink = ({ url }) => (
+  <span
+    className={cx('PdfLink')}
+    onClick={openUrl(url)}
+    title="åpne pdf i ny tab"
+  >
+    <Pdf />
+  </span>
+)
 
 const PdfThumb = ({ cover_page, pages, pdf }) => (
   <div className="PdfThumb">
     <img src={cover_page} alt="" />
     <span className="pages">
-      {pages} sider <a style={{ fontSize: '2em' }} href={pdf}><Pdf /></a>
+      {pages} sider <PdfLink url={pdf} />
     </span>
   </div>
 )

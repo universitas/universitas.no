@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { Add, Delete, Laptop, Tune, Close } from 'components/Icons'
+import { Magic, Add, Delete, Laptop, Tune, Close } from 'components/Icons'
 import { push } from 'redux-little-router'
 import { modelSelectors, modelActions } from 'ducks/basemodel'
 
@@ -17,15 +17,11 @@ const Tool = ({ Icon, ...props }) => (
 
 const ToolBar = props => <div {...props} />
 
-const PhotoTools = ({ autocrop, close, edit_url = 'http://example.com' }) => (
+const PhotoTools = ({ autocrop, close, openAdmin }) => (
   <ToolBar className="DetailToolBar">
     <Tool Icon={Close} title="lukk saken" onClick={close} />
-    <Tool Icon={Tune} title="autocrop" onClick={autocrop} />
-    <Tool
-      Icon={Tune}
-      title="rediger i django-admin"
-      onClick={openUrl(edit_url)}
-    />
+    <Tool Icon={Magic} title="autocrop" onClick={autocrop} />
+    <Tool Icon={Tune} title="rediger i django-admin" onClick={openAdmin} />
   </ToolBar>
 )
 
@@ -34,6 +30,7 @@ const mapStateToProps = (state, { pk }) => getItem(pk)
 const mapDispatchToProps = (dispatch, { pk }) => ({
   autocrop: () => dispatch(fieldChanged(pk, 'cropping_method', 1)),
   close: () => dispatch(push(`/${model}`)),
+  openAdmin: openUrl(`/admin/photo/imagefile/${pk}/change/`),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PhotoTools)

@@ -122,7 +122,7 @@ ContributorDetail	webpack/src/react/contributors/ContributorDetail.js	/^const Co
 ContributorField	webpack/src/react/contributors/ContributorGrid.js	/^const ContributorField = ({ editable, ...props }) => ($/;"	r
 ContributorList	webpack/src/react/contributors/ContributorList.js	/^const ContributorList = ({ model = MODEL }) => {$/;"	r
 ContributorSerializer	django/api/contributor_serializers.py	/^class ContributorSerializer(serializers.HyperlinkedModelSerializer):$/;"	c
-ContributorTools	webpack/src/react/contributors/ContributorTools.js	/^const ContributorTools = ({$/;"	r
+ContributorTools	webpack/src/react/contributors/ContributorTools.js	/^const ContributorTools = ({ autocrop, close, openAdmin }) => ($/;"	r
 ContributorViewSet	django/api/contributor_serializers.py	/^class ContributorViewSet(viewsets.ModelViewSet):$/;"	c
 ContributorsAppConfig	django/apps/contributors/appconf.py	/^class ContributorsAppConfig(AppConfig):$/;"	c
 CropBox	django/apps/photo/cropping/boundingbox.py	/^class CropBox(Box):$/;"	c
@@ -294,7 +294,7 @@ IssueField	webpack/src/react/issues/IssueGrid.js	/^const IssueField = ({ editabl
 IssueList	webpack/src/react/issues/IssueList.js	/^const IssueList = ({ model = MODEL }) => {$/;"	r
 IssueQueryset	django/apps/issues/models.py	/^class IssueQueryset(models.QuerySet):$/;"	c
 IssueSerializer	django/api/issue_serializers.py	/^class IssueSerializer(serializers.HyperlinkedModelSerializer):$/;"	c
-IssueTools	webpack/src/react/issues/IssueTools.js	/^const IssueTools = ({ autocrop, close, edit_url = 'http:\/\/example.com' }) => ($/;"	r
+IssueTools	webpack/src/react/issues/IssueTools.js	/^const IssueTools = ({ autocrop, close, openAdmin }) => ($/;"	r
 IssueTuple	django/apps/issues/models.py	/^IssueTuple = collections.namedtuple('IssueTuple', ['number', 'date'])$/;"	v
 IssueViewSet	django/api/issue_serializers.py	/^class IssueViewSet(viewsets.ModelViewSet):$/;"	c
 IssuesAppConfig	django/apps/issues/appconf.py	/^class IssuesAppConfig(AppConfig):$/;"	c
@@ -514,6 +514,7 @@ PRIVATE	django/apps/adverts/models.py	/^    PRIVATE = 2$/;"	v	class:Advert
 PUBLISHED	django/apps/adverts/models.py	/^    PUBLISHED = 3$/;"	v	class:Advert
 PULLQUOTE_TAG	django/apps/stories/models.py	/^PULLQUOTE_TAG = '@quote:'$/;"	v
 PdfArchiveView	django/apps/issues/views.py	/^class PdfArchiveView(TemplateView):$/;"	c
+PdfLink	webpack/src/react/components/ModelField/PdfField.js	/^const PdfLink = ({ url }) => ($/;"	r
 PdfThumb	webpack/src/react/components/ModelField/PdfField.js	/^const PdfThumb = ({ cover_page, pages, pdf }) => ($/;"	r
 PhotoAppConfig	django/apps/photo/appconf.py	/^class PhotoAppConfig(AppConfig):$/;"	c
 PhotoAppView	django/apps/photo/views.py	/^class PhotoAppView(LoginRequiredMixin, TemplateView):$/;"	c
@@ -523,7 +524,7 @@ PhotoField	webpack/src/react/images/PhotoGrid.js	/^const PhotoField = props => (
 PhotoList	webpack/src/react/containers/PhotoList.js	/^const PhotoList = connect(mapImageListStateToProps)(List)$/;"	r
 PhotoList	webpack/src/react/images/PhotoList.js	/^const PhotoList = ({ model = MODEL }) => {$/;"	r
 PhotoList	webpack/src/react/pages/PhotoList.js	/^const PhotoList = ({ items = [], search = '', displayOptions = {} }) => ($/;"	r
-PhotoTools	webpack/src/react/images/PhotoTools.js	/^const PhotoTools = ({ autocrop, close, edit_url = 'http:\/\/example.com' }) => ($/;"	r
+PhotoTools	webpack/src/react/images/PhotoTools.js	/^const PhotoTools = ({ autocrop, close, openAdmin }) => ($/;"	r
 Position	django/apps/contributors/models.py	/^class Position(models.Model):$/;"	c
 PositionAdmin	django/apps/contributors/admin.py	/^class PositionAdmin(admin.ModelAdmin):$/;"	c
 PostgresLegacySearchBackend	django/watson/backends.py	/^class PostgresLegacySearchBackend(PostgresSearchBackend):$/;"	c
@@ -1079,6 +1080,7 @@ context_object_name	django/watson/views.py	/^    context_object_name = "search_r
 contributor	django/apps/contributors/models.py	/^    contributor = models.ForeignKey(Contributor)$/;"	v	class:Stint
 contributor	django/apps/photo/models.py	/^    contributor = models.ForeignKey($/;"	v	class:ImageFile
 contributor	django/apps/stories/models.py	/^    contributor = models.ForeignKey(Contributor)$/;"	v	class:Byline
+contributorsInitialState	webpack/src/react/entry/ProdSys/reducer.js	/^const contributorsInitialState = {$/;"	r
 convert_html_links	django/apps/stories/models.py	/^    def convert_html_links(cls, bodytext, return_html=False):$/;"	m	class:InlineLink
 convert_pdf_to_web	django/apps/issues/tasks.py	/^def convert_pdf_to_web(input_file):$/;"	f
 copyright_information	django/apps/photo/models.py	/^    copyright_information = models.CharField($/;"	v	class:ImageFile
@@ -1965,6 +1967,7 @@ issue	django/apps/stories/models.py	/^    issue = models.ForeignKey($/;"	v	class
 issue_name	django/apps/issues/models.py	/^    issue_name = models.CharField(max_length=100, editable=False, blank=True)$/;"	v	class:Issue
 issue_type	django/apps/issues/models.py	/^    issue_type = models.PositiveSmallIntegerField($/;"	v	class:Issue
 issues	django/apps/issues/context_processors.py	/^def issues(request):$/;"	f
+issuesInitialState	webpack/src/react/entry/ProdSys/reducer.js	/^const issuesInitialState = {$/;"	r
 item	webpack/src/react/components/ModelField/index.js	/^  const item = modelSelectors(model).getItem(pk)(state)$/;"	r
 itemData	webpack/src/react/ducks/basemodel.test.js	/^const itemData = { id: 100, bar: { foo: null } }$/;"	r
 itemLens	webpack/src/react/ducks/basemodel.js	/^const itemLens = id => R.lensPath(['items', String(id)])$/;"	r
@@ -2566,6 +2569,7 @@ old_name	django/apps/photo/migrations/0006_auto_20151025_2149.py	/^            o
 onClick	webpack/src/react/components/Filter.js	/^  const onClick = e => dispatch(actionCreator(attr, value))$/;"	r
 on_delete	django/apps/contributors/migrations/0010_auto_20151013_2307.py	/^                on_delete=django.db.models.deletion.SET_NULL,$/;"	v	class:Migration
 on_delete	django/apps/contributors/models.py	/^        on_delete=models.SET_NULL,$/;"	v	class:Contributor
+openUrl	webpack/src/react/components/ModelField/PdfField.js	/^const openUrl = url => () => window.open(url)$/;"	r
 openUrl	webpack/src/react/contributors/ContributorTools.js	/^const openUrl = url => () => window.open(url)$/;"	r
 openUrl	webpack/src/react/images/PhotoTools.js	/^const openUrl = url => () => window.open(url)$/;"	r
 openUrl	webpack/src/react/issues/IssueTools.js	/^const openUrl = url => () => window.open(url)$/;"	r
@@ -2725,6 +2729,7 @@ phone	django/apps/contributors/models.py	/^    phone = models.CharField(blank=Tr
 phoneFormat	webpack/src/react/utils/text.js	/^export const phoneFormat = R.pipe(stringify, s => 'tlf: ' + s)$/;"	r
 photo	django/api/tests/test_indesign_api.py	/^def photo():$/;"	f
 photos	django/apps/photo/models.py	/^    def photos(self):$/;"	m	class:ImageFileQuerySet
+photosInitialState	webpack/src/react/entry/ProdSys/reducer.js	/^const photosInitialState = {$/;"	r
 place_all_inline_elements	django/apps/stories/models.py	/^    def place_all_inline_elements(self):$/;"	m	class:Story
 placements	django/apps/frontpage/models.py	/^    placements = models.ManyToManyField($/;"	v	class:FrontpageStory
 populate_from	django/apps/stories/models.py	/^        populate_from=('name', ),$/;"	v	class:StoryType
@@ -3069,9 +3074,9 @@ stint_set	django/api/contributor_serializers.py	/^    stint_set = StintSerialize
 store	django/watson/search.py	/^    store = ()$/;"	v	class:SearchAdapter
 store	webpack/src/react/entry/ProdSys/configureStore.js	/^  const store = createStore(rootReducer, initialState, middlewares)$/;"	r
 store	webpack/src/react/entry/ttEditor/configureStore.js	/^  const store = createStore(rootReducer, defaultState, middleware)$/;"	r
+storiesInitialState	webpack/src/react/entry/ProdSys/reducer.js	/^const storiesInitialState = {$/;"	r
 story	django/apps/frontpage/models.py	/^    story = models.ForeignKey('stories.Story')$/;"	v	class:FrontpageStory
 story	django/apps/stories/models.py	/^    story = models.ForeignKey(Story)$/;"	v	class:Byline
-storyInitialState	webpack/src/react/entry/ProdSys/reducer.js	/^const storyInitialState = {$/;"	r
 story_type	django/api/story_serializers.py	/^    story_type = serializers.PrimaryKeyRelatedField($/;"	v	class:StorySerializer
 story_type	django/apps/stories/models.py	/^    story_type = models.ForeignKey($/;"	v	class:Story
 story_type_name	django/api/story_serializers.py	/^    story_type_name = serializers.StringRelatedField(source='story_type')$/;"	v	class:StorySerializer

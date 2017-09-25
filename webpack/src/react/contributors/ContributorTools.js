@@ -17,18 +17,10 @@ const Tool = ({ Icon, ...props }) => (
 
 const ToolBar = props => <div {...props} />
 
-const ContributorTools = ({
-  autocrop,
-  close,
-  edit_url = 'http://example.com',
-}) => (
+const ContributorTools = ({ autocrop, close, openAdmin }) => (
   <ToolBar className="DetailToolBar">
-    <Tool Icon={Close} title="lukk saken" onClick={close} />
-    <Tool
-      Icon={Tune}
-      title="rediger i django-admin"
-      onClick={openUrl(edit_url)}
-    />
+    <Tool Icon={Close} title="lukk" onClick={close} />
+    <Tool Icon={Tune} title="rediger i django-admin" onClick={openAdmin} />
   </ToolBar>
 )
 
@@ -36,6 +28,7 @@ const mapStateToProps = (state, { pk }) => getItem(pk)
 
 const mapDispatchToProps = (dispatch, { pk }) => ({
   close: () => dispatch(push(`/${model}`)),
+  openAdmin: openUrl(`/admin/contributors/contributor/${pk}/change/`),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContributorTools)

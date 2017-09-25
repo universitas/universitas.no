@@ -26,3 +26,14 @@ $darkgrey: #555;
   }
   .todate { &:before { content: '\0000a0–\0000a0'; } }
 }
+
+.PdfLink {
+  cursor: pointer;
+  font-size: 2em;
+  color: #888;
+  &:hover {
+    color: #aaa;
+  }
+}
+
+
