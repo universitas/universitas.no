@@ -83,18 +83,9 @@ const optionsFields = {
     read_only: false,
     label: 'Issue type',
     choices: [
-      {
-        value: 1,
-        display_name: 'Vanlig',
-      },
-      {
-        value: 2,
-        display_name: 'Magasin',
-      },
-      {
-        value: 3,
-        display_name: 'Velkomstutgave',
-      },
+      { value: 1, display_name: 'Vanlig' },
+      { value: 2, display_name: 'Magasin' },
+      { value: 3, display_name: 'Velkomstutgave' },
     ],
   },
 }

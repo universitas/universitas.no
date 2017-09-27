@@ -105,7 +105,7 @@ lint_javascript() {
 }
 lint_python() {
   py_files=$(git diff --staged --name-status | awk '/^[AM].*\.py$/ {print $2}' | grep -v 'migrations')
-  [[ -n $py_files ]] && exists isort && isort --verbose $py_files && exists yapf && python3 -m yapf --verbose --in-place $py_files
+  [[ -n $py_files ]] && exists isort && isort --verbose $py_files && exists yapf && yapf --verbose --in-place $py_files
 }
 
 load_db() {

@@ -2,14 +2,15 @@
 import logging
 import random
 
+from model_utils.models import TimeStampedModel
+
 # Project apps
 from apps.photo.models import ImageFile
 from django.core.exceptions import ValidationError
 # Django core
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
-from utils.model_mixins import Edit_url_mixin
+from utils.model_mixins import EditURLMixin
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +80,7 @@ def validate_height(value, minvalue=1, maxvalue=12):
         )
 
 
-class FrontPageModule(TimeStampedModel, Edit_url_mixin):
+class FrontPageModule(TimeStampedModel, EditURLMixin):
     """ A single item on the front page """
 
     class Meta:
@@ -246,7 +247,7 @@ class FrontpageStoryManager(models.Manager):
         content_block.save()
 
 
-class FrontpageStory(TimeStampedModel, Edit_url_mixin):
+class FrontpageStory(TimeStampedModel, EditURLMixin):
     class Meta:
         verbose_name = _('Frontpage Story')
         verbose_name_plural = _('Frontpage Stories')

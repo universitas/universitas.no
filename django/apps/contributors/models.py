@@ -6,16 +6,18 @@ import logging
 import os
 import re
 
+from fuzzywuzzy import fuzz
+from slugify import Slugify
+
 from apps.photo.models import ProfileImage
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.core.files import File
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from fuzzywuzzy import fuzz
-from slugify import Slugify
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +41,12 @@ class Contributor(models.Model):
         (EXTERNAL, _('External')),
     ]
 
-    # user = models.ForeignKey(User, blank=True, null=True)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
     status = models.PositiveSmallIntegerField(
         choices=STATUS_CHOICES,
         default=UNKNOWN,
@@ -118,6 +125,18 @@ class Contributor(models.Model):
     def has_byline_image(self):
         return bool(self.get_byline_image())
 
+    @property
+    def first_name(self):
+        name_parts = self.display_name.split()
+        if len(name_parts) > 1:
+            name_parts.pop()
+        return ' '.join(name_parts[:-1])
+
+    @property
+    def last_name(self):
+        name_parts = self.display_name.split()
+        return name_parts[-1]
+
     def legacy_data(self):
         """ Finds original byline in imported data. """
         data = []
@@ -128,6 +147,19 @@ class Contributor(models.Model):
                 byline += json.loads(web_source)[0]['fields']['byline']
                 data.append(byline)
         return '\n'.join(data)
+
+    def get_user(self):
+        """Get the user"""
+        User = get_user_model()
+        user = self.user
+        if not user and self.email:
+            user = User.objects.filter(email=self.email).first()
+        if not user:
+            user = User.objects.filter(
+                first_name=self.first_name,
+                last_name=self.last_name,
+            ).first()
+        return user
 
     @classmethod
     def get_or_create(cls, input_name, initials=''):
@@ -215,7 +247,9 @@ class Contributor(models.Model):
                 contributor = None
 
         # Was not found with any of the methods.
+        created = False
         if not contributor:
+            created = True
             contributor = cls(
                 display_name=full_name[:50].strip(),
                 initials=initials[:5].strip(),
@@ -228,7 +262,7 @@ class Contributor(models.Model):
             contributor.aliases += '\n' + input_name
             contributor.save()
 
-        return [contributor]
+        return (contributor, created)
 
 
 # class ContactInfo(models.Model):
@@ -265,14 +299,20 @@ class Position(models.Model):
     """ A postion or job in the publication. """
 
     title = models.CharField(
+        verbose_name=_('title'),
         help_text=_('Job title at the publication.'),
         unique=True,
         max_length=50
     )
-
+    is_management = models.BooleanField(
+        verbose_name=_('is management'),
+        help_text=_('Is this a management position'),
+        default=False,
+    )
     groups = models.ManyToManyField(
         Group,
-        help_text=_('Group membership'),
+        verbose_name=_('groups'),
+        help_text=_('Implicit auth Group membership'),
     )
 
     class Meta:
@@ -292,15 +332,36 @@ class StintQuerySet(models.QuerySet):
         when = when or today()
         return self.filter(start_date__lte=when).exclude(end_date__lt=when)
 
+    def management(self, value=True):
+        """ management stints """
+        return self.filter(position__is_management=value)
+
 
 class Stint(models.Model):
     """ The period a Contributor serves in a Position. """
 
     objects = StintQuerySet.as_manager()
-    position = models.ForeignKey(Position)
-    contributor = models.ForeignKey(Contributor)
-    start_date = models.DateField(default=today, )
-    end_date = models.DateField(blank=True, null=True)
+    position = models.ForeignKey(
+        Position,
+        verbose_name=_('position'),
+    )
+    contributor = models.ForeignKey(
+        Contributor,
+        verbose_name=_('contributor'),
+    )
+    start_date = models.DateField(
+        default=today,
+        verbose_name=_('start date'),
+    )
+    end_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name=_('end date'),
+    )
 
     def __str__(self):
         return '{} {}'.format(self.position, self.contributor)
+
+    @property
+    def is_management(self):
+        return self.position.is_management

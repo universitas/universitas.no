@@ -17,6 +17,11 @@ from pathlib import Path
 import boto
 # Installed apps
 import PyPDF2
+from sorl import thumbnail
+from wand.color import Color
+from wand.drawing import Drawing
+from wand.image import Image as WandImage
+
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import models
@@ -25,11 +30,7 @@ from django.dispatch.dispatcher import receiver
 # Django core
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from sorl import thumbnail
-from utils.model_mixins import Edit_url_mixin
-from wand.color import Color
-from wand.drawing import Drawing
-from wand.image import Image as WandImage
+from utils.model_mixins import EditURLMixin
 
 logger = logging.getLogger('universitas')
 IssueTuple = collections.namedtuple('IssueTuple', ['number', 'date'])
@@ -186,7 +187,7 @@ class IssueQueryset(models.QuerySet):
         return latest
 
 
-class Issue(models.Model, Edit_url_mixin):
+class Issue(models.Model, EditURLMixin):
     """ Past or future print issue """
 
     objects = IssueQueryset.as_manager()
@@ -253,7 +254,7 @@ class Issue(models.Model, Edit_url_mixin):
         return _('{date:%d. %b}').format(date=self.publication_date)
 
 
-class PrintIssue(models.Model, Edit_url_mixin):
+class PrintIssue(models.Model, EditURLMixin):
     """ PDF file of a printed newspaper. """
 
     class Meta:

@@ -1,8 +1,9 @@
 """ Admin for stories app.  """
 
+from autocomplete_light.forms import modelform_factory
+
 from apps.frontpage.models import FrontpageStory
 from apps.photo.admin import ThumbAdmin
-from autocomplete_light.forms import modelform_factory
 from django.contrib import admin
 from django.db import models
 from django.forms import Textarea, TextInput
@@ -21,14 +22,8 @@ from .models import (
 
 class SmallTextArea:
     formfield_overrides = {
-        models.TextField: {
-            'widget': Textarea(attrs={'rows': 5,
-                                      'cols': 30})
-        },
-        models.CharField: {
-            'widget': Textarea(attrs={'rows': 5,
-                                      'cols': 30})
-        },
+        models.TextField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})},
+        models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})},
     }
 
 
@@ -69,10 +64,7 @@ class AsideInline(
 ):
     model = Aside
     formfield_overrides = {
-        models.TextField: {
-            'widget': Textarea(attrs={'rows': 6,
-                                      'cols': 80})
-        },
+        models.TextField: {'widget': Textarea(attrs={'rows': 6, 'cols': 80})},
     }
     extra = 0
 
@@ -82,10 +74,7 @@ class HtmlInline(
 ):
     model = InlineHtml
     formfield_overrides = {
-        models.TextField: {
-            'widget': Textarea(attrs={'rows': 6,
-                                      'cols': 80})
-        },
+        models.TextField: {'widget': Textarea(attrs={'rows': 6, 'cols': 80})},
     }
     extra = 0
 
@@ -95,10 +84,7 @@ class PullquoteInline(
 ):
     model = Pullquote
     formfield_overrides = {
-        models.TextField: {
-            'widget': Textarea(attrs={'rows': 2,
-                                      'cols': 80})
-        },
+        models.TextField: {'widget': Textarea(attrs={'rows': 2, 'cols': 80})},
     }
     extra = 0
 
@@ -115,10 +101,7 @@ class VideoInline(
 ):
     model = StoryVideo
     formfield_overrides = {
-        models.CharField: {
-            'widget': Textarea(attrs={'rows': 5,
-                                      'cols': 30})
-        },
+        models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})},
     }
     fields = [
         'top',
@@ -138,10 +121,7 @@ class ImageInline(
 ):
     form = modelform_factory(StoryImage, exclude=())
     formfield_overrides = {
-        models.CharField: {
-            'widget': Textarea(attrs={'rows': 5,
-                                      'cols': 30})
-        },
+        models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})},
     }
     model = StoryImage
     fields = [
@@ -169,8 +149,74 @@ def make_frontpage_story(modeladmin, request, queryset):
         FrontpageStory.objects.autocreate(story=story)
 
 
+class PublicationStatusFilter(admin.SimpleListFilter):
+    title = _('status')
+    parameter_name = 'status'
+
+    def lookups(self, request, model_admin):
+        """ what will be shown in the sidebar """
+        return (
+            ('web', _('website')),
+            ('unpub', _('unpublished')),
+            ('wip', _('work in progress')),
+            ('desk', _('newsdesk')),
+        )
+
+    def queryset(self, request, queryset):
+
+        if self.value() == 'wip':
+            return queryset.filter(
+                publication_status__in=[
+                    Story.STATUS_DRAFT,
+                    Story.STATUS_JOURNALIST,
+                    Story.STATUS_SUBEDITOR,
+                    Story.STATUS_EDITOR,
+                ]
+            )
+
+        if self.value() == 'desk':
+            return queryset.filter(
+                publication_status__in=[
+                    Story.STATUS_TO_DESK,
+                    Story.STATUS_AT_DESK,
+                ]
+            )
+
+        if self.value() == 'web':
+            return queryset.filter(
+                publication_status__in=[
+                    Story.STATUS_PUBLISHED,
+                    Story.STATUS_FROM_DESK,
+                    Story.STATUS_NOINDEX,
+                ]
+            )
+
+        if self.value() == 'unpub':
+            return queryset.filter(
+                publication_status__in=[
+                    Story.STATUS_PRIVATE,
+                    Story.STATUS_TEMPLATE,
+                    Story.STATUS_ERROR,
+                ]
+            )
+
+
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
+    def get_title(self, instance):
+        text = ''
+        if instance.kicker:
+            text += f'<em>{instance.kicker}</em></br>'
+        if instance.title:
+            text += f'<strong>{instance.title}</strong>'
+        elif instance.working_title:
+            text += f'[ {instance.working_title} ]'
+        else:
+            text += '---------'
+        return mark_safe(text)
+
+    get_title.short_description = _('title')  # type: ignore
+
     actions = [
         make_frontpage_story,
     ]
@@ -179,20 +225,17 @@ class StoryAdmin(admin.ModelAdmin):
     actions_on_bottom = True
     save_on_top = True
     list_per_page = 25
-    list_filter = ['language', 'publication_status']
+    list_filter = [PublicationStatusFilter, 'language', 'publication_status']
     list_display = [
-        'id',
-        'modified',
-        'title',
-        'kicker',
+        'get_title',
         'lede',
-        # 'theme_word',
+        'publication_status',
+        'modified',
         'hot_count',
         'hit_count',
         'language',
         'story_type',
         'publication_date',
-        'publication_status',
         # 'display_bylines', 'image_count'
     ]
 
@@ -203,14 +246,8 @@ class StoryAdmin(admin.ModelAdmin):
     ]
 
     formfield_overrides = {
-        models.CharField: {
-            'widget': Textarea(attrs={'rows': 2,
-                                      'cols': 30})
-        },
-        models.TextField: {
-            'widget': Textarea(attrs={'rows': 20,
-                                      'cols': 60})
-        },
+        models.CharField: {'widget': Textarea(attrs={'rows': 2, 'cols': 30})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 20, 'cols': 60})},
     }
 
     fieldsets = (
@@ -301,17 +338,12 @@ class StoryTypeAdmin(admin.ModelAdmin):
         'id',
         'name',
         'section',
-        'template',
         'prodsys_mappe',
     )
 
     list_editable = (
         'name',
         'section',
-        # 'prodsys_mappe',
-    )
-
-    raw_id_fields = (  # 'template',
     )
 
 
@@ -328,10 +360,6 @@ class BylineAdmin(admin.ModelAdmin):
     list_editable = (
         'credit',
         'title',
-    )
-
-    raw_id_fields = (  # 'story',
-        # 'contributor',
     )
 
 

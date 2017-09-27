@@ -2,7 +2,7 @@ import 'styles/storylist.scss'
 import cx from 'classnames'
 import { push } from 'redux-little-router'
 import { connect } from 'react-redux'
-import { detailFields, listFields } from 'stories/model'
+import { detailFields } from 'stories/model'
 import { modelSelectors } from 'ducks/basemodel'
 import ModelField from 'components/ModelField'
 
@@ -10,23 +10,31 @@ const MODEL = 'stories'
 
 const { getItemList, getItem, getCurrentItemId } = modelSelectors(MODEL)
 
+const listFields = R.compose(
+  R.pick([
+    'working_title',
+    'publication_status',
+    'story_type_name',
+    'modified',
+  ]),
+  R.map(R.omit(['editable']))
+)(detailFields)
+
+const renderFields = R.pipe(R.values, R.map(TableCell))
+
+const TableCell = ({ editable, ...props }) => (
+  <td key={props.name}>
+    <ModelField editable={false} model={MODEL} {...props} />
+  </td>
+)
+
 // render all headers in table
 const TableRow = ({ pk, onClick, className = '', fields }) => (
   <tr key={pk} onClick={onClick} className={className}>
-    {R.compose(
-      R.values,
-      R.map(({ key, editable, ...props }) => (
-        <td key={key}>
-          <ModelField
-            editable={false}
-            model={MODEL}
-            pk={pk}
-            name={key}
-            {...props}
-          />
-        </td>
-      ))
-    )(fields)}
+    {R.map(
+      props => <TableCell pk={pk} key={props.name} {...props} />,
+      R.values(listFields)
+    )}
   </tr>
 )
 
@@ -47,12 +55,12 @@ const StoryTable = ({ items = [], fields = listFields }) => (
       <tr>
         {R.compose(
           R.values,
-          R.map(({ key, label }) => <th key={key}>{label}</th>)
+          R.map(({ name, label }) => <th key={name}>{label}</th>)
         )(fields)}
       </tr>
     </thead>
     <tbody>
-      {items.map(pk => <ConnectedTableRow fields={fields} pk={pk} />)}
+      {items.map(pk => <ConnectedTableRow key={pk} pk={pk} />)}
     </tbody>
   </table>
 )

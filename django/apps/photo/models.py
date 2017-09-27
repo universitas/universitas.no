@@ -1,33 +1,27 @@
 """ Photography and image files in the publication  """
 
-import hashlib
 import logging
-# Python standard library
 import os
 import re
-from io import BytesIO
 from pathlib import Path
 
-import PIL
-
-import boto
-import imagehash
-# Project apps
-from apps.issues.models import current_issue
-from django.conf import settings
-from django.core.files import File
-from django.core.validators import FileExtensionValidator
-# Django core
-from django.db import models
-from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-# Installed apps
 from model_utils.models import TimeStampedModel
 from slugify import Slugify
 from sorl import thumbnail
-from utils.model_mixins import Edit_url_mixin
+
+from apps.issues.models import current_issue
+from django.conf import settings
+from django.contrib.postgres.fields import JSONField
+from django.core.files import File
+from django.core.validators import FileExtensionValidator
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
+from utils.model_mixins import EditURLMixin
 
 from .cropping.models import AutoCropImage
+from .exif import exif_to_json
+from .imagehash import ImageHashModelMixin
 
 logger = logging.getLogger(__name__)
 
@@ -40,35 +34,6 @@ class BrokenImage:
 
     def read(self):
         return b''
-
-
-def local_file_md5(filepath, blocksize=65536):
-    """Hexadecimal md5 hash of a file stored on local disk"""
-    hasher = hashlib.md5()
-    with open(filepath, 'rb') as source:
-        buf = source.read(blocksize)
-        while len(buf) > 0:
-            hasher.update(buf)
-            buf = source.read(blocksize)
-    return hasher.hexdigest()
-
-
-def file_field_md5(source_file, blocksize=65536):
-    """Hexadecimal md5 hash of a django model.FileField"""
-    hasher = hashlib.md5()
-    if source_file.closed:
-        source_file.open('rb')
-    buf = source_file.read(blocksize)
-    while len(buf) > 0:
-        hasher.update(buf)
-        buf = source_file.read(blocksize)
-    source_file.seek(0)
-    return hasher.hexdigest()
-
-
-def s3_md5(s3key, blocksize=65536):
-    """Hexadecimal md5 hash of a file stored in Amazon S3"""
-    return s3key.etag.strip('"').strip("'")
 
 
 def upload_image_to(instance, filename):
@@ -102,7 +67,9 @@ class ImageFileManager(models.Manager):
         return image
 
 
-class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
+class ImageFile(  # type: ignore
+    ImageHashModelMixin, TimeStampedModel, EditURLMixin, AutoCropImage
+):
     class Meta:
         verbose_name = _('ImageFile')
         verbose_name_plural = _('ImageFiles')
@@ -129,33 +96,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         null=True,
         editable=False,
     )
-    _md5 = models.CharField(
-        verbose_name=_('md5'),
-        help_text=_('md5 hash of source file'),
-        max_length=32,
-        editable=False,
-        null=True,
-    )
-    _imagehash = models.CharField(
-        verbose_name=_('image hash'),
-        help_text=_('perceptual hash of image using dhash algorithm'),
-        max_length=16,
-        editable=False,
-        default='',
-    )
-    _size = models.PositiveIntegerField(
-        verbose_name=_('file size'),
-        help_text=_('size of file in bytes'),
-        editable=False,
-        null=True,
-    )
-    _mtime = models.PositiveIntegerField(
-        verbose_name=_('timestamp'),
-        help_text=_('mtime timestamp of source file'),
-        editable=False,
-        null=True,
-    )
-
     old_file_path = models.CharField(
         verbose_name=_('old file path'),
         help_text=_('previous path if the image has been moved.'),
@@ -187,98 +127,17 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         null=True,
         max_length=1000,
     )
+    exif_data = JSONField(
+        verbose_name=_('exif_data'),
+        help_text=_('exif_data'),
+        default=dict,
+    )
 
     def __str__(self):
         if self.original:
             return os.path.basename(self.original.name)
         else:
             return super(ImageFile, self).__str__()
-
-    def save(self, *args, **kwargs):
-        if self.pk is None:
-            self.md5
-            self.size
-            self._imagehash = str(self.calculate_image_hash())
-
-        super().save(*args, **kwargs)
-
-    def save_local_image_as_source(self, filepath, save=True):
-        """Save file from local filesystem as source
-
-        Only saves if the new file is different from the one that exists.
-        """
-        mtime = os.stat(filepath).st_mtime
-        size = os.stat(filepath).st_size
-        md5 = local_file_md5(filepath)
-        if self.pk and self.original:
-            if mtime <= self.mtime or (size, md5) == (self.size, self.md5):
-                return False
-        filename = os.path.split(filepath)[1]
-        with open(filepath, 'rb') as source:
-            content = File(source)
-            self.original.save(filename, content, save)
-        return True
-
-    @property
-    def md5(self):
-        """Calculate or retrieve md5 value"""
-        if self.original and self._md5 is None:
-            self._md5 = file_field_md5(self.original)
-        return self._md5
-
-    @md5.setter
-    def md5(self, value):
-        self._md5 = value
-
-    @property
-    def imagehash(self):
-        """Calculate or retrieve md5 value"""
-        if self.original and self._imagehash is '':
-            self.imagehash = self.calculate_image_hash()
-        try:
-            return imagehash.hex_to_hash(self._imagehash)
-        except ValueError:
-            # could not calculate imagehash
-            return imagehash.hex_to_hash('F' * 16)
-
-    @imagehash.setter
-    def imagehash(self, value):
-        self._imagehash = str(value)
-
-    @property
-    def size(self):
-        """Calculate or retrive filesize"""
-        if self.original and self._size is None:
-            self._size = self.original.size
-        return self._size
-
-    @size.setter
-    def size(self, value):
-        self._size = value
-
-    @property
-    def mtime(self):
-        if self.original and self._mtime is None:
-            self._mtime = self.get_sourcefile_modification_time()
-        return self._mtime
-
-    @mtime.setter
-    def mtime(self, timestamp):
-        self._mtime = timestamp
-
-    def get_sourcefile_modification_time(self):
-        """Modified time as unix timestamp"""
-        try:
-            try:  # Locally stored file
-                mtime = os.path.getmtime(self.original.path)
-                return int(mtime)
-            except NotImplementedError:  # AWS S3 storage
-                key = self.original.file.key
-                modified = boto.utils.parse_ts(key.last_modified)
-                return int(modified.strftime('%s'))
-        except (FileNotFoundError, AttributeError):
-            # return current time
-            return int(timezone.now().strftime('%s'))
 
     @classmethod
     def upload_folder(cls):
@@ -332,16 +191,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         path.parent.mkdir(0o775, True, True)
         path.write_bytes(data)
 
-    def calculate_image_hash(self, size=11):
-        """Calculate perceptual hash for comparison of identical images"""
-        try:
-            blob = BytesIO(self.large.read())
-            img = PIL.Image.open(blob).convert('L').resize((size, size))
-            return imagehash.dhash(img)
-        except Exception as e:
-            logger.exception('failed')
-            return ''
-
     def save_again(self):
         """fix broken files. THIS IS HACK"""
         src = self.original
@@ -359,25 +208,6 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         self.preview
         logger.info(f'built thumbs {self}')
 
-    def calculate_hashes(self):
-        """Make sure the image has size, mtime, md5 and imagehash"""
-        if all([self._mtime, self._md5, self._size, self._imagehash]):
-            return False
-        # calculate values
-        self.mtime
-        self.md5
-        self.size
-        self.imagehash
-        if self.pk is not None:
-            # save unless instance does not exist already in db.
-            self.save(
-                update_fields=[
-                    'modified', '_mtime', '_md5', '_size', '_imagehash'
-                ]
-            )
-            logger.info(f'updated hashes {self}')
-        return True
-
     def add_description(self):
         """Populates `description` with relevant content from related models"""
         if self.is_profile_image():
@@ -386,6 +216,11 @@ class ImageFile(TimeStampedModel, Edit_url_mixin, AutoCropImage):
         captions = [re.sub(r'/s+', ' ', c.strip()) for c in cap_list]
         self.description = '\n'.join(captions)[:1000]
         return self.description
+
+    def add_exif_from_file(self):
+        data = exif_to_json(self.original)
+        self.exif_data = data
+        return data
 
 
 class ProfileImageManager(ImageFileManager):

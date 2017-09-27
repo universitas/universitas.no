@@ -20,7 +20,8 @@ const Home = () => <div>home</div>
 // activeProps={{ className: 'AppButton active' }}
 const AppButton = ({ href, Icon, label }) => (
   <Link className="AppButton" href={href}>
-    <Icon /><small>{label}</small>
+    <Icon />
+    <small>{label}</small>
   </Link>
 )
 AppButton.propTypes = {

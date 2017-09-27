@@ -32,7 +32,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.fields import AutoSlugField
 from model_utils.models import TimeStampedModel
 from slugify import Slugify
-from utils.model_mixins import Edit_url_mixin
+from utils.model_mixins import EditURLMixin
 
 from .bylines import clean_up_bylines
 from .status_codes import HTTP_STATUS_CODES
@@ -457,7 +457,7 @@ class PublishedStoryManager(models.Manager):
         hot_stories.update(hot_count=(models.F('hot_count') - 1) * factor)
 
 
-class Story(TextContent, TimeStampedModel, Edit_url_mixin):
+class Story(TextContent, TimeStampedModel, EditURLMixin):
     """ An article or story in the newspaper. """
 
     class Meta:

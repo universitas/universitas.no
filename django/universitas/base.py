@@ -60,11 +60,11 @@ CELERY_BROKER_CONNECTION_TIMEOUT = 10
 # CUSTOM APPS
 INSTALLED_APPS = [
     'apps.issues',
+    'apps.contributors',
     'apps.stories',
     'apps.core',
     'apps.photo',
     'apps.frontpage',
-    'apps.contributors',
     'apps.markup',
     'apps.adverts',
     'apps.search',
@@ -148,8 +148,7 @@ CACHES = {
         'BACKEND': 'redis_cache.RedisCache',
         'LOCATION': '{}:{}'.format(redis_host, redis_port),
         'OPTIONS': {
-            'DB': 0,
-            'MAX_ENTRIES': 1000,
+            'DB': 0, 'MAX_ENTRIES': 1000,
             'PARSER_CLASS': 'redis.connection.HiredisParser',
             'CONNECTION_POOL_CLASS': 'redis.BlockingConnectionPool',
             'CONNECTION_POOL_CLASS_KWARGS': {

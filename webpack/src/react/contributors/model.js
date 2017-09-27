@@ -1,9 +1,3 @@
-const cleanFields = R.pipe(
-  R.mapObjIndexed((val, key) => R.assoc('name', key, val)),
-  R.map(({ read_only, ...props }) => ({ ...props, editable: !read_only })),
-  R.omit(['required', 'read_only', 'max_length'])
-)
-
 const optionsFields = {
   id: {
     type: 'integer',
@@ -23,22 +17,10 @@ const optionsFields = {
     read_only: false,
     label: 'Status',
     choices: [
-      {
-        value: 0,
-        display_name: 'Ukjent',
-      },
-      {
-        value: 1,
-        display_name: 'Aktiv',
-      },
-      {
-        value: 2,
-        display_name: 'Slutta',
-      },
-      {
-        value: 3,
-        display_name: 'Ekstern',
-      },
+      { value: 0, display_name: 'Ukjent' },
+      { value: 1, display_name: 'Aktiv' },
+      { value: 2, display_name: 'Slutta' },
+      { value: 3, display_name: 'Ekstern' },
     ],
   },
   display_name: {
@@ -113,5 +95,11 @@ const optionsFields = {
     },
   },
 }
+
+const cleanFields = R.pipe(
+  R.mapObjIndexed((val, key) => R.assoc('name', key, val)),
+  R.map(({ read_only, ...props }) => ({ ...props, editable: !read_only })),
+  R.omit(['required', 'read_only', 'max_length'])
+)
 
 export const detailFields = cleanFields(optionsFields)

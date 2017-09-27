@@ -2,13 +2,13 @@ import 'styles/storylist.scss'
 import cx from 'classnames'
 import { Clear } from 'components/Icons'
 import { connect } from 'react-redux'
-import { listFields } from 'stories/model'
+import { detailFields } from 'stories/model'
 import StoryTable from 'stories/StoryTable'
 import ListPanel from 'containers/ListPanel'
 
 const MODEL = 'stories'
 
-const filters = listFields.publication_status.choices
+const filters = detailFields.publication_status.choices
   .map(({ value, display_name }) => ({
     value: parseInt(value),
     label: display_name,

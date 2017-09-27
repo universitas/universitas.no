@@ -72,7 +72,7 @@ continuation_indent_width=4
 dedent_closing_brackets=True
 
 # Place each dictionary entry onto its own line.
-each_dict_entry_on_separate_line=True
+each_dict_entry_on_separate_line=False
 
 # The regex for an i18n comment. The presence of this comment stops
 # reformatting of that line, because the comments are required to be
