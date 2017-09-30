@@ -14,11 +14,11 @@ services:
     command: "uwsgi"
     environment:
       - DEBUG=False
-    volumes:
-      - ./build:/var/build/
-      - ../STAGING:/var/staging/
-      - ./logs:/var/logs/
 
-  celery:
-    volumes:
-      - ../STAGING:/var/staging/
+volumes:
+  # mount locally for access with rsync
+  django_staging:
+    driver_opts:
+      type: local
+      device: ${PWD}/../STAGING
+      o: bind

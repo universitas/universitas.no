@@ -6,10 +6,11 @@ services:
     image: universitas/django:${IMAGE_VERSION:-edge}
     volumes:
       - ./django:/app
-      - django_logs:/var/logs
       - webpack_build:/var/build/
-      - django_static:/var/static/
+      - django_logs:/var/logs/
       - django_media:/var/media/
+      - django_staging:/var/staging/
+      - django_static:/var/static/
     env_file:
       - ./django/base.env
       - ./django/local.env
@@ -78,10 +79,27 @@ services:
       - redisdata:/data/
 
 volumes:
-  redisdata: {}
-  pgdata: {}
-  django_logs: {}
-  node_modules: {}
+  node_modules:  {}
+  pgdata:        {}
+  redisdata:     {}
   webpack_build: {}
-  django_media: {}
-  django_static: {}
+  django_media:
+    driver_opts:
+      type: local
+      device: ${PWD}/volumes/media/
+      o: bind
+  django_logs:
+    driver_opts:
+      type: local
+      device: ${PWD}/volumes/logs/
+      o: bind
+  django_static:
+    driver_opts:
+      type: local
+      device: ${PWD}/volumes/static/
+      o: bind
+  django_staging:
+    driver_opts:
+      type: local
+      device: ${PWD}/volumes/staging/
+      o: bind

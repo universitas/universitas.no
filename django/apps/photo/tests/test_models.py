@@ -1,23 +1,53 @@
 from pathlib import PosixPath as Path
 
 import pytest
+from apps.photo.exif import extract_exif_data, parse_exif_timestamp
 from apps.photo.models import ImageFile
 from django.core.files import File
 
 
 @pytest.fixture
-def fixture_image():
+def jpeg_file():
     img = Path(__file__).parent / 'fixtureimage.jpg'
     assert img.exists(), 'image not found'
     return str(img)
 
 
-@pytest.mark.django_db
-def test_image_hashes(fixture_image):
-    """ Save an image file and calculate hash values """
+@pytest.fixture
+def img(jpeg_file):
     img = ImageFile()
-    with open(fixture_image, 'rb') as fp:
+    with open(jpeg_file, 'rb') as fp:
         img.source_file.save('foobar.jpg', File(fp), save=False)
+    return img
+
+
+def test_exif_strptime():
+    dt = parse_exif_timestamp('1999:09:09 22:22:22')
+    assert dt.timetuple()[:6] == (1999, 9, 9, 22, 22, 22)
+    assert dt.tzinfo != None
+    assert parse_exif_timestamp('1999:50:09 22:22:22') == None
+
+
+@pytest.mark.django_db
+def test_image_exif(img):
+    assert img.exif_data == {}
+    img.add_exif_from_file()
+
+    data = extract_exif_data(img.exif_data)
+    assert data.artist == 'Dennis the Dog'
+    assert data.description == 'Image Description Data'
+    assert data.datetime.timetuple()[:6] == (1999, 9, 9, 22, 22, 22)
+
+    # exif data is used when image is saved
+    img.save()
+    assert img.created == data.datetime
+    assert img.copyright_information == data.copyright
+    assert img.description == data.description
+
+
+@pytest.mark.django_db
+def test_image_hashes(img):
+    """ Save an image file and calculate hash values """
     assert img.full_width == 100
     assert img.full_height == 97
     assert img._md5 is None
@@ -25,8 +55,8 @@ def test_image_hashes(fixture_image):
     assert img._mtime is None
     assert img._imagehash == ''
     img.calculate_hashes()
-    assert img._md5[:5] == '44086'
-    assert img._size == 2784
+    assert img._md5[:5] == '4eccf'
+    assert img._size == 2966
     assert img._mtime > 1000000000
     assert img._imagehash[:5] == '70b48'  # is string
     assert img.imagehash.hash.shape == (8, 8)  # is array
@@ -41,12 +71,9 @@ def test_image_hashes(fixture_image):
 
 
 @pytest.mark.django_db
-def test_custom_field(fixture_image):
-    img = ImageFile()
+def test_custom_field(img):
     assert img.cropping_method == img.CROP_PENDING
-    assert img.crop_box.left < img.crop_box.right  # pylint: disable-all
-    with open(fixture_image, 'rb') as fp:
-        img.source_file.save('foobar.jpg', File(fp))
+    assert img.crop_box.left < img.crop_box.right
     img.crop_box.right = 5
     img.crop_box.top = -5
     img.crop_box.x = 1

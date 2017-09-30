@@ -5,10 +5,6 @@ import os
 import re
 from pathlib import Path
 
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-
 from apps.issues.models import current_issue
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
@@ -17,10 +13,13 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
 from utils.model_mixins import EditURLMixin
 
 from .cropping.models import AutoCropImage
-from .exif import exif_to_json
+from .exif import exif_to_json, extract_exif_data
 from .imagehash import ImageHashModelMixin
 
 logger = logging.getLogger(__name__)
@@ -51,7 +50,17 @@ class ImageFileQuerySet(models.QuerySet):
     def profile_images(self):
         return self.filter(source_file__startswith=ProfileImage.UPLOAD_FOLDER)
 
+    def update_exif(self):
+        """Look for exif metadata in source file and save if found"""
+        count = 0
+        for image in self:
+            if image.exif_data != image.add_exif_from_file():
+                count += 1
+                image.save(update_fields=['exif_data'])
+        return count
+
     def update_descriptions(self):
+        """Look for image description and add if found"""
         count = 0
         for image in self:
             if image.description != image.add_description():
@@ -70,6 +79,8 @@ class ImageFileManager(models.Manager):
 class ImageFile(  # type: ignore
     ImageHashModelMixin, TimeStampedModel, EditURLMixin, AutoCropImage
 ):
+    """Photo or Illustration in the publication."""
+
     class Meta:
         verbose_name = _('ImageFile')
         verbose_name_plural = _('ImageFiles')
@@ -210,17 +221,36 @@ class ImageFile(  # type: ignore
 
     def add_description(self):
         """Populates `description` with relevant content from related models"""
-        if self.is_profile_image():
+        if not self.description and self.is_profile_image():
             return ProfileImage.add_description(self)
-        cap_list = self.storyimage_set.values_list('caption', flat=True)
-        captions = [re.sub(r'/s+', ' ', c.strip()) for c in cap_list]
-        self.description = '\n'.join(captions)[:1000]
+
+        if not self.description:
+            cap_list = self.storyimage_set.values_list('caption', flat=True)
+            captions = [re.sub(r'/s+', ' ', c.strip()) for c in cap_list]
+            captions = list(set(captions))
+            self.description = '\n'.join(captions)[:1000]
         return self.description
 
     def add_exif_from_file(self):
-        data = exif_to_json(self.original)
-        self.exif_data = data
-        return data
+        self.exif_data = exif_to_json(self.original)
+        data = extract_exif_data(self.exif_data)
+        if not self.description:
+            self.description = data.description
+        if not self.copyright_information:
+            self.copyright_information = data.copyright
+        if data.datetime:
+            self.created = data.datetime
+
+        return self.exif_data
+
+    def delete_thumbnails(self, delete_file=False):
+        """Delete all thumbnails, optinally delete original too"""
+        thumbnail.delete(self.original, delete_file=delete_file)
+
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self.add_exif_from_file()
+        super().save(*args, **kwargs)
 
 
 class ProfileImageManager(ImageFileManager):

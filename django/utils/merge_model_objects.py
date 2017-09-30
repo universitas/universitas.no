@@ -1,8 +1,32 @@
+from itertools import filterfalse, tee
+
 from django.apps import apps
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import transaction
-from django.db.models.fields.related import ManyToManyField, ManyToManyRel
+from django.db.models.fields.related import ManyToManyRel, ManyToOneRel
 from utils.disconnect_signals import disconnect_signals
+
+
+def partition(pred, iterable):
+    'Use a predicate to partition entries into false entries and true entries'
+    # partition(is_odd, range(10)) --> 0 2 4 6 8   and  1 3 5 7 9
+    t1, t2 = tee(iterable)
+    return list(filter(pred, t1)), list(filterfalse(pred, t2))
+
+
+def _get_generic_fields():
+    """Return a list of all GenericForeignKeys in all models."""
+    generic_fields = []
+    for model in apps.get_models():
+        for field_name, field in model.__dict__.items():
+            if isinstance(field, GenericForeignKey):
+                generic_fields.append(field)
+    return generic_fields
+
+
+def is_class(cls):
+    'curried isinstance'
+    return lambda item: isinstance(item, cls)
 
 
 @transaction.atomic()
@@ -23,45 +47,43 @@ def merge_instances(primary_object, *alias_objects, disable_signals=True):
         # signals that could remove file for both instances.
         disconnect_signals()
 
-    generic_fields = get_generic_fields()
+    generic_fields = _get_generic_fields()
 
-    # get related fields
-    relations = primary_object._meta._get_fields(
+    # get reverse related fields
+    reverse_relations = primary_object._meta._get_fields(
         forward=False, include_hidden=True
     )
 
-    many_to_many_fields, related_fields = discrimine(
-        lambda field: isinstance(field, (ManyToManyField, ManyToManyRel)),
-        relations,
+    fk_relations, m2m_relations = partition(
+        is_class(ManyToOneRel), reverse_relations
     )
 
-    # Loop through all alias objects and migrate their references to the
-    # primary object
     for alias_object in alias_objects:
-        # Migrate all foreign key references from alias object to primary
-        # object.
-        for related_object in related_fields:
-            # The variable name on the alias_object model.
-            alias_varname = related_object.get_accessor_name()
+
+        # Migrate all foreign key refs from alias object to primary object.
+        for fk_rel in fk_relations:
             # The variable name on the related model.
-            obj_varname = related_object.field.name
-            related_objects = getattr(alias_object, alias_varname)
-            for obj in related_objects.all():
-                setattr(obj, obj_varname, primary_object)
+            related_object_set = getattr(
+                alias_object, fk_rel.get_accessor_name()
+            )
+            for obj in related_object_set.all():
+                setattr(obj, fk_rel.field.name, primary_object)
                 obj.save()
 
-        # Migrate all many to many references from alias object to primary
-        # object.
-        for related_many_object in many_to_many_fields:
-            alias_varname = related_many_object.get_accessor_name()
-            obj_varname = related_many_object.field.name
-            related_many_objects = getattr(alias_object, alias_varname)
-            for obj in related_many_objects.all():
-                getattr(obj, obj_varname).remove(alias_object)
-                getattr(obj, obj_varname).add(primary_object)
+        # Migrate all many to many refs from alias object to primary object.
+        for m2m_rel in m2m_relations:
+            if m2m_rel.through:
+                # If a relation is `through`, it was processed as fk_rel
+                continue
+            related_object_set = getattr(
+                alias_object, m2m_rel.get_accessor_name()
+            )
+            for obj in related_object_set.all():
+                related_set = getattr(obj, m2m_rel.field.name)
+                related_set.remove(alias_object)
+                related_set.add(primary_object)
 
-        # Migrate all generic foreign key references from alias object to
-        # primary object.
+        # Migrate all generic relations from alias object to primary object.
         for field in generic_fields:
             filter_kwargs = {
                 field.fk_field: alias_object._get_pk_val(),
@@ -76,27 +98,3 @@ def merge_instances(primary_object, *alias_objects, disable_signals=True):
             alias_object.delete()
 
     return primary_object
-
-
-def get_generic_fields():
-    """Return a list of all GenericForeignKeys in all models."""
-    generic_fields = []
-    for model in apps.get_models():
-        for field_name, field in model.__dict__.items():
-            if isinstance(field, GenericForeignKey):
-                generic_fields.append(field)
-    return generic_fields
-
-
-def discrimine(pred, sequence):
-    """Split a collection in two collections using a predicate.
-    >>> discrimine(lambda x: x < 5, [3, 4, 5, 6, 7, 8])
-    ... ([3, 4], [5, 6, 7, 8])
-    """
-    positive, negative = [], []
-    for item in sequence:
-        if pred(item):
-            positive.append(item)
-        else:
-            negative.append(item)
-    return positive, negative

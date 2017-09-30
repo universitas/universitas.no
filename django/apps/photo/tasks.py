@@ -55,6 +55,11 @@ def post_save_task(pk):
     instance.calculate_hashes()  # this saves as well
 
 
+@periodic_task(run_every=timedelta(hours=1))
+def update_image_description():
+    ImageFile.objects.update_descriptions()
+
+
 @periodic_task(run_every=timedelta(minutes=10))
 def clean_up_pending_autocrop():
     # In case some images have ended up in limbo

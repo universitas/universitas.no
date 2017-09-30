@@ -3,7 +3,6 @@ import logging
 from apps.photo import tasks
 from django.conf import settings
 from django.db.models.signals import post_save, pre_delete
-from sorl import thumbnail
 
 # from celery import chain
 # from apps.photo import tasks
@@ -11,10 +10,11 @@ from sorl import thumbnail
 logger = logging.getLogger(__name__)
 
 
-def image_post_delete(sender, instance, **kwargs):
-    """Remove image file and thumbnail"""
-    delete_file = not settings.DEBUG  # only in production
-    thumbnail.delete(instance.source_file, delete_file=delete_file)
+def image_pre_delete(sender, instance, **kwargs):
+    """Remove original image file and thumbnail"""
+    # delete_file = not settings.DEBUG  # only in production
+    delete_file = False
+    instance.delete_thumbnails(delete_file)
 
 
 def image_post_save(sender, instance, created, update_fields, **kwargs):
@@ -27,7 +27,7 @@ def image_post_save(sender, instance, created, update_fields, **kwargs):
         old = sender.objects.get(pk=instance.pk)
         if old._md5 and old._md5 != instance._md5:
             # image file has changed. Invalidate thumbnails.
-            thumbnail.delete(instance.source_file, delete_file=False)
+            instance.delete_thumbnails()
     if instance.cropping_method == instance.CROP_PENDING:
         logger.debug('autocrop_signature %s' % instance)
         # chain two task signatures
@@ -36,7 +36,7 @@ def image_post_save(sender, instance, created, update_fields, **kwargs):
         post_save_signature.apply_async()
 
 
-# pre_delete.connect(image_post_delete, sender='photo.ImageFile')
-# pre_delete.connect(image_post_delete, sender='photo.ProfileImage')
+pre_delete.connect(image_pre_delete, sender='photo.ImageFile')
+pre_delete.connect(image_pre_delete, sender='photo.ProfileImage')
 post_save.connect(image_post_save, sender='photo.ImageFile')
 post_save.connect(image_post_save, sender='photo.ProfileImage')

@@ -1,24 +1,20 @@
 """ Contributors to the thing """
 
-import glob
 import json
 import logging
-import os
-import re
-
-from fuzzywuzzy import fuzz
-from slugify import Slugify
 
 from apps.photo.models import ProfileImage
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
-from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.core.files import File
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
+from .fuzzy_name_search import FuzzyNameSearchMixin
+
+User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
@@ -26,7 +22,7 @@ def today():
     return timezone.now().date()
 
 
-class Contributor(models.Model):
+class Contributor(FuzzyNameSearchMixin, models.Model):
     """ Someone who contributes content to the newspaper or other staff. """
 
     UNKNOWN = 0
@@ -84,42 +80,20 @@ class Contributor(models.Model):
         return self.byline_set.count()
 
     def get_byline_image(self, force_new=False):
-        slugify = Slugify()
-        if not force_new and self.byline_photo:
+        if self.byline_photo and not force_new:
             return self.byline_photo
-        imagefiles = glob.glob(
-            os.path.join(settings.BYLINE_PHOTO_DIR, '*.jpg')
-        )
-        name = self.name
-        name_last_first = re.sub(r'^(.*) (\S+)$', r'\2 \1', name)
-        name_slug_title = slugify(name) + '.jpg'
-        name_slug = name_slug_title.lower()
-        name_slug_reverse = slugify(name_last_first).lower() + '.jpg'
-        bestratio = 90
-        bestmatch = None
-        for path in imagefiles:
-            filename = os.path.split(path)[1].lower()
-            ratio = max(
-                fuzz.ratio(filename, name_slug),
-                fuzz.ratio(filename, name_slug_reverse)
-            )
-            if ratio > bestratio:
-                bestmatch = path
-                bestratio = ratio
-                if ratio == 100:
-                    break
-        if bestmatch:
-            msg = 'found match: name:{}, img:{}, ratio:{} '.format(
-                name_slug, bestmatch, ratio
-            )
-            logger.debug(msg)
-            with open(bestmatch, 'rb') as source:
+
+        filename, match = self.find_image_file(self.name)
+        if match:
+            with open(match, 'rb') as source:
                 content = File(source)
                 img = ProfileImage()
-                img.source_file.save(name_slug_title, content)
+                img.source_file.save(filename, content)
+
             self.byline_photo = img
             self.save()
             return img
+        return False
 
     # @cached(3600)
     def has_byline_image(self):
@@ -130,7 +104,7 @@ class Contributor(models.Model):
         name_parts = self.display_name.split()
         if len(name_parts) > 1:
             name_parts.pop()
-        return ' '.join(name_parts[:-1])
+        return ' '.join(name_parts)
 
     @property
     def last_name(self):
@@ -150,7 +124,6 @@ class Contributor(models.Model):
 
     def get_user(self):
         """Get the user"""
-        User = get_user_model()
         user = self.user
         if not user and self.email:
             user = User.objects.filter(email=self.email).first()
@@ -161,138 +134,32 @@ class Contributor(models.Model):
             ).first()
         return user
 
-    @classmethod
-    def get_or_create(cls, input_name, initials=''):
-        """
-        Fancy lookup for low quality legacy imports.
-        Tries to avoid creation of multiple contributor instances
-        for a single real contributor.
-        """
-        full_name = re.sub('\(.*?\)', '', input_name)[:50].strip()
-        if not full_name:
-            return []
-        names = full_name.split()
-        last_name = names[-1]
-        first_name = ' '.join(names[:-1][:1])
-        # middle_name = ' '.join(names[1:-1])
-        # logger.debug('"%s", "%s", "%s"' % (first_name, last_name, full_name))
-        base_query = cls.objects
+    def set_active(self, active=True, save=True):
+        """Set contributor's status to `active` or `retired`"""
+        if active and self.status != self.ACTIVE:
+            self.status = self.ACTIVE
+            if save:
+                self.save()
+        if not active and self.status != self.EXTERNAL:
+            self.status = self.RETIRED
+            if save:
+                self.save()
+        # if self.user and self.user.is_active != active:
+        #     self.user.is_active = active
+        #     if save:
+        #         self.user.save()
+        logger.debug('set %s as %s' % (self, self.get_status_display()))
 
-        def find_single_item_or_none(func):
-            """ Decorator to return one item or none by catching exceptions """
-
-            def inner_func(*args, **kwargs):
-                try:
-                    return func(*args, **kwargs)
-                except ObjectDoesNotExist:
-                    # lets' try something else.
-                    return None
-                except MultipleObjectsReturned:
-                    # TODO: Make sure two people can have the same name.
-                    return None
-
-            return inner_func
-
-        @find_single_item_or_none
-        def search_for_full_name():
-            return base_query.get(display_name=full_name)
-
-        @find_single_item_or_none
-        def search_for_first_plus_last_name():
-            if not first_name:
-                return None
-            return base_query.get(
-                display_name__istartswith=first_name,
-                display_name__iendswith=last_name
-            )
-
-        @find_single_item_or_none
-        def search_for_alias():
-            if first_name:
-                return None
-            return base_query.get(aliases__icontains=last_name)
-
-        def fuzzy_search():
-            MINIMUM_RATIO = 85
-            candidates = []
-            for contributor in base_query.all():
-                ratio = fuzz.ratio(contributor.display_name, full_name)
-                if ratio >= MINIMUM_RATIO:
-                    # TODO: two contributors with same name.
-                    return contributor
-                if contributor.display_name in full_name:
-                    candidates.append(contributor)
-            return candidates or None
-
-        # Variuous queries to look for contributor in the database.
-        contributor = (
-            search_for_full_name() or search_for_first_plus_last_name()
-            or fuzzy_search() or None
-            # search_for_alias() or
-            # search_for_initials() or
-        )
-
-        if isinstance(contributor, list):
-            combined_byline = ' '.join([c.display_name for c in contributor])
-            ratio = fuzz.token_sort_ratio(combined_byline, full_name)
-            msg = 'ratio: {ratio} {combined} -> {full_name}'.format(
-                ratio=ratio,
-                combined=combined_byline,
-                full_name=full_name,
-            )
-            logger.debug(msg)
-            if ratio >= 80:
-                return contributor
-            else:
-                contributor = None
-
-        # Was not found with any of the methods.
-        created = False
-        if not contributor:
-            created = True
-            contributor = cls(
-                display_name=full_name[:50].strip(),
-                initials=initials[:5].strip(),
-            )
-            contributor.save()
-
-        if contributor.display_name != full_name:
-
-            # Misspelling or different combination of names.
-            contributor.aliases += '\n' + input_name
-            contributor.save()
-
-        return (contributor, created)
-
-
-# class ContactInfo(models.Model):
-
-#     """
-#     Contact information for contributors and others.
-#     """
-
-#     PERSON = _('Person')
-#     INSTITUTION = _('Institution')
-#     POSITION = _('Position')
-#     CONTACT_TYPES = (
-#         ("Person", PERSON),
-#         ("Institution", INSTITUTION),
-#         ("Position", POSITION),
-#     )
-
-#     name = models.CharField(blank=True, null=True, max_length=200)
-#     title = models.CharField(blank=True, null=True, max_length=200)
-#     postal_address = models.CharField(blank=True, null=True, max_length=200)
-#     street_address = models.CharField(blank=True, null=True, max_length=200)
-#     webpage = models.URLField()
-#     contact_type = models.CharField(choices=CONTACT_TYPES, max_length=50)
-
-#     class Meta:
-#         verbose_name = _('ContactInfo')
-#         verbose_name_plural = _('ContactInfo')
-
-#     def __unicode__(self):
-#         return self.name
+    def add_to_groups(self):
+        """Add user to groups based on active stints."""
+        user = self.user
+        if not user or self.status != self.ACTIVE:
+            return False
+        for stint in self.stint_set.active():
+            groups = list(stint.position.groups.all())
+            user.groups.add(*groups)
+            logger.debug('added %s to %s' % (self, groups))
+        return True
 
 
 class Position(models.Model):
@@ -324,6 +191,21 @@ class Position(models.Model):
 
     def active(self, when=None):
         return Stint.objects.filter(position=self).active(when)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        try:
+            mellomledere = Group.objects.get(name='mellomledere')
+            redaksjon = Group.objects.get(name='redaksjon')
+        except Group.DoesNotExist:
+            return
+
+        if self.is_management:
+            self.groups.add(mellomledere)
+            self.groups.remove(redaksjon)
+        else:
+            self.groups.remove(mellomledere)
 
 
 class StintQuerySet(models.QuerySet):
@@ -360,7 +242,10 @@ class Stint(models.Model):
     )
 
     def __str__(self):
-        return '{} {}'.format(self.position, self.contributor)
+        return (
+            f'{self.position}: {self.contributor} '
+            f'{self.start_date} – {self.end_date or ""}'
+        )
 
     @property
     def is_management(self):
