@@ -1,6 +1,7 @@
 from pathlib import PosixPath as Path
 
 import pytest
+
 from apps.photo.exif import extract_exif_data, parse_exif_timestamp
 from apps.photo.models import ImageFile
 from django.core.files import File
@@ -19,13 +20,6 @@ def img(jpeg_file):
     with open(jpeg_file, 'rb') as fp:
         img.source_file.save('foobar.jpg', File(fp), save=False)
     return img
-
-
-def test_exif_strptime():
-    dt = parse_exif_timestamp('1999:09:09 22:22:22')
-    assert dt.timetuple()[:6] == (1999, 9, 9, 22, 22, 22)
-    assert dt.tzinfo != None
-    assert parse_exif_timestamp('1999:50:09 22:22:22') == None
 
 
 @pytest.mark.django_db

@@ -1082,7 +1082,7 @@ cleanFields	webpack/src/react/issues/model.js	/^const cleanFields = R.pipe($/;"	
 cleanFields	webpack/src/react/utils/modelUtils.js	/^export const cleanFields = ({$/;"	r
 cleanValues	webpack/src/react/services/api.js	/^const cleanValues = R.pipe(String, R.replace(\/\\s+\/g, ' '), encodeURIComponent)$/;"	r
 clean_and_create_links	django/apps/stories/models/links.py	/^    def clean_and_create_links(cls, body, parent_story):$/;"	m	class:InlineLink
-clean_data	django/apps/photo/exif.py	/^def clean_data(value):$/;"	f
+clean_data	django/apps/photo/exif.py	/^def clean_data(value: Any) -> Any:$/;"	f
 clean_links	django/apps/stories/models/mixins.py	/^    def clean_links(self, text, model_instance):$/;"	m	class:MarkupFieldMixin
 clean_up_bylines	django/apps/stories/models/byline.py	/^def clean_up_bylines(raw_bylines):$/;"	f
 clean_up_pending_autocrop	django/apps/photo/tasks.py	/^def clean_up_pending_autocrop():$/;"	f
@@ -1436,8 +1436,9 @@ exclude	django/apps/issues/admin.py	/^    exclude = ()$/;"	v	class:ThumbAdmin
 exclude	django/apps/photo/admin.py	/^    exclude = ()$/;"	v	class:ThumbAdmin
 exclude	django/watson/search.py	/^    exclude = ()$/;"	v	class:SearchAdapter
 exclude	django/watson/views.py	/^    exclude = ()$/;"	v	class:SearchMixin
+exif	django/apps/photo/models.py	/^    def exif(self):$/;"	m	class:ImageFile
 exif_data	django/apps/photo/models.py	/^    exif_data = JSONField($/;"	v	class:ImageFile
-exif_to_json	django/apps/photo/exif.py	/^def exif_to_json(imgdata):$/;"	f
+exif_to_json	django/apps/photo/exif.py	/^def exif_to_json(imgdata: bytes) -> dict:$/;"	f
 expand	django/apps/photo/cropping/boundingbox.py	/^    def expand(self, h, v=None):$/;"	m	class:CropBox
 experiments	django/universitas/dev_urls.py	/^experiments = [$/;"	v
 extra	django/apps/contributors/admin.py	/^    extra = 1$/;"	v	class:StintInline
@@ -1455,7 +1456,7 @@ extra_classes	django/apps/adverts/models.py	/^    extra_classes = models.CharFie
 extra_classes	django/apps/adverts/models.py	/^    extra_classes = models.CharField($/;"	v	class:Advert
 extra_context	django/watson/views.py	/^    extra_context = {}$/;"	v	class:SearchMixin
 extra_kwargs	django/api/legacy_serializers.py	/^        extra_kwargs = {'url': {'view_name': 'legacy-detail'}}$/;"	v	class:ProdStorySerializer.Meta
-extract_exif_data	django/apps/photo/exif.py	/^def extract_exif_data(data):$/;"	f
+extract_exif_data	django/apps/photo/exif.py	/^def extract_exif_data(data: dict) -> ExifData:$/;"	f
 facebook_thumb	django/apps/stories/models/story.py	/^    def facebook_thumb(self):$/;"	m	class:Story
 fake	django/utils/content_factory.py	/^fake = Factory.create('no')$/;"	v
 fake_contributor	django/apps/core/content_factory.py	/^def fake_contributor(fake=FAKE, **kwargs):$/;"	f
@@ -2066,6 +2067,7 @@ jane	django/api/tests/funky.py	/^def jane(request):$/;"	f
 join_models	django/apps/issues/migrations/0005_data_link_pdf_to_issue.py	/^def join_models(apps, schema_editor):$/;"	f
 joinpath	django/universitas/setting_helpers.py	/^def joinpath(*paths, resolve=False):$/;"	f
 journalist	django/apps/contributors/tests/test_tasks.py	/^def journalist():$/;"	f
+jpeg_data	django/apps/photo/tests/test_exif.py	/^def jpeg_data():$/;"	f
 jpeg_file	django/apps/photo/tests/test_models.py	/^def jpeg_file():$/;"	f
 jsonDict	django/api/photo_serializers.py	/^class jsonDict(dict):$/;"	c
 kicker	django/apps/frontpage/models.py	/^    kicker = models.CharField($/;"	v	class:FrontpageStory
@@ -2845,7 +2847,7 @@ parent_story	django/apps/stories/models/links.py	/^    parent_story = models.For
 parent_story	django/apps/stories/models/story.py	/^    def parent_story(self):$/;"	m	class:Story
 parent_story	django/apps/stories/models/storychildren.py	/^    parent_story = models.ForeignKey($/;"	v	class:StoryElement
 parse_box_data	django/apps/photo/cropping/models.py	/^def parse_box_data(value):$/;"	f
-parse_exif_timestamp	django/apps/photo/exif.py	/^def parse_exif_timestamp(timestamp):$/;"	f
+parse_exif_timestamp	django/apps/photo/exif.py	/^def parse_exif_timestamp(timestamp: str) -> Optional[datetime]:$/;"	f
 parse_markup	django/apps/stories/models/mixins.py	/^    def parse_markup(self):$/;"	m	class:TextContent
 partialMap	webpack/src/react/utils/fp.js	/^export const partialMap = R.curry((obj, args) =>$/;"	r
 partition	django/utils/merge_model_objects.py	/^def partition(pred, iterable):$/;"	f
@@ -3269,6 +3271,7 @@ test_box_properties	django/apps/photo/cropping/boundingbox.py	/^def test_box_pro
 test_box_serialize	django/apps/photo/cropping/boundingbox.py	/^def test_box_serialize():$/;"	f
 test_cascade	django/apps/photo/tests/test_cropping.py	/^def test_cascade(valid_cascade_file, invalid_cascade_file):$/;"	f
 test_change_story	django/api/tests/test_indesign_api.py	/^def test_change_story(scandal, api_user):$/;"	f
+test_clean_data	django/apps/photo/tests/test_exif.py	/^def test_clean_data():$/;"	f
 test_connect_to_user	django/apps/contributors/tests/test_tasks.py	/^def test_connect_to_user(alice_bob_cherry):$/;"	f
 test_connect_to_user_duplicates	django/apps/contributors/tests/test_tasks.py	/^def test_connect_to_user_duplicates(alice_bob_cherry):$/;"	f
 test_convert_pdf_page_to_image	django/apps/issues/tests/test_tasks.py	/^def test_convert_pdf_page_to_image(tmp_fixture_dir):$/;"	f
@@ -3284,7 +3287,8 @@ test_cropbox_expansion	django/apps/photo/cropping/boundingbox.py	/^def test_crop
 test_cropdetector	django/apps/photo/tests/test_cropping.py	/^def test_cropdetector(Detector, testimage):$/;"	f
 test_custom_field	django/apps/photo/tests/test_models.py	/^def test_custom_field(img):$/;"	f
 test_environ_prefix	django/universitas/tests/test_setting_helpers.py	/^def test_environ_prefix():$/;"	f
-test_exif_strptime	django/apps/photo/tests/test_models.py	/^def test_exif_strptime():$/;"	f
+test_exif_strptime	django/apps/photo/tests/test_exif.py	/^def test_exif_strptime():$/;"	f
+test_exif_to_json	django/apps/photo/tests/test_exif.py	/^def test_exif_to_json(jpeg_data):$/;"	f
 test_extract_page_text	django/apps/issues/tests/test_models.py	/^def test_extract_page_text(fixture_pdf):$/;"	f
 test_fake_contributor	django/apps/core/tests/test_content_factory.py	/^def test_fake_contributor():$/;"	f
 test_fake_imagefile	django/apps/core/tests/test_content_factory.py	/^def test_fake_imagefile():$/;"	f

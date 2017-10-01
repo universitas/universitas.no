@@ -1,15 +1,24 @@
 # vim: ft=config:
 
-# Django
+# FROZEN PACKAGES
+
+# Django must be upgraded manually
 django==1.11
+
+# Breaking changes in version 3
+# http://django-autocomplete-light.readthedocs.io/en/master/index.html
+django-autocomplete-light==2.3.3
+
+# Pypi package has not been updated in a long time
+# https://github.com/jazzband/sorl-thumbnail/issues/507
+sorl-thumbnail==12.4a1
 
 # DJANGO PLUGINS
 django-debug-toolbar
 django-extensions
 django-redis-cache
-django-webpack-loader==0.4.1
-django-autocomplete-light>=2.2,<3.0
-sorl-thumbnail==12.4a1
+django-webpack-loader
+
 django-model-utils
 
 # REST FRAMEWORK

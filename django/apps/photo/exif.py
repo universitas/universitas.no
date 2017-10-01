@@ -10,6 +10,7 @@ from typing import Any, Optional
 from PIL import ExifTags, Image
 
 from django.utils import timezone
+from ftfy import fix_text
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +19,9 @@ ExifData = namedtuple('ExifData', 'description, datetime, artist, copyright')
 
 def clean_data(value: Any) -> Any:
     """Make data json-serializable"""
-    if isinstance(value, (tuple, list)):
+    if isinstance(value, (int, float)):
+        return value
+    if isinstance(value, (tuple, list, set)):
         return [clean_data(v) for v in value]
     if isinstance(value, dict):
         return {str(k): clean_data(v) for k, v in value.items()}
@@ -32,7 +35,7 @@ def clean_data(value: Any) -> Any:
         return 'BASE64|' + base64.b64encode(value).decode()
     if isinstance(value, str):
         # exif text is incorrectly decoded
-        return value.encode('latin1').decode('utf8').replace('\x00', '')
+        return fix_text(value)
 
     return repr(value)
 
@@ -48,7 +51,10 @@ def exif_to_json(imgdata: bytes) -> dict:
     if not tags:
         return {}
 
-    return clean_data({ExifTags.TAGS.get(k, k): v for k, v in tags.items()})
+    return clean_data({
+        ExifTags.TAGS.get(k, str(k)): v
+        for k, v in tags.items()
+    })
 
 
 def extract_exif_data(data: dict) -> ExifData:
