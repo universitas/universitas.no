@@ -470,6 +470,7 @@ Migration	django/apps/photo/migrations/0012_imagefile__imagehash.py	/^class Migr
 Migration	django/apps/photo/migrations/0013_imagefile_description.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/photo/migrations/0014_auto_20170920_1826.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/photo/migrations/0015_imagefile_exif_data.py	/^class Migration(migrations.Migration):$/;"	c
+Migration	django/apps/photo/migrations/0016_postgresql_create_trigram_extension.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0001_initial.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0002_auto_20141217_1841.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^class Migration(migrations.Migration):$/;"	c
@@ -1302,6 +1303,7 @@ dependencies	django/apps/photo/migrations/0012_imagefile__imagehash.py	/^    dep
 dependencies	django/apps/photo/migrations/0013_imagefile_description.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/photo/migrations/0014_auto_20170920_1826.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/photo/migrations/0015_imagefile_exif_data.py	/^    dependencies = [$/;"	v	class:Migration
+dependencies	django/apps/photo/migrations/0016_postgresql_create_trigram_extension.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0001_initial.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0002_auto_20141217_1841.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^    dependencies = [$/;"	v	class:Migration
@@ -2763,6 +2765,7 @@ operations	django/apps/photo/migrations/0012_imagefile__imagehash.py	/^    opera
 operations	django/apps/photo/migrations/0013_imagefile_description.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/photo/migrations/0014_auto_20170920_1826.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/photo/migrations/0015_imagefile_exif_data.py	/^    operations = [$/;"	v	class:Migration
+operations	django/apps/photo/migrations/0016_postgresql_create_trigram_extension.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0001_initial.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0002_auto_20141217_1841.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^    operations = [$/;"	v	class:Migration
@@ -3169,6 +3172,7 @@ serve_ads	django/apps/adverts/models.py	/^    def serve_ads(self):$/;"	m	class:A
 setCenter	webpack/src/react/ducks/cropWidget.js	/^export const setCenter = (id, position) => ({$/;"	r
 set_active	django/apps/contributors/models.py	/^    def set_active(self, active=True, save=True):$/;"	m	class:Contributor
 siblings	django/apps/stories/models/storychildren.py	/^    def siblings(self):$/;"	m	class:StoryElement
+similar	django/apps/photo/models.py	/^    def similar(self, field='imagehash'):$/;"	m	class:ImageFile
 similar_tag	django/apps/markup/models.py	/^    def similar_tag(self, start_tag, cutoff=0.6):$/;"	m	class:BlockTagManager
 size	django/api/photo_serializers.py	/^    size = serializers.SerializerMethodField()$/;"	v	class:ImageFileSerializer
 size	django/apps/photo/cropping/boundingbox.py	/^    def size(self) -> float:$/;"	m	class:Box

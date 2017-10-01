@@ -190,6 +190,23 @@ class ImageFile(  # type: ignore
     def exif(self):
         return extract_exif_data(self.exif_data)
 
+    def similar(self, field='imagehash'):
+        """Finds visually simular images using postgresql trigram search."""
+        others = ImageFile.objects.exclude(pk=self.pk)
+        if field == 'imagehash':
+            return others.filter(_imagehash__trigram_similar=self._imagehash)
+        if field == 'md5':
+            return others.filter(_md5=self._md5)
+        if field == 'created':
+            treshold = timezone.timedelta(minutes=30)
+            return others.filter(
+                created__gt=self.created - treshold,
+                created__lt=self.created + treshold,
+            )
+        else:
+            msg = f'field should be imagehash, md5 or created, not {field}'
+            raise ValueError(msg)
+
     def thumbnail(self, size='x150', **options):
         """Create thumb of image"""
         try:
