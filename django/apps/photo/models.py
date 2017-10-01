@@ -5,6 +5,10 @@ import os
 import re
 from pathlib import Path
 
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+
 from apps.issues.models import current_issue
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
@@ -13,9 +17,6 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
 from utils.model_mixins import EditURLMixin
 
 from .cropping.models import AutoCropImage
@@ -185,6 +186,10 @@ class ImageFile(  # type: ignore
         """Return thumb of cropped image"""
         return self.thumbnail('150x150', crop_box=self.get_crop_box())
 
+    @property
+    def exif(self):
+        return extract_exif_data(self.exif_data)
+
     def thumbnail(self, size='x150', **options):
         """Create thumb of image"""
         try:
@@ -233,12 +238,12 @@ class ImageFile(  # type: ignore
 
     def add_exif_from_file(self):
         if self.pk:
-            data = self.small.read()
+            raw = self.small.read()
         else:
             self.original.open()
-            data = self.original.read()
+            raw = self.original.read()
             self.original.close()
-        self.exif_data = exif_to_json(data)
+        self.exif_data = exif_to_json(raw)
         data = extract_exif_data(self.exif_data)
         if not self.description:
             self.description = data.description

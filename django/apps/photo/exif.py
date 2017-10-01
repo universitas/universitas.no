@@ -3,7 +3,9 @@ import base64
 import logging
 import string
 from collections import namedtuple
+from datetime import datetime
 from io import BytesIO
+from typing import Any, Optional
 
 from PIL import ExifTags, Image
 
@@ -14,7 +16,7 @@ logger = logging.getLogger(__name__)
 ExifData = namedtuple('ExifData', 'description, datetime, artist, copyright')
 
 
-def clean_data(value):
+def clean_data(value: Any) -> Any:
     """Make data json-serializable"""
     if isinstance(value, (tuple, list)):
         return [clean_data(v) for v in value]
@@ -35,7 +37,7 @@ def clean_data(value):
     return repr(value)
 
 
-def exif_to_json(imgdata):
+def exif_to_json(imgdata: bytes) -> dict:
     """Get exif dictionary from open file pointer"""
     try:
         tags = Image.open(BytesIO(imgdata))._getexif()
@@ -49,7 +51,7 @@ def exif_to_json(imgdata):
     return clean_data({ExifTags.TAGS.get(k, k): v for k, v in tags.items()})
 
 
-def extract_exif_data(data):
+def extract_exif_data(data: dict) -> ExifData:
     date = data.get('DateTimeOriginal') or data.get('DateTime', '')
     return ExifData(
         datetime=parse_exif_timestamp(date),
@@ -59,7 +61,7 @@ def extract_exif_data(data):
     )
 
 
-def parse_exif_timestamp(timestamp):
+def parse_exif_timestamp(timestamp: str) -> Optional[datetime]:
     """Exif timestamp of format"""
     try:
         dt = timezone.datetime.strptime(timestamp, '%Y:%m:%d %H:%M:%S')
