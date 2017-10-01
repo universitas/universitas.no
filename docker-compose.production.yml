@@ -12,6 +12,8 @@ services:
 
   web:
     command: "uwsgi"
+    volumes:
+      - ./build:/var/build/
     environment:
       - DEBUG=False
 
