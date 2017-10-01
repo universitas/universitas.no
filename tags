@@ -1437,7 +1437,7 @@ exclude	django/apps/photo/admin.py	/^    exclude = ()$/;"	v	class:ThumbAdmin
 exclude	django/watson/search.py	/^    exclude = ()$/;"	v	class:SearchAdapter
 exclude	django/watson/views.py	/^    exclude = ()$/;"	v	class:SearchMixin
 exif_data	django/apps/photo/models.py	/^    exif_data = JSONField($/;"	v	class:ImageFile
-exif_to_json	django/apps/photo/exif.py	/^def exif_to_json(fp):$/;"	f
+exif_to_json	django/apps/photo/exif.py	/^def exif_to_json(imgdata):$/;"	f
 expand	django/apps/photo/cropping/boundingbox.py	/^    def expand(self, h, v=None):$/;"	m	class:CropBox
 experiments	django/universitas/dev_urls.py	/^experiments = [$/;"	v
 extra	django/apps/contributors/admin.py	/^    extra = 1$/;"	v	class:StintInline

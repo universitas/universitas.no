@@ -33,6 +33,8 @@ BUNDLE_TIME = crontab(hour=4, minute=0, day_of_week=3)
 def weekly_bundle():
     logger.info('bundle time!')
     create_print_issue_pdf(expiration_days=6)
+    # remove old web pages
+    get_staging_pdf_files('WEB/*.pdf', expiration_days=1, delete_expired=True)
 
 
 class MissingBinary(RuntimeError):

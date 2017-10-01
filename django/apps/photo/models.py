@@ -56,7 +56,7 @@ class ImageFileQuerySet(models.QuerySet):
         for image in self:
             if image.exif_data != image.add_exif_from_file():
                 count += 1
-                image.save(update_fields=['exif_data'])
+                image.save()
         return count
 
     def update_descriptions(self):
@@ -65,7 +65,7 @@ class ImageFileQuerySet(models.QuerySet):
         for image in self:
             if image.description != image.add_description():
                 count += 1
-                image.save(update_fields=['description'])
+                image.save()
         return count
 
 
@@ -232,7 +232,13 @@ class ImageFile(  # type: ignore
         return self.description
 
     def add_exif_from_file(self):
-        self.exif_data = exif_to_json(self.original)
+        if self.pk:
+            data = self.small.read()
+        else:
+            self.original.open()
+            data = self.original.read()
+            self.original.close()
+        self.exif_data = exif_to_json(data)
         data = extract_exif_data(self.exif_data)
         if not self.description:
             self.description = data.description

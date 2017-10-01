@@ -1,9 +1,9 @@
 """ Make image file data serializable """
 import base64
-import datetime
 import logging
 import string
 from collections import namedtuple
+from io import BytesIO
 
 from PIL import ExifTags, Image
 
@@ -35,20 +35,18 @@ def clean_data(value):
     return repr(value)
 
 
-def exif_to_json(fp):
+def exif_to_json(imgdata):
     """Get exif dictionary from open file pointer"""
     try:
-        fp.open()
-    except:
-        logger.exception('could not open file %s' % fp)
-    else:
-        tags = Image.open(fp)._getexif()
-        if not tags:
-            return {}
-        data = {ExifTags.TAGS.get(k, k): v for k, v in tags.items()}
-    finally:
-        fp.close()
-    return clean_data(data)
+        tags = Image.open(BytesIO(imgdata))._getexif()
+    except Exception:
+        logger.exception('could not read image')
+        tags = None
+
+    if not tags:
+        return {}
+
+    return clean_data({ExifTags.TAGS.get(k, k): v for k, v in tags.items()})
 
 
 def extract_exif_data(data):
