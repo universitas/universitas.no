@@ -135,15 +135,17 @@ class InlineLink(TimeStampedModel):
             return False
 
         if not self.linked_story:
+            match = re.search(r'universitas.no/.+?/(?P<id>\d+)/', self.href)
             try:
-                match = re.search(
-                    r'universitas.no/.+?/(?P<id>\d+)/', self.href
-                )
-                story_id = int(match.group('id'))
-                self.linked_story = Story.objects.get(pk=story_id)
+                story = Story.objects.get(pk=int(match.group('id')))
             except (AttributeError, ObjectDoesNotExist):
-                # Not an internal link
-                return False
+                return False  # Not an internal link
+            else:
+                if story == self.parent_story:
+                    return False  # Avoid looooops
+                else:
+                    self.linked_story == story
+
         self.href = ''
         self.alt_text = self.linked_story.title
         return self.linked_story
