@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-27 19:56+0200\n"
+"POT-Creation-Date: 2017-10-02 11:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -193,7 +193,7 @@ msgstr ""
 msgid "no end date"
 msgstr ""
 
-#: apps/contributors/appconf.py:7 apps/contributors/models.py:74
+#: apps/contributors/appconf.py:7 apps/contributors/models.py:70
 msgid "Contributors"
 msgstr ""
 
@@ -201,80 +201,80 @@ msgstr ""
 msgid "Name of person."
 msgstr ""
 
-#: apps/contributors/models.py:38
+#: apps/contributors/models.py:34
 msgid "Unknown"
 msgstr ""
 
-#: apps/contributors/models.py:39
+#: apps/contributors/models.py:35
 msgid "Active"
 msgstr ""
 
-#: apps/contributors/models.py:40
+#: apps/contributors/models.py:36
 msgid "Retired"
 msgstr ""
 
-#: apps/contributors/models.py:41
+#: apps/contributors/models.py:37
 msgid "External"
 msgstr ""
 
-#: apps/contributors/models.py:60
+#: apps/contributors/models.py:56
 msgid "Verified to be a correct name."
 msgstr ""
 
-#: apps/contributors/models.py:68
+#: apps/contributors/models.py:64
 msgid "photo used for byline credit."
 msgstr ""
 
-#: apps/contributors/models.py:73
+#: apps/contributors/models.py:69
 msgid "Contributor"
 msgstr ""
 
-#: apps/contributors/models.py:302 apps/markup/models.py:181
+#: apps/contributors/models.py:169 apps/markup/models.py:181
 #: apps/stories/admin.py:218 apps/stories/models/story.py:131
 msgid "title"
 msgstr ""
 
-#: apps/contributors/models.py:303
+#: apps/contributors/models.py:170
 msgid "Job title at the publication."
 msgstr ""
 
-#: apps/contributors/models.py:308
+#: apps/contributors/models.py:175
 msgid "is management"
 msgstr ""
 
-#: apps/contributors/models.py:309
+#: apps/contributors/models.py:176
 msgid "Is this a management position"
 msgstr ""
 
-#: apps/contributors/models.py:314
+#: apps/contributors/models.py:181
 msgid "groups"
 msgstr ""
 
-#: apps/contributors/models.py:315
+#: apps/contributors/models.py:182
 msgid "Implicit auth Group membership"
 msgstr ""
 
-#: apps/contributors/models.py:319
+#: apps/contributors/models.py:186
 msgid "Position"
 msgstr ""
 
-#: apps/contributors/models.py:320
+#: apps/contributors/models.py:187
 msgid "Positions"
 msgstr ""
 
-#: apps/contributors/models.py:346
+#: apps/contributors/models.py:228
 msgid "position"
 msgstr ""
 
-#: apps/contributors/models.py:350 apps/photo/models.py:108
+#: apps/contributors/models.py:232 apps/photo/models.py:121
 msgid "contributor"
 msgstr ""
 
-#: apps/contributors/models.py:354
+#: apps/contributors/models.py:236
 msgid "start date"
 msgstr ""
 
-#: apps/contributors/models.py:359
+#: apps/contributors/models.py:241
 msgid "end date"
 msgstr ""
 
@@ -584,63 +584,67 @@ msgstr ""
 msgid "mtime timestamp of source file"
 msgstr ""
 
-#: apps/photo/models.py:74
+#: apps/photo/models.py:86
 msgid "ImageFile"
 msgstr ""
 
-#: apps/photo/models.py:75
+#: apps/photo/models.py:87
 msgid "ImageFiles"
 msgstr ""
 
-#: apps/photo/models.py:80
+#: apps/photo/models.py:92
 msgid "source file"
 msgstr ""
 
-#: apps/photo/models.py:88
+#: apps/photo/models.py:100
 msgid "height"
 msgstr ""
 
-#: apps/photo/models.py:89 apps/photo/models.py:95
+#: apps/photo/models.py:101 apps/photo/models.py:107
 msgid "full height in pixels"
 msgstr ""
 
-#: apps/photo/models.py:94
+#: apps/photo/models.py:106
 msgid "width"
 msgstr ""
 
-#: apps/photo/models.py:100
+#: apps/photo/models.py:112
 msgid "old file path"
 msgstr ""
 
-#: apps/photo/models.py:101
+#: apps/photo/models.py:113
 msgid "previous path if the image has been moved."
 msgstr ""
 
-#: apps/photo/models.py:109
+#: apps/photo/models.py:122
 msgid "who made this"
 msgstr ""
 
-#: apps/photo/models.py:114 apps/photo/models.py:122
-msgid "copyright information"
+#: apps/photo/models.py:127
+msgid "description"
 msgstr ""
 
-#: apps/photo/models.py:115
+#: apps/photo/models.py:128
 msgid "Description of image"
 msgstr ""
 
-#: apps/photo/models.py:124
+#: apps/photo/models.py:135
+msgid "copyright information"
+msgstr ""
+
+#: apps/photo/models.py:137
 msgid "extra information about license and attribution if needed."
 msgstr ""
 
-#: apps/photo/models.py:131 apps/photo/models.py:132
+#: apps/photo/models.py:144 apps/photo/models.py:145
 msgid "exif_data"
 msgstr ""
 
-#: apps/photo/models.py:234
+#: apps/photo/models.py:297
 msgid "Profile Image"
 msgstr ""
 
-#: apps/photo/models.py:235
+#: apps/photo/models.py:298
 msgid "Profile Images"
 msgstr ""
 
@@ -1309,14 +1313,14 @@ msgstr ""
 msgid "Reset my password"
 msgstr ""
 
-#: universitas/base.py:179
+#: universitas/base.py:180
 msgid "Norwegian Bokmal"
 msgstr ""
 
-#: universitas/base.py:180
+#: universitas/base.py:181
 msgid "Norwegian Nynorsk"
 msgstr ""
 
-#: universitas/base.py:181
+#: universitas/base.py:182
 msgid "English"
 msgstr ""

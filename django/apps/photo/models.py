@@ -5,10 +5,6 @@ import os
 import re
 from pathlib import Path
 
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-
 from apps.issues.models import current_issue
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
@@ -17,6 +13,9 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
 from utils.model_mixins import EditURLMixin
 
 from .cropping.models import AutoCropImage
@@ -113,6 +112,7 @@ class ImageFile(  # type: ignore
         help_text=_('previous path if the image has been moved.'),
         blank=True,
         null=True,
+        editable=False,
         max_length=1000,
     )
     contributor = models.ForeignKey(
@@ -123,7 +123,7 @@ class ImageFile(  # type: ignore
         null=True,
     )
     description = models.CharField(
-        verbose_name=_('copyright information'),
+        verbose_name=_('description'),
         help_text=_('Description of image'),
         default='',
         blank=True,
@@ -143,6 +143,7 @@ class ImageFile(  # type: ignore
         verbose_name=_('exif_data'),
         help_text=_('exif_data'),
         default=dict,
+        editable=False,
     )
 
     def __str__(self):
@@ -257,9 +258,12 @@ class ImageFile(  # type: ignore
         if self.pk:
             raw = self.small.read()
         else:
-            self.original.open()
-            raw = self.original.read()
-            self.original.close()
+            fp = self.original
+            if fp.closed:
+                fp.open('rb')
+            fp.seek(0)
+            raw = fp.read()
+            fp.seek(0)
         self.exif_data = exif_to_json(raw)
         data = extract_exif_data(self.exif_data)
         if not self.description:
