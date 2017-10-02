@@ -2,7 +2,6 @@
 from pathlib import Path
 
 import pytest
-
 from apps.photo.exif import (
     ExifData, clean_data, exif_to_json, extract_exif_data, parse_exif_timestamp
 )

@@ -3,10 +3,10 @@ import logging
 import os
 from io import BytesIO
 
-import boto
-import imagehash
 import PIL
 
+import boto
+import imagehash
 from django.core.files import File
 from django.db import models
 from django.utils import timezone

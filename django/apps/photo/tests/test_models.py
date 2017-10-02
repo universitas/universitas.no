@@ -1,7 +1,6 @@
 from pathlib import PosixPath as Path
 
 import pytest
-
 from apps.photo.exif import extract_exif_data, parse_exif_timestamp
 from apps.photo.models import ImageFile
 from django.core.files import File

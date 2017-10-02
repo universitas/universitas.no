@@ -201,8 +201,7 @@ def test_participant_can_change_own_cv(billy, willy, cvhosts):
     response = client.post(cv_api_url, data={'owner': billy.pk, 'url': nav_cv})
     assert response.status_code == status.HTTP_201_CREATED
     response = client.post(
-        cv_api_url, data={'owner': billy.pk,
-                          'url': linkedin_cv}
+        cv_api_url, data={'owner': billy.pk, 'url': linkedin_cv}
     )
     assert response.status_code == status.HTTP_201_CREATED
 

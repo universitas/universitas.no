@@ -50,12 +50,7 @@ def test_serialize_and_deserialize():
     dump = json.dumps(feature.serialize())
     data = json.loads(dump)
     assert data == {
-        "label": "hello",
-        "x": 1,
-        "y": 2,
-        "width": 3,
-        "height": 7,
-        "weight": 5
+        "label": "hello", "x": 1, "y": 2, "width": 3, "height": 7, "weight": 5
     }
     clone = Feature.deserialize(data)
     assert clone == feature

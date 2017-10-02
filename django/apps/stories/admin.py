@@ -1,9 +1,8 @@
 """ Admin for stories app.  """
 
-from autocomplete_light.forms import modelform_factory
-
 from apps.frontpage.models import FrontpageStory
 from apps.photo.admin import ThumbAdmin
+from autocomplete_light.forms import modelform_factory
 from django.contrib import admin
 from django.db import models
 from django.forms import Textarea, TextInput

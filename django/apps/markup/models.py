@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-""" Content in the publication. """
+"""Markup tags @txt: @mt: etcetera"""
 
 import difflib
 import logging
-# Python standard library
 import re
 
 from django.core.cache import cache
@@ -11,10 +9,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 logger = logging.getLogger(__name__)
-
-# Installed apps
-
-# Project apps
 
 
 class CachedTag(models.Model):

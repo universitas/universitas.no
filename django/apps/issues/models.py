@@ -5,8 +5,6 @@ import datetime
 import logging
 import os
 import os.path
-# pylint: disable=no-member
-# Python standard library
 import re
 import subprocess
 import unicodedata
@@ -15,25 +13,22 @@ from io import BytesIO
 from pathlib import Path
 
 import boto
-# Installed apps
 import PyPDF2
-from sorl import thumbnail
-from wand.color import Color
-from wand.drawing import Drawing
-from wand.image import Image as WandImage
-
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import models
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch.dispatcher import receiver
-# Django core
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from sorl import thumbnail
 from utils.model_mixins import EditURLMixin
+from wand.color import Color
+from wand.drawing import Drawing
+from wand.image import Image as WandImage
 
 logger = logging.getLogger('universitas')
-IssueTuple = collections.namedtuple('IssueTuple', ['number', 'date'])
+IssueTuple = collections.namedtuple('IssueTuple', 'number, date')
 
 
 class BrokenImage:

@@ -61,8 +61,7 @@ if DEBUG:
             'debug_toolbar.panels.sql.SQLPanel',
             'debug_toolbar.panels.templates.TemplatesPanel',
             'debug_toolbar.panels.loggin.LoggingPanel',
-        },
-        "SHOW_TOOLBAR_CALLBACK": lambda request: True
+        }, "SHOW_TOOLBAR_CALLBACK": lambda request: True
     }
 
 WEBPACK_LOADER['DEFAULT'].update({
