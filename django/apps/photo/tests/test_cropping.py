@@ -4,10 +4,11 @@ import json
 from pathlib import PosixPath as Path
 
 import pytest
-from apps.photo.cropping.boundingbox import Box
+from apps.photo.cropping.boundingbox import Box, CropBox
 from apps.photo.cropping.crop_detector import (
     Cascade, Feature, FeatureDetector, KeypointDetector, MockFeatureDetector
 )
+from apps.photo.cropping.crop_engine import calculate_crop, close_crop
 
 
 @pytest.fixture
@@ -25,6 +26,29 @@ def valid_cascade_file():
 @pytest.fixture
 def invalid_cascade_file():
     return 'no_such_cascade.jpg'
+
+
+def test_crop_algorithm():
+    # some basic cases
+    cropbox = CropBox.basic().serialize()
+    assert close_crop(**cropbox, aspect_ratio=1) == Box(0, 0, 1, 1)
+    assert close_crop(**cropbox, aspect_ratio=2) == Box(0, 0.25, 1, 0.75)
+    assert close_crop(**cropbox, aspect_ratio=0.5) == Box(0.25, 0, 0.75, 1)
+
+
+def test_calculate_crop():
+    # valid input
+    kwargs = dict(width=200, height=100, crop_width=50, crop_height=50, exp=0)
+    crop_box = CropBox(.2, .2, .8, .8, .6, .6)
+    assert calculate_crop(
+        crop_box=crop_box.serialize(), **kwargs
+    ) == Box(60, 0, 160, 100)
+
+    # invalid input (width is zero) causes fallback
+    crop_box.width = 0
+    assert calculate_crop(
+        crop_box=crop_box.serialize(), **kwargs
+    ) == Box(50, 0, 150, 100)
 
 
 def test_cascade(valid_cascade_file, invalid_cascade_file):

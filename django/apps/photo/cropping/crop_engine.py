@@ -36,8 +36,12 @@ def calculate_crop(width, height, crop_width, crop_height, crop_box, exp):
     else:  # landscape
         resize = exp, 0  # grow width
 
-    expanded_box = CropBox(**crop_box).expand(*resize).serialize()
-    crop_to = close_crop(aspect_ratio=aspect_ratio, **expanded_box)
+    expanded_box = CropBox(**crop_box).expand(*resize)
+    if expanded_box.width == 0 or expanded_box.height == 0:
+        # cannot use it
+        expanded_box = CropBox.basic()
+
+    crop_to = close_crop(aspect_ratio=aspect_ratio, **expanded_box.serialize())
 
     return Box(
         int(crop_to.left * width),
