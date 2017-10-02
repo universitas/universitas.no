@@ -1,6 +1,5 @@
 """Tests for issue and pdf tasks"""
 
-import os
 import shutil
 import tempfile
 from pathlib import PosixPath as Path
@@ -9,23 +8,13 @@ from PIL import Image
 
 import pytest
 from apps.issues.models import Issue, PrintIssue
-# from apps.issues.models import extract_pdf_text
 from apps.issues.tasks import (
     MissingBinary, convert_pdf_to_web, create_print_issue_pdf,
     create_web_bundle, generate_pdf_preview, get_staging_pdf_files,
-    optimize_staging_pages, require_binary
+    require_binary
 )
-# from django.utils.timezone import datetime
-from django.core.files.base import ContentFile
 
 PAGE_ONE = 'UNI11VER16010101000.pdf'
-
-
-def get_contentfile(filepath):
-    """Get a django contentfile from file path"""
-    with open(filepath, 'rb') as src:
-        content = ContentFile(src.read())
-    return content
 
 
 @pytest.fixture
@@ -37,8 +26,6 @@ def tmp_fixture_dir(settings):
     src = Path(__file__).parent / 'STAGING'
     dst = Path(tmpdir.name) / 'STAGING'
     shutil.copytree(str(src), str(dst))
-    # for file in dst.glob('**/*.*'):
-    #     file.touch()
 
     # Yield will keep the TemporaryDirectory from being garbage collected.
     settings.STAGING_ROOT = str(dst)
@@ -46,21 +33,25 @@ def tmp_fixture_dir(settings):
 
 
 def test_get_staging_pdf_files(tmp_fixture_dir):
-    globpattern = 'UNI11VER*.pdf'
-    pages = get_staging_pdf_files(globpattern)
-    assert len(pages) == 4
+    # get both magazine and regular pages
+    pages = get_staging_pdf_files()
+    assert len(pages) == 8
+
+    # Only regular issue files
+    assert len(get_staging_pdf_files(fileglob='UNI11*.pdf')) == 4
 
     # Exclude pages that are older than tomorrow
-    future_pages = get_staging_pdf_files(globpattern, expiration_days=-1)
+    future_pages = get_staging_pdf_files(expiration_days=-1)
     assert len(future_pages) == 0
     # Files should exist
-    assert all(os.path.exists(pdf) for pdf in pages)
+    assert all(pdf.exists() for pdf in pages)
+
     future_pages = get_staging_pdf_files(
-        globpattern, expiration_days=-1, delete_expired=True
+        expiration_days=-1, delete_expired=True
     )
     assert len(future_pages) == 0
     # Files should be deleted
-    assert all(not os.path.exists(pdf) for pdf in pages)
+    assert not any(pdf.exists() for pdf in pages)
 
 
 def test_convert_pdf_page_to_web(tmp_fixture_dir):
@@ -93,11 +84,6 @@ def test_convert_pdf_page_to_web(tmp_fixture_dir):
     assert not false_pdf.is_file()
     with pytest.raises(FileNotFoundError):
         convert_pdf_to_web(false_pdf)
-
-
-def test_optimize_all_pages(tmp_fixture_dir):
-    pages = optimize_staging_pages()
-    assert len(pages) == 8
 
 
 def test_create_bundle(tmp_fixture_dir):

@@ -4,13 +4,14 @@ import logging
 import string
 from collections import namedtuple
 from datetime import datetime
-from io import BytesIO
 from typing import Any, Optional
 
-from PIL import ExifTags, Image
+import PIL.ExifTags
 
+import ftfy
 from django.utils import timezone
-from ftfy import fix_text
+
+from .file_operations import get_exif
 
 logger = logging.getLogger(__name__)
 
@@ -35,24 +36,17 @@ def clean_data(value: Any) -> Any:
         return 'BASE64|' + base64.b64encode(value).decode()
     if isinstance(value, str):
         # exif text is incorrectly decoded
-        return fix_text(value)
+        return ftfy.fix_text(value)
 
     return repr(value)
 
 
 def exif_to_json(imgdata: bytes) -> dict:
     """Get exif dictionary from open file pointer"""
-    try:
-        tags = Image.open(BytesIO(imgdata))._getexif()
-    except Exception:
-        logger.exception('could not read image')
-        tags = None
-
-    if not tags:
-        return {}
+    tags = get_exif(imgdata)
 
     return clean_data({
-        ExifTags.TAGS.get(k, str(k)): v
+        PIL.ExifTags.TAGS.get(k, str(k)): v
         for k, v in tags.items()
     })
 

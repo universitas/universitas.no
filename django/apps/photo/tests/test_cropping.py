@@ -1,7 +1,6 @@
 """Tests of the cropping detectors."""
 
 import json
-from pathlib import PosixPath as Path
 
 import pytest
 from apps.photo.cropping.boundingbox import Box, CropBox
@@ -11,21 +10,10 @@ from apps.photo.cropping.crop_detector import (
 from apps.photo.cropping.crop_engine import calculate_crop, close_crop
 
 
-@pytest.fixture
-def testimage():
-    img = Path(__file__).parent / 'fixtureimage.jpg'
-    assert img.exists()
-    return img
-
-
-@pytest.fixture
-def valid_cascade_file():
-    return 'haarcascade_smile.xml'
-
-
-@pytest.fixture
-def invalid_cascade_file():
-    return 'no_such_cascade.jpg'
+@pytest.fixture(params=FeatureDetector.__subclasses__())
+def detector(request):
+    Detector = request.param
+    return Detector(n=10)
 
 
 def test_crop_algorithm():
@@ -51,18 +39,18 @@ def test_calculate_crop():
     ) == Box(50, 0, 150, 100)
 
 
-def test_cascade(valid_cascade_file, invalid_cascade_file):
-    nose_cascade = Cascade('nose', valid_cascade_file)
-    assert not nose_cascade.classifier.empty()
+def test_cascade_loading():
+    VALID_CASCADE = 'haarcascade_smile.xml'
+    INVALID_CASCADE = 'no_such_cascade.xml'
+    smile_cascade = Cascade('nose', VALID_CASCADE)
+    assert not smile_cascade.classifier.empty()
 
     with pytest.raises(RuntimeError):
-        Cascade('invalid', invalid_cascade_file)
+        Cascade('invalid', INVALID_CASCADE)
 
 
-@pytest.mark.parametrize('Detector', FeatureDetector.__subclasses__())
-def test_cropdetector(Detector, testimage):
-    detector = Detector(n=10)
-    features = detector.detect_features(testimage)
+def test_cropdetector(detector, jpeg_file):
+    features = detector.detect_features(jpeg_file)
     assert len(features) >= 1
     assert 0 < sum(features).size < 1
     keys = {'x', 'y', 'width', 'height', 'label', 'weight'}
@@ -80,16 +68,16 @@ def test_serialize_and_deserialize():
     assert clone == feature
 
 
-def test_that_keypointdetector_returns_correct_number_of_features(testimage):
+def test_that_keypointdetector_returns_correct_number_of_features(jpeg_file):
     detector = KeypointDetector(n=5)
-    features = detector.detect_features(testimage)
+    features = detector.detect_features(jpeg_file)
     assert len(features) == 5
 
 
-def test_that_both_file_and_bytes_work(testimage):
+def test_that_both_file_and_bytes_work(jpeg_file):
     detector = MockFeatureDetector(n=3)
-    data = testimage.read_bytes()
-    features = detector.detect_features(testimage)
+    data = jpeg_file.read_bytes()
+    features = detector.detect_features(jpeg_file)
     features2 = detector.detect_features(data)
     assert len(features) == 3
     assert features == features2

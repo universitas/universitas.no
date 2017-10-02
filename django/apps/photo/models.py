@@ -4,6 +4,7 @@ import logging
 import os
 import re
 from pathlib import Path
+from typing import Union
 
 from apps.issues.models import current_issue
 from django.conf import settings
@@ -16,10 +17,11 @@ from django.utils.translation import ugettext_lazy as _
 from model_utils.models import TimeStampedModel
 from slugify import Slugify
 from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.model_mixins import EditURLMixin
 
 from .cropping.models import AutoCropImage
-from .exif import exif_to_json, extract_exif_data
+from .exif import ExifData, exif_to_json, extract_exif_data
 from .imagehash import ImageHashModelMixin
 
 logger = logging.getLogger(__name__)
@@ -35,7 +37,10 @@ class BrokenImage:
         return b''
 
 
-def upload_image_to(instance, filename):
+Thumbnail = Union[SorlImageFile, BrokenImage]
+
+
+def upload_image_to(instance: 'ImageFile', filename: str) -> str:
     """Image folder name based on issue number and year"""
     return os.path.join(instance.upload_folder(), instance.slugify(filename))
 
@@ -50,30 +55,30 @@ class ImageFileQuerySet(models.QuerySet):
     def profile_images(self):
         return self.filter(source_file__startswith=ProfileImage.UPLOAD_FOLDER)
 
-    def update_exif(self):
-        """Look for exif metadata in source file and save if found"""
-        count = 0
-        for image in self:
-            if image.exif_data != image.add_exif_from_file():
-                count += 1
-                image.save()
-        return count
-
-    def update_descriptions(self):
-        """Look for image description and add if found"""
-        count = 0
-        for image in self:
-            if image.description != image.add_description():
-                count += 1
-                image.save()
-        return count
-
 
 class ImageFileManager(models.Manager):
     def create_from_file(self, filepath, **kwargs):
         image = self.model(**kwargs)
         image.save_local_image_as_source(filepath)
         return image
+
+    def update_exif(self) -> int:
+        """Look for exif metadata in source file and save if found"""
+        count = 0
+        for image in self.get_queryset():
+            if image.exif_data != image.add_exif_from_file():
+                count += 1
+                image.save()
+        return count
+
+    def update_descriptions(self) -> int:
+        """Look for image description and add if found"""
+        count = 0
+        for image in self.get_queryset():
+            if image.description != image.add_description():
+                count += 1
+                image.save()
+        return count
 
 
 class ImageFile(  # type: ignore
@@ -153,7 +158,7 @@ class ImageFile(  # type: ignore
             return super(ImageFile, self).__str__()
 
     @classmethod
-    def upload_folder(cls):
+    def upload_folder(cls) -> str:
         try:
             issue = current_issue()
             year, number = issue.year, issue.number
@@ -163,7 +168,7 @@ class ImageFile(  # type: ignore
         return f'{year}/{number}'
 
     @classmethod
-    def slugify(cls, filename):
+    def slugify(cls, filename: str) -> str:
         slugify = Slugify(safe_chars='.-', separator='-')
         slugs = slugify(filename).split('.')
         slugs[-1] = slugs[-1].lower().replace('jpeg', 'jpg')
@@ -171,27 +176,27 @@ class ImageFile(  # type: ignore
         return slug
 
     @property
-    def original(self):
+    def original(self) -> File:
         return self.source_file
 
     @property
-    def small(self):
+    def small(self) -> Thumbnail:
         return self.thumbnail('200x200')
 
     @property
-    def large(self):
+    def large(self) -> Thumbnail:
         return self.thumbnail('1500x1500')
 
     @property
-    def preview(self):
+    def preview(self) -> Thumbnail:
         """Return thumb of cropped image"""
         return self.thumbnail('150x150', crop_box=self.get_crop_box())
 
     @property
-    def exif(self):
+    def exif(self) -> ExifData:
         return extract_exif_data(self.exif_data)
 
-    def similar(self, field='imagehash'):
+    def similar(self, field='imagehash') -> models.QuerySet:
         """Finds visually simular images using postgresql trigram search."""
         others = ImageFile.objects.exclude(pk=self.pk)
         if field == 'imagehash':
@@ -208,7 +213,7 @@ class ImageFile(  # type: ignore
             msg = f'field should be imagehash, md5 or created, not {field}'
             raise ValueError(msg)
 
-    def thumbnail(self, size='x150', **options):
+    def thumbnail(self, size='x150', **options) -> Thumbnail:
         """Create thumb of image"""
         try:
             return thumbnail.get_thumbnail(self.original, size, **options)
@@ -216,7 +221,7 @@ class ImageFile(  # type: ignore
             logger.exception('Cannot create thumbnail')
             return BrokenImage()
 
-    def download_from_aws(self, dest=Path('/var/media/')):
+    def download_from_aws(self, dest=Path('/var/media/')) -> None:
         """Download file for development server"""
         path = dest / self.original.name
         if path.exists():
@@ -225,24 +230,24 @@ class ImageFile(  # type: ignore
         path.parent.mkdir(0o775, True, True)
         path.write_bytes(data)
 
-    def save_again(self):
+    def save_again(self) -> None:
         """fix broken files. THIS IS HACK"""
         src = self.original
         filename = os.path.basename(src.name)
         content = File(src)
         src.save(filename, content)
 
-    def is_profile_image(self):
+    def is_profile_image(self) -> bool:
         return self.original.name.startswith(ProfileImage.UPLOAD_FOLDER)
 
-    def build_thumbs(self):
+    def build_thumbs(self) -> None:
         """Make sure thumbs exists"""
         self.large
         self.small
         self.preview
         logger.info(f'built thumbs {self}')
 
-    def add_description(self):
+    def add_description(self) -> str:
         """Populates `description` with relevant content from related models"""
         if not self.description and self.is_profile_image():
             return ProfileImage.add_description(self)
@@ -254,7 +259,7 @@ class ImageFile(  # type: ignore
             self.description = '\n'.join(captions)[:1000]
         return self.description
 
-    def add_exif_from_file(self):
+    def add_exif_from_file(self) -> dict:
         if self.pk:
             raw = self.small.read()
         else:
@@ -275,7 +280,7 @@ class ImageFile(  # type: ignore
 
         return self.exif_data
 
-    def delete_thumbnails(self, delete_file=False):
+    def delete_thumbnails(self, delete_file=False) -> None:
         """Delete all thumbnails, optinally delete original too"""
         thumbnail.delete(self.original, delete_file=delete_file)
 
@@ -300,7 +305,7 @@ class ProfileImage(ImageFile):
 
     UPLOAD_FOLDER = 'byline-photo'
 
-    def add_description(self):
+    def add_description(self) -> str:
         if self.person.count():
             self.description = self.person.first().display_name
         else:
@@ -308,15 +313,15 @@ class ProfileImage(ImageFile):
         return self.description
 
     @classmethod
-    def slugify(cls, filename):
+    def slugify(cls, filename) -> str:
         return super().slugify(filename.title())
 
     @classmethod
-    def upload_folder(cls):
+    def upload_folder(cls) -> str:
         return cls.UPLOAD_FOLDER
 
     @property
-    def preview(self):
+    def preview(self) -> Thumbnail:
         """Return thumb of cropped image"""
         return self.thumbnail(
             size='150x150',

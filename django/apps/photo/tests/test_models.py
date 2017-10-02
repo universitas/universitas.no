@@ -1,24 +1,5 @@
-from pathlib import PosixPath as Path
-
 import pytest
-from apps.photo.exif import extract_exif_data, parse_exif_timestamp
-from apps.photo.models import ImageFile
-from django.core.files import File
-
-
-@pytest.fixture
-def jpeg_file():
-    img = Path(__file__).parent / 'fixtureimage.jpg'
-    assert img.exists(), 'image not found'
-    return str(img)
-
-
-@pytest.fixture
-def img(jpeg_file):
-    img = ImageFile()
-    with open(jpeg_file, 'rb') as fp:
-        img.source_file.save('foobar.jpg', File(fp), save=False)
-    return img
+from apps.photo.exif import extract_exif_data
 
 
 @pytest.mark.django_db

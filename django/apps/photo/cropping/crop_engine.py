@@ -26,6 +26,7 @@ def close_crop(x, y, left, right, top, bottom, aspect_ratio):
 
 
 def calculate_crop(width, height, crop_width, crop_height, crop_box, exp):
+    """Calculate best crop for a given input and output image format"""
     aspect_ratio = (crop_width * height) / (crop_height * width)
 
     # modify size of the crop box
@@ -52,6 +53,8 @@ def calculate_crop(width, height, crop_width, crop_height, crop_box, exp):
 
 
 class CloseCropEngine(WandEngine):
+    """Sorl thumbnail crop engine"""
+
     def create(self, image, geometry, options):
         cropbox = options.pop('crop_box', None)
         try:

@@ -1,21 +1,12 @@
 """ Tests for exif library """
-from pathlib import Path
 
-import pytest
 from apps.photo.exif import (
     ExifData, clean_data, exif_to_json, extract_exif_data, parse_exif_timestamp
 )
 
 
-@pytest.fixture
-def jpeg_data():
-    img = Path(__file__).parent / 'fixtureimage.jpg'
-    assert img.exists(), 'image not found'
-    return img.read_bytes()
-
-
-def test_exif_to_json(jpeg_data):
-    data = exif_to_json(jpeg_data)
+def test_exif_to_json(jpeg_file):
+    data = exif_to_json(jpeg_file)
     assert data.get('Artist') == 'Dennis the Dog'
     exif = extract_exif_data(data)
     assert isinstance(exif, ExifData)

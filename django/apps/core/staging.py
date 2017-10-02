@@ -1,22 +1,24 @@
-# -*- coding: utf-8 -*-
 """
 Utilities for synchronising staging files between home server, S3 and database
 """
-import glob
-import os
 import time
 from datetime import datetime, timedelta
+from pathlib import Path
+from typing import List
 
 from django.conf import settings
-
-# import logging
 
 IMAGES_DIR = 'IMAGES'
 PDF_DIR = 'PDF'
 BYLINE_DIR = 'BYLINE'
 
 
-def timestamp(delta, fallback):
+def get_staging_dir(name: str) -> Path:
+    """Lazy lookup to support test monkeypatching"""
+    return Path(settings.STAGING_ROOT) / name
+
+
+def timestamp(delta: timedelta, fallback: datetime) -> int:
     """Calculates seconds since epoch of current time minus delta.
     If delta is out of range, calculates timestamp of fallback datetime
     instead.
@@ -30,53 +32,51 @@ def timestamp(delta, fallback):
 
 
 def new_staging_files(
-    staging_subdirectory,
+    directory: Path,
     fileglob='*.*',
-    min_age=timedelta.min,
-    max_age=timedelta.max
-):
+    min_age: timedelta = None,
+    max_age: timedelta = None
+) -> List[Path]:
     """Check for new or updated files in staging area."""
-    directory = os.path.join(settings.STAGING_ROOT, staging_subdirectory)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    os.chdir(directory)
-    all_files = glob.glob(fileglob)
-    min_mtime = timestamp(min_age, fallback=datetime.max)
-    max_mtime = timestamp(max_age, fallback=datetime.min)
-    files = [
+
+    min_mtime = timestamp(min_age or timedelta.max, fallback=datetime.max)
+    max_mtime = timestamp(max_age or timedelta.min, fallback=datetime.min)
+
+    directory.mkdir(parents=True, exist_ok=True)
+    all_files = directory.glob(fileglob)
+
+    return sorted(
         file for file in all_files
-        if min_mtime > os.path.getmtime(file) > max_mtime
-    ]
-    return directory, sorted(files)
+        if min_mtime > file.stat().st_mtime > max_mtime
+    )
 
 
-def new_staging_images(**kwargs):
+def new_staging_images(**kwargs) -> List[Path]:
     """Check for new or updated images in staging area"""
-    arguments = dict(
-        staging_subdirectory=IMAGES_DIR,
-        fileglob='*.jpg',
-    )
-    arguments.update(kwargs)
-    return new_staging_files(**arguments)
+    kwargs = {
+        'directory': get_staging_dir(IMAGES_DIR),
+        'fileglob': '*.jpg',
+        **kwargs,
+    }
+    return new_staging_files(**kwargs)
 
 
-def new_staging_byline_images(**kwargs):
+def new_staging_byline_images(**kwargs) -> List[Path]:
     """Check for new or updated byline images in staging area"""
-    arguments = dict(
-        staging_subdirectory=BYLINE_DIR,
-        fileglob='*.jpg',
-        max_age=timedelta(days=1),
-    )
-    arguments.update(kwargs)
-    return new_staging_files(**arguments)
+    kwargs = {
+        'directory': get_staging_dir(BYLINE_DIR),
+        'fileglob': '*.jpg',
+        'max_age': timedelta(days=1),
+        **kwargs,
+    }
+    return new_staging_files(**kwargs)
 
 
-def new_staging_pdf_files(**kwargs):
+def new_staging_pdf_files(**kwargs) -> List[Path]:
     """Check for new or updated pdf files in staging area"""
-    arguments = dict(
-        staging_subdirectory=PDF_DIR,
-        fileglob='UNI1*VER*000.pdf',
-        max_age=timedelta(days=100),
-    )
-    arguments.update(kwargs)
-    return new_staging_files(**arguments)
+    kwargs = {
+        'directory': get_staging_dir(PDF_DIR),
+        'fileglob': 'UNI1*VER*000.pdf',
+        **kwargs,
+    }
+    return new_staging_files(**kwargs)
