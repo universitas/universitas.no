@@ -2,7 +2,6 @@ import logging
 import re
 
 from bs4 import BeautifulSoup
-from model_utils.models import TimeStampedModel
 from requests import request
 from requests.exceptions import ConnectionError, MissingSchema, Timeout
 
@@ -12,6 +11,7 @@ from django.core.validators import URLValidator, ValidationError
 from django.db import models
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
 
 from .status_codes import HTTP_STATUS_CODES
 from .story import Story

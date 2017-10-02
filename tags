@@ -13,7 +13,6 @@ ADTYPE_CHOICES	django/apps/adverts/models.py	/^    ADTYPE_CHOICES = [$/;"	v	clas
 ALIAS_ACTION	django/apps/markup/models.py	/^    ALIAS_ACTION = 'alias'$/;"	v	class:BlockTag
 ALLOWED_HOSTS	django/universitas/base.py	/^ALLOWED_HOSTS = env.allowed_hosts.split(',') or '*'$/;"	v
 ALLOWED_HOSTS	django/universitas/local.py	/^ALLOWED_HOSTS = '*'$/;"	v
-ASIDE_TAG	django/apps/stories/models/storychildren.py	/^ASIDE_TAG = '@box:'$/;"	v
 ASPECT_RATIO_CHOICES	django/apps/stories/models/storychildren.py	/^    ASPECT_RATIO_CHOICES = [$/;"	v	class:StoryMedia
 AUTOCROP	webpack/src/react/sagas/images.js	/^const AUTOCROP = 1$/;"	r
 AUTOCROP_IMAGE	webpack/src/react/ducks/images.js	/^export const AUTOCROP_IMAGE = 'images\/AUTOCROP_IMAGE'$/;"	r
@@ -261,9 +260,7 @@ IMAGE_AD	django/apps/adverts/models.py	/^    IMAGE_AD = 1$/;"	v	class:Advert
 IMAGE_CLICKED	webpack/src/react/ducks/ui.js	/^export const IMAGE_CLICKED = 'ui\/IMAGE_CLICKED'$/;"	r
 IMAGE_FILE_PATCHED	webpack/src/react/ducks/images.js	/^export const IMAGE_FILE_PATCHED = 'images\/IMAGE_FILE_PATCHED'$/;"	r
 IMAGE_SELECTED	webpack/src/react/ducks/ui.js	/^export const IMAGE_SELECTED = 'ui\/IMAGE_SELECTED'$/;"	r
-IMAGE_TAG	django/apps/stories/models/storychildren.py	/^IMAGE_TAG = '@image:'$/;"	v
 IMG	django/utils/content_factory.py	/^IMG = Image.open(Path(__file__).parent \/ 'triptych.jpg')$/;"	v
-INLINE_HTML_TAG	django/apps/stories/models/storychildren.py	/^INLINE_HTML_TAG = '@html:'$/;"	v
 INSERT_TEXT	webpack/src/react/ducks/editor.js	/^const INSERT_TEXT = 'INSERT_TEXT'$/;"	r
 INSTALLED_APPS	django/universitas/base.py	/^INSTALLED_APPS = [$/;"	v
 ISSUE_TYPES	django/apps/issues/models.py	/^    ISSUE_TYPES = [$/;"	v	class:Issue
@@ -471,6 +468,7 @@ Migration	django/apps/photo/migrations/0013_imagefile_description.py	/^class Mig
 Migration	django/apps/photo/migrations/0014_auto_20170920_1826.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/photo/migrations/0015_imagefile_exif_data.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/photo/migrations/0016_postgresql_create_trigram_extension.py	/^class Migration(migrations.Migration):$/;"	c
+Migration	django/apps/photo/migrations/0017_auto_20171002_1130.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0001_initial.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0002_auto_20141217_1841.py	/^class Migration(migrations.Migration):$/;"	c
 Migration	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^class Migration(migrations.Migration):$/;"	c
@@ -529,7 +527,6 @@ PDF_MERGE	django/apps/issues/management/commands/web_pdf.py	/^PDF_MERGE = os.pat
 PDF_STAGING	django/apps/issues/management/commands/web_pdf.py	/^PDF_STAGING = os.path.join(settings.STAGING_ROOT, 'STAGING', 'PDF')$/;"	v
 PRIVATE	django/apps/adverts/models.py	/^    PRIVATE = 2$/;"	v	class:Advert
 PUBLISHED	django/apps/adverts/models.py	/^    PUBLISHED = 3$/;"	v	class:Advert
-PULLQUOTE_TAG	django/apps/stories/models/storychildren.py	/^PULLQUOTE_TAG = '@quote:'$/;"	v
 PdfArchiveView	django/apps/issues/views.py	/^class PdfArchiveView(TemplateView):$/;"	c
 PdfLink	webpack/src/react/components/ModelField/PdfField.js	/^const PdfLink = ({ url }) => ($/;"	r
 PdfThumb	webpack/src/react/components/ModelField/PdfField.js	/^const PdfThumb = ({ cover_page, pages, pdf }) => ($/;"	r
@@ -745,7 +742,6 @@ User	django/apps/contributors/tasks.py	/^User = get_user_model()$/;"	v
 User	django/apps/contributors/tests/test_tasks.py	/^User = get_user_model()$/;"	v
 UserTool	webpack/src/react/components/UserTool.js	/^const UserTool = ({ first_name, last_name, username, logOut }) => ($/;"	r
 VIDEO_HOSTS	django/apps/stories/models/storychildren.py	/^    VIDEO_HOSTS = ($/;"	v	class:StoryVideo
-VIDEO_TAG	django/apps/stories/models/storychildren.py	/^VIDEO_TAG = '@video:'$/;"	v
 VideoInline	django/apps/stories/admin.py	/^):$/;"	c
 WATSON_MIDDLEWARE_FLAG	django/watson/middleware.py	/^WATSON_MIDDLEWARE_FLAG = "watson.search_context_middleware_active"$/;"	v
 WEBPACK_LOADER	django/universitas/base.py	/^WEBPACK_LOADER = {$/;"	v
@@ -1007,7 +1003,6 @@ blank	django/apps/stories/models/byline.py	/^        blank=True,$/;"	v	class:Byl
 blank	django/apps/stories/models/links.py	/^        blank=True,$/;"	v	class:InlineLink.Meta
 blank	django/apps/stories/models/mixins.py	/^        blank=True,$/;"	v	class:TextContent.Meta
 blank	django/apps/stories/models/story.py	/^        blank=True,$/;"	v	class:Story.Meta
-blank	django/apps/stories/models/storychildren.py	/^        blank=True,$/;"	v	class:StoryElement
 blank	django/watson/models.py	/^        blank=True,$/;"	v	class:SearchEntry
 blockParser	webpack/src/react/utils/tagParser.js	/^export const blockParser = memoize(text => {$/;"	r
 bodytext_html	django/apps/stories/models/mixins.py	/^    bodytext_html = models.TextField($/;"	v	class:TextContent
@@ -1220,10 +1215,8 @@ default	django/apps/stories/models/story.py	/^        default=1000,  # All stori
 default	django/apps/stories/models/story.py	/^        default=STATUS_DRAFT,$/;"	v	class:Story.Meta
 default	django/apps/stories/models/story.py	/^        default=default_story_type,$/;"	v	class:Story.Meta
 default	django/apps/stories/models/story.py	/^        default=settings.LANGUAGES[0][0],$/;"	v	class:Story.Meta
-default	django/apps/stories/models/storychildren.py	/^        default=0,$/;"	v	class:StoryElement
 default	django/apps/stories/models/storychildren.py	/^        default=1,$/;"	v	class:StoryMedia.Meta
 default	django/apps/stories/models/storychildren.py	/^        default=DEFAULT_RATIO,$/;"	v	class:StoryMedia.Meta
-default	django/apps/stories/models/storychildren.py	/^        default=False,$/;"	v	class:StoryElement
 default	django/apps/stories/models/storychildren.py	/^        default=VIDEO_HOSTS[0][0],$/;"	v	class:StoryVideo.Meta
 default	django/watson/models.py	/^        default="default",$/;"	v	class:SearchEntry
 defaultSelector	webpack/src/react/ducks/basemodel.js	/^const defaultSelector = fallback =>$/;"	r
@@ -1304,6 +1297,7 @@ dependencies	django/apps/photo/migrations/0013_imagefile_description.py	/^    de
 dependencies	django/apps/photo/migrations/0014_auto_20170920_1826.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/photo/migrations/0015_imagefile_exif_data.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/photo/migrations/0016_postgresql_create_trigram_extension.py	/^    dependencies = [$/;"	v	class:Migration
+dependencies	django/apps/photo/migrations/0017_auto_20171002_1130.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0001_initial.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0002_auto_20141217_1841.py	/^    dependencies = [$/;"	v	class:Migration
 dependencies	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^    dependencies = [$/;"	v	class:Migration
@@ -1536,6 +1530,9 @@ field	django/apps/photo/migrations/0012_imagefile__imagehash.py	/^            fi
 field	django/apps/photo/migrations/0013_imagefile_description.py	/^            field=models.CharField($/;"	v	class:Migration
 field	django/apps/photo/migrations/0014_auto_20170920_1826.py	/^            field=sorl.thumbnail.fields.ImageField($/;"	v	class:Migration
 field	django/apps/photo/migrations/0015_imagefile_exif_data.py	/^            field=django.contrib.postgres.fields.jsonb.JSONField(default=dict, help_text='exif_data', verbose_name='exif_data'),$/;"	v	class:Migration
+field	django/apps/photo/migrations/0017_auto_20171002_1130.py	/^            field=django.contrib.postgres.fields.jsonb.JSONField(default=dict, editable=False, help_text='exif_data', verbose_name='exif_data'),$/;"	v	class:Migration
+field	django/apps/photo/migrations/0017_auto_20171002_1130.py	/^            field=models.CharField(blank=True, default='', help_text='Description of image', max_length=1000, verbose_name='description'),$/;"	v	class:Migration
+field	django/apps/photo/migrations/0017_auto_20171002_1130.py	/^            field=models.CharField(blank=True, editable=False, help_text='previous path if the image has been moved.', max_length=1000, null=True, verbose_name='old file path'),$/;"	v	class:Migration
 field	django/apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey($/;"	v	class:Migration
 field	django/apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey(null=True, help_text='link to story on this website.',$/;"	v	class:Migration
 field	django/apps/stories/migrations/0001_initial.py	/^            field=models.ForeignKey(to='stories.Story'),$/;"	v	class:Migration
@@ -1950,8 +1947,6 @@ help_text	django/apps/stories/models/story.py	/^        help_text=_('which page 
 help_text	django/apps/stories/models/storychildren.py	/^        help_text=_($/;"	v	class:StoryVideo.Meta
 help_text	django/apps/stories/models/storychildren.py	/^        help_text=_('Choose an image by name or upload a new one.'),$/;"	v	class:StoryImage.Meta
 help_text	django/apps/stories/models/storychildren.py	/^        help_text=_('Extra information about media attribution and license.'),$/;"	v	class:StoryMedia.Meta
-help_text	django/apps/stories/models/storychildren.py	/^        help_text=_('Is this element placed on top?'),$/;"	v	class:StoryElement
-help_text	django/apps/stories/models/storychildren.py	/^        help_text=_('Leave blank to unpublish'),$/;"	v	class:StoryElement
 help_text	django/apps/stories/models/storychildren.py	/^        help_text=_('Relative image size.'),$/;"	v	class:StoryMedia.Meta
 help_text	django/apps/stories/models/storychildren.py	/^        help_text=_('Text explaining the media.'),$/;"	v	class:StoryMedia.Meta
 help_text	django/apps/stories/models/storychildren.py	/^        help_text=_('height \/ width'),$/;"	v	class:StoryMedia.Meta
@@ -2258,12 +2253,7 @@ mapStateToProps	webpack/src/react/issues/IssueTools.js	/^const mapStateToProps =
 mapStateToProps	webpack/src/react/pages/PhotoList.js	/^const mapStateToProps = (state, ownProps) => ({})$/;"	r
 mapStateToProps	webpack/src/react/stories/StoryTools.js	/^const mapStateToProps = (state, { pk }) => getItem(pk)$/;"	r
 mappe	django/api/legacy_serializers.py	/^    mappe = serializers.SerializerMethodField()$/;"	v	class:ProdStorySerializer
-markup_tag	django/apps/stories/models/storychildren.py	/^    markup_tag = ''  # change in subclasses$/;"	v	class:StoryElement
-markup_tag	django/apps/stories/models/storychildren.py	/^    markup_tag = ASIDE_TAG$/;"	v	class:Aside
-markup_tag	django/apps/stories/models/storychildren.py	/^    markup_tag = IMAGE_TAG$/;"	v	class:StoryImage
-markup_tag	django/apps/stories/models/storychildren.py	/^    markup_tag = INLINE_HTML_TAG$/;"	v	class:InlineHtml
-markup_tag	django/apps/stories/models/storychildren.py	/^    markup_tag = PULLQUOTE_TAG$/;"	v	class:Pullquote
-markup_tag	django/apps/stories/models/storychildren.py	/^    markup_tag = VIDEO_TAG$/;"	v	class:StoryVideo
+markup_tag	django/apps/stories/models/storychildren.py	/^    def markup_tag(cls):$/;"	m	class:StoryElement
 markup_to_html	django/apps/stories/models/links.py	/^    def markup_to_html(self, text):$/;"	m	class:InlineLink
 markup_to_html	django/apps/stories/models/links.py	/^    def markup_to_html(self, text):$/;"	m	class:InlineLinkManager
 mask	webpack/src/react/components/Overlay.js	/^  const mask = name.split('').map(parseFloat)$/;"	r
@@ -2413,6 +2403,7 @@ model_name	django/apps/photo/migrations/0012_imagefile__imagehash.py	/^         
 model_name	django/apps/photo/migrations/0013_imagefile_description.py	/^            model_name='imagefile',$/;"	v	class:Migration
 model_name	django/apps/photo/migrations/0014_auto_20170920_1826.py	/^            model_name='imagefile',$/;"	v	class:Migration
 model_name	django/apps/photo/migrations/0015_imagefile_exif_data.py	/^            model_name='imagefile',$/;"	v	class:Migration
+model_name	django/apps/photo/migrations/0017_auto_20171002_1130.py	/^            model_name='imagefile',$/;"	v	class:Migration
 model_name	django/apps/stories/migrations/0001_initial.py	/^            model_name='byline',$/;"	v	class:Migration
 model_name	django/apps/stories/migrations/0001_initial.py	/^            model_name='inlinelink',$/;"	v	class:Migration
 model_name	django/apps/stories/migrations/0001_initial.py	/^            model_name='story',$/;"	v	class:Migration
@@ -2574,6 +2565,9 @@ name	django/apps/photo/migrations/0012_imagefile__imagehash.py	/^            nam
 name	django/apps/photo/migrations/0013_imagefile_description.py	/^            name='description',$/;"	v	class:Migration
 name	django/apps/photo/migrations/0014_auto_20170920_1826.py	/^            name='source_file',$/;"	v	class:Migration
 name	django/apps/photo/migrations/0015_imagefile_exif_data.py	/^            name='exif_data',$/;"	v	class:Migration
+name	django/apps/photo/migrations/0017_auto_20171002_1130.py	/^            name='description',$/;"	v	class:Migration
+name	django/apps/photo/migrations/0017_auto_20171002_1130.py	/^            name='exif_data',$/;"	v	class:Migration
+name	django/apps/photo/migrations/0017_auto_20171002_1130.py	/^            name='old_file_path',$/;"	v	class:Migration
 name	django/apps/stories/appconf.py	/^    name = 'apps.stories'$/;"	v	class:StoriesAppConfig
 name	django/apps/stories/migrations/0001_initial.py	/^            name='Aside',$/;"	v	class:Migration
 name	django/apps/stories/migrations/0001_initial.py	/^            name='Byline',$/;"	v	class:Migration
@@ -2666,7 +2660,6 @@ null	django/apps/stories/migrations/0027_auto_20170927_1904.py	/^               
 null	django/apps/stories/models/byline.py	/^        null=True,$/;"	v	class:Byline
 null	django/apps/stories/models/links.py	/^        null=True,$/;"	v	class:InlineLink.Meta
 null	django/apps/stories/models/story.py	/^        null=True,$/;"	v	class:Story.Meta
-null	django/apps/stories/models/storychildren.py	/^        null=True,$/;"	v	class:StoryElement
 null	django/watson/models.py	/^        null=True,$/;"	v	class:SearchEntry
 number	django/apps/issues/models.py	/^    def number(self):$/;"	m	class:Issue
 number	django/apps/stories/models/links.py	/^    number = models.PositiveSmallIntegerField($/;"	v	class:InlineLink
@@ -2703,7 +2696,6 @@ on_delete	django/apps/stories/migrations/0027_auto_20170927_1904.py	/^          
 on_delete	django/apps/stories/models/sections.py	/^        on_delete=models.SET_DEFAULT,$/;"	v	class:StoryType
 on_delete	django/apps/stories/models/story.py	/^        on_delete=models.SET_DEFAULT,$/;"	v	class:Story.Meta
 on_delete	django/apps/stories/models/story.py	/^        on_delete=models.SET_NULL,$/;"	v	class:Story.Meta
-on_delete	django/apps/stories/models/storychildren.py	/^        on_delete=models.CASCADE,$/;"	v	class:StoryElement
 on_delete	django/apps/stories/models/storychildren.py	/^        on_delete=models.CASCADE,$/;"	v	class:StoryImage.Meta
 openUrl	webpack/src/react/components/ModelField/PdfField.js	/^const openUrl = url => () => window.open(url)$/;"	r
 openUrl	webpack/src/react/contributors/ContributorTools.js	/^const openUrl = url => () => window.open(url)$/;"	r
@@ -2766,6 +2758,7 @@ operations	django/apps/photo/migrations/0013_imagefile_description.py	/^    oper
 operations	django/apps/photo/migrations/0014_auto_20170920_1826.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/photo/migrations/0015_imagefile_exif_data.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/photo/migrations/0016_postgresql_create_trigram_extension.py	/^    operations = [$/;"	v	class:Migration
+operations	django/apps/photo/migrations/0017_auto_20171002_1130.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0001_initial.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0002_auto_20141217_1841.py	/^    operations = [$/;"	v	class:Migration
 operations	django/apps/stories/migrations/0003_data_load_sections_and_storytypes.py	/^    operations = [$/;"	v	class:Migration
@@ -3497,6 +3490,7 @@ verbose_name	django/apps/photo/models.py	/^        verbose_name = _('ImageFile')
 verbose_name	django/apps/photo/models.py	/^        verbose_name = _('Profile Image')$/;"	v	class:ProfileImage.Meta
 verbose_name	django/apps/photo/models.py	/^        verbose_name=_('contributor'),$/;"	v	class:ImageFile.Meta
 verbose_name	django/apps/photo/models.py	/^        verbose_name=_('copyright information'),$/;"	v	class:ImageFile.Meta
+verbose_name	django/apps/photo/models.py	/^        verbose_name=_('description'),$/;"	v	class:ImageFile.Meta
 verbose_name	django/apps/photo/models.py	/^        verbose_name=_('exif_data'),$/;"	v	class:ImageFile.Meta
 verbose_name	django/apps/photo/models.py	/^        verbose_name=_('height'),$/;"	v	class:ImageFile.Meta
 verbose_name	django/apps/photo/models.py	/^        verbose_name=_('old file path'),$/;"	v	class:ImageFile.Meta
@@ -3550,7 +3544,6 @@ verbose_name	django/apps/stories/models/storychildren.py	/^        verbose_name=
 verbose_name	django/apps/stories/models/storychildren.py	/^        verbose_name=_('credit line'),$/;"	v	class:StoryMedia.Meta
 verbose_name	django/apps/stories/models/storychildren.py	/^        verbose_name=_('id for video file.'),$/;"	v	class:StoryVideo.Meta
 verbose_name	django/apps/stories/models/storychildren.py	/^        verbose_name=_('image size'),$/;"	v	class:StoryMedia.Meta
-verbose_name	django/apps/stories/models/storychildren.py	/^        verbose_name=_('index'),$/;"	v	class:StoryElement
 verbose_name_plural	django/apps/adverts/models.py	/^        verbose_name_plural = _("Adverts")$/;"	v	class:Advert.Meta
 verbose_name_plural	django/apps/adverts/models.py	/^        verbose_name_plural = _("Customers")$/;"	v	class:Customer.Meta
 verbose_name_plural	django/apps/adverts/models.py	/^        verbose_name_plural = _("Locations")$/;"	v	class:AdChannel.Meta

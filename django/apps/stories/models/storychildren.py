@@ -3,25 +3,18 @@
 import logging
 import re
 
-from model_utils.models import TimeStampedModel
 from requests import request
 from requests.exceptions import MissingSchema, Timeout
-from slugify import Slugify
 
 from apps.photo.models import ImageFile
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
 
-from .mixins import MarkupCharField, MarkupModelMixin, TextContent
-
-# Hardcoded tags for special content
-PULLQUOTE_TAG = '@quote:'
-ASIDE_TAG = '@box:'
-IMAGE_TAG = '@image:'
-VIDEO_TAG = '@video:'
-INLINE_HTML_TAG = '@html:'
+from .mixins import MARKUP_TAGS, MarkupCharField, MarkupModelMixin, TextContent
 
 slugify = Slugify(max_length=50, to_lower=True)
 logger = logging.getLogger(__name__)
@@ -101,7 +94,10 @@ class RemembersSubClass(models.Model):
 class StoryElement(TimeStampedModel, RemembersSubClass):
     """ Models that are placed somewhere inside an article """
 
-    markup_tag = ''  # change in subclasses
+    @classmethod
+    def markup_tag(cls):
+        tag = MARKUP_TAGS.get(cls.__name__, '')
+        return f'@{tag}:'
 
     objects = ElementManager()
     parent_story = models.ForeignKey(
@@ -155,8 +151,6 @@ class StoryElement(TimeStampedModel, RemembersSubClass):
 class Pullquote(TextContent, StoryElement):  # type: ignore
     """ A quote that is that is pulled out of the content. """
 
-    markup_tag = PULLQUOTE_TAG
-
     def needle(self):
         firstline = self.bodytext_markup.splitlines()[0]
         needle = re.sub('@\S+:|«|»', '', firstline)
@@ -170,8 +164,6 @@ class Pullquote(TextContent, StoryElement):  # type: ignore
 class Aside(TextContent, StoryElement):  # type: ignore
     """ Fact box or other information typically placed in side bar """
 
-    markup_tag = ASIDE_TAG
-
     class Meta:
         verbose_name = _('Aside')
         verbose_name_plural = _('Asides')
@@ -179,8 +171,6 @@ class Aside(TextContent, StoryElement):  # type: ignore
 
 class InlineHtml(StoryElement):
     """ Inline html code """
-
-    markup_tag = INLINE_HTML_TAG
 
     bodytext_html = models.TextField()
 
@@ -266,8 +256,6 @@ class StoryMedia(StoryElement, MarkupModelMixin):
 class StoryImage(StoryMedia):
     """ Photo or illustration connected to a story """
 
-    markup_tag = IMAGE_TAG
-
     class Meta:
         verbose_name = _('Image')
         verbose_name_plural = _('Images')
@@ -311,8 +299,6 @@ class StoryImage(StoryMedia):
 
 class StoryVideo(StoryMedia):
     """ Video content connected to a story """
-
-    markup_tag = VIDEO_TAG
 
     VIDEO_HOSTS = (
         ('vimeo', _('vimeo')),

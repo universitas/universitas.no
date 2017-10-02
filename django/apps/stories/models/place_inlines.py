@@ -1,7 +1,6 @@
 import re
 
 from diff_match_patch import diff_match_patch
-
 from django.utils.translation import ugettext_lazy as _
 
 from .storychildren import Aside, InlineHtml, Pullquote, StoryImage, StoryVideo
@@ -67,7 +66,7 @@ class InlineElementsMixin:
                 else:
                     replace = placeholder['elements'] + \
                         ['#', INDEX_NOT_FOUND] + indexes or ['None']
-                placeholder['replace'] = element_class.markup_tag + \
+                placeholder['replace'] = element_class.markup_tag() + \
                     ' '.join(str(r) for r in replace)
 
                 if placeholder['line'] != placeholder['replace']:
@@ -94,9 +93,7 @@ class InlineElementsMixin:
     def find_inline_placeholders(self, element_class, body):
         """ Find placeholder markup for images,
         pullquotes and other story elements. """
-        regex = r'^{tag}\s*([^#\n]*).*$'.format(tag=element_class.markup_tag)
-        # TODO: Placeholder flags ( <, > ) are magic constants, and should be
-        # moved somewhere smart.
+        regex = r'^{tag}\s*([^#\n]*).*$'.format(tag=element_class.markup_tag())
         FLAGS = ['<', '>']
         matches = re.finditer(regex, body, flags=re.M)
         placeholders = []
@@ -120,7 +117,7 @@ class InlineElementsMixin:
 
             # remove tags:
             for cls in Aside, StoryImage, Pullquote, StoryVideo, InlineHtml:
-                find = r'^{tag}.*$'.format(tag=cls.markup_tag)
+                find = r'^{tag}.*$'.format(tag=cls.markup_tag())
                 body = re.sub(find, '', body, flags=re.M)
 
             # insert asides

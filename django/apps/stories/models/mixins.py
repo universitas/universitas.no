@@ -21,11 +21,11 @@ NON_PRINTING_CHARS = re.compile(
 )
 
 MARKUP_TAGS = {
-    'StoryImage': '@image',
-    'Pullquote': '@quote',
-    'Aside': '@box',
-    'StoryVideo': '@video',
-    'InlineHtml': '@html',
+    'StoryImage': 'image',
+    'Pullquote': 'quote',
+    'Aside': 'box',
+    'StoryVideo': 'video',
+    'InlineHtml': 'html',
 }
 
 
@@ -60,6 +60,9 @@ class MarkupFieldMixin:
     def clean_links(self, text, model_instance):
         """ Clean up links into markup format """
         from .links import InlineLink  # noqa
+        if model_instance.parent_story.pk is None:
+            # Cannot create links before story is saved.
+            return text
         text = InlineLink.convert_html_links(text)
         text = InlineLink.clean_and_create_links(
             body=text, parent_story=model_instance.parent_story
@@ -183,7 +186,7 @@ class TextContent(models.Model, MarkupModelMixin):
             '{{% load inline_elements %}}'
             '{{% inline_{classname} "\\1" %}}'
         )
-        regex = '^{markup_tag} *([^#\n]*) *$'
+        regex = '^@{markup_tag}: *([^#\n]*) *$'
 
         for classname, markup_tag in MARKUP_TAGS.items():
             find = regex.format(markup_tag=markup_tag)
