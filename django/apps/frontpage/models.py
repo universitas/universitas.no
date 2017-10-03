@@ -1,15 +1,11 @@
-# pylint: disable=no-member
 import logging
 import random
 
-from model_utils.models import TimeStampedModel
-
-# Project apps
 from apps.photo.models import ImageFile
 from django.core.exceptions import ValidationError
-# Django core
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
 from utils.model_mixins import EditURLMixin
 
 logger = logging.getLogger(__name__)
@@ -37,14 +33,6 @@ class Frontpage(TimeStampedModel):
     published = models.BooleanField(
         help_text=_('This page is published.'), default=False
     )
-
-    # draft_of = models.ForeignKey(
-    #     'Frontpage',
-    #     help_text=_('Is a draft version of other Frontpage.'),
-    #     editable=False,
-    #     blank=True,
-    #     null=True,
-    # )
 
     def __str__(self):
         return self.label

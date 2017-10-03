@@ -2,10 +2,6 @@
 
 import logging
 
-from django_extensions.db.fields import AutoSlugField
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-
 from apps.contributors.models import Contributor
 from apps.frontpage.models import FrontpageStory
 from apps.markup.models import Alias
@@ -16,6 +12,9 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django_extensions.db.fields import AutoSlugField
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
 from utils.model_mixins import EditURLMixin
 
 from .byline import Byline, clean_up_bylines

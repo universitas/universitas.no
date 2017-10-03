@@ -26,6 +26,7 @@ def close_crop(x, y, left, right, top, bottom, aspect_ratio):
 
 
 def calculate_crop(width, height, crop_width, crop_height, crop_box, exp):
+    """Calculate best crop for a given input and output image format"""
     aspect_ratio = (crop_width * height) / (crop_height * width)
 
     # modify size of the crop box
@@ -36,8 +37,12 @@ def calculate_crop(width, height, crop_width, crop_height, crop_box, exp):
     else:  # landscape
         resize = exp, 0  # grow width
 
-    expanded_box = CropBox(**crop_box).expand(*resize).serialize()
-    crop_to = close_crop(aspect_ratio=aspect_ratio, **expanded_box)
+    expanded_box = CropBox(**crop_box).expand(*resize)
+    if expanded_box.width == 0 or expanded_box.height == 0:
+        # cannot use it
+        expanded_box = CropBox.basic()
+
+    crop_to = close_crop(aspect_ratio=aspect_ratio, **expanded_box.serialize())
 
     return Box(
         int(crop_to.left * width),
@@ -48,6 +53,8 @@ def calculate_crop(width, height, crop_width, crop_height, crop_box, exp):
 
 
 class CloseCropEngine(WandEngine):
+    """Sorl thumbnail crop engine"""
+
     def create(self, image, geometry, options):
         cropbox = options.pop('crop_box', None)
         try:

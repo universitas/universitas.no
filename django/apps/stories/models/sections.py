@@ -2,12 +2,11 @@
 
 import logging
 
-from django_extensions.db.fields import AutoSlugField
-from slugify import Slugify
-
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django_extensions.db.fields import AutoSlugField
+from slugify import Slugify
 
 slugify = Slugify(max_length=50, to_lower=True)
 logger = logging.getLogger(__name__)

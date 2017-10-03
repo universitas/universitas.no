@@ -29,23 +29,21 @@ TEMPLATES[0]['OPTIONS']['string_if_invalid'] = 'INVALID'  # type: ignore
 
 aws = Environment('AWS')
 try:
+    # AMAZON WEB SERVICES
+    AWS_S3_SECURE_URLS = False
+    AWS_S3_USE_SSL = False
+    AWS_S3_HOST = aws.s3_host
     AWS_STORAGE_BUCKET_NAME = aws.storage_bucket_name
     AWS_ACCESS_KEY_ID = aws.access_key_id
     AWS_SECRET_ACCESS_KEY = aws.secret_access_key
 
-    # AMAZON WEB SERVICES
+    AWS_S3_CUSTOM_DOMAIN = '{bucket}.{domain}'.format(
+        bucket=AWS_STORAGE_BUCKET_NAME,
+        domain=AWS_S3_HOST.replace('s3.', 's3-website.'),
+    )
+
     DEFAULT_FILE_STORAGE = 'utils.aws_custom_storage.MediaStorage'
     THUMBNAIL_STORAGE = 'utils.aws_custom_storage.ThumbStorage'
-
-    AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
-    AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME  # cname
-    AWS_S3_SECURE_URLS = False
-    AWS_S3_USE_SSL = False
-
-    MEDIA_URL = "http://{host}/{media}/".format(
-        host=AWS_S3_CUSTOM_DOMAIN,
-        media='media',
-    )
 
 except AttributeError:
     # Use File system in local development instead of Amanon S3
@@ -61,8 +59,7 @@ if DEBUG:
             'debug_toolbar.panels.sql.SQLPanel',
             'debug_toolbar.panels.templates.TemplatesPanel',
             'debug_toolbar.panels.loggin.LoggingPanel',
-        },
-        "SHOW_TOOLBAR_CALLBACK": lambda request: True
+        }, "SHOW_TOOLBAR_CALLBACK": lambda request: True
     }
 
 WEBPACK_LOADER['DEFAULT'].update({

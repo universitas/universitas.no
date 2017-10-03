@@ -1,14 +1,11 @@
 """ Photography and image files in the publication  """
 
 import json
-# Python standard library
 import logging
 
 from django.core.exceptions import ValidationError
-# Django core
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-# Third party apps
 from sorl import thumbnail
 
 from .boundingbox import CropBox
