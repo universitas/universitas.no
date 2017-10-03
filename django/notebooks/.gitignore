@@ -1,3 +1,6 @@
+*
+!.gitignore
+!commit/
+!commit/*
+
 .ipynb_checkpoints/
-img/
-*.pdf
