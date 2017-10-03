@@ -2,6 +2,7 @@ import logging
 
 from celery.schedules import crontab
 from celery.task import periodic_task
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
@@ -11,7 +12,7 @@ from utils.merge_model_objects import merge_instances
 from .calculate_stints import (
     create_stints_from_bylines, create_stints_from_pdfs
 )
-from .models import Contributor
+from .models import Contributor, default_groups
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -36,6 +37,7 @@ def connect_contributor_to_user(cn: Contributor, create=False):
     if cn.user:
         return cn.user
     user = cn.get_user()
+    groups = default_groups()
     if user:
         logger.info(f'found {user}')
         try:
@@ -61,6 +63,7 @@ def connect_contributor_to_user(cn: Contributor, create=False):
             last_name=cn.last_name,
             is_active=True,
         )
+        user.groups.add(groups.staff)
         logger.info(f'created {user}')
     return user
 

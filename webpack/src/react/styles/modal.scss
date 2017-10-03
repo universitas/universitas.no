@@ -4,12 +4,23 @@
   align-items: center;
   display: flex;
   flex-direction: column;
+  font-size: 1.5em;
   input, button {
-    font-size: 1.5em;
+    font-size: 1em;
     width: 20em;
     padding: .5em;
     margin: .2em;
     border-radius: .2em;
     border: 1px solid #999;
+  }
+  .text, a {
+    font-size: 0.7em;
+  }
+  .ErrorMessage {
+    display: flex;
+    max-width: 20em;
+    margin: .5em 0;
+    color: red;
+    font-weight: bold;
   }
 }

@@ -4,6 +4,7 @@ from pathlib import Path
 
 import boto
 import imagehash
+
 from django.core.files import File
 from django.db import models
 from django.utils import timezone
@@ -102,7 +103,10 @@ class ImageHashModelMixin(models.Model):
     def imagehash(self):
         """Calculate or retrieve imagehash value."""
         if not self._imagehash and self.original:
-            self.imagehash = get_imagehash(self.large.read())
+            try:
+                self.imagehash = get_imagehash(self.large)
+            except FileNotFoundError:
+                self.imagehash = get_imagehash(self.original)
         try:
             return imagehash.hex_to_hash(self._imagehash)
         except ValueError:

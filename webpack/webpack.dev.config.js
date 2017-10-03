@@ -1,7 +1,7 @@
 const config = require('./webpack.config.js')
 const webpack = require('webpack')
 // config.devtool = 'eval'  // fast rebuild times
-config.devtool = 'cheap-eval-source-map' // also fast
+config.devtool = 'cheap-module-source-map' // also fast
 
 function hotify(entry) {
   return [

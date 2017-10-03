@@ -5,10 +5,19 @@
 {% block content %}
 <div id="ReactApp">
   <div class=loaderWrapper>
-    <div class=loader>Laster inn prodsys...</div>
+    <div class=loader></div>
   </div>
 </div>
 {% endblock content %}
 {% block final %}
   {% render_bundle "prodsys" %}
+{% if messages %}
+<script>
+  setTimeout((function() {
+  {% for message in messages %}
+    showMessage('{{message}}', '{{message.level_tag}}');
+  {% endfor %}
+  }), 200);
+</script>
+{% endif %}
 {% endblock final %}

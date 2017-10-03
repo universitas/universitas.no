@@ -2,6 +2,7 @@
 
 import json
 import logging
+from collections import namedtuple
 
 from apps.photo.models import ProfileImage
 from django.conf import settings
@@ -14,12 +15,22 @@ from django.utils.translation import ugettext_lazy as _
 
 from .fuzzy_name_search import FuzzyNameSearchMixin
 
+STAFF_GROUP = 'redaksjon'
+MANAGEMENT_GROUP = 'mellomledere'
+
 User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
 def today():
     return timezone.now().date()
+
+
+def default_groups():
+    """Get or create editorial staff groups"""
+    staff = Group.objects.get_or_create(name=STAFF_GROUP)[0]
+    management = Group.objects.get_or_create(name=MANAGEMENT_GROUP)[0]
+    return namedtuple('Groups', 'management, staff')(management, staff)
 
 
 class Contributor(FuzzyNameSearchMixin, models.Model):
@@ -194,18 +205,13 @@ class Position(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-
-        try:
-            mellomledere = Group.objects.get(name='mellomledere')
-            redaksjon = Group.objects.get(name='redaksjon')
-        except Group.DoesNotExist:
-            return
+        groups = default_groups()
 
         if self.is_management:
-            self.groups.add(mellomledere)
-            self.groups.remove(redaksjon)
+            self.groups.add(groups.managment)
+            self.groups.remove(groups.staff)
         else:
-            self.groups.remove(mellomledere)
+            self.groups.remove(groups.management)
 
 
 class StintQuerySet(models.QuerySet):

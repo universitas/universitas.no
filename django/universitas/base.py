@@ -17,6 +17,41 @@ SECRET_KEY = env.secret_key
 ALLOWED_HOSTS = env.allowed_hosts.split(',') or '*'
 SILENCED_SYSTEM_CHECKS = ["1_8.W001"]
 
+# DJANGO ALLAUTH
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+ACCOUNT_PRESERVE_USERNAME_CASING = False
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
+ACCOUNT_LOGOUT_REDIRECT_URL = '/auth/login/'
+# SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_ADAPTER = 'utils.auth.AutoConnectSocialAccountAdapter'
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email'],
+        'VERIFIED_EMAIL': True,
+        'VERSION': 'v2.5',
+    }
+}
+
+SITE_ID = 1
+LOGIN_URL = '/accounts/login/'
+LOGOUT_URL = '/'
+LOGIN_REDIRECT_URL = '/prodsys/#'
+
+dcapv = 'django.contrib.auth.password_validation'
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': f'{dcapv}.MinimumLengthValidator', 'OPTIONS': {'min_length': 8}},
+    {'NAME': f'{dcapv}.CommonPasswordValidator'},
+    {'NAME': f'{dcapv}.NumericPasswordValidator'},
+]
+
 # DJANGO REST FRAMEWORK
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -32,7 +67,6 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
 }
-
 # SENTRY
 RAVEN_CONFIG = {'dsn': env.raven_dsn, 'site': SITE_URL}
 SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
@@ -72,6 +106,11 @@ INSTALLED_APPS = [
 
 # THIRD PARTY APPS
 INSTALLED_APPS = [
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    # 'allauth.socialaccount.providers.google',
     'autocomplete_light',
     'django_extensions',
     'sorl.thumbnail',
@@ -91,6 +130,7 @@ INSTALLED_APPS = [
     'django.forms',
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -109,10 +149,6 @@ MIDDLEWARE_CLASSES = [
 
 WSGI_APPLICATION = 'universitas.wsgi.application'
 ROOT_URLCONF = 'universitas.urls'
-
-LOGIN_URL = '/admin/login/'
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_URL = '/'
 
 # SORL
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'

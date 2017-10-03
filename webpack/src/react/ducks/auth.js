@@ -46,13 +46,12 @@ const getReducer = ({ type, payload, error }) => {
     // case LOG_IN:
     //   return R.always({ pending: true })
     case LOG_IN_SUCCESS:
-      return R.set(tokenLens(payload.key))
+      return R.set(tokenLens, payload.key)
     case LOG_IN_FAILED:
       return R.set(errorLens, error)
     case REQUEST_USER_SUCCESS:
       return R.compose(R.mergeDeepRight(payload), R.set(pendingLens, false))
     case REQUEST_USER_FAILED:
-      console.log(error)
       return R.compose(R.set(pendingLens, false), R.set(errorLens, error))
     case LOG_OUT:
       return R.always({ pending: false, error: {} })

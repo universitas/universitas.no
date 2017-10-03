@@ -2,12 +2,23 @@ import 'babel-polyfill'
 import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
 
-import ProdSys from './ProdSys'
+import ProdSys, { rootStore } from './ProdSys'
+import { loginFailed } from 'ducks/auth'
 
 const ROOT_ID = 'ReactApp'
 const DOMNode = document.getElementById(ROOT_ID)
 
+const showMessage = (msg, level) => {
+  if (level == 'error') {
+    console.error(msg)
+    rootStore.dispatch(loginFailed({ non_field_errors: [msg] }))
+  } else {
+    console.log(msg)
+  }
+}
+
 const render = () => {
+  window.showMessage = showMessage
   ReactDOM.render(
     <AppContainer>
       <ProdSys />

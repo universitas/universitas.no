@@ -1,4 +1,6 @@
 """Base url router for universitas.no"""
+from autocomplete_light import urls as autocomplete_light_urls
+
 from api.urls import urlpatterns as api_urls
 from apps.core.autocomplete_views import autocomplete_list
 from apps.core.views import HumansTxtView, RobotsTxtView, search_404_view
@@ -10,7 +12,6 @@ from apps.photo.views import PhotoAppView
 from apps.search import urls as search_urls
 from apps.stories.feeds import LatestStories
 from apps.stories.views import article_view
-from autocomplete_light import urls as autocomplete_light_urls
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -23,6 +24,8 @@ from .redirect_urls import urlpatterns as redirect_urls
 admin.autodiscover()
 
 urlpatterns = [
+    # DJANGO-ALLAUTH (login, password etc)
+    url(r'^auth/', include('allauth.urls')),
     # RSS
     url(r'^rss/$', LatestStories(), name='rss'),
     # API
@@ -33,7 +36,11 @@ urlpatterns = [
 
     # React apps
     url(r'^foto/$', PhotoAppView.as_view(), name='photoapp'),
-    url(r'^prodsys', TemplateView.as_view(template_name='prodsys.html')),
+    url(
+        r'^prodsys',
+        TemplateView.as_view(template_name='prodsys.html'),
+        name='prodsys'
+    ),
 
     # Flat pages
     url(
@@ -66,12 +73,12 @@ urlpatterns = [
         name='article'
     ),
     url(r'^(?P<story_id>\d+?)/.*$', article_view, name='article_short'),
+    url(r'^(?P<section>[a-z0-9-]+)/all/$', section_frontpage, name='section'),
     url(
-        r'^(?P<section>[a-z0-9-]+)/(?P<storytype>[a-z0-9-]+)/$',
+        r'^(?P<section>[a-z0-9-]+)/(?P<storytype>[a-z0-9-]+)/all/$',
         storytype_frontpage,
         name='storytype'
     ),
-    url(r'^(?P<section>[a-z0-9-]+)/$', section_frontpage, name='section'),
 ]
 
 # redirect 404 to search page
