@@ -9,27 +9,34 @@ import PIL
 import imagehash
 from django.core.files import File as DjangoFile
 
+try:
+    from storages.backends.s3boto import S3BotoStorageFile as BotoFile
+except ImportError:
+    BotoFile = type('BotoFileFallbackClass', (), {})
+
 logger = logging.getLogger(__name__)
-Fileish = Union[str, bytes, Path, IO[Any], DjangoFile]
+Fileish = Union[str, bytes, Path, DjangoFile]
 
 
 def read_data(value: Fileish) -> bytes:
     """Read raw data from Fileish like object"""
     if isinstance(value, str):
-        fp = Path(value).open('rb')
+        return Path(value).read_bytes()
     elif isinstance(value, bytes):
-        fp = BytesIO(value)
+        return value
     elif isinstance(value, Path):
-        fp = value.open('rb')
+        return value.read_bytes()
     elif isinstance(value, DjangoFile):
-        fp = value.file
+        value.open('rb')
+        return value.read()
     else:
-        fp = value
-    try:
-        fp.seek(0)
-    except:
-        pass
-    return fp.read()
+        # try:
+        #     value.seek(0)
+        # except AttributeError:
+        #     pass
+        return value.read()
+    # elif isinstance(value, BotoFile):
+    #     return value.read()
 
 
 def pil_image(fp: Fileish) -> PIL.Image:

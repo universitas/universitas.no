@@ -19,7 +19,7 @@ class Environment:
 
     def __init__(self, prefix='', strict=True):
         def _attrname(name):
-            result = re.sub(r'[^a-z]', '_', name.lower())
+            result = re.sub(r'[^a-z0-9]', '_', name.lower())
             result = result[len(prefix):].strip('_')
             return result or name.lower()
 
@@ -27,6 +27,7 @@ class Environment:
             _attrname(key): key
             for key in os.environ.keys() if key.startswith(prefix)
         }
+        self.prefix = prefix
         self._strict = strict
 
     def __dir__(self):
@@ -47,4 +48,8 @@ class Environment:
         except KeyError:
             if not self._strict:
                 return ''
-            raise AttributeError
+            msg = (
+                f'{self.prefix.upper()}_{name.upper()} '
+                f'not found in {dir(self)}'
+            )
+            raise AttributeError(msg)

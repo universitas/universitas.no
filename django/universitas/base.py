@@ -2,7 +2,9 @@
 
 from django.utils.translation import ugettext_lazy as _
 
-from .logging_settings import LOGGING  # NOQA
+from .email_settings import *  # type: ignore
+from .file_settings import *  # type: ignore
+from .logging_settings import LOGGING
 from .setting_helpers import joinpath as path
 from .setting_helpers import Environment
 
@@ -14,7 +16,7 @@ DEBUG = True if env.debug.lower() == 'true' else False
 TEMPLATE_DEBUG = DEBUG
 SITE_URL = env.site_url or 'www.example.com'
 SECRET_KEY = env.secret_key
-ALLOWED_HOSTS = env.allowed_hosts.split(',') or '*'
+ALLOWED_HOSTS = env.allowed_hosts.split(',')
 SILENCED_SYSTEM_CHECKS = ["1_8.W001"]
 
 # DJANGO ALLAUTH
@@ -158,7 +160,7 @@ FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
 FILE_UPLOAD_PERMISSIONS = 0o664
 # Enable original file names for resized images.
 THUMBNAIL_BACKEND = 'apps.photo.thumb_backend.KeepNameThumbnailBackend'
-# With boto and aman s3, we don't check if file exist.
+# With boto and amazon s3, we don't check if file exist.
 # Automatic overwrite if not found in cache key
 THUMBNAIL_FORCE_OVERWRITE = True
 THUMBNAIL_PREFIX = 'thumb-cache/'

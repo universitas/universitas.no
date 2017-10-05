@@ -30,7 +30,7 @@ while (( $# > 0 )); do
   django  ) docker-compose run --rm -u django web ${rest:-bash}; exit ;;
   root    ) docker-compose run --rm           web ${rest:-bash}; exit ;;
 
-  pytest  ) docker-compose run --rm --name testf -u django web pytest -f -x --ff $rest; exit ;;
+  pytest  ) testing; docker-compose run --rm --name testf -u django web pytest -f -x --ff $rest; exit ;;
 
   flower  ) docker-compose run --rm --name flower -d -p 5555:5555 celery flower ;;  # start celery flower on port 5555
   jupyter ) start_jupyter ;;  # start jupyter server for django on port 8888
@@ -82,8 +82,12 @@ production_settings() {
   export IMAGE_VERSION BRANCH COMPOSE_FILE
 }
 
-run_tests() {
+testing() {
   export COMPOSE_FILE=docker-compose.yml:docker-compose.testing.yml
+}
+
+run_tests() {
+  testing
   docker-compose run --rm webpack test || exit 1
   docker-compose run --rm -u django web pytest --create-db || exit 1
 }
