@@ -22,22 +22,14 @@ def read_data(value: Fileish) -> bytes:
     elif isinstance(value, Path):
         fp = value.open('rb')
     elif isinstance(value, DjangoFile):
-        if value.closed:
-            value.open()  # type: ignore
-        fp = value
+        fp = value.file
     else:
         fp = value
     try:
         fp.seek(0)
     except:
         pass
-    try:
-        return fp.read()
-    finally:
-        try:
-            fp.close()
-        except:
-            pass
+    return fp.read()
 
 
 def pil_image(fp: Fileish) -> PIL.Image:

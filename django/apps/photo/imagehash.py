@@ -105,7 +105,7 @@ class ImageHashModelMixin(models.Model):
         if not self._imagehash and self.original:
             try:
                 self.imagehash = get_imagehash(self.large)
-            except FileNotFoundError:
+            except (IOError, FileNotFoundError):
                 self.imagehash = get_imagehash(self.original)
         try:
             return imagehash.hex_to_hash(self._imagehash)
