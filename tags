@@ -76,6 +76,7 @@ BylineManager	django/apps/stories/models/byline.py	/^class BylineManager(models.
 BylineSerializer	django/api/story_serializers.py	/^class BylineSerializer(serializers.ModelSerializer):$/;"	c
 CACHES	django/universitas/base.py	/^CACHES = {$/;"	v
 CACHE_MIDDLEWARE_KEY_PREFIX	django/universitas/base.py	/^CACHE_MIDDLEWARE_KEY_PREFIX = SITE_URL$/;"	v
+CACHE_TIME	django/apps/stories/views.py	/^CACHE_TIME = 60 * 5  # 5 minutes$/;"	v
 CATEGORY_CHOICES	django/apps/adverts/models.py	/^    CATEGORY_CHOICES = [$/;"	v	class:AdFormat
 CELERYD_HIJACK_ROOT_LOGGER	django/universitas/base.py	/^CELERYD_HIJACK_ROOT_LOGGER = False$/;"	v
 CELERY_ACCEPT_CONTENT	django/universitas/base.py	/^CELERY_ACCEPT_CONTENT = ['json', 'pickle']$/;"	v
@@ -854,6 +855,7 @@ _mtime	django/apps/photo/imagehash.py	/^    _mtime = models.PositiveIntegerField
 _opencv_image	django/apps/photo/cropping/crop_detector.py	/^    def _opencv_image(source: Image, resize: int = 0) -> CVImage:$/;"	m	class:FeatureDetector
 _post_save_receiver	django/watson/search.py	/^    def _post_save_receiver(self, instance, **kwargs):$/;"	m	class:SearchEngine
 _pre_delete_receiver	django/watson/search.py	/^    def _pre_delete_receiver(self, instance, **kwargs):$/;"	m	class:SearchEngine
+_render_story	django/apps/stories/views.py	/^def _render_story(request, story, template='story.html'):$/;"	f
 _repair_legacy_links	django/apps/stories/management/commands/check_links.py	/^    def _repair_legacy_links(self, links_to_check):$/;"	m	class:Command
 _request_finished_receiver	django/watson/search.py	/^    def _request_finished_receiver(self, **kwargs):$/;"	m	class:SearchContextManager
 _resize_feature	django/apps/photo/cropping/crop_detector.py	/^    def _resize_feature(feature: Feature, cv_image: CVImage) -> Feature:$/;"	m	class:FeatureDetector

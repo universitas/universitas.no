@@ -1,10 +1,10 @@
 {% load thumbnail %}
-{% with contributor.get_byline_image as img %}
-{% if img %}
-{% thumbnail img.source_file image_size colorspace="GRAY" crop_box=img.get_crop_box as thumb %}
-<div class="byline_image">
-      <img src="{{ thumb.url }}" alt="{{ contributor.name }}">
-</div>
-{% endthumbnail %}
+{% if contributor.has_byline_image %}
+  {% with contributor.get_byline_image as img %}
+    {% thumbnail img.source_file image_size colorspace="GRAY" crop_box=img.get_crop_box as thumb %}
+    <div class="byline_image">
+          <img src="{{ thumb.url }}" alt="{{ contributor.name }}">
+    </div>
+    {% endthumbnail %}
+  {% endwith %}
 {% endif %}
-{% endwith %}
