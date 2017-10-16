@@ -20,6 +20,7 @@ from utils.model_mixins import EditURLMixin
 from .byline import Byline, clean_up_bylines
 from .mixins import MarkupCharField, MarkupTextField, TextContent
 from .place_inlines import InlineElementsMixin
+from .search_mixin import FullTextSearchMixin, FullTextSearchQuerySet
 from .sections import StoryType, default_story_type
 from .storychildren import Aside, Pullquote, StoryImage
 
@@ -27,7 +28,7 @@ slugify = Slugify(max_length=50, to_lower=True)
 logger = logging.getLogger(__name__)
 
 
-class StoryQuerySet(models.QuerySet):
+class StoryQuerySet(FullTextSearchQuerySet, models.QuerySet):
     def published(self):
         now = timezone.now()
         return self.filter(
@@ -46,12 +47,6 @@ class PublishedStoryManager(models.Manager):
     def get_queryset(self):
         return StoryQuerySet(self.model, using=self._db)
 
-    def published(self):
-        return self.get_queryset().published()
-
-    def is_on_frontpage(self, frontpage):
-        return self.get_queryset().is_on_frontpage(frontpage)
-
     def populate_frontpage(self, **kwargs):
         """ create some random frontpage stories """
         if not kwargs:
@@ -69,6 +64,7 @@ class PublishedStoryManager(models.Manager):
 
 
 class Story(
+    FullTextSearchMixin,
     EditURLMixin,
     TimeStampedModel,
     TextContent,
@@ -76,11 +72,12 @@ class Story(
 ):
     """ An article or story in the newspaper. """
 
-    class Meta:
+    class Meta(FullTextSearchMixin.Meta):
+        abstract = False
         verbose_name = _('Story')
         verbose_name_plural = _('Stories')
 
-    objects = PublishedStoryManager()
+    objects = PublishedStoryManager.from_queryset(StoryQuerySet)()
     template_name = 'bodytext.html'
 
     STATUS_DRAFT = 0

@@ -1,6 +1,4 @@
 """Base url router for universitas.no"""
-from autocomplete_light import urls as autocomplete_light_urls
-
 from api.urls import urlpatterns as api_urls
 from apps.core.autocomplete_views import autocomplete_list
 from apps.core.views import HumansTxtView, RobotsTxtView, search_404_view
@@ -12,14 +10,13 @@ from apps.photo.views import PhotoAppView
 from apps.search import urls as search_urls
 from apps.stories.feeds import LatestStories
 from apps.stories.views import article_view
+from autocomplete_light import urls as autocomplete_light_urls
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
 
 from .redirect_urls import urlpatterns as redirect_urls
-
-# from watson import urls as watson_urls
 
 admin.autodiscover()
 
@@ -65,7 +62,7 @@ urlpatterns = [
     url(r'^humans.txt$', HumansTxtView.as_view(), name='humans.txt'),
     url(r'^autocomplete', include(autocomplete_light_urls)),
     url(r'^autocomplete/menu$', autocomplete_list, name='autocomplete_list'),
-    url(r'^search/', include(search_urls, namespace='watson')),
+    url(r'^search/', include(search_urls)),
     url(r'^', include(redirect_urls, namespace='redirect')),
     url(
         r'^(?P<section>[a-z0-9-]+)/(?P<story_id>\d+)/(?P<slug>[a-z0-9-]*)/?$',
