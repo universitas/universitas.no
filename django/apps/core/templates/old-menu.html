@@ -87,7 +87,7 @@
       <div class="search-icon">
         <i class="icon -search"></i>
       </div>
-      <form class="search-form" action="{% url 'watson:search' %}">
+      <form class="search-form" action="{% url 'search' %}">
         <input placeholder="Søk i universitas.no" class="search-input" type="text" name="q" value="{{ request.GET.q }}" >
         <input class='hidden-input' type="submit">
       </form>

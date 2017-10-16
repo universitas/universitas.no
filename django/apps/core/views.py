@@ -35,7 +35,7 @@ class RobotsTxtView(TextTemplateView):
 def search_404_view(request, slug):
     search_terms = re.split(r'\W|_', slug)
     redirect_to = '{search}?q={terms}'.format(
-        search=reverse('watson:search'),
+        search=reverse('search'),
         terms='+'.join(search_terms),
     )
     return HttpResponseRedirect(redirect_to)

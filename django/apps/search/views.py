@@ -1,14 +1,8 @@
-# -*- coding: utf-8 -*-
-"""
-Views for use with django-watson
-"""
-import json
+""" Views for searching """
 
-import watson
-from django.http import HttpResponse
+from apps.stories.models import Story
 from django.shortcuts import redirect
 from django.views.generic import ListView
-from django.views.generic.list import BaseListView
 
 
 class SearchMixin:
@@ -19,25 +13,15 @@ class SearchMixin:
 
     def get_queryset(self):
         """Returns the initial queryset."""
-        search_results = watson.search.search(self.query)
-        if search_results:
-            search_results = search_results.prefetch_related("object")
-
-        return search_results
+        return Story.objects.published().search(self.query)
 
     def get_query(self, request):
         """Parses the query from the request."""
         return request.GET.get(self.query_param, "").strip()
 
-    empty_query_redirect = None  # type: ignore
-
-    def get_empty_query_redirect(self):
-        """Returns the URL to redirect an empty query to, or None."""
-        return self.empty_query_redirect
-
     def get_context_data(self, **kwargs):
         """Generates context variables."""
-        context = super(SearchMixin, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["query"] = self.query
         return context
 
@@ -48,7 +32,7 @@ class SearchMixin:
             empty_query_redirect = self.get_empty_query_redirect()
             if empty_query_redirect:
                 return redirect(empty_query_redirect)
-        return super(SearchMixin, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
 
 class SearchView(SearchMixin, ListView):
@@ -56,27 +40,3 @@ class SearchView(SearchMixin, ListView):
 
     paginate_by = 10
     template_name = "search-results.html"
-
-
-class SearchApiView(SearchMixin, BaseListView):
-    """A JSON-based search API."""
-
-    def render_to_response(self, context, **response_kwargs):
-        """Renders the search results to the response."""
-        content = json.dumps({
-            "results": [
-                {
-                    "title": result.title,
-                    "description": result.description,
-                    "url": result.url,
-                    "meta": result.meta,
-                }
-                for result in
-                context[self.get_context_object_name(self.get_queryset())]
-            ]
-        }).encode("utf-8")
-        # Generate the response.
-        response = HttpResponse(content, **response_kwargs)
-        response["Content-Type"] = "application/json; charset=utf-8"
-        response["Content-Length"] = len(content)
-        return response
