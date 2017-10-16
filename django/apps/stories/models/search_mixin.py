@@ -1,5 +1,4 @@
 from django.contrib.postgres.indexes import GinIndex
-# from django.db.models.expressions import RawSQL
 from django.contrib.postgres.search import (
     SearchQuery, SearchRank, SearchVector, SearchVectorField, TrigramSimilarity
 )
@@ -69,7 +68,10 @@ class FullTextSearchQuerySet(QuerySet):
 
 class FullTextSearchMixin(Model):
 
-    search_vector = SearchVectorField(null=True)
+    search_vector = SearchVectorField(
+        editable=False,
+        null=True,
+    )
 
     class Meta:
         indexes = [GinIndex(fields=['search_vector'])]

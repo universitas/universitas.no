@@ -116,7 +116,6 @@ INSTALLED_APPS = [
     'autocomplete_light',
     'django_extensions',
     'sorl.thumbnail',
-    'watson',
     'raven.contrib.django.raven_compat',
     'storages',
     'webpack_loader',
