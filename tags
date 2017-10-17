@@ -344,6 +344,7 @@ MEDIA_ROOT	django/universitas/file_settings.py	/^    MEDIA_ROOT = env.MEDIA_DIR 
 MEDIA_URL	django/universitas/file_settings.py	/^    MEDIA_URL = '\/media\/'$/;"	v
 MEDIA_URL	django/universitas/file_settings.py	/^    MEDIA_URL = f'http:\/\/{AWS_S3_CUSTOM_DOMAIN}\/media\/'$/;"	v
 MIDDLEWARE_CLASSES	django/universitas/base.py	/^MIDDLEWARE_CLASSES = [$/;"	v
+MIN_AGE	django/apps/stories/models/search_mixin.py	/^    MIN_AGE = 2.0$/;"	v	class:LogAge
 MODEL	webpack/src/react/contributors/ContributorGrid.js	/^const MODEL = 'contributors'$/;"	r
 MODEL	webpack/src/react/contributors/ContributorList.js	/^const MODEL = 'contributors'$/;"	r
 MODEL	webpack/src/react/images/PhotoGrid.js	/^const MODEL = 'images'$/;"	r
@@ -1501,7 +1502,7 @@ filter_backends	django/api/issue_serializers.py	/^    filter_backends = (filters
 filter_backends	django/api/issue_serializers.py	/^    filter_backends = (filters.SearchFilter, DjangoFilterBackend)$/;"	v	class:PrintIssueViewSet
 filter_backends	django/api/legacy_serializers.py	/^    filter_backends = [DjangoFilterBackend]$/;"	v	class:ProdStoryViewSet
 filter_backends	django/api/photo_serializers.py	/^    filter_backends = (filters.SearchFilter, DjangoFilterBackend)$/;"	v	class:ImageFileViewSet
-filter_backends	django/api/story_serializers.py	/^    filter_backends = [DjangoFilterBackend, SearchFilter]$/;"	v	class:StoryViewSet
+filter_backends	django/api/story_serializers.py	/^    filter_backends = [DjangoFilterBackend]$/;"	v	class:StoryViewSet
 filter_fields	django/api/contributor_serializers.py	/^    filter_fields = ['status', 'display_name', 'byline_photo']$/;"	v	class:ContributorViewSet
 filter_fields	django/api/issue_serializers.py	/^    filter_fields = ['id', 'publication_date']$/;"	v	class:IssueViewSet
 filter_fields	django/api/legacy_serializers.py	/^    filter_fields = ['publication_status', 'title', 'bodytext_markup']$/;"	v	class:ProdStoryViewSet
@@ -1647,6 +1648,7 @@ get_publication_date	django/apps/issues/models.py	/^    def get_publication_date
 get_query	django/apps/search/views.py	/^    def get_query(self, request):$/;"	m	class:SearchMixin
 get_queryset	django/api/photo_serializers.py	/^    def get_queryset(self):$/;"	m	class:ImageFileViewSet
 get_queryset	django/api/story_serializers.py	/^    def get_queryset(self):$/;"	m	class:QueryOrderableViewSetMixin
+get_queryset	django/api/story_serializers.py	/^    def get_queryset(self):$/;"	m	class:StoryViewSet
 get_queryset	django/apps/contributors/admin.py	/^    def get_queryset(self, request):$/;"	m	class:StintAdmin
 get_queryset	django/apps/issues/views.py	/^    def get_queryset(self):$/;"	m	class:PdfArchiveView
 get_queryset	django/apps/issues/views.py	/^    def get_queryset(self):$/;"	m	class:PubPlanView
@@ -1839,7 +1841,7 @@ img	webpack/src/react/containers/CropBox.js	/^    const img = this.masterImg.get
 import_staging_images	django/apps/photo/tasks.py	/^def import_staging_images(max_age=timedelta(minutes=10)) -> List[Path]:$/;"	f
 index	django/apps/stories/migrations/0029_auto_20171016_2230.py	/^            index=django.contrib.postgres.indexes.GinIndex(fields=['search_vector'], name='stories_sto_search__18a3ad_gin'),$/;"	v	class:Migration
 index	django/apps/stories/models/storychildren.py	/^    index = models.PositiveSmallIntegerField($/;"	v	class:StoryElement
-indexes	django/apps/stories/models/search_mixin.py	/^        indexes = [GinIndex(fields=['search_vector'])]$/;"	v	class:FullTextSearchMixin.Meta
+indexes	django/apps/stories/models/search_mixin.py	/^        indexes = [$/;"	v	class:FullTextSearchMixin.Meta
 initialLocation	webpack/src/react/entry/ProdSys/configureStore.js	/^  const initialLocation = store.getState().router$/;"	r
 initialState	webpack/src/react/ducks/auth.js	/^const initialState = { pending: true, error: {} }$/;"	r
 initialState	webpack/src/react/ducks/basemodel.js	/^  const initialState = R.mergeDeepRight(baseInitialState(), modelState)$/;"	r
@@ -2763,10 +2765,7 @@ queryset	django/api/issue_serializers.py	/^    queryset = PrintIssue.objects.ord
 queryset	django/api/legacy_serializers.py	/^    queryset = Story.objects.order_by('publication_status', 'modified').filter($/;"	v	class:ProdStoryViewSet
 queryset	django/api/photo_serializers.py	/^    queryset = ImageFile.objects.order_by('-created').annotate($/;"	v	class:ImageFileViewSet
 queryset	django/api/story_serializers.py	/^        queryset=StoryType.objects.all(),$/;"	v	class:StorySerializer.Meta
-queryset	django/api/story_serializers.py	/^    queryset = Story.objects.all()$/;"	v	class:StoryViewSet
 queryset	django/api/story_serializers.py	/^    queryset = StoryType.objects.all().prefetch_related('section')$/;"	v	class:StoryTypeViewSet
-queryset	django/api/story_serializers.py	/^    queryset = queryset.prefetch_related('bylines', 'byline_set')$/;"	v	class:StoryViewSet
-queryset	django/api/story_serializers.py	/^    queryset = queryset.prefetch_related('story_type__section')$/;"	v	class:StoryViewSet
 queryset	django/apps/contributors/admin.py	/^    def queryset(self, request, queryset):$/;"	m	class:StintActiveFilter
 queryset	django/apps/stories/admin.py	/^    def queryset(self, request, queryset):$/;"	m	class:PublicationStatusFilter
 random_bands	django/apps/core/content_factory.py	/^def random_bands(sourceimg):$/;"	f
@@ -2914,7 +2913,6 @@ search_404_view	django/apps/core/views.py	/^def search_404_view(request, slug):$
 search_fields	django/api/contributor_serializers.py	/^    search_fields = ['display_name']$/;"	v	class:ContributorViewSet
 search_fields	django/api/issue_serializers.py	/^    search_fields = ['issue_name']$/;"	v	class:IssueViewSet
 search_fields	django/api/photo_serializers.py	/^    search_fields = ['source_file', 'description']$/;"	v	class:ImageFileViewSet
-search_fields	django/api/story_serializers.py	/^    search_fields = ['working_title', 'bodytext_markup']$/;"	v	class:StoryViewSet
 search_fields	django/apps/contributors/admin.py	/^    search_fields = ('display_name', )$/;"	v	class:ContributorAdmin
 search_fields	django/apps/contributors/autocomplete_light_registry.py	/^    search_fields=['display_name'],$/;"	v
 search_fields	django/apps/frontpage/admin.py	/^    search_fields = ($/;"	v	class:FrontpageStoryAdmin

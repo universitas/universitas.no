@@ -13,7 +13,7 @@ router.register(r'images', ImageFileViewSet)
 router.register(r'issues', IssueViewSet)
 router.register(r'pdfs', PrintIssueViewSet)
 router.register(r'contributors', ContributorViewSet)
-router.register(r'stories', StoryViewSet)
+router.register(r'stories', StoryViewSet, 'story')
 router.register(r'storytypes', StoryTypeViewSet)
 router.register(r'legacy', ProdStoryViewSet, 'legacy')
 

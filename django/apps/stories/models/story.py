@@ -63,7 +63,7 @@ class PublishedStoryManager(models.Manager):
         hot_stories.update(hot_count=(models.F('hot_count') - 1) * factor)
 
 
-class Story(
+class Story(  # type: ignore
     FullTextSearchMixin,
     EditURLMixin,
     TimeStampedModel,
