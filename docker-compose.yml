@@ -68,7 +68,7 @@ services:
 
   # PostgreSQL database
   postgres:
-    image: postgres:9.6
+    image: postgres:10.0
     volumes:
       - pgdata:/var/lib/postgresql/data/
 

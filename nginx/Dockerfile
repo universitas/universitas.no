@@ -1,4 +1,4 @@
-FROM nginx:1.11
+FROM nginx:1.13
 # In the nginx docker image `sites-enabled` is not used
 # Instead site specific config are placed in `conf.d`
 # Remove default config files
