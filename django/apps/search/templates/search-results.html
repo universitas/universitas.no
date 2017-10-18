@@ -1,30 +1,29 @@
 {% extends "base-template.html" %}
 {% block title %}
-    Søkeresultat for {% if query %} for &ldquo;{{ query }}&rdquo;{% endif %}
+  Søkeresultat for {% if query %} for &ldquo;{{ query }}&rdquo;{% endif %}
 {% endblock title %}
-        {# <h1>Search results{% if query %} for &ldquo;{{query}}&rdquo;{% endif %}</h1> #}
 {% block content %}
-  <div class="row search-results">
-    <div class="summary small-12 columns">
-      <div class="pagination">
-        Treff for søket "{{ query }}"
-        <span class="step-links">
-          {% if page_obj.has_previous %}
-            <a href="?q={{query}}&page={{ page_obj.previous_page_number }}">forrige</a>
-          {% endif %}
-
-          <span class="current">
-            Side {{ page_obj.number }} av {{ page_obj.paginator.num_pages }}.
-          </span>
-
-          {% if page_obj.has_next %}
-            <a href="?q={{query}}&page={{ page_obj.next_page_number }}">neste</a>
-          {% endif %}
-        </span>
-      </div>
-    </div>
-    {% for result in  search_results %}
-      {% include "_single-result.html" %}
-    {% endfor %}
+<div class="row search-results">
+  <div class="summary small-12 columns">
+    {{ page_obj.paginator.count }} treff for søket "{{ query }}"
   </div>
+  {% for result in  search_results %}
+  {% include "_single-result.html" %}
+  {% endfor %}
+  <div class="pagination">
+    <span class="step-links">
+      {% if page_obj.has_previous %}
+      <a href="?q={{query}}&page={{ page_obj.previous_page_number }}">forrige</a>
+      {% endif %}
+
+      <span class="current">
+        Side {{ page_obj.number }} av {{ page_obj.paginator.num_pages }}.
+      </span>
+
+      {% if page_obj.has_next %}
+      <a href="?q={{query}}&page={{ page_obj.next_page_number }}">neste</a>
+      {% endif %}
+    </span>
+  </div>
+</div>
 {% endblock content %}

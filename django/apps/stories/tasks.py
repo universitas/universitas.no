@@ -16,8 +16,8 @@ DEVALUE_HOTNESS = timedelta(hours=1)
 
 
 @periodic_task(run_every=UPDATE_SEARCH)
-def update_search():
-    """Update search index for stories"""
+def update_search_task():
+    """Update database search index for newly modified stories."""
     Story.objects.filter(
         Q(search_vector=None) |
         Q(modified__gt=timezone.now() - UPDATE_SEARCH * 1.5)
@@ -25,7 +25,7 @@ def update_search():
 
 
 @periodic_task(run_every=DEVALUE_HOTNESS)
-def devalue_hotness():
-    """ Decrease the hotness rating of all stories """
+def devalue_hotness_task():
+    """Decrease the hotness rating of all stories."""
     logger.info('decreasing hotness')
     Story.objects.devalue_hotness()

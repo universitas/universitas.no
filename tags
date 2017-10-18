@@ -1282,7 +1282,7 @@ detector	django/apps/photo/tests/test_cropping.py	/^def detector(request):$/;"	f
 determine_ad_type	django/apps/adverts/models.py	/^    def determine_ad_type(self, as_string=False):$/;"	m	class:Advert
 determine_cropping_method	django/apps/photo/tasks.py	/^def determine_cropping_method(features: List[Feature]) -> int:$/;"	f
 devalue_hotness	django/apps/stories/models/story.py	/^    def devalue_hotness(self, factor=0.99):$/;"	m	class:PublishedStoryManager
-devalue_hotness	django/apps/stories/tasks.py	/^def devalue_hotness():$/;"	f
+devalue_hotness_task	django/apps/stories/tasks.py	/^def devalue_hotness_task():$/;"	f
 diagonal	django/apps/photo/cropping/boundingbox.py	/^    def diagonal(self) -> float:$/;"	m	class:Box
 dimension	django/apps/adverts/models.py	/^    def dimension(self, axis, fallback=300):$/;"	m	class:Advert
 disabled	webpack/src/react/components/Filter.js	/^  const disabled = toggle ? false : isActive$/;"	r
@@ -3169,7 +3169,7 @@ update_descriptions	django/apps/photo/models.py	/^    def update_descriptions(se
 update_exif	django/apps/photo/models.py	/^    def update_exif(self) -> int:$/;"	m	class:ImageFileManager
 update_image_description	django/apps/photo/tasks.py	/^def update_image_description() -> None:$/;"	f
 update_images	django/api/legacy_serializers.py	/^def update_images(images, story):$/;"	f
-update_search	django/apps/stories/tasks.py	/^def update_search():$/;"	f
+update_search_task	django/apps/stories/tasks.py	/^def update_search_task():$/;"	f
 update_search_vector	django/apps/stories/models/search_mixin.py	/^    def update_search_vector(self):$/;"	m	class:FullTextSearchQuerySet
 update_status	django/apps/contributors/tasks.py	/^def update_status():$/;"	f
 update_story_image	django/api/legacy_serializers.py	/^def update_story_image($/;"	f

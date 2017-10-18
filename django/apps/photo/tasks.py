@@ -16,11 +16,12 @@ logger = logging.getLogger(__name__)
 
 
 def determine_cropping_method(features: List[Feature]) -> int:
+    """Determines which cropping method label to use"""
     if 'face' in features[-1].label:
-        if len(features) == 1:
+        if len(features) == 1:  # single face
             return ImageFile.CROP_PORTRAIT
-        return ImageFile.CROP_FACES
-    return ImageFile.CROP_FEATURES
+        return ImageFile.CROP_FACES  # multiple faces
+    return ImageFile.CROP_FEATURES  # no faces
 
 
 @shared_task
@@ -54,9 +55,15 @@ def autocrop_image_file(pk: int) -> None:
 
 @shared_task
 def post_save_task(pk: int) -> None:
-    instance = ImageFile.objects.get(pk=pk)
+    try:
+        instance = ImageFile.objects.get(pk=pk)
+    except ImageFile.DoesNotExist:
+        logger.debug(f'imagefile {pk} does not exist')
+        return
     instance.build_thumbs()
-    instance.calculate_hashes()  # this saves as well
+    instance.calculate_hashes()
+    # note: the last step re-saves the image.
+    # Should not trigger this task again.
 
 
 @periodic_task(run_every=timedelta(hours=1))

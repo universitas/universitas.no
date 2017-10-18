@@ -29,9 +29,7 @@ class SearchMixin:
         """Performs a GET request."""
         self.query = self.get_query(request)
         if not self.query:
-            empty_query_redirect = self.get_empty_query_redirect()
-            if empty_query_redirect:
-                return redirect(empty_query_redirect)
+            return redirect('frontpage')
         return super().get(request, *args, **kwargs)
 
 
