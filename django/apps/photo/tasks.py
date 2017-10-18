@@ -120,7 +120,6 @@ def import_image(file: Path):
     img = ImageFile(
         md5=ops.get_md5(file),
         imagehash=ops.get_imagehash(file),
-        exif_data=ops.get_exif(file),
         size=ops.get_filesize(file),
         mtime=ops.get_mtime(file),
     )
