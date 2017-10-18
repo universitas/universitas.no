@@ -183,16 +183,12 @@ DATABASES = {
 CACHE_MIDDLEWARE_KEY_PREFIX = SITE_URL
 CACHES = {
     'default': {
-        'BACKEND': 'redis_cache.RedisCache',
-        'LOCATION': '{}:{}'.format(redis_host, redis_port),
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://{}:{}/0'.format(redis_host, redis_port),
         'OPTIONS': {
-            'DB': 0, 'MAX_ENTRIES': 1000,
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'PARSER_CLASS': 'redis.connection.HiredisParser',
-            'CONNECTION_POOL_CLASS': 'redis.BlockingConnectionPool',
-            'CONNECTION_POOL_CLASS_KWARGS': {
-                'max_connections': 50,
-                'timeout': 20,
-            }
+            'CONNECTION_POOL_KWARGS': {'max_connections': 50}
         },
     },
 }

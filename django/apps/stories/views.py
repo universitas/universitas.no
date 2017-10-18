@@ -10,7 +10,7 @@ from django.utils import translation
 from .models import Story
 
 logger = logging.getLogger(__name__)
-CACHE_TIME = 60 * 5  # 5 minutes
+FIVE_MINUTES = 60 * 5
 
 
 def article_view(request, story_id, **section_and_slug):
@@ -36,8 +36,9 @@ def article_view(request, story_id, **section_and_slug):
         response = cache.get(cache_key)
         if not response:
             response = _render_story(request, story)
-            cache.set(cache_key, response, CACHE_TIME)
-        story.visit_page(request)
+            cache.set(cache_key, response, timeout=FIVE_MINUTES)
+        if story.valid_page_view(request):
+            story.register_visit_in_cache()
         return response
 
 
