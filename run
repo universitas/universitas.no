@@ -195,5 +195,6 @@ mkdir -p \
   ./volumes/logs/
 
 export COMPOSE_HTTP_TIMEOUT=6000
+export GIT_SHA=$(git rev-parse HEAD)
 export COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml
 main $@
