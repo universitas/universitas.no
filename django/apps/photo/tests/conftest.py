@@ -13,6 +13,13 @@ def jpeg_file():
     return img
 
 
+@pytest.fixture(scope='module')
+def png_file():
+    img = Path(__file__).parent / 'fixtureimage.png'
+    assert img.exists(), 'image not found'
+    return img
+
+
 @pytest.fixture(scope='function')
 def img(jpeg_file):
     img = ImageFile()

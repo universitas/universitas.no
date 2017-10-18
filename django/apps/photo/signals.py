@@ -3,6 +3,7 @@ import logging
 from apps.photo import tasks
 from django.conf import settings
 from django.db.models.signals import post_save, pre_delete
+from sorl.thumbnail.helpers import ThumbnailError
 
 # from celery import chain
 # from apps.photo import tasks
@@ -12,9 +13,11 @@ logger = logging.getLogger(__name__)
 
 def image_pre_delete(sender, instance, **kwargs):
     """Remove original image file and thumbnail"""
-    # delete_file = not settings.DEBUG  # only in production
-    delete_file = False
-    instance.delete_thumbnails(delete_file)
+    delete_file = settings.DEBUG  # not in production
+    try:
+        instance.delete_thumbnails(delete_file)
+    except ThumbnailError:
+        pass
 
 
 def image_post_save(sender, instance, created, update_fields, **kwargs):

@@ -50,6 +50,19 @@ def get_md5(fp: Fileish) -> str:
     return hasher.hexdigest()
 
 
+def get_mtime(file: Union[Path, str]) -> int:
+    """Modification time"""
+    return int(Path(file).stat().st_mtime)
+
+
+def get_filesize(fp: Fileish) -> int:
+    """Get file size in bytes"""
+    if isinstance(fp, Path):
+        return fp.stat().st_size
+    else:
+        return len(read_data(fp))
+
+
 def get_imagehash(fp, size=11) -> imagehash.ImageHash:
     """Calculate perceptual hash for comparison of identical images"""
     img = pil_image(fp).convert('L').resize((size, size))

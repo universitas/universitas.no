@@ -57,11 +57,6 @@ class ImageFileQuerySet(models.QuerySet):
 
 
 class ImageFileManager(models.Manager):
-    def create_from_file(self, filepath, **kwargs):
-        image = self.model(**kwargs)
-        image.save_local_image_as_source(filepath)
-        return image
-
     def update_exif(self) -> int:
         """Look for exif metadata in source file and save if found"""
         count = 0

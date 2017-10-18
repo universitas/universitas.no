@@ -8,3 +8,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # MEDIA_ROOT = tempfile.mkdtemp(prefix='djangotest_')
 # STATIC_ROOT = tempfile.mkdtemp(prefix='djangotest_')
 THUMBNAIL_KEY_PREFIX = 'testing'
+DEFAULT_FILE_STORAGE = 'utils.local_file_storage.OverwriteStorage'
