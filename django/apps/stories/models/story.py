@@ -57,10 +57,12 @@ class PublishedStoryManager(models.Manager):
             story.frontpagestory_set.all().delete()
             story.save(new=True)
 
-    def devalue_hotness(self, factor=0.99):
+    def devalue_hotness(self, factor=1.0):
         """Devalue hot count for all stories."""
-        hot_stories = self.exclude(hot_count__lt=1)
+        hot_stories = self.filter(hot_count__gte=1)
         hot_stories.update(hot_count=(models.F('hot_count') - 1) * factor)
+        cold_stories = self.filter(hot_count__gt=0, hot_count__lt=1)
+        cold_stories.update(hot_count=0)
 
 
 class Story(  # type: ignore
