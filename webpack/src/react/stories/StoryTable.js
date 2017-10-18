@@ -10,14 +10,15 @@ const MODEL = 'stories'
 
 const { getItemList, getItem, getCurrentItemId } = modelSelectors(MODEL)
 
-const listFields = R.compose(
+const listFields = R.pipe(
+  R.map(R.omit(['editable'])),
   R.pick([
     'working_title',
     'publication_status',
     'story_type_name',
     'modified',
   ]),
-  R.map(R.omit(['editable']))
+  R.assocPath(['modified', 'relative'], true)
 )(detailFields)
 
 const renderFields = R.pipe(R.values, R.map(TableCell))
@@ -59,9 +60,7 @@ const StoryTable = ({ items = [], fields = listFields }) => (
         )(fields)}
       </tr>
     </thead>
-    <tbody>
-      {items.map(pk => <ConnectedTableRow key={pk} pk={pk} />)}
-    </tbody>
+    <tbody>{items.map(pk => <ConnectedTableRow key={pk} pk={pk} />)}</tbody>
   </table>
 )
 export default connect(state => ({ items: getItemList(state) }))(StoryTable)

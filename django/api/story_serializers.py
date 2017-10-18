@@ -1,7 +1,10 @@
 from apps.stories.models import Byline, Story, StoryType
 from django.core.exceptions import FieldError
-from rest_framework import serializers, viewsets
+from rest_framework import serializers, viewsets, filters
 from url_filter.integrations.drf import DjangoFilterBackend
+
+import logging
+logger = logging.getLogger('apps')
 
 
 class BylineSerializer(serializers.ModelSerializer):
@@ -111,22 +114,30 @@ class StoryTypeViewSet(viewsets.ModelViewSet):
     serializer_class = StoryTypeSerializer
 
 
+class SearchFilterBackend(filters.BaseFilterBackend):
+    """ Postgresql filter """
+
+    def filter_queryset(self, request, queryset, view):
+        search_query = request.query_params.get('search', None)
+        if search_query:
+            qs = queryset.search(search_query)
+            if qs:
+                return qs.order_by('publication_status')
+            else:
+                queryset = queryset.filter(
+                    working_title__icontains=search_query
+                )
+        return queryset.order_by('publication_status', '-modified')
+
+
 class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
     """ API endpoint that allows Story to be viewed or updated.  """
 
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilterBackend]
     filter_fields = ['id', 'publication_status', 'modified']
     serializer_class = StorySerializer
-
-    def get_queryset(self):
-        """Use special search lookup"""
-        queryset = Story.objects.all().prefetch_related(
-            'story_type__section',
-            'bylines',
-            'byline_set',
-        )
-        search_query = self.request.query_params.get('search', None)
-        if search_query:
-            return queryset.search(search_query)
-        else:
-            return queryset.order_by('publication_status', 'modified')
+    queryset = Story.objects.all().prefetch_related(
+        'story_type__section',
+        'bylines',
+        'byline_set',
+    )
