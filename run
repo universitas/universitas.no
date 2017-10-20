@@ -6,7 +6,7 @@ purple="$esc[35;1m"
 bold="$esc[37;1m"
 reset="$esc[0m"
 
-main(){
+main__(){
 while (( $# > 0 )); do
   rest=${@:2}
   case $1 in
@@ -26,7 +26,8 @@ while (( $# > 0 )); do
   build   ) webpack_build ;; # build webpack
 
   npmi    ) docker-compose run --rm -u root webpack install $rest; exit ;; # npm install [packages...]
-  npmu    ) docker-compose run --rm -u root webpack update; exit ;; # npm update packages
+  npmup   ) docker-compose run --rm -u root webpack update ;; # npm update js packages
+  pyup    ) cd django; pip-compile --upgrade ;; # pip update python packages
 
   repl    ) docker-compose run --rm web django-admin shell_plus --quiet-load ;; # django repl shell
   django  ) docker-compose run --rm -u django web ${rest:-bash}; exit ;;
@@ -53,7 +54,7 @@ while (( $# > 0 )); do
   lint    ) lint_javascript ; lint_python ;; # lint all files commited
   test    ) run_tests ;;  # run pytest and jest
   tags    ) ctags -R ./django ./webpack/src/react && echo "collected ctags" ;; # collect ctags for python and js
-  precom  ) main test lint build tags; exit ;; # run before git commit
+  precom  ) main__ lint tags test build; exit ;; # run before git commit
   *       ) show_help ; printf >&2 "\n  %sunknown command:  %s%s%s\n" "$red" "$bold" "$*" "$reset" ; exit 1 ;;
   esac;
   shift 1;
@@ -62,7 +63,9 @@ done
 
 webpack_build() {
   echo 'build webpack for production'
-  export COMPOSE_FILE="$COMPOSE_FILE:docker-compose.build.yml"
+  COMPOSE_FILE='docker-compose.yml:docker-compose.dev.yml:docker-compose.build.yml'
+  export COMPOSE_FILE
+  rm ./build/*
   docker-compose run --rm webpack
 }
 
@@ -91,7 +94,8 @@ production_settings() {
 }
 
 testing() {
-  export COMPOSE_FILE=docker-compose.yml:docker-compose.testing.yml
+  COMPOSE_FILE=docker-compose.yml:docker-compose.testing.yml
+  export COMPOSE_FILE
 }
 
 run_tests() {
@@ -103,7 +107,7 @@ run_tests() {
 show_help() {
   printf "\n%s  usage:   %s [...commmands]%s\n\n" "$bold" "run" "$reset"
   cat run \
-    | sed -n '/^main()/,$p;/^}/q'\
+    | sed -n '/^main__()/,$p;/^}/q'\
     | awk '/\w  *) /{print}/case/{p=1}'\
     | sed 's/; exit//' | sed 's/;;//'\
     | sed "s/).*#\(.*\)$/)$yellow\1$reset/"\
@@ -206,4 +210,4 @@ export COMPOSE_HTTP_TIMEOUT=6000
 export GIT_SHA=$(git rev-parse HEAD)
 export COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml
 export AWS_ENABLED=$AWS_ENABLED
-main $@
+main__ $@
