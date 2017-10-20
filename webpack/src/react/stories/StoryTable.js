@@ -11,14 +11,13 @@ const MODEL = 'stories'
 const { getItemList, getItem, getCurrentItemId } = modelSelectors(MODEL)
 
 const listFields = R.pipe(
-  R.map(R.omit(['editable'])),
   R.pick([
     'working_title',
     'publication_status',
     'story_type_name',
     'modified',
   ]),
-  R.assocPath(['modified', 'relative'], true)
+  R.assocPath(['modified', 'relative'], true) // relative time
 )(detailFields)
 
 const renderFields = R.pipe(R.values, R.map(TableCell))

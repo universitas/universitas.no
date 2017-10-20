@@ -26,27 +26,18 @@ LOGGING = {
     'disable_existing_loggers': True,
 }  # type: Dict
 LOGGING['filters'] = {
-    'debug_off': {
-        '()': 'django.utils.log.RequireDebugFalse'
-    },
-    'debug_on': {
-        '()': 'django.utils.log.RequireDebugTrue'
-    }
+    'debug_off': {'()': 'django.utils.log.RequireDebugFalse'},
+    'debug_on': {'()': 'django.utils.log.RequireDebugTrue'}
 }
 LOGGING['formatters'] = {
-    'minimal': {
-        'format': '%(message)s'
-    },
-    'simple': {
-        'format': '%(name)s %(levelname)3s: %(message)s'
-    },
+    'minimal': {'format': '%(message)s'},
+    'simple': {'format': '%(name)s %(levelname)3s: %(message)s'},
     'verbose': {
         'format': (
             '%(asctime)s [%(levelname)5s] %(name)12s '
             '%(filename)12s:%(lineno)-4d '
             '(%(funcName)s)\n\t%(message)s\n'
-        ),
-        'datefmt': '%H:%M:%S %Y-%m-%d'
+        ), 'datefmt': '%H:%M:%S %Y-%m-%d'
     },
 }
 LOGGING['handlers'] = {

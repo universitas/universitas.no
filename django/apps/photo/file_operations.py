@@ -65,7 +65,10 @@ def get_filesize(fp: Fileish) -> int:
 
 def get_imagehash(fp, size=11) -> imagehash.ImageHash:
     """Calculate perceptual hash for comparison of identical images"""
-    img = pil_image(fp).convert('L').resize((size, size))
+    try:
+        img = pil_image(fp).convert('L').resize((size, size))
+    except OSError:
+        return None
     return imagehash.dhash(img)
 
 

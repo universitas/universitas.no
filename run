@@ -20,11 +20,13 @@ while (( $# > 0 )); do
   loaddb  ) load_db $rest; exit;;  # load database from dump file [filename]
 
   enable  ) enable_service ;; # enable systemd service file for web server - starts all docker images
-  build   ) build_django ;;   # download and build all images, migrate database
+  djbuild ) build_django ;;   # download and build all images, migrate database
 
   webpack ) docker-compose run --rm webpack ${rest:-bash}; exit;;
+  build   ) webpack_build ;; # build webpack
 
-  npmi    ) docker-compose run --rm -u root webpack npm i --upgrade --save $rest; exit ;; # npm install [packages...]
+  npmi    ) docker-compose run --rm -u root webpack install $rest; exit ;; # npm install [packages...]
+  npmu    ) docker-compose run --rm -u root webpack update; exit ;; # npm update packages
 
   repl    ) docker-compose run --rm web django-admin shell_plus --quiet-load ;; # django repl shell
   django  ) docker-compose run --rm -u django web ${rest:-bash}; exit ;;
@@ -51,11 +53,17 @@ while (( $# > 0 )); do
   lint    ) lint_javascript ; lint_python ;; # lint all files commited
   test    ) run_tests ;;  # run pytest and jest
   tags    ) ctags -R ./django ./webpack/src/react && echo "collected ctags" ;; # collect ctags for python and js
-  precom  ) main prod tags lint webpack build; exit ;; # run before git commit
+  precom  ) main test lint build tags; exit ;; # run before git commit
   *       ) show_help ; printf >&2 "\n  %sunknown command:  %s%s%s\n" "$red" "$bold" "$*" "$reset" ; exit 1 ;;
   esac;
   shift 1;
 done
+}
+
+webpack_build() {
+  echo 'build webpack for production'
+  export COMPOSE_FILE="$COMPOSE_FILE:docker-compose.build.yml"
+  docker-compose run --rm webpack
 }
 
 collect_static_files() {
@@ -196,4 +204,5 @@ mkdir -p \
 
 export COMPOSE_HTTP_TIMEOUT=6000
 export COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml
+export AWS_ENABLED=$AWS_ENABLED
 main $@
