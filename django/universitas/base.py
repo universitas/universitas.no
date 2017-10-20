@@ -2,6 +2,7 @@
 
 from django.utils.translation import ugettext_lazy as _
 
+
 from .email_settings import *  # type: ignore
 from .file_settings import *  # type: ignore
 from .logging_settings import LOGGING
@@ -69,9 +70,6 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
 }
-# SENTRY
-RAVEN_CONFIG = {'dsn': env.raven_dsn, 'site': SITE_URL}
-SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
 
 # CELERY TASK RUNNER
 CELERY_TASK_DEFAULT_QUEUE = SITE_URL
