@@ -45,10 +45,13 @@ while (( $# > 0 )); do
   upd     ) docker-compose up -d ;;  # start all docker images in daemon mode
   logs    ) docker-compose logs --tail=50 -f $rest ; exit ;;
 
+  testing ) # testing settings
+            testing
+            echo 'testing settings' $IMAGE_VERSION $BRANCH;;
 
   prod    ) # production settings
             production_settings
-            echo 'production settings' $IMAGE_VERSION $BRANCH;;
+            echo 'production settings' ;;
   dev     ) # development settings
             echo "development settings" ;;
   lint    ) lint_javascript ; lint_python ;; # lint all files commited
@@ -82,20 +85,19 @@ collect_static_files() {
 }
 
 production_settings() {
-  BRANCH=$(git status | awk '/On branch/{print $3}')
-  BRANCH=${TRAVIS_BRANCH:-$BRANCH}
-  if [[ $BRANCH == 'master' ]]; then
-    IMAGE_VERSION=$(git tag --merged | tail -n1)
-  else
-    IMAGE_VERSION=edge
-  fi
-  COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml
-  export IMAGE_VERSION BRANCH COMPOSE_FILE
+  export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml
 }
 
 testing() {
+  BRANCH=$(git status | awk '/On branch/{print $3}')
+  BRANCH=${TRAVIS_BRANCH:-$BRANCH}
+  if [[ $BRANCH == 'master' ]]; then
+    IMAGE_VERSION=latest
+  else
+    IMAGE_VERSION=edge
+  fi
   COMPOSE_FILE=docker-compose.yml:docker-compose.testing.yml
-  export COMPOSE_FILE
+  export IMAGE_VERSION COMPOSE_FILE
 }
 
 run_tests() {
