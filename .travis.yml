@@ -6,7 +6,7 @@ services:
   - docker
 
 install:
-  - pip install --user docker-compose
+  - pip install docker-compose
 
 script:
   - which docker-compose
