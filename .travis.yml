@@ -9,5 +9,5 @@ install:
   - pip install docker-compose
 
 script:
-  - ./run dc prod pull
+  - ./run prod dc pull
   - ./run prod test
