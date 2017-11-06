@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-i
-"""
-Views for articles
-"""
+""" Views for articles """
 import logging
 
 from apps.core.views import search_404_view
+from django.core.cache import cache
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import translation
@@ -12,10 +10,10 @@ from django.utils import translation
 from .models import Story
 
 logger = logging.getLogger(__name__)
+FIVE_MINUTES = 60 * 5
 
 
 def article_view(request, story_id, **section_and_slug):
-    template = 'story.html'
     try:
         story = Story.objects.get(pk=story_id)
     except Story.DoesNotExist:
@@ -25,24 +23,29 @@ def article_view(request, story_id, **section_and_slug):
         else:
             raise Http404('This page does not exist')
 
-    if not request.user.is_staff:
-        if story.publication_status != Story.STATUS_PUBLISHED:
-            raise Http404('You are not supposed to visit this page')
-
     correct_url = story.get_absolute_url()
-
     if request.path != correct_url:
         return HttpResponseRedirect(correct_url)
 
-    translation.activate(story.language)
+    if request.user.is_staff:
+        return _render_story(request, story)
+    else:
+        if story.publication_status != Story.STATUS_PUBLISHED:
+            raise Http404('You are not supposed to visit this page')
+        cache_key = f'{story.pk}_{story.modified:%s}'
+        response = cache.get(cache_key)
+        if not response:
+            response = _render_story(request, story)
+            cache.set(cache_key, response, timeout=FIVE_MINUTES)
+        if story.valid_page_view(request):
+            story.register_visit_in_cache()
+        return response
 
-    context = {
-        'story': story,
-    }
-    response = render(
+
+def _render_story(request, story, template='story.html'):
+    translation.activate(story.language)
+    return render(
         request,
         template,
-        context,
+        {'story': story},
     )
-    story.visit_page(request)
-    return response

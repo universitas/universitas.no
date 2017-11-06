@@ -2,6 +2,7 @@
 
 from django.utils.translation import ugettext_lazy as _
 
+
 from .email_settings import *  # type: ignore
 from .file_settings import *  # type: ignore
 from .logging_settings import LOGGING
@@ -69,9 +70,6 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
 }
-# SENTRY
-RAVEN_CONFIG = {'dsn': env.raven_dsn, 'site': SITE_URL}
-SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
 
 # CELERY TASK RUNNER
 CELERY_TASK_DEFAULT_QUEUE = SITE_URL
@@ -116,7 +114,6 @@ INSTALLED_APPS = [
     'autocomplete_light',
     'django_extensions',
     'sorl.thumbnail',
-    'watson',
     'raven.contrib.django.raven_compat',
     'storages',
     'webpack_loader',
@@ -184,16 +181,12 @@ DATABASES = {
 CACHE_MIDDLEWARE_KEY_PREFIX = SITE_URL
 CACHES = {
     'default': {
-        'BACKEND': 'redis_cache.RedisCache',
-        'LOCATION': '{}:{}'.format(redis_host, redis_port),
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://{}:{}/0'.format(redis_host, redis_port),
         'OPTIONS': {
-            'DB': 0, 'MAX_ENTRIES': 1000,
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'PARSER_CLASS': 'redis.connection.HiredisParser',
-            'CONNECTION_POOL_CLASS': 'redis.BlockingConnectionPool',
-            'CONNECTION_POOL_CLASS_KWARGS': {
-                'max_connections': 50,
-                'timeout': 20,
-            }
+            'CONNECTION_POOL_KWARGS': {'max_connections': 50}
         },
     },
 }

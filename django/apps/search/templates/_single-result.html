@@ -1,7 +1,7 @@
 {% load thumbnail %}
-{% with result.object as story %}
+{% with result as story %}
 <div class="wrapper">
-  <a href="{{result.url}}">
+  <a href="{{story.get_absolute_url}}">
     <article class="search-result">
       {% with story.main_image as image %}
         {% if image %}

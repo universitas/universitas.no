@@ -6,7 +6,9 @@ const UserTool = ({ first_name, last_name, username, logOut }) => (
     <span className="username">
       {first_name ? `${first_name} ${last_name}` : username}
     </span>
-    <button className="button" onClick={logOut}>Logg ut</button>
+    <button className="button" onClick={logOut}>
+      Logg ut
+    </button>
   </div>
 )
 

@@ -1,7 +1,9 @@
+from pathlib import Path
+
 import pytest
 from apps.photo.models import ImageFile
 from apps.photo.tasks import (
-    autocrop_image_file, new_staging_images, post_save_task
+    autocrop_image_file, import_image, new_staging_images, post_save_task
 )
 from django.core.files import File
 
@@ -28,3 +30,23 @@ def test_post_save(jpeg_file):
 def test_new_staging_images():
     # Doesn't raise
     assert new_staging_images() is not None
+
+
+@pytest.mark.django_db
+def test_import_images(jpeg_file, png_file):
+    assert ImageFile.objects.count() == 0
+
+    assert import_image(jpeg_file)
+
+    # already exists, so it's not saved
+    assert not import_image(jpeg_file)
+    assert ImageFile.objects.count() == 1
+
+    # exists, but is larger
+    assert import_image(png_file)
+    assert ImageFile.objects.count() == 1
+    imgfile = ImageFile.objects.first()
+    assert Path(imgfile.source_file.name).name == png_file.name
+
+    # exists, but is smaller
+    assert not import_image(jpeg_file)

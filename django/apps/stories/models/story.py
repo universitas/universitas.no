@@ -20,6 +20,7 @@ from utils.model_mixins import EditURLMixin
 from .byline import Byline, clean_up_bylines
 from .mixins import MarkupCharField, MarkupTextField, TextContent
 from .place_inlines import InlineElementsMixin
+from .search_mixin import FullTextSearchMixin, FullTextSearchQuerySet
 from .sections import StoryType, default_story_type
 from .storychildren import Aside, Pullquote, StoryImage
 
@@ -27,7 +28,7 @@ slugify = Slugify(max_length=50, to_lower=True)
 logger = logging.getLogger(__name__)
 
 
-class StoryQuerySet(models.QuerySet):
+class StoryQuerySet(FullTextSearchQuerySet, models.QuerySet):
     def published(self):
         now = timezone.now()
         return self.filter(
@@ -46,12 +47,6 @@ class PublishedStoryManager(models.Manager):
     def get_queryset(self):
         return StoryQuerySet(self.model, using=self._db)
 
-    def published(self):
-        return self.get_queryset().published()
-
-    def is_on_frontpage(self, frontpage):
-        return self.get_queryset().is_on_frontpage(frontpage)
-
     def populate_frontpage(self, **kwargs):
         """ create some random frontpage stories """
         if not kwargs:
@@ -62,13 +57,16 @@ class PublishedStoryManager(models.Manager):
             story.frontpagestory_set.all().delete()
             story.save(new=True)
 
-    def devalue_hotness(self, factor=0.99):
-        """ Devalue hot count for all stories. Run as a scheduled task. """
-        hot_stories = self.exclude(hot_count__lt=1)
+    def devalue_hotness(self, factor=1.0):
+        """Devalue hot count for all stories."""
+        hot_stories = self.filter(hot_count__gte=1)
         hot_stories.update(hot_count=(models.F('hot_count') - 1) * factor)
+        cold_stories = self.filter(hot_count__gt=0, hot_count__lt=1)
+        cold_stories.update(hot_count=0)
 
 
-class Story(
+class Story(  # type: ignore
+    FullTextSearchMixin,
     EditURLMixin,
     TimeStampedModel,
     TextContent,
@@ -76,11 +74,14 @@ class Story(
 ):
     """ An article or story in the newspaper. """
 
-    class Meta:
+    VISIT_KEY_PREFIX = 'story_hit_'
+
+    class Meta(FullTextSearchMixin.Meta):
+        abstract = False
         verbose_name = _('Story')
         verbose_name_plural = _('Stories')
 
-    objects = PublishedStoryManager()
+    objects = PublishedStoryManager.from_queryset(StoryQuerySet)()
     template_name = 'bodytext.html'
 
     STATUS_DRAFT = 0
@@ -304,36 +305,41 @@ class Story(
         pri += len(self.bodytext_markup) // 1000
         return min(12, pri)
 
-    def visit_page(self, request):
-        """ Check if visit looks like a human and update hit count """
+    def valid_page_view(self, request):
+        """Check if page view looks like a valid visit"""
         if not self.is_published:
             # Only count hits on published pages.
             return False
         user_agent = request.META.get('HTTP_USER_AGENT', '').lower()
-        if not user_agent:
+        ip = request.META.get('REMOTE_ADDR')
+
+        if not user_agent or not ip:
             # Visitor is not using a web browser.
             return False
 
         bots = ['bot', 'spider', 'yahoo', 'crawler']
-        for bot in bots:
-            if bot in user_agent:
-                # Search engine web crawler.
-                return False
+        if any(bot in user_agent for bot in bots):
+            # Search engine web crawler.
+            return False
 
-        cache_key = '{}{}'.format(
-            request.META.get('REMOTE_ADDR', ''),  # visitor ip
-            self.pk,  # story primary key
-        )
+        cache_key = f'{self.pk}_{ip}'
         if cache.get(cache_key):
             # same ip address has visited page recently
             return False
+        else:
+            FIVE_MINUTES = 60 * 5
+            cache.set(cache_key, 1, timeout=FIVE_MINUTES)
+            return True
 
-        cache.set(cache_key, 1, 600)  # time to live in seconds is 600
-
-        self.hit_count = models.F('hit_count') + 1
-        self.hot_count = models.F('hot_count') + 100
-        self.save(update_fields=['hit_count', 'hot_count'])
-        return True
+    def register_visit_in_cache(self, n=1):
+        """Register valid visit in cache. Use scheduled task to persist in
+        database."""
+        hit_key = f'{self.VISIT_KEY_PREFIX}{self.pk}'
+        try:
+            cache.incr(hit_key, n)
+        except ValueError:
+            NEVER = None
+            cache.add(hit_key, n, timeout=NEVER)
 
     def get_bylines_as_html(self):
         """ create html table of bylines in db for search and admin display """

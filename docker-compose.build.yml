@@ -1,0 +1,7 @@
+# overrides for building webpack assets
+version: '2.1'
+services:
+  webpack:
+    command: build
+    volumes:
+      - ./build:/var/build/

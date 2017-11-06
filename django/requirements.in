@@ -16,7 +16,7 @@ sorl-thumbnail==12.4a1
 # DJANGO PLUGINS
 django-debug-toolbar
 django-extensions
-django-redis-cache
+django-redis
 django-webpack-loader
 
 django-model-utils

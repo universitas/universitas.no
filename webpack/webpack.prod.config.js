@@ -1,28 +1,31 @@
 const webpack = require('webpack')
 const config = require('./webpack.config.js')
-
-// for extracting css into css files
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-config.output.filename = '[name].[chunkhash:12].js'
-const extractSass = new ExtractTextPlugin({
-  filename: '[name].[chunkhash:12].css',
-})
-config.plugins.push(extractSass)
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 
-let sass_loader = config.module.rules[1]
-sass_loader.use.shift() // remove javascript style-loader
-sass_loader.use = extractSass.extract({
-  // wrap sass loader
-  fallback: 'style-loader',
-  use: sass_loader.use,
-})
-
+// Disable devtool to speed up build
 config.devtool = false
-config.plugins.push(
-  new webpack.DefinePlugin({
-    'process.env': { NODE_ENV: JSON.stringify('production') },
-  })
-)
-config.plugins.push(new webpack.optimize.UglifyJsPlugin())
+
+// Use chunkhash in filenames
+const outputhash = '[name].[chunkhash:12]'
+config.output.filename = outputhash + '.js'
+
+// Plugins
+const productionEnv = new webpack.DefinePlugin({
+  'process.env': { NODE_ENV: JSON.stringify('production') },
+})
+const uglifyJs = new webpack.optimize.UglifyJsPlugin()
+const extractSass = new ExtractTextPlugin({ filename: outputhash + '.css' })
+const progressBar = new ProgressBarPlugin({ width: 50 })
+
+config.plugins.push(productionEnv, uglifyJs, extractSass, progressBar)
+
+// Replace style loader with extract loader
+const scssLoader = config.module.rules.find(l => l.test.test('.scss'))
+scssLoader.use.shift()
+scssLoader.use = extractSass.extract({
+  fallback: 'style-loader',
+  use: scssLoader.use,
+})
 
 module.exports = config

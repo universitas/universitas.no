@@ -1,8 +1,10 @@
 from apps.stories.models import Byline, Story, StoryType
 from django.core.exceptions import FieldError
-from rest_framework import serializers, viewsets
-from rest_framework.filters import SearchFilter
+from rest_framework import serializers, viewsets, filters
 from url_filter.integrations.drf import DjangoFilterBackend
+
+import logging
+logger = logging.getLogger('apps')
 
 
 class BylineSerializer(serializers.ModelSerializer):
@@ -112,13 +114,30 @@ class StoryTypeViewSet(viewsets.ModelViewSet):
     serializer_class = StoryTypeSerializer
 
 
+class SearchFilterBackend(filters.BaseFilterBackend):
+    """ Postgresql filter """
+
+    def filter_queryset(self, request, queryset, view):
+        search_query = request.query_params.get('search', None)
+        if search_query:
+            qs = queryset.search(search_query)
+            if qs:
+                return qs.order_by('publication_status')
+            else:
+                queryset = queryset.filter(
+                    working_title__icontains=search_query
+                )
+        return queryset.order_by('publication_status', '-modified')
+
+
 class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
     """ API endpoint that allows Story to be viewed or updated.  """
 
-    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filter_backends = [DjangoFilterBackend, SearchFilterBackend]
     filter_fields = ['id', 'publication_status', 'modified']
-    search_fields = ['working_title', 'bodytext_markup']
-    queryset = Story.objects.all()
-    queryset = queryset.prefetch_related('story_type__section')
-    queryset = queryset.prefetch_related('bylines', 'byline_set')
     serializer_class = StorySerializer
+    queryset = Story.objects.all().prefetch_related(
+        'story_type__section',
+        'bylines',
+        'byline_set',
+    )

@@ -15,3 +15,13 @@ EMAIL_HOST_USER = gmail.user + '@gmail.com'
 EMAIL_HOST_PASSWORD = gmail.password
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+# RAVEN / SENTRY
+env = Environment()
+RAVEN_CONFIG = {
+    'dsn': env.raven_dsn,
+    'site': env.site_url,
+    'release': env.git_sha,
+}
+
+# SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'

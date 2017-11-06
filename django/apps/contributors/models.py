@@ -8,6 +8,7 @@ from apps.photo.models import ProfileImage
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.core.cache import cache
 from django.core.files import File
 from django.db import models
 from django.utils import timezone
@@ -106,9 +107,13 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
             return img
         return False
 
-    # @cached(3600)
     def has_byline_image(self):
-        return bool(self.get_byline_image())
+        cache_key = f'{self.pk}_has_byline_image'
+        value = cache.get(cache_key)
+        if value is None:
+            value = bool(self.get_byline_image())
+            cache.set(cache_key, value, 60 * 30)
+        return value
 
     @property
     def first_name(self):

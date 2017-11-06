@@ -1,11 +1,8 @@
 import logging
-import os
 from pathlib import Path
 
 import boto
 import imagehash
-
-from django.core.files import File
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -69,24 +66,6 @@ class ImageHashModelMixin(models.Model):
     def save(self, *args, **kwargs):
         self.calculate_hashes()
         super().save(*args, **kwargs)
-
-    def save_local_image_as_source(self, filepath: Path, save=True):
-        """Save file from local filesystem as source
-
-        Only saves if the new file is different from the one that exists.
-        """
-        mtime = filepath.stat().st_mtime
-        size = filepath.stat().st_size
-        md5 = get_md5(filepath)
-        if self.pk and self.original:
-            if mtime <= self.mtime or (size, md5) == (self.size, self.md5):
-                return False
-        self.mtime = mtime
-        self.size = size
-        self.md5 = md5
-        self.imagehash = get_imagehash(filepath)
-        self.original.save(filepath.name, File(filepath.open('rb')), save)
-        return True
 
     @property
     def md5(self):
