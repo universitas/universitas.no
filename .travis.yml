@@ -1,13 +1,14 @@
 language: python
 
-sudo: required
+sudo: false
 
 services:
   - docker
 
-before_install:
-  - sudo rm /usr/local/bin/docker-compose
-  - sudo pip install docker-compose
+install:
+  - pip install --user docker-compose
 
 script:
+  - which docker-compose
+  - ./run prod pull
   - ./run prod test
