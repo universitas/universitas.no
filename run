@@ -45,12 +45,15 @@ while (( $# > 0 )); do
   upd     ) docker-compose up -d ;;  # start all docker images in daemon mode
   logs    ) docker-compose logs --tail=50 -f $rest ; exit ;;
 
-
+  testing ) # testing settings
+            testing
+            echo 'testing settings' $IMAGE_VERSION $BRANCH;;
   prod    ) # production settings
             production_settings
             echo 'production settings' $IMAGE_VERSION $BRANCH;;
   dev     ) # development settings
             echo "development settings" ;;
+
   lint    ) lint_javascript ; lint_python ;; # lint all files commited
   test    ) run_tests ;;  # run pytest and jest
   tags    ) ctags -R ./django ./webpack/src/react && echo "collected ctags" ;; # collect ctags for python and js
@@ -83,19 +86,19 @@ collect_static_files() {
 
 production_settings() {
   BRANCH=$(git status | awk '/On branch/{print $3}')
-  BRANCH=${TRAVIS_BRANCH:-$BRANCH}
+  export BRANCH=${TRAVIS_BRANCH:-$BRANCH}
   if [[ $BRANCH == 'master' ]]; then
-    IMAGE_VERSION=$(git tag --merged | tail -n1)
-  else
-    IMAGE_VERSION=edge
+    export IMAGE_VERSION=$(git tag --merged | tail -n1)
   fi
-  COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml
-  export IMAGE_VERSION BRANCH COMPOSE_FILE
+  export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml
 }
 
 testing() {
-  COMPOSE_FILE=docker-compose.yml:docker-compose.testing.yml
-  export COMPOSE_FILE
+  production_settings
+  if [[ $BRANCH == 'master' ]]; then
+    export IMAGE_VERSION=latest
+  fi
+  export COMPOSE_FILE=docker-compose.yml:docker-compose.testing.yml
 }
 
 run_tests() {
@@ -210,4 +213,5 @@ export COMPOSE_HTTP_TIMEOUT=6000
 export GIT_SHA=$(git rev-parse HEAD)
 export COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml
 export AWS_ENABLED=$AWS_ENABLED
+export IMAGE_VERSION=edge
 main__ $@
