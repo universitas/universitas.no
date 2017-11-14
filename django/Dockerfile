@@ -11,7 +11,7 @@ RUN cd /var && mkdir staging media static logs &&\
   chown 1000:1000 staging media static logs
 
 # install pdf utils and database clients
-RUN apt-get update && install -y \
+RUN apt-get update && apt-get install -y \
   gettext \
   ghostscript \
   poppler-utils \
