@@ -10,7 +10,7 @@
     display: flex;
     justify-content: flex-end;
     .Tool {
-      @extend .AppButton;
+      // @extend .AppButton;
       background-color: #aaa;
       margin-left: 0.1em;
       height: 1.3em;
@@ -31,9 +31,9 @@
   }
   .DetailField {
     display: flex;
-    padding-bottom: .5em;
+    padding-bottom: 0.5em;
     &.image {
-      flex: 1
+      flex: 1;
     }
     &.thumb {
       .Field {

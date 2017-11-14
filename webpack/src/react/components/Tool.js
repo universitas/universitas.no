@@ -1,7 +1,7 @@
 import * as Icons from './Icons'
 import 'styles/tool.scss'
 
-const Tool = ({ onClick, icon, active, toolTip, ...props }) => {
+const Tool = ({ onClick, icon, active, toolTip, label, ...props }) => {
   const Icon = Icons[icon] || Icons.Fallback
   const className = `Tool ${active ? 'active' : 'inactive'}`
   return (
@@ -12,6 +12,7 @@ const Tool = ({ onClick, icon, active, toolTip, ...props }) => {
       onClick={onClick}
     >
       <Icon {...props} />
+      {label && <small className="toolLabel">{label}</small>}
     </div>
   )
 }

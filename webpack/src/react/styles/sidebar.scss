@@ -8,38 +8,41 @@ $darkgrey: #555;
   background-color: $darkgrey;
 }
 
-.AppButton {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 1.8em;
-  height: 1.8em;
-  color: inherit;
-  cursor: pointer;
-  &:hover, &:visited {
-    color: inherit;
-  }
-  &:hover {
-    background-color: #777;
-  }
-  &.active {
-    color: yellow;
-    background-color: #777;
-  }
-  small {
-    //text-transform: uppercase;
-    //font-weight: bold;
-    font-size: 0.25em;
-  }
-}
+// .AppButton {
+//   display: flex;
+// }
+//  display: flex;
+//  flex-direction: column;
+//  align-items: center;
+//  justify-content: center;
+//  width: 1.8em;
+//  height: 1.8em;
+//  color: inherit;
+//  cursor: pointer;
+//  &:hover, &:visited {
+//    color: inherit;
+//  }
+//  &:hover {
+//    background-color: #777;
+//  }
+//  &.active {
+//    color: yellow;
+//    background-color: #777;
+//  }
+//  small {
+//    //text-transform: uppercase;
+//    //font-weight: bold;
+//    font-size: 0.25em;
+//  }
+//}
 
 .UserTool {
   font-size: 0.3em;
   align-items: center;
   display: flex;
   flex-direction: column;
-  .username, .button {
+  .username,
+  .button {
     font-size: 0.9em;
     width: 5.5em;
     margin-bottom: 0.5em;

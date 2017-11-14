@@ -20,6 +20,7 @@ $bblack: rgba(black, 0.2);
 
 .Tool {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 1.5em;
@@ -29,7 +30,10 @@ $bblack: rgba(black, 0.2);
   border: 2px solid;
   border-color: $bwhite $bblack $bblack $bwhite;
   border-opacity: 0.3;
-  &:hover{
-    background-color: rgba(white, .2);
+  &:hover {
+    background-color: rgba(white, 0.2);
+  }
+  .toolLabel {
+    font-size: 0.7rem;
   }
 }

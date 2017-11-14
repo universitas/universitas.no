@@ -3,7 +3,7 @@
   Utgivelsesplan {{ year }}
 {% endblock title %}
 {% block content %}
-  <h1>Utgivelsesplan for {{ year }}</h1>
+<h1>Utgivelsesplan for {{ year }}</h1>
 <p>Magasin er Universitas' månedlige featurebilag</p>
 <p>Velkomstbilaget Universitas' årlige velkomstmagasin for nye og gamle studenter. Det samme bilaget legges ved i avisenes to første utgaver</p>
 <table class="foundation-table">
@@ -26,4 +26,10 @@
   {% endfor %}
   </tbody>
 </table>
+{% if last %}<p>
+  <a href="{% url "pub_plan_year" last %}">Utgivelsesplan {{ last }}</a>
+</p>{% endif %}
+{% if next %}<p>
+  <a href="{% url "pub_plan_year" next %}">Utgivelsesplan {{ next }}</a>
+</p>{% endif %}
 {% endblock content %}

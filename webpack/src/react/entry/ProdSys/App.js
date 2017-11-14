@@ -1,4 +1,4 @@
-import { Fragment, Link } from 'redux-little-router'
+import { Fragment, push } from 'redux-little-router'
 import { Camera, Person, Newspaper, Edit } from 'components/Icons'
 import { connect } from 'react-redux'
 import IssueList from 'issues/IssueList'
@@ -10,6 +10,8 @@ import PhotoDetail from 'images/PhotoDetail'
 import StoryList from 'stories/StoryList'
 import StoryDetail from 'stories/StoryDetail'
 import UserTool from 'components/UserTool'
+import Tool from 'components/Tool'
+import ToolBar from 'components/ToolBar'
 import ErrorTool from 'components/ErrorTool'
 import LoginForm from 'components/LoginForm'
 import { getUser } from 'ducks/auth'
@@ -17,51 +19,64 @@ import 'styles/prodsys.scss'
 
 const Home = () => <div>home</div>
 
-// activeProps={{ className: 'AppButton active' }}
-const AppButton = ({ href, Icon, label }) => (
-  <Link className="AppButton" href={href}>
-    <Icon />
-    <small>{label}</small>
-  </Link>
-)
-AppButton.propTypes = {
-  Icon: PropTypes.func.isRequired,
-  href: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-}
+const AppTool = connect(null, { push })(({ href, push, ...props }) => (
+  <Tool onClick={() => push(href)} {...props} />
+))
 
 const ProdSys = () => (
   <main className="ProdSys">
     <section className="SideBar">
-      <AppButton href="/stories" Icon={Edit} label="saker" />
-      <AppButton href="/images" Icon={Camera} label="foto" />
-      <AppButton href="/issues" Icon={Newspaper} label="utgaver" />
-      <AppButton href="/contributors" Icon={Person} label="bidragsytere" />
+      <AppTool href="/stories" icon="Edit" label="saker" />
+      <AppTool href="/images" icon="Camera" label="foto" />
+      <AppTool href="/issues" icon="Newspaper" label="utgaver" />
+      <AppTool href="/contributors" icon="Person" label="bidragsytere" />
       <div className="spacer" style={{ flex: 1 }} />
       <ErrorTool />
       <UserTool />
     </section>
     <section className="ListPanel">
-      <Fragment forRoute="/stories"><StoryList /></Fragment>
-      <Fragment forRoute="/issues"><IssueList /></Fragment>
-      <Fragment forRoute="/contributors"><ContributorList /></Fragment>
-      <Fragment forRoute="/images"><PhotoList /></Fragment>
+      <Fragment forRoute="/stories">
+        <StoryList />
+      </Fragment>
+      <Fragment forRoute="/issues">
+        <IssueList />
+      </Fragment>
+      <Fragment forRoute="/contributors">
+        <ContributorList />
+      </Fragment>
+      <Fragment forRoute="/images">
+        <PhotoList />
+      </Fragment>
     </section>
     <Fragment forRoute="/stories/:id">
-      <section className="DetailPanel"> <StoryDetail /> </section>
+      <section className="DetailPanel">
+        {' '}
+        <StoryDetail />{' '}
+      </section>
     </Fragment>
     <Fragment forRoute="/contributors/:id">
-      <section className="DetailPanel"> <ContributorDetail /> </section>
+      <section className="DetailPanel">
+        {' '}
+        <ContributorDetail />{' '}
+      </section>
     </Fragment>
     <Fragment forRoute="/issues/:id">
-      <section className="DetailPanel"> <IssueDetail /> </section>
+      <section className="DetailPanel">
+        {' '}
+        <IssueDetail />{' '}
+      </section>
     </Fragment>
     <Fragment forRoute="/images/:id">
-      <section className="DetailPanel"> <PhotoDetail /> </section>
+      <section className="DetailPanel">
+        {' '}
+        <PhotoDetail />{' '}
+      </section>
     </Fragment>
   </main>
 )
 const App = ({ username, pending }) =>
   pending ? null : username ? <ProdSys /> : <LoginForm />
 
-export default connect(getUser)(App)
+const mapDispatchToProps = dispatch => ({})
+
+export default connect(getUser, mapDispatchToProps)(App)

@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-    Issues views
-"""
+""" Issues views """
 
 from django.utils import timezone
 from django.views.generic.base import TemplateView
@@ -31,18 +28,24 @@ class PubPlanView(TemplateView):
 
     template_name = 'publication-plan.html'
 
-    def get_queryset(self):
+    def get_year(self):
         try:
-            self.year = int(self.kwargs['year'])
+            return int(self.kwargs['year'])
         except KeyError:
-            self.year = timezone.now().year
+            return timezone.now().year
 
-        queryset = Issue.objects.filter(publication_date__year=self.year)
-
-        return queryset
+    def get_queryset(self, year=None):
+        if year is None:
+            year = self.get_year()
+        return Issue.objects.filter(publication_date__year=year)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['issue_list'] = self.get_queryset().reverse()
-        context['year'] = self.year
+        year = self.get_year()
+        context.update({
+            'year': year,
+            'issue_list': self.get_queryset(year).reverse(),
+            'last': year - 1 if self.get_queryset(year - 1).exists() else None,
+            'next': year + 1 if self.get_queryset(year + 1).exists() else None,
+        })
         return context
