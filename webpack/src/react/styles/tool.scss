@@ -15,7 +15,7 @@
     }
   }
 }
-$bwhite: rgba(white, 0.3);
+$bwhite: rgba(white, 0.1);
 $bblack: rgba(black, 0.2);
 
 .Tool {
@@ -27,7 +27,7 @@ $bblack: rgba(black, 0.2);
   height: 1.5em;
   color: white;
   cursor: pointer;
-  border: 2px solid;
+  border: 1px solid;
   border-color: $bwhite $bblack $bblack $bwhite;
   border-opacity: 0.3;
   &:hover {

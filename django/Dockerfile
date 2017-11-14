@@ -1,5 +1,5 @@
 # parent image based on python:3.6 (debian)
-FROM haakenlid/opencv:3.6  
+FROM haakenlid/opencv:3.6
 MAINTAINER haakenlid
 
 # create user to run app
@@ -11,12 +11,11 @@ RUN cd /var && mkdir staging media static logs &&\
   chown 1000:1000 staging media static logs
 
 # install pdf utils and database clients
-RUN apt-get install -y \
+RUN apt-get update && install -y \
   gettext \
   ghostscript \
   poppler-utils \
-  postgresql-client \
-  mysql-client
+  postgresql-client
 
 # copy files
 COPY requirements.txt install-jupyter.sh docker-entrypoint.sh /app/
