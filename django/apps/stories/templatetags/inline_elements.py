@@ -1,6 +1,4 @@
-"""
-Template tags for inline story elements such as images, asides and pullquotes
-"""
+""" inline story elements such as images, asides and pullquotes """
 
 import logging
 

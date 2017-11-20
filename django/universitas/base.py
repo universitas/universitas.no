@@ -2,7 +2,6 @@
 
 from django.utils.translation import ugettext_lazy as _
 
-
 from .email_settings import *  # type: ignore
 from .file_settings import *  # type: ignore
 from .logging_settings import LOGGING
@@ -36,7 +35,7 @@ ACCOUNT_LOGOUT_REDIRECT_URL = '/auth/login/'
 SOCIALACCOUNT_ADAPTER = 'utils.auth.AutoConnectSocialAccountAdapter'
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
-        'METHOD': 'oauth2',
+        'METHOD': 'js_sdk',
         'SCOPE': ['email'],
         'VERIFIED_EMAIL': True,
         'VERSION': 'v2.5',

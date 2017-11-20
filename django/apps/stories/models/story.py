@@ -279,9 +279,9 @@ class Story(  # type: ignore
         return self
 
     @property
-    def disqus_enabled(self):
-        # Is Disqus available here?
-        return self.is_published
+    def comments_plugin(self):
+        return 'facebook' if self.is_published else None
+        return 'disqus' if self.is_published else None
 
     @property
     def is_published(self):
