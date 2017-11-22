@@ -1,12 +1,11 @@
 <script>
   window.fbAsyncInit = function() {
-    console.log({{ init }});
     FB.init({{ init }});
   };
 
   (function(d, s, id){
      var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {console.log('wat'); return;}
+     if (d.getElementById(id)) {return;}
      js = d.createElement(s); js.id = id;
      js.src = "{{ src }}";
      fjs.parentNode.insertBefore(js, fjs);

@@ -42,6 +42,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+FACEBOOK_APP_ID = 1936304073248701
 SITE_ID = 1
 LOGIN_URL = '/accounts/login/'
 LOGOUT_URL = '/'
@@ -235,6 +236,7 @@ TEMPLATES = [
             'context_processors': [
                 'apps.issues.context_processors.issues',
                 'apps.contributors.context_processors.staff',
+                'apps.core.context_processors.core',
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',

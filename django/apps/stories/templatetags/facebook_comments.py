@@ -13,7 +13,7 @@ def facebook_sdk(context):
     story = context['story']
     lang = {'nb': 'nb_NO', 'nn': 'nn_NO', 'en': 'en_GB'}.get(story.language)
     fb_init = dict(
-        app_id='1936304073248701',
+        app_id=context['facebook']['app_id'],
         version='v2.11',
         autoLogAppEvents=True,
         xfbml=True,
