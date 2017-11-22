@@ -96,6 +96,11 @@ class Story(  # type: ignore
     STATUS_PRIVATE = 15
     STATUS_TEMPLATE = 100
     STATUS_ERROR = 500
+    COMMENT_FIELD_CHOICES = [
+        ('facebook', _('facebook')),
+        ('disqus', _('disqus')),
+        ('off', _('off')),
+    ]
     STATUS_CHOICES = [
         (STATUS_DRAFT, _('Draft')),
         (STATUS_JOURNALIST, _('To Journalist')),
@@ -240,6 +245,13 @@ class Story(  # type: ignore
         help_text=_('Working title'),
         verbose_name=_('Working title'),
     )
+    comment_field = models.CharField(
+        max_length=16,
+        choices=COMMENT_FIELD_CHOICES,
+        default=COMMENT_FIELD_CHOICES[0][0],
+        help_text=_('Enable comment field'),
+        verbose_name=_('Comment Field'),
+    )
 
     def __str__(self):
         title = self.title or f'({self.working_title})' or '[no title]'
@@ -279,9 +291,10 @@ class Story(  # type: ignore
         return self
 
     @property
-    def disqus_enabled(self):
-        # Is Disqus available here?
-        return self.is_published
+    def comments_plugin(self):
+        if self.is_published:
+            return self.comment_field
+        return 'off'
 
     @property
     def is_published(self):

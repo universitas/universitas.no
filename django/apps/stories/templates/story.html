@@ -2,6 +2,7 @@
 {% load thumbnail %}
 {% load byline_image %}
 {% load inline_elements %}
+{% load facebook_comments %}
 {% load advert_channel %}
 {% block title %}{{ story.title }} | universitas.no{% endblock title %}
 {% block head %}
@@ -23,6 +24,7 @@
   {% advert "story column right" %}
 {% endblock columns %}
 {% block content %}
+{% facebook_sdk %}
 <div class="main-content">
   <article class="row {{ story.section.slug }}" id="story">
     <header class="small-12 columns">
@@ -90,12 +92,16 @@
   </article>
   <section id="after-story" class="row">
     {% advert "story after" %}
-    {% if story.disqus_enabled %}
-      <div id="comments-left" class="show-for-large large-2 columns"></div>
-      <div id="comments" class="large-10 columns">
-        {% include '_disqus.html' %}
-      </div>
-    {% endif %}
+    <div id="comments-left" class="show-for-large large-2 columns"></div>
+    <div id="comments" class="large-10 columns">
+      {% if story.comments_plugin == "disqus" %}
+        {% include '_comments_disqus.html' %}
+      {% elif story.comments_plugin == "facebook" %}
+        {% facebook_comments %}
+      {% elif story.comments_plugin == "off" %}
+        <div><small>Kommentarer er skrudd av for denne artikkelen.</small></div>
+      {% endif %}
+    </div>
   </section>
 </div>
 {% endblock content %}

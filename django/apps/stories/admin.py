@@ -235,7 +235,6 @@ class StoryAdmin(admin.ModelAdmin):
         'language',
         'story_type',
         'publication_date',
-        # 'display_bylines', 'image_count'
     ]
 
     # list_editable = [ 'publication_status', ]
@@ -263,6 +262,7 @@ class StoryAdmin(admin.ModelAdmin):
                         'story_type',
                         'publication_date',
                         'publication_status',
+                        'comment_field',
                     ),
                 ),
             }
