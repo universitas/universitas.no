@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-04 00:19+0200\n"
+"POT-Creation-Date: 2017-11-22 12:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -89,7 +89,7 @@ msgstr ""
 msgid "Dummy or unfinished advert"
 msgstr ""
 
-#: apps/adverts/models.py:195 apps/stories/models/story.py:99
+#: apps/adverts/models.py:195 apps/stories/models/story.py:105
 msgid "Draft"
 msgstr ""
 
@@ -193,7 +193,7 @@ msgstr ""
 msgid "no end date"
 msgstr ""
 
-#: apps/contributors/appconf.py:7 apps/contributors/models.py:81
+#: apps/contributors/appconf.py:7 apps/contributors/models.py:82
 msgid "Contributors"
 msgstr ""
 
@@ -201,80 +201,80 @@ msgstr ""
 msgid "Name of person."
 msgstr ""
 
-#: apps/contributors/models.py:45
+#: apps/contributors/models.py:46
 msgid "Unknown"
 msgstr ""
 
-#: apps/contributors/models.py:46
+#: apps/contributors/models.py:47
 msgid "Active"
 msgstr ""
 
-#: apps/contributors/models.py:47
+#: apps/contributors/models.py:48
 msgid "Retired"
 msgstr ""
 
-#: apps/contributors/models.py:48
+#: apps/contributors/models.py:49
 msgid "External"
 msgstr ""
 
-#: apps/contributors/models.py:67
+#: apps/contributors/models.py:68
 msgid "Verified to be a correct name."
 msgstr ""
 
-#: apps/contributors/models.py:75
+#: apps/contributors/models.py:76
 msgid "photo used for byline credit."
 msgstr ""
 
-#: apps/contributors/models.py:80
+#: apps/contributors/models.py:81
 msgid "Contributor"
 msgstr ""
 
-#: apps/contributors/models.py:180 apps/markup/models.py:175
-#: apps/stories/admin.py:217 apps/stories/models/story.py:130
+#: apps/contributors/models.py:185 apps/markup/models.py:175
+#: apps/stories/admin.py:217 apps/stories/models/story.py:136
 msgid "title"
 msgstr ""
 
-#: apps/contributors/models.py:181
+#: apps/contributors/models.py:186
 msgid "Job title at the publication."
 msgstr ""
 
-#: apps/contributors/models.py:186
+#: apps/contributors/models.py:191
 msgid "is management"
 msgstr ""
 
-#: apps/contributors/models.py:187
+#: apps/contributors/models.py:192
 msgid "Is this a management position"
 msgstr ""
 
-#: apps/contributors/models.py:192
+#: apps/contributors/models.py:197
 msgid "groups"
 msgstr ""
 
-#: apps/contributors/models.py:193
+#: apps/contributors/models.py:198
 msgid "Implicit auth Group membership"
 msgstr ""
 
-#: apps/contributors/models.py:197
+#: apps/contributors/models.py:202
 msgid "Position"
 msgstr ""
 
-#: apps/contributors/models.py:198
+#: apps/contributors/models.py:203
 msgid "Positions"
 msgstr ""
 
-#: apps/contributors/models.py:234
+#: apps/contributors/models.py:239
 msgid "position"
 msgstr ""
 
-#: apps/contributors/models.py:238 apps/photo/models.py:125
+#: apps/contributors/models.py:243 apps/photo/models.py:120
 msgid "contributor"
 msgstr ""
 
-#: apps/contributors/models.py:242
+#: apps/contributors/models.py:247
 msgid "start date"
 msgstr ""
 
-#: apps/contributors/models.py:247
+#: apps/contributors/models.py:252
 msgid "end date"
 msgstr ""
 
@@ -351,7 +351,7 @@ msgid "headline"
 msgstr ""
 
 #: apps/frontpage/models.py:265 apps/markup/models.py:179
-#: apps/stories/models/story.py:147
+#: apps/stories/models/story.py:153
 msgid "kicker"
 msgstr ""
 
@@ -360,7 +360,7 @@ msgid "vignette"
 msgstr ""
 
 #: apps/frontpage/models.py:275 apps/markup/models.py:183
-#: apps/stories/models/story.py:152
+#: apps/stories/models/story.py:158
 msgid "lede"
 msgstr ""
 
@@ -436,7 +436,7 @@ msgstr ""
 msgid "body text"
 msgstr ""
 
-#: apps/markup/models.py:187 apps/stories/models/story.py:164
+#: apps/markup/models.py:187 apps/stories/models/story.py:170
 msgid "theme word"
 msgstr ""
 
@@ -476,7 +476,7 @@ msgstr ""
 msgid "extra"
 msgstr ""
 
-#: apps/markup/models.py:407 apps/stories/models/story.py:170
+#: apps/markup/models.py:407 apps/stories/models/story.py:176
 msgid "bylines"
 msgstr ""
 
@@ -496,15 +496,15 @@ msgstr ""
 msgid "explain this pattern"
 msgstr ""
 
-#: apps/photo/admin.py:39
+#: apps/photo/admin.py:36
 msgid "preview"
 msgstr ""
 
-#: apps/photo/admin.py:41
+#: apps/photo/admin.py:38
 msgid "cropped"
 msgstr ""
 
-#: apps/photo/admin.py:50
+#: apps/photo/admin.py:47
 msgid "Autocrop"
 msgstr ""
 
@@ -552,99 +552,99 @@ msgstr ""
 msgid "crop box"
 msgstr ""
 
-#: apps/photo/imagehash.py:42
+#: apps/photo/imagehash.py:40
 msgid "md5"
 msgstr ""
 
-#: apps/photo/imagehash.py:43
+#: apps/photo/imagehash.py:41
 msgid "md5 hash of source file"
 msgstr ""
 
-#: apps/photo/imagehash.py:49
+#: apps/photo/imagehash.py:47
 msgid "image hash"
 msgstr ""
 
-#: apps/photo/imagehash.py:50
+#: apps/photo/imagehash.py:48
 msgid "perceptual hash of image using dhash algorithm"
 msgstr ""
 
-#: apps/photo/imagehash.py:56
+#: apps/photo/imagehash.py:54
 msgid "file size"
 msgstr ""
 
-#: apps/photo/imagehash.py:57
+#: apps/photo/imagehash.py:55
 msgid "size of file in bytes"
 msgstr ""
 
-#: apps/photo/imagehash.py:62
+#: apps/photo/imagehash.py:60
 msgid "timestamp"
 msgstr ""
 
-#: apps/photo/imagehash.py:63
+#: apps/photo/imagehash.py:61
 msgid "mtime timestamp of source file"
 msgstr ""
 
-#: apps/photo/models.py:90
+#: apps/photo/models.py:85
 msgid "ImageFile"
 msgstr ""
 
-#: apps/photo/models.py:91
+#: apps/photo/models.py:86
 msgid "ImageFiles"
 msgstr ""
 
-#: apps/photo/models.py:96
+#: apps/photo/models.py:91
 msgid "source file"
 msgstr ""
 
-#: apps/photo/models.py:104
+#: apps/photo/models.py:99
 msgid "height"
 msgstr ""
 
-#: apps/photo/models.py:105 apps/photo/models.py:111
+#: apps/photo/models.py:100 apps/photo/models.py:106
 msgid "full height in pixels"
 msgstr ""
 
-#: apps/photo/models.py:110
+#: apps/photo/models.py:105
 msgid "width"
 msgstr ""
 
-#: apps/photo/models.py:116
+#: apps/photo/models.py:111
 msgid "old file path"
 msgstr ""
 
-#: apps/photo/models.py:117
+#: apps/photo/models.py:112
 msgid "previous path if the image has been moved."
 msgstr ""
 
-#: apps/photo/models.py:126
+#: apps/photo/models.py:121
 msgid "who made this"
 msgstr ""
 
-#: apps/photo/models.py:131
+#: apps/photo/models.py:126
 msgid "description"
 msgstr ""
 
-#: apps/photo/models.py:132
+#: apps/photo/models.py:127
 msgid "Description of image"
 msgstr ""
 
-#: apps/photo/models.py:139
+#: apps/photo/models.py:134
 msgid "copyright information"
 msgstr ""
 
-#: apps/photo/models.py:141
+#: apps/photo/models.py:136
 msgid "extra information about license and attribution if needed."
 msgstr ""
 
-#: apps/photo/models.py:148 apps/photo/models.py:149
+#: apps/photo/models.py:143 apps/photo/models.py:144
 msgid "exif_data"
 msgstr ""
 
-#: apps/photo/models.py:301
+#: apps/photo/models.py:296
 msgid "Profile Image"
 msgstr ""
 
-#: apps/photo/models.py:302
+#: apps/photo/models.py:297
 msgid "Profile Images"
 msgstr ""
 
@@ -652,7 +652,7 @@ msgstr ""
 msgid "make frontpage story"
 msgstr ""
 
-#: apps/stories/admin.py:152 apps/stories/models/story.py:189
+#: apps/stories/admin.py:152 apps/stories/models/story.py:195
 msgid "status"
 msgstr ""
 
@@ -676,7 +676,7 @@ msgstr ""
 msgid "find linked stories"
 msgstr ""
 
-#: apps/stories/appconf.py:8 apps/stories/models/story.py:81
+#: apps/stories/appconf.py:7 apps/stories/models/story.py:82
 msgid "Stories"
 msgstr ""
 
@@ -814,7 +814,7 @@ msgid "section title"
 msgstr ""
 
 #: apps/stories/models/sections.py:42 apps/stories/models/sections.py:75
-#: apps/stories/models/story.py:133
+#: apps/stories/models/story.py:139
 msgid "slug"
 msgstr ""
 
@@ -826,168 +826,188 @@ msgstr ""
 msgid "StoryTypes"
 msgstr ""
 
-#: apps/stories/models/story.py:80
+#: apps/stories/models/story.py:81
 msgid "Story"
 msgstr ""
 
 #: apps/stories/models/story.py:100
-msgid "To Journalist"
+msgid "facebook"
 msgstr ""
 
 #: apps/stories/models/story.py:101
-msgid "To Sub Editor"
+msgid "disqus"
 msgstr ""
 
 #: apps/stories/models/story.py:102
-msgid "To Editor"
-msgstr ""
-
-#: apps/stories/models/story.py:103
-msgid "Ready for newsdesk"
-msgstr ""
-
-#: apps/stories/models/story.py:104
-msgid "Imported to newsdesk"
-msgstr ""
-
-#: apps/stories/models/story.py:105
-msgid "Exported from newsdesk"
+msgid "off"
 msgstr ""
 
 #: apps/stories/models/story.py:106
-msgid "Published on website"
+msgid "To Journalist"
 msgstr ""
 
 #: apps/stories/models/story.py:107
-msgid "Published, but hidden from search engines"
+msgid "To Sub Editor"
 msgstr ""
 
 #: apps/stories/models/story.py:108
-msgid "Will not be published"
+msgid "To Editor"
 msgstr ""
 
 #: apps/stories/models/story.py:109
-msgid "Used as template for new articles"
+msgid "Ready for newsdesk"
 msgstr ""
 
 #: apps/stories/models/story.py:110
+msgid "Imported to newsdesk"
+msgstr ""
+
+#: apps/stories/models/story.py:111
+msgid "Exported from newsdesk"
+msgstr ""
+
+#: apps/stories/models/story.py:112
+msgid "Published on website"
+msgstr ""
+
+#: apps/stories/models/story.py:113
+msgid "Published, but hidden from search engines"
+msgstr ""
+
+#: apps/stories/models/story.py:114
+msgid "Will not be published"
+msgstr ""
+
+#: apps/stories/models/story.py:115
+msgid "Used as template for new articles"
+msgstr ""
+
+#: apps/stories/models/story.py:116
 msgid "Technical error"
 msgstr ""
 
-#: apps/stories/models/story.py:117
+#: apps/stories/models/story.py:123
 msgid "primary id in the legacy prodsys database."
 msgstr ""
 
-#: apps/stories/models/story.py:118
+#: apps/stories/models/story.py:124
 msgid "prodsak id"
 msgstr ""
 
-#: apps/stories/models/story.py:122 apps/stories/models/story.py:123
+#: apps/stories/models/story.py:128 apps/stories/models/story.py:129
 msgid "language"
 msgstr ""
 
-#: apps/stories/models/story.py:129
+#: apps/stories/models/story.py:135
 msgid "main headline or title"
 msgstr ""
 
-#: apps/stories/models/story.py:145
+#: apps/stories/models/story.py:151
 msgid "secondary headline, usually displayed above main headline"
 msgstr ""
 
-#: apps/stories/models/story.py:151
+#: apps/stories/models/story.py:157
 msgid "brief introduction or summary of the story"
 msgstr ""
 
-#: apps/stories/models/story.py:157
+#: apps/stories/models/story.py:163
 msgid "for internal use only"
 msgstr ""
 
-#: apps/stories/models/story.py:158
+#: apps/stories/models/story.py:164
 msgid "comment"
 msgstr ""
 
-#: apps/stories/models/story.py:163
+#: apps/stories/models/story.py:169
 msgid "theme, topic, main keyword"
 msgstr ""
 
-#: apps/stories/models/story.py:169
+#: apps/stories/models/story.py:175
 msgid "the people who created this content."
 msgstr ""
 
-#: apps/stories/models/story.py:174
+#: apps/stories/models/story.py:180
 msgid "the type of story."
 msgstr ""
 
-#: apps/stories/models/story.py:175
+#: apps/stories/models/story.py:181
 msgid "article type"
 msgstr ""
 
-#: apps/stories/models/story.py:182
+#: apps/stories/models/story.py:188
 msgid "when this story will be published on the web."
 msgstr ""
 
-#: apps/stories/models/story.py:183
+#: apps/stories/models/story.py:189
 msgid "publication date"
 msgstr ""
 
-#: apps/stories/models/story.py:188
+#: apps/stories/models/story.py:194
 msgid "publication status."
 msgstr ""
 
-#: apps/stories/models/story.py:193
+#: apps/stories/models/story.py:199
 msgid "which issue this story was printed in."
 msgstr ""
 
-#: apps/stories/models/story.py:194
+#: apps/stories/models/story.py:200
 msgid "issue"
 msgstr ""
 
-#: apps/stories/models/story.py:202
+#: apps/stories/models/story.py:208
 msgid "which page the story was printed on."
 msgstr ""
 
-#: apps/stories/models/story.py:203
+#: apps/stories/models/story.py:209
 msgid "page"
 msgstr ""
 
-#: apps/stories/models/story.py:208
+#: apps/stories/models/story.py:214
 msgid "how many time the article has been viewed."
 msgstr ""
 
-#: apps/stories/models/story.py:209
+#: apps/stories/models/story.py:215
 msgid "total page views"
 msgstr ""
 
-#: apps/stories/models/story.py:214
+#: apps/stories/models/story.py:220
 msgid "calculated value representing recent page views."
 msgstr ""
 
-#: apps/stories/models/story.py:215
+#: apps/stories/models/story.py:221
 msgid "recent page views"
 msgstr ""
 
-#: apps/stories/models/story.py:220
+#: apps/stories/models/story.py:226
 msgid "all bylines as html."
 msgstr ""
 
-#: apps/stories/models/story.py:226
+#: apps/stories/models/story.py:232
 msgid "From old web page. For reference only."
 msgstr ""
 
-#: apps/stories/models/story.py:227
+#: apps/stories/models/story.py:233
 msgid "Imported html source."
 msgstr ""
 
-#: apps/stories/models/story.py:233
+#: apps/stories/models/story.py:239
 msgid "From prodsys. For reference only."
 msgstr ""
 
-#: apps/stories/models/story.py:234
+#: apps/stories/models/story.py:240
 msgid "Imported xtagged source."
 msgstr ""
 
-#: apps/stories/models/story.py:239 apps/stories/models/story.py:240
+#: apps/stories/models/story.py:245 apps/stories/models/story.py:246
 msgid "Working title"
+msgstr ""
+
+#: apps/stories/models/story.py:252
+msgid "Enable comment field"
+msgstr ""
+
+#: apps/stories/models/story.py:253
+msgid "Comment Field"
 msgstr ""
 
 #: apps/stories/models/storychildren.py:111
@@ -1313,14 +1333,14 @@ msgstr ""
 msgid "Reset my password"
 msgstr ""
 
-#: universitas/base.py:216
+#: universitas/base.py:210
 msgid "Norwegian Bokmal"
 msgstr ""
 
-#: universitas/base.py:217
+#: universitas/base.py:211
 msgid "Norwegian Nynorsk"
 msgstr ""
 
-#: universitas/base.py:218
+#: universitas/base.py:212
 msgid "English"
 msgstr ""

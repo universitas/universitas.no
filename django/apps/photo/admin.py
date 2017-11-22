@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Admin for photo app.
-"""
+""" Admin for photo app. """
 
 import logging
 

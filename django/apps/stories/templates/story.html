@@ -98,6 +98,8 @@
         {% include '_comments_disqus.html' %}
       {% elif story.comments_plugin == "facebook" %}
         {% facebook_comments %}
+      {% elif story.comments_plugin == "off" %}
+        <div><small>Kommentarer er skrudd av for denne artikkelen.</small></div>
       {% endif %}
     </div>
   </section>
