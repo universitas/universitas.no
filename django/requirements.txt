@@ -100,7 +100,7 @@ selenium==3.7.0
 simplegeneric==0.8.1      # via ipython
 simplejson==3.13.2        # via django-rest-swagger
 six==1.11.0               # via django-autocomplete-light, django-extensions, django-guardian, django-rest-auth, django-url-filter, faker, imagehash, prompt-toolkit, pytest, python-dateutil, traitlets
-sorl-thumbnail==12.4a1
+sorl-thumbnail==12.4.1
 sqlparse==0.2.4           # via django-debug-toolbar
 text-unidecode==1.1       # via faker
 tornado==4.5.2            # via flower

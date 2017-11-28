@@ -9,17 +9,13 @@ django==1.11
 # http://django-autocomplete-light.readthedocs.io/en/master/index.html
 django-autocomplete-light==2.3.3
 
-# Pypi package has not been updated in a long time
-# https://github.com/jazzband/sorl-thumbnail/issues/507
-sorl-thumbnail==12.4a1
-
 # DJANGO PLUGINS
 django-debug-toolbar
 django-extensions
 django-redis
 django-webpack-loader
-
 django-model-utils
+sorl-thumbnail
 
 # REST FRAMEWORK
 djangorestframework
