@@ -111,7 +111,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.google',
-    # 'autocomplete_light',
     'django_extensions',
     'sorl.thumbnail',
     'raven.contrib.django.raven_compat',

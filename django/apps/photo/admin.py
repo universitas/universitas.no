@@ -70,11 +70,14 @@ class ImageAdmin(
         'full_thumb',
     ]
     list_editable = ()
-    search_fields = (
+    search_fields = [
         'source_file',
         'storyimage__caption',
         'frontpagestory__headline',
-    )
+    ]
+    autocomplete_fields = [
+        'contributor',
+    ]
 
 
 @admin.register(ImageFile)

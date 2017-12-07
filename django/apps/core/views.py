@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Core views for webpage."""
 
 import re
@@ -35,7 +34,7 @@ class RobotsTxtView(TextTemplateView):
 def search_404_view(request, slug):
     search_terms = re.split(r'\W|_', slug)
     redirect_to = '{search}?q={terms}'.format(
-        search=reverse('search'),
+        search=reverse('search:search'),
         terms='+'.join(search_terms),
     )
     return HttpResponseRedirect(redirect_to)

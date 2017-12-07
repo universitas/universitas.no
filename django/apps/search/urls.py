@@ -4,6 +4,8 @@ from django.conf.urls import url
 
 from .views import SearchView
 
+app_name = 'search'
+
 urlpatterns = [
-    url("^$", SearchView.as_view(), name="search"),
+    url(r'^$', SearchView.as_view(), name='search'),
 ]

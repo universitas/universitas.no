@@ -4,7 +4,6 @@
 django==2.0
 
 # DJANGO PLUGINS
-django-autocomplete-light
 django-debug-toolbar
 django-extensions
 django-redis

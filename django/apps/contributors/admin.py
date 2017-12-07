@@ -8,42 +8,61 @@ from django.utils.translation import ugettext_lazy as _
 
 from .models import Contributor, Position, Stint
 
-# from django.template import Template
-# from django.utils.safestring import mark_safe
-
 
 class StintInline(
     admin.TabularInline,
 ):
     model = Stint
-    fields = ['position', 'start_date', 'end_date']
+    fields = [
+        'position',
+        'start_date',
+        'end_date',
+    ]
+    autocomplete_fields = [
+        'position',
+    ]
     extra = 1
 
 
 @admin.register(Contributor)
 class ContributorAdmin(admin.ModelAdmin):
 
-    # form = modelform_factory(Contributor, exclude=())
-
-    list_display = (
+    inlines = [
+        StintInline,
+        BylineInline,
+    ]
+    list_display = [
         'display_name',
         'bylines_count',
         'verified',
         'status',
-    )
-
-    list_editable = ('verified', )
-
-    search_fields = ('display_name', )
-
-    inlines = [
-        StintInline,
-        BylineInline,
+    ]
+    list_editable = [
+        'verified',
+    ]
+    readonly_fields = [
+        'user',
+    ]
+    search_fields = [
+        'display_name',
+    ]
+    autocomplete_fields = [
+        'byline_photo',
     ]
 
 
 @admin.register(Position)
 class PositionAdmin(admin.ModelAdmin):
+    list_display = [
+        'title',
+        'total',
+        'active_now',
+        'groups_list',
+    ]
+    search_fields = [
+        'title',
+    ]
+
     def active_now(self, instance):
         active = instance.active()
         if len(active) == 1:
@@ -66,13 +85,6 @@ class PositionAdmin(admin.ModelAdmin):
 
     def groups_list(self, instance):
         return ', '.join(str(group) for group in instance.groups.all())
-
-    list_display = [
-        'title',
-        'total',
-        'active_now',
-        'groups_list',
-    ]
 
 
 class StintActiveFilter(admin.SimpleListFilter):
@@ -106,22 +118,23 @@ class StintActiveFilter(admin.SimpleListFilter):
 
 @admin.register(Stint)
 class StintAdmin(admin.ModelAdmin):
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.order_by('-end_date', '-start_date')
-
     list_per_page = 25
     list_filter = ['position', StintActiveFilter]
-    # form = modelform_factory(Stint, exclude=())
-
-    list_display = (
+    list_display = [
         '__str__',
         'position',
         'start_date',
         'end_date',
-    )
-
-    list_editable = (
+    ]
+    list_editable = [
         'start_date',
         'end_date',
-    )
+    ]
+    autocomplete_fields = [
+        'position',
+        'contributor',
+    ]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.order_by('-end_date', '-start_date')

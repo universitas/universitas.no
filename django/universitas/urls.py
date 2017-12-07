@@ -1,6 +1,5 @@
 """Base url router for universitas.no"""
 from api.urls import urlpatterns as api_urls
-from apps.core.autocomplete_views import autocomplete_list
 from apps.core.views import HumansTxtView, RobotsTxtView, search_404_view
 from apps.frontpage.views import (
     frontpage_view, section_frontpage, storytype_frontpage
@@ -10,7 +9,6 @@ from apps.photo.views import PhotoAppView
 from apps.search import urls as search_urls
 from apps.stories.feeds import LatestStories
 from apps.stories.views import article_view
-from autocomplete_light import urls as autocomplete_light_urls
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, re_path
@@ -60,10 +58,6 @@ urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
     re_path(r'^robots.txt$', RobotsTxtView.as_view(), name='robots.txt'),
     re_path(r'^humans.txt$', HumansTxtView.as_view(), name='humans.txt'),
-    re_path(r'^autocomplete', include(autocomplete_light_urls)),
-    re_path(
-        r'^autocomplete/menu$', autocomplete_list, name='autocomplete_list'
-    ),
     re_path(r'^search/', include(search_urls)),
     re_path(r'^', include(redirect_urls)),
     re_path(

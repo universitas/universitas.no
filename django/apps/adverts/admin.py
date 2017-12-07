@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from apps.photo.admin import ThumbAdmin
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
@@ -12,6 +10,7 @@ from .models import AdChannel, AdFormat, Advert, Customer
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ['name', 'contact_info']
     list_editable = []
+    search_fields = ['name']
 
 
 @admin.register(Advert)
@@ -37,6 +36,7 @@ class AdvertAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
         'extra_classes',
     ]
     readonly_fields = ['get_html']
+    autocomplete_fields = ['customer', 'ad_channels']
 
 
 def create_dummy_ads(modeladmin, request, queryset):
@@ -65,6 +65,9 @@ class ChannelAdmin(admin.ModelAdmin):
     ]
     actions = [
         create_dummy_ads,
+    ]
+    search_fields = [
+        'name',
     ]
 
 

@@ -41,7 +41,6 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
     ACTIVE = 1
     RETIRED = 2
     EXTERNAL = 3
-
     STATUS_CHOICES = [
         (UNKNOWN, _('Unknown')),
         (ACTIVE, _('Active')),

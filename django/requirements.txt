@@ -25,7 +25,6 @@ decorator==4.1.2          # via ipython, traitlets
 defusedxml==0.5.0         # via python3-openid
 diff-match-patch==20121119
 django-allauth==0.34.0
-django-autocomplete-light==3.2.10
 django-crispy-forms==1.7.0
 django-debug-toolbar==1.9.1
 django-extensions==1.9.8

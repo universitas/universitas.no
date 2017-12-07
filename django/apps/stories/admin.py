@@ -13,10 +13,6 @@ from .models import (
     StoryImage, StoryType, StoryVideo
 )
 
-# from django.utils.html import format_html_join
-# from apps.photo.models import ImageFile
-# from sorl.thumbnail.admin import AdminImageMixin
-
 
 class SmallTextArea:
     formfield_overrides = {
@@ -26,14 +22,16 @@ class SmallTextArea:
 
 
 class BylineInline(admin.TabularInline):
-    # form = modelform_factory(Byline, exclude=())
     model = Byline
-    fields = (
+    fields = [
         'ordering',
         'credit',
         'contributor',
         'title',
-    )
+    ]
+    autocomplete_fields = [
+        'contributor',
+    ]
     extra = 0
     max_num = 20
     formfield_overrides = {
@@ -44,16 +42,20 @@ class BylineInline(admin.TabularInline):
 
 
 class FrontpageStoryInline(SmallTextArea, admin.TabularInline, ThumbAdmin):
-    # form = modelform_factory(FrontpageStory, exclude=())
     model = FrontpageStory
-    fields = (
+    fields = [
         'headline',
         'kicker',
         'lede',
         'imagefile',
         'full_thumb',
-    ),
-    readonly_fields = ('full_thumb', )
+    ]
+    autocomplete_fields = [
+        'imagefile',
+    ]
+    readonly_fields = [
+        'full_thumb',
+    ]
     extra = 0
 
 
@@ -88,10 +90,12 @@ class PullquoteInline(
 
 
 class LinkInline(admin.TabularInline):
-    # form = modelform_factory(InlineLink, exclude=())
     model = InlineLink
     fk_name = 'parent_story'
     extra = 0
+    autocomplete_fields = [
+        'linked_story',
+    ]
 
 
 class VideoInline(
@@ -117,7 +121,6 @@ class ImageInline(
     admin.TabularInline,
     ThumbAdmin,
 ):
-    # form = modelform_factory(StoryImage, exclude=())
     formfield_overrides = {
         models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})},
     }
@@ -132,7 +135,8 @@ class ImageInline(
         'imagefile',
         'full_thumb',
     ]
-    readonly_fields = ('full_thumb', )
+    autocomplete_fields = ['imagefile']
+    readonly_fields = ['full_thumb']
     extra = 0
 
 
@@ -223,7 +227,7 @@ class StoryAdmin(admin.ModelAdmin):
     actions_on_bottom = True
     save_on_top = True
     list_per_page = 25
-    list_filter = [PublicationStatusFilter, 'language', 'publication_status']
+    list_filter = (PublicationStatusFilter, 'language', 'publication_status')
     list_display = [
         'get_title',
         'lede',
@@ -240,6 +244,9 @@ class StoryAdmin(admin.ModelAdmin):
 
     readonly_fields = [
         'legacy_html_source', 'legacy_prodsys_source', 'get_html'
+    ]
+    autocomplete_fields = [
+        'story_type',
     ]
 
     formfield_overrides = {
@@ -301,13 +308,11 @@ class StoryAdmin(admin.ModelAdmin):
         HtmlInline,
     ]
 
-    search_fields = (
+    search_fields = [
         'title',
         'lede',
         'bylines_html',
-        # 'story_type__name',
-        # 'bylines',
-    )
+    ]
 
     def display_bylines(self, instance):
         return mark_safe(instance.bylines_html) or " -- "
@@ -319,46 +324,53 @@ class StoryAdmin(admin.ModelAdmin):
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
 
-    list_display = (
+    list_display = [
         'id',
         'title',
-    )
+    ]
 
-    list_editable = ('title', )
+    list_editable = [
+        'title',
+    ]
 
     inlines = (StoryTypeInline, )
 
 
 @admin.register(StoryType)
 class StoryTypeAdmin(admin.ModelAdmin):
-    # form = modelform_factory(StoryType, exclude=[])
-    list_display = (
+    list_display = [
         'id',
         'name',
         'section',
         'prodsys_mappe',
-    )
+    ]
 
-    list_editable = (
+    list_editable = [
         'name',
         'section',
-    )
+    ]
+    search_fields = [
+        'name',
+    ]
 
 
 @admin.register(Byline)
 class BylineAdmin(admin.ModelAdmin):
-    # form = modelform_factory(Byline, exclude=())
-    list_display = (
+    list_display = [
         'id',
         'story',
         'contributor',
         'credit',
         'title',
-    )
-    list_editable = (
+    ]
+    list_editable = [
         'credit',
         'title',
-    )
+    ]
+    autocomplete_fields = [
+        'story',
+        'contributor',
+    ]
 
 
 def find_linked_story(modeladmin, request, queryset):
@@ -387,11 +399,11 @@ class LinkAdmin(admin.ModelAdmin):
         'get_html',
         'get_tag',
         'link',
-        # 'linked_story',
         'status_code',
     )
-    list_editable = (
-        'alt_text',
-        # 'href',
-    )
+    list_editable = ('alt_text', )
     list_filter = ('status_code', )
+    autocomplete_fields = (
+        'linked_story',
+        'parent_story',
+    )
