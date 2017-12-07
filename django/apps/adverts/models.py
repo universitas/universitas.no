@@ -207,6 +207,7 @@ class Advert(models.Model):
     customer = models.ForeignKey(
         Customer,
         help_text=_('Who bought this ad?'),
+        on_delete=models.CASCADE,
     )
     ad_channels = models.ManyToManyField(
         AdChannel,

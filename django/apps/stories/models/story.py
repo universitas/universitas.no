@@ -8,8 +8,8 @@ from apps.markup.models import Alias
 from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.fields import AutoSlugField
@@ -425,17 +425,14 @@ class Story(  # type: ignore
             self.save(update_fields=['bodytext_html'])
 
     def get_absolute_url(self):
-        try:
-            return reverse(
-                viewname='article',
-                kwargs={
-                    'story_id': str(self.id),
-                    'section': self.section.slug,
-                    'slug': self.slug,
-                }
-            )
-        except Exception:
-            return ''
+        return reverse(
+            viewname='article',
+            kwargs={
+                'story_id': str(self.id),
+                'section': self.section.slug,
+                'slug': self.slug,
+            }
+        )
 
     def get_shortlink(self):
         url = reverse(

@@ -257,7 +257,9 @@ class PrintIssue(models.Model, EditURLMixin):
         verbose_name = _('Pdf issue')
         verbose_name_plural = _('Pdf issues')
 
-    issue = models.ForeignKey(Issue, related_name='pdfs')
+    issue = models.ForeignKey(
+        Issue, related_name='pdfs', on_delete=models.PROTECT
+    )
 
     pages = models.IntegerField(
         help_text='Number of pages',

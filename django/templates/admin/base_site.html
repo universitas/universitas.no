@@ -1,12 +1,7 @@
 {% extends "admin/base.html" %}
 
 {% block extrahead %}
-
     {% include "_favicons.html" %}
-
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js" type="text/javascript"></script>
-    {% include 'autocomplete_light/static.html' %}
-
     <script>
     $(document).ready(function (e) {
         $('.field-thumbnail>img').click(function (e) {
@@ -20,52 +15,28 @@
             h_field.val(h_pos);
         });
     });
-    // Change #navsearch by a selector that matches the input you want to use
-    // for the navigation autocomplete.
-    $(document).ready(function(){
-        $('#navigation_autocomplete').yourlabsAutocomplete({
-            // Url of the view you just created
-            url: '{% url "autocomplete_list" %}',
-
-            // With keyboard, we should iterate around <a> tags in the autocomplete
-            choiceSelector: 'a',
-        }).input.bind('selectChoice', function(e, choice, autocomplete) {
-            // When a choice is selected, open it. Note: this is not needed for
-            // mouse click on the links of course, but this is necessary for keyboard
-            // selection.
-            window.location.href = choice.attr('href');
-        });
-    });
-
     </script>
     <style>
-    .field-from_top+.field-thumbnail>img{cursor: crosshair;}
-
-    </style>
-    <style>
+      .field-from_top+.field-thumbnail>img{cursor: crosshair;}
         /* cancel out django default for now, or choices are white on white */
-        .separator,
-        #header a.choice:link,
-        #header a.choice:visited,
-        #header a.choice:hover {
-            color: black;
-            text-decoration: none;
-        }
+      .separator,
+      #header a.choice:link,
+      #header a.choice:visited,
+      #header a.choice:hover {
+        color: black;
+        text-decoration: none;
+      }
     </style>
-
-
 {% endblock %}
 
-{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+{% block title %}
+  {{ title }} | {{ site_title|default:_('Universitas admin') }}
+{% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
+<h1 id="site-name">
+  <a href="{% url 'admin:index' %}">
+    {{ site_header|default:_('Universitas admin') }}
+  </a>
+</h1>
 {% endblock %}
-
-{% block nav-global %}
-<div id="navsearch">
-   <input tabindex="1" placeholder="søk" type="text" name="q" id="navigation_autocomplete" style="width: 270px; font-size: 16px; margin: 5px 20px; " >
-
-</div>
-{% endblock %}
-

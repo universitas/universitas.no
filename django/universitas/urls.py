@@ -12,66 +12,70 @@ from apps.stories.feeds import LatestStories
 from apps.stories.views import article_view
 from autocomplete_light import urls as autocomplete_light_urls
 from django.conf import settings
-from django.conf.urls import include, url
 from django.contrib import admin
+from django.urls import include, re_path
 from django.views.generic import TemplateView
 
-from .redirect_urls import urlpatterns as redirect_urls
+from . import redirect_urls
 
 admin.autodiscover()
 
 urlpatterns = [
     # DJANGO-ALLAUTH (login, password etc)
-    url(r'^auth/', include('allauth.urls')),
+    re_path(r'^auth/', include('allauth.urls')),
     # RSS
-    url(r'^rss/$', LatestStories(), name='rss'),
+    re_path(r'^rss/$', LatestStories(), name='rss'),
     # API
-    url(r'^api/', include(api_urls)),
+    re_path(r'^api/', include(api_urls)),
 
     # Frontpage
-    url(r'^$', frontpage_view, name='frontpage'),
+    re_path(r'^$', frontpage_view, name='frontpage'),
 
     # React apps
-    url(r'^foto/$', PhotoAppView.as_view(), name='photoapp'),
-    url(
+    re_path(r'^foto/$', PhotoAppView.as_view(), name='photoapp'),
+    re_path(
         r'^prodsys',
         TemplateView.as_view(template_name='prodsys.html'),
         name='prodsys'
     ),
 
     # Flat pages
-    url(
+    re_path(
         r'^om_universitas/$',
         TemplateView.as_view(template_name='general-info.html'),
         name='general_info',
     ),
-    url(
+    re_path(
         r'^annonser/$',
         TemplateView.as_view(template_name='advert-info.html'),
         name='ad_info',
     ),
-    url(r'^utgivelsesplan/$', PubPlanView.as_view(), name='pub_plan'),
-    url(
+    re_path(r'^utgivelsesplan/$', PubPlanView.as_view(), name='pub_plan'),
+    re_path(
         r'^utgivelsesplan/(?P<year>\d{4})/$',
         PubPlanView.as_view(),
         name='pub_plan_year'
     ),
-    url(r'^pdf/$', PdfArchiveView.as_view(), name='pdf_archive'),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^robots.txt$', RobotsTxtView.as_view(), name='robots.txt'),
-    url(r'^humans.txt$', HumansTxtView.as_view(), name='humans.txt'),
-    url(r'^autocomplete', include(autocomplete_light_urls)),
-    url(r'^autocomplete/menu$', autocomplete_list, name='autocomplete_list'),
-    url(r'^search/', include(search_urls)),
-    url(r'^', include(redirect_urls, namespace='redirect')),
-    url(
+    re_path(r'^pdf/$', PdfArchiveView.as_view(), name='pdf_archive'),
+    re_path(r'^admin/', admin.site.urls),
+    re_path(r'^robots.txt$', RobotsTxtView.as_view(), name='robots.txt'),
+    re_path(r'^humans.txt$', HumansTxtView.as_view(), name='humans.txt'),
+    re_path(r'^autocomplete', include(autocomplete_light_urls)),
+    re_path(
+        r'^autocomplete/menu$', autocomplete_list, name='autocomplete_list'
+    ),
+    re_path(r'^search/', include(search_urls)),
+    re_path(r'^', include(redirect_urls)),
+    re_path(
         r'^(?P<section>[a-z0-9-]+)/(?P<story_id>\d+)/(?P<slug>[a-z0-9-]*)/?$',
         article_view,
         name='article'
     ),
-    url(r'^(?P<story_id>\d+?)/.*$', article_view, name='article_short'),
-    url(r'^(?P<section>[a-z0-9-]+)/all/$', section_frontpage, name='section'),
-    url(
+    re_path(r'^(?P<story_id>\d+?)/.*$', article_view, name='article_short'),
+    re_path(
+        r'^(?P<section>[a-z0-9-]+)/all/$', section_frontpage, name='section'
+    ),
+    re_path(
         r'^(?P<section>[a-z0-9-]+)/(?P<storytype>[a-z0-9-]+)/all/$',
         storytype_frontpage,
         name='storytype'
@@ -81,5 +85,5 @@ urlpatterns = [
 # redirect 404 to search page
 if not settings.DEBUG:
     urlpatterns += [
-        url(r'^(?P<slug>.+)/$', search_404_view, name='not_found'),
+        re_path(r'^(?P<slug>.+)/$', search_404_view, name='not_found'),
     ]

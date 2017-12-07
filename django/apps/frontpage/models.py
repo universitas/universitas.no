@@ -78,6 +78,7 @@ class FrontPageModule(TimeStampedModel, EditURLMixin):
         Frontpage,
         default=1,
         editable=True,
+        on_delete=models.CASCADE,
     )
 
     height = models.PositiveSmallIntegerField(
@@ -113,6 +114,7 @@ class StoryModule(FrontPageModule):
     frontpage_story = models.ForeignKey(
         'FrontpageStory',
         editable=False,
+        on_delete=models.CASCADE,
     )
 
     position = models.PositiveIntegerField(
@@ -242,7 +244,10 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
 
     objects = FrontpageStoryManager()
 
-    story = models.ForeignKey('stories.Story')
+    story = models.ForeignKey(
+        'stories.Story',
+        on_delete=models.CASCADE,
+    )
     placements = models.ManyToManyField(
         Frontpage,
         through=StoryModule,
@@ -253,6 +258,7 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
         null=True,
         blank=True,
         help_text=_('image'),
+        on_delete=models.CASCADE,
     )
     headline = models.CharField(
         blank=True,

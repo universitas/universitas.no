@@ -14,7 +14,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='printissue',
             name='issue',
-            field=models.ForeignKey(to='issues.Issue', null=True),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE, to='issues.Issue', null=True
+            ),
             preserve_default=True,
         ),
     ]

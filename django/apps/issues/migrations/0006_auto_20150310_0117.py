@@ -19,6 +19,10 @@ class Migration(migrations.Migration):
             model_name='printissue',
             name='issue',
             field=models.ForeignKey(
-                to='issues.Issue', related_name='pdfs', null=True),
+                on_delete=models.CASCADE,
+                to='issues.Issue',
+                related_name='pdfs',
+                null=True
+            ),
         ),
     ]

@@ -121,6 +121,7 @@ class ImageFile(  # type: ignore
         help_text=_('who made this'),
         blank=True,
         null=True,
+        on_delete=models.SET_NULL,
     )
     description = models.CharField(
         verbose_name=_('description'),

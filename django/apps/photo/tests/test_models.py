@@ -32,7 +32,7 @@ def test_image_hashes(img):
     assert img._md5[:5] == '4eccf'
     assert img._size == 2966
     assert img._mtime > 1000000000
-    assert img._imagehash[:5] == '70b48'  # is string
+    assert img._imagehash[:5] == '0e2d1'  # is string
     assert img.imagehash.hash.shape == (8, 8)  # is array
     assert img.pk is None  # did not save
     img.save()

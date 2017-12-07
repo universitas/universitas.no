@@ -48,7 +48,11 @@ class InlineLink(TimeStampedModel):
         verbose_name = _('inline link')
         verbose_name_plural = _('inline links')
 
-    parent_story = models.ForeignKey(Story, related_name='inline_links')
+    parent_story = models.ForeignKey(
+        Story,
+        related_name='inline_links',
+        on_delete=models.CASCADE,
+    )
     number = models.PositiveSmallIntegerField(
         default=1,
         help_text=_('link label'),
@@ -66,6 +70,7 @@ class InlineLink(TimeStampedModel):
         help_text=_('link to story on this website.'),
         verbose_name=_('linked story'),
         related_name='incoming_links',
+        on_delete=models.CASCADE,
     )
     alt_text = models.CharField(
         max_length=500,

@@ -14,11 +14,15 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='staticmodule',
             name='frontpage',
-            field=models.ForeignKey(default=1, to='frontpage.Frontpage'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE, default=1, to='frontpage.Frontpage'
+            ),
         ),
         migrations.AlterField(
             model_name='storymodule',
             name='frontpage',
-            field=models.ForeignKey(default=1, to='frontpage.Frontpage'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE, default=1, to='frontpage.Frontpage'
+            ),
         ),
     ]

@@ -1,7 +1,6 @@
 """ Admin for frontpage app.  """
 
 from apps.photo.admin import ThumbAdmin
-from autocomplete_light.forms import modelform_factory
 from django.contrib import admin
 
 from .models import FrontpageStory, StaticModule, StoryModule
@@ -19,10 +18,10 @@ class StoryModuleInline(admin.TabularInline):
 
 @admin.register(FrontpageStory)
 class FrontpageStoryAdmin(admin.ModelAdmin, ThumbAdmin):
-    form = modelform_factory(FrontpageStory, exclude=())
-    form.Meta.widgets = {
-        'lede': admin.widgets.AdminTextareaWidget(attrs={'rows': 3})
-    }
+    # form = modelform_factory(FrontpageStory, exclude=())
+    # form.Meta.widgets = {
+    #     'lede': admin.widgets.AdminTextareaWidget(attrs={'rows': 3})
+    # }
     save_on_top = True
     list_per_page = 25
     list_display = (

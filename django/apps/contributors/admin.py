@@ -1,7 +1,6 @@
 """ Admin for contributors app.  """
 
 from apps.stories.admin import BylineInline
-from autocomplete_light.forms import modelform_factory
 from django.contrib import admin
 from django.utils import timezone
 from django.utils.safestring import mark_safe
@@ -24,7 +23,7 @@ class StintInline(
 @admin.register(Contributor)
 class ContributorAdmin(admin.ModelAdmin):
 
-    form = modelform_factory(Contributor, exclude=())
+    # form = modelform_factory(Contributor, exclude=())
 
     list_display = (
         'display_name',
@@ -113,7 +112,7 @@ class StintAdmin(admin.ModelAdmin):
 
     list_per_page = 25
     list_filter = ['position', StintActiveFilter]
-    form = modelform_factory(Stint, exclude=())
+    # form = modelform_factory(Stint, exclude=())
 
     list_display = (
         '__str__',

@@ -111,7 +111,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.google',
-    'autocomplete_light',
+    # 'autocomplete_light',
     'django_extensions',
     'sorl.thumbnail',
     'raven.contrib.django.raven_compat',
@@ -137,7 +137,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
 ] + INSTALLED_APPS
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

@@ -15,22 +15,41 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Stint',
             fields=[
-                ('id', models.AutoField(serialize=False,
-                                        verbose_name='ID', primary_key=True, auto_created=True)),
+                (
+                    'id', models.AutoField(
+                        serialize=False,
+                        verbose_name='ID',
+                        primary_key=True,
+                        auto_created=True
+                    )
+                ),
                 ('start_date', models.DateField(auto_now_add=True)),
                 ('duration', models.DateField(blank=True, null=True)),
-                ('contributor', models.ForeignKey(to='contributors.Contributor')),
-                ('position', models.ForeignKey(to='contributors.Position')),
+                (
+                    'contributor', models.ForeignKey(
+                        on_delete=models.CASCADE,
+                        to='contributors.Contributor'
+                    )
+                ),
+                (
+                    'position', models.ForeignKey(
+                        on_delete=models.CASCADE, to='contributors.Position'
+                    )
+                ),
             ],
-            options={
-            },
-            bases=(models.Model,),
+            options={},
+            bases=(models.Model, ),
         ),
         migrations.AddField(
             model_name='position',
             name='group_membership',
             field=models.ForeignKey(
-                to='auth.Group', help_text='Group membership', blank=True, null=True),
+                on_delete=models.CASCADE,
+                to='auth.Group',
+                help_text='Group membership',
+                blank=True,
+                null=True
+            ),
             preserve_default=True,
         ),
     ]

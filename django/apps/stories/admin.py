@@ -2,7 +2,6 @@
 
 from apps.frontpage.models import FrontpageStory
 from apps.photo.admin import ThumbAdmin
-from autocomplete_light.forms import modelform_factory
 from django.contrib import admin
 from django.db import models
 from django.forms import Textarea, TextInput
@@ -27,7 +26,7 @@ class SmallTextArea:
 
 
 class BylineInline(admin.TabularInline):
-    form = modelform_factory(Byline, exclude=())
+    # form = modelform_factory(Byline, exclude=())
     model = Byline
     fields = (
         'ordering',
@@ -45,7 +44,7 @@ class BylineInline(admin.TabularInline):
 
 
 class FrontpageStoryInline(SmallTextArea, admin.TabularInline, ThumbAdmin):
-    form = modelform_factory(FrontpageStory, exclude=())
+    # form = modelform_factory(FrontpageStory, exclude=())
     model = FrontpageStory
     fields = (
         'headline',
@@ -89,7 +88,7 @@ class PullquoteInline(
 
 
 class LinkInline(admin.TabularInline):
-    form = modelform_factory(InlineLink, exclude=())
+    # form = modelform_factory(InlineLink, exclude=())
     model = InlineLink
     fk_name = 'parent_story'
     extra = 0
@@ -118,7 +117,7 @@ class ImageInline(
     admin.TabularInline,
     ThumbAdmin,
 ):
-    form = modelform_factory(StoryImage, exclude=())
+    # form = modelform_factory(StoryImage, exclude=())
     formfield_overrides = {
         models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})},
     }
@@ -332,7 +331,7 @@ class SectionAdmin(admin.ModelAdmin):
 
 @admin.register(StoryType)
 class StoryTypeAdmin(admin.ModelAdmin):
-    form = modelform_factory(StoryType, exclude=[])
+    # form = modelform_factory(StoryType, exclude=[])
     list_display = (
         'id',
         'name',
@@ -348,7 +347,7 @@ class StoryTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Byline)
 class BylineAdmin(admin.ModelAdmin):
-    form = modelform_factory(Byline, exclude=())
+    # form = modelform_factory(Byline, exclude=())
     list_display = (
         'id',
         'story',
@@ -377,7 +376,7 @@ def check_link_status(modeladmin, request, queryset):
 
 @admin.register(InlineLink)
 class LinkAdmin(admin.ModelAdmin):
-    form = modelform_factory(InlineLink, exclude=())
+    # form = modelform_factory(InlineLink, exclude=())
     actions_on_bottom = actions_on_top = True
     actions = [find_linked_story, check_link_status]
     list_display = (

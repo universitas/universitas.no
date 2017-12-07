@@ -2,7 +2,6 @@
 
 import logging
 
-from autocomplete_light.forms import modelform_factory
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
@@ -53,7 +52,7 @@ class ImageAdmin(
     admin.ModelAdmin,
 ):
 
-    form = modelform_factory(ImageFile, exclude=())
+    # form = modelform_factory(ImageFile, exclude=())
     actions = [autocrop]
     date_hierarchy = 'created'
     actions_on_top = True

@@ -237,10 +237,12 @@ class Stint(models.Model):
     position = models.ForeignKey(
         Position,
         verbose_name=_('position'),
+        on_delete=models.CASCADE,
     )
     contributor = models.ForeignKey(
         Contributor,
         verbose_name=_('contributor'),
+        on_delete=models.CASCADE,
     )
     start_date = models.DateField(
         default=today,

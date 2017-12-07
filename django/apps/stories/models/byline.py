@@ -50,8 +50,14 @@ class Byline(models.Model):
     ]
     DEFAULT_CREDIT = CREDIT_CHOICES[0][0]
     objects = BylineManager()
-    story = models.ForeignKey('Story')
-    contributor = models.ForeignKey(Contributor)
+    story = models.ForeignKey(
+        'Story',
+        on_delete=models.CASCADE,
+    )
+    contributor = models.ForeignKey(
+        Contributor,
+        on_delete=models.CASCADE,
+    )
     ordering = models.IntegerField(default=1)
     credit = models.CharField(
         choices=CREDIT_CHOICES,

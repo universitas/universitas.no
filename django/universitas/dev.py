@@ -1,7 +1,7 @@
 """Development settings and globals."""
 from .base import *  # NOQA
 # flake8: noqa F403
-from .base import DEBUG, INSTALLED_APPS, MIDDLEWARE_CLASSES, WEBPACK_LOADER
+from .base import DEBUG, INSTALLED_APPS, MIDDLEWARE, WEBPACK_LOADER
 
 ROOT_URLCONF = 'universitas.dev_urls'
 RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8000'
@@ -9,7 +9,7 @@ ALLOWED_HOSTS = '*'
 
 # TOOLBAR CONFIGURATION
 INSTALLED_APPS += ['debug_toolbar']
-MIDDLEWARE_CLASSES += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 # TEMPLATES[0]['OPTIONS']['string_if_invalid'] = 'INVALID'  # type: ignore

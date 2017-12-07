@@ -1,15 +1,10 @@
 # vim: ft=config:
 
-# FROZEN PACKAGES
-
 # Django must be upgraded manually
 django==2.0
 
-# Breaking changes in version 3
-# http://django-autocomplete-light.readthedocs.io/en/master/index.html
-django-autocomplete-light==2.3.3
-
 # DJANGO PLUGINS
+django-autocomplete-light
 django-debug-toolbar
 django-extensions
 django-redis
