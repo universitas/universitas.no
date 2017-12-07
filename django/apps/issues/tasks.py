@@ -79,8 +79,8 @@ def get_staging_pdf_files(delete_expired=False, expiration_days=0, **kwargs):
 
 
 def get_output_file(input_file: Path, subfolder: str,
-                    suffix: str = None) -> (Path, bool):
-    if suffix is None:
+                    suffix: str = '') -> (Path, bool):
+    if not suffix:
         suffix = input_file.suffix
     if suffix and not suffix.startswith('.'):
         suffix = '.' + suffix

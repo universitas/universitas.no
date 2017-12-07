@@ -1,9 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-Admin for printissues app
-"""
+""" Admin for printissues app """
 from django.contrib import admin, messages
-# import autocomplete_light
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail import get_thumbnail
@@ -49,6 +45,19 @@ class IssueAdmin(admin.ModelAdmin):
 
     list_per_page = 40
     date_hierarchy = 'publication_date'
+    list_display = [
+        '__str__',
+        'publication_date',
+        'issue_type',
+        'pdf_links',
+    ]
+    list_editable = [
+        'publication_date',
+        'issue_type',
+    ]
+    search_fields = [
+        'name',
+    ]
 
     def pdf_thumb(self, pdf, width=250, height=100):
         try:
@@ -77,51 +86,40 @@ class IssueAdmin(admin.ModelAdmin):
 
         return mark_safe(html)
 
-    list_display = (
-        '__str__',
-        'publication_date',
-        'issue_type',
-        'pdf_links',
-    )
-    list_editable = (
-        'publication_date',
-        'issue_type',
-    )
-
 
 @admin.register(PrintIssue)
 class PrintIssueAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
-    # date_hierarchy = 'publication_date'
     actions = [create_pdf]
     actions_on_top = True
     actions_on_bottom = True
     save_on_top = True
     list_per_page = 40
-    list_display = (
-        # 'publication_date',
+    list_display = [
         'pages',
         'pdf',
         'thumbnail',
-        'text',
-        'issue'
-    )
-    search_fields = (
+        'extract',
+        'issue',
+    ]
+    search_fields = [
         'text',
         'pdf',
-    )
-    fieldsets = ((
-        '',
-        {
-            'fields': ((
-                'pdf',
-                'cover_page',
-                'pages',
-                'issue',
-            ), ('large_thumbnail', 'text')),
-        },
-    ), )
-    readonly_fields = (
+    ]
+    readonly_fields = [
         'large_thumbnail',
         'text',
+        'extract',
         'pages',
-    )
+    ]
+    autocomplete_fields = [
+        'issue',
+    ]
+    fieldsets = [[
+        '', {
+            'fields': (
+                ('issue', ),
+                ('pdf', 'cover_page', 'pages'),
+                ('large_thumbnail', 'extract'),
+            )
+        }
+    ]]

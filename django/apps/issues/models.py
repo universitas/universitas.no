@@ -289,6 +289,9 @@ class PrintIssue(models.Model, EditURLMixin):
         else:
             return super().__str__()
 
+    def extract(self):
+        return self.text[:200]
+
     def save(self, *args, **kwargs):
         if self.pk:
             old_self = type(self).objects.get(pk=self.pk)
