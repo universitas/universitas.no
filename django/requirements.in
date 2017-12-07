@@ -3,7 +3,7 @@
 # FROZEN PACKAGES
 
 # Django must be upgraded manually
-django==1.11
+django==2.0
 
 # Breaking changes in version 3
 # http://django-autocomplete-light.readthedocs.io/en/master/index.html
