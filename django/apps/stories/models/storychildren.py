@@ -271,7 +271,11 @@ class StoryImage(StoryMedia):
         return f'[{self.imagefile}]'
 
     def original_ratio(self):
-        return self.imagefile.full_height / self.imagefile.full_width
+        try:
+            return self.imagefile.full_height / self.imagefile.full_width
+        except TypeError:
+            logger.exception('could not calculate ratio')
+            return 1
 
     def needle(self):
         """ Look for a name in the text """

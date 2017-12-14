@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Admin for markup app.
-"""
+""" Admin for markup app.  """
 
 from django.contrib import admin
 

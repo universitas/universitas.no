@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-"""Devalue hotness by 10%"""
 import logging
 
 from apps.stories.models import Story
