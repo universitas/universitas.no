@@ -274,8 +274,10 @@ class StoryImage(StoryMedia):
         try:
             return self.imagefile.full_height / self.imagefile.full_width
         except TypeError:
-            logger.exception('could not calculate ratio')
-            return 1
+            logger.warn(
+                'cannot calculate ratio for image %s' % (self.imagefile, )
+            )
+            return super().original_ratio()
 
     def needle(self):
         """ Look for a name in the text """
