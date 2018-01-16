@@ -11,6 +11,7 @@ from apps.stories.feeds import LatestStories
 from apps.stories.views import article_view
 from django.conf import settings
 from django.contrib import admin
+from django.http import HttpResponse
 from django.urls import include, re_path
 from django.views.generic import TemplateView
 
@@ -58,6 +59,11 @@ urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
     re_path(r'^robots.txt$', RobotsTxtView.as_view(), name='robots.txt'),
     re_path(r'^humans.txt$', HumansTxtView.as_view(), name='humans.txt'),
+    re_path(
+        f'^{settings.FACEBOOK_DOMAIN_VERIFICATION}.html$',
+        lambda request: HttpResponse(settings.FACEBOOK_DOMAIN_VERIFICATION),
+        name='facebook_verification'
+    ),
     re_path(r'^search/', include(search_urls)),
     re_path(r'^', include(redirect_urls)),
     re_path(
