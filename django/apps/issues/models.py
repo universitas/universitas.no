@@ -112,7 +112,7 @@ def pdf_to_image(pdf, page=1, size=800, file_format='jpeg'):
         resolution=int(1.6 * 72 * scaleby),
     )
     # fix problem with colorspace
-    foreground.type = 'truecolor'
+    foreground.type = 'truecolormatte'
     foreground.resize(*dims, 25)
     # white background
     background = WandImage(

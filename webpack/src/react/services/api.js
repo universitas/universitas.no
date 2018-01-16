@@ -4,22 +4,10 @@ import * as Cookies from 'js-cookie'
 // base url for the api
 const BASE_URL = '/api'
 
-// base fetch init values
-// https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
-const BASE_INIT = {
-  method: 'GET',
-  credentials: 'same-origin',
-}
-
-// Extract csrf-token from cookie and assign to http request headers
-// getCsrfToken :: Object -> Object
-const getCsrfToken = R.assocPath(
-  ['headers', 'X-CSRFToken'],
-  Cookies.get('csrftoken') || 'NO-CSRF-COOKIE'
-)
-
 // Set content type header
 const contentType = R.assocPath(['headers', 'Content-Type'])
+
+const mergeDeepAll = R.reduce(R.mergeDeepRight, {})
 
 // Create a merge-able init mapping with body data and content type header
 // jsonifyBody :: Any -> Object
@@ -33,17 +21,23 @@ const jsonifyBody = R.cond([
 ])
 
 // Merge headers and body to build an init object for fetch spec
-export const initializeRequest = (head, body) =>
-  R.mergeDeepRight(
-    R.mergeDeepLeft(head || {}, getCsrfToken(BASE_INIT)),
-    jsonifyBody(body)
-  )
+export const initializeRequest = (head = {}, body) =>
+  mergeDeepAll([
+    {
+      method: 'GET',
+      credentials: 'same-origin',
+      headers: { 'X-CSRFToken': Cookies.get('csrftoken') || 'NO-CSRF-COOKIE' },
+    },
+    head,
+    jsonifyBody(body),
+  ])
 
 // Perform fetch return promise containing an object with either an
 // `error` or `response` property. {error: Object} | {response: Object}
 // apiFetch :: (String, Object, Any) -> Promise[Object]
 export const apiFetch = (url, head = {}, body = null) => {
   const init = initializeRequest(head, body)
+  console.log(init)
   return fetch(url, init)
     .then(response =>
       response
