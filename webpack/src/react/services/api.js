@@ -21,14 +21,14 @@ const jsonifyBody = R.cond([
 ])
 
 // Merge headers and body to build an init object for fetch spec
-export const initializeRequest = (head = {}, body) =>
+export const initializeRequest = (head, body) =>
   mergeDeepAll([
     {
       method: 'GET',
       credentials: 'same-origin',
       headers: { 'X-CSRFToken': Cookies.get('csrftoken') || 'NO-CSRF-COOKIE' },
     },
-    head,
+    R.defaultTo({}, head),
     jsonifyBody(body),
   ])
 
