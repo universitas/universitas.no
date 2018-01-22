@@ -2,9 +2,7 @@
 esc=$(printf '\033')
 yellow="$esc[33;1m"
 red="$esc[31;1m"
-purple="$esc[35;1m"
-bold="$esc[37;1m"
-reset="$esc[0m"
+purple="$esc[35;1m" bold="$esc[37;1m" reset="$esc[0m"
 
 main__(){
 while (( $# > 0 )); do
@@ -27,6 +25,7 @@ while (( $# > 0 )); do
 
   npmi    ) docker-compose run --rm -u root webpack install $rest; exit ;; # npm install [packages...]
   npmup   ) docker-compose run --rm -u root webpack update ;; # npm update js packages
+  storyb  ) docker-compose run --rm -u root --name storybook -p 9001:9001 webpack storybook ;;  # start storybook on port 9001
   pyup    ) cd django; pip-compile --upgrade ;; # pip update python packages
 
   repl    ) docker-compose run --rm web django-admin shell_plus --quiet-load ;; # django repl shell
