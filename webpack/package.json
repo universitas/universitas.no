@@ -25,6 +25,7 @@
     ]
   },
   "dependencies": {
+    "@storybook/addon-console": "^1.0.0",
     "@storybook/react": "^3.3.10",
     "babel-core": "^6",
     "babel-jest": "^21",

@@ -1,5 +1,5 @@
 {% extends "info-page.html" %}
-{% load thumbnail %}
+{% load static thumbnail %}
 {% block title %}
   Om Universitas
 {% endblock title %}
@@ -9,8 +9,14 @@
     <h1>Om Universitas</h1>
     <p>Universitas er Norges største studentavis.
     <p>Avisen har et opplag på 14 000, og kommer ut 35 ganger i året.
-
+    <div style='padding: 1em; padding-right: 0; float:right; max-width: 120px'>
+      <a href="http://www.studentvelferd.no/">
+      <img src="{% static 'images/velferdstinget_logo.svg' %}"/>
+      </a>
+    </div>
     <p>Universitas mottar støtte fra Studentsamskipnaden i Oslo og Akershus (SiO), og alle studenter som betaler semesteravgift er dermed med på å støtte Universitas økonomisk. Papirutgaven av Universitas distribueres rundt på læresteder tilknyttet SiO.
+    <p>Velferdstinget i Oslo og Akershus fordeler semesteravgiften, men står
+    uten redaksjonelt ansvar.
 
     <p>Universitas legges også ut ved studentbyene under SiO. Redaksjonen består av fire heltidsansatte og en rekke journalister, fotografer, sideuttegnere etc. som jobber frilans.
 
