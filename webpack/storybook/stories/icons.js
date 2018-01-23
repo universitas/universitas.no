@@ -7,23 +7,37 @@ const iconStyle = {
   fontSize: '150%',
   cursor: 'pointer',
 }
+const tableStyle = {
+  padding: '0.2em',
+}
+
+const Icon = ({ name }) =>
+  Icons[name]({
+    style: iconStyle,
+    onClick: logMessage(`clicked ${name}`),
+  })
 
 export default () => {
   return (
-    <table>
-      <tbody>
-        {Object.keys(Icons).map(name => (
-          <tr key={name}>
-            <td>
-              {Icons[name]({
-                style: iconStyle,
-                onClick: logMessage(`clicked ${name}`),
-              })}
-            </td>
-            <td>{`<${name} />`}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <section>
+      <h1>Icons</h1>
+      <p>
+        Icon components in <code>components/Icons</code>
+      </p>
+      <table>
+        <tbody>
+          {Object.keys(Icons).map(name => (
+            <tr key={name}>
+              <td style={tableStyle}>
+                <Icon name={name} />
+              </td>
+              <td style={tableStyle}>
+                <code>{`<${name} />`}</code>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
   )
 }

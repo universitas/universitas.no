@@ -9,5 +9,29 @@ module.exports = (baseConfig, env) => {
   // Extend it as you need.
 
   config.resolve.modules.push('../src/react')
+  config.module.rules.push({
+    test: /\.scss$/,
+    use: [
+      { loader: 'style-loader' },
+      { loader: 'css-loader', options: { sourceMap: false } },
+      {
+        loader: 'postcss-loader',
+        options: {
+          sourceMap: false,
+          plugins: () => [require('autoprefixer')],
+        },
+      },
+      {
+        loader: 'sass-loader',
+        options: {
+          sourceMap: false,
+          includePaths: [
+            'node_modules/foundation-sites/scss/',
+            'node_modules/slick-carousel/',
+          ],
+        },
+      },
+    ],
+  })
   return config
 }
