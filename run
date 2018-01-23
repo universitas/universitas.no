@@ -23,8 +23,8 @@ while (( $# > 0 )); do
   webpack ) docker-compose run --rm webpack ${rest:-bash}; exit;;
   build   ) webpack_build ;; # build webpack
 
-  npmi    ) docker-compose run --rm -u root webpack install $rest; exit ;; # npm install [packages...]
-  npmup   ) docker-compose run --rm -u root webpack update ;; # npm update js packages
+  npmi    ) docker-compose run --rm webpack install $rest; exit ;; # npm install [packages...]
+  npmup   ) docker-compose run --rm webpack update ;; # npm update js packages
   storyb  ) docker-compose run --rm --name storybook -p 9001:9001 webpack storybook ;;  # start storybook on port 9001
   storybb ) # build storybook
     rm -r docs/

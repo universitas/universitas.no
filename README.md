@@ -1,14 +1,11 @@
+| master | development |
+| --- | --- |
+| [![tmb]][travis] [![lmb]][landscapeM] | [![tdb]][travis] [![ldb]][landscapeD] |
+
 # universitas.no
+Source code for the newspaper [universitas.no][universitas]
 
-Source code for the newspaper universitas.no
-
-develop:
-[![Build Status](https://travis-ci.org/universitas/universitas.no.svg?branch=develop)](https://travis-ci.org/universitas/universitas.no)
-[![Code Health](https://landscape.io/github/universitas/universitas.no/develop/landscape.svg?style=flat)](https://landscape.io/github/universitas/universitas.no/develop)
-
-master:
-[![Build Status](https://travis-ci.org/universitas/universitas.no.svg?branch=master)](https://travis-ci.org/universitas/universitas.no)
-[![Code Health](https://landscape.io/github/universitas/universitas.no/master/landscape.svg?style=flat)](https://landscape.io/github/universitas/universitas.no/master)
+## Storybooks
 
 React.js [storybooks](http://universitas.github.io/universitas.no/) for the master branch.
 
@@ -37,4 +34,13 @@ React.js [storybooks](http://universitas.github.io/universitas.no/) for the mast
 - [Sentry](https://sentry.io) Real time error tracking
 - [Google Adsense](https://www.google.com/adsense/start/) Ads
 - [Disqus](https://disqus.com) Comment fields
+
+[tmb]:https://travis-ci.org/universitas/universitas.no.svg?branch=master
+[tdb]:https://travis-ci.org/universitas/universitas.no.svg?branch=develop
+[travis]:https://travis-ci.org/universitas/universitas.no
+[lmb]:https://landscape.io/github/universitas/universitas.no/master/landscape.svg?style=flat
+[ldb]:https://landscape.io/github/universitas/universitas.no/develop/landscape.svg?style=flat
+[landscapeM]:https://landscape.io/github/universitas/universitas.no/master
+[landscapeD]:https://landscape.io/github/universitas/universitas.no/develop
+[universitas]:http://universitas.no
 
