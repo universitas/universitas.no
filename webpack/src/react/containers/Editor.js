@@ -36,10 +36,11 @@ class Editor extends React.Component {
   }
   render() {
     const moveCaret = e => this.props.moveCaret(e.target.selectionStart)
+    // console.log(this.props.content)
     return (
       <section className="Editor">
         <EditorToolBar />
-        <textArea
+        <textarea
           className="TextArea"
           autoCapitalize="sentences"
           lang="no-nn"

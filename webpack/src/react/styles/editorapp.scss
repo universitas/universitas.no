@@ -1,21 +1,20 @@
 @mixin scrollbars(
   $size, $foreground-color,
-  $background-color: mix($foreground-color, white, 50%))
-{
+  $background-color: mix($foreground-color, white, 50%)) {
   &::-webkit-scrollbar {
-      width:  $size;
-      height: $size;
+    width: $size;
+    height: $size;
   }
   &::-webkit-scrollbar-thumb {
-      background: $foreground-color;
-      min-height: 20 * $size;
-      &:hover {
-        background: lighten($foreground-color, 10%);
-      }
+    background: $foreground-color;
+    min-height: 20 * $size;
+    &:hover {
+      background: lighten($foreground-color, 10%);
+    }
   }
 
   &::-webkit-scrollbar-track {
-      background: $background-color;
+    background: $background-color;
   }
 }
 
@@ -27,20 +26,23 @@
 }
 
 $scrollbarbg: #bbb;
-.Preview {
-  @include scrollbars(.6em, $scrollbarbg);
+.EditorPreview {
+  @include scrollbars(0.6em, $scrollbarbg);
   flex: 1;
   padding: 1em;
   // border: 2px solid blue;
   overflow-x: hidden;
   overflow-y: scroll;
   .scrollTo {
-     background: #ff8;
+    background: #ff8;
   }
   span {
     &:hover {
       background: lighten(blue, 40%);
     }
+  }
+  .inngangsord {
+    font-weight: bolder;
   }
 }
 
@@ -56,8 +58,9 @@ $scrollbarbg: #bbb;
   $textareabg: #eee;
 
   .TextArea {
-    padding: .5em;
-    &:active, &:focus {
+    padding: 0.5em;
+    &:active,
+    &:focus {
       outline: none;
       background: lighten($textareabg, 4%);
     }
@@ -67,6 +70,6 @@ $scrollbarbg: #bbb;
     resize: none;
     overflow-x: hidden;
     overflow-y: scroll;
-    @include scrollbars(.6em, $scrollbarbg);
+    @include scrollbars(0.6em, $scrollbarbg);
   }
 }

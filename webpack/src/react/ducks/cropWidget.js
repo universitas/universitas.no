@@ -102,11 +102,9 @@ export const reducer = (state = initialState, action) => {
       }
       top > bottom && ([dt, db] = [db, dt])
       left > right && ([dl, dr] = [dr, dl])
-      return {
-        ...state,
-        crop_box: normalize({ x, y, left, top, right, bottom }),
-        dragging: { ...state.dragging, dragMask: [dl, dt, dr, db, dc] },
-      }
+      const crop_box = normalize({ x, y, left, top, right, bottom })
+      const dragging = { ...state.dragging, dragMask: [dl, dt, dr, db, dc] }
+      return { ...state, crop_box, dragging }
     }
     case END_DRAG_HANDLE:
       return {

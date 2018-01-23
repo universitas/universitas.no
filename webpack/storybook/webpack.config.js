@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 
 // load the default config generator.
 const genDefaultConfig = require('@storybook/react/dist/server/config/defaults/webpack.config.js')
@@ -9,6 +10,13 @@ module.exports = (baseConfig, env) => {
   // Extend it as you need.
 
   config.resolve.modules.push('../src/react')
+  config.plugins.push(
+    new webpack.ProvidePlugin({
+      React: 'react',
+      R: 'ramda',
+      PropTypes: 'prop-types',
+    })
+  )
   config.module.rules.push({
     test: /\.scss$/,
     use: [

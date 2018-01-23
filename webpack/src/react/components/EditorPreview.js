@@ -5,17 +5,19 @@ import { getNodes, getActiveIndex } from 'ducks/editor'
 const Tingo = (n = 0, { children, ...props }) => {
   const tingoPattern = n ? `(?:\\S+\\s+){1,${n}}` : '.{1,12}\\S*'
   const fullPattern = RegExp(`^(${tingoPattern})(.*)$`)
-  if (typeof children == 'string') {
-    const match = children.trim().match(fullPattern)
+  const text = children[0]
+  if (typeof text == 'string') {
+    const match = text.trim().match(fullPattern)
     if (match) {
       return (
         <p className="tingo" {...props}>
-          <span className="inngangsord">{match[1]}</span>{match[2]}
+          <span className="inngangsord">{match[1]}</span>
+          {match[2]}
         </p>
       )
     }
   }
-  return <p {...props}>{children}</p>
+  return <p {...props}>{text}</p>
 }
 
 const Link = ({ target, ...props }) => (
@@ -55,26 +57,24 @@ const Node = ({ type, children, ...props }) => {
       Element = elements.em
     }
   }
-  //props.title = type || 'span'
-  const renderChild = (props, key) =>
-    props.type ? <Node key={key} {...props} /> : props.children
-  return (
-    <Element {...props}>
-      {typeof children == 'string' ? children : children.map(renderChild)}
-    </Element>
-  )
+  const renderChild = (props, key) => {
+    return props.type ? <Node key={key} {...props} /> : props.children
+  }
+  return <Element {...props}>{children.map(renderChild)}</Element>
 }
 
 const NodeWrapper = ({ scrollTo, ...props }) =>
-  scrollTo
-    ? <div className="scrollTo" ref={scrollElement}>
-        <Node {...props} />
-      </div>
-    : <Node {...props} />
+  scrollTo ? (
+    <div className="scrollTo" ref={scrollElement}>
+      <Node {...props} />
+    </div>
+  ) : (
+    <Node {...props} />
+  )
 
-const Preview = ({ nodes, activeIndex }) => {
+const EditorPreview = ({ nodes, activeIndex }) => {
   return (
-    <section className="Preview">
+    <section className="EditorPreview">
       {nodes.map(({ index, ...props }) => (
         <NodeWrapper key={index} scrollTo={index == activeIndex} {...props} />
       ))}
@@ -87,4 +87,4 @@ const mapStateToProps = R.applySpec({
   activeIndex: getActiveIndex,
 })
 
-export default connect(mapStateToProps)(Preview)
+export default connect(mapStateToProps)(EditorPreview)

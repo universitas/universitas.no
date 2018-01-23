@@ -2,13 +2,13 @@
 import { Provider } from 'react-redux'
 import configureStore from './configureStore'
 import Editor from 'containers/Editor'
-import Preview from 'components/Preview'
+import EditorPreview from 'components/EditorPreview'
 import 'styles/editorapp.scss'
 
 const App = () => (
   <section className="EditApp">
     <Editor />
-    <Preview />
+    <EditorPreview />
   </section>
 )
 const rootStore = configureStore()
