@@ -1,8 +1,6 @@
 # universitas.no
 
 Source code for the newspaper universitas.no
-React.js [storybooks](http://universitas.github.io/universitas.no/) for the
-master branch.
 
 develop:
 [![Build Status](https://travis-ci.org/universitas/universitas.no.svg?branch=develop)](https://travis-ci.org/universitas/universitas.no)
@@ -12,7 +10,7 @@ master:
 [![Build Status](https://travis-ci.org/universitas/universitas.no.svg?branch=master)](https://travis-ci.org/universitas/universitas.no)
 [![Code Health](https://landscape.io/github/universitas/universitas.no/master/landscape.svg?style=flat)](https://landscape.io/github/universitas/universitas.no/master)
 
-
+React.js [storybooks](http://universitas.github.io/universitas.no/) for the master branch.
 
 ## Backend Stack
 - [Django](https://www.djangoproject.com/) Python web framework
