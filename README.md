@@ -7,7 +7,7 @@ Source code for the newspaper [universitas.no][universitas]
 
 ## Storybooks
 
-React.js [storybooks](http://universitas.github.io/universitas.no/) for the master branch.
+React.js [storybooks](https://universitas.github.io/universitas.no/) for the master branch.
 
 ## Backend Stack
 - [Django](https://www.djangoproject.com/) Python web framework

@@ -2,11 +2,12 @@ from django.conf.urls import include, url
 from rest_auth import urls as rest_auth_urls
 from rest_framework import routers
 
-from .contributor_serializers import ContributorViewSet
-from .issue_serializers import IssueViewSet, PrintIssueViewSet
-from .legacy_serializers import ProdStoryViewSet
-from .photo_serializers import ImageFileViewSet
-from .story_serializers import StoryTypeViewSet, StoryViewSet
+from .contributors import ContributorViewSet
+from .issues import IssueViewSet, PrintIssueViewSet
+from .legacy_viewsets import ProdStoryViewSet
+from .permissions import PermissionViewSet
+from .photos import ImageFileViewSet
+from .stories import StoryTypeViewSet, StoryViewSet
 from .upload_image import FileUploadView
 
 router = routers.DefaultRouter()
@@ -17,6 +18,7 @@ router.register(r'contributors', ContributorViewSet)
 router.register(r'stories', StoryViewSet, 'story')
 router.register(r'storytypes', StoryTypeViewSet)
 router.register(r'legacy', ProdStoryViewSet, 'legacy')
+router.register(r'permissions', PermissionViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),
