@@ -37,7 +37,6 @@ export const initializeRequest = (head, body) =>
 // apiFetch :: (String, Object, Any) -> Promise[Object]
 export const apiFetch = (url, head = {}, body = null) => {
   const init = initializeRequest(head, body)
-  console.log(init)
   return fetch(url, init)
     .then(response =>
       response
