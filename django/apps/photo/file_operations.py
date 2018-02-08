@@ -44,6 +44,14 @@ def pil_image(fp: Fileish) -> PIL.Image:
     return PIL.Image.open(blob)
 
 
+def valid_image(fp: Fileish) -> bool:
+    try:
+        pil_image(fp).verify()
+        return True
+    except (SyntaxError, OSError, RuntimeError, ValueError, TypeError) as e:
+        return False
+
+
 def get_md5(fp: Fileish) -> str:
     """Hexadecimal md5 hash of a Fileish stored on local disk"""
     hasher = hashlib.md5(read_data(fp))

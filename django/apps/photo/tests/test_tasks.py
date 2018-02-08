@@ -33,7 +33,7 @@ def test_new_staging_images():
 
 
 @pytest.mark.django_db
-def test_import_images(jpeg_file, png_file):
+def test_import_images(jpeg_file, png_file, broken_image_file):
     assert ImageFile.objects.count() == 0
 
     assert import_image(jpeg_file)
@@ -50,3 +50,6 @@ def test_import_images(jpeg_file, png_file):
 
     # exists, but is smaller
     assert not import_image(jpeg_file)
+
+    # should not import broken image
+    assert not import_image(broken_image_file)

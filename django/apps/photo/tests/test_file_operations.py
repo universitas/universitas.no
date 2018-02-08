@@ -1,7 +1,12 @@
 """ Tests for exif library """
 import pytest
 from apps.photo.file_operations import (
-    get_exif, get_filesize, get_imagehash, get_md5, get_mtime
+    get_exif,
+    get_filesize,
+    get_imagehash,
+    get_md5,
+    get_mtime,
+    valid_image,
 )
 from django.core.files import File as DjangoFile
 
@@ -40,3 +45,11 @@ def test_get_exif(file):
 def test_get_mtime(jpeg_file):
     # timestamp value is large
     assert get_mtime(jpeg_file) > 15e8
+
+
+def test_valid_image(jpeg_file, png_file, broken_image_file):
+    assert valid_image(jpeg_file)
+    assert valid_image(png_file)
+    assert not valid_image(broken_image_file)
+    assert not valid_image('abc')
+    assert not valid_image(jpeg_file.parent)

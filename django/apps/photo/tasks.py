@@ -116,7 +116,10 @@ def import_staging_images(max_age=timedelta(minutes=10)) -> List[Path]:
     return files_saved
 
 
-def import_image(file: Path):
+def import_image(file: Path) -> bool:
+    if not ops.valid_image(file):
+        return False
+
     img = ImageFile(
         md5=ops.get_md5(file),
         imagehash=ops.get_imagehash(file),
