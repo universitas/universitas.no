@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-22 12:46+0100\n"
+"POT-Creation-Date: 2018-02-23 18:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid "Create dummy adverts."
 msgstr ""
 
-#: apps/adverts/appconf.py:7 apps/adverts/models.py:269
+#: apps/adverts/appconf.py:7 apps/adverts/models.py:270
 msgid "Adverts"
 msgstr ""
 
@@ -113,156 +113,156 @@ msgstr ""
 msgid "Who bought this ad?"
 msgstr ""
 
-#: apps/adverts/models.py:214
+#: apps/adverts/models.py:215
 msgid "Where to show the ad"
 msgstr ""
 
-#: apps/adverts/models.py:217
+#: apps/adverts/models.py:218
 msgid "Ordering of the ad within the channel"
 msgstr ""
 
-#: apps/adverts/models.py:221
+#: apps/adverts/models.py:222
 msgid "Publication status"
 msgstr ""
 
-#: apps/adverts/models.py:226
+#: apps/adverts/models.py:227
 msgid "Advert type."
 msgstr ""
 
-#: apps/adverts/models.py:232
+#: apps/adverts/models.py:233
 msgid "When to start serving this ad"
 msgstr ""
 
-#: apps/adverts/models.py:236
+#: apps/adverts/models.py:237
 msgid "When to stop serving this ad"
 msgstr ""
 
-#: apps/adverts/models.py:240
+#: apps/adverts/models.py:241
 msgid "Image Ad: image file in jpg or png format"
 msgstr ""
 
-#: apps/adverts/models.py:246
+#: apps/adverts/models.py:247
 msgid "Image Ad: url that ad links to"
 msgstr ""
 
-#: apps/adverts/models.py:251
+#: apps/adverts/models.py:252
 msgid "Image ad: alternative text for image"
 msgstr ""
 
-#: apps/adverts/models.py:257
+#: apps/adverts/models.py:258
 msgid "HTML to use for ad instead of serving an image ad."
 msgstr ""
 
-#: apps/adverts/models.py:268
+#: apps/adverts/models.py:269
 msgid "Advert"
 msgstr ""
 
-#: apps/adverts/models.py:295
+#: apps/adverts/models.py:296
 msgid "Choose one or more ad channels before publishing."
 msgstr ""
 
-#: apps/adverts/models.py:300
+#: apps/adverts/models.py:301
 msgid "Published ad must contain an image or html code."
 msgstr ""
 
-#: apps/adverts/models.py:306
+#: apps/adverts/models.py:307
 msgid "Image ads must have a link."
 msgstr ""
 
-#: apps/adverts/models.py:310
+#: apps/adverts/models.py:311
 msgid "Image ads must have alternative text."
 msgstr ""
 
-#: apps/adverts/models.py:315
+#: apps/adverts/models.py:316
 msgid "End time must be after start time."
 msgstr ""
 
-#: apps/contributors/admin.py:80 apps/contributors/admin.py:86
+#: apps/contributors/admin.py:17
+msgid "merging %(number) instances into %(first)"
+msgstr ""
+
+#: apps/contributors/admin.py:103 apps/contributors/admin.py:109
 msgid "active"
 msgstr ""
 
-#: apps/contributors/admin.py:87
+#: apps/contributors/admin.py:110
 msgid "quit"
 msgstr ""
 
-#: apps/contributors/admin.py:88
+#: apps/contributors/admin.py:111
 msgid "not started"
 msgstr ""
 
-#: apps/contributors/admin.py:89
+#: apps/contributors/admin.py:112
 msgid "no end date"
 msgstr ""
 
-#: apps/contributors/appconf.py:7 apps/contributors/models.py:82
+#: apps/contributors/appconf.py:7 apps/contributors/models.py:81
 msgid "Contributors"
 msgstr ""
 
-#: apps/contributors/autocomplete_light_registry.py:13
-msgid "Name of person."
-msgstr ""
-
-#: apps/contributors/models.py:46
+#: apps/contributors/models.py:45
 msgid "Unknown"
 msgstr ""
 
-#: apps/contributors/models.py:47
+#: apps/contributors/models.py:46
 msgid "Active"
 msgstr ""
 
-#: apps/contributors/models.py:48
+#: apps/contributors/models.py:47
 msgid "Retired"
 msgstr ""
 
-#: apps/contributors/models.py:49
+#: apps/contributors/models.py:48
 msgid "External"
 msgstr ""
 
-#: apps/contributors/models.py:68
+#: apps/contributors/models.py:67
 msgid "Verified to be a correct name."
 msgstr ""
 
-#: apps/contributors/models.py:76
+#: apps/contributors/models.py:75
 msgid "photo used for byline credit."
 msgstr ""
 
-#: apps/contributors/models.py:81
+#: apps/contributors/models.py:80
 msgid "Contributor"
 msgstr ""
 
-#: apps/contributors/models.py:185 apps/markup/models.py:175
-#: apps/stories/admin.py:217 apps/stories/models/story.py:136
+#: apps/contributors/models.py:184 apps/markup/models.py:175
+#: apps/stories/admin.py:220 apps/stories/models/story.py:136
 msgid "title"
 msgstr ""
 
-#: apps/contributors/models.py:186
+#: apps/contributors/models.py:185
 msgid "Job title at the publication."
 msgstr ""
 
-#: apps/contributors/models.py:191
+#: apps/contributors/models.py:190
 msgid "is management"
 msgstr ""
 
-#: apps/contributors/models.py:192
+#: apps/contributors/models.py:191
 msgid "Is this a management position"
 msgstr ""
 
-#: apps/contributors/models.py:197
+#: apps/contributors/models.py:196
 msgid "groups"
 msgstr ""
 
-#: apps/contributors/models.py:198
+#: apps/contributors/models.py:197
 msgid "Implicit auth Group membership"
 msgstr ""
 
-#: apps/contributors/models.py:202
+#: apps/contributors/models.py:201
 msgid "Position"
 msgstr ""
 
-#: apps/contributors/models.py:203
+#: apps/contributors/models.py:202
 msgid "Positions"
 msgstr ""
 
-#: apps/contributors/models.py:239
+#: apps/contributors/models.py:238
 msgid "position"
 msgstr ""
 
@@ -270,11 +270,11 @@ msgstr ""
 msgid "contributor"
 msgstr ""
 
-#: apps/contributors/models.py:247
+#: apps/contributors/models.py:248
 msgid "start date"
 msgstr ""
 
-#: apps/contributors/models.py:252
+#: apps/contributors/models.py:253
 msgid "end date"
 msgstr ""
 
@@ -298,77 +298,77 @@ msgstr ""
 msgid "{} is not a number between {} and {}"
 msgstr ""
 
-#: apps/frontpage/models.py:84
+#: apps/frontpage/models.py:85
 msgid "height - minimum 1 maximum 12"
 msgstr ""
 
-#: apps/frontpage/models.py:92
+#: apps/frontpage/models.py:93
 msgid "width - minimum 1 maximum 12"
 msgstr ""
 
-#: apps/frontpage/models.py:109 apps/frontpage/models.py:110
+#: apps/frontpage/models.py:110 apps/frontpage/models.py:111
 msgid "Story module"
 msgstr ""
 
-#: apps/frontpage/models.py:119
+#: apps/frontpage/models.py:121
 msgid "larger numbers come first"
 msgstr ""
 
-#: apps/frontpage/models.py:149
+#: apps/frontpage/models.py:151
 msgid "Static module"
 msgstr ""
 
-#: apps/frontpage/models.py:150
+#: apps/frontpage/models.py:152
 msgid "Static modules"
 msgstr ""
 
-#: apps/frontpage/models.py:156
+#: apps/frontpage/models.py:158
 msgid "Placement on front page"
 msgstr ""
 
-#: apps/frontpage/models.py:159
+#: apps/frontpage/models.py:161
 msgid "Use django template rendering"
 msgstr ""
 
-#: apps/frontpage/models.py:240
+#: apps/frontpage/models.py:242
 msgid "Frontpage Story"
 msgstr ""
 
-#: apps/frontpage/models.py:241
+#: apps/frontpage/models.py:243
 msgid "Frontpage Stories"
 msgstr ""
 
-#: apps/frontpage/models.py:249
+#: apps/frontpage/models.py:254
 msgid "position and size of story element."
 msgstr ""
 
-#: apps/frontpage/models.py:255
+#: apps/frontpage/models.py:260
 msgid "image"
 msgstr ""
 
-#: apps/frontpage/models.py:260
+#: apps/frontpage/models.py:266
 msgid "headline"
 msgstr ""
 
-#: apps/frontpage/models.py:265 apps/markup/models.py:179
+#: apps/frontpage/models.py:271 apps/markup/models.py:179
 #: apps/stories/models/story.py:153
 msgid "kicker"
 msgstr ""
 
-#: apps/frontpage/models.py:270
+#: apps/frontpage/models.py:276
 msgid "vignette"
 msgstr ""
 
-#: apps/frontpage/models.py:275 apps/markup/models.py:183
+#: apps/frontpage/models.py:281 apps/markup/models.py:183
 #: apps/stories/models/story.py:158
 msgid "lede"
 msgstr ""
 
-#: apps/frontpage/models.py:280
+#: apps/frontpage/models.py:286
 msgid "html_class"
 msgstr ""
 
-#: apps/issues/admin.py:38
+#: apps/issues/admin.py:34
 msgid "PDF is not uploaded yet."
 msgstr ""
 
@@ -400,15 +400,15 @@ msgstr ""
 msgid "Pdf issues"
 msgstr ""
 
-#: apps/issues/models.py:268
+#: apps/issues/models.py:270
 msgid "Pdf file for this issue."
 msgstr ""
 
-#: apps/issues/models.py:273
+#: apps/issues/models.py:275
 msgid "An image file of the front page"
 msgstr ""
 
-#: apps/issues/models.py:280
+#: apps/issues/models.py:282
 msgid "Extracted from file."
 msgstr ""
 
@@ -496,24 +496,20 @@ msgstr ""
 msgid "explain this pattern"
 msgstr ""
 
-#: apps/photo/admin.py:36
+#: apps/photo/admin.py:35
 msgid "preview"
 msgstr ""
 
-#: apps/photo/admin.py:38
+#: apps/photo/admin.py:37
 msgid "cropped"
 msgstr ""
 
-#: apps/photo/admin.py:47
+#: apps/photo/admin.py:46
 msgid "Autocrop"
 msgstr ""
 
 #: apps/photo/appconf.py:7 apps/stories/models/byline.py:42
 msgid "Photo"
-msgstr ""
-
-#: apps/photo/autocomplete_light_registry.py:14
-msgid "Filename"
 msgstr ""
 
 #: apps/photo/cropping/models.py:73
@@ -620,68 +616,64 @@ msgstr ""
 msgid "who made this"
 msgstr ""
 
-#: apps/photo/models.py:126
+#: apps/photo/models.py:127
 msgid "description"
 msgstr ""
 
-#: apps/photo/models.py:127
+#: apps/photo/models.py:128
 msgid "Description of image"
 msgstr ""
 
-#: apps/photo/models.py:134
+#: apps/photo/models.py:135
 msgid "copyright information"
 msgstr ""
 
-#: apps/photo/models.py:136
+#: apps/photo/models.py:137
 msgid "extra information about license and attribution if needed."
 msgstr ""
 
-#: apps/photo/models.py:143 apps/photo/models.py:144
+#: apps/photo/models.py:144 apps/photo/models.py:145
 msgid "exif_data"
 msgstr ""
 
-#: apps/photo/models.py:296
+#: apps/photo/models.py:297
 msgid "Profile Image"
 msgstr ""
 
-#: apps/photo/models.py:297
+#: apps/photo/models.py:298
 msgid "Profile Images"
 msgstr ""
 
-#: apps/stories/admin.py:146
+#: apps/stories/admin.py:149
 msgid "make frontpage story"
 msgstr ""
 
-#: apps/stories/admin.py:152 apps/stories/models/story.py:195
+#: apps/stories/admin.py:155 apps/stories/models/story.py:195
 msgid "status"
 msgstr ""
 
-#: apps/stories/admin.py:158
+#: apps/stories/admin.py:161
 msgid "website"
 msgstr ""
 
-#: apps/stories/admin.py:159
+#: apps/stories/admin.py:162
 msgid "unpublished"
 msgstr ""
 
-#: apps/stories/admin.py:160
+#: apps/stories/admin.py:163
 msgid "work in progress"
 msgstr ""
 
-#: apps/stories/admin.py:161
+#: apps/stories/admin.py:164
 msgid "newsdesk"
 msgstr ""
 
-#: apps/stories/admin.py:366 apps/stories/admin.py:373
+#: apps/stories/admin.py:377 apps/stories/admin.py:384
 msgid "find linked stories"
 msgstr ""
 
 #: apps/stories/appconf.py:7 apps/stories/models/story.py:82
 msgid "Stories"
-msgstr ""
-
-#: apps/stories/autocomplete_light_registry.py:15
-msgid "Story headline or lede."
 msgstr ""
 
 #: apps/stories/models/byline.py:39
@@ -693,7 +685,7 @@ msgid "Text"
 msgstr ""
 
 #: apps/stories/models/byline.py:41 apps/stories/models/byline.py:43
-#: apps/stories/models/storychildren.py:309
+#: apps/stories/models/storychildren.py:315
 msgid "Video"
 msgstr ""
 
@@ -721,11 +713,11 @@ msgstr ""
 msgid "PhotoVideo"
 msgstr ""
 
-#: apps/stories/models/byline.py:68
+#: apps/stories/models/byline.py:74
 msgid "Byline"
 msgstr ""
 
-#: apps/stories/models/byline.py:69
+#: apps/stories/models/byline.py:75
 msgid "Bylines"
 msgstr ""
 
@@ -737,39 +729,39 @@ msgstr ""
 msgid "inline links"
 msgstr ""
 
-#: apps/stories/models/links.py:54
+#: apps/stories/models/links.py:58
 msgid "link label"
 msgstr ""
 
-#: apps/stories/models/links.py:59 apps/stories/models/links.py:60
+#: apps/stories/models/links.py:63 apps/stories/models/links.py:64
 msgid "link target"
 msgstr ""
 
-#: apps/stories/models/links.py:66
+#: apps/stories/models/links.py:70
 msgid "link to story on this website."
 msgstr ""
 
-#: apps/stories/models/links.py:67
+#: apps/stories/models/links.py:71
 msgid "linked story"
 msgstr ""
 
-#: apps/stories/models/links.py:73
+#: apps/stories/models/links.py:78
 msgid "alternate link text"
 msgstr ""
 
-#: apps/stories/models/links.py:74
+#: apps/stories/models/links.py:79
 msgid "alt text"
 msgstr ""
 
-#: apps/stories/models/links.py:79 apps/stories/models/links.py:80
+#: apps/stories/models/links.py:84 apps/stories/models/links.py:85
 msgid "link text"
 msgstr ""
 
-#: apps/stories/models/links.py:87
+#: apps/stories/models/links.py:92
 msgid "Status code returned from automatic check."
 msgstr ""
 
-#: apps/stories/models/links.py:88
+#: apps/stories/models/links.py:93
 msgid "http status code"
 msgstr ""
 
@@ -1138,32 +1130,24 @@ msgstr ""
 msgid "Choose an image by name or upload a new one."
 msgstr ""
 
-#: apps/stories/models/storychildren.py:304
+#: apps/stories/models/storychildren.py:310
 msgid "vimeo"
 msgstr ""
 
-#: apps/stories/models/storychildren.py:305
+#: apps/stories/models/storychildren.py:311
 msgid "youtube"
 msgstr ""
 
-#: apps/stories/models/storychildren.py:310
+#: apps/stories/models/storychildren.py:316
 msgid "Videos"
 msgstr ""
 
-#: apps/stories/models/storychildren.py:320
+#: apps/stories/models/storychildren.py:326
 msgid "id for video file."
 msgstr ""
 
-#: apps/stories/models/storychildren.py:322
+#: apps/stories/models/storychildren.py:328
 msgid "the part of the url that identifies this particular video"
-msgstr ""
-
-#: templates/admin/base_site.html:59
-msgid "Django site admin"
-msgstr ""
-
-#: templates/admin/base_site.html:62
-msgid "Django administration"
 msgstr ""
 
 #: templates/registration/password_change_done.html:3
@@ -1333,14 +1317,14 @@ msgstr ""
 msgid "Reset my password"
 msgstr ""
 
-#: universitas/base.py:210
+#: universitas/base.py:211
 msgid "Norwegian Bokmal"
 msgstr ""
 
-#: universitas/base.py:211
+#: universitas/base.py:212
 msgid "Norwegian Nynorsk"
 msgstr ""
 
-#: universitas/base.py:212
+#: universitas/base.py:213
 msgid "English"
 msgstr ""

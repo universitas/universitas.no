@@ -3,7 +3,6 @@ import logging
 # from allauth.account.models import EmailAccount
 from allauth.exceptions import ImmediateHttpResponse
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
-
 from apps.contributors.models import Contributor
 from apps.contributors.tasks import connect_contributor_to_user
 from django.contrib import messages
@@ -17,15 +16,19 @@ User = get_user_model()
 
 
 def get_instance(Model, *lookups):
+    """Helper function to search for model instance by a cascade of lookups"""
     for kwargs in lookups:
+        qs = Model.objects.filter(**kwargs)
         try:
-            return Model.objects.get(**kwargs)
+            return qs.get()
+        except Model.MultipleObjectsReturned:
+            return qs.last()
         except Model.DoesNotExist:
             pass
 
 
 class AutoConnectSocialAccountAdapter(DefaultSocialAccountAdapter):
-
+    """Automatically link facebook account to matching django user."""
     unknown_user = ('Could not find an active staff member with name %(name)s')
     not_verified = (
         'The facebook user %(name)s is not verified.\n'
@@ -62,7 +65,9 @@ class AutoConnectSocialAccountAdapter(DefaultSocialAccountAdapter):
             raise ImmediateHttpResponse(redirect('prodsys'))
 
         contributor = get_instance(
-            Contributor, dict(email=email), dict(display_name=name)
+            Contributor,
+            dict(status=Contributor.ACTIVE, email=email),
+            dict(status=Contributor.ACTIVE, display_name=name)
         )
         if contributor:
             user = connect_contributor_to_user(contributor, create=True)

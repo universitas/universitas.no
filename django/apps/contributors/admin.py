@@ -1,12 +1,23 @@
 """ Admin for contributors app.  """
-
 from apps.stories.admin import BylineInline
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from utils.merge_model_objects import merge_instances
 
 from .models import Contributor, Position, Stint
+
+
+def merge_contributors(modeladmin, request, queryset):
+    """Merge multiple contributors into one."""
+    first, *rest = list(queryset)
+    messages.add_message(
+        request, messages.INFO,
+        _('merging %(number)s instances into %(first)s') %
+        {'number': len(rest), 'first': first}
+    )
+    merge_instances(first, *rest)
 
 
 class StintInline(
@@ -26,6 +37,7 @@ class StintInline(
 
 @admin.register(Contributor)
 class ContributorAdmin(admin.ModelAdmin):
+    actions = [merge_contributors]
 
     inlines = [
         StintInline,
