@@ -10,8 +10,8 @@ const MODEL = 'images'
 
 const filters = [
   { toggle: true, attr: 'limit', model: MODEL, value: 25, label: '25' },
-  { toggle: true, attr: 'limit', model: MODEL, value: 50, label: '50' },
   { toggle: true, attr: 'limit', model: MODEL, value: 75, label: '75' },
+  { toggle: true, attr: 'limit', model: MODEL, value: 150, label: '150' },
 ]
 
 const PhotoList = ({ model = MODEL }) => {

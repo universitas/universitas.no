@@ -1,4 +1,4 @@
-@import 'storylist';
+@import "storylist";
 $darkgrey: #555;
 .ListPanel {
   flex: 1;
@@ -11,14 +11,14 @@ $darkgrey: #555;
     flex-direction: column;
     margin: 0;
     overflow-y: scroll;
+    overflow-x: hidden;
   }
-  table{
+  table {
     thead {
       width: calc(100% - 16px);
     }
     tbody {
       flex: 1;
-      overflow-y: scroll;
     }
     tr {
       width: 100%;
@@ -26,12 +26,14 @@ $darkgrey: #555;
       table-layout: fixed;
     }
   }
-  .TopBar, .BottomBar {
+  .TopBar,
+  .BottomBar {
     background-color: lighten($darkgrey, 40%);
     // align-content: flex-start;
     // align-items: space-around;
     // justify-content: space-between;
-    .Filters, .Navigation {
+    .Filters,
+    .Navigation {
       flex-wrap: wrap;
       display: flex;
       margin: 0.2em;
@@ -39,7 +41,8 @@ $darkgrey: #555;
       // justify-content: stretch;
       align-items: center;
     }
-    .info, button {
+    .info,
+    button {
       font-size: 0.8em;
       padding: 0.5em;
       margin: 0.2em;
@@ -59,9 +62,17 @@ $darkgrey: #555;
         background-color: scale_color($color, $saturation: 100, $lightness: 15);
       }
       &.inactive {
-        background-color: scale_color($color, $lightness: -50, $saturation: -70);
+        background-color: scale_color(
+          $color,
+          $lightness: -50,
+          $saturation: -70
+        );
         &:hover {
-          background-color: scale_color($color, $lightness: -30, $saturation: -50);
+          background-color: scale_color(
+            $color,
+            $lightness: -30,
+            $saturation: -50
+          );
         }
       }
       &:disabled {

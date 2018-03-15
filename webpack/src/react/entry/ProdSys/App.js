@@ -34,20 +34,18 @@ const ProdSys = () => (
       <ErrorTool />
       <UserTool />
     </section>
-    <section className="ListPanel">
-      <Fragment forRoute="/stories">
-        <StoryList />
-      </Fragment>
-      <Fragment forRoute="/issues">
-        <IssueList />
-      </Fragment>
-      <Fragment forRoute="/contributors">
-        <ContributorList />
-      </Fragment>
-      <Fragment forRoute="/images">
-        <PhotoList />
-      </Fragment>
-    </section>
+    <Fragment forRoute="/stories">
+      <StoryList />
+    </Fragment>
+    <Fragment forRoute="/issues">
+      <IssueList />
+    </Fragment>
+    <Fragment forRoute="/contributors">
+      <ContributorList />
+    </Fragment>
+    <Fragment forRoute="/images">
+      <PhotoList />
+    </Fragment>
     <Fragment forRoute="/stories/:id">
       <section className="DetailPanel">
         {' '}
