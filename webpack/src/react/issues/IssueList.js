@@ -7,10 +7,25 @@ import IssueGrid from 'issues/IssueGrid'
 import ListPanel from 'containers/ListPanel'
 
 const MODEL = 'issues'
-const date = new Date().toISOString().slice(0, 10)
-const year = new Date().toISOString().slice(0, 4)
+const month = parseInt(new Date().toISOString().slice(5, 7))
+let year = parseInt(new Date().toISOString().slice(0, 4))
+if (month > 10) year += 1
 
 const filters = [
+  {
+    toggle: true,
+    attr: 'publication_date__year',
+    model: MODEL,
+    value: year - 2,
+    label: year - 2,
+  },
+  {
+    toggle: true,
+    attr: 'publication_date__year',
+    model: MODEL,
+    value: year - 1,
+    label: year - 1,
+  },
   {
     toggle: true,
     attr: 'publication_date__year',
@@ -20,10 +35,10 @@ const filters = [
   },
   {
     toggle: true,
-    attr: 'publication_date__gte',
+    attr: 'ordering',
     model: MODEL,
-    value: date,
-    label: 'kommende',
+    value: 'publication_date',
+    label: 'eldste først',
   },
 ]
 
