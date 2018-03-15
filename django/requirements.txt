@@ -69,7 +69,7 @@ pickleshare==0.7.4        # via ipython
 pillow==5.0.0
 pluggy==0.6.0             # via pytest
 prompt-toolkit==1.0.15    # via ipython, ptpython
-psycopg2==2.7.4
+psycopg2-binary==2.7.4
 ptpython==0.41
 ptyprocess==0.5.2         # via pexpect
 py==1.5.2                 # via pytest

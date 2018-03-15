@@ -1,6 +1,7 @@
 import logging
 
 from sorl.thumbnail.engines.wand_engine import Engine as WandEngine
+from wand.color import Color
 
 from .boundingbox import Box, CropBox
 
@@ -14,13 +15,12 @@ def close_crop(x, y, left, right, top, bottom, aspect_ratio):
     W = 0.5 * min(A, 1, w if a > A else h * A)
     H = W / A
     X, Y = [
-        sorted(c)[1]
-        for c in (((W,
-                    (l + r) / 2, 1 - W),
-                   (l + W, x, r - W))[W * 2 < w], ((H,
-                                                    (t + b) / 2, 1 - H),
-                                                   (t + H, y,
-                                                    b - H))[H * 2 < h])
+        sorted(c)[1] for c in (((W,
+                                 (l + r) / 2, 1 - W),
+                                (l + W, x, r - W))[W * 2 < w],
+                               ((H,
+                                 (t + b) / 2, 1 - H),
+                                (t + H, y, b - H))[H * 2 < h])
     ]
     return Box(X - W, Y - H, X + W, Y + H)
 
@@ -74,5 +74,8 @@ class CloseCropEngine(WandEngine):
                 expand,
             )
             image.crop(*new_geometry)
+
+        image.background_color = Color('white')
+        image.alpha_channel = 'remove'
 
         return super().create(image, geometry, options)
