@@ -75,12 +75,13 @@ const optionsFields = {
     label: 'Large',
   },
   description: {
-    type: 'string',
+    type: 'shorttext',
     required: false,
     read_only: false,
     label: 'Beskrivelse',
     help_text: 'Kort beskrivelse av bildet',
     max_length: 1000,
+    rows: 4,
   },
   usage: {
     type: 'integer',

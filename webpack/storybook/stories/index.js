@@ -5,7 +5,7 @@ import '../../src/stylesheets/universitas.scss'
 import IconTable from './icons'
 import ColourTable from './colours'
 import Typography from './typography'
-import { EditorDemo } from './demo'
+import { EditorDemo } from './editordemo'
 
 storiesOf('Elements', module)
   .add('icons', () => <IconTable />)

@@ -63,14 +63,15 @@ const ImageData = data => (
     <tbody>
       {Object.entries(data).map(([key, value], i) => (
         <tr key={i}>
-          <th>{key}</th><td>{prepare(value)}</td>
+          <th>{key}</th>
+          <td>{prepare(value)}</td>
         </tr>
       ))}
     </tbody>
   </table>
 )
 
-let EditImage = ({
+export const EditImage = ({
   id = 0,
   image = {},
   data,
@@ -103,11 +104,10 @@ let EditImage = ({
     </div>
   )
 }
-EditImage = connect(state => {
+
+export default connect(state => {
   const { image: id, expanded, data } = getCropPanel(state)
   const { dragging, crop_box } = getCropWidget(state)
   const image = getImage(state, id)
   return { id, image, dragging, crop_box, expanded, data }
 })(EditImage)
-
-export default EditImage

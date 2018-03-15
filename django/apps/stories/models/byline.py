@@ -169,7 +169,11 @@ class Byline(models.Model):
         else:
             credit = cls.DEFAULT_CREDIT
 
-        contributor, __ = Contributor.get_or_create(full_name, initials)
+        try:
+            contributor, __ = Contributor.get_or_create(full_name, initials)
+        except ValueError:  # multiple contributors found
+            # TODO: reimplement this shit
+            return False
 
         new_byline = cls(
             story=story,

@@ -9,8 +9,9 @@ import ListPanel from 'containers/ListPanel'
 const MODEL = 'images'
 
 const filters = [
-  { toggle: true, attr: 'limit', model: MODEL, value: 5, label: 'limit 5' },
-  { toggle: true, attr: 'limit', model: MODEL, value: 10, label: 'limit 10' },
+  { toggle: true, attr: 'limit', model: MODEL, value: 25, label: '25' },
+  { toggle: true, attr: 'limit', model: MODEL, value: 50, label: '50' },
+  { toggle: true, attr: 'limit', model: MODEL, value: 75, label: '75' },
 ]
 
 const PhotoList = ({ model = MODEL }) => {

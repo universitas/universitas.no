@@ -51,6 +51,11 @@
         max-height: 100%;
       }
     }
+    &.shorttext {
+      textarea {
+        padding: 0.5em;
+      }
+    }
     &.text {
       flex: 1;
       flex-direction: column;

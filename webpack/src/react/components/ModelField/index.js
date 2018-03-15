@@ -28,6 +28,7 @@ const fields = {
   string,
   text,
   thumb,
+  shorttext: text,
 }
 
 export const Field = ({
