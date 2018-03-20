@@ -1,5 +1,6 @@
 /* eslint-env browser */
 import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
 import configureStore from './configureStore'
 import Editor from 'containers/Editor'
 import EditorPreview from 'components/EditorPreview'
@@ -11,10 +12,12 @@ const App = () => (
     <EditorPreview />
   </section>
 )
-const rootStore = configureStore()
+const { store, persistor } = configureStore()
 
 export default () => (
-  <Provider store={rootStore}>
-    <App />
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <App />
+    </PersistGate>
   </Provider>
 )

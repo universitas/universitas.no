@@ -23,17 +23,21 @@ const AppTool = connect(null, { push })(({ href, push, ...props }) => (
   <Tool onClick={() => push(href)} {...props} />
 ))
 
+const MainToolBar = () => (
+  <section className="SideBar">
+    <AppTool href="/stories" icon="Edit" label="saker" />
+    <AppTool href="/images" icon="Camera" label="foto" />
+    <AppTool href="/issues" icon="Newspaper" label="utgaver" />
+    <AppTool href="/contributors" icon="Person" label="bidragsytere" />
+    <div className="spacer" style={{ flex: 1 }} />
+    <ErrorTool />
+    <UserTool />
+  </section>
+)
+
 const ProdSys = () => (
   <main className="ProdSys">
-    <section className="SideBar">
-      <AppTool href="/stories" icon="Edit" label="saker" />
-      <AppTool href="/images" icon="Camera" label="foto" />
-      <AppTool href="/issues" icon="Newspaper" label="utgaver" />
-      <AppTool href="/contributors" icon="Person" label="bidragsytere" />
-      <div className="spacer" style={{ flex: 1 }} />
-      <ErrorTool />
-      <UserTool />
-    </section>
+    <MainToolBar />
     <Fragment forRoute="/stories">
       <StoryList />
     </Fragment>
@@ -48,26 +52,22 @@ const ProdSys = () => (
     </Fragment>
     <Fragment forRoute="/stories/:id">
       <section className="DetailPanel">
-        {' '}
-        <StoryDetail />{' '}
+        <StoryDetail />
       </section>
     </Fragment>
     <Fragment forRoute="/contributors/:id">
       <section className="DetailPanel">
-        {' '}
-        <ContributorDetail />{' '}
+        <ContributorDetail />
       </section>
     </Fragment>
     <Fragment forRoute="/issues/:id">
       <section className="DetailPanel">
-        {' '}
-        <IssueDetail />{' '}
+        <IssueDetail />
       </section>
     </Fragment>
     <Fragment forRoute="/images/:id">
       <section className="DetailPanel">
-        {' '}
-        <PhotoDetail />{' '}
+        <PhotoDetail />
       </section>
     </Fragment>
   </main>

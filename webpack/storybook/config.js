@@ -1,5 +1,7 @@
 import { configure } from '@storybook/react'
-import '@storybook/addon-console'
+import 'babel-polyfill'
+
+// import '@storybook/addon-console'
 
 function loadStories() {
   require('./stories/index.js')
