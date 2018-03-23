@@ -1,28 +1,70 @@
-# from rest_framework import serializers, views, viewsets, filters
 import logging
 
 import apps.photo.file_operations as ops
 from apps.photo.exif import exif_to_json
-from rest_framework import permissions, response, serializers, views
+from apps.photo.models import ImageFile
+from .photos import ImageFileSerializer
+from rest_framework import (
+    permissions,
+    response,
+    serializers,
+    viewsets,
+    mixins,
+    status,
+)
 from rest_framework.parsers import FormParser, MultiPartParser
 
 logger = logging.getLogger('apps')
 
 
-class FileSerializer(serializers.Serializer):
-    file = serializers.FileField(required=True)
+class UploadFileSerializer(ImageFileSerializer):
+    original = serializers.FileField(required=True)
+
+    class Meta:
+        model = ImageFile
+        fields = [
+            'url',
+            'name',
+            'original',
+            'large',
+            'description',
+            '_imagehash',
+            '_md5',
+        ]
+        read_only_fields = [
+            'crop_box',
+        ]
 
 
-class FileUploadView(views.APIView):
+class FileUploadViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+    """Endpoint for image uploads.
+    Also search for duplicates with queryparams"""
     parser_classes = [MultiPartParser, FormParser]
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = FileSerializer
+    serializer_class = UploadFileSerializer
 
-    def post(self, request):
+    def get_queryset(self):
+        kwargs = {
+            key: val
+            for key, val in self.request.query_params.items()
+            if key in {'md5', 'fingerprint', 'imagehash', 'id'}
+        }
+        if kwargs:
+            return ImageFile.objects.search(**kwargs)
+        return ImageFile.objects.none()
 
-        file = request.FILES.get('file')
+    def list(self, request, *args, **kwargs):
+        try:
+            return super().list(request, *args, **kwargs)
+        except ValueError as err:
+            data = {'queryError': str(err)}
+            return response.Response(data=data, status=400)
+
+    def create(self, request):
+
+        file = request.FILES.get('original')
         if not file:
-            return response.Response(data={'fail': 'no file'}, status=400)
+            return response.Response(data={'error': 'no file'}, status=400)
         data = dict(
             name=file.name,
             content_type=file.content_type,
@@ -31,4 +73,9 @@ class FileUploadView(views.APIView):
             imagehash=str(ops.get_imagehash(file)),
             exif=exif_to_json(file),
         )
-        return response.Response(data=data, status=201)
+        if file.content_type in ('image/jpeg', 'image/png'):
+            st = status.HTTP_201_CREATED
+        else:
+            st = status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
+            data['error'] = 'not an image file'
+        return response.Response(data=data, status=st)

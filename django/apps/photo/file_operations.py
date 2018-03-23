@@ -2,10 +2,11 @@ import hashlib
 import logging
 from io import BytesIO
 from pathlib import Path
-from typing import IO, Any, Union
+from typing import Union
 
 import PIL
 
+import base64
 import imagehash
 from django.core.files import File as DjangoFile
 
@@ -16,6 +17,20 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 Fileish = Union[str, bytes, Path, DjangoFile]
+
+
+def image_from_fingerprint(fingerprint):
+    """Create tiny fingerprint image from 11x11 b64 encoded string
+    for image hash comparisons"""
+    data = base64.b64decode(fingerprint)
+    size = int(len(data)**0.5)
+    return PIL.Image.frombytes('L', (size, size), data)
+
+
+def image_to_fingerprint(image, size=11):
+    """Create b64encoded image signature for image hash comparisons"""
+    data = image.copy().convert('L').resize((size, size)).getdata()
+    return base64.b64encode(bytes(data)).decode()
 
 
 def read_data(value: Fileish) -> bytes:
@@ -39,7 +54,9 @@ def read_data(value: Fileish) -> bytes:
     #     return value.read()
 
 
-def pil_image(fp: Fileish) -> PIL.Image:
+def pil_image(fp: Fileish) -> PIL.Image.Image:
+    if isinstance(fp, PIL.Image.Image):
+        return fp
     blob = BytesIO(read_data(fp))
     return PIL.Image.open(blob)
 
@@ -83,7 +100,7 @@ def get_imagehash(fp, size=11) -> imagehash.ImageHash:
 def get_exif(fp: Fileish) -> dict:
     try:
         return pil_image(fp)._getexif() or {}
-    except AttributeError:
+    except (AttributeError, OSError):
         pass  # file format has no exif.
     except Exception:
         logger.exception('Cannot extract exif data')

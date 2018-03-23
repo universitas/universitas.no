@@ -23,6 +23,7 @@ from utils.model_mixins import EditURLMixin
 from .cropping.models import AutoCropImage
 from .exif import ExifData, exif_to_json, extract_exif_data
 from .imagehash import ImageHashModelMixin
+from .file_operations import image_from_fingerprint, get_imagehash
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +75,28 @@ class ImageFileManager(models.Manager):
                 count += 1
                 image.save()
         return count
+
+    def search(self, md5=None, imagehash=None, fingerprint=None, **kwargs):
+        """Search for images matching query."""
+        if fingerprint:
+            try:
+                image = image_from_fingerprint(fingerprint)
+            except ValueError as err:
+                raise ValueError('incorrect fingerprint: %s' % err) from err
+            imagehash = str(get_imagehash(image))
+        if imagehash:
+            kwargs['_imagehash'] = imagehash
+        if md5:
+            kwargs['_md5'] = md5
+        qs = self.get_queryset()
+        if kwargs:
+            results = qs.filter(**kwargs)
+            if results:
+                return results
+        if imagehash:
+            logger.debug('hash: %s' % imagehash)
+            return qs.filter(_imagehash__trigram_similar=imagehash)
+        return qs.none()
 
 
 class ImageFile(  # type: ignore

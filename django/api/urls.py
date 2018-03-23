@@ -8,7 +8,7 @@ from .legacy_viewsets import ProdStoryViewSet
 from .permissions import PermissionViewSet
 from .photos import ImageFileViewSet
 from .stories import StoryTypeViewSet, StoryViewSet
-from .upload_image import FileUploadView
+from .upload_image import FileUploadViewSet
 
 router = routers.DefaultRouter()
 router.register(r'images', ImageFileViewSet)
@@ -19,6 +19,7 @@ router.register(r'stories', StoryViewSet, 'story')
 router.register(r'storytypes', StoryTypeViewSet)
 router.register(r'legacy', ProdStoryViewSet, 'legacy')
 router.register(r'permissions', PermissionViewSet)
+router.register(r'upload', FileUploadViewSet, 'upload')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
@@ -27,5 +28,4 @@ urlpatterns = [
         include('rest_framework.urls', namespace='rest_framework')
     ),
     url(r'^rest-auth/', include(rest_auth_urls)),
-    url(r'^upload/', FileUploadView.as_view(), name='upload'),
 ]

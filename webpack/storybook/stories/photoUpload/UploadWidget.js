@@ -42,6 +42,7 @@ class UploadWidget extends React.Component {
   render() {
     const { fileList } = this.state
     const { accept } = this.props
+    console.log('images:', document.images)
     return (
       <section className="UploadWidget">
         <FileInput accept={accept} handleFileInput={this.handleFileInput}>
