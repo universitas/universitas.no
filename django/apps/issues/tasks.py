@@ -181,7 +181,8 @@ def create_web_bundle(filename, **kwargs):
 
     optimized_pages = [convert_pdf_to_web(pdf) for pdf in pages]
     PS_DATEFORMAT = 'D: %Y%m%d%H%M%S'  # used in pdf metadata
-    pdfmark = Path('pdfmark')  # pdf meta data
+    output_file = Path(filename)
+    pdfmark = output_file.parent / 'pdfmark'  # pdf meta data
     pdfmark.write_text((
         f'[/Title (Universitas {issue.issue_name})'
         f'/CreationDate ({issue.publication_date:{PS_DATEFORMAT}})'
@@ -200,7 +201,6 @@ def create_web_bundle(filename, **kwargs):
         '<< /Nums [0 << /S /D /St 1 >>] >>'  # fix page numbers
         '/DOCVIEW pdfmark'
     ))
-    output_file = Path(filename)
     output_file.touch()
     args = [
         GHOSTSCRIPT,
