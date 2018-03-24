@@ -8,7 +8,7 @@ import {
   withMd5,
   cleanData,
 } from './processImageData'
-import './UploadWidget.scss'
+import './upload.scss'
 
 class UploadWidget extends React.Component {
   constructor(props) {

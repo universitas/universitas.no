@@ -1,4 +1,5 @@
 import React from 'react'
+import './upload.scss'
 
 const ImageData = data => (
   <table>
@@ -28,6 +29,7 @@ const ImagePreview = ({
   height,
   md5,
   objectURL,
+  timestamp,
   ...props
 }) => (
   <div className="ImagePreview">

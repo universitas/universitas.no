@@ -1,3 +1,4 @@
+import * as R from 'ramda'
 import {
   extractExifTags,
   exifString,
@@ -5,29 +6,33 @@ import {
   humanizeFileSize,
 } from './processImageData'
 
-const fixtureExif = {
+const inputExif = {
   DateTime: '2008:11:21 05:43:03',
-  Artist: 'Nicolai StrÃ¸m',
-  ImageDescription: 'Do not copy',
-  DateTimeOriginal: '2008:10:28 18:19:44',
+  Artist: 'Knut StrÃ¸m', // utf8
+  ImageDescription: 'Do not copy     ', // extra spaces
+  DateTimeOriginal: '2008:10:28 18:19:44', // preference over DateTime
 }
 
 const expectExif = {
   date: new Date('2008-10-28 18:19:44'),
-  artist: 'Nicolai Strøm',
+  artist: 'Knut Strøm',
   description: 'Do not copy',
 }
 
 test('exifString', () => {
-  expect(exifString(fixtureExif.Artist)).toEqual(expectExif.artist)
+  expect(exifString(inputExif.Artist)).toEqual(expectExif.artist)
 })
 
 test('exifDateTime', () => {
-  expect(exifDateTime(fixtureExif.DateTimeOriginal)).toEqual(expectExif.date)
+  expect(exifDateTime(inputExif.DateTimeOriginal)).toEqual(expectExif.date)
 })
 
 test('extractExifTags', () => {
-  expect(extractExifTags(fixtureExif)).toEqual(expectExif)
+  expect(extractExifTags(inputExif)).toEqual(expectExif)
+  // fallback to `DateTime`
+  expect(
+    extractExifTags(R.dissoc('DateTimeOriginal', inputExif)).date.valueOf()
+  ).toBeGreaterThan(expectExif.date.valueOf())
 })
 
 test('humanizeFileSize', () => {

@@ -46,24 +46,24 @@ export const withMd5 = props =>
 
 // :: {file, ...props} -> {filename, mimetype, size, ...props}
 export const cleanData = ({ file, date, ...props }) => ({
+  timestamp: performance.now(),
   filename: file.name,
   mimetype: file.type,
-  timestamp: Date.now(),
   size: humanizeFileSize(file.size),
   date: date || new Date(file.lastModified),
   ...props,
 })
 
-// :: string -> string
+// :: utf-8 encoded string -> unicode string
 export const exifString = R.when(
   R.is(String),
-  R.tryCatch(R.pipe(escape, decodeURIComponent), R.nthArg(1))
+  R.pipe(escape, decodeURIComponent, R.trim)
 )
 
-// :: string -> string | Date
-export const exifDateTime = R.tryCatch(
-  R.pipe(R.replace(/:/, '-'), R.replace(/:/, '-'), R.constructN(1, Date)),
-  R.nthArg(1)
+// :: string -> Date | string
+export const exifDateTime = R.when(
+  R.test(/^\d{4}:\d{1,2}:\d{1,2}/),
+  R.pipe(R.replace(/:/, '-'), R.replace(/:/, '-'), R.constructN(1, Date))
 )
 
 // :: {...tags} -> {artist, date, description}
@@ -73,12 +73,9 @@ export const extractExifTags = R.tryCatch(
       artist: tags.Artist,
       date: tags.DateTimeOriginal || tags.DateTime,
       description: tags.ImageDescription,
+      imageId: tags.ImageUniqueId,
     }),
-    R.evolve({
-      artist: exifString,
-      date: exifDateTime,
-      description: exifString,
-    })
+    R.map(R.pipe(exifString, exifDateTime))
   ),
   R.always({})
 )
