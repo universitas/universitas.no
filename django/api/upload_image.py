@@ -3,6 +3,7 @@ import logging
 import apps.photo.file_operations as ops
 from apps.photo.exif import exif_to_json
 from apps.photo.models import ImageFile
+from apps.contributors.models import Contributor
 from .photos import ImageFileSerializer
 from rest_framework import (
     permissions,
@@ -18,7 +19,9 @@ logger = logging.getLogger('apps')
 
 
 class UploadFileSerializer(ImageFileSerializer):
-    original = serializers.FileField(required=True)
+    original = serializers.ImageField(required=True)
+    description = serializers.CharField(min_length=10, required=True)
+    artist = serializers.CharField(min_length=2, required=True)
 
     class Meta:
         model = ImageFile
@@ -26,8 +29,9 @@ class UploadFileSerializer(ImageFileSerializer):
             'url',
             'name',
             'original',
-            'large',
+            'small',
             'description',
+            'artist',
             '_imagehash',
             '_md5',
         ]
@@ -35,12 +39,26 @@ class UploadFileSerializer(ImageFileSerializer):
             'crop_box',
         ]
 
+    def create(self, validated_data):
+        artist = validated_data.pop('artist')
+        validated_data['source_file'] = validated_data.pop('original')
+        try:
+            validated_data['contributor'] = Contributor.objects.get(
+                display_name=artist
+            )
+            validated_data['copyright_information'] = f'{artist} / Universitas'
+        except Contributor.DoesNotExist:
+            validated_data['copyright_information'] = artist
+        return super().create(validated_data)
 
-class FileUploadViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+
+class FileUploadViewSet(
+    viewsets.GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin
+):
     """Endpoint for image uploads.
     Also search for duplicates with queryparams"""
     parser_classes = [MultiPartParser, FormParser]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     serializer_class = UploadFileSerializer
 
     def get_queryset(self):
@@ -60,22 +78,22 @@ class FileUploadViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             data = {'queryError': str(err)}
             return response.Response(data=data, status=400)
 
-    def create(self, request):
+    # def create(self, request):
 
-        file = request.FILES.get('original')
-        if not file:
-            return response.Response(data={'error': 'no file'}, status=400)
-        data = dict(
-            name=file.name,
-            content_type=file.content_type,
-            size=file.size,
-            md5=ops.get_md5(file),
-            imagehash=str(ops.get_imagehash(file)),
-            exif=exif_to_json(file),
-        )
-        if file.content_type in ('image/jpeg', 'image/png'):
-            st = status.HTTP_201_CREATED
-        else:
-            st = status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
-            data['error'] = 'not an image file'
-        return response.Response(data=data, status=st)
+    #     file = request.FILES.get('original')
+    #     if not file:
+    #         return response.Response(data={'error': 'no file'}, status=400)
+    #     data = dict(
+    #         name=file.name,
+    #         content_type=file.content_type,
+    #         size=file.size,
+    #         md5=ops.get_md5(file),
+    #         imagehash=str(ops.get_imagehash(file)),
+    #         exif=exif_to_json(file),
+    #     )
+    #     if file.content_type in ('image/jpeg', 'image/png'):
+    #         st = status.HTTP_201_CREATED
+    #     else:
+    #         st = status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
+    #         data['error'] = 'not an image file'
+    #     return response.Response(data=data, status=st)

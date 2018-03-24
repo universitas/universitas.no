@@ -9,7 +9,10 @@ ALLOWED_HOSTS = '*'
 
 # TOOLBAR CONFIGURATION
 INSTALLED_APPS += ['debug_toolbar']
-MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+MIDDLEWARE += [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'utils.cors_middleware.AllowCorsMiddleware',
+]
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 # TEMPLATES[0]['OPTIONS']['string_if_invalid'] = 'INVALID'  # type: ignore

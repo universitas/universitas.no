@@ -195,6 +195,12 @@ class ImageFile(  # type: ignore
         return slug
 
     @property
+    def artist(self) -> str:
+        if self.contributor:
+            return str(self.contributor.name)
+        return self.copyright_information or '?'
+
+    @property
     def original(self) -> File:
         return self.source_file
 
