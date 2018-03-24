@@ -14,6 +14,7 @@ from celery.schedules import crontab
 from celery.task import periodic_task
 from django.conf import settings
 from django.core.files.base import ContentFile
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -168,28 +169,44 @@ def generate_pdf_preview(input_file, img_format='png', size=300):
 
 def create_web_bundle(filename, **kwargs):
     """Creates a web bundle file"""
-    output_file = Path(filename)
-    output_file.touch()
-
+    try:
+        issue = kwargs.pop('issue')
+    except KeyError:
+        issue = current_issue()
     pages = get_staging_pdf_files(**kwargs)
-
-    number_of_pages = len(pages)
-    if number_of_pages == 0:
+    if not pages:
         raise RuntimeWarning('No pages found')
-
-    if number_of_pages % 4 != 0:
-        raise RuntimeError('Wrong number of pages %d' % number_of_pages)
-
-    logger.info('{} pages found'.format(number_of_pages))
+    if len(pages) % 4 != 0:
+        raise RuntimeError(f'Wrong number of pages {len(pages)}')
 
     optimized_pages = [convert_pdf_to_web(pdf) for pdf in pages]
-
+    PS_DATEFORMAT = 'D: %Y%m%d%H%M%S'  # used in pdf metadata
+    pdfmark = Path('pdfmark')  # pdf meta data
+    pdfmark.write_text((
+        f'[/Title (Universitas {issue.issue_name})'
+        f'/CreationDate ({issue.publication_date:{PS_DATEFORMAT}})'
+        f'/ModDate ({timezone.now():{PS_DATEFORMAT}})'
+        '/Creator (Universitas)'
+        '/Subject (Nyheter)'
+        '/DOCINFO pdfmark'
+        '['
+        '/PageMode'
+        '/UseThumbs'  # do not show thumbs
+        '/Page 1'
+        '/View [/Fit]'  # fit full page
+        '/PageLayout'
+        '/TwoColumnRight'  # two column layout
+        '/PageLabels'
+        '<< /Nums [0 << /S /D /St 1 >>] >>'  # fix page numbers
+        '/DOCVIEW pdfmark'
+    ))
+    output_file = Path(filename)
+    output_file.touch()
     args = [
         GHOSTSCRIPT,
         '-q',
         '-o',
         output_file,
-        '-dFirstPage=1',
         '-dBATCH',
         '-dNOPAUSE',
         '-dAutoRotatePages=/None',
@@ -199,9 +216,11 @@ def create_web_bundle(filename, **kwargs):
         '-dCompatibilityLevel=1.6',
         '-dDetectDuplicateImages=true',
         '-sDEVICE=pdfwrite',
-    ] + optimized_pages
-
+        *optimized_pages,
+        pdfmark,
+    ]
     subprocess.run(map(str, args))
+    pdfmark.unlink()
     return output_file
 
 
@@ -221,6 +240,7 @@ def create_print_issue_pdf(**kwargs):
             create_web_bundle(
                 filename=tmp_bundle_file.name,
                 fileglob=fileglob,
+                issue=issue,
                 **kwargs,
             )
         except RuntimeWarning as warning:
