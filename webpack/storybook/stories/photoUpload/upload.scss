@@ -32,3 +32,12 @@
   }
   display: flex;
 }
+.FingerPrint {
+  image-rendering: pixelated;
+  width: 20px;
+  cursor: zoom-in;
+  transition: transform 100ms;
+  &:hover {
+    transform: scale(4);
+  }
+}

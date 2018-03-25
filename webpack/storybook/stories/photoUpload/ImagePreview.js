@@ -1,5 +1,7 @@
 import React from 'react'
 import './upload.scss'
+import { formatDate, formatFileSize } from 'utils/text'
+import { fingerPrintToDataURL } from 'utils/imageHash'
 
 const ImageData = data => (
   <table>
@@ -19,6 +21,10 @@ const ImageData = data => (
   </table>
 )
 
+const FingerPrint = ({ data }) => (
+  <img className="FingerPrint" src={fingerPrintToDataURL(data)} />
+)
+
 const ImagePreview = ({
   filename,
   thumb,
@@ -28,8 +34,13 @@ const ImagePreview = ({
   width,
   height,
   md5,
+  fingerPrint,
   objectURL,
   timestamp,
+  postImage,
+  findDuplicateImages,
+  dupes = [],
+  prodsysURL,
   ...props
 }) => (
   <div className="ImagePreview">
@@ -38,12 +49,28 @@ const ImagePreview = ({
     </div>
     <div className="data">
       <div>filename: {filename} </div>
-      <div>size: {size}</div>
+      <div>size: {formatFileSize(size)}</div>
       <div>
         dimensions: {width}x{height}
       </div>
-      <div>date: {date.toLocaleDateString()}</div>
+      <div>hash: {md5}</div>
+      {fingerPrint && (
+        <div>
+          fingerprint: <FingerPrint data={fingerPrint} />
+        </div>
+      )}
+      <div>date: {formatDate(date)}</div>
       <ImageData {...props} />
+      <button type="button" className="button" onClick={findDuplicateImages}>
+        find dupes
+      </button>
+      <button type="button" className="button" onClick={postImage}>
+        post image
+      </button>
+      {prodsysURL && <a href={prodsysURL}>uploaded</a>}
+      {dupes.map(url => (
+        <img className="duplicate" width={50} key={url} src={url} />
+      ))}
     </div>
   </div>
 )

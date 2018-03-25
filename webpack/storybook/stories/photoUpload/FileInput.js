@@ -71,7 +71,6 @@ class FileInput extends React.Component {
         onDrop={this.dropHandler}
         onDragOver={ev => ev.preventDefault()}
       >
-        {(acceptFiles, dragOver)}
         <label htmlFor="upload" className={cx({ dragOver, acceptFiles })}>
           {messages[0] || text}
           <input

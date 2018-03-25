@@ -2,12 +2,7 @@ import React from 'react'
 import * as R from 'ramda'
 import FileInput from './FileInput'
 import ImagePreview from './ImagePreview'
-import {
-  objectURL,
-  loadImageBlueImp,
-  withMd5,
-  cleanData,
-} from './processImageData'
+import processImageFile from 'utils/processImageData'
 import './upload.scss'
 
 class UploadWidget extends React.Component {
@@ -27,11 +22,7 @@ class UploadWidget extends React.Component {
     const pipeline = R.pipe(
       R.filter(acceptFilter),
       R.map(file =>
-        Promise.resolve({ file })
-          .then(objectURL)
-          .then(loadImageBlueImp)
-          .then(withMd5)
-          .then(cleanData)
+        processImageFile(file)
           .then(updateState)
           .catch(console.error)
       )
@@ -42,7 +33,6 @@ class UploadWidget extends React.Component {
   render() {
     const { fileList } = this.state
     const { accept } = this.props
-    console.log('images:', document.images)
     return (
       <section className="UploadWidget">
         <FileInput accept={accept} handleFileInput={this.handleFileInput}>

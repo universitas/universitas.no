@@ -2,6 +2,7 @@ import * as R from 'ramda'
 import loadImage from 'blueimp-load-image/js'
 import md5 from './md5hasher'
 import { utf8Decode } from 'utils/text'
+import { imageFingerPrint } from 'utils/imageHash'
 
 const THUMB_SIZE = 200 // pixels
 
@@ -74,3 +75,38 @@ export const extractExifTags = R.tryCatch(
   ),
   R.always({})
 )
+
+const urlToImage = url => {
+  const img = new Image()
+  img.src = url
+  return new Promise(resolve => (img.onload = () => resolve(img)))
+}
+
+const withFingerPrint = async props => ({
+  fingerPrint: await urlToImage(props.objectURL).then(imageFingerPrint),
+  ...props,
+})
+
+// filedata = {
+//   objectURL,
+//   filename,
+//   height,
+//   width,
+//   date,
+//   mimetype,
+//   size,
+//   md5,
+//   thumb,
+//   ?artist,
+//   ?description,
+// }
+// :: File -> Promise[filedata]
+const processImageFile = file =>
+  Promise.resolve({ file })
+    .then(objectURL)
+    .then(loadImageBlueImp)
+    .then(withMd5)
+    .then(withFingerPrint)
+    .then(cleanData)
+
+export default processImageFile

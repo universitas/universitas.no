@@ -7,7 +7,7 @@ class AllowCorsMiddleware:
     def __call__(self, request):
         response = self.get_response(request)
         response['Access-Control-Allow-Origin'
-                 ] = 'https://haakenlid.static.observableusercontent.com'
+                 ] = request.META.get('HTTP_ORIGIN')
         response['Access-Control-Allow-Credentials'] = 'true'
-        response['Access-Control-Allow-Headers'] = 'Content-Type'
+        response['Access-Control-Allow-Headers'] = 'Content-Type, X-CSRFToken'
         return response

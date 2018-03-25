@@ -1,12 +1,13 @@
 import json
 from pathlib import Path
 
-from apps.photo.cropping.boundingbox import CropBox
-from apps.photo.models import ImageFile
-from django.db import models
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, serializers, viewsets
 from rest_framework.exceptions import ValidationError
+
+from apps.photo.cropping.boundingbox import CropBox
+from apps.photo.models import ImageFile
+from django.db import models
 
 
 class jsonDict(dict):
@@ -36,6 +37,7 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
             'name',
             'created',
             'cropping_method',
+            'contributor',
             'method',
             'size',
             'original',

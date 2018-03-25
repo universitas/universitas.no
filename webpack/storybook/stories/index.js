@@ -1,6 +1,6 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-// import { action } from '@storybook/addon-actions'
+import { action } from '@storybook/addon-actions'
 import '../../src/stylesheets/universitas.scss'
 import IconTable from './icons'
 import ColourTable from './colours'
@@ -8,7 +8,7 @@ import Typography from './typography'
 import StoryEditor from './storyEditor'
 import PhotoUpload from './photoUpload'
 import ImagePreview from './photoUpload/ImagePreview'
-import ApiWrapper from './photoUpload/ApiWrapper'
+import ImageWrapper from './photoUpload/ImageWrapper'
 import irgens from './assets/mooch.jpg'
 
 storiesOf('Elements', module)
@@ -35,4 +35,4 @@ storiesOf('File upload', module)
       }}
     />
   ))
-  .add('api demo', () => <ApiWrapper />)
+  .add('api demo', () => <ImageWrapper />)
