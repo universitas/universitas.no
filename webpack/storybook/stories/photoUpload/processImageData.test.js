@@ -1,7 +1,6 @@
 import * as R from 'ramda'
 import {
   extractExifTags,
-  exifString,
   exifDateTime,
   humanizeFileSize,
 } from './processImageData'
@@ -17,11 +16,8 @@ const expectExif = {
   date: new Date('2008-10-28 18:19:44'),
   artist: 'Knut Strøm',
   description: 'Do not copy',
+  imageId: undefined,
 }
-
-test('exifString', () => {
-  expect(exifString(inputExif.Artist)).toEqual(expectExif.artist)
-})
 
 test('exifDateTime', () => {
   expect(exifDateTime(inputExif.DateTimeOriginal)).toEqual(expectExif.date)
@@ -33,11 +29,4 @@ test('extractExifTags', () => {
   expect(
     extractExifTags(R.dissoc('DateTimeOriginal', inputExif)).date.valueOf()
   ).toBeGreaterThan(expectExif.date.valueOf())
-})
-
-test('humanizeFileSize', () => {
-  expect(humanizeFileSize(123)).toEqual('123 B')
-  expect(humanizeFileSize(12345)).toEqual('12.3 kB')
-  expect(humanizeFileSize(1234567)).toEqual('1.23 MB')
-  expect(humanizeFileSize(12345678900)).toEqual('12.3 GB')
 })

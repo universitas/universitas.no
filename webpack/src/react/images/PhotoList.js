@@ -12,6 +12,13 @@ const filters = [
   { toggle: true, attr: 'limit', model: MODEL, value: 25, label: '25' },
   { toggle: true, attr: 'limit', model: MODEL, value: 75, label: '75' },
   { toggle: true, attr: 'limit', model: MODEL, value: 150, label: '150' },
+  {
+    toggle: true,
+    attr: 'profile_images',
+    model: MODEL,
+    value: true,
+    label: 'byline',
+  },
 ]
 
 const PhotoList = ({ model = MODEL }) => {

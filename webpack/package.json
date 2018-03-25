@@ -5,12 +5,13 @@
   "version": "1.2.0",
   "description": "frontend universitas",
   "scripts": {
-    "test": "jest --watch --verbose ./src/react",
-    "testonce": "jest ./src/react",
+    "test": "jest --watchAll --verbose",
+    "testonce": "jest",
     "build": "webpack --config webpack.prod.config.js ",
     "tern": "tern --persistent --host 0.0.0.0 --port 33000",
     "rebuild": "npm run build",
-    "stats": "webpack --config webpack.prod.config.js --profile --json > webpack-stats.json",
+    "stats":
+      "webpack --config webpack.prod.config.js --profile --json > webpack-stats.json",
     "dev": "webpack-dev-server --config webpack.dev.config.js",
     "storybook": "start-storybook -p 9001 -c storybook",
     "build-storybook": "build-storybook -c storybook -o docs"
@@ -21,9 +22,9 @@
   },
   "jest": {
     "verbose": true,
-    "setupFiles": [
-      "<rootDir>/jest.setup.js"
-    ]
+    "setupFiles": ["<rootDir>/jest.setup.js"],
+    "moduleDirectories": ["node_modules", "src/react"],
+    "roots": ["<rootDir>/src/react/", "<rootDir>/storybook/"]
   },
   "dependencies": {
     "@storybook/addon-console": "^1.0.0",

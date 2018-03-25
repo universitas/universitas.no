@@ -1,6 +1,7 @@
 import * as R from 'ramda'
 import loadImage from 'blueimp-load-image/js'
 import md5 from './md5hasher'
+import { utf8Decode } from 'utils/text'
 
 const THUMB_SIZE = 200 // pixels
 
@@ -49,16 +50,10 @@ export const cleanData = ({ file, date, ...props }) => ({
   timestamp: performance.now(),
   filename: file.name,
   mimetype: file.type,
-  size: humanizeFileSize(file.size),
+  size: file.size,
   date: date || new Date(file.lastModified),
   ...props,
 })
-
-// :: utf-8 encoded string -> unicode string
-export const exifString = R.when(
-  R.is(String),
-  R.pipe(escape, decodeURIComponent, R.trim)
-)
 
 // :: string -> Date | string
 export const exifDateTime = R.when(
@@ -75,19 +70,7 @@ export const extractExifTags = R.tryCatch(
       description: tags.ImageDescription,
       imageId: tags.ImageUniqueId,
     }),
-    R.map(R.pipe(exifString, exifDateTime))
+    R.map(R.pipe(utf8Decode, exifDateTime))
   ),
   R.always({})
 )
-
-// :: number -> string
-const toFixed = digits => number => number.toPrecision(digits)
-
-// :: number -> string
-export const humanizeFileSize = (size, digits = 3) => {
-  const units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-  const multiple = Math.floor(Math.log10(size) / 3)
-  const number = toFixed(digits)(size / 10 ** (multiple * 3))
-  const unit = units[multiple]
-  return unit ? `${number} ${unit}` : 'very bigly large size'
-}
