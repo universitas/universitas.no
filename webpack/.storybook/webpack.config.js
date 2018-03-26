@@ -7,9 +7,8 @@ const genDefaultConfig = require('@storybook/react/dist/server/config/defaults/w
 module.exports = (baseConfig, env) => {
   const config = genDefaultConfig(baseConfig, env)
 
-  // Extend it as you need.
+  config.resolve.modules.push('../src/react') // import modules from here
 
-  config.resolve.modules.push('../src/react')
   config.plugins.push(
     new webpack.ProvidePlugin({
       React: 'react',

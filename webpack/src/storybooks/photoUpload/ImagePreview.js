@@ -21,8 +21,8 @@ const ImageData = data => (
   </table>
 )
 
-const FingerPrint = ({ data }) => (
-  <img className="FingerPrint" src={fingerPrintToDataURL(data)} />
+const Fingerprint = ({ data }) => (
+  <img className="Fingerprint" src={fingerPrintToDataURL(data)} />
 )
 
 const ImagePreview = ({
@@ -34,7 +34,7 @@ const ImagePreview = ({
   width,
   height,
   md5,
-  fingerPrint,
+  fingerprint,
   objectURL,
   timestamp,
   postImage,
@@ -54,9 +54,9 @@ const ImagePreview = ({
         dimensions: {width}x{height}
       </div>
       <div>hash: {md5}</div>
-      {fingerPrint && (
+      {fingerprint && (
         <div>
-          fingerprint: <FingerPrint data={fingerPrint} />
+          fingerprint: <Fingerprint data={fingerprint} />
         </div>
       )}
       <div>date: {formatDate(date)}</div>

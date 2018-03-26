@@ -83,7 +83,7 @@ const urlToImage = url => {
 }
 
 const withFingerPrint = async props => ({
-  fingerPrint: await urlToImage(props.objectURL).then(imageFingerPrint),
+  fingerprint: await urlToImage(props.objectURL).then(imageFingerPrint),
   ...props,
 })
 

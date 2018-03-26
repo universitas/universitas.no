@@ -13,8 +13,8 @@
     "stats":
       "webpack --config webpack.prod.config.js --profile --json > webpack-stats.json",
     "dev": "webpack-dev-server --config webpack.dev.config.js",
-    "storybook": "start-storybook -p 9001 -c storybook",
-    "build-storybook": "build-storybook -c storybook -o docs"
+    "storybook": "start-storybook -p 9001 -c .storybook",
+    "build-storybook": "build-storybook -c .storybook -o docs"
   },
   "repository": {
     "type": "git",
@@ -24,11 +24,9 @@
     "verbose": true,
     "setupFiles": ["<rootDir>/jest.setup.js"],
     "moduleDirectories": ["node_modules", "src/react"],
-    "roots": ["<rootDir>/src/react/", "<rootDir>/storybook/"]
+    "roots": ["<rootDir>/src/react/", "<rootDir>/src/storybooks/"]
   },
   "dependencies": {
-    "@storybook/addon-console": "^1.0.0",
-    "@storybook/react": "^3.3.15",
     "ajv": "^6.2.1",
     "babel-core": "^6",
     "babel-jest": "^22",
@@ -49,7 +47,6 @@
     "file-loader": "^1",
     "foundation-sites": "^6",
     "isomorphic-fetch": "^2",
-    "jest": "^22",
     "js-cookie": "^2.2.0",
     "localforage": "^1.6",
     "lodash": "^4.17.5",
@@ -74,11 +71,22 @@
     "slick-carousel": "^1.8.1",
     "spark-md5": "^3.0.0",
     "style-loader": "^0.20",
-    "tern": "^0.21",
     "url-loader": "^1",
     "webpack": "^3",
     "webpack-bundle-tracker": "^0.3",
     "webpack-dev-server": "^2.11.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@storybook/addon-a11y": "^3.3.15",
+    "@storybook/addon-actions": "^3.3.15",
+    "@storybook/addon-console": "^1.0.0",
+    "@storybook/addon-knobs": "^3.3.15",
+    "@storybook/addon-options": "^3.3.15",
+    "@storybook/addon-storyshots": "^3.3.15",
+    "@storybook/react": "^3.3.15",
+    "jest": "^22",
+    "react-test-renderer": "^16.2.0",
+    "storybook-addon-jsx": "^5.3.0",
+    "tern": "^0.21"
+  }
 }
