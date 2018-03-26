@@ -13,7 +13,7 @@ setOptions({
   showStoriesPanel: true,
   showAddonPanel: true,
   addonPanelInRight: true,
-  showSearchBox: true,
+  showSearchBox: false,
 })
 
 addDecorator(withKnobs) // knobs!

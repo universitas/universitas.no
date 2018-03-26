@@ -15,7 +15,7 @@ const optionsFields = {
     type: 'string',
     required: false,
     read_only: true,
-    label: 'Name',
+    label: 'Filnavn',
   },
   created: {
     type: 'datetime',
@@ -48,7 +48,7 @@ const optionsFields = {
     type: 'size',
     required: false,
     read_only: true,
-    label: 'Size',
+    label: 'Størrelse',
   },
   original: {
     type: 'link',
@@ -66,13 +66,13 @@ const optionsFields = {
     type: 'thumb',
     required: false,
     read_only: true,
-    label: 'Small',
+    label: 'Liten',
   },
   large: {
     type: 'image',
     required: false,
     read_only: true,
-    label: 'Large',
+    label: 'Bilde',
   },
   description: {
     type: 'shorttext',
@@ -87,7 +87,7 @@ const optionsFields = {
     type: 'integer',
     required: false,
     read_only: true,
-    label: 'Usage',
+    label: 'Artikler',
   },
   _imagehash: {
     type: 'string',
@@ -100,13 +100,13 @@ const optionsFields = {
     type: 'cropbox',
     required: true,
     read_only: false,
-    label: 'Crop box',
+    label: 'Beskjæring',
   },
   is_profile_image: {
     type: 'boolean',
     required: false,
     read_only: true,
-    label: 'Is profile image',
+    label: 'Bylinebilde',
   },
 }
 

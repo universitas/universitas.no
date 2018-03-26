@@ -23,7 +23,13 @@ export const stringify = R.cond([
 ])
 
 // :: int|string -> string
-export const phoneFormat = R.pipe(stringify, s => 'tlf: ' + s)
+export const phoneFormat = R.pipe(
+  stringify,
+  R.trim,
+  R.ifElse(Boolean, R.identity, R.always('–')),
+  R.replace(' ', ''),
+  R.replace(/(\d{3}) ?(\d{2}) ?(\d{3})/, '$1 $2 $3')
+)
 
 // :: string|Date -> string
 export const formatDate = (

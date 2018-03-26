@@ -1,3 +1,5 @@
+// base model for prodsys
+
 import { combinedToggle, partialMap } from '../utils/fp'
 export const ITEM_ADDED = 'model/ITEM_ADDED'
 export const ITEM_SELECTED = 'model/ITEM_SELECTED'

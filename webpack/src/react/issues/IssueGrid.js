@@ -19,7 +19,7 @@ const GridItem = ({ pk, onClick, className = '' }) => (
     <IssueField pk={pk} {...fields.publication_date} />
     <IssueField pk={pk} {...fields.issue_name} />
     <IssueField pk={pk} {...fields.issue_type} />
-    <IssueField pk={pk} {...fields.pdfs} />
+    <IssueField pk={pk} {...fields.pdfs} label />
   </div>
 )
 

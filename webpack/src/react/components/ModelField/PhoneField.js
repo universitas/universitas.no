@@ -1,4 +1,4 @@
-// String Field
+// Phone field
 import { stringify, phoneFormat } from 'utils/text'
 
 export const EditableField = ({ value, ...args }) => (

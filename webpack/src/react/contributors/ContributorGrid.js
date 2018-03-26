@@ -18,8 +18,8 @@ const GridItem = ({ pk, onClick, className = '' }) => (
   <div key={pk} onClick={onClick} className={cx('GridItem', className)}>
     <ContributorField pk={pk} {...fields.display_name} />
     <ContributorField pk={pk} {...fields.phone} />
-    <ContributorField pk={pk} {...fields.email} />
-    <ContributorField pk={pk} {...fields.thumb} />
+    <ContributorField pk={pk} {...fields.email} label />
+    <ContributorField pk={pk} {...fields.thumb} label />
   </div>
 )
 

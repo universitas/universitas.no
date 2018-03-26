@@ -1,0 +1,35 @@
+.ModelField {
+  display: flex;
+  .label {
+    width: 6em;
+    padding-right: 1em;
+    font-size: smaller;
+  }
+  .value {
+    flex: 1;
+  }
+  &.shorttext,
+  &.text {
+    flex-direction: column;
+  }
+  &.pdfs,
+  &.image,
+  &.thumb {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 5em;
+    flex-grow: 1;
+    flex-shrink: 1;
+    .value {
+      display: flex;
+      justify-content: center;
+      // align-items: center;
+      background-color: #ccc;
+      img {
+        align-self: center;
+        object-fit: contain;
+        max-height: 100%;
+      }
+    }
+  }
+}

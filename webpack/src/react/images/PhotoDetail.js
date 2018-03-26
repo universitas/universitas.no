@@ -6,24 +6,17 @@ import { modelSelectors } from 'ducks/basemodel'
 
 const model = 'images'
 
-const Field = ({ label, type, ...props }) => (
-  <div className={`DetailField ${type}`}>
-    <span className="label">{label}: </span>
-    <ModelField className="Field" type={type} {...props} />
-  </div>
-)
-
 const PhotoDetail = ({ pk }) => (
   <section className="DetailPanel">
     <PhotoTools pk={pk} />
     <div className="panelContent">
-      <Field {...{ pk, model, ...fields.name }} />
-      <Field {...{ pk, model, ...fields.large }} />
-      <Field {...{ pk, model, ...fields.original }} />
-      <Field {...{ pk, model, ...fields.description }} />
-      <Field {...{ pk, model, ...fields.usage }} />
-      <Field {...{ pk, model, ...fields.created }} />
-      <Field {...{ pk, model, ...fields.size }} />
+      <ModelField {...{ pk, model, ...fields.name }} />
+      <ModelField {...{ pk, model, ...fields.large }} />
+      <ModelField {...{ pk, model, ...fields.original }} />
+      <ModelField {...{ pk, model, ...fields.description }} />
+      <ModelField {...{ pk, model, ...fields.usage }} />
+      <ModelField {...{ pk, model, ...fields.created }} />
+      <ModelField {...{ pk, model, ...fields.size }} />
     </div>
   </section>
 )

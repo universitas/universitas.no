@@ -1,3 +1,5 @@
+// prodsys image ducks
+
 export const IMAGES_FETCH_SUCCESS = 'imagelist/IMAGES_FETCH_SUCCESS'
 export const IMAGES_FETCH_START = 'imagelist/IMAGES_FETCH_START'
 export const SEARCH_CHANGED = 'imagelist/SEARCH_CHANGED'

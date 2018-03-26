@@ -22,7 +22,7 @@ const listFields = R.pipe(
 
 const renderFields = R.pipe(R.values, R.map(TableCell))
 
-const TableCell = ({ editable, ...props }) => (
+const TableCell = ({ editable, label, ...props }) => (
   <td key={props.name}>
     <ModelField editable={false} model={MODEL} {...props} />
   </td>
