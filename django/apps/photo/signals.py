@@ -1,9 +1,10 @@
 import logging
 
+from sorl.thumbnail.helpers import ThumbnailError
+
 from apps.photo import tasks
 from django.conf import settings
 from django.db.models.signals import post_save, pre_delete
-from sorl.thumbnail.helpers import ThumbnailError
 
 # from celery import chain
 # from apps.photo import tasks
@@ -28,7 +29,8 @@ def image_post_save(sender, instance, created, update_fields, **kwargs):
     post_save_signature = tasks.post_save_task.si(instance.pk)
     if not created:
         old = sender.objects.get(pk=instance.pk)
-        if old._md5 and old._md5 != instance._md5:
+        if old.stat.get('md5'
+                        ) and old.stat.get('md5') != instance.stat.get('md5'):
             # image file has changed. Invalidate thumbnails.
             instance.delete_thumbnails()
     if instance.cropping_method == instance.CROP_PENDING:

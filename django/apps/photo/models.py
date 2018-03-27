@@ -6,6 +6,11 @@ import re
 from pathlib import Path
 from typing import Union
 
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
+
 from apps.issues.models import current_issue
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
@@ -14,16 +19,12 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.model_mixins import EditURLMixin
 
 from .cropping.models import AutoCropImage
 from .exif import ExifData, exif_to_json, extract_exif_data
+from .file_operations import get_imagehash, image_from_fingerprint
 from .imagehash import ImageHashModelMixin
-from .file_operations import image_from_fingerprint, get_imagehash
 
 logger = logging.getLogger(__name__)
 
@@ -87,7 +88,7 @@ class ImageFileManager(models.Manager):
         if imagehash:
             kwargs['_imagehash'] = imagehash
         if md5:
-            kwargs['_md5'] = md5
+            kwargs['stats__md5'] = md5
         qs = self.get_queryset()
         if kwargs:
             results = qs.filter(**kwargs)
@@ -188,6 +189,7 @@ class ImageFile(  # type: ignore
 
     @classmethod
     def slugify(cls, filename: str) -> str:
+        """Normalize file name"""
         slugify = Slugify(safe_chars='.-', separator='-')
         slugs = slugify(filename).split('.')
         slugs[-1] = slugs[-1].lower().replace('jpeg', 'jpg')
@@ -196,8 +198,9 @@ class ImageFile(  # type: ignore
 
     @property
     def artist(self) -> str:
+        """Attribution as string"""
         if self.contributor:
-            return str(self.contributor.name)
+            return f'{self.contributor} / Universitas'
         return self.copyright_information or '?'
 
     @property
@@ -227,7 +230,7 @@ class ImageFile(  # type: ignore
         if field == 'imagehash':
             return others.filter(_imagehash__trigram_similar=self._imagehash)
         if field == 'md5':
-            return others.filter(_md5=self._md5)
+            return others.filter(stat__md5=self.md5)
         if field == 'created':
             treshold = timezone.timedelta(minutes=30)
             return others.filter(

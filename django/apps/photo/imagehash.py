@@ -3,6 +3,9 @@ from pathlib import Path
 
 import boto
 import imagehash
+
+from django.contrib.postgres.fields import JSONField
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -36,13 +39,6 @@ class ImageHashModelMixin(models.Model):
     class Meta:
         abstract = True
 
-    _md5 = models.CharField(
-        verbose_name=_('md5'),
-        help_text=_('md5 hash of source file'),
-        max_length=32,
-        editable=False,
-        null=True,
-    )
     _imagehash = models.CharField(
         verbose_name=_('image hash'),
         help_text=_('perceptual hash of image using dhash algorithm'),
@@ -50,17 +46,12 @@ class ImageHashModelMixin(models.Model):
         editable=False,
         default='',
     )
-    _size = models.PositiveIntegerField(
-        verbose_name=_('file size'),
-        help_text=_('size of file in bytes'),
+    stat = JSONField(
+        encoder=DjangoJSONEncoder,
+        verbose_name=_('stat'),
+        help_text=_('file stats'),
         editable=False,
-        null=True,
-    )
-    _mtime = models.PositiveIntegerField(
-        verbose_name=_('timestamp'),
-        help_text=_('mtime timestamp of source file'),
-        editable=False,
-        null=True,
+        default=lambda: dict(md5=None, size=None, mtime=None),
     )
 
     def save(self, *args, **kwargs):
@@ -70,13 +61,34 @@ class ImageHashModelMixin(models.Model):
     @property
     def md5(self):
         """Calculate or retrieve md5 value"""
-        if self.original and self._md5 is None:
-            self._md5 = get_md5(self.original)
-        return self._md5
+        if self.original and self.stat['md5'] is None:
+            self.stat['md5'] = get_md5(self.original)
+        return self.stat['md5']
 
     @md5.setter
     def md5(self, value):
-        self._md5 = value if value else None
+        self.stat['md5'] = value if value else None
+
+    @property
+    def size(self):
+        """Calculate or retrive filesize"""
+        if self.original and self.stat['size'] is None:
+            self.stat['size'] = self.original.size
+        return self.stat['size']
+
+    @size.setter
+    def size(self, value):
+        self.stat['size'] = value
+
+    @property
+    def mtime(self):
+        if self.original and self.stat['mtime'] is None:
+            self.stat['mtime'] = get_sourcefile_modification_time(self)
+        return self.stat['mtime']
+
+    @mtime.setter
+    def mtime(self, timestamp):
+        self.stat['mtime'] = timestamp
 
     @property
     def imagehash(self):
@@ -96,38 +108,27 @@ class ImageHashModelMixin(models.Model):
     def imagehash(self, value):
         self._imagehash = str(value) if value else ''
 
-    @property
-    def size(self):
-        """Calculate or retrive filesize"""
-        if self.original and self._size is None:
-            self._size = self.original.size
-        return self._size
-
-    @size.setter
-    def size(self, value):
-        self._size = value
-
-    @property
-    def mtime(self):
-        if self.original and self._mtime is None:
-            self._mtime = get_sourcefile_modification_time(self)
-        return self._mtime
-
-    @mtime.setter
-    def mtime(self, timestamp):
-        self._mtime = timestamp
-
     def calculate_hashes(self):
         """Make sure the image has size, mtime, md5 and imagehash"""
-        fields = ['_mtime', '_md5', '_size', '_imagehash', 'modified']
-        if all(getattr(self, f) for f in fields):
-            return False
+        fields = ['stat', '_imagehash', 'modified']
+        if all([
+            self.stat.get('mtime'),
+            self.stat.get('md5'),
+            self.stat.get('size'),
+            self._imagehash,
+        ]):
+            return False  # ok
         # calculate values
-        updated = self.mtime, self.md5, self.size, self.imagehash
+        updated = (
+            self.mtime,
+            self.md5,
+            self.size,
+            self.imagehash,
+        )
         assert all(updated), f'All {fields} should have a value'
 
         if self.pk is not None:
             # save unless instance does not exist already in db.
-            self.save(update_fields=fields)
-            logger.debug(f'updated hashes {self}')
+            self.save(update_fields=['_imagehash', 'stat', 'modified'])
+            logger.debug(f'updated hashes and stats {self}')
         return True
