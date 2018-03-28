@@ -10,12 +10,29 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.DeleteModel(
-            name='ProfileImage',
+        migrations.DeleteModel(name='ProfileImage', ),
+        migrations.RemoveField(
+            model_name='imagefile',
+            name='_md5',
+        ),
+        migrations.RemoveField(
+            model_name='imagefile',
+            name='_mtime',
+        ),
+        migrations.RemoveField(
+            model_name='imagefile',
+            name='_size',
         ),
         migrations.AddField(
             model_name='imagefile',
             name='category',
-            field=models.PositiveSmallIntegerField(choices=[(0, 'unknown'), (1, 'photo'), (2, 'illustration'), (3, 'diagram'), (4, 'profile image'), (5, 'third party image')], default=0, help_text='category', verbose_name='category'),
+            field=models.PositiveSmallIntegerField(
+                choices=[(0, 'unknown'), (1, 'photo'), (2, 'illustration'),
+                         (3, 'diagram'), (4, 'profile image'),
+                         (5, 'third party image')],
+                default=0,
+                help_text='category',
+                verbose_name='category'
+            ),
         ),
     ]

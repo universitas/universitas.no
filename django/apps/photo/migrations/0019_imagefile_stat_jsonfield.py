@@ -14,6 +14,15 @@ def migrate_stats(apps, schema_editor):
         img.save(update_fields=['stat'])
 
 
+def unmigrate_stats(apps, schema_editor):
+    ImageFile = apps.get_model("photo", "ImageFile")
+    for img in ImageFile.objects.all():
+        img._md5 = img.stat.get('md5')
+        img._size = img.stat.get('size')
+        img._mtime = img.stat.get('mtime')
+        img.save(update_fields=['_md5', '_size', '_mtime'])
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -32,17 +41,8 @@ class Migration(migrations.Migration):
                 verbose_name='stat'
             ),
         ),
-        migrations.RunPython(code=migrate_stats),
-        migrations.RemoveField(
-            model_name='imagefile',
-            name='_md5',
-        ),
-        migrations.RemoveField(
-            model_name='imagefile',
-            name='_mtime',
-        ),
-        migrations.RemoveField(
-            model_name='imagefile',
-            name='_size',
+        migrations.RunPython(
+            code=migrate_stats,
+            reverse_code=unmigrate_stats,
         ),
     ]

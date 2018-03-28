@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from pathlib import Path
 from django.db import migrations
 from utils.migration_helpers import unload_fixture, load_fixture

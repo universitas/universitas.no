@@ -29,7 +29,7 @@ class UploadFileSerializer(ImageFileSerializer):
             'description',
             'artist',
             '_imagehash',
-            'md5',
+            'stat',
         ]
         read_only_fields = [
             'crop_box',
