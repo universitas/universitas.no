@@ -1,19 +1,15 @@
 import logging
 
 import apps.photo.file_operations as ops
+from apps.contributors.models import Contributor
 from apps.photo.exif import exif_to_json
 from apps.photo.models import ImageFile
-from apps.contributors.models import Contributor
-from .photos import ImageFileSerializer
 from rest_framework import (
-    permissions,
-    response,
-    serializers,
-    viewsets,
-    mixins,
-    status,
+    mixins, permissions, response, serializers, status, viewsets
 )
 from rest_framework.parsers import FormParser, MultiPartParser
+
+from .photos import ImageFileSerializer
 
 logger = logging.getLogger('apps')
 
@@ -33,7 +29,7 @@ class UploadFileSerializer(ImageFileSerializer):
             'description',
             'artist',
             '_imagehash',
-            '_md5',
+            'md5',
         ]
         read_only_fields = [
             'crop_box',

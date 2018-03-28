@@ -4,7 +4,7 @@ import json
 import logging
 from collections import namedtuple
 
-from apps.photo.models import ProfileImage
+from apps.photo.models import ImageFile
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
@@ -68,7 +68,8 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
         default=False,
     )
     byline_photo = models.ForeignKey(
-        ProfileImage,
+        ImageFile,
+        limit_choices_to={'category': ImageFile.PROFILE},
         related_name='person',
         blank=True,
         null=True,
@@ -98,7 +99,7 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
         if match:
             with open(match, 'rb') as source:
                 content = File(source)
-                img = ProfileImage()
+                img = ImageFile(category=ImageFile.PROFILE)
                 img.source_file.save(filename, content)
 
             self.byline_photo = img

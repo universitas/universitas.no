@@ -52,9 +52,9 @@ def exif_to_json(imgdata: bytes) -> dict:
 
 
 def extract_exif_data(data: dict) -> ExifData:
-    date = data.get('DateTimeOriginal') or data.get('DateTime', '')
+    original_date = data.get('DateTimeOriginal') or data.get('DateTime', '')
     return ExifData(
-        datetime=parse_exif_timestamp(date),
+        datetime=parse_exif_timestamp(original_date),
         description=data.get('ImageDescription', ''),
         copyright=data.get('Copyright', ''),
         artist=data.get('Artist', ''),

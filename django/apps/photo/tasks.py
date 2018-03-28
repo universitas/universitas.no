@@ -8,6 +8,7 @@ from apps.core.staging import new_staging_images
 from celery import shared_task
 from celery.task import periodic_task
 from django.core.files import File
+from utils.model_fields import AttrDict
 
 from . import file_operations as ops
 from .cropping.boundingbox import CropBox
@@ -117,14 +118,24 @@ def import_staging_images(max_age=timedelta(minutes=10)) -> List[Path]:
 
 
 def import_image(file: Path) -> bool:
+    """Import image file from staging directory if it passes checks.
+
+    - the file is a valid image file
+    - there's no image with the same md5 in the database
+    - there's no larger image with the same image hash
+
+    returns False if the checks failed and image was not imported
+    """
     if not ops.valid_image(file):
         return False
 
     img = ImageFile(
-        md5=ops.get_md5(file),
         imagehash=ops.get_imagehash(file),
-        size=ops.get_filesize(file),
-        mtime=ops.get_mtime(file),
+        stat=AttrDict(
+            md5=ops.get_md5(file),
+            size=ops.get_filesize(file),
+            mtime=ops.get_mtime(file),
+        )
     )
     same_md5 = img.similar('md5').first()
     if same_md5:
@@ -132,10 +143,10 @@ def import_image(file: Path) -> bool:
 
     same_imghash = img.similar('imagehash').first()
     if same_imghash:
-        if same_imghash.size > img.size:
-            return False
+        if same_imghash.stat.size > img.stat.size:
+            return False  # do not overwrite
         else:
-            img.pk = same_imghash.pk
+            img.pk = same_imghash.pk  # overwrite smaller file
 
     img.original.save(
         file.name,

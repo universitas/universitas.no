@@ -1,10 +1,9 @@
 import logging
 
-from sorl.thumbnail.helpers import ThumbnailError
-
 from apps.photo import tasks
 from django.conf import settings
 from django.db.models.signals import post_save, pre_delete
+from sorl.thumbnail.helpers import ThumbnailError
 
 # from celery import chain
 # from apps.photo import tasks
@@ -42,6 +41,4 @@ def image_post_save(sender, instance, created, update_fields, **kwargs):
 
 
 pre_delete.connect(image_pre_delete, sender='photo.ImageFile')
-pre_delete.connect(image_pre_delete, sender='photo.ProfileImage')
 post_save.connect(image_post_save, sender='photo.ImageFile')
-post_save.connect(image_post_save, sender='photo.ProfileImage')
