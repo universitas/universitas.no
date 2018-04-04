@@ -1,13 +1,15 @@
 import json
+import logging
 from pathlib import Path
-
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, serializers, viewsets
-from rest_framework.exceptions import ValidationError
 
 from apps.photo.cropping.boundingbox import CropBox
 from apps.photo.models import ImageFile
 from django.db import models
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, serializers, viewsets
+from rest_framework.exceptions import ValidationError
+
+logger = logging.getLogger('apps')
 
 
 class jsonDict(dict):
@@ -36,10 +38,9 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'name',
             'created',
-            'cropping_method',
+            'category',
             'contributor',
-            'method',
-            'size',
+            'artist',
             'original',
             'thumb',
             'small',
@@ -47,8 +48,12 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
             'description',
             'usage',
             '_imagehash',
-            'crop_box',
+            'size',
             'is_profile_image',
+            'crop_box',
+            'stat',
+            'cropping_method',
+            'method',
         ]
         read_only_fields = [
             'original',
@@ -101,9 +106,18 @@ class ImageFileViewSet(viewsets.ModelViewSet):
     search_fields = ['source_file', 'description']
 
     def get_queryset(self):
+        search_parameters = {
+            key: val
+            for key, val in self.request.query_params.items()
+            if key in {'md5', 'fingerprint', 'imagehash', 'id'}
+        }
+        if search_parameters:
+            qs = ImageFile.objects.search(**search_parameters)
+        else:
+            qs = self.queryset
         profile_images = self.request.query_params.get('profile_images', '')
         if profile_images.lower() in ['1', 'yes', 'true']:
-            return self.queryset.profile_images()
+            qs = qs.profile_images()
         elif profile_images.lower() in ['0', 'no', 'false']:
-            return self.queryset.photos()
-        return self.queryset
+            qs = qs.photos()
+        return qs

@@ -1,5 +1,6 @@
+@import "globals";
 @import "storylist";
-$darkgrey: #555;
+
 .ListPanel {
   flex: 1;
   display: flex;
@@ -28,7 +29,7 @@ $darkgrey: #555;
   }
   .TopBar,
   .BottomBar {
-    background-color: lighten($darkgrey, 40%);
+    @extend %horizontal-bar;
     // align-content: flex-start;
     // align-items: space-around;
     // justify-content: space-between;
@@ -37,46 +38,52 @@ $darkgrey: #555;
       flex-wrap: wrap;
       display: flex;
       margin: 0.2em;
-      // align-content: center;
-      // justify-content: stretch;
       align-items: center;
     }
     .info,
     button {
       font-size: 0.8em;
       padding: 0.5em;
-      margin: 0.2em;
+      margin: 0.1rem;
     }
     .info {
       flex: 1;
       min-width: 10em;
     }
     button {
-      $color: lighten(blue, 15);
       outline: none;
       color: white;
       border-radius: 0.5em;
-      background-color: $color;
+      background-color: $button-color;
       cursor: pointer;
       &:hover {
-        background-color: scale_color($color, $saturation: 100, $lightness: 15);
+        background-color: scale_color(
+          $button-color,
+          $saturation: 100,
+          $lightness: 10
+        );
       }
       &.inactive {
         background-color: scale_color(
-          $color,
+          $button-color,
           $lightness: -50,
-          $saturation: -70
+          $saturation: -30
         );
         &:hover {
           background-color: scale_color(
-            $color,
+            $button-color,
             $lightness: -30,
-            $saturation: -50
+            $saturation: -10
           );
         }
       }
       &:disabled {
-        background-color: scale_color($color, $lightness: 00, $saturation: -90);
+        background-color: scale_color(
+          $button-color,
+          $lightness: -30,
+          $saturation: -90
+        );
+        color: #ccc;
         cursor: inherit;
       }
     }

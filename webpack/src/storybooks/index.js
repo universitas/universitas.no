@@ -16,3 +16,4 @@ storiesOf('Editor', module).add('story editor', () => <StoryEditor />)
 
 require('./upload')
 require('./forms')
+require('./photos')

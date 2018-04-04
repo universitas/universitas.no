@@ -27,8 +27,8 @@ export const phoneFormat = R.pipe(
   stringify,
   R.trim,
   R.ifElse(Boolean, R.identity, R.always('–')),
-  R.replace(' ', ''),
-  R.replace(/(\d{3}) ?(\d{2}) ?(\d{3})/, '$1 $2 $3')
+  R.replace(/ /g, ''),
+  R.replace(/(\+\d\d)?(\d{3})(\d{2})(\d{3})$/, '$1 $2 $3 $4')
 )
 
 // :: string|Date -> string

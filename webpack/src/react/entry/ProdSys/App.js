@@ -51,24 +51,16 @@ const ProdSys = () => (
       <PhotoList />
     </Fragment>
     <Fragment forRoute="/stories/:id">
-      <section className="DetailPanel">
-        <StoryDetail />
-      </section>
+      <StoryDetail />
     </Fragment>
     <Fragment forRoute="/contributors/:id">
-      <section className="DetailPanel">
-        <ContributorDetail />
-      </section>
+      <ContributorDetail />
     </Fragment>
     <Fragment forRoute="/issues/:id">
-      <section className="DetailPanel">
-        <IssueDetail />
-      </section>
+      <IssueDetail />
     </Fragment>
     <Fragment forRoute="/images/:id">
-      <section className="DetailPanel">
-        <PhotoDetail />
-      </section>
+      <PhotoDetail />
     </Fragment>
   </main>
 )

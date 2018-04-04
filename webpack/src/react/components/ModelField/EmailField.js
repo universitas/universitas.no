@@ -6,6 +6,6 @@ export const EditableField = ({ value, ...args }) => (
 )
 export const DetailField = ({ value, ...args }) => (
   <span {...args}>
-    <a href={'mailto:' + value}>{stringify(value)}</a>
+    <a href={'mailto:' + value}>{stringify(value) || '–'}</a>
   </span>
 )
