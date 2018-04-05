@@ -71,6 +71,9 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
 }
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'api.user.AvatarUserDetailsSerializer'
+}
 
 # CELERY TASK RUNNER
 CELERY_TASK_DEFAULT_QUEUE = SITE_URL

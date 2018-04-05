@@ -25,7 +25,7 @@ const PhotoTools = ({ autocrop, close, openAdmin }) => (
   </ToolBar>
 )
 
-const mapStateToProps = (state, { pk }) => getItem(pk)
+const mapStateToProps = (state, { pk }) => getItem(pk)(state)
 
 const mapDispatchToProps = (dispatch, { pk }) => ({
   autocrop: () => dispatch(fieldChanged(pk, 'cropping_method', 1)),

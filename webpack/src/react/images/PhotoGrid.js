@@ -16,9 +16,9 @@ const PhotoField = props => (
 
 const GridItem = ({ pk, onClick, className = '' }) => (
   <div key={pk} onClick={onClick} className={cx('GridItem', className)}>
-    <PhotoField pk={pk} {...fields.name} />
-    <PhotoField pk={pk} {...fields.created} />
     <PhotoField pk={pk} {...fields.small} label />
+    <PhotoField pk={pk} {...fields.name} label />
+    <PhotoField pk={pk} {...fields.created} label />
   </div>
 )
 

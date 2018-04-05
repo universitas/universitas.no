@@ -32,16 +32,18 @@ const StoryTools = ({
       Icon={Laptop}
       title="se saken på universitas.no"
       onClick={openUrl(public_url)}
+      title={public_url}
     />
     <Tool
       Icon={Tune}
       title="rediger i django-admin"
       onClick={openUrl(edit_url)}
+      title={edit_url}
     />
   </ToolBar>
 )
 
-const mapStateToProps = (state, { pk }) => getItem(pk)
+const mapStateToProps = (state, { pk }) => getItem(pk)(state)
 
 const mapDispatchToProps = (dispatch, { pk }) => ({
   trashStory: () => dispatch(fieldChanged(pk, 'publication_status', 15)),

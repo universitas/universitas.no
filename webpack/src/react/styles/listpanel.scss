@@ -1,6 +1,12 @@
 @import "globals";
 @import "storylist";
 
+%button {
+  border-radius: 0.3rem;
+  box-shadow: inset -1px -1px 1px rgba(black, 0.4),
+    inset 1px 1px 1px rgba(white, 0.3);
+}
+
 .ListPanel {
   flex: 1;
   display: flex;
@@ -51,9 +57,9 @@
       min-width: 10em;
     }
     button {
+      @extend %button;
       outline: none;
       color: white;
-      border-radius: 0.5em;
       background-color: $button-color;
       cursor: pointer;
       &:hover {
@@ -78,6 +84,7 @@
         }
       }
       &:disabled {
+        box-shadow: none;
         background-color: scale_color(
           $button-color,
           $lightness: -30,

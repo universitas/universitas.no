@@ -59,7 +59,9 @@ const modelFuncs = action => {
 
 function* itemListScrollTopHack() {
   // scroll to top when loading new items. This feels hacky.
-  document.querySelector('.itemList').scrollTop = 0
+  try {
+    document.querySelector('.itemList').scrollTop = 0
+  } catch (e) {}
 }
 
 function* watchRouteChange() {
