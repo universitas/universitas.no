@@ -104,6 +104,7 @@ class ImageFileViewSet(viewsets.ModelViewSet):
     serializer_class = ImageFileSerializer
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)
     search_fields = ['source_file', 'description']
+    filter_fields = ['category']
 
     def get_queryset(self):
         search_parameters = {
@@ -115,9 +116,4 @@ class ImageFileViewSet(viewsets.ModelViewSet):
             qs = ImageFile.objects.search(**search_parameters)
         else:
             qs = self.queryset
-        profile_images = self.request.query_params.get('profile_images', '')
-        if profile_images.lower() in ['1', 'yes', 'true']:
-            qs = qs.profile_images()
-        elif profile_images.lower() in ['0', 'no', 'false']:
-            qs = qs.photos()
         return qs

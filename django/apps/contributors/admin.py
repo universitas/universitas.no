@@ -41,7 +41,7 @@ class ContributorAdmin(admin.ModelAdmin):
 
     inlines = [
         StintInline,
-        BylineInline,
+        # BylineInline,
     ]
     list_display = [
         'display_name',

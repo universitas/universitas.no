@@ -34,8 +34,18 @@ def default_groups():
     return namedtuple('Groups', 'management, staff')(management, staff)
 
 
+class ContributorQuerySet(models.QuerySet):
+    def search(self, query):
+        """fuzzy name search"""
+        return self.filter(
+            display_name__unaccent__icontains=query
+        ) or self.filter(display_name__unaccent__trigram_similar=query)
+
+
 class Contributor(FuzzyNameSearchMixin, models.Model):
     """ Someone who contributes content to the newspaper or other staff. """
+
+    objects = ContributorQuerySet.as_manager()
 
     UNKNOWN = 0
     ACTIVE = 1

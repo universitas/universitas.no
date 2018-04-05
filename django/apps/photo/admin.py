@@ -71,8 +71,11 @@ class ImageFileAdmin(
         'cropped_thumb',
         'full_thumb',
     ]
-    list_editable = ()
+    list_editable = [
+        'category',
+    ]
     search_fields = [
+        'category',
         'source_file',
         'storyimage__caption',
         'frontpagestory__headline',

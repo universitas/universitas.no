@@ -17,11 +17,32 @@ const optionsFields = {
     read_only: true,
     label: 'Filnavn',
   },
+  artist: {
+    type: 'string',
+    required: false,
+    read_only: true,
+    label: 'opphav',
+  },
   created: {
     type: 'datetime',
     required: false,
     read_only: true,
     label: 'Opprettet',
+  },
+  category: {
+    type: 'choice',
+    required: true,
+    read_only: false,
+    label: 'Kategori',
+    help_text: 'kategori',
+    choices: [
+      { value: 1, display_name: 'foto' },
+      { value: 2, display_name: 'illustrasjon' },
+      { value: 3, display_name: 'diagram' },
+      { value: 4, display_name: 'bylinebilde' },
+      { value: 5, display_name: 'ekstern' },
+      { value: 0, display_name: 'ukjent' },
+    ],
   },
   cropping_method: {
     type: 'choice',
