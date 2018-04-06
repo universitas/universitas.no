@@ -19,8 +19,8 @@ const Tool = ({ onClick, icon, active, toolTip, label, ...props }) => {
 Tool.propTypes = {
   onClick: PropTypes.func.isRequired,
   icon: PropTypes.string.isRequired,
-  active: PropTypes.bool.isRequired,
-  toolTip: PropTypes.string.isRequired,
+  active: PropTypes.bool,
+  toolTip: PropTypes.string,
 }
 
 export default Tool

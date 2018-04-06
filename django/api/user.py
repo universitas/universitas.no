@@ -10,9 +10,9 @@ class AvatarUserDetailsSerializer(UserDetailsSerializer):
         try:
             img = instance.contributor.byline_photo.preview
             return self._build_uri(img.url)
-        except Exception:
-            raise
-        return None
+        except AttributeError:
+            # no byline photo
+            return None
 
     def _build_uri(self, url):
         return self._context['request'].build_absolute_uri(url)

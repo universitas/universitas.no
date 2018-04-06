@@ -1,7 +1,7 @@
 // Date Field
 import { formatDate } from 'utils/text'
 
-export const EditableField = ({ value, ...args }) => (
+export const EditableField = ({ value = '', ...args }) => (
   <input type="date" value={value} {...args} />
 )
 
