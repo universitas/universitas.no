@@ -4,7 +4,7 @@ import json
 import logging
 from collections import namedtuple
 
-from apps.photo.models import ProfileImage
+from apps.photo.models import ImageFile
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
@@ -34,8 +34,18 @@ def default_groups():
     return namedtuple('Groups', 'management, staff')(management, staff)
 
 
+class ContributorQuerySet(models.QuerySet):
+    def search(self, query):
+        """fuzzy name search"""
+        return self.filter(
+            display_name__unaccent__icontains=query
+        ) or self.filter(display_name__unaccent__trigram_similar=query)
+
+
 class Contributor(FuzzyNameSearchMixin, models.Model):
     """ Someone who contributes content to the newspaper or other staff. """
+
+    objects = ContributorQuerySet.as_manager()
 
     UNKNOWN = 0
     ACTIVE = 1
@@ -68,7 +78,8 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
         default=False,
     )
     byline_photo = models.ForeignKey(
-        ProfileImage,
+        ImageFile,
+        limit_choices_to={'category': ImageFile.PROFILE},
         related_name='person',
         blank=True,
         null=True,
@@ -98,7 +109,7 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
         if match:
             with open(match, 'rb') as source:
                 content = File(source)
-                img = ProfileImage()
+                img = ImageFile(category=ImageFile.PROFILE)
                 img.source_file.save(filename, content)
 
             self.byline_photo = img

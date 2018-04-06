@@ -16,10 +16,10 @@ const ContributorField = ({ editable, ...props }) => (
 
 const GridItem = ({ pk, onClick, className = '' }) => (
   <div key={pk} onClick={onClick} className={cx('GridItem', className)}>
-    <ContributorField pk={pk} {...fields.display_name} />
-    <ContributorField pk={pk} {...fields.phone} />
-    <ContributorField pk={pk} {...fields.email} />
-    <ContributorField pk={pk} {...fields.thumb} />
+    <ContributorField pk={pk} {...fields.thumb} label />
+    <ContributorField pk={pk} {...fields.display_name} label />
+    <ContributorField pk={pk} {...fields.email} label />
+    <ContributorField pk={pk} {...fields.phone} label />
   </div>
 )
 
@@ -34,9 +34,11 @@ const ConnectedGridItem = connect(
   (dispatch, { pk }) => ({ onClick: e => dispatch(push(`/${MODEL}/${pk}`)) })
 )(GridItem)
 
-const ItemGrid = ({ items = [] }) => (
+const ContributorGrid = ({ items = [] }) => (
   <div className="ItemGrid">
-    {items.map(pk => <ConnectedGridItem fields={fields} pk={pk} />)}
+    {items.map(pk => <ConnectedGridItem key={pk} fields={fields} pk={pk} />)}
   </div>
 )
-export default connect(state => ({ items: getItemList(state) }))(ItemGrid)
+export default connect(state => ({ items: getItemList(state) }))(
+  ContributorGrid
+)

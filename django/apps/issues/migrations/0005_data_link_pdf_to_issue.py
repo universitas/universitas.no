@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 from django.db import migrations
 
@@ -31,7 +30,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(
-            join_models,
-            reverse_code=unjoin_models
+            code=join_models,
+            reverse_code=unjoin_models,
         ),
     ]

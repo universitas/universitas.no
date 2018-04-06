@@ -5,7 +5,7 @@ from pathlib import Path
 from PIL import Image, ImageChops, ImageFilter, ImageOps
 
 from apps.contributors.models import Contributor
-from apps.photo.models import ImageFile, ProfileImage
+from apps.photo.models import ImageFile
 from apps.stories.models import Story, StoryImage, StoryType
 from django.core.files import File
 from django.utils import timezone
@@ -68,12 +68,12 @@ def random_bands(sourceimg):
     return newimg
 
 
-def fake_imagefile(size=(1200, 600), class_=ImageFile, fake=FAKE, **kwargs):
+def fake_imagefile(size=(1200, 600), fake=FAKE, **kwargs):
     image = random_image(size=size)
     blob = BytesIO()
     image.convert('RGB').save(blob, 'JPEG')
     filename = kwargs.pop('filename', fake.file_name(extension='jpg'))
-    instance = class_(**kwargs)
+    instance = ImageFile(**kwargs)
     content = File(blob)
     instance.source_file.save(filename, content)
     return instance
@@ -82,7 +82,9 @@ def fake_imagefile(size=(1200, 600), class_=ImageFile, fake=FAKE, **kwargs):
 def fake_contributor(fake=FAKE, **kwargs):
     name = fake.name()
     filename = '{}.jpg'.format(name).lower()
-    byline_photo = fake_imagefile((400, 400), ProfileImage, filename=filename)
+    byline_photo = fake_imagefile((400, 400),
+                                  category=ImageFile.PROFILE,
+                                  filename=filename)
     instance = Contributor(
         byline_photo=byline_photo,
         display_name=name,

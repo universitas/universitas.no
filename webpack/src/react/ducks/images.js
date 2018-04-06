@@ -1,3 +1,5 @@
+// duck for image cropping app
+
 import { IMAGES_FETCH_SUCCESS } from 'ducks/imageList'
 
 // Action constants

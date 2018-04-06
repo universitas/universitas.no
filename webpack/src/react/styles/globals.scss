@@ -1,0 +1,26 @@
+$labelcolor: #666;
+$inputheight: 1.8em;
+$inputradius: 0.2rem;
+// prodsys story list
+$green: #6c6;
+$lightgreen: #ee6;
+$palegreen: #dda;
+$gray: #999;
+$dullgreen: mix($green, $gray);
+$pink: #f1c;
+$orange: #77f;
+$black: #222;
+
+$horizontal-bar-color: #756;
+$darkgrey: darken($horizontal-bar-color, 20);
+$horizontal-bar-height: 2.2rem;
+// $button-color: purple;
+$button-color: #24c7e4;
+$button-color: #1188d2;
+
+%horizontal-bar {
+  color: white;
+  flex-shrink: 0;
+  flex-basis: $horizontal-bar-height;
+  background-color: $horizontal-bar-color;
+}

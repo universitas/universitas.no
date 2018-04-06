@@ -10,37 +10,38 @@ const contentType = R.assocPath(['headers', 'Content-Type'])
 const mergeDeepAll = R.reduce(R.mergeDeepRight, {})
 
 // Create a merge-able init mapping with body data and content type header
-// jsonifyBody :: Any -> Object
-const jsonifyBody = R.cond([
-  [R.isNil, R.always({})],
-  [R.is(String), R.pipe(R.objOf('body'), contentType('text/plain'))],
+// wrapBody :: Any -> Object
+const wrapBody = R.cond([
+  [R.isNil, R.always({})], // no body
+  [R.is(String), R.objOf('body')], // plain string (content-type auto)
+  [R.is(FormData), R.objOf('body')], // multipart form (content-type auto)
   [
-    R.T,
+    R.T, // anything else is converted to JSON
     R.pipe(JSON.stringify, R.objOf('body'), contentType('application/json')),
   ],
 ])
 
 // Merge headers and body to build an init object for fetch spec
-export const initializeRequest = (head, body) =>
+export const httpOptions = (head, body) =>
   mergeDeepAll([
     {
-      method: 'GET',
+      method: 'GET', // default method
       credentials: 'same-origin',
-      headers: { 'X-CSRFToken': Cookies.get('csrftoken') || 'NO-CSRF-COOKIE' },
+      headers: { 'X-CSRFToken': Cookies.get('csrftoken') || 'NO-CSRF-COOKIE' }, // cookie auth
     },
     R.defaultTo({}, head),
-    jsonifyBody(body),
+    wrapBody(body),
   ])
 
 // Perform fetch return promise containing an object with either an
 // `error` or `response` property. {error: Object} | {response: Object}
 // apiFetch :: (String, Object, Any) -> Promise[Object]
 export const apiFetch = (url, head = {}, body = null) => {
-  const init = initializeRequest(head, body)
+  const init = httpOptions(head, body)
   return fetch(url, init)
     .then(response =>
       response
-        .json()
+        .json() // api always should return json
         .then(data => ({ HTTPstatus: response.status, url, ...data }))
         .then(data => (response.ok ? { response: data } : { error: data }))
     )

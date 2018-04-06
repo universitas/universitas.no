@@ -1,63 +1,15 @@
 """ Photography and image files in the publication  """
 
-import json
 import logging
 
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from sorl import thumbnail
+from utils.model_fields import BoxField
 
-from .boundingbox import CropBox
+# from .boundingbox import CropBox
 
 logger = logging.getLogger(__name__)
-
-
-def parse_box_data(value):
-    try:
-        data = json.loads(value)
-        return CropBox(**data)
-    except json.JSONDecodeError:
-        return CropBox.basic()
-    except ValueError:
-        return CropBox.basic()
-
-
-def validate_box(value):
-    try:
-        CropBox(**value.__dict__)
-    except ValueError as err:
-        raise ValidationError(str(err))
-
-
-class BoxField(models.Field):
-    description = 'Bounding Box field'
-    default_validators = [validate_box]
-
-    def from_db_value(self, value, expression, connection, context):
-        if value is None:
-            return value
-        return parse_box_data(value)
-
-    def to_python(self, value):
-        if isinstance(value, CropBox):
-            return value
-        if value is None:
-            return value
-        return parse_box_data(value)
-
-    def value_to_string(self, obj):
-        value = self.value_from_object(obj)
-        return self.get_prep_value(value)
-
-    def get_prep_value(self, value):
-        if value is None:
-            return ''
-        validate_box(value)
-        return json.dumps(value.serialize())
-
-    def get_internal_type(self):
-        return 'TextField'
 
 
 class AutoCropImage(models.Model):
@@ -90,7 +42,6 @@ class AutoCropImage(models.Model):
     crop_box = BoxField(
         verbose_name=_('crop box'),
         null=True,
-        default=CropBox.basic,
         help_text=_('How this image has been cropped.'),
     )
 

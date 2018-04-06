@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+
 from apps.photo.models import ImageFile
 from apps.photo.tasks import (
     autocrop_image_file, import_image, new_staging_images, post_save_task
@@ -23,7 +24,7 @@ def test_post_save(jpeg_file):
     assert '.jpg' in img.small.url
     assert '.jpg' in img.large.url
     img.refresh_from_db()
-    assert img._md5
+    assert img.stat.get('md5')
     assert img._imagehash
 
 

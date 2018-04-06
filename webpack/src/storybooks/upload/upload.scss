@@ -1,0 +1,43 @@
+.UploadWidget {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  background: #eee;
+}
+.FileInput {
+  background: #ddd;
+  flex: 1;
+  label {
+    &.dragOver {
+      background: red;
+      &.acceptFiles {
+        background: green;
+      }
+    }
+    height: 3em;
+    display: block;
+    cursor: pointer;
+    &:hover {
+      background: yellow;
+    }
+  }
+  input[type="file"] {
+    visibility: hidden;
+  }
+}
+.ImagePreview {
+  margin: 0.4em;
+  .thumb {
+    width: 15em;
+  }
+  display: flex;
+}
+.Fingerprint {
+  image-rendering: pixelated;
+  width: 20px;
+  cursor: zoom-in;
+  transition: transform 100ms;
+  &:hover {
+    transform: scale(4);
+  }
+}

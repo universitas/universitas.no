@@ -16,10 +16,9 @@ const PhotoField = props => (
 
 const GridItem = ({ pk, onClick, className = '' }) => (
   <div key={pk} onClick={onClick} className={cx('GridItem', className)}>
-    <PhotoField pk={pk} {...fields.name} />
-    <PhotoField pk={pk} {...fields.created} />
-    <PhotoField pk={pk} {...fields.size} />
-    <PhotoField pk={pk} {...fields.thumb} />
+    <PhotoField pk={pk} {...fields.small} label />
+    <PhotoField pk={pk} {...fields.name} label />
+    <PhotoField pk={pk} {...fields.created} label />
   </div>
 )
 
@@ -34,9 +33,9 @@ const ConnectedGridItem = connect(
   (dispatch, { pk }) => ({ onClick: e => dispatch(push(`/${MODEL}/${pk}`)) })
 )(GridItem)
 
-const ItemGrid = ({ items = [] }) => (
+const PhotoGrid = ({ items = [] }) => (
   <div className="ItemGrid">
-    {items.map(pk => <ConnectedGridItem fields={fields} pk={pk} />)}
+    {items.map(pk => <ConnectedGridItem key={pk} fields={fields} pk={pk} />)}
   </div>
 )
-export default connect(state => ({ items: getItemList(state) }))(ItemGrid)
+export default connect(state => ({ items: getItemList(state) }))(PhotoGrid)

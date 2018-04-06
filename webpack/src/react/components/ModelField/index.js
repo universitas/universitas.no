@@ -13,8 +13,11 @@ import * as phone from './PhoneField'
 import * as stints from './StintsField'
 import { connect } from 'react-redux'
 import { modelActions, modelSelectors } from 'ducks/basemodel'
+import cx from 'classnames'
 
-const fields = {
+import './modelfield.scss'
+
+const fieldTypes = {
   choice,
   date,
   datetime,
@@ -28,7 +31,9 @@ const fields = {
   string,
   text,
   thumb,
+  shorttext: text,
 }
+export const fieldNames = R.keys(fieldTypes)
 
 export const Field = ({
   type = 'text',
@@ -36,11 +41,21 @@ export const Field = ({
   model,
   pk,
   name,
+  label,
   ...props
 }) => {
-  const { EditableField, DetailField } = R.propOr(fields.string, type, fields)
+  const { EditableField, DetailField } = R.propOr(
+    fieldTypes.string,
+    type,
+    fieldTypes
+  )
   const ModelField = editable ? EditableField : DetailField
-  return <ModelField {...props} />
+  return (
+    <div className={cx('ModelField', type)}>
+      {R.is(String, label) && <label className={cx('label')}>{label}</label>}
+      <ModelField className={cx('value')} {...props} />
+    </div>
+  )
 }
 
 const mapStateToProps = (state, { pk, model, name }) => {

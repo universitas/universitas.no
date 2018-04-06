@@ -25,4 +25,9 @@ def migrate_cropboxes(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [('photo', '0009_imagefile_crop_box')]
-    operations = [migrations.RunPython(migrate_cropboxes)]
+    operations = [
+        migrations.RunPython(
+            code=migrate_cropboxes,
+            reverse_code=migrations.RunPython.noop,
+        )
+    ]

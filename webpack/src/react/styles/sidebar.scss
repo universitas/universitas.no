@@ -1,4 +1,4 @@
-$darkgrey: #555;
+@import "globals";
 
 .SideBar {
   display: flex;
@@ -37,19 +37,26 @@ $darkgrey: #555;
 //}
 
 .UserTool {
-  font-size: 0.3em;
+  width: 1.5em;
   align-items: center;
   display: flex;
   flex-direction: column;
+  .Avatar {
+    border: 0.05em solid rgba(black, 0.2);
+    border-radius: 50%;
+    width: 1.2em;
+    height: 1.2em;
+    margin-bottom: 0.2rem;
+    object-fit: cover;
+  }
   .username,
   .button {
-    font-size: 0.9em;
+    font-size: 0.25em;
     width: 5.5em;
     margin-bottom: 0.5em;
     padding: 0.2em 0.5em;
   }
   .button {
-    font-size: 0.9em;
     background-color: #222;
     color: white;
     padding: 0.5em;

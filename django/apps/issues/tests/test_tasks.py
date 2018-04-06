@@ -90,7 +90,7 @@ def test_create_bundle(tmp_fixture_dir):
     bundle_file = tmp_fixture_dir / 'bundle.pdf'
     assert not bundle_file.exists()
 
-    bundle = create_web_bundle(bundle_file)
+    bundle = create_web_bundle(bundle_file, issue=Issue())
     assert bundle.exists()
     assert bundle.stat().st_size > 1000
 

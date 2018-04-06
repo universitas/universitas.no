@@ -17,7 +17,7 @@ const PdfLink = ({ url }) => (
 
 const PdfThumb = ({ cover_page, pages, pdf }) => (
   <div className="PdfThumb">
-    <img src={cover_page} alt="" />
+    <img src={cover_page} />
     <span className="pages">
       {pages} sider <PdfLink url={pdf} />
     </span>
@@ -25,7 +25,7 @@ const PdfThumb = ({ cover_page, pages, pdf }) => (
 )
 
 export const DetailField = ({ value = [], ...args }) => (
-  <div className="PdfDetail" {...args}>
+  <div {...args}>
     {value.map((props, index) => <PdfThumb key={index} {...props} />)}
   </div>
 )

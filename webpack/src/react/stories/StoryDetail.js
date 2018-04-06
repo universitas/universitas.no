@@ -6,20 +6,13 @@ import { modelSelectors } from 'ducks/basemodel'
 
 const model = 'stories'
 
-const Field = ({ label, type, ...props }) => (
-  <div className={`DetailField ${type}`}>
-    <span className="label">{label}: </span>
-    <ModelField className="Field" type={type} {...props} />
-  </div>
-)
-
 const StoryDetail = ({ pk, storytypechoices }) => (
   <section className="DetailPanel">
     <StoryTools pk={pk} />
     <div className="panelContent">
-      <Field {...{ pk, model, ...fields.working_title }} />
-      <Field {...{ pk, model, ...fields.publication_status }} />
-      <Field
+      <ModelField {...{ pk, model, ...fields.working_title }} />
+      <ModelField {...{ pk, model, ...fields.publication_status }} />
+      <ModelField
         {...{
           pk,
           model,
@@ -28,9 +21,9 @@ const StoryDetail = ({ pk, storytypechoices }) => (
           type: 'choice',
         }}
       />
-      <Field {...{ pk, model, ...fields.created }} />
-      <Field {...{ pk, model, ...fields.modified }} />
-      <Field {...{ pk, model, ...fields.bodytext_markup }} />
+      <ModelField {...{ pk, model, ...fields.created }} />
+      <ModelField {...{ pk, model, ...fields.modified }} />
+      <ModelField {...{ pk, model, ...fields.bodytext_markup }} />
     </div>
   </section>
 )

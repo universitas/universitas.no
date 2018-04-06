@@ -42,11 +42,13 @@ class LargeLimitPagination(pagination.LimitOffsetPagination):
 class IssueViewSet(viewsets.ModelViewSet):
     """ API endpoint that allows Issue to be viewed or updated.  """
 
-    filter_fields = ['id', 'publication_date']
+    filter_fields = ['id', 'publication_date', 'pdfs']
     queryset = Issue.objects.all().prefetch_related('pdfs')
     serializer_class = IssueSerializer
     pagination_class = LargeLimitPagination
-    filter_backends = (filters.SearchFilter, DjangoFilterBackend)
+    filter_backends = (
+        filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend
+    )
     search_fields = ['issue_name']
 
 

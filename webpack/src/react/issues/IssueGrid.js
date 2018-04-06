@@ -19,7 +19,7 @@ const GridItem = ({ pk, onClick, className = '' }) => (
     <IssueField pk={pk} {...fields.publication_date} />
     <IssueField pk={pk} {...fields.issue_name} />
     <IssueField pk={pk} {...fields.issue_type} />
-    <IssueField pk={pk} {...fields.pdfs} />
+    <IssueField pk={pk} {...fields.pdfs} label />
   </div>
 )
 
@@ -34,9 +34,9 @@ const ConnectedGridItem = connect(
   (dispatch, { pk }) => ({ onClick: e => dispatch(push(`/${MODEL}/${pk}`)) })
 )(GridItem)
 
-const ItemGrid = ({ items = [] }) => (
+const IssueGrid = ({ items = [] }) => (
   <div className="ItemGrid">
-    {items.map(pk => <ConnectedGridItem fields={fields} pk={pk} />)}
+    {items.map(pk => <ConnectedGridItem key={pk} fields={fields} pk={pk} />)}
   </div>
 )
-export default connect(state => ({ items: getItemList(state) }))(ItemGrid)
+export default connect(state => ({ items: getItemList(state) }))(IssueGrid)

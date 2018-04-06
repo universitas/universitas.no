@@ -22,9 +22,11 @@ from utils.model_mixins import EditURLMixin
 
 from .cropping.models import AutoCropImage
 from .exif import ExifData, exif_to_json, extract_exif_data
+from .file_operations import get_imagehash, image_from_fingerprint
 from .imagehash import ImageHashModelMixin
 
 logger = logging.getLogger(__name__)
+PROFILE_IMAGE_UPLOAD_FOLDER = 'byline-photo'
 
 image_file_validator = FileExtensionValidator(['jpg', 'jpeg', 'png'])
 
@@ -50,10 +52,10 @@ class ImageFileQuerySet(models.QuerySet):
         return self.filter(cropping_method=self.model.CROP_PENDING)
 
     def photos(self):
-        return self.exclude(source_file__startswith=ProfileImage.UPLOAD_FOLDER)
+        return self.filter(category=ImageCategoryMixin.PHOTO)
 
     def profile_images(self):
-        return self.filter(source_file__startswith=ProfileImage.UPLOAD_FOLDER)
+        return self.filter(category=ImageCategoryMixin.PROFILE)
 
 
 class ImageFileManager(models.Manager):
@@ -75,17 +77,70 @@ class ImageFileManager(models.Manager):
                 image.save()
         return count
 
+    def search(self, md5=None, imagehash=None, fingerprint=None, **kwargs):
+        """Search for images matching query."""
+        if fingerprint:
+            try:
+                image = image_from_fingerprint(fingerprint)
+            except ValueError as err:
+                raise ValueError('incorrect fingerprint: %s' % err) from err
+            imagehash = str(get_imagehash(image))
+        if imagehash:
+            kwargs['_imagehash'] = imagehash
+        if md5:
+            kwargs['stats__md5'] = md5
+        qs = self.get_queryset()
+        if kwargs:
+            results = qs.filter(**kwargs)
+            if results:
+                return results
+        if imagehash:
+            logger.debug('hash: %s' % imagehash)
+            return qs.filter(_imagehash__trigram_similar=imagehash)
+        return qs.none()
+
+
+class ImageCategoryMixin(models.Model):
+    """Sort images by category"""
+
+    class Meta:
+        abstract = True
+
+    UNKNOWN = 0
+    PHOTO = 1
+    ILLUSTRATION = 2
+    DIAGRAM = 3
+    PROFILE = 4
+    EXTERNAL = 5
+
+    CATEGORY_CHOICES = (
+        (UNKNOWN, _('unknown')),
+        (PHOTO, _('photo')),
+        (ILLUSTRATION, _('illustration')),
+        (DIAGRAM, _('diagram')),
+        (PROFILE, _('profile image')),
+        (EXTERNAL, _('third party image')),
+    )
+
+    category = models.PositiveSmallIntegerField(
+        verbose_name=_('category'),
+        help_text=_('category'),
+        choices=CATEGORY_CHOICES,
+        default=UNKNOWN,
+    )
+
 
 class ImageFile(  # type: ignore
-    ImageHashModelMixin, TimeStampedModel, EditURLMixin, AutoCropImage
+    ImageHashModelMixin, TimeStampedModel, EditURLMixin, AutoCropImage,
+    ImageCategoryMixin
 ):
     """Photo or Illustration in the publication."""
+
+    objects = ImageFileManager.from_queryset(ImageFileQuerySet)()
 
     class Meta:
         verbose_name = _('ImageFile')
         verbose_name_plural = _('ImageFiles')
-
-    objects = ImageFileManager.from_queryset(ImageFileQuerySet)()
 
     source_file = thumbnail.ImageField(
         verbose_name=_('source file'),
@@ -153,8 +208,9 @@ class ImageFile(  # type: ignore
         else:
             return super(ImageFile, self).__str__()
 
-    @classmethod
-    def upload_folder(cls) -> str:
+    def upload_folder(self) -> str:
+        if self.is_profile_image():
+            return PROFILE_IMAGE_UPLOAD_FOLDER
         try:
             issue = current_issue()
             year, number = issue.year, issue.number
@@ -163,13 +219,22 @@ class ImageFile(  # type: ignore
             number = '0'
         return f'{year}/{number}'
 
-    @classmethod
-    def slugify(cls, filename: str) -> str:
+    def slugify(self, filename: str) -> str:
+        """Normalize file name"""
         slugify = Slugify(safe_chars='.-', separator='-')
+        if self.is_profile_image():
+            filename = filename.title()
         slugs = slugify(filename).split('.')
         slugs[-1] = slugs[-1].lower().replace('jpeg', 'jpg')
         slug = '.'.join(segment.strip('-') for segment in slugs)
         return slug
+
+    @property
+    def artist(self) -> str:
+        """Attribution as string"""
+        if self.contributor:
+            return f'{self.contributor} / Universitas'
+        return self.copyright_information or '?'
 
     @property
     def original(self) -> File:
@@ -186,7 +251,10 @@ class ImageFile(  # type: ignore
     @property
     def preview(self) -> Thumbnail:
         """Return thumb of cropped image"""
-        return self.thumbnail('150x150', crop_box=self.get_crop_box())
+        options = dict(crop_box=self.get_crop_box())
+        if self.is_profile_image():
+            options.update(expand=0.2, colorspace='GRAY')
+        return self.thumbnail('150x150', **options)
 
     @property
     def exif(self) -> ExifData:
@@ -198,7 +266,7 @@ class ImageFile(  # type: ignore
         if field == 'imagehash':
             return others.filter(_imagehash__trigram_similar=self._imagehash)
         if field == 'md5':
-            return others.filter(_md5=self._md5)
+            return others.filter(stat__md5=self.stat.md5)
         if field == 'created':
             treshold = timezone.timedelta(minutes=30)
             return others.filter(
@@ -234,7 +302,7 @@ class ImageFile(  # type: ignore
         src.save(filename, content)
 
     def is_profile_image(self) -> bool:
-        return self.original.name.startswith(ProfileImage.UPLOAD_FOLDER)
+        return self.category == self.PROFILE
 
     def build_thumbs(self) -> None:
         """Make sure thumbs exists"""
@@ -245,14 +313,19 @@ class ImageFile(  # type: ignore
 
     def add_description(self) -> str:
         """Populates `description` with relevant content from related models"""
-        if not self.description and self.is_profile_image():
-            return ProfileImage.add_description(self)
-
         if not self.description:
-            cap_list = self.storyimage_set.values_list('caption', flat=True)
-            captions = [re.sub(r'/s+', ' ', c.strip()) for c in cap_list]
-            captions = list(set(captions))
-            self.description = '\n'.join(captions)[:1000]
+            if self.is_profile_image():
+                if self.person.count():
+                    self.description = self.person.first().display_name
+                else:
+                    self.description = ''
+            else:
+                cap_list = self.storyimage_set.values_list(
+                    'caption', flat=True
+                )
+                captions = [re.sub(r'/s+', ' ', c.strip()) for c in cap_list]
+                captions = list(set(captions))
+                self.description = '\n'.join(captions)[:1000]
         return self.description
 
     def add_exif_from_file(self) -> dict:
@@ -284,44 +357,3 @@ class ImageFile(  # type: ignore
         if self.pk is None:
             self.add_exif_from_file()
         super().save(*args, **kwargs)
-
-
-class ProfileImageManager(ImageFileManager):
-    def get_queryset(self):
-        return super().get_queryset().profile_images()
-
-
-class ProfileImage(ImageFile):
-    class Meta:
-        proxy = True
-        verbose_name = _('Profile Image')
-        verbose_name_plural = _('Profile Images')
-
-    objects = ProfileImageManager.from_queryset(ImageFileQuerySet)()
-
-    UPLOAD_FOLDER = 'byline-photo'
-
-    def add_description(self) -> str:
-        if self.person.count():
-            self.description = self.person.first().display_name
-        else:
-            self.description = ''
-        return self.description
-
-    @classmethod
-    def slugify(cls, filename) -> str:
-        return super().slugify(filename.title())
-
-    @classmethod
-    def upload_folder(cls) -> str:
-        return cls.UPLOAD_FOLDER
-
-    @property
-    def preview(self) -> Thumbnail:
-        """Return thumb of cropped image"""
-        return self.thumbnail(
-            size='150x150',
-            crop_box=self.get_crop_box(),
-            expand=0.2,
-            colorspace='GRAY',
-        )

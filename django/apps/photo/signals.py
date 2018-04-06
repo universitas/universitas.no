@@ -28,7 +28,8 @@ def image_post_save(sender, instance, created, update_fields, **kwargs):
     post_save_signature = tasks.post_save_task.si(instance.pk)
     if not created:
         old = sender.objects.get(pk=instance.pk)
-        if old._md5 and old._md5 != instance._md5:
+        if old.stat.get('md5'
+                        ) and old.stat.get('md5') != instance.stat.get('md5'):
             # image file has changed. Invalidate thumbnails.
             instance.delete_thumbnails()
     if instance.cropping_method == instance.CROP_PENDING:
@@ -40,6 +41,4 @@ def image_post_save(sender, instance, created, update_fields, **kwargs):
 
 
 pre_delete.connect(image_pre_delete, sender='photo.ImageFile')
-pre_delete.connect(image_pre_delete, sender='photo.ProfileImage')
 post_save.connect(image_post_save, sender='photo.ImageFile')
-post_save.connect(image_post_save, sender='photo.ProfileImage')

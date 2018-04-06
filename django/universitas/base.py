@@ -45,7 +45,7 @@ FACEBOOK_APP_ID = 1936304073248701
 FACEBOOK_PAGE_ID = 273358471969
 FACEBOOK_DOMAIN_VERIFICATION = 'hy9lkh9i5a4ia332dj5xuayvmxc00x'
 SITE_ID = 1
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/auth/login/'
 LOGOUT_URL = '/'
 LOGIN_REDIRECT_URL = '/prodsys/#'
 
@@ -70,6 +70,9 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
+}
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'api.user.AvatarUserDetailsSerializer'
 }
 
 # CELERY TASK RUNNER

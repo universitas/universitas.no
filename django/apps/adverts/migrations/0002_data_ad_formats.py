@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from django.db import models, migrations
+from django.db import migrations
 from django.core.management import call_command
 
 FIXTURE = 'ad_formats'
@@ -21,5 +20,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(load_fixture, reverse_code=unload_fixture),
+        migrations.RunPython(
+            code=load_fixture,
+            reverse_code=unload_fixture,
+        ),
     ]

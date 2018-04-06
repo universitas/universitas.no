@@ -10,11 +10,11 @@ export const getDisplayName = value =>
     R.find(R.propSatisfies(stringEq(value), 'value'))
   )
 
-export const DetailField = ({ choices, value, ...args }) => (
+export const DetailField = ({ choices = [], value, ...args }) => (
   <span {...args}>{getDisplayName(value)(choices)}</span>
 )
 
-export const EditableField = ({ choices, value, ...args }) => (
+export const EditableField = ({ choices = [], value, ...args }) => (
   <select value={value} {...args}>
     {choices.map(({ value, display_name }) => (
       <option key={value} value={value}>

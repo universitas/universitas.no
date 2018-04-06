@@ -7,21 +7,19 @@
     flex: 1;
     flex-direction: column;
     cursor: pointer;
-    padding: .5em;
+    padding: 0.5em;
     border: 1px solid #ddd;
-    font-size: .8em;
+    font-size: 0.8em;
     min-height: 15em;
     min-width: 15em;
-    img {
-      align-self: center;
-    }
     &:hover {
       background-color: #ddd;
     }
   }
 }
 
-.DetailField.pdfs>.Field, .PdfDetail {
+.DetailField.pdfs > .Field,
+.PdfDetail {
   display: flex;
   flex: 1;
   flex-direction: row;
@@ -35,7 +33,7 @@
     img {
       flex-basis: 20em;
       flex: 1;
-      box-shadow: 0 5px 10px 2px rgba(black, .2);
+      box-shadow: 0 5px 10px 2px rgba(black, 0.2);
     }
     .pages {
       margin-top: 1em;

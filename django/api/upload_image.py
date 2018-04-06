@@ -1,34 +1,59 @@
-# from rest_framework import serializers, views, viewsets, filters
 import logging
 
-import apps.photo.file_operations as ops
-from apps.photo.exif import exif_to_json
-from rest_framework import permissions, response, serializers, views
+from apps.contributors.models import Contributor
+from apps.photo.models import ImageFile
+from rest_framework import mixins, permissions, response, serializers, viewsets
 from rest_framework.parsers import FormParser, MultiPartParser
+
+from .photos import ImageFileSerializer
 
 logger = logging.getLogger('apps')
 
 
-class FileSerializer(serializers.Serializer):
-    file = serializers.FileField(required=True)
+class UploadFileSerializer(ImageFileSerializer):
+    original = serializers.ImageField(required=True)
+    description = serializers.CharField(min_length=10, required=True)
+    artist = serializers.CharField(min_length=2, required=True)
+
+    class Meta:
+        model = ImageFile
+        fields = [
+            'url',
+            'original',
+            'description',
+            'artist',
+            'category',
+            'name',
+            'small',
+            'stat',
+            '_imagehash',
+        ]
+        read_only_fields = [
+            'crop_box',
+        ]
+
+    def create(self, validated_data):
+        artist = validated_data.pop('artist')
+        validated_data['source_file'] = validated_data.pop('original')
+        try:
+            validated_data['contributor'] = Contributor.objects.get(
+                display_name=artist
+            )
+        except Contributor.DoesNotExist:
+            validated_data['copyright_information'] = artist
+        return super().create(validated_data)
 
 
-class FileUploadView(views.APIView):
+class FileUploadViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
+    """Endpoint for image uploads"""
     parser_classes = [MultiPartParser, FormParser]
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = FileSerializer
+    permission_classes = [permissions.AllowAny]
+    serializer_class = UploadFileSerializer
+    queryset = ImageFile.objects.none()
 
-    def post(self, request):
-
-        file = request.FILES.get('file')
-        if not file:
-            return response.Response(data={'fail': 'no file'}, status=400)
-        data = dict(
-            name=file.name,
-            content_type=file.content_type,
-            size=file.size,
-            md5=ops.get_md5(file),
-            imagehash=str(ops.get_imagehash(file)),
-            exif=exif_to_json(file),
-        )
-        return response.Response(data=data, status=201)
+    # def list(self, request, *args, **kwargs):
+    #     try:
+    #         return super().list(request, *args, **kwargs)
+    #     except ValueError as err:
+    #         data = {'queryError': str(err)}
+    #         return response.Response(data=data, status=400)

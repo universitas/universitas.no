@@ -7,7 +7,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail.admin import AdminImageMixin
 
-from .models import ImageFile, ProfileImage
+from .models import ImageFile
 
 logger = logging.getLogger(__name__)
 
@@ -46,31 +46,36 @@ def autocrop(modeladmin, request, queryset):
 autocrop.short_description = _('Autocrop')  # type: ignore
 
 
-class ImageAdmin(
+@admin.register(ImageFile)
+class ImageFileAdmin(
     AdminImageMixin,
     ThumbAdmin,
     admin.ModelAdmin,
 ):
 
-    # form = modelform_factory(ImageFile, exclude=())
     actions = [autocrop]
     date_hierarchy = 'created'
     actions_on_top = True
     actions_on_bottom = True
     save_on_top = True
     list_per_page = 25
+    list_filter = ['category']
     list_display = [
         'id',
         'created',
         'source_file',
         'contributor',
+        'category',
         'cropping_method',
         'crop_box',
         'cropped_thumb',
         'full_thumb',
     ]
-    list_editable = ()
+    list_editable = [
+        'category',
+    ]
     search_fields = [
+        'category',
         'source_file',
         'storyimage__caption',
         'frontpagestory__headline',
@@ -78,15 +83,3 @@ class ImageAdmin(
     autocomplete_fields = [
         'contributor',
     ]
-
-
-@admin.register(ImageFile)
-class ImageFileAdmin(ImageAdmin):
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.exclude(source_file__startswith=ProfileImage.UPLOAD_FOLDER)
-
-
-@admin.register(ProfileImage)
-class ProfileImageAdmin(ImageAdmin):
-    pass

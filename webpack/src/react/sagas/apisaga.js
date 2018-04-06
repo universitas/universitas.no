@@ -9,8 +9,10 @@ import {
   take,
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
+import { scrollTo } from 'utils/scroll'
 import { apiFetch, apiPatch, apiPost, apiList, apiGet } from '../services/api'
 import {
+  ITEMS_FETCHED,
   ITEMS_REQUESTED,
   ITEM_SELECTED,
   FILTER_TOGGLED,
@@ -24,6 +26,7 @@ import {
 import { push } from 'redux-little-router'
 
 export default function* rootSaga() {
+  yield takeEvery(ITEMS_FETCHED, itemListScrollTopHack)
   yield takeLatest([FILTER_TOGGLED, FILTER_SET], requestItems)
   yield takeLatest(ITEM_SELECTED, selectItem)
   yield takeLatest(FIELD_CHANGED, patchItem)
@@ -54,6 +57,13 @@ const modelFuncs = action => {
   ])
 }
 
+function* itemListScrollTopHack() {
+  // scroll to top when loading new items. This feels hacky.
+  try {
+    document.querySelector('.itemList').scrollTop = 0
+  } catch (e) {}
+}
+
 function* watchRouteChange() {
   while (true) {
     const action = yield take('ROUTER_LOCATION_CHANGED')
@@ -66,7 +76,6 @@ function* watchRouteChange() {
     }
   }
 }
-
 function* selectItem(action) {
   const { getItem, itemAdded, apiGet } = modelFuncs(action)
   const id = R.path(['payload', 'id'], action)

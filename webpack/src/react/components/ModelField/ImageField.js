@@ -1,10 +1,8 @@
 // Image Field
+import cx from 'classnames'
 
 export const DetailField = ({ value, className, ...args }) => (
-  <div
-    style={{ border: '1px solid black', width: '100%' }}
-    className={`${className} image`}
-  >
+  <div className={cx('image', className)}>
     <img src={value} {...args} />
   </div>
 )

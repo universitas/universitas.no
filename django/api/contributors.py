@@ -61,6 +61,15 @@ class ContributorViewSet(viewsets.ModelViewSet):
         'stint_set__position', 'byline_photo'
     )
     serializer_class = ContributorSerializer
-    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend]
     filter_fields = ['status', 'display_name', 'byline_photo']
-    search_fields = ['display_name']
+
+    def get_queryset(self):
+        """
+        use fancy postgresql trigram unaccent search
+        """
+        query = self.request.query_params.get('search')
+        if query is not None:
+            return self.queryset.search(query)
+
+        return self.queryset

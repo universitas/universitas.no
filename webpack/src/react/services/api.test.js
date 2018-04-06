@@ -1,7 +1,7 @@
 import {
   searchUrl,
   queryString,
-  initializeRequest,
+  httpOptions,
   paramPairs,
   cleanValues,
   isEmpty,
@@ -61,20 +61,25 @@ test('paramPairs', () => {
 })
 
 test('build http fetch init and headers', () => {
-  expect(initializeRequest()).toEqual({
+  expect(httpOptions()).toEqual({
     method: 'GET',
     credentials: 'same-origin',
     headers: { 'X-CSRFToken': 'NO-CSRF-COOKIE' },
   })
-  expect(initializeRequest({ method: 'POST' }, 'hello world')).toMatchObject({
+  expect(httpOptions({ method: 'POST' }, 'hello world')).toMatchObject({
     method: 'POST',
     body: 'hello world',
-    headers: { 'Content-Type': 'text/plain' },
   })
-  expect(initializeRequest(null, { data: 'hello world' })).toMatchObject({
+  expect(httpOptions(null, { data: 'hello world' })).toMatchObject({
     method: 'GET',
-    body: '{"data":"hello world"}',
-    headers: { 'Content-Type': 'application/json' },
+    body: '{"data":"hello world"}', // json stringified
+    headers: { 'Content-Type': 'application/json' }, // correct header
+  })
+  const form = new FormData()
+  form.append('foo', 'bar')
+  expect(httpOptions({ method: 'POST' }, form)).toMatchObject({
+    method: 'POST',
+    body: form,
   })
 })
 

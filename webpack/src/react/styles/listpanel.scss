@@ -1,5 +1,12 @@
-@import 'storylist';
-$darkgrey: #555;
+@import "globals";
+@import "storylist";
+
+%button {
+  border-radius: 0.3rem;
+  box-shadow: inset -1px -1px 1px rgba(black, 0.4),
+    inset 1px 1px 1px rgba(white, 0.3);
+}
+
 .ListPanel {
   flex: 1;
   display: flex;
@@ -11,14 +18,14 @@ $darkgrey: #555;
     flex-direction: column;
     margin: 0;
     overflow-y: scroll;
+    overflow-x: hidden;
   }
-  table{
+  table {
     thead {
       width: calc(100% - 16px);
     }
     tbody {
       flex: 1;
-      overflow-y: scroll;
     }
     tr {
       width: 100%;
@@ -26,46 +33,64 @@ $darkgrey: #555;
       table-layout: fixed;
     }
   }
-  .TopBar, .BottomBar {
-    background-color: lighten($darkgrey, 40%);
+  .TopBar,
+  .BottomBar {
+    @extend %horizontal-bar;
     // align-content: flex-start;
     // align-items: space-around;
     // justify-content: space-between;
-    .Filters, .Navigation {
+    .Filters,
+    .Navigation {
       flex-wrap: wrap;
       display: flex;
       margin: 0.2em;
-      // align-content: center;
-      // justify-content: stretch;
       align-items: center;
     }
-    .info, button {
+    .info,
+    button {
       font-size: 0.8em;
       padding: 0.5em;
-      margin: 0.2em;
+      margin: 0.1rem;
     }
     .info {
       flex: 1;
       min-width: 10em;
     }
     button {
-      $color: lighten(blue, 15);
+      @extend %button;
       outline: none;
       color: white;
-      border-radius: 0.5em;
-      background-color: $color;
+      background-color: $button-color;
       cursor: pointer;
       &:hover {
-        background-color: scale_color($color, $saturation: 100, $lightness: 15);
+        background-color: scale_color(
+          $button-color,
+          $saturation: 100,
+          $lightness: 10
+        );
       }
       &.inactive {
-        background-color: scale_color($color, $lightness: -50, $saturation: -70);
+        background-color: scale_color(
+          $button-color,
+          $lightness: -50,
+          $saturation: -30
+        );
         &:hover {
-          background-color: scale_color($color, $lightness: -30, $saturation: -50);
+          background-color: scale_color(
+            $button-color,
+            $lightness: -30,
+            $saturation: -10
+          );
         }
       }
       &:disabled {
-        background-color: scale_color($color, $lightness: 00, $saturation: -90);
+        box-shadow: none;
+        background-color: scale_color(
+          $button-color,
+          $lightness: -30,
+          $saturation: -90
+        );
+        color: #ccc;
         cursor: inherit;
       }
     }
