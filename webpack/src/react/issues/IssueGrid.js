@@ -28,14 +28,14 @@ const ConnectedGridItem = connect(
     const data = getItem(pk)(state) || {}
     const selected = getCurrentItemId(state) === pk
     const { dirty } = data
-    const className = cx('GridItem', { dirty, selected })
+    const className = cx({ dirty, selected })
     return { ...data, className, model: MODEL }
   },
   (dispatch, { pk }) => ({ onClick: e => dispatch(push(`/${MODEL}/${pk}`)) })
 )(GridItem)
 
 const IssueGrid = ({ items = [] }) => (
-  <div className="ItemGrid">
+  <div className="ItemGrid IssueGrid">
     {items.map(pk => <ConnectedGridItem key={pk} fields={fields} pk={pk} />)}
   </div>
 )

@@ -51,7 +51,8 @@ export const formatFileSize = (size, digits = 3) => {
   const multiple = Math.floor(Math.log10(size) / 3)
   const number = toFixed(digits, size / 10 ** (multiple * 3))
   const unit = units[multiple]
-  return unit ? `${number} ${unit}` : 'very bigly large size'
+  const nbrspace = '\xA0'
+  return unit ? `${number}${nbrspace}${unit}` : 'very bigly large size'
 }
 
 // :: utf-8 encoded string -> unicode string

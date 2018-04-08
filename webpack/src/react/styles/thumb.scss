@@ -1,0 +1,20 @@
+// Thumbnail image centered and contained in flexbox
+
+$margin: 0.2em;
+
+.Thumb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #ddd;
+  &.dropshadow img {
+    max-width: calc(100% - #{2 * $margin});
+    max-height: calc(100% - #{2 * $margin});
+    box-shadow: 0.2em 0.4em 0.5em rgba(black, 0.3);
+  }
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}

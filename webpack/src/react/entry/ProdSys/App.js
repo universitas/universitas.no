@@ -1,11 +1,11 @@
 import { Fragment, push } from 'redux-little-router'
-import { Camera, Person, Newspaper, Edit } from 'components/Icons'
 import { connect } from 'react-redux'
 import IssueList from 'issues/IssueList'
 import IssueDetail from 'issues/IssueDetail'
 import ContributorList from 'contributors/ContributorList'
 import ContributorDetail from 'contributors/ContributorDetail'
 import PhotoList from 'images/PhotoList'
+import PhotoUpload from 'images/PhotoUpload'
 import PhotoDetail from 'images/PhotoDetail'
 import StoryList from 'stories/StoryList'
 import StoryDetail from 'stories/StoryDetail'
@@ -29,6 +29,7 @@ const MainToolBar = () => (
     <AppTool href="/images" icon="Camera" label="foto" />
     <AppTool href="/issues" icon="Newspaper" label="utgaver" />
     <AppTool href="/contributors" icon="Person" label="bidragsytere" />
+    <AppTool href="/upload" icon="FileUpload" label="last opp" />
     <div className="spacer" style={{ flex: 1 }} />
     <ErrorTool />
     <UserTool />
@@ -49,6 +50,9 @@ const ProdSys = () => (
     </Fragment>
     <Fragment forRoute="/images">
       <PhotoList />
+    </Fragment>
+    <Fragment forRoute="/upload">
+      <PhotoUpload />
     </Fragment>
     <Fragment forRoute="/stories/:id">
       <StoryDetail />

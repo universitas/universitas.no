@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import { modelReducer } from 'ducks/basemodel'
+import { reducer as fileupload } from 'ducks/fileupload'
 import { reducer as auth } from 'ducks/auth'
 import { reducer as errors } from 'ducks/error'
 
@@ -15,6 +16,8 @@ const issuesInitialState = {
   query: {
     search: '',
     limit: 40,
+    ordering: 'publication_date',
+    publication_date__year: new Date().getFullYear(),
   },
 }
 const contributorsInitialState = {
@@ -27,12 +30,13 @@ const contributorsInitialState = {
 const photosInitialState = {
   query: {
     search: '',
-    limit: 25,
+    limit: 16,
   },
 }
 export default {
   auth,
   errors,
+  fileupload,
   storytypes: modelReducer('storytypes'),
   stories: modelReducer('stories', storiesInitialState),
   issues: modelReducer('issues', issuesInitialState),

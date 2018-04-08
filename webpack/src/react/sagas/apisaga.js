@@ -25,6 +25,8 @@ import {
 } from 'ducks/basemodel'
 import { push } from 'redux-little-router'
 
+const DEBOUNCE_TIMEOUT = 1000
+
 export default function* rootSaga() {
   yield takeEvery(ITEMS_FETCHED, itemListScrollTopHack)
   yield takeLatest([FILTER_TOGGLED, FILTER_SET], requestItems)
@@ -101,7 +103,7 @@ function* requestItems(action) {
 }
 function* patchItem(action) {
   // debounce
-  yield call(delay, 1000)
+  yield call(delay, DEBOUNCE_TIMEOUT)
   const { itemPatched, apiPatch } = modelFuncs(action)
   const { id, field, value } = action.payload
   const { error, response } = yield call(apiPatch, id, { [field]: value })

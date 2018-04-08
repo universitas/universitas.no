@@ -18,6 +18,7 @@ from model_utils.models import TimeStampedModel
 from slugify import Slugify
 from sorl import thumbnail
 from sorl.thumbnail.images import ImageFile as SorlImageFile
+from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
 from .cropping.models import AutoCropImage
@@ -77,25 +78,20 @@ class ImageFileManager(models.Manager):
                 image.save()
         return count
 
-    def search(self, md5=None, imagehash=None, fingerprint=None, **kwargs):
+    def search(self, md5=None, fingerprint=None, imagehash=None, **kwargs):
         """Search for images matching query."""
+        qs = self.get_queryset()
         if fingerprint:
             try:
                 image = image_from_fingerprint(fingerprint)
             except ValueError as err:
                 raise ValueError('incorrect fingerprint: %s' % err) from err
             imagehash = str(get_imagehash(image))
-        if imagehash:
-            kwargs['_imagehash'] = imagehash
         if md5:
-            kwargs['stats__md5'] = md5
-        qs = self.get_queryset()
-        if kwargs:
-            results = qs.filter(**kwargs)
+            results = qs.filter(stat__md5=md5)
             if results:
                 return results
         if imagehash:
-            logger.debug('hash: %s' % imagehash)
             return qs.filter(_imagehash__trigram_similar=imagehash)
         return qs.none()
 
@@ -233,7 +229,7 @@ class ImageFile(  # type: ignore
     def artist(self) -> str:
         """Attribution as string"""
         if self.contributor:
-            return f'{self.contributor} / Universitas'
+            return f'{self.contributor}'
         return self.copyright_information or '?'
 
     @property
@@ -259,23 +255,6 @@ class ImageFile(  # type: ignore
     @property
     def exif(self) -> ExifData:
         return extract_exif_data(self.exif_data)
-
-    def similar(self, field='imagehash') -> models.QuerySet:
-        """Finds visually simular images using postgresql trigram search."""
-        others = ImageFile.objects.exclude(pk=self.pk)
-        if field == 'imagehash':
-            return others.filter(_imagehash__trigram_similar=self._imagehash)
-        if field == 'md5':
-            return others.filter(stat__md5=self.stat.md5)
-        if field == 'created':
-            treshold = timezone.timedelta(minutes=30)
-            return others.filter(
-                created__gt=self.created - treshold,
-                created__lt=self.created + treshold,
-            )
-        else:
-            msg = f'field should be imagehash, md5 or created, not {field}'
-            raise ValueError(msg)
 
     def thumbnail(self, size='x150', **options) -> Thumbnail:
         """Create thumb of image"""
@@ -352,6 +331,28 @@ class ImageFile(  # type: ignore
     def delete_thumbnails(self, delete_file=False) -> None:
         """Delete all thumbnails, optinally delete original too"""
         thumbnail.delete(self.original, delete_file=delete_file)
+
+    def similar(self, field='imagehash', minutes=30) -> models.QuerySet:
+        """Finds visually simular images using postgresql trigram search."""
+        others = ImageFile.objects.exclude(pk=self.pk)
+        if field == 'imagehash':
+            return others.filter(_imagehash__trigram_similar=self._imagehash)
+        if field == 'md5':
+            return others.filter(stat__md5=self.stat.md5)
+        if field == 'created':
+            treshold = timezone.timedelta(minutes=minutes)
+            return others.filter(
+                created__gt=self.created - treshold,
+                created__lt=self.created + treshold,
+            )
+        else:
+            msg = f'field should be imagehash, md5 or created, not {field}'
+            raise ValueError(msg)
+
+    def merge_with(self, others):
+        """Merge self with duplicate images."""
+        # TODO: is `save` needed here?
+        merge_instances(self, *list(others)).save()
 
     def save(self, *args, **kwargs):
         if self.pk is None:

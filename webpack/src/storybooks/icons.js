@@ -24,6 +24,11 @@ export default () => {
       <p>
         Icon components in <code>components/Icons</code>
       </p>
+      <p>
+        <a href="http://gorangajic.github.io/react-icons/md.html">
+          react-icons
+        </a>
+      </p>
       <table>
         <tbody>
           {Object.keys(Icons).map(name => (

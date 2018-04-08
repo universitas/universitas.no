@@ -17,17 +17,23 @@ const optionsFields = {
     read_only: true,
     label: 'Filnavn',
   },
+  filename: {
+    type: 'string',
+    required: false,
+    read_only: false,
+    label: 'Filnavn',
+  },
   artist: {
     type: 'string',
     required: false,
-    read_only: true,
-    label: 'opphav',
+    read_only: false,
+    label: 'Byline',
   },
   created: {
     type: 'datetime',
     required: false,
     read_only: true,
-    label: 'Opprettet',
+    label: 'Dato',
   },
   category: {
     type: 'choice',
@@ -41,7 +47,7 @@ const optionsFields = {
       { value: 3, display_name: 'diagram' },
       { value: 4, display_name: 'bylinebilde' },
       { value: 5, display_name: 'ekstern' },
-      { value: 0, display_name: 'ukjent' },
+      { value: 0, display_name: '–' },
     ],
   },
   cropping_method: {

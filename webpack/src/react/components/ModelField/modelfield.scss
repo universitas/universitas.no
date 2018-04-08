@@ -64,41 +64,38 @@
   &.image,
   &.thumb {
     display: flex;
-    align-items: stretch;
+    flex: 1;
     flex-direction: column;
-    flex-grow: 1;
-    flex-shrink: 1;
+    align-items: stretch;
     .value {
-      display: flex;
-      flex-direction: column;
-      flex-basis: 8rem;
-      justify-content: center;
-      align-items: center;
-      background-color: #ccc;
-      img {
-        object-fit: scale-down;
-        max-height: 100%;
-        min-height: 1px;
-      }
+      flex: 1;
+      // border: 2px dotted red;
     }
   }
   &.pdfs {
     .value {
+      background-color: #ddd;
+      display: flex;
       flex-direction: row;
       flex-shrink: 1;
-      align-items: unset;
-      flex-basis: 12rem;
+      align-items: center;
+      flex-basis: 15rem;
       .PdfThumb {
-        display: flex;
+        flex: 1;
         justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        margin: 0.5em;
-        img {
-          align-self: center;
-          // background-color: yellow;
-          // box-shadow: 0.5em 0.5em 1em rgba(black, 0.3);
+        max-height: 100%;
+        display: flex;
+        padding-bottom: 2.5em;
+        position: relative;
+        .data {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          //background-color: rgba(red, 0.2);
+          width: 100%;
+          text-align: center;
         }
+        //flex-direction: column;
       }
     }
   }

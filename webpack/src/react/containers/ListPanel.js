@@ -1,8 +1,6 @@
 import Navigation from 'components/Navigation'
 import SearchField from 'components/SearchField'
 import Filter from 'components/Filter'
-import cx from 'classnames'
-import { scrollTo } from 'utils/scroll'
 
 import 'styles/listpanel.scss'
 

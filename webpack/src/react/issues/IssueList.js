@@ -44,7 +44,7 @@ const filters = [
 
 const IssueList = ({ model = MODEL }) => {
   return (
-    <ListPanel model={MODEL} filters={filters} className={cx('ItemGrid')}>
+    <ListPanel model={MODEL} filters={filters}>
       <IssueGrid />
     </ListPanel>
   )

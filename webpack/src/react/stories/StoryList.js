@@ -24,6 +24,13 @@ filters.push({
   value: [],
   label: <Clear />,
 })
+filters.push({
+  toggle: true,
+  attr: 'ordering',
+  model: MODEL,
+  value: '-modified',
+  label: 'sist endret',
+})
 
 const StoryList = ({ model = MODEL }) => {
   return (

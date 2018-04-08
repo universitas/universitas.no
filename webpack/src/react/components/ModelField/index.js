@@ -14,6 +14,7 @@ import * as stints from './StintsField'
 import { connect } from 'react-redux'
 import { modelActions, modelSelectors } from 'ducks/basemodel'
 import cx from 'classnames'
+import * as R from 'ramda'
 
 import './modelfield.scss'
 
@@ -38,10 +39,9 @@ export const fieldNames = R.keys(fieldTypes)
 export const Field = ({
   type = 'text',
   editable = false,
-  model,
-  pk,
-  name,
   label,
+  onChange,
+  value,
   ...props
 }) => {
   const { EditableField, DetailField } = R.propOr(
@@ -49,11 +49,17 @@ export const Field = ({
     type,
     fieldTypes
   )
+  const fieldProps = R.omit(['model', 'pk', 'name'], props)
   const ModelField = editable ? EditableField : DetailField
   return (
     <div className={cx('ModelField', type)}>
       {R.is(String, label) && <label className={cx('label')}>{label}</label>}
-      <ModelField className={cx('value')} {...props} />
+      <ModelField
+        className={cx('value')}
+        onChange={onChange}
+        value={value}
+        {...fieldProps}
+      />
     </div>
   )
 }

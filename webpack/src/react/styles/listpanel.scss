@@ -46,16 +46,18 @@
       margin: 0.2em;
       align-items: center;
     }
+    .FileInput,
     .info,
     button {
+      line-height: 1;
       font-size: 0.8em;
       padding: 0.5em;
       margin: 0.1rem;
     }
     .info {
       flex: 1;
-      min-width: 10em;
     }
+    .FileInput,
     button {
       @extend %button;
       outline: none;

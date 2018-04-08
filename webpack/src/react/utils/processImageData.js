@@ -1,10 +1,12 @@
+// client side image processing before file upload
+
 import * as R from 'ramda'
 import loadImage from 'blueimp-load-image/js'
 import md5 from './md5hasher'
 import { utf8Decode } from 'utils/text'
 import { imageFingerPrint } from 'utils/imageHash'
 
-const THUMB_SIZE = 200 // pixels
+const THUMB_SIZE = 300 // pixels image preview size
 
 // :: {file, ...props} -> Promise[{file, objectURL, width, height, ...props }]
 export const objectURL = props =>
@@ -46,16 +48,6 @@ export const withMd5 = props =>
     md5(props.file).then(hash => resolve({ ...props, md5: hash }))
   )
 
-// :: {file, ...props} -> {filename, mimetype, size, ...props}
-export const cleanData = ({ file, date, ...props }) => ({
-  timestamp: performance.now(),
-  filename: file.name,
-  mimetype: file.type,
-  size: file.size,
-  date: date || new Date(file.lastModified),
-  ...props,
-})
-
 // :: string -> Date | string
 export const exifDateTime = R.when(
   R.test(/^\d{4}:\d{1,2}:\d{1,2}/),
@@ -87,19 +79,31 @@ const withFingerPrint = async props => ({
   ...props,
 })
 
+// :: {file, ...props} -> {filename, mimetype, size, ...props}
+export const cleanData = ({ file, date, ...props }) => ({
+  timestamp: performance.now(),
+  filename: file.name,
+  mimetype: file.type,
+  size: file.size,
+  date: date || new Date(file.lastModified),
+  ...props,
+})
+
+// shape of return value from processImageFile
 // filedata = {
-//   objectURL,
-//   filename,
-//   height,
-//   width,
-//   date,
-//   mimetype,
-//   size,
-//   md5,
-//   thumb,
-//   ?artist,
-//   ?description,
+//   objectURL,   string
+//   filename,    string
+//   height,      number
+//   width,       number
+//   date,        Date
+//   mimetype,    string
+//   size,        number
+//   md5,         string
+//   thumb,       string
+//   ?artist,     string
+//   ?description string
 // }
+
 // :: File -> Promise[filedata]
 const processImageFile = file =>
   Promise.resolve({ file })

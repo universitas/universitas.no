@@ -1,6 +1,7 @@
 // String Field
 import { stringify } from 'utils/text'
 import { Pdf } from 'components/Icons'
+import Thumb from 'components/Thumb'
 import cx from 'classnames'
 
 const openUrl = url => () => window.open(url)
@@ -17,9 +18,9 @@ const PdfLink = ({ url }) => (
 
 const PdfThumb = ({ cover_page, pages, pdf }) => (
   <div className="PdfThumb">
-    <img src={cover_page} />
-    <span className="pages">
-      {pages} sider <PdfLink url={pdf} />
+    <Thumb className="dropshadow" src={cover_page} />
+    <span className="data">
+      {pages} sider <PdfLink url={pdf} />{' '}
     </span>
   </div>
 )

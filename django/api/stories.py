@@ -1,9 +1,10 @@
+import logging
+
 from apps.stories.models import Byline, Story, StoryType
 from django.core.exceptions import FieldError
-from rest_framework import serializers, viewsets, filters
+from rest_framework import filters, serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
 
-import logging
 logger = logging.getLogger('apps')
 
 
@@ -122,12 +123,17 @@ class SearchFilterBackend(filters.BaseFilterBackend):
         if search_query:
             qs = queryset.search(search_query)
             if qs:
-                return qs.order_by('publication_status')
+                queryset = qs
             else:
                 queryset = queryset.filter(
                     working_title__icontains=search_query
                 )
-        return queryset.order_by('publication_status', '-modified')
+
+        order_by = request.query_params.get('ordering')
+        if order_by:
+            return queryset.order_by(order_by)
+        else:
+            return queryset.order_by('publication_status', '-modified')
 
 
 class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):

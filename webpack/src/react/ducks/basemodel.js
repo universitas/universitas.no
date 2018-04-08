@@ -7,6 +7,7 @@ export const ITEM_CLONED = 'model/ITEM_CLONED'
 export const ITEM_PATCHED = 'model/ITEM_PATCHED'
 export const FIELD_CHANGED = 'model/FIELD_CHANGED'
 export const ITEMS_FETCHED = 'model/ITEMS_FETCHED'
+export const ITEMS_APPENDED = 'model/ITEMS_APPENDED'
 export const ITEM_REQUESTED = 'model/ITEM_REQUESTED'
 export const ITEMS_REQUESTED = 'model/ITEMS_REQUESTED'
 export const FILTER_TOGGLED = 'model/FILTER_TOGGLED'
@@ -79,6 +80,7 @@ export const modelActions = partialMap({
   itemRequested: getActionCreator(ITEM_REQUESTED, id => ({ id })),
   itemsRequested: getActionCreator(ITEMS_REQUESTED, url => ({ url })),
   itemsFetched: getActionCreator(ITEMS_FETCHED, data => data),
+  itemsAppended: getActionCreator(ITEMS_APPENDED, data => data),
   filterToggled: getActionCreator(FILTER_TOGGLED, (key, value) => ({
     key,
     value,
@@ -110,11 +112,9 @@ const getReducer = ({ type, payload }) => {
   switch (type) {
     case ITEMS_FETCHED: {
       const { results, next, previous, count, url } = payload
-      const ids = R.pluck('id', results)
-      const items = R.zipObj(ids, results)
       return R.compose(
-        R.over(itemsLens, R.merge(items)),
-        R.set(currentItemsLens, ids),
+        R.over(itemsLens, R.merge(R.indexBy(R.prop('id'), results))),
+        R.set(currentItemsLens, R.pluck('id', results)),
         R.set(navigationLens, {
           results: results.length,
           last: offsetFromUrl(next) || offsetFromUrl(url) + results.length,
@@ -124,6 +124,11 @@ const getReducer = ({ type, payload }) => {
         })
       )
     }
+    case ITEMS_APPENDED:
+      return R.over(
+        itemsLens,
+        R.merge(R.indexBy(R.prop('id'), payload.results))
+      )
     case ITEM_PATCHED:
       return R.set(itemLens(payload.id), payload)
     case ITEM_ADDED:

@@ -1,8 +1,10 @@
-import cx from 'classnames'
 // Thumb Field
+//
+import cx from 'classnames'
+import Thumb from 'components/Thumb'
+
 export const DetailField = ({ value, className, ...args }) => (
-  <div className={cx('thumb', className)}>
-    <img src={value} {...args} />
-  </div>
+  <Thumb className={cx('thumb', className)} src={value} {...args} />
 )
+
 export const EditableField = DetailField

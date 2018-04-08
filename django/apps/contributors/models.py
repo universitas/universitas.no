@@ -8,6 +8,7 @@ from apps.photo.models import ImageFile
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.contrib.postgres.search import TrigramSimilarity
 from django.core.cache import cache
 from django.core.files import File
 from django.db import models
@@ -37,9 +38,9 @@ def default_groups():
 class ContributorQuerySet(models.QuerySet):
     def search(self, query):
         """fuzzy name search"""
-        return self.filter(
-            display_name__unaccent__icontains=query
-        ) or self.filter(display_name__unaccent__trigram_similar=query)
+        return self.annotate(
+            similarity=TrigramSimilarity('display_name', query)
+        ).filter(similarity__gt=0.3).order_by('-similarity')
 
 
 class Contributor(FuzzyNameSearchMixin, models.Model):

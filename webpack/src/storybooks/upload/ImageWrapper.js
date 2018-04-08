@@ -42,7 +42,7 @@ const validateImageData = image =>
   ])
 
 const fetchDupes = ({ md5, fingerprint }) =>
-  apiList('upload', { md5, fingerprint }).then(R.path(['response', 'results']))
+  apiList('images', { md5, fingerprint }).then(R.path(['response', 'results']))
 
 const uploadImage = ({ artist, description, filename, objectURL }) =>
   objectURLtoFile(objectURL, filename)

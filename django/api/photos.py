@@ -2,11 +2,12 @@ import json
 import logging
 from pathlib import Path
 
+from apps.contributors.models import Contributor
 from apps.photo.cropping.boundingbox import CropBox
 from apps.photo.models import ImageFile
 from django.db import models
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, serializers, viewsets
+from rest_framework import filters, permissions, serializers, viewsets
 from rest_framework.exceptions import ValidationError
 
 logger = logging.getLogger('apps')
@@ -38,6 +39,7 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'name',
             'created',
+            'modified',
             'category',
             'contributor',
             'artist',
@@ -59,6 +61,7 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
             'original',
         ]
 
+    artist = serializers.CharField(allow_blank=True)
     thumb = serializers.SerializerMethodField()
     original = serializers.SerializerMethodField()
     small = serializers.SerializerMethodField()
@@ -68,6 +71,26 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
     usage = serializers.IntegerField(read_only=True)
     name = serializers.SerializerMethodField()
     crop_box = CropBoxField()
+
+    def find_artist(self, validated_data):
+        """Assign artist to contributor if able."""
+        # this is slightly hacky ....
+        artist = validated_data.pop('artist', None)
+        if not artist:
+            return
+        contributor = Contributor.objects.search(artist).first()
+        validated_data['contributor'] = contributor
+        if contributor is None:
+            validated_data['copyright_information'] = artist
+            validated_data['category'] = ImageFile.EXTERNAL
+
+    def create(self, validated_data):
+        self.find_artist(validated_data)
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        self.find_artist(validated_data)
+        return super().update(instance, validated_data)
 
     def get_name(self, instance):
         return Path(instance.source_file.name).name
@@ -102,9 +125,13 @@ class ImageFileViewSet(viewsets.ModelViewSet):
     )
 
     serializer_class = ImageFileSerializer
-    filter_backends = (filters.SearchFilter, DjangoFilterBackend)
+    filter_backends = (
+        filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend
+    )
     search_fields = ['source_file', 'description']
+    ordering_fields = ['created', 'modified']
     filter_fields = ['category']
+    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         search_parameters = {

@@ -1,0 +1,79 @@
+.FileInput {
+  &.dragOver {
+    border-color: red;
+    &.acceptFiles {
+      border-color: limegreen;
+    }
+  }
+  input[type="file"] {
+    display: none;
+  }
+}
+label.FileInput {
+  cursor: pointer;
+}
+section.FileInput {
+  border: 5px solid transparent;
+}
+
+.PhotoStats {
+  display: flex;
+  flex-direction: row;
+  .stat {
+    font-size: 0.8rem;
+    color: #888;
+    border-left: 1px solid #aaa;
+    padding: 0 0 0 1em;
+    margin: 0 0 0 1em;
+    &:first-of-type {
+      padding-left: 0;
+      margin-left: 0;
+      border-left: none;
+    }
+  }
+}
+.UploadItem {
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed black;
+  max-width: 40rem;
+  display: flex;
+  flex-direction: row;
+  .static {
+    display: flex;
+    flex-direction: column;
+    flex: 2;
+    .Thumb {
+      height: 10em;
+      flex: 1;
+    }
+  }
+  .dynamic {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+  }
+  .buttons {
+    // width: 5rem;
+    display: flex;
+    flex-direction: column;
+    button {
+      padding: 1em;
+      margin: 0.5em;
+      background-color: #59f;
+      &:hover {
+        background-color: #6af;
+      }
+      cursor: pointer;
+    }
+  }
+}
+.Fingerprint {
+  image-rendering: pixelated;
+  width: 20px;
+  cursor: zoom-in;
+  transition: transform 100ms;
+  &:hover {
+    transform: scale(4);
+  }
+}

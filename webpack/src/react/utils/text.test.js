@@ -16,12 +16,12 @@ test('stringify', () => {
 })
 
 test('formatFileSize', () => {
-  expect(formatFileSize(123)).toEqual('123 B')
-  expect(formatFileSize(12345)).toEqual('12.3 kB')
-  expect(formatFileSize(1234567)).toEqual('1.23 MB')
-  expect(formatFileSize(12345678900)).toEqual('12.3 GB')
-  expect(formatFileSize(12345, 5)).toEqual('12.345 kB')
-  expect(formatFileSize(1234567, 5)).toEqual('1.2346 MB')
+  expect(formatFileSize(123)).toEqual('123\xA0B')
+  expect(formatFileSize(12345)).toEqual('12.3\xA0kB')
+  expect(formatFileSize(1234567)).toEqual('1.23\xA0MB')
+  expect(formatFileSize(12345678900)).toEqual('12.3\xA0GB')
+  expect(formatFileSize(12345, 5)).toEqual('12.345\xA0kB')
+  expect(formatFileSize(1234567, 5)).toEqual('1.2346\xA0MB')
 })
 
 test('utf8Decode', () => {
