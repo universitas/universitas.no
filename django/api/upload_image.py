@@ -1,10 +1,10 @@
 import logging
 import re
 
-from apps.contributors.models import Contributor
 from apps.photo.models import ImageFile
 from rest_framework import mixins, permissions, serializers, viewsets
 from rest_framework.parsers import FormParser, MultiPartParser
+from django.conf import settings
 
 from .photos import ImageFileSerializer
 
@@ -15,7 +15,7 @@ class UploadFileSerializer(ImageFileSerializer):
     """ImageFile upload serializer"""
 
     original = serializers.ImageField(required=True)
-    description = serializers.CharField(min_length=10, required=True)
+    description = serializers.CharField(required=True)
     duplicates = serializers.CharField(required=False)
 
     class Meta:
@@ -54,13 +54,6 @@ class UploadFileSerializer(ImageFileSerializer):
 class FileUploadViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
     """Endpoint for image uploads"""
     parser_classes = [MultiPartParser, FormParser]
-    permission_classes = [permissions.AllowAny]
     serializer_class = UploadFileSerializer
-    queryset = ImageFile.objects.none()
-
-    # def list(self, request, *args, **kwargs):
-    #     try:
-    #         return super().list(request, *args, **kwargs)
-    #     except ValueError as err:
-    #         data = {'queryError': str(err)}
-    #         return response.Response(data=data, status=400)
+    if settings.DEBUG:
+        permission_classes = [permissions.AllowAny]

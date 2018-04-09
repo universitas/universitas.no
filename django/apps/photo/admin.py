@@ -75,10 +75,7 @@ class ImageFileAdmin(
         'category',
     ]
     search_fields = [
-        'category',
         'source_file',
-        'storyimage__caption',
-        'frontpagestory__headline',
     ]
     autocomplete_fields = [
         'contributor',

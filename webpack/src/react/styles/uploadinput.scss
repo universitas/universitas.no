@@ -11,8 +11,7 @@
     display: none;
   }
   .items {
-    // display: flex;
-    // flex-direction: column;
+    display: block;
   }
 }
 label.FileInput {
@@ -36,8 +35,7 @@ section.FileInput {
 .UploadItem {
   margin-bottom: 0.5rem;
   padding-bottom: 0.5rem;
-  border: 2px dotted pink;
-  border-bottom: 1px dashed black;
+  border-bottom: 1px solid #bbb;
   max-width: 100%;
   display: flex;
   flex-direction: row;
