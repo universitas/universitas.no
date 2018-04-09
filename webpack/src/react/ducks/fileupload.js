@@ -38,6 +38,12 @@ export const uploadPostError = (pk, error) => ({
   payload: { pk },
 })
 
+export const CHANGE_DUPLICATE = 'fileupload/CHANGE_DUPLICATE'
+export const changeDuplicate = (pk, id, choice) => ({
+  type: CHANGE_DUPLICATE,
+  payload: { pk, id, choice },
+})
+
 const baseItemState = {
   category: 1,
   md5: null,
@@ -78,16 +84,22 @@ const cleanFilename = props => {
   return R.assoc('filename', `${base}.${extension}`, props)
 }
 
+const noNulls = R.none(R.propEq('choice', null))
+
 const checkStatus = R.ifElse(
   R.allPass([
     R.propSatisfies(longerThan(5), 'artist'),
-    R.propSatisfies(longerThan(10), 'description'),
+    R.propSatisfies(longerThan(5), 'description'),
     R.propSatisfies(val => val !== '0', 'category'),
     R.propSatisfies(R.is(Array), 'duplicates'),
+    R.propSatisfies(noNulls, 'duplicates'),
   ]),
   R.assoc('status', 'ready'),
   R.assoc('status', 'invalid')
 )
+
+const updateDuplicates = ({ id, choice }) =>
+  R.map(R.ifElse(R.propEq('id', id), R.assoc('choice', choice), R.identity))
 
 // REDUCER
 const getReducer = ({ type, payload }) => {
@@ -102,6 +114,16 @@ const getReducer = ({ type, payload }) => {
       return R.over(lens, R.assoc('status', 'uploading'))
     case POST_SUCCESS:
       return R.over(lens, R.mergeDeepLeft({ status: 'uploaded', ...data }))
+    case POST_ERROR:
+      return R.over(lens, R.assoc('status', 'error'))
+    case CHANGE_DUPLICATE:
+      return R.over(
+        lens,
+        R.pipe(
+          R.over(R.lensProp('duplicates'), updateDuplicates(data)),
+          checkStatus
+        )
+      )
     case POST_ERROR:
       return R.over(lens, R.assoc('status', 'error'))
     case CLOSE:

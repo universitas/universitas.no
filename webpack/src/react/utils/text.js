@@ -46,10 +46,10 @@ export const formatDate = (
 const toFixed = R.curryN(2, (digits, number) => number.toPrecision(digits))
 
 // :: number -> string
-export const formatFileSize = (size, digits = 3) => {
+export const formatFileSize = (size = 0, digits = 3) => {
   const units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-  const multiple = Math.floor(Math.log10(size) / 3)
-  const number = toFixed(digits, size / 10 ** (multiple * 3))
+  const multiple = size ? Math.floor(Math.log10(size) / 3) : 0
+  const number = multiple ? toFixed(digits, size / 10 ** (multiple * 3)) : size
   const unit = units[multiple]
   const nbrspace = '\xA0'
   return unit ? `${number}${nbrspace}${unit}` : 'very bigly large size'

@@ -2,13 +2,14 @@ import json
 import logging
 from pathlib import Path
 
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, permissions, serializers, viewsets
+from rest_framework.exceptions import ValidationError
+
 from apps.contributors.models import Contributor
 from apps.photo.cropping.boundingbox import CropBox
 from apps.photo.models import ImageFile
 from django.db import models
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, permissions, serializers, viewsets
-from rest_framework.exceptions import ValidationError
 
 logger = logging.getLogger('apps')
 
@@ -56,6 +57,7 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
             'stat',
             'cropping_method',
             'method',
+            'filename',
         ]
         read_only_fields = [
             'original',

@@ -6,6 +6,11 @@ import re
 from pathlib import Path
 from typing import Union
 
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
+
 from apps.issues.models import current_issue
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
@@ -14,10 +19,6 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
@@ -89,10 +90,11 @@ class ImageFileManager(models.Manager):
             imagehash = str(get_imagehash(image))
         if md5:
             results = qs.filter(stat__md5=md5)
-            if results:
+            if results.count():
                 return results
         if imagehash:
             return qs.filter(_imagehash__trigram_similar=imagehash)
+        raise ValueError('no query?')
         return qs.none()
 
 
@@ -224,6 +226,10 @@ class ImageFile(  # type: ignore
         slugs[-1] = slugs[-1].lower().replace('jpeg', 'jpg')
         slug = '.'.join(segment.strip('-') for segment in slugs)
         return slug
+
+    @property
+    def filename(self) -> str:
+        return str(self)
 
     @property
     def artist(self) -> str:

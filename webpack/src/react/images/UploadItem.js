@@ -6,28 +6,11 @@ import {
   uploadPost,
   uploadClose,
 } from 'ducks/fileupload'
-import { formatDate, formatFileSize } from 'utils/text'
 
 import { detailFields as fields } from 'images/model'
-import Thumb from 'components/Thumb'
 import { Field } from 'components/ModelField'
-
-const JSONData = data => (
-  <pre style={{ maxWidth: '80vw', fontSize: '0.8em' }}>
-    {JSON.stringify(data, null, 2)}
-  </pre>
-)
-
-const PhotoStats = ({ mimetype, width, height, size, date }) => (
-  <div className="PhotoStats">
-    <div className="stat">{mimetype}</div>
-    <div className="stat">
-      {width}×{height}
-    </div>
-    <div className="stat">{formatFileSize(size)}</div>
-    <div className="stat">{formatDate(date)}</div>
-  </div>
-)
+import StaticImageData from './ImageData'
+import Duplicate from './Duplicate'
 
 const UploadForm = ({ editable, changeHandler, ...props }) => (
   <form className="UploadForm">
@@ -45,23 +28,19 @@ const UploadForm = ({ editable, changeHandler, ...props }) => (
     )}
   </form>
 )
-
 const UploadItem = ({
-  pk,
+  viewImage,
   uploadPost,
   uploadClose,
   uploadUpdate,
   thumb,
+  pk,
   status,
-  viewImage,
   id,
   ...props
 }) => (
   <div className="UploadItem">
-    <div className="static">
-      <Thumb src={thumb} title={pk} />
-      <PhotoStats {...props} />
-    </div>
+    <StaticImageData thumb={thumb} {...props} />
     <div className="dynamic">
       <UploadForm
         editable={status != 'uploaded' && status != 'uploading'}
@@ -71,19 +50,29 @@ const UploadItem = ({
       />
     </div>
     <div className="buttons">
-      {status == 'ready' && <button onClick={uploadPost}>Post</button>}
+      {status == 'ready' && <button onClick={uploadPost}>Last opp</button>}
       {(status == 'ready' || status == 'invalid') && (
-        <button onClick={uploadClose}>Cancel</button>
+        <button onClick={uploadClose}>Avbryt</button>
       )}
-      {status == 'uploaded' && <button onClick={uploadClose}>Ok</button>}
-      {id && <button onClick={viewImage(id)}>View</button>}
-      <span title={JSON.stringify(props, null, 2)}>{status}</span>
+      {status == 'uploaded' && <button onClick={uploadClose}>Lukk</button>}
+      {id && <button onClick={viewImage(id)}>Vis</button>}
     </div>
+    <Duplicates {...props} pk={pk} />
   </div>
 )
 
+const Duplicates = ({ duplicates, pk }) =>
+  duplicates && duplicates.length ? (
+    <div className="Duplicates">
+      <small>Bildet er lastet opp fra før</small>
+      {R.map(({ id, choice }) => (
+        <Duplicate key={id} id={id} choice={choice} pk={pk} />
+      ))(duplicates)}
+    </div>
+  ) : null
+
 const mapStateToProps = (state, { pk }) => getUpload(pk, state)
-const mapDispatchToProps = (dispatch, { pk }) => ({
+const mapDispatchToProps = (dispatch, { pk, id }) => ({
   uploadPost: e => dispatch(uploadPost(pk)),
   uploadClose: e => dispatch(uploadClose(pk)),
   uploadUpdate: (pk, data) => dispatch(uploadUpdate(pk, data)),

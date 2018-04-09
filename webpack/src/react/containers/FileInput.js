@@ -54,7 +54,7 @@ class FileInput extends React.Component {
     const { acceptFiles, dragOver } = this.state
     const { accept, children, label, className } = this.props
     return label ? (
-      <label className={cx(className, 'FileInput')}>
+      <label className={cx(className, 'FileInput', 'button')}>
         {label}
         <input
           multiple
@@ -69,7 +69,10 @@ class FileInput extends React.Component {
       </label>
     ) : (
       <section
-        className={cx(className, 'FileInput', { dragOver, acceptFiles })}
+        className={cx(className, 'FileInput', 'area', {
+          dragOver,
+          acceptFiles,
+        })}
         onDragEnter={this.dragEnterHandler}
         onDragOver={preventDefault}
         onDragLeave={this.dragLeaveHandler}

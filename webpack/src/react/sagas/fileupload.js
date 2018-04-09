@@ -62,13 +62,16 @@ function* postFileSaga(action) {
     duplicates,
   } = yield select(getUpload(action.payload.pk))
   const original = yield call(objectURLtoFile, objectURL, filename)
-  const formBody = yield call(jsonToFormData, {
-    original,
+  const data = {
     description,
     artist,
     category,
-    duplicates: R.pluck('id', duplicates),
-  })
+    duplicates: R.pipe(R.filter(R.propEq('choice', 'replace')), R.pluck('id'))(
+      duplicates
+    ),
+  }
+  console.log(data)
+  const formBody = yield call(jsonToFormData, { original, ...data })
   const { response, error } = yield call(apiPost, 'upload', formBody)
   if (response) {
     yield put(uploadPostSuccess(pk, response))
