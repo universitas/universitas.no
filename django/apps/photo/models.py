@@ -104,7 +104,8 @@ class ImageFileManager(models.Manager):
                 return results
         if filename:
             return self.filename_search(filename)
-        raise ValueError('no query?')
+        return qs.none()
+        # raise ValueError('no query?')
 
     def filename_search(self, file_name, similarity=0.5):
         """Fuzzy filename search"""
