@@ -6,19 +6,19 @@ import re
 from pathlib import Path
 from typing import Union
 
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
-
 from apps.issues.models import current_issue
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.search import TrigramSimilarity
 from django.core.files import File
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
@@ -79,7 +79,13 @@ class ImageFileManager(models.Manager):
                 image.save()
         return count
 
-    def search(self, md5=None, fingerprint=None, imagehash=None, **kwargs):
+    def search(
+        self,
+        md5=None,
+        fingerprint=None,
+        imagehash=None,
+        filename=None,
+    ):
         """Search for images matching query."""
         qs = self.get_queryset()
         if fingerprint:
@@ -93,9 +99,24 @@ class ImageFileManager(models.Manager):
             if results.count():
                 return results
         if imagehash:
-            return qs.filter(_imagehash__trigram_similar=imagehash)
+            results = qs.filter(_imagehash__trigram_similar=imagehash)
+            if results.count():
+                return results
+        if filename:
+            return self.filename_search(filename)
         raise ValueError('no query?')
-        return qs.none()
+
+    def filename_search(self, file_name, similarity=0.5):
+        """Fuzzy filename search"""
+        SQL = '''
+        WITH filematches AS (
+          SELECT id, SIMILARITY(regexp_replace(source_file, '.*/', ''), %s) AS similarity
+          FROM photo_imagefile
+        )
+        SELECT id from filematches  WHERE (similarity > %s) ORDER BY similarity DESC
+        '''
+        raw_query = ImageFile.objects.raw(SQL, [file_name, similarity])
+        return self.get_queryset().filter(id__in=(im.id for im in raw_query))
 
 
 class ImageCategoryMixin(models.Model):
@@ -287,7 +308,7 @@ class ImageFile(  # type: ignore
         src.save(filename, content)
 
     def is_profile_image(self) -> bool:
-        return self.category == self.PROFILE
+        return self.category == ImageFile.PROFILE
 
     def build_thumbs(self) -> None:
         """Make sure thumbs exists"""

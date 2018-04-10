@@ -2,9 +2,9 @@ import logging
 import re
 
 from apps.photo.models import ImageFile
+from django.conf import settings
 from rest_framework import mixins, permissions, serializers, viewsets
 from rest_framework.parsers import FormParser, MultiPartParser
-from django.conf import settings
 
 from .photos import ImageFileSerializer
 
@@ -55,5 +55,6 @@ class FileUploadViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
     """Endpoint for image uploads"""
     parser_classes = [MultiPartParser, FormParser]
     serializer_class = UploadFileSerializer
+    queryset = ImageFile.objects.none()
     if settings.DEBUG:
         permission_classes = [permissions.AllowAny]
