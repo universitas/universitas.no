@@ -55,11 +55,12 @@ def scandal(news):
 def photo():
     source = Path(__file__).parent / 'dummy.jpg'
     shutil.copy(source, Path('/var/media/scandal.jpg'))
-    return ImageFile.objects.create(source_file='scandal.jpg')
+    return ImageFile.objects.create(original='scandal.jpg')
 
 
 @pytest.mark.django_db
 def test_get_story(scandal):
+    """Client fetches story list from api"""
     api_url = '/api/legacy/'
     client = APIClient()
     response = client.get(api_url)
@@ -71,6 +72,7 @@ def test_get_story(scandal):
 
 @pytest.mark.django_db
 def test_change_story(scandal, api_user):
+    """Client patches story from indesign"""
     api_url = f'/api/legacy/{scandal.pk}/'
     text = 'A scandal rocks the university'
     client = APIClient()
@@ -90,6 +92,7 @@ def test_change_story(scandal, api_user):
 
 @pytest.mark.django_db
 def test_create_story(api_user, photo):
+    """Client creates a new story from indesign(!)"""
     api_url = '/api/legacy/'
     client = APIClient()
     client.login(username='api', password='api')
@@ -102,10 +105,7 @@ def test_create_story(api_user, photo):
             'arbeidstittel': 'hello',
             'produsert': 1,
             'bilete': [
-                {
-                    'bildefil': 'sandal.jpg',
-                    'bildetekst': 'one'
-                },
+                {'bildefil': 'sandal.jpg', 'bildetekst': 'one'},
             ],
         }
     )
@@ -114,21 +114,17 @@ def test_create_story(api_user, photo):
 
 @pytest.mark.django_db
 def test_update_photos(scandal, photo, api_user):
+    """Client updates story images from indesign"""
     api_url = f'/api/legacy/{scandal.pk}/'
     client = APIClient()
     client.login(username='api', password='api')
     data = {
-        'bilete': [{
-            'bildefil': 'scandal.jpg',
-            'bildetekst': 'one'
-        }, {
-            'bildefil': 'scandal.jpg',
-            'bildetekst': 'two'
-        }]
+        'bilete': [{'bildefil': 'scandal.jpg', 'bildetekst': 'one'},
+                   {'bildefil': 'scandal.jpg', 'bildetekst': 'two'}]
     }
     response = client.patch(api_url, data=data, format='json')
     assert response.status_code == status.HTTP_200_OK
-    captions = scandal.get_images().values_list('caption', flat=True)
+    captions = scandal.images.values_list('caption', flat=True)
     assert sorted(captions) == ['one', 'two']
 
     updated_data = client.get(api_url).json()

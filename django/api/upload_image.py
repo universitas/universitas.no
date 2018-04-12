@@ -20,23 +20,18 @@ class UploadFileSerializer(ImageFileSerializer):
 
     class Meta:
         model = ImageFile
-        fields = ImageFileSerializer.Meta.fields[:]
-        fields.append('duplicates')
-        fields.remove('cropping_method')
-        fields.remove('method')
-        fields.remove('_imagehash')
-        fields.remove('stat')
-        fields.remove('contributor')
-        fields.remove('crop_box')
-        fields.remove('is_profile_image')
-        fields.remove('usage')
+        fields = [
+            'url',
+            'original',
+            'created',
+            'description',
+            'artist',
+            'category',
+            'duplicates',
+        ]
 
     def create(self, validated_data):
         """Create new ImageFile, set contributor and merge any dupliacates."""
-
-        # `original` is a property. To save, use underlying `source_file` field
-        validated_data['source_file'] = validated_data.pop('original')
-
         # check if form includes duplicates
         duplicates = validated_data.pop('duplicates', None)
         instance = super().create(validated_data)

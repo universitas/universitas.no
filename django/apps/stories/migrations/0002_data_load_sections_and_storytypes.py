@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from django.db import migrations
 from utils.migration_helpers import unload_fixture, load_fixture
@@ -9,7 +8,7 @@ fixture = Path(__file__).parent / 'sections_and_story_types.json'
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('stories', '0002_auto_20141217_1841'),
+        ('stories', '0001_initial'),
     ]
 
     operations = [

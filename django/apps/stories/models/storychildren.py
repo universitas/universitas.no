@@ -36,7 +36,7 @@ class ElementQuerySet(models.QuerySet):
         return self.filter(index__isnull=True)
 
 
-class StoryElement(TimeStampedModel):
+class StoryChild(TimeStampedModel):
     """ Models that are placed somewhere inside an article """
     objects = ElementQuerySet.as_manager()
 
@@ -52,7 +52,6 @@ class StoryElement(TimeStampedModel):
         verbose_name=_('index'),
     )
     top = models.BooleanField(
-        # editable=False,
         default=False,
         help_text=_('Is this element placed on top?'),
     )
@@ -88,7 +87,7 @@ class StoryElement(TimeStampedModel):
         self.parent_story.clear_html()
 
 
-class Pullquote(TextContent, StoryElement):  # type: ignore
+class Pullquote(TextContent, StoryChild):  # type: ignore
     """ A quote that is that is pulled out of the content. """
 
     parent_story = models.ForeignKey(
@@ -107,7 +106,7 @@ class Pullquote(TextContent, StoryElement):  # type: ignore
         verbose_name_plural = _('Pullquotes')
 
 
-class Aside(TextContent, StoryElement):  # type: ignore
+class Aside(TextContent, StoryChild):  # type: ignore
     """ Fact box or other information typically placed in side bar """
     parent_story = models.ForeignKey(
         'Story',
@@ -120,7 +119,7 @@ class Aside(TextContent, StoryElement):  # type: ignore
         verbose_name_plural = _('Asides')
 
 
-class InlineHtml(StoryElement):
+class InlineHtml(StoryChild):
     """ Inline html code """
 
     parent_story = models.ForeignKey(
@@ -139,7 +138,7 @@ class InlineHtml(StoryElement):
         return mark_safe(self.bodytext_html)
 
 
-class StoryMedia(StoryElement, MarkupModelMixin):
+class StoryMedia(StoryChild, MarkupModelMixin):
     """ Video, photo or illustration connected to a story """
 
     ORIGINAL_RATIO = 100.0

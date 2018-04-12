@@ -94,7 +94,7 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
         return super().update(instance, validated_data)
 
     def get_name(self, instance):
-        return Path(instance.source_file.name).name
+        return Path(instance.original.name).name
 
     def get_method(self, instance):
         return instance.get_cropping_method_display()
@@ -129,7 +129,7 @@ class ImageFileViewSet(viewsets.ModelViewSet):
     filter_backends = (
         filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend
     )
-    search_fields = ['source_file', 'description', 'contributor__display_name']
+    search_fields = ['original', 'description', 'contributor__display_name']
     ordering_fields = ['created', 'modified']
     filter_fields = ['category']
     permission_classes = [permissions.AllowAny]

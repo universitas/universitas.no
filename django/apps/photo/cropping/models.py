@@ -65,12 +65,12 @@ class AutoCropImage(models.Model):
         geometry = '{}x{}'.format(width, height)
         try:
             return thumbnail.get_thumbnail(
-                self.source_file, geometry, crop_box=self.get_crop_box()
+                self.original, geometry, crop_box=self.get_crop_box()
             ).url
         except Exception as e:
-            msg = 'Thumbnail failed: {} {}'.format(e, self.source_file)
+            msg = 'Thumbnail failed: {} {}'.format(e, self.original)
             logger.warn(msg)
-            return self.source_file
+            return self.original
 
     def autocrop(self):
         self.cropping_method = self.CROP_PENDING

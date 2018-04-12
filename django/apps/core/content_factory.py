@@ -75,7 +75,7 @@ def fake_imagefile(size=(1200, 600), fake=FAKE, **kwargs):
     filename = kwargs.pop('filename', fake.file_name(extension='jpg'))
     instance = ImageFile(**kwargs)
     content = File(blob)
-    instance.source_file.save(filename, content)
+    instance.original.save(filename, content)
     return instance
 
 

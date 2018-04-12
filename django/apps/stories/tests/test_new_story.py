@@ -1,13 +1,15 @@
 """Tests for creating stories and parsing stuff"""
 
+from io import BytesIO
+
+from PIL import Image
+
 import pytest
 from apps.markup.models import BlockTag
-from apps.stories.models import Section, Story, StoryType, StoryImage
 from apps.photo.models import ImageFile
+from apps.stories.models import Section, Story, StoryImage, StoryType
 from apps.stories.models.sections import default_story_type
 from django.core.files.uploadedfile import SimpleUploadedFile
-from PIL import Image
-from io import BytesIO
 
 
 def image_data(size=(100, 100), mode='RGB', format='png', color='white'):
@@ -27,7 +29,7 @@ def no_story_types():
 @pytest.fixture
 def dummy_image():
     return ImageFile.objects.create(
-        source_file=SimpleUploadedFile(
+        original=SimpleUploadedFile(
             'dummy.jpg', image_data(format='jpeg', color='black')
         ),
         description='blackness',

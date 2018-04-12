@@ -63,7 +63,7 @@ class ImageFileAdmin(
     list_display = [
         'id',
         'created',
-        'source_file',
+        'original',
         'contributor',
         'category',
         'cropping_method',
@@ -75,7 +75,7 @@ class ImageFileAdmin(
         'category',
     ]
     search_fields = [
-        'source_file',
+        'original',
     ]
     autocomplete_fields = [
         'contributor',

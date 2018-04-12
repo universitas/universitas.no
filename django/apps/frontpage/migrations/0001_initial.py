@@ -1,4 +1,3 @@
-
 from django.db import models, migrations
 import django.utils.timezone
 import apps.frontpage.models
@@ -8,7 +7,7 @@ import model_utils.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('stories', '0004_auto_20150205_1331'),
+        ('stories', '0001_initial'),
         ('photo', '0001_initial'),
     ]
 
@@ -17,7 +16,8 @@ class Migration(migrations.Migration):
             name='Frontpage',
             fields=[
                 (
-                    'id', models.AutoField(
+                    'id',
+                    models.AutoField(
                         primary_key=True,
                         verbose_name='ID',
                         auto_created=True,
@@ -25,21 +25,24 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'created', model_utils.fields.AutoCreatedField(
+                    'created',
+                    model_utils.fields.AutoCreatedField(
                         editable=False,
                         verbose_name='created',
                         default=django.utils.timezone.now
                     )
                 ),
                 (
-                    'modified', model_utils.fields.AutoLastModifiedField(
+                    'modified',
+                    model_utils.fields.AutoLastModifiedField(
                         editable=False,
                         verbose_name='modified',
                         default=django.utils.timezone.now
                     )
                 ),
                 (
-                    'label', models.CharField(
+                    'label',
+                    models.CharField(
                         max_length=100,
                         blank=True,
                         help_text='Unique label used in url',
@@ -47,7 +50,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'published', models.BooleanField(
+                    'published',
+                    models.BooleanField(
                         help_text='This page is published.', default=False
                     )
                 ),
@@ -62,7 +66,8 @@ class Migration(migrations.Migration):
             name='FrontpageStory',
             fields=[
                 (
-                    'id', models.AutoField(
+                    'id',
+                    models.AutoField(
                         primary_key=True,
                         verbose_name='ID',
                         auto_created=True,
@@ -70,41 +75,48 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'created', model_utils.fields.AutoCreatedField(
+                    'created',
+                    model_utils.fields.AutoCreatedField(
                         editable=False,
                         verbose_name='created',
                         default=django.utils.timezone.now
                     )
                 ),
                 (
-                    'modified', model_utils.fields.AutoLastModifiedField(
+                    'modified',
+                    model_utils.fields.AutoLastModifiedField(
                         editable=False,
                         verbose_name='modified',
                         default=django.utils.timezone.now
                     )
                 ),
                 (
-                    'headline', models.CharField(
+                    'headline',
+                    models.CharField(
                         max_length=200, blank=True, help_text='headline'
                     )
                 ),
                 (
-                    'kicker', models.CharField(
+                    'kicker',
+                    models.CharField(
                         max_length=200, blank=True, help_text='kicker'
                     )
                 ),
                 (
-                    'lede', models.CharField(
+                    'lede',
+                    models.CharField(
                         max_length=200, blank=True, help_text='lede'
                     )
                 ),
                 (
-                    'html_class', models.CharField(
+                    'html_class',
+                    models.CharField(
                         max_length=200, blank=True, help_text='html_class'
                     )
                 ),
                 (
-                    'imagefile', models.ForeignKey(
+                    'imagefile',
+                    models.ForeignKey(
                         on_delete=models.CASCADE,
                         blank=True,
                         help_text='image',
@@ -123,7 +135,8 @@ class Migration(migrations.Migration):
             name='StaticModule',
             fields=[
                 (
-                    'id', models.AutoField(
+                    'id',
+                    models.AutoField(
                         primary_key=True,
                         verbose_name='ID',
                         auto_created=True,
@@ -131,28 +144,32 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'created', model_utils.fields.AutoCreatedField(
+                    'created',
+                    model_utils.fields.AutoCreatedField(
                         editable=False,
                         verbose_name='created',
                         default=django.utils.timezone.now
                     )
                 ),
                 (
-                    'modified', model_utils.fields.AutoLastModifiedField(
+                    'modified',
+                    model_utils.fields.AutoLastModifiedField(
                         editable=False,
                         verbose_name='modified',
                         default=django.utils.timezone.now
                     )
                 ),
                 (
-                    'height', models.PositiveSmallIntegerField(
+                    'height',
+                    models.PositiveSmallIntegerField(
                         validators=[apps.frontpage.models.validate_height],
                         help_text='height - minimum 1 maximum 3',
                         default=1
                     )
                 ),
                 (
-                    'columns', models.PositiveSmallIntegerField(
+                    'columns',
+                    models.PositiveSmallIntegerField(
                         validators=[apps.frontpage.models.validate_columns],
                         help_text='width - minimum 1 maximum 12',
                         default=6
@@ -165,12 +182,14 @@ class Migration(migrations.Migration):
                     models.IntegerField(help_text='Placement on front page')
                 ),
                 (
-                    'render_template', models.BooleanField(
+                    'render_template',
+                    models.BooleanField(
                         help_text='Use django rendering', default=False
                     )
                 ),
                 (
-                    'frontpage', models.ForeignKey(
+                    'frontpage',
+                    models.ForeignKey(
                         on_delete=models.CASCADE, to='frontpage.Frontpage'
                     )
                 ),
@@ -186,7 +205,8 @@ class Migration(migrations.Migration):
             name='StoryModule',
             fields=[
                 (
-                    'id', models.AutoField(
+                    'id',
+                    models.AutoField(
                         primary_key=True,
                         verbose_name='ID',
                         auto_created=True,
@@ -194,45 +214,52 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'created', model_utils.fields.AutoCreatedField(
+                    'created',
+                    model_utils.fields.AutoCreatedField(
                         editable=False,
                         verbose_name='created',
                         default=django.utils.timezone.now
                     )
                 ),
                 (
-                    'modified', model_utils.fields.AutoLastModifiedField(
+                    'modified',
+                    model_utils.fields.AutoLastModifiedField(
                         editable=False,
                         verbose_name='modified',
                         default=django.utils.timezone.now
                     )
                 ),
                 (
-                    'height', models.PositiveSmallIntegerField(
+                    'height',
+                    models.PositiveSmallIntegerField(
                         validators=[apps.frontpage.models.validate_height],
                         help_text='height - minimum 1 maximum 3',
                         default=1
                     )
                 ),
                 (
-                    'columns', models.PositiveSmallIntegerField(
+                    'columns',
+                    models.PositiveSmallIntegerField(
                         validators=[apps.frontpage.models.validate_columns],
                         help_text='width - minimum 1 maximum 12',
                         default=6
                     )
                 ),
                 (
-                    'position', models.PositiveIntegerField(
+                    'position',
+                    models.PositiveIntegerField(
                         help_text='larger numbers come first'
                     )
                 ),
                 (
-                    'frontpage', models.ForeignKey(
+                    'frontpage',
+                    models.ForeignKey(
                         on_delete=models.CASCADE, to='frontpage.Frontpage'
                     )
                 ),
                 (
-                    'frontpage_story', models.ForeignKey(
+                    'frontpage_story',
+                    models.ForeignKey(
                         on_delete=models.CASCADE,
                         editable=False,
                         to='frontpage.FrontpageStory'

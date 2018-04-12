@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import pytest
-
 from apps.photo.models import ImageFile
 from apps.photo.tasks import (
     autocrop_image_file, import_image, new_staging_images, post_save_task
@@ -14,7 +13,7 @@ def test_post_save(jpeg_file):
     img = ImageFile()
     assert img.cropping_method == img.CROP_PENDING
     with jpeg_file.open('rb') as fp:
-        img.source_file.save('foobar.jpg', File(fp))
+        img.original.save('foobar.jpg', File(fp))
     autocrop_image_file(img.pk)
     img.refresh_from_db()
     assert img.cropping_method != img.CROP_PENDING
@@ -47,7 +46,7 @@ def test_import_images(jpeg_file, png_file, broken_image_file):
     assert import_image(png_file)
     assert ImageFile.objects.count() == 1
     imgfile = ImageFile.objects.first()
-    assert Path(imgfile.source_file.name).name == png_file.name
+    assert Path(imgfile.original.name).name == png_file.name
 
     # exists, but is smaller
     assert not import_image(jpeg_file)

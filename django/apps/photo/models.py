@@ -111,7 +111,7 @@ class ImageFileManager(models.Manager):
         """Fuzzy filename search"""
         SQL = '''
         WITH filematches AS (
-          SELECT id, SIMILARITY(regexp_replace(source_file, '.*/', ''), %s) AS similarity
+          SELECT id, SIMILARITY(regexp_replace(original, '.*/', ''), %s) AS similarity
           FROM photo_imagefile
         )
         SELECT id from filematches  WHERE (similarity > %s) ORDER BY similarity DESC
@@ -162,8 +162,8 @@ class ImageFile(  # type: ignore
         verbose_name = _('ImageFile')
         verbose_name_plural = _('ImageFiles')
 
-    source_file = thumbnail.ImageField(
-        verbose_name=_('source file'),
+    original = thumbnail.ImageField(
+        verbose_name=_('original'),
         validators=[image_file_validator],
         upload_to=upload_image_to,
         height_field='full_height',
@@ -259,10 +259,6 @@ class ImageFile(  # type: ignore
         if self.contributor:
             return f'{self.contributor}'
         return self.copyright_information or '?'
-
-    @property
-    def original(self) -> File:
-        return self.source_file
 
     @property
     def small(self) -> Thumbnail:

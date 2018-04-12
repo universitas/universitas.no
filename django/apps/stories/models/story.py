@@ -22,7 +22,7 @@ from .mixins import MarkupCharField, MarkupTextField, TextContent
 from .place_inlines import InlineElementsMixin
 from .search_mixin import FullTextSearchMixin, FullTextSearchQuerySet
 from .sections import StoryType, default_story_type
-from .storychildren import Aside, Pullquote, StoryImage
+from .storychildren import Aside, Pullquote
 
 slugify = Slugify(max_length=50, to_lower=True)
 logger = logging.getLogger(__name__)

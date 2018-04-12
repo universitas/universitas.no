@@ -106,13 +106,6 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
         if self.byline_photo and not force_new:
             return self.byline_photo
 
-        # filename, match = self.find_image_file(self.name)
-        # if match:
-        #     with open(match, 'rb') as source:
-        #         content = File(source)
-        #         img = ImageFile(category=ImageFile.PROFILE)
-        #         img.source_file.save(filename, content)
-
         img = ImageFile.objects.search(
             filename=f'{self}.jpg',
         ).filter(category=ImageFile.PROFILE).first()

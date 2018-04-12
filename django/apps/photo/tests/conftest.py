@@ -37,6 +37,6 @@ def broken_image_file():
 def img(jpeg_file):
     img = ImageFile()
     with open(jpeg_file, 'rb') as fp:
-        img.source_file.save('foobar.jpg', File(fp), save=False)
+        img.original.save('foobar.jpg', File(fp), save=False)
     yield img
     clear_thumbnail_cache()

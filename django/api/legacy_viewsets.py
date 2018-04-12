@@ -32,7 +32,7 @@ class ProdBildeSerializer(serializers.ModelSerializer):
 
 
 def get_imagefile(filename):
-    img = ImageFile.objects.filter(source_file__endswith=filename).last()
+    img = ImageFile.objects.filter(original__endswith=filename).last()
     if img is None:
         raise MissingImageFileException('ImageFile("%s") not found' % filename)
     return img
@@ -118,7 +118,7 @@ class ProdStorySerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         out = super().to_internal_value(data)
-        out['get_images'] = data.get('bilete', [])
+        out['images'] = data.get('bilete', [])
         mappe = data.get('mappe')
         if mappe:
             out['story_type'] = StoryType.objects.filter(
