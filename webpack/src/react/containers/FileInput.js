@@ -4,20 +4,68 @@ import cx from 'classnames'
 import processImageFile from 'utils/processImageData'
 import 'styles/uploadinput.scss'
 
-const filterValidFiles = accept =>
-  accept.length ? R.filter(file => R.contains(file.type, accept)) : Array.from
+class BaseFileInput extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleNewFiles = this.handleNewFiles.bind(this)
+    this.filterValidFiles = this.filterValidFiles.bind(this)
+  }
 
-const preventDefault = ev => ev.preventDefault()
+  filterValidFiles(files) {
+    const { accept } = this.props
+    const filter =
+      accept && accept.length
+        ? R.filter(file => R.contains(file.type, accept))
+        : Array.from
+    return filter(files)
+  }
 
-class FileInput extends React.Component {
+  handleNewFiles(inputFiles) {
+    const { fileAdded, fileError } = this.props
+    const validFiles = this.filterValidFiles(inputFiles)
+    R.map(file =>
+      processImageFile(file)
+        .then(fileAdded)
+        .catch(fileError)
+    )(validFiles)
+  }
+}
+
+BaseFileInput.defaultProps = {
+  accept: [],
+  fileAdded: console.log,
+  fileError: console.error,
+}
+
+class FileInputButton extends BaseFileInput {
+  render() {
+    const { accept, label = 'upload', className } = this.props
+    return (
+      <label className={cx(className, 'FileInputButton')}>
+        {label}
+        <input
+          multiple
+          type="file"
+          accept={accept && R.join(', ', accept)}
+          onChange={ev => {
+            ev.stopPropagation()
+            this.handleNewFiles(ev.target.files)
+            ev.target.value = null
+          }}
+        />
+      </label>
+    )
+  }
+}
+
+class FileInputArea extends BaseFileInput {
   constructor(props) {
     super(props)
     this.state = { acceptFiles: true, dragOver: 0 }
-    this.filterValidFiles = filterValidFiles(props.accept)
     this.dragEnterHandler = this.dragEnterHandler.bind(this)
     this.dragLeaveHandler = this.dragLeaveHandler.bind(this)
+    this.dragOverHandler = ev => ev.preventDefault()
     this.dropHandler = this.dropHandler.bind(this)
-    this.handleNewFiles = this.handleNewFiles.bind(this)
   }
 
   dragEnterHandler(ev) {
@@ -39,42 +87,17 @@ class FileInput extends React.Component {
     this.handleNewFiles(ev.dataTransfer.files)
   }
 
-  handleNewFiles(inputFiles) {
-    const { fileAdded, fileError } = this.props
-    const validFiles = this.filterValidFiles(inputFiles)
-
-    R.map(file =>
-      processImageFile(file)
-        .then(fileAdded)
-        .catch(fileError)
-    )(validFiles)
-  }
-
   render() {
     const { acceptFiles, dragOver } = this.state
-    const { accept, children, label, className } = this.props
-    return label ? (
-      <label className={cx(className, 'FileInput', 'button')}>
-        {label}
-        <input
-          multiple
-          type="file"
-          accept={accept && R.join(', ', accept)}
-          onChange={ev => {
-            ev.stopPropagation()
-            this.handleNewFiles(ev.target.files)
-            ev.target.value = null
-          }}
-        />
-      </label>
-    ) : (
+    const { accept, children, className } = this.props
+    return (
       <section
-        className={cx(className, 'FileInput', 'area', {
+        className={cx(className, 'FileInputArea', {
           dragOver,
           acceptFiles,
         })}
         onDragEnter={this.dragEnterHandler}
-        onDragOver={preventDefault}
+        onDragOver={this.dragOverHandler}
         onDragLeave={this.dragLeaveHandler}
         onDrop={this.dropHandler}
       >
@@ -84,11 +107,4 @@ class FileInput extends React.Component {
   }
 }
 
-FileInput.defaultProps = {
-  accept: [],
-  text: 'upload files',
-  fileAdded: console.log,
-  fileError: console.error,
-}
-
-export default FileInput
+export { FileInputArea, FileInputButton }

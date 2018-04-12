@@ -1,24 +1,24 @@
-.FileInput {
+.FileInputArea {
   display: flex;
   flex-direction: column;
+  border: 5px solid transparent;
   &.dragOver {
     border-color: red;
     &.acceptFiles {
       border-color: limegreen;
     }
   }
-  input[type="file"] {
-    display: none;
-  }
   .items {
     display: block;
   }
 }
-label.FileInput {
+
+.FileInputButton {
+  display: flex;
   cursor: pointer;
-}
-section.FileInput {
-  border: 5px solid transparent;
+  input[type="file"] {
+    display: none;
+  }
 }
 
 .PhotoStats {

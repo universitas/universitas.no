@@ -46,7 +46,7 @@
       margin: 0.2em;
       align-items: center;
     }
-    .FileInput,
+    .FileInputButton,
     .info,
     button {
       line-height: 1;
@@ -57,7 +57,7 @@
     .info {
       flex: 1;
     }
-    .FileInput,
+    .FileInputButton,
     button {
       @extend %button;
       outline: none;

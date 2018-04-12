@@ -1,13 +1,13 @@
 import { connect } from 'react-redux'
 import { getUploadPKs, uploadAdd } from 'ducks/fileupload'
 import UploadItem from './UploadItem'
-import FileInput from 'containers/FileInput'
+import { FileInputArea, FileInputButton } from 'containers/FileInput'
 
 const UploadPanel = ({ fileAdded, fileError = console.error, files }) => (
   <section className="ListPanel">
     <div className="TopBar">
       <div className="Filters">
-        <FileInput
+        <FileInputButton
           accept={['image/jpeg', 'image/png']}
           fileAdded={fileAdded}
           fileError={fileError}
@@ -15,14 +15,14 @@ const UploadPanel = ({ fileAdded, fileError = console.error, files }) => (
         />
       </div>
     </div>
-    <FileInput
+    <FileInputArea
       accept={['image/jpeg', 'image/png']}
       fileAdded={fileAdded}
       fileError={fileError}
       className="itemList"
     >
       {files.map(pk => <UploadItem pk={pk} key={pk} />)}
-    </FileInput>
+    </FileInputArea>
   </section>
 )
 
