@@ -501,15 +501,13 @@ class Story(  # type: ignore
             text = getattr(self, attr)
             if text:
                 output.append(f'@{tag}:{text}')
-        for bl in self.byline_set.all():
+        for bl in self.bylines.all():
             output.append(str(bl))
         output.append(self.bodytext_markup)
-        for aside in self.storyelement_set.all():
-            if aside._subclass == 'aside':
-                output.append(aside.child.bodytext_markup)
-        for pullquote in self.storyelement_set.all():
-            if pullquote._subclass == 'pullquote':
-                output.append(pullquote.child.bodytext_markup)
+        for aside in self.asides.all():
+            output.append(aside.bodytext_markup)
+        for pullquote in self.pullquotes.all():
+            output.append(pullquote.bodytext_markup)
         return '\n'.join(output)
 
     @tekst.setter

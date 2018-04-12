@@ -99,9 +99,7 @@ class ProdStorySerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {'url': {'view_name': 'legacy-detail'}}
 
-    bilete = ProdBildeSerializer(
-        required=False, many=True, source='get_images'
-    )
+    bilete = ProdBildeSerializer(required=False, many=True, source='images')
     prodsak_id = serializers.IntegerField(source='id', required=False)
     mappe = serializers.SerializerMethodField()
     arbeidstittel = serializers.CharField(source='working_title')
@@ -129,7 +127,7 @@ class ProdStorySerializer(serializers.ModelSerializer):
         return out
 
     def create(self, validated_data):
-        bilete = validated_data.pop('get_images', [])
+        bilete = validated_data.pop('images', [])
         if Story.objects.filter(pk=validated_data.get('id')):
             raise ValidationError('Story exists')
         story = super().create(validated_data)
@@ -137,7 +135,7 @@ class ProdStorySerializer(serializers.ModelSerializer):
         return story
 
     def update(self, instance, validated_data):
-        bilete = validated_data.pop('get_images', [])
+        bilete = validated_data.pop('images', [])
         story = super().update(instance, validated_data)
         update_images(bilete, story)
         story.full_clean()
@@ -160,12 +158,12 @@ class ProdStoryViewSet(viewsets.ModelViewSet):
 
     serializer_class = ProdStorySerializer
     queryset = Story.objects.order_by('publication_status', 'modified').filter(
-        publication_status__lt=Story.STATUS_PUBLISHED
+        publication_status__lt=Story.STATUS_PUBLISHED,
     ).prefetch_related(
         'story_type',
         'bylines',
         'byline_set',
-        'storyelement_set',
+        'images',
     )
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['publication_status', 'title', 'bodytext_markup']
