@@ -4,6 +4,12 @@ from pathlib import PosixPath as Path
 import pytest
 from apps.photo.models import ImageFile
 from django.core.files import File
+from sorl.thumbnail import default
+
+
+def clear_thumbnail_cache():
+    """Clear all thumbnails from cache."""
+    default.kvstore.clear()
 
 
 @pytest.fixture(scope='module')
@@ -32,4 +38,5 @@ def img(jpeg_file):
     img = ImageFile()
     with open(jpeg_file, 'rb') as fp:
         img.source_file.save('foobar.jpg', File(fp), save=False)
-    return img
+    yield img
+    clear_thumbnail_cache()

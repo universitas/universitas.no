@@ -58,7 +58,7 @@ class ImageHashModelMixin(models.Model):
     @property
     def imagehash(self):
         """Calculate or retrieve imagehash value."""
-        if not self._imagehash and self.original:
+        if not self._imagehash:
             try:
                 self.imagehash = get_imagehash(self.large)
             except (IOError, FileNotFoundError):

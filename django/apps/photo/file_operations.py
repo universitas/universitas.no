@@ -1,3 +1,4 @@
+import base64
 import hashlib
 import logging
 from io import BytesIO
@@ -6,7 +7,6 @@ from typing import Union
 
 import PIL
 
-import base64
 import imagehash
 from django.core.files import File as DjangoFile
 
@@ -93,6 +93,7 @@ def get_imagehash(fp, size=11) -> imagehash.ImageHash:
     try:
         img = pil_image(fp).convert('L').resize((size, size))
     except OSError:
+        raise
         return None
     return imagehash.dhash(img)
 

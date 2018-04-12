@@ -43,6 +43,7 @@ def test_image_hashes(img):
     assert img._imagehash[:5] == '0e2d1'  # is string
     assert img.imagehash.hash.shape == (8, 8)  # is ndarray
     assert img.pk is None  # did not save
+    assert img.large
 
     img.save()
     modified = img.modified
