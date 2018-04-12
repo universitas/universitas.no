@@ -387,17 +387,11 @@ class Story(  # type: ignore
 
     def image_count(self):
         """ Number of story images related to the story """
-        return len(self.images())
-
-    def get_images(self):
-        ids = self.images().values_list('id', flat=True)
-        return StoryImage.objects.filter(id__in=ids)
+        return len(self.images.all())
 
     def main_image(self):
         """ Get the top image if there is any. """
-        top_image = self.images().order_by('-top', 'index').first()
-        if top_image:
-            return top_image.child
+        return self.images.order_by('-top', 'index').first()
 
     def facebook_thumb(self):
         if self.main_image():
@@ -415,12 +409,10 @@ class Story(  # type: ignore
     def clear_html(self):
         """ clears html after child is changed """
         if self.bodytext_html != '':
-            Aside.objects.filter(parent_story__pk=self.pk).update(
-                bodytext_html=''
-            )
-            Pullquote.objects.filter(parent_story__pk=self.pk).update(
-                bodytext_html=''
-            )
+            Aside.objects.filter(parent_story__pk=self.pk
+                                 ).update(bodytext_html='')
+            Pullquote.objects.filter(parent_story__pk=self.pk
+                                     ).update(bodytext_html='')
             self.bodytext_html = ''
             self.save(update_fields=['bodytext_html'])
 
@@ -454,7 +446,10 @@ class Story(  # type: ignore
 
     def clean(self):
         """ Clean user input and populate fields """
+
+        # run cleanup only when preparing for web
         cleanup = [Story.STATUS_FROM_DESK, Story.STATUS_PUBLISHED]
+
         published = [Story.STATUS_PUBLISHED, Story.STATUS_NOINDEX]
 
         if self.publication_status in cleanup:
@@ -522,6 +517,6 @@ class Story(  # type: ignore
         self.title = ''
         self.lede = ''
         self.theme_word = ''
-        self.asides().delete()
-        self.pullquotes().delete()
+        self.asides.all().delete()
+        self.pullquotes.all().delete()
         self.bodytext_markup = value

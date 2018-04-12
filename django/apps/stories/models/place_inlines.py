@@ -121,19 +121,19 @@ class InlineElementsMixin:
                 body = re.sub(find, '', body, flags=re.M)
 
             # insert asides
-            asides = self.asides().inline()
+            asides = self.asides.inline()
             body = top_right(asides, body)
 
             # insert images
-            images = self.images().inline()
+            images = self.images.inline()
             body = big_on_top_search_for_rest(images, body)
 
             # insert videos
-            videos = self.videos().inline()
+            videos = self.videos.inline()
             body = fifty_fifty(videos, body)
 
             # insert pullquotes
-            pullquotes = self.pullquotes().inline()
+            pullquotes = self.pullquotes.inline()
             body = fuzzy_search(pullquotes, body)
 
             return body
@@ -156,7 +156,7 @@ class InlineElementsMixin:
 
         def big_on_top_search_for_rest(queryset, body):
             for item in queryset:
-                if item.child.size < 2:
+                if item.size < 2:
                     item.top = True
                     item.save()
 
@@ -168,7 +168,7 @@ class InlineElementsMixin:
 
             for item in queryset:
                 line = '{tag} {flags} {index}'.format(
-                    tag=item.child.markup_tag,
+                    tag=item.markup_tag,
                     flags=flags,
                     index=item.index,
                 )
@@ -196,9 +196,8 @@ class InlineElementsMixin:
                 return value is not -1
 
             paragraphs = body.splitlines()
-            items = [item.child for item in queryset]
 
-            for item in items:
+            for item in queryset:
                 needle = item.needle()
                 if not needle:
                     continue

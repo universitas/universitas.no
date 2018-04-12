@@ -20,7 +20,6 @@ case $1 in
     ;;
   django-admin)
     /app/wait-for-it.sh -q postgres:5432
-    echo "command: $*"
     run "$*"
     ;;
   runserver)
