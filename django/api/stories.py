@@ -1,11 +1,21 @@
 import logging
 
-from apps.stories.models import Byline, Story, StoryType
+from apps.stories.models import Byline, Story, StoryType, StoryImage
 from django.core.exceptions import FieldError
 from rest_framework import filters, serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
 
 logger = logging.getLogger('apps')
+
+
+class StoryImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StoryImage
+        fields = [
+            'imagefile',
+            'caption',
+            'creditline',
+        ]
 
 
 class BylineSerializer(serializers.ModelSerializer):
@@ -44,6 +54,10 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
         many=True,
         read_only=True,
     )
+    get_images = StoryImageSerializer(
+        many=True,
+        read_only=True,
+    )
 
     class Meta:
         model = Story
@@ -60,6 +74,7 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
             'story_type',
             'story_type_name',
             'byline_set',
+            'get_images',
         ]
 
     story_type = serializers.PrimaryKeyRelatedField(

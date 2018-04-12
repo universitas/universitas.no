@@ -51,59 +51,14 @@ class ElementQuerySet(models.QuerySet):
         return self.filter(_subclass='inlinehtml')
 
 
-class ElementManager(models.Manager):
-
-    qs_methods = [
-        attr for attr in dir(ElementQuerySet) if not attr.startswith('_')
-    ]
-
-    def get_queryset(self):
-        return ElementQuerySet(self.model, using=self._db)
-
-    def __getattr__(self, attr):
-        """ Checks the queryset class for missing methods. """
-        if attr in self.qs_methods:
-            return getattr(self.get_queryset(), attr)
-        return self.__getattribute__(attr)
-
-
-class RemembersSubClass(models.Model):
-    """ Mixin for storyelements. Saves their class name in a field. """
-
-    _subclass = models.CharField(
-        editable=False,
-        max_length=200,
-    )
+class StoryElement(TimeStampedModel):
+    """ Models that are placed somewhere inside an article """
+    objects = ElementQuerySet.as_manager()
 
     class Meta:
         abstract = True
+        ordering = ['index']
 
-    @property
-    def child(self):
-        return getattr(self, self._subclass)
-
-    def save(self, *args, **kwargs):
-        if self.pk is None:
-            subclass = self.__class__
-            # Save name of the subclass
-            self._subclass = subclass.__name__.lower()
-
-        super().save(*args, **kwargs)
-
-
-class StoryElement(TimeStampedModel, RemembersSubClass):
-    """ Models that are placed somewhere inside an article """
-
-    @classmethod
-    def markup_tag(cls):
-        tag = MARKUP_TAGS.get(cls.__name__, '')
-        return f'@{tag}:'
-
-    objects = ElementManager()
-    parent_story = models.ForeignKey(
-        'Story',
-        on_delete=models.CASCADE,
-    )
     index = models.PositiveSmallIntegerField(
         default=0,
         blank=True,
@@ -117,10 +72,10 @@ class StoryElement(TimeStampedModel, RemembersSubClass):
         help_text=_('Is this element placed on top?'),
     )
 
-    class Meta:
-        verbose_name = _('story element')
-        verbose_name_plural = _('story elements')
-        ordering = ['index']
+    @classmethod
+    def markup_tag(cls):
+        tag = MARKUP_TAGS.get(cls.__name__, '')
+        return f'@{tag}:'
 
     @property
     def published(self):
@@ -151,6 +106,11 @@ class StoryElement(TimeStampedModel, RemembersSubClass):
 class Pullquote(TextContent, StoryElement):  # type: ignore
     """ A quote that is that is pulled out of the content. """
 
+    parent_story = models.ForeignKey(
+        'Story',
+        on_delete=models.CASCADE,
+    )
+
     def needle(self):
         firstline = self.bodytext_markup.splitlines()[0]
         needle = re.sub('@\S+:|«|»', '', firstline)
@@ -163,6 +123,10 @@ class Pullquote(TextContent, StoryElement):  # type: ignore
 
 class Aside(TextContent, StoryElement):  # type: ignore
     """ Fact box or other information typically placed in side bar """
+    parent_story = models.ForeignKey(
+        'Story',
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
         verbose_name = _('Aside')
@@ -172,6 +136,10 @@ class Aside(TextContent, StoryElement):  # type: ignore
 class InlineHtml(StoryElement):
     """ Inline html code """
 
+    parent_story = models.ForeignKey(
+        'Story',
+        on_delete=models.CASCADE,
+    )
     bodytext_html = models.TextField()
 
     class Meta:
@@ -260,6 +228,11 @@ class StoryImage(StoryMedia):
         verbose_name = _('Image')
         verbose_name_plural = _('Images')
 
+    parent_story = models.ForeignKey(
+        'Story',
+        on_delete=models.CASCADE,
+    )
+
     imagefile = models.ForeignKey(
         ImageFile,
         help_text=_('Choose an image by name or upload a new one.'),
@@ -315,6 +288,10 @@ class StoryVideo(StoryMedia):
         verbose_name = _('Video')
         verbose_name_plural = _('Videos')
 
+    parent_story = models.ForeignKey(
+        'Story',
+        on_delete=models.CASCADE,
+    )
     video_host = models.CharField(
         max_length=20,
         default=VIDEO_HOSTS[0][0],
