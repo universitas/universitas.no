@@ -11,12 +11,12 @@ logger = logging.getLogger(__name__)
 @register.inclusion_tag('_header_images.html', takes_context=True)
 def header_image(context):
     story = context['story']
-    images = story.images().top()
-    videos = story.videos().top()
+    images = story.images.top()
+    videos = story.videos.top()
     height, width = 600, 1200
     # images = context['story'].images().top()
     context = {
-        'elements': [i.child for i in images] + [i.child for i in videos],
+        'elements': list(images) + list(videos),
         'css_classes': 'main_image',
         'expand': 0,
     }
@@ -45,7 +45,6 @@ def inline_storyimage(context, argument_string):
     # videos = story.videos().inline()
     context = get_items(images, argument_string)
     context['expand'] = 0
-    # context['elements'] += [i.child for i in videos]
     images = context['elements']
     if images:
         first_image = images[0]
@@ -112,10 +111,7 @@ def get_items(queryset, argument_string):
             # raise template.TemplateSyntaxError(error_message)
 
     for index in indexes:
-        context['elements'].extend([
-            i.child for i in queryset.filter(index=index)
-        ])
+        context['elements'].extend(list(queryset.filter(index=index)))
 
-    # context['css_classes'] = ' '.join(classes) or FLAGS['=']
     context['css_classes'] = ' '.join(classes) or 'inline-regular'
     return context

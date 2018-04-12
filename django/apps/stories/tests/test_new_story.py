@@ -83,7 +83,7 @@ def test_fixture(another_hope, dummy_image):
     )
     another_hope.refresh_from_db()
     assert another_hope.byline_set.count() == 1
-    assert another_hope.images().count() == 1
+    assert another_hope.images.count() == 1
 
 
 @pytest.mark.django_db

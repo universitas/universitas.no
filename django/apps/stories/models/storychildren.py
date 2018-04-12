@@ -35,21 +35,6 @@ class ElementQuerySet(models.QuerySet):
     def unpublished(self):
         return self.filter(index__isnull=True)
 
-    def images(self):
-        return self.filter(_subclass='storyimage')
-
-    def videos(self):
-        return self.filter(_subclass='storyvideo')
-
-    def pullquotes(self):
-        return self.filter(_subclass='pullquote')
-
-    def asides(self):
-        return self.filter(_subclass='aside')
-
-    def inline_html_blocks(self):
-        return self.filter(_subclass='inlinehtml')
-
 
 class StoryElement(TimeStampedModel):
     """ Models that are placed somewhere inside an article """
@@ -108,6 +93,7 @@ class Pullquote(TextContent, StoryElement):  # type: ignore
 
     parent_story = models.ForeignKey(
         'Story',
+        related_name='pullquotes',
         on_delete=models.CASCADE,
     )
 
@@ -125,6 +111,7 @@ class Aside(TextContent, StoryElement):  # type: ignore
     """ Fact box or other information typically placed in side bar """
     parent_story = models.ForeignKey(
         'Story',
+        related_name='asides',
         on_delete=models.CASCADE,
     )
 
@@ -138,6 +125,7 @@ class InlineHtml(StoryElement):
 
     parent_story = models.ForeignKey(
         'Story',
+        related_name='inline_html_blocks',
         on_delete=models.CASCADE,
     )
     bodytext_html = models.TextField()
@@ -230,6 +218,7 @@ class StoryImage(StoryMedia):
 
     parent_story = models.ForeignKey(
         'Story',
+        related_name='images',
         on_delete=models.CASCADE,
     )
 
@@ -290,6 +279,7 @@ class StoryVideo(StoryMedia):
 
     parent_story = models.ForeignKey(
         'Story',
+        related_name='videos',
         on_delete=models.CASCADE,
     )
     video_host = models.CharField(
