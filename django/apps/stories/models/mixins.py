@@ -117,7 +117,9 @@ class MarkupModelMixin:
             for line in raw.splitlines():
                 # line = BlockTag.objects.make_html(line)
                 line = InlineTag.objects.make_html(line)
-                line = self.parent.inline_links.markup_to_html(line)
+                line = self.parent.parent_story.inline_links.markup_to_html(
+                    line
+                )
                 result.append(line)
             return '\n'.join(result)
 
@@ -209,7 +211,7 @@ class TextContent(models.Model, MarkupModelMixin):
 
     def insert_urls_in_links(self, text):
         """ Change markup references to urls. """
-        text = self.inline_links.insert_urls(text)
+        text = self.parent_story.inline_links.insert_urls(text)
         return text
 
     def parse_markup(self):
