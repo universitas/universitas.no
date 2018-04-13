@@ -14,6 +14,7 @@ import { apiFetch, apiPatch, apiPost, apiList, apiGet } from '../services/api'
 import {
   ITEMS_FETCHED,
   ITEMS_REQUESTED,
+  ITEM_REQUESTED,
   ITEM_SELECTED,
   FILTER_TOGGLED,
   FILTER_SET,
@@ -33,6 +34,7 @@ export default function* rootSaga() {
   yield takeLatest(ITEM_SELECTED, selectItem)
   yield takeLatest(FIELD_CHANGED, patchItem)
   yield takeEvery(ITEMS_REQUESTED, requestItems)
+  yield takeEvery(ITEM_REQUESTED, fetchItem)
   yield takeEvery(ITEM_CLONED, cloneItem)
   yield fork(watchRouteChange)
 }
@@ -78,15 +80,6 @@ function* watchRouteChange() {
     }
   }
 }
-function* selectItem(action) {
-  const { getItem, itemAdded, apiGet } = modelFuncs(action)
-  const id = R.path(['payload', 'id'], action)
-  let data = yield select(getItem(id))
-  if (id && !data) {
-    data = yield call(apiGet, id)
-    yield put(itemAdded(data.response))
-  }
-}
 function* requestItems(action) {
   yield call(delay, 200)
   const { itemsFetched } = modelFuncs(action)
@@ -113,6 +106,26 @@ function* patchItem(action) {
     yield put(errorAction(error))
   }
 }
+
+function* selectItem(action) {
+  const { getItem } = modelFuncs(action)
+  const id = R.path(['payload', 'id'], action)
+  if (!id) return // id is 0 or null
+  const data = yield select(getItem(id)) // check if item is already fetched
+  if (R.isEmpty(data)) yield call(fetchItem, action) // fetch if not
+}
+
+function* fetchItem(action) {
+  const { itemAdded, apiGet } = modelFuncs(action)
+  const id = R.path(['payload', 'id'], action)
+  const { error, response } = yield call(apiGet, id)
+  if (response) {
+    yield put(itemAdded(response))
+  } else {
+    yield put(errorAction(error))
+  }
+}
+
 function* fetchItems(action) {
   const funcs = modelFuncs(action)
   const { getQuery, apiList } = funcs

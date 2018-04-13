@@ -1,0 +1,11 @@
+// css resets
+// @import "../../stylesheets/includes/googlefonts";
+@import "../../stylesheets/normalize";
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  border: none;
+}

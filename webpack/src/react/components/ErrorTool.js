@@ -20,26 +20,28 @@ const ErrorItem = ({ error, onClick }) => (
       <div className="timestamp">{formatTimestamp(error.timestamp)}</div>
       <div className="detail">{errorToString(error)}</div>
     </span>
-    <span className="dismiss" onClick={onClick}><Clear /></span>
+    <span className="dismiss" onClick={onClick}>
+      <Clear />
+    </span>
   </div>
 )
 
 const ErrorTool = ({ errors, clearError }, index) =>
-  errors.length
-    ? <div className="AppButton ErrorTool">
-        <Error />
-        <small>{errors.length} feil</small>
-        <div className="errorItems">
-          {errors.map((error, index) => (
-            <ErrorItem
-              key={index}
-              error={error}
-              onClick={e => clearError(index)}
-            />
-          ))}
-        </div>
+  errors.length ? (
+    <div className="AppButton ErrorTool">
+      <small>{errors.length} feil</small>
+      <Error />
+      <div className="errorItems">
+        {errors.map((error, index) => (
+          <ErrorItem
+            key={index}
+            error={error}
+            onClick={e => clearError(index)}
+          />
+        ))}
       </div>
-    : null
+    </div>
+  ) : null
 
 ErrorTool.propTypes = {
   errors: PropTypes.array.isRequired,

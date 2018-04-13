@@ -15,7 +15,7 @@ import { jsonToFormData, objectURLtoFile } from 'utils/fileupload'
 
 import { modelActions } from 'ducks/basemodel'
 
-const { itemsAppended, itemAdded } = modelActions('images')
+const { itemsAppended, itemAdded, itemRequested } = modelActions('images')
 
 export default function* uploadSaga() {
   yield takeEvery(ADD, newFileSaga)
@@ -76,5 +76,6 @@ function* postFileSaga(action) {
   if (response) {
     yield put(uploadPostSuccess(pk, response))
     yield put(itemAdded(response))
+    yield put(itemRequested(response.id))
   } else yield put(uploadPostError(pk))
 }

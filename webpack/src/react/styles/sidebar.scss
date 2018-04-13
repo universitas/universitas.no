@@ -2,6 +2,8 @@
 
 .SideBar {
   display: flex;
+  position: relative;
+  z-index: 10;
   flex-direction: column;
   font-size: 3em;
   color: white;

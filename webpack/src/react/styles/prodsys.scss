@@ -1,19 +1,22 @@
 $darkgrey: #555;
 
-@import 'sidebar';
-@import 'modal';
-@import 'listpanel';
-@import 'detailpanel';
-@import 'gridview';
-@import 'errors';
+@import "reset";
+@import "sidebar";
+@import "modal";
+@import "listpanel";
+@import "detailpanel";
+@import "gridview";
+@import "errors";
 
 .ProdSys {
+  // main app container
   display: flex;
   align-items: stretch;
   height: 100vh;
 }
 
 .Stint {
+  // job at publication
   &.past {
     color: grey;
   }
@@ -24,10 +27,15 @@ $darkgrey: #555;
   }
   .fromdate {
   }
-  .todate { &:before { content: '\0000a0–\0000a0'; } }
+  .todate {
+    &:before {
+      content: "\0000a0–\0000a0";
+    }
+  }
 }
 
 .PdfLink {
+  // icon to open pdf
   cursor: pointer;
   font-size: 2em;
   color: #888;
@@ -35,5 +43,3 @@ $darkgrey: #555;
     color: #aaa;
   }
 }
-
-
