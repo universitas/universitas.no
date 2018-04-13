@@ -14,7 +14,7 @@ def header_image(context):
     images = story.images.top()
     videos = story.videos.top()
     height, width = 600, 1200
-    # images = context['story'].images().top()
+    # images = context['story'].images.top()
     context = {
         'elements': list(images) + list(videos),
         'css_classes': 'main_image',
@@ -41,8 +41,8 @@ def inline_storyimage(context, argument_string):
         height, width = 400, 300
     else:
         height, width = 700, 1200
-    images = story.images().inline()
-    # videos = story.videos().inline()
+    images = story.images.inline()
+    # videos = story.videos.inline()
     context = get_items(images, argument_string)
     context['expand'] = 0
     images = context['elements']
@@ -61,26 +61,26 @@ def inline_storyimage(context, argument_string):
 
 @register.inclusion_tag('_inline_pullquotes.html', takes_context=True)
 def inline_pullquote(context, argument_string):
-    queryset = context['story'].pullquotes().published()
+    queryset = context['story'].pullquotes.published()
     return get_items(queryset, argument_string)
 
 
 @register.inclusion_tag('_inline_videos.html', takes_context=True)
 def inline_storyvideo(context, argument_string):
-    queryset = context['story'].videos().published()
+    queryset = context['story'].videos.published()
     return get_items(queryset, argument_string)
 
 
 @register.inclusion_tag('_inline_asides.html', takes_context=True)
 def inline_aside(context, argument_string):
-    queryset = context['story'].asides().published()
+    queryset = context['story'].asides.published()
     context.update(get_items(queryset, argument_string))
     return context
 
 
 @register.inclusion_tag('_inline_html.html', takes_context=True)
 def inline_inlinehtml(context, argument_string):
-    queryset = context['story'].inline_html_blocks().published()
+    queryset = context['story'].inline_html_blocks.published()
     context.update(get_items(queryset, argument_string))
     return context
 

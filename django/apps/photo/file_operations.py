@@ -92,8 +92,7 @@ def get_imagehash(fp, size=11) -> imagehash.ImageHash:
     """Calculate perceptual hash for comparison of identical images"""
     try:
         img = pil_image(fp).convert('L').resize((size, size))
-    except OSError:
-        raise
+    except OSError:  # corrupt image file probably
         return None
     return imagehash.dhash(img)
 

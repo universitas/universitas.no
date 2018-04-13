@@ -202,7 +202,7 @@ class InlineLink(TimeStampedModel):
         """
         body = cls.convert_html_links(body)
         found_links = re.finditer(cls.find_pattern, body)
-        queryset = parent_story.links()
+        queryset = parent_story.inline_links.all()
 
         number = queryset.count() + 1
         for match in found_links:

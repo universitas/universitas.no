@@ -21,6 +21,7 @@ class UploadFileSerializer(ImageFileSerializer):
     class Meta:
         model = ImageFile
         fields = [
+            'id',
             'url',
             'original',
             'created',

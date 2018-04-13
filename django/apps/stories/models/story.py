@@ -438,11 +438,14 @@ class Story(  # type: ignore
     def children_modified(self):
         """ check if any related objects have been
         modified after self was last saved. """
-        changed_elements = self.storyelement_set.filter(
-            modified__gt=self.modified
+        children = (
+            self.videos, self.images, self.inline_links,
+            self.inline_html_blocks, self.asides, self.pullquotes
         )
-        changed_links = self.links().filter(modified__gt=self.modified)
-        return bool(changed_elements or changed_links)
+        return any(
+            qs.filter(modified__gt=self.modified).count() > 0
+            for qs in children
+        )
 
     def clean(self):
         """ Clean user input and populate fields """

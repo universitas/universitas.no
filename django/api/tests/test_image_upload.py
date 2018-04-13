@@ -67,3 +67,12 @@ def test_upload_image(client):
     )
     assert response.json()['created'] != ''
     assert response.status_code == status.HTTP_201_CREATED
+    assert set(response.json().keys()) == {
+        'id',
+        'url',
+        'original',
+        'description',
+        'artist',
+        'category',
+        'created',
+    }

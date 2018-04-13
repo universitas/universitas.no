@@ -18,6 +18,7 @@ class InlineElementsMixin:
         """
         INDEX_NOT_FOUND = _('No such element. Valid indexes: ')
         body = body or self.bodytext_markup
+
         element_classes = element_classes or [
             Aside,
             StoryImage,
@@ -33,11 +34,8 @@ class InlineElementsMixin:
             body_changed = False
             elements_changed = False
 
-            subclass = element_class.__name__.lower()
             placeholders = self.find_inline_placeholders(element_class, body)
-            queryset = self.storyelement_set.filter(
-                _subclass=subclass, top=False
-            )
+            queryset = element_class.filter(parent_story=self, top=False)
             indexes = list(queryset.values_list('index', flat=True))
             for placeholder in placeholders:
                 replace = []
