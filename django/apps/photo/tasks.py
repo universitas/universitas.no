@@ -1,5 +1,6 @@
 """Celery tasks for photos"""
 import logging
+import re
 from datetime import timedelta
 from pathlib import Path
 from typing import BinaryIO, List
@@ -71,9 +72,37 @@ def post_save_task(pk: int) -> bool:
     return True
 
 
-@periodic_task(run_every=timedelta(hours=1))
-def update_image_description() -> None:
-    return ImageFile.objects.update_descriptions()
+@periodic_task(run_every=timedelta(hours=24))
+def update_image_descriptions() -> int:
+    """Add descriptions to images that doesn't have it already"""
+
+    def add_description(image_file) -> str:
+        """Populates `description` with relevant content from related models"""
+        if image_file.is_profile_image():
+            if image_file.person.count():
+                return image_file.person.first().display_name
+            else:
+                return ''
+        else:
+            cap_list = image_file.storyimage_set.values_list(
+                'caption',
+                flat=True,
+            )
+            captions = [re.sub(r'/s+', ' ', c.strip()) for c in cap_list]
+            captions = list(set(captions))
+            return '\n'.join(captions)[:1000]
+
+    count = 0
+    qs = ImageFile.objects.filter(description='')
+    profile_images = qs.exclude(person=None)
+    story_images = qs.filter(storyimage__caption__regex='.')
+    for image_file in (profile_images | story_images):
+        description = add_description(image_file)
+        if image_file.description != description:
+            image_file.description = description
+            image_file.save(update_fields=['description'])
+            count += 1
+    return count
 
 
 @periodic_task(run_every=timedelta(minutes=10))
