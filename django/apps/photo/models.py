@@ -1,7 +1,7 @@
 """ Photography and image files in the publication  """
 
 import logging
-import os
+import mimetypes
 import re
 from pathlib import Path
 from typing import Union
@@ -10,7 +10,6 @@ from apps.issues.models import current_issue
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import TrigramSimilarity
-from django.core.files import File
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
@@ -22,9 +21,9 @@ from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
+from . import file_operations
 from .cropping.models import AutoCropImage
 from .exif import ExifData, exif_to_json, extract_exif_data
-from .file_operations import get_imagehash, image_from_fingerprint
 from .imagehash import ImageHashModelMixin
 
 logger = logging.getLogger(__name__)
@@ -44,9 +43,22 @@ class BrokenImage:
 Thumbnail = Union[SorlImageFile, BrokenImage]
 
 
+def slugify_filename(filename: str) -> Path:
+    """Slugify filename"""
+    slugify = Slugify(safe_chars='.-', separator='-')
+    fn = Path(filename)
+    stem = Path(filename).stem.split('.')[0]
+    stem = re.sub(r'-+', '-', slugify(re.sub(r'_.{7}$', '', stem))).strip('-')
+    suffix = ''.join(s.lower().replace('jpeg', 'jpg') for s in fn.suffixes)
+    return Path(f'{stem}{suffix}')
+
+
 def upload_image_to(instance: 'ImageFile', filename: str) -> str:
     """Image folder name based on issue number and year"""
-    return os.path.join(instance.upload_folder(), instance.slugify(filename))
+    return str(
+        instance.upload_folder() /
+        (instance.filename or slugify_filename(filename))
+    )
 
 
 class ImageFileQuerySet(models.QuerySet):
@@ -56,29 +68,23 @@ class ImageFileQuerySet(models.QuerySet):
     def photos(self):
         return self.filter(category=ImageCategoryMixin.PHOTO)
 
+    def illustrations(self):
+        return self.filter(category=ImageCategoryMixin.ILLUSTRATION)
+
+    def diagrams(self):
+        return self.filter(category=ImageCategoryMixin.DIAGRAM)
+
+    def externals(self):
+        return self.filter(category=ImageCategoryMixin.EXTERNAL)
+
     def profile_images(self):
         return self.filter(category=ImageCategoryMixin.PROFILE)
 
+    def uncategorised(self):
+        return self.filter(category=ImageCategoryMixin.UNKNOWN)
+
 
 class ImageFileManager(models.Manager):
-    def update_exif(self) -> int:
-        """Look for exif metadata in source file and save if found"""
-        count = 0
-        for image in self.get_queryset():
-            if image.exif_data != image.add_exif_from_file():
-                count += 1
-                image.save()
-        return count
-
-    def update_descriptions(self) -> int:
-        """Look for image description and add if found"""
-        count = 0
-        for image in self.get_queryset():
-            if image.description != image.add_description():
-                count += 1
-                image.save()
-        return count
-
     def search(
         self,
         md5=None,
@@ -90,10 +96,10 @@ class ImageFileManager(models.Manager):
         qs = self.get_queryset()
         if fingerprint:
             try:
-                image = image_from_fingerprint(fingerprint)
+                image = file_operations.image_from_fingerprint(fingerprint)
             except ValueError as err:
                 raise ValueError('incorrect fingerprint: %s' % err) from err
-            imagehash = str(get_imagehash(image))
+            imagehash = str(file_operations.get_imagehash(image))
         if md5:
             results = qs.filter(stat__md5=md5)
             if results.count():
@@ -103,18 +109,23 @@ class ImageFileManager(models.Manager):
             if results.count():
                 return results
         if filename:
-            return self.filename_search(filename)
+            return qs.annotate(
+                similarity=TrigramSimilarity('stem',
+                                             Path(filename).stem)
+            ).filter(similarity__gt=0.5).order_by('-similarity')
         return qs.none()
-        # raise ValueError('no query?')
 
     def filename_search(self, file_name, similarity=0.5):
         """Fuzzy filename search"""
         SQL = '''
         WITH filematches AS (
-          SELECT id, SIMILARITY(regexp_replace(original, '.*/', ''), %s) AS similarity
+          SELECT id, SIMILARITY(regexp_replace(original, '.*/', ''), %s)
+          AS similarity
           FROM photo_imagefile
         )
-        SELECT id from filematches  WHERE (similarity > %s) ORDER BY similarity DESC
+        SELECT id from filematches
+        WHERE (similarity > %s)
+        ORDER BY similarity DESC
         '''
         raw_query = ImageFile.objects.raw(SQL, [file_name, similarity])
         return self.get_queryset().filter(id__in=(im.id for im in raw_query))
@@ -162,6 +173,10 @@ class ImageFile(  # type: ignore
         verbose_name = _('ImageFile')
         verbose_name_plural = _('ImageFiles')
 
+    stem = models.CharField(
+        verbose_name=_('file name stem'),
+        max_length=1024,
+    )
     original = thumbnail.ImageField(
         verbose_name=_('original'),
         validators=[image_file_validator],
@@ -173,13 +188,13 @@ class ImageFile(  # type: ignore
     full_height = models.PositiveIntegerField(
         verbose_name=_('height'),
         help_text=_('full height in pixels'),
-        null=True,
+        default=0,
         editable=False,
     )
     full_width = models.PositiveIntegerField(
         verbose_name=_('width'),
         help_text=_('full height in pixels'),
-        null=True,
+        default=0,
         editable=False,
     )
     old_file_path = models.CharField(
@@ -223,35 +238,18 @@ class ImageFile(  # type: ignore
     )
 
     def __str__(self):
-        if self.original:
-            return os.path.basename(self.original.name)
-        else:
-            return super(ImageFile, self).__str__()
+        return self.filename or super(ImageFile, self).__str__()
 
-    def upload_folder(self) -> str:
+    def upload_folder(self) -> Path:
         if self.is_profile_image():
-            return PROFILE_IMAGE_UPLOAD_FOLDER
+            return Path(PROFILE_IMAGE_UPLOAD_FOLDER)
         try:
             issue = current_issue()
             year, number = issue.year, issue.number
         except Exception:
             year = timezone.now().year
             number = '0'
-        return f'{year}/{number}'
-
-    def slugify(self, filename: str) -> str:
-        """Normalize file name"""
-        slugify = Slugify(safe_chars='.-', separator='-')
-        if self.is_profile_image():
-            filename = filename.title()
-        slugs = slugify(filename).split('.')
-        slugs[-1] = slugs[-1].lower().replace('jpeg', 'jpg')
-        slug = '.'.join(segment.strip('-') for segment in slugs)
-        return slug
-
-    @property
-    def filename(self) -> str:
-        return str(self)
+        return Path(f'{year}/{number}')
 
     @property
     def artist(self) -> str:
@@ -259,6 +257,20 @@ class ImageFile(  # type: ignore
         if self.contributor:
             return f'{self.contributor}'
         return self.copyright_information or '?'
+
+    @property
+    def filename(self) -> str:
+        return f'{self.stem}{self.suffix}'
+
+    @property
+    def suffix(self) -> str:
+        if self.stat.mimetype == 'image/jpeg':
+            return '.jpg'
+        else:
+            return (
+                mimetypes.guess_extension(self.stat.mimetype or '')
+                or Path(self.original.name).suffix
+            )
 
     @property
     def small(self) -> Thumbnail:
@@ -297,13 +309,6 @@ class ImageFile(  # type: ignore
         path.parent.mkdir(0o775, True, True)
         path.write_bytes(data)
 
-    def save_again(self) -> None:
-        """fix broken files. THIS IS HACK"""
-        src = self.original
-        filename = os.path.basename(src.name)
-        content = File(src)
-        src.save(filename, content)
-
     def is_profile_image(self) -> bool:
         return self.category == ImageFile.PROFILE
 
@@ -313,23 +318,6 @@ class ImageFile(  # type: ignore
         self.small
         self.preview
         logger.info(f'built thumbs {self}')
-
-    def add_description(self) -> str:
-        """Populates `description` with relevant content from related models"""
-        if not self.description:
-            if self.is_profile_image():
-                if self.person.count():
-                    self.description = self.person.first().display_name
-                else:
-                    self.description = ''
-            else:
-                cap_list = self.storyimage_set.values_list(
-                    'caption', flat=True
-                )
-                captions = [re.sub(r'/s+', ' ', c.strip()) for c in cap_list]
-                captions = list(set(captions))
-                self.description = '\n'.join(captions)[:1000]
-        return self.description
 
     def add_exif_from_file(self) -> dict:
         if self.pk:
@@ -378,7 +366,17 @@ class ImageFile(  # type: ignore
         # TODO: is `save` needed here?
         merge_instances(self, *list(others)).save()
 
+    def new_image(self):
+        """Check image file and record metadata"""
+        self.add_exif_from_file()
+        img = file_operations.pil_image(self.original)
+        if not file_operations.valid_image(img):
+            raise ValueError('invalid image file')
+        self.stem = slugify_filename(self.original.name).stem
+        self.stat.mimetype = file_operations.get_mimetype(img)
+        self.build_thumbs()
+
     def save(self, *args, **kwargs):
         if self.pk is None:
-            self.add_exif_from_file()
+            self.new_image()
         super().save(*args, **kwargs)

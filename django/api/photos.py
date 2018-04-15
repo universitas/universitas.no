@@ -129,7 +129,9 @@ class ImageFileViewSet(viewsets.ModelViewSet):
     filter_backends = (
         filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend
     )
-    search_fields = ['original', 'description', 'contributor__display_name']
+    search_fields = [
+        'filename__trigram_similar', 'description', 'contributor__display_name'
+    ]
     ordering_fields = ['created', 'modified']
     filter_fields = ['category']
     permission_classes = [permissions.AllowAny]

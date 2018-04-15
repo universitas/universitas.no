@@ -107,6 +107,10 @@ def get_exif(fp: Fileish) -> dict:
     return {}
 
 
+def get_mimetype(fp: Fileish) -> str:
+    return PIL.Image.MIME.get(pil_image(fp).format)
+
+
 def s3_md5(s3key):
     """Hexadecimal md5 hash of a Fileish stored in Amazon S3"""
     return s3key.etag.strip('"').strip("'")
