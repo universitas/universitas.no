@@ -130,7 +130,7 @@ class ImageFileViewSet(viewsets.ModelViewSet):
         filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend
     )
     search_fields = [
-        'filename__trigram_similar', 'description', 'contributor__display_name'
+        'stem', 'description', 'contributor__display_name'
     ]
     ordering_fields = ['created', 'modified']
     filter_fields = ['category']
