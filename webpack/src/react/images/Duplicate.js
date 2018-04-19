@@ -2,6 +2,7 @@ import { connect } from 'react-redux'
 import StaticImageData from './ImageData'
 import { modelSelectors } from 'ducks/basemodel'
 import { changeDuplicate } from 'ducks/fileupload'
+import Tool from 'components/Tool'
 
 const getImage = modelSelectors('images').getItem
 
@@ -17,8 +18,8 @@ const Duplicate = ({
     <StaticImageData {...props} />
     <small>{`${choice}`}</small>
     <div className="buttons" style={{ flexDirection: 'row' }}>
-      <button onClick={replaceDuplicate}>Erstatt</button>
-      <button onClick={keepDuplicate}>Behold</button>
+      <Tool icon="check" onClick={replaceDuplicate} label="erstatt" />
+      <Tool icon="replace" onClick={keepDuplicate} label="behold" />
     </div>
   </div>
 )

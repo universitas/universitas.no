@@ -24,3 +24,11 @@ $button-color: #1188d2;
   flex-basis: $horizontal-bar-height;
   background-color: $horizontal-bar-color;
 }
+
+$margin: 0.2rem;
+$bordercolor: #ddd;
+
+%label {
+  color: $labelcolor;
+  font-size: 0.8rem;
+}

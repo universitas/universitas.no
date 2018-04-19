@@ -6,10 +6,6 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  // background-color: #eee;
-  .label {
-    min-width: 7em;
-  }
   .DetailToolBar {
     @extend %horizontal-bar;
     font-size: 1.6rem;
@@ -31,11 +27,19 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
-    // background-color: #eee;
+    //background-color: #eee;
     padding: 0.2rem;
     overflow-y: auto;
   }
+  .label {
+    min-width: 7em;
+  }
   .ModelField {
+    &:not(:last-child) {
+      padding-bottom: $margin;
+      margin-bottom: $margin;
+      border-bottom: 1px solid #eee;
+    }
     &.thumb {
       flex: unset;
     }

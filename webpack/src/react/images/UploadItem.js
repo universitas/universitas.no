@@ -49,7 +49,7 @@ const UploadItem = ({
         {...props}
       />
     </div>
-    <div className="buttons">
+    <div className="actions">
       {status == 'ready' && <button onClick={uploadPost}>Last opp</button>}
       {(status == 'ready' || status == 'invalid') && (
         <button onClick={uploadClose}>Avbryt</button>

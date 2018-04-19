@@ -1,6 +1,4 @@
 .FileInputArea {
-  display: flex;
-  flex-direction: column;
   border: 5px solid transparent;
   &.dragOver {
     border-color: red;
@@ -9,11 +7,12 @@
     }
   }
   .items {
-    display: block;
+    display: block; // not flex – enables scroll bar
   }
 }
 
 .FileInputButton {
+  // button in top bar
   display: flex;
   cursor: pointer;
   input[type="file"] {
@@ -37,42 +36,38 @@
   padding-bottom: 0.5rem;
   border-bottom: 1px solid #bbb;
   max-width: 100%;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 2.5rem 2fr 3fr 2fr;
+  grid-gap: 0.5rem;
+  .actions {
+    grid-row-start: 1;
+    grid-column-start: 1;
+  }
   .static {
+    grid-column-start: 2;
     display: flex;
     flex-direction: column;
-    flex: 2;
     .Thumb {
       height: 10em;
       flex: 1;
     }
   }
   .dynamic {
-    flex: 3;
+    grid-column-start: 3;
     display: flex;
     flex-direction: column;
   }
   .Duplicates {
-    display: flex;
-    flex: 2;
-    flex-direction: column;
-  }
-  .buttons {
-    // width: 5rem;
+    grid-column-start: 4;
     display: flex;
     flex-direction: column;
-    button {
-      padding: 1em;
-      margin: 0.5em;
-      background-color: #59f;
-      &:hover {
-        background-color: #6af;
-      }
-      cursor: pointer;
+    .Tool {
+      font-size: 2rem;
+      background-color: #888;
     }
   }
 }
+
 .Fingerprint {
   image-rendering: pixelated;
   width: 20px;

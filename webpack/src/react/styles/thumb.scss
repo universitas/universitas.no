@@ -1,7 +1,5 @@
 // Thumbnail image centered and contained in flexbox
-
-$margin: 0.2em;
-
+@import "globals";
 .Thumb {
   display: flex;
   flex-direction: column;

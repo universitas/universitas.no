@@ -1,45 +1,40 @@
 @import "../../styles/globals.scss";
 
+$down-arrow: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 250 205" xmlns="http://www.w3.org/2000/svg"> <path fill="none" stroke="currentColor" stroke-width="15" d="M 50 80 L 125 155 200 80" /></svg>');
+
 .ModelField {
   display: flex;
   flex-flow: row wrap;
   align-items: flex-end;
-  margin: 0.2rem;
-  margin-bottom: 0;
-  padding-bottom: 0.2rem;
-  border-bottom: 1px solid #eee;
+  margin-bottom: $margin;
   .label {
-    font-size: smaller;
-    color: $labelcolor;
+    @extend %label;
     min-width: 5em;
   }
   .value {
     flex: 1;
   }
-  .value,
-  .label {
-    margin: 0;
-    padding: 0.2rem 0.3rem;
-  }
   select {
     appearance: none;
-    background-color: white;
-    &:after {
-      position: absolute;
-      content: "V";
-    }
+    background-image: $down-arrow;
+    background-position: top 50% right 0.3rem;
+    background-repeat: no-repeat;
   }
   select,
   textarea,
   input {
-    min-width: 10em;
-    background-color: #f5f5fa;
-    box-shadow: inset 1px 1px 2px rgba(black, 0.2);
-    border: 1px solid lighten($labelcolor, 30);
+    padding: $margin/2 $margin;
+    min-width: 75%;
+    max-width: 100%;
+    background-color: white;
+    line-height: 1.2;
+    height: 1.6rem;
+    border: 1px solid $bordercolor;
     border-radius: $inputradius;
-    height: $inputheight;
+    &:focus,
     &:hover {
-      background-color: white;
+      box-shadow: inset 1px 1px 3px rgba(black, 0.1);
+      border: 1px solid darken($bordercolor, 10);
     }
     &:invalid {
       background-color: lighten(yellow, 30);
@@ -47,7 +42,6 @@
     }
     &:focus {
       border: 1px solid #555;
-      background-color: white;
       outline: none;
     }
   }
@@ -71,7 +65,6 @@
     align-items: stretch;
     .value {
       flex: 1;
-      // border: 2px dotted red;
     }
   }
   &.pdfs {
@@ -93,11 +86,9 @@
           position: absolute;
           bottom: 0;
           left: 0;
-          //background-color: rgba(red, 0.2);
           width: 100%;
           text-align: center;
         }
-        //flex-direction: column;
       }
     }
   }
