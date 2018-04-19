@@ -13,20 +13,20 @@ const inputExif = {
 }
 
 const expectExif = {
-  date: new Date('2008-10-28 18:19:44'),
+  created: new Date('2008-10-28 18:19:44'),
   artist: 'Knut Strøm',
   description: 'Do not copy',
   imageId: undefined,
 }
 
 test('exifDateTime', () => {
-  expect(exifDateTime(inputExif.DateTimeOriginal)).toEqual(expectExif.date)
+  expect(exifDateTime(inputExif.DateTimeOriginal)).toEqual(expectExif.created)
 })
 
 test('extractExifTags', () => {
   expect(extractExifTags(inputExif)).toEqual(expectExif)
   // fallback to `DateTime`
   expect(
-    extractExifTags(R.dissoc('DateTimeOriginal', inputExif)).date.valueOf()
-  ).toBeGreaterThan(expectExif.date.valueOf())
+    extractExifTags(R.dissoc('DateTimeOriginal', inputExif)).created.valueOf()
+  ).toBeGreaterThan(expectExif.created.valueOf())
 })

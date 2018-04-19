@@ -26,13 +26,18 @@ $bblack: rgba(black, 0.2);
   width: 1.5em;
   height: 1.5em;
   color: white;
-  cursor: pointer;
+  &.disabled {
+    color: #ddd;
+  }
+  &.clickable {
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(white, 0.2);
+    }
+  }
   border: 1px solid;
   border-color: $bwhite $bblack $bblack $bwhite;
   border-opacity: 0.3;
-  &:hover {
-    background-color: rgba(white, 0.2);
-  }
   .toolLabel {
     font-size: 0.7rem;
   }

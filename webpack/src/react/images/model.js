@@ -11,17 +11,17 @@ const optionsFields = {
     read_only: true,
     label: 'Url',
   },
-  name: {
+  filename: {
     type: 'string',
     required: false,
     read_only: true,
     label: 'Filnavn',
   },
-  filename: {
-    type: 'string',
+  filesize: {
+    type: 'filesize',
     required: false,
-    read_only: false,
-    label: 'Filnavn',
+    read_only: true,
+    label: 'Filstørrelse',
   },
   artist: {
     type: 'string',
@@ -34,6 +34,12 @@ const optionsFields = {
     required: false,
     read_only: true,
     label: 'Dato',
+  },
+  mimetype: {
+    type: 'string',
+    required: false,
+    read_only: true,
+    label: 'Mime-type',
   },
   category: {
     type: 'choice',
@@ -71,11 +77,17 @@ const optionsFields = {
     read_only: true,
     label: 'Method',
   },
-  size: {
-    type: 'size',
+  width: {
+    type: 'number',
     required: false,
     read_only: true,
-    label: 'Størrelse',
+    label: 'Bredde',
+  },
+  height: {
+    type: 'number',
+    required: false,
+    read_only: true,
+    label: 'Høyde',
   },
   original: {
     type: 'link',
@@ -128,12 +140,6 @@ const optionsFields = {
     required: true,
     read_only: false,
     label: 'Beskjæring',
-  },
-  is_profile_image: {
-    type: 'boolean',
-    required: false,
-    read_only: true,
-    label: 'Bylinebilde',
   },
 }
 

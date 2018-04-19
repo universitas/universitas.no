@@ -6,7 +6,7 @@ import md5 from './md5hasher'
 import { utf8Decode } from 'utils/text'
 import { imageFingerPrint } from 'utils/imageHash'
 
-const THUMB_SIZE = 300 // pixels image preview size
+const THUMB_SIZE = 600 // pixels image preview size
 
 // :: {file, ...props} -> Promise[{file, objectURL, width, height, ...props }]
 export const objectURL = props =>
@@ -24,7 +24,7 @@ export const objectURL = props =>
     img.onerror = err => reject(err)
   })
 
-// :: {file, ...props} -> Promise[{file, thumb, ...exifTags, ...props}]
+// :: {file, ...props} -> Promise[{file, small, ...exifTags, ...props}]
 export const loadImageBlueImp = props =>
   // https://github.com/blueimp/JavaScript-Load-Image
   new Promise((resolve, reject) =>
@@ -34,7 +34,7 @@ export const loadImageBlueImp = props =>
         if (canvas.type === 'error') reject(canvas)
         resolve({
           ...props,
-          thumb: canvas.toDataURL(),
+          small: canvas.toDataURL(),
           ...extractExifTags(meta.exif && meta.exif.getAll()),
         })
       },
@@ -54,12 +54,12 @@ export const exifDateTime = R.when(
   R.pipe(R.replace(/:/, '-'), R.replace(/:/, '-'), R.constructN(1, Date))
 )
 
-// :: {...tags} -> {artist, date, description}
+// :: {...tags} -> {artist, created, description}
 export const extractExifTags = R.tryCatch(
   R.pipe(
     tags => ({
       artist: tags.Artist,
-      date: tags.DateTimeOriginal || tags.DateTime,
+      created: tags.DateTimeOriginal || tags.DateTime,
       description: tags.ImageDescription,
       imageId: tags.ImageUniqueId,
     }),
@@ -79,13 +79,13 @@ const withFingerPrint = async props => ({
   ...props,
 })
 
-// :: {file, ...props} -> {filename, mimetype, size, ...props}
-export const cleanData = ({ file, date, ...props }) => ({
+// :: {file, ...props} -> {filename, mimetype, filesize, ...props}
+export const cleanData = ({ file, created, ...props }) => ({
   timestamp: performance.now(),
   filename: file.name,
   mimetype: file.type,
-  size: file.size,
-  date: date || new Date(file.lastModified),
+  filesize: file.size,
+  created: created || new Date(file.lastModified),
   ...props,
 })
 
@@ -95,11 +95,11 @@ export const cleanData = ({ file, date, ...props }) => ({
 //   filename,    string
 //   height,      number
 //   width,       number
-//   date,        Date
+//   created,     Date
 //   mimetype,    string
-//   size,        number
+//   filesize,    number
 //   md5,         string
-//   thumb,       string
+//   small,       string
 //   ?artist,     string
 //   ?description string
 // }

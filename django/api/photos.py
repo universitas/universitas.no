@@ -37,26 +37,25 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             'id',
             'url',
-            'name',
-            'created',
-            'modified',
+            'filename',
+            'filesize',
+            'artist',
+            'description',
             'category',
             'contributor',
-            'artist',
-            'original',
-            'thumb',
             'small',
             'large',
-            'description',
-            'usage',
-            '_imagehash',
-            'size',
-            'is_profile_image',
-            'crop_box',
-            'stat',
+            'thumb',
+            'original',
+            'width',
+            'height',
+            'mimetype',
             'cropping_method',
             'method',
-            'filename',
+            'created',
+            'modified',
+            'crop_box',
+            'usage',
         ]
         read_only_fields = [
             'original',
@@ -64,14 +63,18 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
 
     artist = serializers.CharField(allow_blank=True)
     thumb = serializers.SerializerMethodField()
-    original = serializers.SerializerMethodField()
     small = serializers.SerializerMethodField()
     large = serializers.SerializerMethodField()
-    size = serializers.SerializerMethodField()
+    width = serializers.IntegerField(source='full_width')
+    height = serializers.IntegerField(source='full_height')
+    mimetype = serializers.SerializerMethodField()
+    original = serializers.SerializerMethodField()
     method = serializers.SerializerMethodField()
     usage = serializers.IntegerField(read_only=True)
-    name = serializers.SerializerMethodField()
     crop_box = CropBoxField()
+
+    def _build_uri(self, url):
+        return self._context['request'].build_absolute_uri(url)
 
     def find_artist(self, validated_data):
         """Assign artist to contributor if able."""
@@ -93,17 +96,11 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
         self.find_artist(validated_data)
         return super().update(instance, validated_data)
 
-    def get_name(self, instance):
-        return Path(instance.original.name).name
-
     def get_method(self, instance):
         return instance.get_cropping_method_display()
 
-    def get_size(self, instance):
-        return [instance.full_width, instance.full_height]
-
-    def _build_uri(self, url):
-        return self._context['request'].build_absolute_uri(url)
+    def get_mimetype(self, instance):
+        return instance.stat.mimetype
 
     def get_original(self, instance):
         return self._build_uri(instance.original.url)
@@ -129,9 +126,7 @@ class ImageFileViewSet(viewsets.ModelViewSet):
     filter_backends = (
         filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend
     )
-    search_fields = [
-        'stem', 'description', 'contributor__display_name'
-    ]
+    search_fields = ['stem', 'description', 'contributor__display_name']
     ordering_fields = ['created', 'modified']
     filter_fields = ['category']
     permission_classes = [permissions.AllowAny]

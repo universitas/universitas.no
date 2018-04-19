@@ -56,6 +56,10 @@ class ImageHashModelMixin(models.Model):
         super().save(*args, **kwargs)
 
     @property
+    def filesize(self):
+        return self.stat.size
+
+    @property
     def imagehash(self):
         """Calculate or retrieve imagehash value."""
         if not self._imagehash:

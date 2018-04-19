@@ -11,6 +11,7 @@ import * as pdfs from './PdfField'
 import * as email from './EmailField'
 import * as phone from './PhoneField'
 import * as stints from './StintsField'
+import * as filesize from './FileSizeField'
 import { connect } from 'react-redux'
 import { modelActions, modelSelectors } from 'ducks/basemodel'
 import cx from 'classnames'
@@ -29,6 +30,7 @@ const fieldTypes = {
   pdfs,
   phone,
   stints,
+  filesize,
   string,
   text,
   thumb,

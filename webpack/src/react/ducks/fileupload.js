@@ -54,7 +54,7 @@ const baseItemState = {
   date: null,
   mimetype: '',
   size: 0,
-  thumb: null,
+  small: null,
   artist: '',
   description: '',
 

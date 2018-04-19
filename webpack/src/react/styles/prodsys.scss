@@ -8,6 +8,9 @@ $darkgrey: #555;
 @import "gridview";
 @import "errors";
 
+.clickable {
+  cursor: pointer;
+}
 .ProdSys {
   // main app container
   display: flex;

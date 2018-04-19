@@ -1,9 +1,8 @@
 .FileInputArea {
-  border: 5px solid transparent;
   &.dragOver {
-    border-color: red;
+    background-color: rgba(red, 0.8);
     &.acceptFiles {
-      border-color: limegreen;
+      background-color: rgba(limegreen, 0.1);
     }
   }
   .items {
@@ -30,10 +29,31 @@
     color: #555;
   }
 }
-
+.UploadActions {
+  background-color: #888;
+  align-self: start;
+  .Tool {
+    &.ok {
+    }
+    &.warn {
+      background-color: red;
+    }
+    &.error {
+      background-color: yellow;
+    }
+    &.ready {
+      background-color: green;
+    }
+    &.loading {
+    }
+    font-size: 2.5rem;
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+}
 .UploadItem {
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.5rem;
+  margin: 0.3rem;
+  padding-bottom: 0.2rem;
   border-bottom: 1px solid #bbb;
   max-width: 100%;
   display: grid;
@@ -52,18 +72,30 @@
       flex: 1;
     }
   }
-  .dynamic {
+  .UploadForm {
     grid-column-start: 3;
     display: flex;
     flex-direction: column;
+    .ModelField:last-child {
+      flex: 1;
+    }
   }
-  .Duplicates {
-    grid-column-start: 4;
+}
+
+.Duplicates {
+  grid-column-start: 4;
+  display: flex;
+  flex-direction: column;
+  .FlipFlop {
     display: flex;
-    flex-direction: column;
-    .Tool {
-      font-size: 2rem;
-      background-color: #888;
+    .flipFlopChoice {
+      padding: 0.2rem;
+      flex: 1;
+      color: white;
+      background-color: grey;
+    }
+    .active {
+      background-color: green;
     }
   }
 }

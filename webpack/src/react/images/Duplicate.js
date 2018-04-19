@@ -1,50 +1,51 @@
 import { connect } from 'react-redux'
+import { push } from 'redux-little-router'
 import StaticImageData from './ImageData'
 import { modelSelectors } from 'ducks/basemodel'
 import { changeDuplicate } from 'ducks/fileupload'
 import Tool from 'components/Tool'
+import cx from 'classnames'
 
 const getImage = modelSelectors('images').getItem
 
-const Duplicate = ({
-  pk,
-  keepDuplicate,
-  replaceDuplicate,
-  choice,
-  id,
-  ...props
-}) => (
-  <div className="Duplicate">
-    <StaticImageData {...props} />
-    <small>{`${choice}`}</small>
-    <div className="buttons" style={{ flexDirection: 'row' }}>
-      <Tool icon="check" onClick={replaceDuplicate} label="erstatt" />
-      <Tool icon="replace" onClick={keepDuplicate} label="behold" />
-    </div>
+const FlipFlop = ({ choices, changeHandler, value }) => (
+  <div className="FlipFlop">
+    {R.pipe(
+      R.mapObjIndexed((val, key) => (
+        <button
+          key={key}
+          className={cx('flipFlopChoice', { active: val == value })}
+          onClick={changeHandler(val)}
+        >
+          {key}
+        </button>
+      )),
+      R.values
+    )(choices)}
   </div>
 )
 
-const convertProps = ({
-  size = [0, 0],
-  stat = {},
-  name = '',
+const Duplicate = ({
+  id,
+  changeHandler,
+  viewImage,
+  choice,
   small,
-  created,
   ...props
-}) => ({
-  ...props,
-  width: size[0],
-  height: size[1],
-  size: stat.size,
-  stat: stat,
-  mimetype: R.test(/jpg/, name) ? 'image/jpeg' : 'image/png',
-  thumb: small,
-  date: created,
-})
+}) => (
+  <div className="Duplicate">
+    <StaticImageData {...props} thumb={small} onClick={viewImage(id)} />
+    <FlipFlop
+      choices={{ behold: 'keep', erstatt: 'replace' }}
+      value={choice}
+      changeHandler={changeHandler}
+    />
+  </div>
+)
 
-const mapStateToProps = (state, { id }) => convertProps(getImage(id)(state))
+const mapStateToProps = (state, { id }) => getImage(id)(state)
 const mapDispatchToProps = (dispatch, { pk, id }) => ({
-  keepDuplicate: e => dispatch(changeDuplicate(pk, id, 'keep')),
-  replaceDuplicate: e => dispatch(changeDuplicate(pk, id, 'replace')),
+  changeHandler: value => e => dispatch(changeDuplicate(pk, id, value)),
+  viewImage: id => e => dispatch(push(`images/${id}`)),
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Duplicate)

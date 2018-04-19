@@ -3,9 +3,10 @@
   flex-direction: column;
   height: calc(100vh - 40px);
   user-select: none;
-  input, button {
+  input,
+  button {
     padding: 5px 10px;
-    margin: 5px ;
+    margin: 5px;
     background: white;
   }
   button {
