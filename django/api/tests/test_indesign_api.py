@@ -1,61 +1,6 @@
-import shutil
-from pathlib import Path
-
 import pytest
-from apps.photo.models import ImageFile
-from apps.stories.models import Section, Story, StoryType
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Permission
 from rest_framework import status
 from rest_framework.test import APIClient
-
-
-@pytest.fixture
-def editor(request):
-    wyatt = get_user_model().objects.create_superuser(
-        username='wyatt',
-        email='wyatt@marshall.gov',
-        password='gunsmoke',
-    )
-    return wyatt
-
-
-@pytest.fixture
-def api_user(request):
-    user = get_user_model().objects.create_user(
-        username='api',
-        email='api@marshall.gov',
-        password='api',
-    )
-    change = Permission.objects.get(codename='change_story')
-    create = Permission.objects.get(codename='add_story')
-    user.user_permissions.add(change, create)
-    return user
-
-
-@pytest.fixture
-def news():
-    try:
-        return StoryType.objects.get(name='News')
-    except StoryType.DoesNotExist:
-        section = Section.objects.get_or_create(title='Foo')[0]
-        return StoryType.objects.create(section=section, name='News')
-
-
-@pytest.fixture
-def scandal(news):
-    story = Story.objects.create(
-        story_type=news,
-        working_title='A shocking scandal!',
-    )
-    return story
-
-
-@pytest.fixture
-def photo():
-    source = Path(__file__).parent / 'dummy.jpg'
-    shutil.copy(source, Path('/var/media/scandal.jpg'))
-    return ImageFile.objects.create(original='scandal.jpg')
 
 
 @pytest.mark.django_db
@@ -71,8 +16,8 @@ def test_get_story(scandal):
 
 
 @pytest.mark.django_db
-def test_change_story(scandal, api_user):
-    """Client patches story from indesign"""
+def test_change_story_anon(scandal):
+    """Must be logged in to change"""
     api_url = f'/api/legacy/{scandal.pk}/'
     text = 'A scandal rocks the university'
     client = APIClient()
@@ -80,10 +25,15 @@ def test_change_story(scandal, api_user):
     response = client.patch(api_url, data={'tekst': text})
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-    login = client.login(username='api', password='api')
-    assert login
 
-    response = client.patch(api_url, data={'tekst': text})
+@pytest.mark.django_db
+def test_change_story(scandal, staff_client):
+    """Logged in client can change."""
+    api_url = f'/api/legacy/{scandal.pk}/'
+    text = 'A scandal rocks the university'
+    response = staff_client.patch(api_url, data={'tekst': text})
+    if response.status_code != 200:
+        print(response.content)
     assert response.status_code == status.HTTP_200_OK
 
     scandal.refresh_from_db()
@@ -91,12 +41,10 @@ def test_change_story(scandal, api_user):
 
 
 @pytest.mark.django_db
-def test_create_story(api_user, photo):
+def test_create_story(staff_client, scandal_photo):
     """Client creates a new story from indesign(!)"""
     api_url = '/api/legacy/'
-    client = APIClient()
-    client.login(username='api', password='api')
-    response = client.post(
+    response = staff_client.post(
         api_url,
         format='json',
         data={
@@ -113,19 +61,17 @@ def test_create_story(api_user, photo):
 
 
 @pytest.mark.django_db
-def test_update_photos(scandal, photo, api_user):
+def test_update_photos(scandal, scandal_photo, staff_client):
     """Client updates story images from indesign"""
     api_url = f'/api/legacy/{scandal.pk}/'
-    client = APIClient()
-    client.login(username='api', password='api')
     data = {
         'bilete': [{'bildefil': 'scandal.jpg', 'bildetekst': 'one'},
                    {'bildefil': 'scandal.jpg', 'bildetekst': 'two'}]
     }
-    response = client.patch(api_url, data=data, format='json')
+    response = staff_client.patch(api_url, data=data, format='json')
     assert response.status_code == status.HTTP_200_OK
     captions = scandal.images.values_list('caption', flat=True)
     assert sorted(captions) == ['one', 'two']
 
-    updated_data = client.get(api_url).json()
+    updated_data = staff_client.get(api_url).json()
     assert updated_data['bilete'][0]['bildefil'] == 'scandal.jpg'
