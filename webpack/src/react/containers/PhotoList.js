@@ -4,9 +4,8 @@ import { getImage } from 'ducks/images'
 import { imageClicked } from 'ducks/ui'
 import 'styles/photolist.scss'
 
-const FullThumbWithCropBox = ({ small, title, size, crop_box }) => {
+const FullThumbWithCropBox = ({ small, title, width, height, crop_box }) => {
   const { left, x, right, top, y, bottom } = crop_box
-  const [width, height] = size
   const boxPath = `M0, 0H1V1H0Z M${left}, ${top}V${bottom}H${right}V${top}Z`
   return (
     <svg className="Thumb" viewBox={`0 0 ${width} ${height}`}>
@@ -18,15 +17,14 @@ const FullThumbWithCropBox = ({ small, title, size, crop_box }) => {
         width="100%"
       >
         <path className="cropOverlay" fillRule="evenodd" d={boxPath} />
-
       </svg>
       <Frame />
     </svg>
   )
 }
 
-const FullThumb = ({ small, title, size }) => (
-  <svg className="Thumb" viewBox={`0 0 ${size[0]} ${size[1]}`}>
+const FullThumb = ({ small, title, width, height }) => (
+  <svg className="Thumb" viewBox={`0 0 ${width} ${height}`}>
     <image xlinkHref={small} width="100%" height="100%" />
     <Frame />
   </svg>
@@ -47,9 +45,7 @@ let Photo = ({ onClick, original = 'foo.jpg', thumbStyle = 0, ...props }) => {
   return (
     <div className="Photo" onClick={onClick}>
       <Thumb {...props} />
-      <small className="title">
-        {original.replace(/^.*\//, '')}
-      </small>
+      <small className="title">{original.replace(/^.*\//, '')}</small>
     </div>
   )
 }

@@ -90,7 +90,8 @@ export const EditImage = ({
     )
   }
   const pdata = [subset0, subset1, subset2][data](image)
-  const { large: src, size, cropping_method } = image
+  const { large: src, cropping_method } = image
+  const size = [image.width, image.height]
   const pending = cropping_method === 1
   const aspects = [1, 0.5, 2.5]
   const cropBoxProps = { id, src, size, dragging, crop_box, pending }
