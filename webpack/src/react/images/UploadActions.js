@@ -14,8 +14,8 @@ import {
 
 const ButtonA = ({ uploadPost, viewImage, status, id }) => {
   return {
-    new: <Tool icon="Loop" label="sjekker" className="loading" />,
-    uploading: <Tool icon="Loop" label="vent" className="loading" />,
+    new: <Tool icon="Loop" label="sjekker" className="spinning" />,
+    uploading: <Tool icon="Loop" label="vent" className="spinning" />,
     ready: (
       <Tool
         label="fortsett"
@@ -24,7 +24,14 @@ const ButtonA = ({ uploadPost, viewImage, status, id }) => {
         onClick={uploadPost}
       />
     ),
-    invalid: <Tool label="fortsett" icon="Forward" disabled />,
+    invalid: (
+      <Tool
+        label="fortsett"
+        icon="Forward"
+        title="fyll ut alle feltene"
+        disabled
+      />
+    ),
     error: <Tool label="feil" icon="Block" className="error" />,
     uploaded: (
       <Tool label="vis" className="ready" icon="Eye" onClick={viewImage(id)} />
@@ -34,7 +41,7 @@ const ButtonA = ({ uploadPost, viewImage, status, id }) => {
 
 const ButtonB = ({ uploadClose, status }) =>
   status == 'uploaded' ? (
-    <Tool label="ok" icon="Close" onClick={uploadClose} />
+    <Tool label="lukk" icon="Done" onClick={uploadClose} />
   ) : (
     <Tool label="avbryt" className="warn" icon="Close" onClick={uploadClose} />
   )

@@ -1,19 +1,13 @@
 import { connect } from 'react-redux'
-import { Add, Delete, Laptop, Tune, Close } from 'components/Icons'
 import { push } from 'redux-little-router'
 import { modelSelectors, modelActions } from 'ducks/basemodel'
+import Tool from 'components/Tool'
 
 const model = 'stories'
 const { fieldChanged, itemCloned, itemDeSelected } = modelActions(model)
 const { getItem } = modelSelectors(model)
 
 const openUrl = url => () => window.open(url)
-
-const Tool = ({ Icon, ...props }) => (
-  <div className="Tool" {...props}>
-    <Icon />
-  </div>
-)
 
 const ToolBar = props => <div {...props} />
 
@@ -25,20 +19,18 @@ const StoryTools = ({
   public_url,
 }) => (
   <ToolBar className="DetailToolBar">
-    <Tool Icon={Close} title="lukk saken" onClick={closeStory} />
-    <Tool Icon={Add} title="kopier saken" onClick={cloneStory} />
-    <Tool Icon={Delete} title="slett saken" onClick={trashStory} />
+    <Tool icon="Close" title="lukk saken" onClick={closeStory} />
+    <Tool icon="Add" title="kopier saken" onClick={cloneStory} />
+    <Tool icon="Delete" title="slett saken" onClick={trashStory} />
     <Tool
-      Icon={Laptop}
+      icon="Laptop"
       title="se saken på universitas.no"
       onClick={openUrl(public_url)}
-      title={public_url}
     />
     <Tool
-      Icon={Tune}
+      icon="Tune"
       title="rediger i django-admin"
       onClick={openUrl(edit_url)}
-      title={edit_url}
     />
   </ToolBar>
 )

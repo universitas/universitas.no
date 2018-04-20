@@ -2,6 +2,7 @@ import { connect } from 'react-redux'
 import { Magic, Add, Delete, Laptop, Tune, Close } from 'components/Icons'
 import { push } from 'redux-little-router'
 import { modelSelectors, modelActions } from 'ducks/basemodel'
+import Tool from 'components/Tool'
 
 const model = 'images'
 const { fieldChanged } = modelActions(model)
@@ -9,7 +10,7 @@ const { getItem } = modelSelectors(model)
 
 const openUrl = url => () => window.open(url)
 
-const Tool = ({ Icon, ...props }) => (
+const Tool__ = ({ Icon, ...props }) => (
   <div className="Tool" {...props}>
     <Icon />
   </div>
@@ -19,9 +20,8 @@ const ToolBar = props => <div {...props} />
 
 const PhotoTools = ({ autocrop, close, openAdmin }) => (
   <ToolBar className="DetailToolBar">
-    <Tool Icon={Close} title="lukk saken" onClick={close} />
-    <Tool Icon={Magic} title="autocrop" onClick={autocrop} />
-    <Tool Icon={Tune} title="rediger i django-admin" onClick={openAdmin} />
+    <Tool icon="Close" title="lukk bildet" onClick={close} />
+    <Tool icon="Tune" title="rediger i django-admin" onClick={openAdmin} />
   </ToolBar>
 )
 

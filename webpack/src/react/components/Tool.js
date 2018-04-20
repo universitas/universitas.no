@@ -7,7 +7,7 @@ const Tool = ({
   icon,
   disabled,
   active,
-  toolTip,
+  title,
   label,
   className,
   ...props
@@ -20,7 +20,7 @@ const Tool = ({
         { disabled, active, clickable: onClick },
         className
       )}
-      title={toolTip}
+      title={title}
       onMouseDown={e => e.preventDefault()}
       onClick={onClick}
     >

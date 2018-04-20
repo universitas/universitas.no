@@ -38,7 +38,7 @@
     &:not(:last-child) {
       padding-bottom: $margin;
       margin-bottom: $margin;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid rgba(black, 0.1);
     }
     &.thumb {
       flex: unset;

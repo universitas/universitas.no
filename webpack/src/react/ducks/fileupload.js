@@ -10,7 +10,7 @@ export const uploadAdd = data => ({
 export const UPDATE = 'fileupload/UPDATE'
 export const uploadUpdate = (pk, data) => ({
   type: UPDATE,
-  payload: { pk, ...data },
+  payload: { pk, check: true, ...data },
 })
 
 export const CLOSE = 'fileupload/CANCEL'
@@ -97,7 +97,6 @@ const checkStatus = R.ifElse(
   R.assoc('status', 'ready'),
   R.assoc('status', 'invalid')
 )
-
 const updateDuplicates = ({ id, choice }) =>
   R.map(R.ifElse(R.propEq('id', id), R.assoc('choice', choice), R.identity))
 
@@ -109,7 +108,10 @@ const getReducer = ({ type, payload }) => {
     case ADD:
       return R.set(lens, R.mergeDeepRight(baseItemState, data))
     case UPDATE:
-      return R.over(lens, R.pipe(R.mergeDeepLeft(data), checkStatus))
+      return R.over(
+        lens,
+        R.pipe(R.mergeDeepLeft(data), R.when(R.prop('check'), checkStatus))
+      )
     case POST:
       return R.over(lens, R.assoc('status', 'uploading'))
     case POST_SUCCESS:

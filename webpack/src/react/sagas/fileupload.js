@@ -35,7 +35,7 @@ function* newFileSaga(action) {
   const { artist } = yield select(getUpload(md5))
   const { contributor_name } = yield select(getUser)
   if (contributor_name && !artist) {
-    yield put(uploadUpdate(md5, { artist: contributor_name }))
+    yield put(uploadUpdate(md5, { artist: contributor_name, check: false }))
   }
   const { response, error } = yield call(fetchDupes, { md5, fingerprint })
   if (response) {
@@ -44,7 +44,7 @@ function* newFileSaga(action) {
       R.map(R.pick(['id'])),
       R.map(R.assoc('choice', null))
     )(response)
-    yield put(uploadUpdate(md5, { duplicates }))
+    yield put(uploadUpdate(md5, { duplicates, check: true }))
     yield put(itemsAppended(response))
   } else {
     yield put(errorAction(error))

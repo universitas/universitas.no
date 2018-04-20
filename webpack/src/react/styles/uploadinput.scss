@@ -18,8 +18,8 @@
     display: none;
   }
 }
-
 .PhotoStats {
+  // background-color: rgba(blue, 0.2);
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
@@ -29,32 +29,44 @@
     color: #555;
   }
 }
+
 .UploadActions {
-  background-color: #888;
   align-self: start;
   .Tool {
+    background-color: #888;
+    &.disabled {
+      background-color: #aaa;
+      color: #eee;
+    }
+    &.ready {
+      background-color: #7cb342;
+    }
     &.ok {
     }
     &.warn {
-      background-color: red;
+      background-color: #dd2c00;
     }
     &.error {
-      background-color: yellow;
+      background-color: #dd2c00;
     }
-    &.ready {
-      background-color: green;
-    }
-    &.loading {
+    &.spinning {
+      background-color: #00bfa5;
     }
     font-size: 2.5rem;
     height: 2.5rem;
     width: 2.5rem;
+    margin-bottom: 0.15rem;
+    small {
+      margin-top: -0.3em;
+      padding-bottom: 0.1em;
+    }
   }
 }
 .UploadItem {
   margin: 0.3rem;
   padding-bottom: 0.2rem;
   border-bottom: 1px solid #bbb;
+  min-height: 13rem;
   max-width: 100%;
   display: grid;
   grid-template-columns: 2.5rem 2fr 3fr 2fr;
@@ -63,13 +75,14 @@
     grid-row-start: 1;
     grid-column-start: 1;
   }
-  .static {
+  .StaticImageData {
     grid-column-start: 2;
     display: flex;
     flex-direction: column;
+    flex: 1;
     .Thumb {
-      height: 10em;
-      flex: 1;
+      height: 5rem;
+      flex-grow: 1;
     }
   }
   .UploadForm {
@@ -86,6 +99,14 @@
   grid-column-start: 4;
   display: flex;
   flex-direction: column;
+  .Duplicate {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    &:not(:last-child) {
+      padding-bottom: 0.5rem;
+    }
+  }
   .FlipFlop {
     display: flex;
     .flipFlopChoice {

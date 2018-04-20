@@ -18,6 +18,15 @@
 $bwhite: rgba(white, 0.1);
 $bblack: rgba(black, 0.2);
 
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .Tool {
   display: flex;
   flex-direction: column;
@@ -32,10 +41,16 @@ $bblack: rgba(black, 0.2);
   &.clickable {
     cursor: pointer;
     &:hover {
-      background-color: rgba(white, 0.2);
+      box-shadow: inset 1000px 1000px 0 rgba(white, 0.2);
+      //background: rgba(white, 0.2);
     }
   }
-  border: 1px solid;
+  &.spinning {
+    svg {
+      animation: spin 1s linear infinite;
+    }
+  }
+  border: 2px solid;
   border-color: $bwhite $bblack $bblack $bwhite;
   border-opacity: 0.3;
   .toolLabel {

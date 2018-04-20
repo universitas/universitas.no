@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import cx from 'classnames'
 import { detailFields as fields } from 'stories/model'
 import StoryTools from 'stories/StoryTools'
 import ModelField from 'components/ModelField'
@@ -6,8 +7,10 @@ import { modelSelectors } from 'ducks/basemodel'
 
 const model = 'stories'
 
-const StoryDetail = ({ pk, storytypechoices }) => (
-  <section className="DetailPanel">
+const StoryDetail = ({ id: pk, publication_status, storytypechoices }) => (
+  <section
+    className={cx('DetailPanel', 'StoryDetail', `status-${publication_status}`)}
+  >
     <StoryTools pk={pk} />
     <div className="panelContent">
       <ModelField {...{ pk, model, ...fields.working_title }} />
@@ -28,6 +31,11 @@ const StoryDetail = ({ pk, storytypechoices }) => (
   </section>
 )
 
-const { getCurrentItemId: pk } = modelSelectors(model)
-const { getChoices: storytypechoices } = modelSelectors('storytypes')
-export default connect(R.applySpec({ pk, storytypechoices }))(StoryDetail)
+const { getCurrentItemId, getCurrentItem } = modelSelectors(model)
+const { getChoices } = modelSelectors('storytypes')
+const mapStateToProps = state => ({
+  storytypechoices: getChoices(state),
+  //pk: getCurrentItemId(state),
+  ...getCurrentItem(state),
+})
+export default connect(mapStateToProps)(StoryDetail)
