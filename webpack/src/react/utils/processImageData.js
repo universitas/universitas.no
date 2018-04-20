@@ -1,6 +1,5 @@
 // client side image processing before file upload
 
-import * as R from 'ramda'
 import loadImage from 'blueimp-load-image/js'
 import md5 from './md5hasher'
 import { utf8Decode } from 'utils/text'
@@ -54,19 +53,21 @@ export const exifDateTime = R.when(
   R.pipe(R.replace(/:/, '-'), R.replace(/:/, '-'), R.constructN(1, Date))
 )
 
+// :: Strip null characters and trim if string
+const stripNull = R.when(R.is(String), R.pipe(R.replace(/\0/g, ''), R.trim))
+
 // :: {...tags} -> {artist, created, description}
-export const extractExifTags = R.tryCatch(
-  R.pipe(
-    tags => ({
-      artist: tags.Artist,
-      created: tags.DateTimeOriginal || tags.DateTime,
-      description: tags.ImageDescription,
-      imageId: tags.ImageUniqueId,
-    }),
-    R.map(R.pipe(utf8Decode, exifDateTime))
-  ),
-  R.always({})
+const _extractExifTags = R.pipe(
+  // R.tap(t => console.log(JSON.stringify(t.ImageDescription))),
+  tags => ({
+    artist: tags.Artist,
+    created: tags.DateTimeOriginal || tags.DateTime,
+    description: tags.ImageDescription,
+    imageId: tags.ImageUniqueId,
+  }),
+  R.map(R.pipe(stripNull, utf8Decode, exifDateTime))
 )
+export const extractExifTags = R.tryCatch(_extractExifTags, R.always({}))
 
 const urlToImage = url => {
   const img = new Image()
@@ -88,6 +89,27 @@ export const cleanData = ({ file, created, ...props }) => ({
   created: created || new Date(file.lastModified),
   ...props,
 })
+
+// Extract artist name from description.
+export const artistFromDescription = ({
+  artist = '',
+  description = '',
+  ...props
+}) => {
+  const regex = /(?:(?:f|ph)oto(?:cred|graf|manipulasjon|):? )(([^\s.]\.?[^\s.]* ?)+.?)/i
+  return {
+    ...props,
+    description: R.pipe(R.replace(regex, ''), R.trim)(description),
+    artist:
+      artist ||
+      R.pipe(
+        R.match(regex),
+        R.propOr('', 1),
+        R.replace(/[\s.]+$/g, ''), // strip trailing `.` characters
+        R.trim
+      )(description),
+  }
+}
 
 // shape of return value from processImageFile
 // filedata = {
@@ -111,6 +133,7 @@ const processImageFile = file =>
     .then(loadImageBlueImp)
     .then(withMd5)
     .then(withFingerPrint)
+    .then(artistFromDescription)
     .then(cleanData)
 
 export default processImageFile

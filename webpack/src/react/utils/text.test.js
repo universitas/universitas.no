@@ -25,6 +25,9 @@ test('formatFileSize', () => {
 })
 
 test('utf8Decode', () => {
+  expect(utf8Decode('Marta gÅ\x92r pÅ\x92 universitetet')).toEqual(
+    'Marta går på universitetet'
+  )
   expect(utf8Decode('hello')).toEqual('hello')
   expect(utf8Decode('«Håken»')).toEqual('«Håken»')
   expect(utf8Decode('Â«HÃ¥kenÂ»')).toEqual('«Håken»')

@@ -56,7 +56,12 @@ export const formatFileSize = (size = 0, digits = 3) => {
 }
 
 // :: utf-8 encoded string -> unicode string
-export const utf8Decode = R.tryCatch(
-  R.when(R.is(String), R.pipe(escape, decodeURIComponent, R.trim)),
-  R.nthArg(1)
+export const utf8Decode = R.when(
+  R.is(String),
+  R.pipe(
+    R.replace(/\xc5\x92/g, 'å'), // unknown encoding
+    R.replace(/\xc2\xbf/g, 'ø'), // unknown encoding
+    R.tryCatch(R.pipe(escape, decodeURIComponent), R.nthArg(1)),
+    R.trim
+  )
 )

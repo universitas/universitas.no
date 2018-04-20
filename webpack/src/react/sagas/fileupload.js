@@ -52,7 +52,6 @@ function* newFileSaga(action) {
 }
 function* postFileSaga(action) {
   const pk = action.payload.pk
-  console.log('posting', pk)
   const {
     objectURL,
     filename,
@@ -70,7 +69,6 @@ function* postFileSaga(action) {
       duplicates
     ),
   }
-  console.log(data)
   const formBody = yield call(jsonToFormData, { original, ...data })
   const { response, error } = yield call(apiPost, 'upload', formBody)
   if (response) {
