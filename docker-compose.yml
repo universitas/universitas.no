@@ -11,6 +11,7 @@ services:
       - django_media:/var/media/
       - django_staging:/var/staging/
       - django_static:/var/static/
+      - ssh:/home/django/.ssh/
     env_file:
       - ./django/base.env
       - ./django/local.env
@@ -82,7 +83,7 @@ volumes:
   ssh:
     driver_opts:
       type: local
-      device: ${HOME}/.ssh/
+      device: ${PWD}/volumes/ssh/
       o: bind
   django_media:
     driver_opts:

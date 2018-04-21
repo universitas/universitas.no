@@ -167,6 +167,7 @@ def copy_image_to_local_filesystem(image, dest=Path('/var/media/')) -> None:
     data = image.original.file.read()
     path.parent.mkdir(0o775, True, True)
     path.write_bytes(data)
+    path.chmod(0o660)
     return path
 
 
