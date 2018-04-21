@@ -1,6 +1,12 @@
 // file upload ducks
 
 // ACTIONS
+export const PUSH = 'fileupload/PUSH'
+export const imagePush = pk => ({
+  type: PUSH,
+  payload: { pk },
+})
+
 export const ADD = 'fileupload/ADD'
 export const uploadAdd = data => ({
   type: ADD,

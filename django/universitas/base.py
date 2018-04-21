@@ -2,15 +2,18 @@
 
 from django.utils.translation import ugettext_lazy as _
 
-from .email_settings import *  # type: ignore
-from .file_settings import *  # type: ignore
-from .logging_settings import LOGGING
+from .email_settings import *  # noqa
+from .file_settings import *  # noqa
+from .logging_settings import LOGGING  # noqa
 from .setting_helpers import joinpath as path
 from .setting_helpers import Environment
 
 env = Environment(strict=False)
 redis_host = env.redis_host or 'redis'
 redis_port = env.redis_port or 6379
+
+TASSEN_DESKEN_LOGIN = env.desken_login
+TASSEN_DESKEN_PATH = env.desken_path
 
 DEBUG = True if env.debug.lower() == 'true' else False
 TEMPLATE_DEBUG = DEBUG

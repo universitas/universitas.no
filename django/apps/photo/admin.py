@@ -2,12 +2,14 @@
 
 import logging
 
-from django.contrib import admin
-from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail.admin import AdminImageMixin
 
+from django.contrib import admin, messages
+from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
+
 from .models import ImageFile
+from .tasks import upload_imagefile_to_desken
 
 logger = logging.getLogger(__name__)
 
@@ -41,9 +43,23 @@ def autocrop(modeladmin, request, queryset):
     for image in queryset.all():
         image.cropping_method = image.CROP_PENDING
         image.save()
+    messages.add_message(
+        request, messages.INFO, 'crop %s images' % queryset.count()
+    )
 
 
 autocrop.short_description = _('Autocrop')  # type: ignore
+
+
+def upload_to_desken(modeladmin, request, queryset):
+    for image_pk in queryset.values_list('pk', flat=True):
+        upload_imagefile_to_desken.delay(image_pk)
+    messages.add_message(
+        request, messages.INFO, 'upload %s images' % queryset.count()
+    )
+
+
+upload_to_desken.short_description = _('Upload to desken')  # type: ignore
 
 
 @admin.register(ImageFile)
@@ -53,7 +69,7 @@ class ImageFileAdmin(
     admin.ModelAdmin,
 ):
 
-    actions = [autocrop]
+    actions = [autocrop, upload_to_desken]
     date_hierarchy = 'created'
     actions_on_top = True
     actions_on_bottom = True

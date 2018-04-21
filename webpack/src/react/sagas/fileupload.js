@@ -1,8 +1,9 @@
 import { put, takeEvery, select, call } from 'redux-saga/effects'
-import { apiPost, apiList } from 'services/api'
+import { pushImageFile, apiPost, apiList } from 'services/api'
 import {
   ADD,
   POST,
+  PUSH,
   uploadUpdate,
   uploadPostSuccess,
   uploadPostError,
@@ -20,6 +21,7 @@ const { itemsAppended, itemAdded, itemRequested } = modelActions('images')
 export default function* uploadSaga() {
   yield takeEvery(ADD, newFileSaga)
   yield takeEvery(POST, postFileSaga)
+  yield takeEvery(PUSH, pushImageSaga)
 }
 
 const fetchDupes = ({ md5, fingerprint }) =>
@@ -29,6 +31,13 @@ const errorAction = error => ({
   type: 'api/ERROR',
   error,
 })
+
+function* pushImageSaga(action) {
+  const { pk } = action.payload
+  const { response, error } = yield call(pushImageFile, pk)
+  if (response) console.log(response)
+  else yield put(errorAction(error))
+}
 
 function* newFileSaga(action) {
   const { md5, fingerprint } = action.payload
@@ -50,6 +59,7 @@ function* newFileSaga(action) {
     yield put(errorAction(error))
   }
 }
+
 function* postFileSaga(action) {
   const pk = action.payload.pk
   const {

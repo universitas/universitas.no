@@ -1,14 +1,17 @@
 import json
 import logging
-from pathlib import Path
+
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, permissions, serializers, status, viewsets
+from rest_framework.decorators import detail_route
+from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
 
 from apps.contributors.models import Contributor
 from apps.photo.cropping.boundingbox import CropBox
 from apps.photo.models import ImageFile
+from apps.photo.tasks import upload_imagefile_to_desken
 from django.db import models
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, permissions, serializers, viewsets
-from rest_framework.exceptions import ValidationError
 
 logger = logging.getLogger('apps')
 
@@ -129,7 +132,8 @@ class ImageFileViewSet(viewsets.ModelViewSet):
     search_fields = ['stem', 'description', 'contributor__display_name']
     ordering_fields = ['created', 'modified']
     filter_fields = ['category']
-    permission_classes = [permissions.AllowAny]
+
+    # permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         search_parameters = {
@@ -142,3 +146,9 @@ class ImageFileViewSet(viewsets.ModelViewSet):
         else:
             qs = self.queryset
         return qs
+
+    @detail_route(methods=['post'])
+    def push_file(self, request, pk):
+        image_pk = self.get_object().pk
+        upload_imagefile_to_desken.delay(image_pk)
+        return Response(data={'pk': image_pk}, status=status.HTTP_202_ACCEPTED)

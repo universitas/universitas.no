@@ -75,6 +75,20 @@ export const apiLogout = () =>
 export const apiUser = () =>
   apiFetch(`${BASE_URL}/rest-auth/user/`, { method: 'GET' })
 
+// generic action
+const apiAction = R.curry((model, action, head, data, pk) =>
+  apiFetch(`${BASE_URL}/${model}/${pk}/${action}/`, head, data)
+)
+
+// Push image file to desken
+// :: pk -> Promise
+export const pushImageFile = apiAction(
+  'images',
+  'push_file',
+  { method: 'POST' },
+  null
+)
+
 // Get list data of `model` from django rest api
 export const apiList = R.curry((model, params) => {
   const url = searchUrl(model, params)

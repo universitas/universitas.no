@@ -1,13 +1,16 @@
 """Celery tasks for photos"""
 import logging
 import re
+import subprocess
 from datetime import timedelta
 from pathlib import Path
 from typing import BinaryIO, List
 
-from apps.core.staging import new_staging_images
 from celery import shared_task
 from celery.task import periodic_task
+
+from apps.core import staging
+from django.conf import settings
 from django.core.files import File
 from utils.model_fields import AttrDict
 
@@ -133,6 +136,40 @@ def new_image_file(fp: BinaryIO, filename: str) -> ImageFile:
     return ImageFile()
 
 
+@shared_task
+def upload_imagefile_to_desken(pk):
+    """Upload imagefile to desken server."""
+    # rsync -azv --progress  --include='UNI*000.pdf' --exclude='*'
+    outdir = staging.get_staging_dir('OUT')
+    outdir.mkdir(exist_ok=True)
+    image = ImageFile.objects.get(pk=pk)
+    dest = copy_image_to_local_filesystem(image, outdir)
+    remote_path = Path(settings.TASSEN_DESKEN_PATH) / 'INCOMING'
+    remote_login = settings.TASSEN_DESKEN_LOGIN
+    desken = f'{remote_login}:{remote_path}/'
+    subprocess.check_call(['ssh', remote_login, 'mkdir', '-p', remote_path])
+    args = [
+        'rsync',
+        '-az',
+        f'{dest}',
+        f'{desken}',
+    ]
+
+    logger.debug(f'call rsync: {args}')
+    subprocess.check_call(args)
+
+
+def copy_image_to_local_filesystem(image, dest=Path('/var/media/')) -> None:
+    """Download file for development server"""
+    path = dest / image.filename
+    if path.exists():
+        return path
+    data = image.original.file.read()
+    path.parent.mkdir(0o775, True, True)
+    path.write_bytes(data)
+    return path
+
+
 @periodic_task(run_every=timedelta(minutes=1))
 def import_staging_images(max_age=timedelta(minutes=10)) -> List[Path]:
     """
@@ -140,7 +177,7 @@ def import_staging_images(max_age=timedelta(minutes=10)) -> List[Path]:
     database.
     """
     files_saved: List[Path] = []
-    for file in new_staging_images(max_age=max_age):
+    for file in staging.new_staging_images(max_age=max_age):
         if import_image(file):
             files_saved.append(file)
     return files_saved
