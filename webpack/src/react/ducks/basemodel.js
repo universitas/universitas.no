@@ -1,6 +1,6 @@
 // base model for prodsys
-
-import { combinedToggle, partialMap } from '../utils/fp'
+import { parseQuery } from 'utils/urls'
+import { combinedToggle, partialMap } from 'utils/fp'
 export const ITEM_ADDED = 'model/ITEM_ADDED'
 export const ITEM_SELECTED = 'model/ITEM_SELECTED'
 export const ITEM_CLONED = 'model/ITEM_CLONED'
@@ -78,7 +78,7 @@ export const modelActions = partialMap({
     value,
   })),
   itemRequested: getActionCreator(ITEM_REQUESTED, id => ({ id })),
-  itemsRequested: getActionCreator(ITEMS_REQUESTED, url => ({ url })),
+  itemsRequested: getActionCreator(ITEMS_REQUESTED, params => ({ params })),
   itemsFetched: getActionCreator(ITEMS_FETCHED, data => data),
   itemsAppended: getActionCreator(ITEMS_APPENDED, data => data),
   filterToggled: getActionCreator(FILTER_TOGGLED, (key, value) => ({
@@ -119,8 +119,8 @@ const getReducer = ({ type, payload }) => {
           results: results.length,
           last: offsetFromUrl(next) || offsetFromUrl(url) + results.length,
           count,
-          next,
-          previous,
+          next: next && parseQuery(next),
+          previous: previous && parseQuery(previous),
         })
       )
     }

@@ -48,7 +48,7 @@ const modelFuncs = action => {
   const modelName = R.view(actionModelLens, action)
   const apiFuncs = {
     detailView: id => push(`/${modelName}/${id}`),
-    listView: () => push(`/${modelName}/`),
+    // listView: () => push(`/${modelName}/`),
     apiGet: apiGet(modelName),
     apiPost: apiPost(modelName),
     apiList: apiList(modelName),
@@ -73,37 +73,8 @@ function* watchRouteChange() {
     const action = yield take('ROUTER_LOCATION_CHANGED')
     const { id, model } = R.path(['payload', 'params'])(action)
     const { itemSelected } = modelActions(model)
-    if (id) {
-      yield put(itemSelected(parseInt(id)))
-    } else {
-      yield put(itemSelected(0))
-    }
-  }
-}
-function* requestItems(action) {
-  yield call(delay, 200)
-  const { itemsFetched } = modelFuncs(action)
-  const url = R.path(['payload', 'url'])(action)
-  let data = null
-  if (url) {
-    data = yield call(fetchUrl, url)
-  } else {
-    data = yield call(fetchItems, action)
-  }
-  if (data) {
-    yield put(itemsFetched(data))
-  }
-}
-function* patchItem(action) {
-  // debounce
-  yield call(delay, DEBOUNCE_TIMEOUT)
-  const { itemPatched, apiPatch } = modelFuncs(action)
-  const { id, field, value } = action.payload
-  const { error, response } = yield call(apiPatch, id, { [field]: value })
-  if (response) {
-    yield put(itemPatched(response))
-  } else {
-    yield put(errorAction(error))
+    if (id) yield put(itemSelected(parseInt(id)))
+    else yield put(itemSelected(0))
   }
 }
 
@@ -115,31 +86,40 @@ function* selectItem(action) {
   if (R.isEmpty(data)) yield call(fetchItem, action) // fetch if not
 }
 
+function* requestItems(action) {
+  const { itemsFetched, getQuery, apiList } = modelFuncs(action)
+  let params = R.path(['payload', 'params'])(action)
+  if (!params) {
+    yield call(delay, 200) // debounce
+    params = yield select(getQuery)
+  }
+  const { response, error } = yield call(apiList, params)
+  if (response) yield put(itemsFetched(response))
+  else yield put(errorAction(error))
+}
+
+function* patchItem(action) {
+  // debounce
+  yield call(delay, DEBOUNCE_TIMEOUT)
+  const { itemPatched, apiPatch } = modelFuncs(action)
+  const { id, field, value } = action.payload
+  const { error, response } = yield call(apiPatch, id, { [field]: value })
+  if (response) yield put(itemPatched(response))
+  else yield put(errorAction(error))
+}
+
 function* fetchItem(action) {
   const { itemAdded, apiGet } = modelFuncs(action)
   const id = R.path(['payload', 'id'], action)
   const { error, response } = yield call(apiGet, id)
-  if (response) {
-    yield put(itemAdded(response))
-  } else {
-    yield put(errorAction(error))
-  }
+  if (response) yield put(itemAdded(response))
+  else yield put(errorAction(error))
 }
 
-function* fetchItems(action) {
-  const funcs = modelFuncs(action)
-  const { getQuery, apiList } = funcs
-  const attrs = yield select(getQuery)
-  const { response, error } = yield call(apiList, attrs)
-  if (response) {
-    return response
-  } else {
-    yield put(errorAction(error))
-  }
-}
 function* cloneItem(action) {
-  const { getItem, itemAdded, apiPost, detailView } = modelFuncs(action)
+  // post a new story
   const { id } = action.payload
+  const { getItem, itemAdded, apiPost, detailView } = modelFuncs(action)
   const { working_title, story_type, bodytext_markup } = yield select(
     getItem(id)
   )
@@ -153,15 +133,5 @@ function* cloneItem(action) {
   if (response) {
     yield put(itemAdded(response))
     yield put(detailView(response.id))
-  } else {
-    yield put({ type: 'ERROR', error })
-  }
-}
-function* fetchUrl(url) {
-  const { response, error } = yield call(apiFetch, url)
-  if (response) {
-    return response
-  } else {
-    yield put({ type: 'ERROR', error })
-  }
+  } else yield put(errorAction(error))
 }

@@ -49,7 +49,7 @@ describe('action creators', () => {
     ],
     [fieldChanged, actions.FIELD_CHANGED, [6, 'foo', 'bar'], {}],
     [itemRequested, actions.ITEM_REQUESTED, 2, { id: 2 }],
-    [itemsRequested, actions.ITEMS_REQUESTED, 'foo', { url: 'foo' }],
+    [itemsRequested, actions.ITEMS_REQUESTED, { q: '' }, { params: { q: '' } }],
     [itemsFetched, actions.ITEMS_FETCHED, itemData, itemData],
     [filterToggled, actions.FILTER_TOGGLED, ['foo', 2], { key: 'foo' }],
     [filterSet, actions.FILTER_SET, ['foo', 2], { key: 'foo', value: 2 }],

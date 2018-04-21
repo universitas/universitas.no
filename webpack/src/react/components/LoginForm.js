@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { Error } from 'components/Icons'
 import { logOut, logIn, getUser } from 'ducks/auth'
-import urls from 'utils/urls'
+import urls from 'services/authurls'
 
 const ErrorMessage = ({ children }) => (
   <div className="ErrorMessage">
@@ -32,8 +32,12 @@ class LoginForm extends React.Component {
           placeholder="passord"
         />
         <input className="button" type="submit" value="Logg inn" />
-        <a className="text" href={urls.password.reset}>Glemt passord?</a>
-        <a className="text" href={urls.login.facebook}>logg inn med Facebook</a>
+        <a className="text" href={urls.password.reset}>
+          Glemt passord?
+        </a>
+        <a className="text" href={urls.login.facebook}>
+          logg inn med Facebook
+        </a>
         {non_field_errors && <ErrorMessage>{non_field_errors}</ErrorMessage>}
         {password && <ErrorMessage>passord: {password}</ErrorMessage>}
       </form>

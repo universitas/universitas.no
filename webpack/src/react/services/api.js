@@ -1,13 +1,12 @@
 import fetch from 'isomorphic-fetch'
 import * as Cookies from 'js-cookie'
+import { queryString } from 'utils/urls'
 
 // base url for the api
 const BASE_URL = '/api'
 
 // Set content type header
 const contentType = R.assocPath(['headers', 'Content-Type'])
-
-const mergeDeepAll = R.reduce(R.mergeDeepRight, {})
 
 // Create a merge-able init mapping with body data and content type header
 // wrapBody :: Any -> Object
@@ -21,17 +20,29 @@ const wrapBody = R.cond([
   ],
 ])
 
+const mergeReduce = R.reduce(R.mergeDeepRight, {})
+const getCookie = () => ({
+  'X-CSRFToken': Cookies.get('csrftoken') || 'NO-CSRF-COOKIE',
+})
+
 // Merge headers and body to build an init object for fetch spec
 export const httpOptions = (head, body) =>
-  mergeDeepAll([
+  mergeReduce([
     {
       method: 'GET', // default method
       credentials: 'same-origin',
-      headers: { 'X-CSRFToken': Cookies.get('csrftoken') || 'NO-CSRF-COOKIE' }, // cookie auth
     },
+    { headers: getCookie() },
     R.defaultTo({}, head),
     wrapBody(body),
   ])
+
+// build "search" url for api model list view with query parameters.
+// searchUrl :: String -> Object -> String
+export const searchUrl = R.curryN(2, (model, params = {}) => {
+  const query = queryString(params)
+  return query ? `${BASE_URL}/${model}/?${query}` : `${BASE_URL}/${model}/`
+})
 
 // Perform fetch return promise containing an object with either an
 // `error` or `response` property. {error: Object} | {response: Object}
@@ -65,9 +76,8 @@ export const apiUser = () =>
   apiFetch(`${BASE_URL}/rest-auth/user/`, { method: 'GET' })
 
 // Get list data of `model` from django rest api
-export const apiList = R.curry((model, attrs) => {
-  const query = queryString(attrs)
-  const url = query ? `${BASE_URL}/${model}/?${query}` : `${BASE_URL}/${model}/`
+export const apiList = R.curry((model, params) => {
+  const url = searchUrl(model, params)
   return apiFetch(url)
 })
 
@@ -89,43 +99,3 @@ export const apiPost = R.curry((model, data) => {
   const head = { method: 'POST' }
   return apiFetch(url, head, data)
 })
-
-// paramPairs :: (String | Array, String, Object) -> { String : String }
-export const paramPairs = (key, value) =>
-  R.is(Array, value)
-    ? `${key}=${value.map(cleanValues).join(',')}`
-    : `${key}=${cleanValues(value)}`
-
-// convert query data to url paramater string
-// cleanValues :: Number|String -> String
-export const cleanValues = R.pipe(
-  String,
-  R.trim,
-  R.replace(/\s+/g, ' '),
-  encodeURIComponent
-)
-
-// build "search" url for api model list view with query pareters.
-// searchUrl :: String -> Object -> String
-export const searchUrl = R.curryN(2, (model, attrs = {}) => {
-  const query = queryString(attrs)
-  return query ? `${BASE_URL}/${model}/?${query}` : `${BASE_URL}/${model}/`
-})
-
-// Emptiness test where the falsy values 0 and false are not empty
-// but trythy values {} and [] are empty.
-// isEmpty :: Any -> Boolean
-export const isEmpty = R.contains(R.__, [{}, undefined, null, [], ''])
-
-// flipify mapObjectIndexed
-// ((k, v) -> A) -> Object[k, v] -> Array[A]
-const mapObject = fn =>
-  R.pipe(R.mapObjIndexed((val, key, _) => fn(key, val)), R.values)
-
-// Build url safe querystring from object mapping.
-// queryString :: Obj -> String
-export const queryString = R.pipe(
-  R.reject(isEmpty),
-  mapObject(paramPairs),
-  R.join('&')
-)
