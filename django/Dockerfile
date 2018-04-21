@@ -12,6 +12,7 @@ RUN cd /var && mkdir staging media static logs &&\
 
 # install pdf utils and database clients
 RUN apt-get update && apt-get install -y \
+  rsync \
   gettext \
   ghostscript \
   poppler-utils \

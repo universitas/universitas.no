@@ -6,6 +6,7 @@ import re
 from pathlib import Path
 from typing import Union
 
+from apps.contributors.models import Contributor
 from apps.issues.models import current_issue
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
@@ -206,7 +207,7 @@ class ImageFile(  # type: ignore
         max_length=1000,
     )
     contributor = models.ForeignKey(
-        'contributors.Contributor',
+        Contributor,
         verbose_name=_('contributor'),
         help_text=_('who made this'),
         blank=True,
@@ -258,6 +259,18 @@ class ImageFile(  # type: ignore
             return f'{self.contributor}'
         return self.copyright_information or '?'
 
+    @artist.setter
+    def artist(self, value) -> None:
+        if not value:
+            self.copyright_information == ''
+            self.contributor = None
+        else:
+            match = Contributor.objects.search(value).first()
+            if match:
+                self.contributor = match
+            else:
+                self.copyright_information = value
+
     @property
     def filename(self) -> str:
         return f'{self.stem}{self.suffix}'
@@ -299,15 +312,6 @@ class ImageFile(  # type: ignore
         except Exception:
             logger.exception('Cannot create thumbnail')
             return BrokenImage()
-
-    def download_from_aws(self, dest=Path('/var/media/')) -> None:
-        """Download file for development server"""
-        path = dest / self.original.name
-        if path.exists():
-            return
-        data = self.original.file.read()
-        path.parent.mkdir(0o775, True, True)
-        path.write_bytes(data)
 
     def is_profile_image(self) -> bool:
         return self.category == ImageFile.PROFILE
@@ -372,11 +376,12 @@ class ImageFile(  # type: ignore
         img = file_operations.pil_image(self.original)
         if not file_operations.valid_image(img):
             raise ValueError('invalid image file')
-        self.stem = slugify_filename(self.original.name).stem
         self.stat.mimetype = file_operations.get_mimetype(img)
         self.build_thumbs()
 
     def save(self, *args, **kwargs):
         if self.pk is None:
             self.new_image()
+        if not self.stem:
+            self.stem = slugify_filename(self.original.name).stem
         super().save(*args, **kwargs)

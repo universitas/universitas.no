@@ -32,6 +32,8 @@ services:
     command: celery
     extends: django
     restart: always
+    volumes:
+      - ssh:/home/django/.ssh/
     depends_on:
       - postgres
       - redis
@@ -77,6 +79,11 @@ volumes:
   pgdata:        {}
   redisdata:     {}
   webpack_build: {}
+  ssh:
+    driver_opts:
+      type: local
+      device: ${HOME}/.ssh/
+      o: bind
   django_media:
     driver_opts:
       type: local

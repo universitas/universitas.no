@@ -4,7 +4,6 @@ import json
 import logging
 from collections import namedtuple
 
-from apps.photo.models import ImageFile
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
@@ -38,9 +37,10 @@ def default_groups():
 class ContributorQuerySet(models.QuerySet):
     def search(self, query):
         """fuzzy name search"""
+        cutoff = 0.3 if len(query) < 6 else 0.5
         return self.annotate(
             similarity=TrigramSimilarity('display_name', query)
-        ).filter(similarity__gt=0.3).order_by('-similarity')
+        ).filter(similarity__gt=cutoff).order_by('-similarity')
 
 
 class Contributor(FuzzyNameSearchMixin, models.Model):
@@ -79,8 +79,7 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
         default=False,
     )
     byline_photo = models.ForeignKey(
-        ImageFile,
-        limit_choices_to={'category': ImageFile.PROFILE},
+        'photo.ImageFile',
         related_name='person',
         blank=True,
         null=True,
@@ -105,7 +104,7 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
     def get_byline_image(self, force_new=False):
         if self.byline_photo and not force_new:
             return self.byline_photo
-
+        from apps.photo.models import ImageFile
         img = ImageFile.objects.search(
             filename=f'{self}.jpg',
         ).filter(category=ImageFile.PROFILE).first()
