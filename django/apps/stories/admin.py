@@ -110,7 +110,6 @@ class VideoInline(
         'index',
         'caption',
         'creditline',
-        'size',
         'video_host',
         'host_video_id',
     ]
@@ -130,9 +129,8 @@ class ImageInline(
         'index',
         'caption',
         'creditline',
-        'size',
-        'aspect_ratio',
         'imagefile',
+        'aspect_ratio',
         'full_thumb',
     ]
     autocomplete_fields = ['imagefile']

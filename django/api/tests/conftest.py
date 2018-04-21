@@ -3,56 +3,50 @@ import shutil
 from pathlib import Path
 
 import pytest
-from rest_framework.test import APIClient
-
 from apps.photo.models import ImageFile
 from apps.stories.models import Section, Story, StoryType
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
+from rest_framework.test import APIClient
 
 
-@pytest.fixture
-def staff_client(request, journalist):
-    client = APIClient()
-    client.login(username='journalist', password='howdypartner')
-    yield client
-    client.logout()
-
-
-@pytest.fixture
-def journalist(request):
-    User = get_user_model()
-    try:
-        return User.objects.get(username='journalist')
-    except User.DoesNotExist:
-        pass
-    user = User.objects.create_user(
-        username='journalist',
-        email='journalist@marshall.gov',
-        password='howdypartner',
-    )
+@pytest.fixture()
+def journalist(db, django_user_model, django_username_field):
+    """A staff user with typical staff permissions."""
+    UserModel = django_user_model
+    username_field = django_username_field
     perms = [
         'add_story',
         'change_story',
         'add_imagefile',
         'change_imagefile',
+        'add_storyimage',
+        'change_storyimage',
     ]
+    try:
+        user = UserModel._default_manager.get(**{username_field: 'journalist'})
+    except UserModel.DoesNotExist:
+        user = UserModel._default_manager.create_user(
+            **{
+                username_field: 'journalist',
+                'email': 'journalist@marshall.gov',
+                'password': 'password',
+            }
+        )
     user.user_permissions.add(*Permission.objects.filter(codename__in=perms))
     return user
 
 
-@pytest.fixture(scope='session')
-def editor(request):
-    wyatt = get_user_model().objects.create_superuser(
-        username='wyatt',
-        email='wyatt@marshall.gov',
-        password='gunsmoke',
-    )
-    return wyatt
+@pytest.fixture
+def staff_client(db, journalist):
+    client = APIClient()
+    client.login(username=journalist.username, password='password')
+    yield client
+    client.logout()  # maybe not needed?
 
 
 @pytest.fixture(scope='session')
 def news():
+    """News StoryType"""
     try:
         return StoryType.objects.get(name='News')
     except StoryType.DoesNotExist:
@@ -61,7 +55,8 @@ def news():
 
 
 @pytest.fixture
-def scandal(news):
+def scandal(db, news):
+    """A typical news story"""
     story = Story.objects.create(
         story_type=news,
         working_title='A shocking scandal!',
@@ -71,7 +66,8 @@ def scandal(news):
 
 
 @pytest.fixture
-def scandal_photo():
+def scandal_photo(db):
+    """A typical news photo"""
     description = 'SCANDAL!!'
     try:
         return ImageFile.objects.get(description=description)

@@ -1,77 +1,63 @@
-import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
+api_url = '/api/legacy/'
 
-@pytest.mark.django_db
-def test_get_story(scandal):
-    """Client fetches story list from api"""
-    api_url = '/api/legacy/'
-    client = APIClient()
-    response = client.get(api_url)
-    stories = response.json().get('results')
+
+def test_indesign_get_stories(scandal):
+    """Unauthenticated user can GET a list of stories."""
+    response = APIClient().get(api_url)
+    stories = response.data.get('results')
     assert len(stories) == 1
     assert stories[0]['arbeidstittel'] == scandal.working_title
     assert stories[0]['bilete'] == []
 
 
-@pytest.mark.django_db
-def test_change_story_anon(scandal):
-    """Must be logged in to change"""
-    api_url = f'/api/legacy/{scandal.pk}/'
-    text = 'A scandal rocks the university'
-    client = APIClient()
-
-    response = client.patch(api_url, data={'tekst': text})
+def test_indesign_patch_anonymous(scandal):
+    """Must be logged in to submit a PATCH."""
+    data = {'tekst': 'A scandal rocks the university'}
+    url = f'{api_url}{scandal.pk}/'
+    response = APIClient().patch(url, data=data)
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
-@pytest.mark.django_db
-def test_change_story(scandal, staff_client):
-    """Logged in client can change."""
-    api_url = f'/api/legacy/{scandal.pk}/'
-    text = 'A scandal rocks the university'
-    response = staff_client.patch(api_url, data={'tekst': text})
-    if response.status_code != 200:
-        print(response.content)
+def test_indesign_patch_story(scandal, staff_client):
+    """Logged in client can submit a PATCH"""
+    data = {'tekst': 'A scandal rocks the university'}
+    url = f'{api_url}{scandal.pk}/'
+    response = staff_client.patch(url, format='json', data=data)
     assert response.status_code == status.HTTP_200_OK
 
+    # patch was stored in the db
     scandal.refresh_from_db()
-    assert scandal.bodytext_markup == text
+    assert scandal.bodytext_markup == data['tekst']
 
 
-@pytest.mark.django_db
-def test_create_story(staff_client, scandal_photo):
-    """Client creates a new story from indesign(!)"""
-    api_url = '/api/legacy/'
-    response = staff_client.post(
-        api_url,
-        format='json',
-        data={
-            'mappe': 'kultur',
-            'tekst': 'test',
-            'arbeidstittel': 'hello',
-            'produsert': 1,
-            'bilete': [
-                {'bildefil': 'sandal.jpg', 'bildetekst': 'one'},
-            ],
-        }
-    )
+def test_indesign_create_story(staff_client, scandal_photo):
+    """Client creates a new story from indesign with POST"""
+    data = {
+        'mappe': 'kultur',
+        'tekst': 'test',
+        'arbeidstittel': 'hello',
+        'produsert': 1,
+        'bilete': [{'bildefil': 'scandal.jpg', 'bildetekst': 'one'}],
+    }
+    response = staff_client.post(api_url, format='json', data=data)
     assert response.status_code == status.HTTP_201_CREATED
 
 
-@pytest.mark.django_db
-def test_update_photos(scandal, scandal_photo, staff_client):
+def test_indesign_update_photos(scandal, scandal_photo, staff_client):
     """Client updates story images from indesign"""
-    api_url = f'/api/legacy/{scandal.pk}/'
     data = {
         'bilete': [{'bildefil': 'scandal.jpg', 'bildetekst': 'one'},
                    {'bildefil': 'scandal.jpg', 'bildetekst': 'two'}]
     }
-    response = staff_client.patch(api_url, data=data, format='json')
+    url = f'{api_url}{scandal.pk}/'
+    response = staff_client.patch(url, format='json', data=data)
     assert response.status_code == status.HTTP_200_OK
+
     captions = scandal.images.values_list('caption', flat=True)
     assert sorted(captions) == ['one', 'two']
 
-    updated_data = staff_client.get(api_url).json()
+    updated_data = staff_client.get(url).data
     assert updated_data['bilete'][0]['bildefil'] == 'scandal.jpg'
