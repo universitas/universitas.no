@@ -1,8 +1,11 @@
 import { connect } from 'react-redux'
-import { getImageList, searchUrlChanged } from 'ducks/imageList'
+import { getImageList, searchUrlChanged } from 'x/ducks/imageList'
 
 let Button = ({ onClick, children }) => (
-  <button onClick={onClick} disabled={!onClick}> {children}</button>
+  <button onClick={onClick} disabled={!onClick}>
+    {' '}
+    {children}
+  </button>
 )
 Button = connect(null, (dispatch, { url }) => ({
   onClick: url ? () => dispatch(searchUrlChanged(url)) : null,
@@ -20,9 +23,7 @@ let ResultsPanel = ({
       <div className="urlPanel">
         <a href={url}>{url}</a>
       </div>
-      <div className="countPanel">
-        {count}
-      </div>
+      <div className="countPanel">{count}</div>
       <Button url={previous}>previous</Button>
       <Button url={url}>refresh</Button>
       <Button url={next}>next</Button>

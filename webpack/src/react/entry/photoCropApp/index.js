@@ -4,8 +4,8 @@ import { combineReducers } from 'redux'
 
 import configureStore from './configureStore'
 import App from './App'
-import { reducer as ui } from 'ducks/ui'
-import { reducer as images } from 'ducks/images'
+import { reducer as ui } from 'x/ducks/cropWidgetUi'
+import { reducer as images } from 'x/ducks/images'
 
 const rootReducer = combineReducers({ ui, images })
 const rootStore = configureStore(rootReducer)

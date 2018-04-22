@@ -5,9 +5,9 @@ import {
   startDragHandle,
   startNewCrop,
   setCenter,
-} from 'ducks/cropWidget'
-import Overlay from 'components/Overlay'
-import DragKing from 'components/DragKing'
+} from 'x/ducks/cropWidget'
+import Overlay from 'x/components/Overlay'
+import DragKing from 'x/components/DragKing'
 import 'styles/cropbox.scss'
 
 class CropBox extends React.Component {
@@ -28,12 +28,13 @@ class CropBox extends React.Component {
   render() {
     const { src, size, crop_box, pending, dragging } = this.props
     const [width, height] = size || [100, 100]
-    const dragKing = dragging.dragMask === undefined
-      ? null
-      : <DragKing
+    const dragKing =
+      dragging.dragMask === undefined ? null : (
+        <DragKing
           moveDragHandle={this.moveDragHandle}
           endDragHandle={this.endDragHandle}
         />
+      )
 
     return (
       <div className="CropBox">

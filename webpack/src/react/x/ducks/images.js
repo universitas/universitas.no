@@ -1,6 +1,6 @@
 // duck for image cropping app
 
-import { IMAGES_FETCH_SUCCESS } from 'ducks/imageList'
+import { IMAGES_FETCH_SUCCESS } from 'x/ducks/imageList'
 
 // Action constants
 export const ADD_IMAGE = 'images/ADD_IMAGE'

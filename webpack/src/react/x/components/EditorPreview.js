@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { scrollElement } from 'utils/scroll'
-import { getNodes, getActiveIndex } from 'ducks/editor'
+import { getNodes, getActiveIndex } from 'x/ducks/editor'
 
 const Tingo = (n = 0, { children, ...props }) => {
   const tingoPattern = n ? `(?:\\S+\\s+){1,${n}}` : '.{1,12}\\S*'

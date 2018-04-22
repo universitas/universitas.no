@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import rootSaga from 'sagas/index'
+import imageCropSaga from 'x/sagas/imageCropSaga'
 
 // import { autoRehydrate, persistStore } from 'redux-persist'
 // import localForage from 'localforage'
@@ -20,7 +20,7 @@ const configureStore = (rootReducer, initialState = {}) => {
       // autoRehydrate({ storage: localForage })
     )
   )
-  sagaMiddleware.run(rootSaga)
+  sagaMiddleware.run(imageCropSaga)
   // persistStore(rootStore, { storage: localForage })
   return rootStore
 }

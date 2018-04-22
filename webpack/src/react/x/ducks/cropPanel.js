@@ -1,5 +1,5 @@
-import { getImage } from 'ducks/images'
-import { IMAGE_SELECTED } from 'ducks/ui'
+import { getImage } from 'x/ducks/images'
+import { IMAGE_SELECTED } from 'x/ducks/cropWidgetUi'
 
 // Action types
 const CYCLE_PANEL_DATA = 'cropPanel/CYCLE_PANEL_DATA'

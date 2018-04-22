@@ -2,8 +2,8 @@
 import { combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 
-import { reducer as images } from 'ducks/images'
-import { imageClicked, reducer as ui } from 'ducks/ui'
+import { imageClicked, reducer as ui } from 'x/ducks/cropWidgetUi'
+import { reducer as images } from 'x/ducks/images'
 
 import configureStore from '../photoCropApp/configureStore'
 import App from './App'

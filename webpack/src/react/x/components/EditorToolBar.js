@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { insertText, changeTag } from 'ducks/editor'
+import { insertText, changeTag } from 'x/ducks/editor'
 import ToolBar from 'components/ToolBar'
 
 const EditorToolBar = ({ insertText, changeTag, ...props }) => {

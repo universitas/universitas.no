@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import EditImage from 'containers/EditImage'
-import { getSelectedImage } from 'ducks/cropPanel'
+import EditImage from 'x/components/EditImage'
+import { getSelectedImage } from 'x/ducks/cropPanel'
 
 const style = {
   position: 'fixed',
@@ -24,11 +24,11 @@ const mapStateToProps = state => ({
 })
 
 const CropBox = ({ active }) =>
-  active
-    ? <section className="FrontPageCrop" style={style}>
-        <EditImage />
-        <div style={empty} />
-      </section>
-    : null
+  active ? (
+    <section className="FrontPageCrop" style={style}>
+      <EditImage />
+      <div style={empty} />
+    </section>
+  ) : null
 
 export default connect(mapStateToProps)(CropBox)

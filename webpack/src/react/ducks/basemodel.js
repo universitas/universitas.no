@@ -111,6 +111,7 @@ export const baseInitialState = R.pipe(
 const getReducer = ({ type, payload }) => {
   switch (type) {
     case ITEMS_FETCHED: {
+      // items fetched and pagination updated
       const { results, next, previous, count, url } = payload
       return R.compose(
         R.over(itemsLens, R.merge(R.indexBy(R.prop('id'), results))),
@@ -125,29 +126,35 @@ const getReducer = ({ type, payload }) => {
       )
     }
     case ITEMS_APPENDED:
+      // items fetched, but no change in selection (current pagination)
       return R.over(
         itemsLens,
         R.merge(R.indexBy(R.prop('id'), payload.results))
       )
     case ITEM_PATCHED:
+      // received single item patch from server
       return R.set(itemLens(payload.id), payload)
     case ITEM_ADDED:
+      // received single new item
       return R.compose(
         R.over(currentItemsLens, R.union([payload.id])),
         R.set(itemLens(payload.id), payload)
       )
     case FIELD_CHANGED: {
+      // single item field changed client side
       const { id, field, value } = payload
       const mergeData = { dirty: true, [field]: value }
       const lens = itemLens(id)
       return R.over(lens, R.mergeDeepLeft(mergeData))
-      // return R.set(itemLens(id), mergeData)
     }
     case ITEM_SELECTED:
+      // select single item
       return R.set(currentItemLens, payload.id)
     case FILTER_SET:
+      // set single filter value
       return R.set(R.compose(queryLens, R.lensProp(payload.key)), payload.value)
     case FILTER_TOGGLED:
+      // flip single filter value ( also works with filter-set )
       return R.over(queryLens, combinedToggle(payload.key, payload.value))
     default:
       return R.identity

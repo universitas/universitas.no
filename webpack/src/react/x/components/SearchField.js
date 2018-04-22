@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getImageList, searchChanged, thumbStyleCycle } from 'ducks/imageList'
+import { getImageList, searchChanged, thumbStyleCycle } from 'x/ducks/imageList'
 
 let SearchField = ({
   searchText,
@@ -30,9 +30,7 @@ let SearchField = ({
       <button disabled={!searchText} onClick={clearButtonOnClick}>
         Clear
       </button>
-      <button onClick={thumbStyleCycle}>
-        Style
-      </button>
+      <button onClick={thumbStyleCycle}>Style</button>
     </section>
   )
 }

@@ -3,7 +3,7 @@ import localForage from 'localforage'
 import { persistStore, persistReducer } from 'redux-persist'
 import { createLogger } from 'redux-logger'
 
-import { reducer as editor } from 'ducks/editor'
+import { reducer as editor } from 'x/ducks/editor'
 
 // react-dev-tools
 const composeEnhancers =

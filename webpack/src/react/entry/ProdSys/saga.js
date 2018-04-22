@@ -1,8 +1,8 @@
 import { all, fork, call, put, take } from 'redux-saga/effects'
-import authSaga from 'sagas/auth'
-import errorSaga from 'sagas/error'
-import apiSaga from 'sagas/apisaga'
-import uploadSaga from 'sagas/fileupload'
+import authSaga from 'sagas/authSaga'
+import errorSaga from 'sagas/errorSaga'
+import basemodelSaga from 'sagas/basemodelSaga'
+import uploadSaga from 'sagas/uploadSaga'
 import { modelActions } from 'ducks/basemodel'
 import { requestUser } from 'ducks/auth'
 import { push, LOCATION_CHANGED } from 'redux-little-router'
@@ -10,7 +10,7 @@ import { push, LOCATION_CHANGED } from 'redux-little-router'
 function* rootSaga() {
   yield [
     fork(uploadSaga),
-    fork(apiSaga),
+    fork(basemodelSaga),
     fork(errorSaga),
     fork(authSaga),
     call(loadInitialData),

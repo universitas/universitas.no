@@ -2,16 +2,16 @@ import 'styles/editimage.scss'
 import { connect } from 'react-redux'
 import format from 'date-fns/format'
 
-import CropBox from 'containers/CropBox'
-import CropPreview from 'components/CropPreview'
-import { getImage, autocropImage } from 'ducks/images'
-import { getCropWidget } from 'ducks/cropWidget'
+import CropBox from 'x/components/CropBox'
+import CropPreview from 'x/components/CropPreview'
+import { getImage, autocropImage } from 'x/ducks/images'
+import { getCropWidget } from 'x/ducks/cropWidget'
 import {
   getCropPanel,
   dismissPanel,
   resizePanel,
   cyclePanelData,
-} from 'ducks/cropPanel'
+} from 'x/ducks/cropPanel'
 
 const Spinner = () => <div className="spinner">Loading...</div>
 

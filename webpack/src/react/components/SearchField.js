@@ -15,9 +15,13 @@ const SearchField = ({
       placeholder={label}
       value={value}
     />
-    <button disabled={!value} onClick={clearSearch} className="clear">
-      <Clear />
-    </button>
+    <ClearSearch disabled={!value} onClick={clearSearch} />
+  </div>
+)
+import cx from 'classnames'
+const ClearSearch = ({ onClick, disabled }) => (
+  <div onClick={onClick} className={cx('ClearSearch', { disabled })}>
+    <Clear />
   </div>
 )
 

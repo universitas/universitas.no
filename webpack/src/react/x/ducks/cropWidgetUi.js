@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
-import { getImage } from 'ducks/images'
-import { reducer as cropWidget } from 'ducks/cropWidget'
-import { reducer as cropPanel } from 'ducks/cropPanel'
-import { reducer as imageList } from 'ducks/imageList'
+import { getImage } from 'x/ducks/images'
+import { reducer as cropWidget } from 'x/ducks/cropWidget'
+import { reducer as cropPanel } from 'x/ducks/cropPanel'
+import { reducer as imageList } from 'x/ducks/imageList'
 
 // Selectors
 //

@@ -1,4 +1,4 @@
-import { EditImage, PhotoList, SearchField, ResultsPanel } from './components'
+import { EditImage, PhotoList, SearchField, ResultsPanel } from 'x/components'
 import 'styles/photolistview.scss'
 
 const App = () => {

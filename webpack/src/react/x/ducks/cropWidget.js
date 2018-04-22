@@ -1,5 +1,5 @@
 import { normalize, round } from 'utils/cropHelpers'
-import { IMAGE_SELECTED } from 'ducks/ui'
+import { IMAGE_SELECTED } from 'x/ducks/cropWidgetUi'
 // Action constants
 const MOVE_CENTER = 'cropbox/MOVE_CENTER'
 const START_DRAG_HANDLE = 'cropbox/START_DRAG_HANDLE'

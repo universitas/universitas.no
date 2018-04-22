@@ -1,3 +1,8 @@
+// Saga for image cropping app (frontpage and /foto/)
+//
+// TODO: This app should get deprecated by prodsys, since there's much
+// redundancy between the apps
+
 import {
   takeLatest,
   takeEvery,
@@ -7,21 +12,21 @@ import {
   all,
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-import { searchUrl, apiFetch, apiPatch, apiGet } from '../services/api'
+import { searchUrl, apiFetch, apiPatch, apiGet } from 'services/api'
 import {
   SEARCH_CHANGED,
   SEARCH_URL_CHANGED,
   searchUrlChanged,
   imagesFetchSuccess,
-} from '../ducks/imageList'
-import { IMAGE_CLICKED, imageSelected } from '../ducks/ui'
+} from 'x/ducks/imageList'
+import { IMAGE_CLICKED, imageSelected } from 'x/ducks/cropWidgetUi'
 import {
   getImage,
   addImage,
   imageFilePatched,
   AUTOCROP_IMAGE,
-} from '../ducks/images'
-import { END_DRAG_HANDLE, getCropWidget } from '../ducks/cropWidget'
+} from 'x/ducks/images'
+import { END_DRAG_HANDLE, getCropWidget } from 'x/ducks/cropWidget'
 
 export default function* rootSaga() {
   yield all([

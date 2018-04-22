@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import { textChanged, moveCaret } from 'ducks/editor'
-import EditorToolBar from 'containers/EditorToolBar'
+import { textChanged, moveCaret } from 'x/ducks/editor'
+import EditorToolBar from 'x/components/EditorToolBar'
 import * as Icon from 'components/Icons'
 
 const cleanup = text => {

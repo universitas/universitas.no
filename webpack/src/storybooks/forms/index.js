@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react'
 import { Field, fieldNames } from 'components/ModelField'
 import { boolean } from '@storybook/addon-knobs'
 
-import mooch from '../upload/assets/mooch.jpg'
+import mooch from '../assets/mooch.jpg'
 
 const initialState = {
   choice: {

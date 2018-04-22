@@ -1,7 +1,7 @@
-import EditImage from 'containers/EditImage'
-import PhotoList from 'containers/PhotoList'
-import SearchField from 'containers/SearchField'
-import ResultsPanel from 'containers/ResultsPanel'
+import EditImage from 'x/components/EditImage'
+import PhotoList from 'x/components/PhotoList'
+import SearchField from 'x/components/SearchField'
+import ResultsPanel from 'x/components/ResultsPanel'
 import 'styles/app.scss'
 
 const App = () => {

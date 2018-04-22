@@ -1,14 +1,14 @@
 import { connect } from 'react-redux'
 import { modelSelectors, modelActions } from 'ducks/basemodel'
 
-const Navigation = ({ results, last, count, offset, ...props }) => (
-  <div className="Navigation">
-    <div className="info">
-      resultat {1 + last - results}–{last} av {count}
-    </div>
-    <Pagination {...props} />
+const NavInfo = ({ results, last, count, offset }) => (
+  <div className="NavInfo info">
+    {results
+      ? `resultat ${1 + last - results}–${last} av ${count}`
+      : 'Laster inn ...'}
   </div>
 )
+
 const Pagination = ({ changePage, next, previous }) =>
   next || previous ? (
     <span>
@@ -20,6 +20,13 @@ const Pagination = ({ changePage, next, previous }) =>
       </button>
     </span>
   ) : null
+
+const Navigation = props => (
+  <div className="Navigation">
+    <NavInfo {...props} />
+    <Pagination {...props} />
+  </div>
+)
 
 const mapStateToProps = (state, { model }) =>
   modelSelectors(model).getNavigation
