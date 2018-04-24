@@ -58,7 +58,7 @@ const mapDispatchToProps = (dispatch, { pk, id }) => ({
   uploadClose: e => dispatch(uploadClose(pk)),
   uploadUpdate: (pk, data) => dispatch(uploadUpdate(pk, data)),
   viewImage: id => e => {
-    dispatch(push(`/images/${id}`))
+    dispatch(push(`/photos/${id}`))
     dispatch(uploadClose(pk))
   },
 })

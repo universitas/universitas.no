@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
-import requests
+import json
 import re
 from collections import OrderedDict
-import json
+
+import requests
+
 url = 'https://raw.githubusercontent.com/ramda/ramda/master/dist/ramda.js'
 
 
@@ -27,7 +29,7 @@ def sig_to_terntype(sig):
     sig = re.sub(r'\([^(]*?\)', ' fn ', sig)
     sig = re.sub(r'\([^(]*?\)', ' fn ', sig)
     length = len(sig.split('->'))
-    if length == 1: 
+    if length == 1:
         return ''
     return ' -> '.join(['fn()'] * (length - 1) + ['!0'])
 
@@ -38,13 +40,13 @@ pattern = re.compile(
     flags=re.DOTALL | re.MULTILINE
 )
 
-
 R = OrderedDict()  # type: dict
 matches = [m.groupdict() for m in pattern.finditer(code)]
 
 
 def sortByName(d):
     return d['name']
+
 
 print(len(matches))
 
@@ -57,7 +59,6 @@ for match in sorted(matches, key=sortByName)[:]:
             '!doc': doc,
             # '!url': 'http://ramdajs.com/docs/#' + name,
         }
-
 
 with open('ramda.json', 'w') as fp:
     json.dump({"!name": "ramda", "R": R}, fp, indent=2)

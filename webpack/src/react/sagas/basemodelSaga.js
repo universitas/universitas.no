@@ -71,10 +71,10 @@ function* itemListScrollTopHack() {
 function* watchRouteChange() {
   while (true) {
     const action = yield take('ROUTER_LOCATION_CHANGED')
-    const { id, model } = R.path(['payload', 'params'])(action)
+    const { id, model } = R.pathOr({}, ['payload', 'params'], action)
+    if (!model) return
     const { itemSelected } = modelActions(model)
-    if (id) yield put(itemSelected(parseInt(id)))
-    else yield put(itemSelected(0))
+    yield put(itemSelected(parseInt(id || 0)))
   }
 }
 

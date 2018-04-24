@@ -52,7 +52,7 @@ function* selectImage(action) {
 }
 
 function* fetchImage(id) {
-  const { response, error } = yield call(apiGet('images'), id)
+  const { response, error } = yield call(apiGet('photos'), id)
   if (response) {
     return response
   } else {
@@ -60,7 +60,7 @@ function* fetchImage(id) {
   }
 }
 function* patchImage(id, data) {
-  const { response, error } = yield call(apiPatch('images'), id, data)
+  const { response, error } = yield call(apiPatch('photos'), id, data)
   if (response) {
     yield put(imageFilePatched(response))
   } else {
@@ -80,7 +80,7 @@ function* searchChanged(action) {
   const search = action.payload.searchText
   if (search) {
     yield call(delay, DEBOUNCE_TIMEOUT)
-    const url = searchUrl('images')({ search })
+    const url = searchUrl('photos')({ search })
     yield put(searchUrlChanged(url))
   }
 }

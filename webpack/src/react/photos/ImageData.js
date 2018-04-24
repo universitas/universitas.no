@@ -1,5 +1,5 @@
 import { formatDate, formatFileSize } from 'utils/text'
-import { detailFields as fields } from 'images/model'
+import { detailFields as fields } from 'photos/model'
 import Thumb from 'components/Thumb'
 import { Field } from 'components/ModelField'
 import cx from 'classnames'

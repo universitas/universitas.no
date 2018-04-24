@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
-import requests
+import json
 import subprocess
 import time
-import json
+
+import requests
 
 
 def get_comp(funcname="func"):

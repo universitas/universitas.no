@@ -4,9 +4,9 @@ import IssueList from 'issues/IssueList'
 import IssueDetail from 'issues/IssueDetail'
 import ContributorList from 'contributors/ContributorList'
 import ContributorDetail from 'contributors/ContributorDetail'
-import PhotoList from 'images/PhotoList'
-import PhotoUpload from 'images/PhotoUpload'
-import PhotoDetail from 'images/PhotoDetail'
+import PhotoList from 'photos/PhotoList'
+import PhotoUpload from 'photos/PhotoUpload'
+import PhotoDetail from 'photos/PhotoDetail'
 import StoryList from 'stories/StoryList'
 import StoryDetail from 'stories/StoryDetail'
 import UserTool from 'components/UserTool'
@@ -26,7 +26,7 @@ const AppTool = connect(null, { push })(({ href, push, ...props }) => (
 const MainToolBar = () => (
   <section className="SideBar">
     <AppTool href="/stories" icon="Edit" label="saker" />
-    <AppTool href="/images" icon="Camera" label="foto" />
+    <AppTool href="/photos" icon="Camera" label="foto" />
     <AppTool href="/issues" icon="Newspaper" label="utgaver" />
     <AppTool href="/contributors" icon="Person" label="bidragsytere" />
     <AppTool href="/upload" icon="FileUpload" label="last opp" />
@@ -36,35 +36,56 @@ const MainToolBar = () => (
   </section>
 )
 
+const Panel = ({ children }) => (
+  <section
+    className="Panel"
+    style={{
+      display: 'flex',
+      height: '100vh',
+    }}
+  >
+    {children}
+  </section>
+)
+
 const ProdSys = () => (
   <main className="ProdSys">
     <MainToolBar />
+    <Fragment forRoute="/storyimages">
+      <Panel>
+        <StoryList />
+        <PhotoList />
+      </Panel>
+    </Fragment>
+    <Fragment forRoute="/storyimages:id">
+      <StoryDetail />
+    </Fragment>
     <Fragment forRoute="/stories">
       <StoryList />
-    </Fragment>
-    <Fragment forRoute="/issues">
-      <IssueList />
-    </Fragment>
-    <Fragment forRoute="/contributors">
-      <ContributorList />
-    </Fragment>
-    <Fragment forRoute="/images">
-      <PhotoList />
-    </Fragment>
-    <Fragment forRoute="/upload">
-      <PhotoUpload />
     </Fragment>
     <Fragment forRoute="/stories/:id">
       <StoryDetail />
     </Fragment>
-    <Fragment forRoute="/contributors/:id">
-      <ContributorDetail />
+    <Fragment forRoute="/issues">
+      <IssueList />
     </Fragment>
     <Fragment forRoute="/issues/:id">
       <IssueDetail />
     </Fragment>
-    <Fragment forRoute="/images/:id">
+    <Fragment forRoute="/contributors">
+      <ContributorList />
+    </Fragment>
+    <Fragment forRoute="/contributors/:id">
+      <ContributorDetail />
+    </Fragment>
+    <Fragment forRoute="/photos">
+      <PhotoList />
+    </Fragment>
+    <Fragment forRoute="/photos/:id">
       <PhotoDetail />
+    </Fragment>
+    <Fragment forRoute="/upload">
+      <PhotoUpload />
     </Fragment>
   </main>
 )

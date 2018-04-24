@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import { detailFields as fields } from 'images/model'
-import PhotoTools from 'images/PhotoTools'
+import { detailFields as fields } from 'photos/model'
+import PhotoTools from 'photos/PhotoTools'
 import ModelField from 'components/ModelField'
 import { modelSelectors } from 'ducks/basemodel'
 

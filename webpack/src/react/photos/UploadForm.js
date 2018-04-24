@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import { push } from 'redux-little-router'
 import Tool from 'components/Tool'
 import { Field } from 'components/ModelField'
-import { detailFields as fields } from 'images/model'
+import { detailFields as fields } from 'photos/model'
 import { uploadUpdate, getUpload } from 'ducks/fileupload'
 
 const UploadForm = ({ changeHandler, status, ...props }) => (

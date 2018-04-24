@@ -2,7 +2,7 @@ import 'styles/storylist.scss'
 import cx from 'classnames'
 import { push } from 'redux-little-router'
 import { connect } from 'react-redux'
-import { detailFields as fields } from 'images/model'
+import { detailFields as fields } from 'photos/model'
 import { modelSelectors } from 'ducks/basemodel'
 import ModelField from 'components/ModelField'
 

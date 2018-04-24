@@ -21,7 +21,7 @@ function* loadInitialData() {
   yield put(modelActions('storytypes').itemsRequested())
   yield put(modelActions('stories').itemsRequested())
   yield put(modelActions('contributors').itemsRequested())
-  yield put(modelActions('images').itemsRequested())
+  yield put(modelActions('photos').itemsRequested())
   yield put(modelActions('issues').itemsRequested())
   yield put(requestUser())
   const action = yield take(LOCATION_CHANGED)

@@ -46,6 +46,6 @@ const Duplicate = ({
 const mapStateToProps = (state, { id }) => getImage(id)(state)
 const mapDispatchToProps = (dispatch, { pk, id }) => ({
   changeHandler: value => e => dispatch(changeDuplicate(pk, id, value)),
-  viewImage: id => e => dispatch(push(`images/${id}`)),
+  viewImage: id => e => dispatch(push(`photos/${id}`)),
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Duplicate)
