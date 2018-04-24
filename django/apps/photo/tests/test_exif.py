@@ -1,8 +1,7 @@
 """ Tests for exif library """
 
-from apps.photo.exif import (
-    ExifData, clean_data, exif_to_json, extract_exif_data, parse_exif_timestamp
-)
+from apps.photo.exif import (ExifData, clean_data, exif_to_json,
+                             extract_exif_data, parse_exif_timestamp)
 
 
 def test_exif_to_json(jpeg_file):

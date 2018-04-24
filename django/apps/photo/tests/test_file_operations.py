@@ -1,9 +1,8 @@
 """ Tests for exif library """
 import pytest
-from apps.photo.file_operations import (
-    get_exif, get_filesize, get_imagehash, get_md5, get_mimetype, get_mtime,
-    valid_image
-)
+from apps.photo.file_operations import (get_exif, get_filesize, get_imagehash,
+                                        get_md5, get_mimetype, get_mtime,
+                                        valid_image)
 from django.core.files import File as DjangoFile
 
 

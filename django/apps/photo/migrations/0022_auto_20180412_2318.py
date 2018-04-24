@@ -2,8 +2,8 @@
 
 import apps.photo.models
 import django.core.validators
-from django.db import migrations
 import sorl.thumbnail.fields
+from django.db import migrations
 
 
 class Migration(migrations.Migration):

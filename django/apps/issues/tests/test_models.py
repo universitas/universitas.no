@@ -5,9 +5,8 @@ import tempfile
 from datetime import date
 
 import pytest
-from apps.issues.models import (
-    Issue, PrintIssue, error_image, pdf_to_image, pdf_to_text
-)
+from apps.issues.models import (Issue, PrintIssue, error_image, pdf_to_image,
+                                pdf_to_text)
 from django.core.files.base import ContentFile
 from django.utils.timezone import datetime
 

@@ -5,6 +5,7 @@ from django.views.generic.base import TemplateView
 
 from .models import Issue
 
+
 # from django.conf import settings
 
 

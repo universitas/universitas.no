@@ -8,10 +8,8 @@ from django.forms import Textarea, TextInput
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from .models import (
-    Aside, Byline, InlineHtml, InlineLink, Pullquote, Section, Story,
-    StoryImage, StoryType, StoryVideo
-)
+from .models import (Aside, Byline, InlineHtml, InlineLink, Pullquote, Section,
+                     Story, StoryImage, StoryType, StoryVideo)
 
 
 class SmallTextArea:

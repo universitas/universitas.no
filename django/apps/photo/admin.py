@@ -2,11 +2,10 @@
 
 import logging
 
-from sorl.thumbnail.admin import AdminImageMixin
-
 from django.contrib import admin, messages
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from sorl.thumbnail.admin import AdminImageMixin
 
 from .models import ImageFile
 from .tasks import upload_imagefile_to_desken

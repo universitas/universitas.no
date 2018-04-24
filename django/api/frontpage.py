@@ -1,6 +1,5 @@
-from rest_framework import serializers, viewsets
-
 from apps.frontpage.models import FrontpageStory
+from rest_framework import serializers, viewsets
 
 
 class FrontpageStorySerializer(serializers.ModelSerializer):

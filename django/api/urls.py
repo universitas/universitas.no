@@ -1,7 +1,6 @@
+from django.conf.urls import include, url
 from rest_auth import urls as rest_auth_urls
 from rest_framework import routers
-
-from django.conf.urls import include, url
 
 from .contributors import ContributorViewSet
 from .frontpage import FrontpageStoryViewset
@@ -17,7 +16,7 @@ router = routers.DefaultRouter()
 
 router.register(r'contributors', ContributorViewSet)
 router.register(r'frontpage', FrontpageStoryViewset)
-router.register(r'images', ImageFileViewSet)
+router.register(r'photos', ImageFileViewSet)
 router.register(r'issues', IssueViewSet)
 router.register(r'legacy', ProdStoryViewSet, 'legacy')
 router.register(r'pdfs', PrintIssueViewSet)

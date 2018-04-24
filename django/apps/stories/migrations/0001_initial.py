@@ -5,12 +5,12 @@ import apps.stories.models.place_inlines
 import apps.stories.models.sections
 import django.contrib.postgres.indexes
 import django.contrib.postgres.search
-from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
 import django_extensions.db.fields
 import model_utils.fields
 import utils.model_mixins
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):

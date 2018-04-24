@@ -1,5 +1,5 @@
-from django.db import models, migrations
 from django.core.management import call_command
+from django.db import migrations, models
 
 FIXTURE = 'ad_channels'
 

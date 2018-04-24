@@ -1,7 +1,7 @@
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import (
-    SearchQuery, SearchRank, SearchVector, SearchVectorField, TrigramSimilarity
-)
+from django.contrib.postgres.search import (SearchQuery, SearchRank,
+                                            SearchVector, SearchVectorField,
+                                            TrigramSimilarity)
 from django.db.models import FloatField  # Manager,
 from django.db.models import ExpressionWrapper, F, Func, Model, QuerySet
 

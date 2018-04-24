@@ -6,9 +6,9 @@ from collections import namedtuple
 from datetime import datetime
 from typing import Any, Optional
 
+import ftfy
 import PIL.ExifTags
 
-import ftfy
 from django.utils import timezone
 
 from .file_operations import get_exif

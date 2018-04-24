@@ -6,10 +6,9 @@ from datetime import timedelta
 from pathlib import Path
 from typing import BinaryIO, List
 
+from apps.core import staging
 from celery import shared_task
 from celery.task import periodic_task
-
-from apps.core import staging
 from django.conf import settings
 from django.core.files import File
 from utils.model_fields import AttrDict

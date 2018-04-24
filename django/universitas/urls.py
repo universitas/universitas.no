@@ -1,9 +1,8 @@
 """Base url router for universitas.no"""
 from api.urls import urlpatterns as api_urls
 from apps.core.views import HumansTxtView, RobotsTxtView, search_404_view
-from apps.frontpage.views import (
-    frontpage_view, section_frontpage, storytype_frontpage
-)
+from apps.frontpage.views import (frontpage_view, section_frontpage,
+                                  storytype_frontpage)
 from apps.issues.views import PdfArchiveView, PubPlanView
 from apps.photo.views import PhotoAppView
 from apps.search import urls as search_urls

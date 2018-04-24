@@ -1,6 +1,6 @@
 
-from django.db import models, migrations
 import apps.frontpage.models
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):

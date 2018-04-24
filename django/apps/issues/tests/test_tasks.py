@@ -8,11 +8,10 @@ from PIL import Image
 
 import pytest
 from apps.issues.models import Issue, PrintIssue
-from apps.issues.tasks import (
-    MissingBinary, convert_pdf_to_web, create_print_issue_pdf,
-    create_web_bundle, generate_pdf_preview, get_staging_pdf_files,
-    require_binary
-)
+from apps.issues.tasks import (MissingBinary, convert_pdf_to_web,
+                               create_print_issue_pdf, create_web_bundle,
+                               generate_pdf_preview, get_staging_pdf_files,
+                               require_binary)
 
 PAGE_ONE = 'UNI11VER16010101000.pdf'
 

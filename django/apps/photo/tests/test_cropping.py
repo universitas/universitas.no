@@ -4,9 +4,10 @@ import json
 
 import pytest
 from apps.photo.cropping.boundingbox import Box, CropBox
-from apps.photo.cropping.crop_detector import (
-    Cascade, Feature, FeatureDetector, KeypointDetector, MockFeatureDetector
-)
+from apps.photo.cropping.crop_detector import (Cascade, Feature,
+                                               FeatureDetector,
+                                               KeypointDetector,
+                                               MockFeatureDetector)
 from apps.photo.cropping.crop_engine import calculate_crop, close_crop
 
 
