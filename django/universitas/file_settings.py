@@ -19,6 +19,7 @@ if env.aws_enabled:
     AWS_S3_CUSTOM_DOMAIN = aws.s3_custom_domain  # cname
     AWS_S3_SECURE_URLS = False
     AWS_S3_USE_SSL = False
+    AWS_S3_FILE_OVERWRITE = False
 
     MEDIA_URL = f'http://{AWS_S3_CUSTOM_DOMAIN}/media/'
     STATIC_URL = f'http://{AWS_S3_CUSTOM_DOMAIN}/static/'

@@ -242,15 +242,8 @@ class ImageFile(  # type: ignore
         return self.filename or super(ImageFile, self).__str__()
 
     def upload_folder(self) -> Path:
-        if self.is_profile_image():
-            return Path(PROFILE_IMAGE_UPLOAD_FOLDER)
-        try:
-            issue = current_issue()
-            year, number = issue.year, issue.number
-        except Exception:
-            year = timezone.now().year
-            number = '0'
-        return Path(f'{year}/{number}')
+        created = self.created or timezone.now()
+        return Path(f'{created.year:04}/{created.month:02}/{created.day:02}')
 
     @property
     def artist(self) -> str:
