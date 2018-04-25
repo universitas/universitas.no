@@ -7,11 +7,11 @@ import { modelSelectors } from 'ducks/basemodel'
 
 const model = 'stories'
 
-const StoryDetail = ({ pk, publication_status, storytypechoices }) => (
+const StoryDetail = ({ pk, title, publication_status, storytypechoices }) => (
   <section
     className={cx('DetailPanel', 'StoryDetail', `status-${publication_status}`)}
   >
-    <StoryTools pk={pk} />
+    <StoryTools title={title} pk={pk} />
     <div className="panelContent">
       <ModelField {...{ pk, model, ...fields.working_title }} />
       <ModelField {...{ pk, model, ...fields.publication_status }} />
@@ -34,8 +34,13 @@ const StoryDetail = ({ pk, publication_status, storytypechoices }) => (
 const { getCurrentItemId, getCurrentItem } = modelSelectors(model)
 const { getChoices } = modelSelectors('storytypes')
 const mapStateToProps = state => {
-  const { id, publication_status } = getCurrentItem(state)
+  const { id, title, working_title, publication_status } = getCurrentItem(state)
   const storytypechoices = getChoices(state)
-  return { storytypechoices, pk: id, publication_status }
+  return {
+    title: title || working_title,
+    storytypechoices,
+    pk: id,
+    publication_status,
+  }
 }
 export default connect(mapStateToProps)(StoryDetail)

@@ -2,6 +2,7 @@ import { connect } from 'react-redux'
 import { push } from 'redux-little-router'
 import { modelSelectors, modelActions } from 'ducks/basemodel'
 import Tool from 'components/Tool'
+import DetailTopBar from 'components/DetailTopBar'
 
 const model = 'stories'
 const { fieldChanged, itemCloned, itemDeSelected } = modelActions(model)
@@ -9,16 +10,15 @@ const { getItem } = modelSelectors(model)
 
 const openUrl = url => () => window.open(url)
 
-const ToolBar = props => <div {...props} />
-
 const StoryTools = ({
   trashStory,
   cloneStory,
   closeStory,
   edit_url,
   public_url,
+  ...props
 }) => (
-  <ToolBar className="DetailToolBar">
+  <DetailTopBar {...props}>
     <Tool icon="Close" title="lukk saken" onClick={closeStory} />
     <Tool icon="Add" title="kopier saken" onClick={cloneStory} />
     <Tool icon="Delete" title="slett saken" onClick={trashStory} />
@@ -32,7 +32,7 @@ const StoryTools = ({
       title="rediger i django-admin"
       onClick={openUrl(edit_url)}
     />
-  </ToolBar>
+  </DetailTopBar>
 )
 
 const mapStateToProps = (state, { pk }) => getItem(pk)(state)

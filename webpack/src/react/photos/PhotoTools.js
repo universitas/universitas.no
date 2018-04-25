@@ -3,6 +3,7 @@ import { Magic, Add, Delete, Laptop, Tune, Close } from 'components/Icons'
 import { push } from 'redux-little-router'
 import { photoPush } from 'ducks/fileupload'
 import { modelSelectors, modelActions } from 'ducks/basemodel'
+import DetailTopBar from 'components/DetailTopBar'
 import Tool from 'components/Tool'
 
 const model = 'photos'
@@ -17,14 +18,19 @@ const Tool__ = ({ Icon, ...props }) => (
   </div>
 )
 
-const ToolBar = props => <div {...props} />
-
-const PhotoTools = ({ autocrop, close, photoPush, openAdmin }) => (
-  <ToolBar className="DetailToolBar">
+const PhotoTools = ({
+  autocrop,
+  close,
+  photoPush,
+  openAdmin,
+  filename,
+  pk,
+}) => (
+  <DetailTopBar title={filename} pk={pk}>
     <Tool icon="Close" title="lukk bildet" onClick={close} />
     <Tool icon="Download" title="last opp til desken" onClick={photoPush} />
     <Tool icon="Tune" title="rediger i django-admin" onClick={openAdmin} />
-  </ToolBar>
+  </DetailTopBar>
 )
 
 const mapStateToProps = (state, { pk }) => getItem(pk)(state)

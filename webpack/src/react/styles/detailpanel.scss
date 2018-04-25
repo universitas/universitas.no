@@ -6,8 +6,18 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  .DetailToolBar {
+  .DetailTopBar {
     @extend %horizontal-bar;
+    .title,
+    .pk {
+      margin: 0.5em;
+      font-size: 1rem;
+      align-self: center;
+    }
+    .title {
+      flex: 1;
+      color: #bbb;
+    }
     font-size: 1.6rem;
     display: flex;
     justify-content: flex-end;
