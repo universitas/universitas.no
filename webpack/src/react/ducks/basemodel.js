@@ -4,6 +4,7 @@ import { combinedToggle, partialMap } from 'utils/fp'
 export const ITEM_ADDED = 'model/ITEM_ADDED'
 export const ITEM_SELECTED = 'model/ITEM_SELECTED'
 export const ITEM_CLONED = 'model/ITEM_CLONED'
+export const ITEMS_DISCARDED = 'model/ITEMS_DISCARDED'
 export const ITEM_PATCHED = 'model/ITEM_PATCHED'
 export const FIELD_CHANGED = 'model/FIELD_CHANGED'
 export const ITEMS_FETCHED = 'model/ITEMS_FETCHED'
@@ -68,6 +69,7 @@ export const modelActions = partialMap({
   itemCloned: getActionCreator(ITEM_CLONED, id => ({ id })),
   itemSelected: getActionCreator(ITEM_SELECTED, id => ({ id })),
   itemDeSelected: getActionCreator(ITEM_SELECTED, R.always({ id: 0 })),
+  itemsDiscarded: getActionCreator(ITEMS_DISCARDED, ids => ({ ids })),
   itemPatched: getActionCreator(ITEM_PATCHED, response => ({
     dirty: false,
     ...response,
@@ -131,6 +133,8 @@ const getReducer = ({ type, payload }) => {
         itemsLens,
         R.merge(R.indexBy(R.prop('id'), payload.results))
       )
+    case ITEMS_DISCARDED:
+      return R.over(currentItemsLens, R.without(payload.ids))
     case ITEM_PATCHED:
       // received single item patch from server
       return R.set(itemLens(payload.id), payload)

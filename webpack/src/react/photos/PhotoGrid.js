@@ -6,7 +6,7 @@ import { detailFields as fields } from 'photos/model'
 import { modelSelectors } from 'ducks/basemodel'
 import ModelField from 'components/ModelField'
 
-const MODEL = 'images'
+const MODEL = 'photos'
 
 const { getItemList, getItem, getCurrentItemId } = modelSelectors(MODEL)
 

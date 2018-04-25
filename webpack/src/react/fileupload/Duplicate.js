@@ -1,12 +1,12 @@
 import { connect } from 'react-redux'
 import { push } from 'redux-little-router'
-import StaticImageData from './ImageData'
+import ImageData from 'components/ImageData'
 import { modelSelectors } from 'ducks/basemodel'
 import { changeDuplicate } from 'ducks/fileupload'
 import Tool from 'components/Tool'
 import cx from 'classnames'
 
-const getImage = modelSelectors('images').getItem
+const getImage = modelSelectors('photos').getItem
 
 const FlipFlop = ({ choices, changeHandler, value }) => (
   <div className="FlipFlop">
@@ -34,7 +34,7 @@ const Duplicate = ({
   ...props
 }) => (
   <div className="Duplicate">
-    <StaticImageData {...props} thumb={small} onClick={viewImage(id)} />
+    <ImageData {...props} thumb={small} onClick={viewImage(id)} />
     <FlipFlop
       choices={{ behold: 'keep', erstatt: 'replace' }}
       value={choice}

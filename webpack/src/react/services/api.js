@@ -83,7 +83,7 @@ const apiAction = R.curry((model, action, head, data, pk) =>
 // Push image file to desken
 // :: pk -> Promise
 export const pushImageFile = apiAction(
-  'images',
+  'photos',
   'push_file',
   { method: 'POST' },
   null

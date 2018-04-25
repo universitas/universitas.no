@@ -5,8 +5,8 @@ import IssueDetail from 'issues/IssueDetail'
 import ContributorList from 'contributors/ContributorList'
 import ContributorDetail from 'contributors/ContributorDetail'
 import PhotoList from 'photos/PhotoList'
-import PhotoUpload from 'photos/PhotoUpload'
 import PhotoDetail from 'photos/PhotoDetail'
+import UploadList from 'fileupload/UploadList'
 import StoryList from 'stories/StoryList'
 import StoryDetail from 'stories/StoryDetail'
 import UserTool from 'components/UserTool'
@@ -85,7 +85,7 @@ const ProdSys = () => (
       <PhotoDetail />
     </Fragment>
     <Fragment forRoute="/upload">
-      <PhotoUpload />
+      <UploadList />
     </Fragment>
   </main>
 )

@@ -12,11 +12,20 @@ import {
 
 import { getUser } from 'ducks/auth'
 
-import { jsonToFormData, objectURLtoFile } from 'utils/fileupload'
+import {
+  slugifyFilename,
+  jsonToFormData,
+  objectURLtoFile,
+} from 'utils/fileUtils'
 
 import { modelActions } from 'ducks/basemodel'
 
-const { itemsAppended, itemAdded, itemRequested } = modelActions('images')
+const {
+  itemsAppended,
+  itemsDiscarded,
+  itemAdded,
+  itemRequested,
+} = modelActions('photos')
 
 export default function* uploadSaga() {
   yield takeEvery(ADD, newFileSaga)
@@ -25,7 +34,7 @@ export default function* uploadSaga() {
 }
 
 const fetchDupes = ({ md5, fingerprint }) =>
-  apiList('images', { md5, fingerprint })
+  apiList('photos', { md5, fingerprint })
 
 const errorAction = error => ({
   type: 'api/ERROR',
@@ -61,29 +70,36 @@ function* newFileSaga(action) {
 }
 
 function* postFileSaga(action) {
-  const pk = action.payload.pk
-  const {
-    objectURL,
-    filename,
-    description,
-    artist,
-    category,
-    duplicates,
-  } = yield select(getUpload(action.payload.pk))
+  const { pk } = action.payload
+  const upload = yield select(getUpload(pk))
+  const { objectURL, description, artist, category, story } = upload
+
+  const duplicates = R.pipe(
+    R.filter(R.propEq('choice', 'replace')),
+    R.pluck('id')
+  )(upload.duplicates)
+  const filename = slugifyFilename(upload)
   const original = yield call(objectURLtoFile, objectURL, filename)
   const data = {
     description,
     artist,
     category,
-    duplicates: R.pipe(R.filter(R.propEq('choice', 'replace')), R.pluck('id'))(
-      duplicates
-    ),
+    duplicates,
   }
   const formBody = yield call(jsonToFormData, { original, ...data })
   const { response, error } = yield call(apiPost, 'upload', formBody)
   if (response) {
-    yield put(uploadPostSuccess(pk, response))
-    yield put(itemAdded(response))
+    yield put(uploadPostSuccess(pk, { filename, ...response }))
+    if (parseInt(story)) {
+      const data = {
+        imagefile: response.id,
+        parent_story: parseInt(story),
+        caption: description,
+      }
+      const { error } = yield call(apiPost, 'storyimages', data)
+      if (error) yield put(errorAction(error))
+    }
+    yield put(itemsDiscarded(duplicates))
     yield put(itemRequested(response.id))
   } else yield put(uploadPostError(pk))
 }

@@ -1,12 +1,13 @@
 import { connect } from 'react-redux'
 import { modelSelectors, modelActions } from 'ducks/basemodel'
 
-const Filter = ({ label, onClick, isActive, disabled }) => (
+export const Filter = ({ label, isActive, title, onClick, disabled }) => (
   <button
     type="button"
     className={`Filter ${isActive ? 'active' : 'inactive'}`}
-    disabled={disabled}
     onClick={onClick}
+    disabled={disabled}
+    title={title || label}
   >
     {label}
   </button>

@@ -4,7 +4,7 @@ import PhotoTools from 'photos/PhotoTools'
 import ModelField from 'components/ModelField'
 import { modelSelectors } from 'ducks/basemodel'
 
-const model = 'images'
+const model = 'photos'
 
 const PhotoDetail = ({ pk }) => (
   <section className="DetailPanel">

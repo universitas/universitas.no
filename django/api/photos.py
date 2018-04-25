@@ -1,16 +1,18 @@
 import json
 import logging
+import re
+
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, permissions, serializers, status, viewsets
+from rest_framework.decorators import detail_route
+from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
 
 from apps.contributors.models import Contributor
 from apps.photo.cropping.boundingbox import CropBox
 from apps.photo.models import ImageFile
 from apps.photo.tasks import upload_imagefile_to_desken
 from django.db import models
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, permissions, serializers, status, viewsets
-from rest_framework.decorators import detail_route
-from rest_framework.exceptions import ValidationError
-from rest_framework.response import Response
 
 logger = logging.getLogger('apps')
 
@@ -145,6 +147,13 @@ class ImageFileViewSet(viewsets.ModelViewSet):
         else:
             qs = self.queryset
         return qs
+
+    def filter_queryset(self, queryset):
+        search = self.request.query_params.get('search', '')
+        numbers = re.findall(r'\b\d+\b', search)
+        if numbers:
+            return queryset.filter(id__in=[int(n) for n in numbers])
+        return super().filter_queryset(queryset)
 
     @detail_route(methods=['post'])
     def push_file(self, request, pk):

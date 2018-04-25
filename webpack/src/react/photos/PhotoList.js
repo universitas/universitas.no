@@ -6,7 +6,7 @@ import { detailFields } from 'photos/model'
 import PhotoGrid from 'photos/PhotoGrid'
 import ListPanel from 'containers/ListPanel'
 
-const MODEL = 'images'
+const MODEL = 'photos'
 
 const category = { toggle: true, attr: 'category', model: MODEL }
 

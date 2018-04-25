@@ -41,5 +41,5 @@ export default {
   stories: modelReducer('stories', storiesInitialState),
   issues: modelReducer('issues', issuesInitialState),
   contributors: modelReducer('contributors', contributorsInitialState),
-  images: modelReducer('images', photosInitialState),
+  photos: modelReducer('photos', photosInitialState),
 }

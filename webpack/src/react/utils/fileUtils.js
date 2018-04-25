@@ -14,3 +14,17 @@ export const objectURLtoFile = (url, filename) =>
   fetch(url)
     .then(r => r.blob())
     .then(b => new File([b], filename))
+
+export const slugifyFilename = ({ filename, mimetype }) => {
+  const ext = R.pipe(R.split('/'), R.last, R.replace('jpeg', 'jpg'))
+  const stem = R.pipe(
+    R.trim,
+    R.replace(/\.[^.]{0,4}$/, ''),
+    R.replace(/_/g, ' '),
+    R.replace(/[^\w.]+/g, ' '),
+    R.trim,
+    R.replace(/ /g, '-')
+  )
+  //const zeroPad = (n, pad = '00') => (pad + n).slice(-pad.length)
+  return stem(filename) + '.' + ext(mimetype)
+}

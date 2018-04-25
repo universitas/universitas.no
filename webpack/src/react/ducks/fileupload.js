@@ -1,53 +1,51 @@
+import { modelSelectors } from 'ducks/basemodel'
 // file upload ducks
+const SLICE = 'fileupload'
 
 // ACTIONS
-export const PUSH = 'fileupload/PUSH'
-export const imagePush = pk => ({
-  type: PUSH,
-  payload: { pk },
-})
 
+export const CHANGE_DUPLICATE = 'fileupload/CHANGE_DUPLICATE'
+export const POST_ERROR = 'fileupload/POST_ERROR'
+export const POST_SUCCESS = 'fileupload/POST_SUCCESS'
+export const POST = 'fileupload/POST'
+export const CLOSE = 'fileupload/CANCEL'
+export const UPDATE = 'fileupload/UPDATE'
 export const ADD = 'fileupload/ADD'
+export const TOGGLE_UPDATE_ALL = 'fileupload/TOGGLE_UPDATE_ALL'
+export const PUSH = 'fileupload/PUSH'
+
+export const photoPush = pk => ({ type: PUSH, payload: { pk } })
+
+export const toggleUpdateAll = () => ({ type: TOGGLE_UPDATE_ALL })
+
+export const uploadClose = pk => ({ type: CLOSE, payload: { pk } })
+
+export const uploadPost = pk => ({ type: POST, payload: { pk } })
+
 export const uploadAdd = data => ({
   type: ADD,
   payload: { pk: data.md5, ...data },
 })
 
-export const UPDATE = 'fileupload/UPDATE'
-export const uploadUpdate = (pk, data) => ({
+export const uploadUpdate = (pk, data, single = true, verify = true) => ({
   type: UPDATE,
-  payload: { pk, check: true, ...data },
+  payload: { pk, single, verify, ...data },
 })
 
-export const CLOSE = 'fileupload/CANCEL'
-export const uploadClose = pk => ({
-  type: CLOSE,
-  payload: { pk },
+export const changeDuplicate = (pk, id, choice) => ({
+  type: CHANGE_DUPLICATE,
+  payload: { pk, id, choice },
 })
 
-export const POST = 'fileupload/POST'
-export const uploadPost = pk => ({
-  type: POST,
-  payload: { pk },
-})
-
-export const POST_SUCCESS = 'fileupload/POST_SUCCESS'
-export const uploadPostSuccess = (pk, { id, artist, category }) => ({
+export const uploadPostSuccess = (pk, { id, artist, category, filename }) => ({
   type: POST_SUCCESS,
-  payload: { pk, id, artist, category },
+  payload: { pk, id, artist, category, filename },
 })
 
-export const POST_ERROR = 'fileupload/POST_ERROR'
 export const uploadPostError = (pk, error) => ({
   type: POST_ERROR,
   error,
   payload: { pk },
-})
-
-export const CHANGE_DUPLICATE = 'fileupload/CHANGE_DUPLICATE'
-export const changeDuplicate = (pk, id, choice) => ({
-  type: CHANGE_DUPLICATE,
-  payload: { pk, id, choice },
 })
 
 const baseItemState = {
@@ -67,20 +65,44 @@ const baseItemState = {
   fingerprint: null,
   duplicates: null,
   status: 'new',
+  story: null,
 }
 
+// lenses
+const updateAllLens = R.lensProp('updateAll')
+const itemsLens = R.lensProp('items')
+const itemLens = pk => R.compose(itemsLens, R.lensProp(pk))
+
 // SELECTORS
-const SLICE = 'fileupload'
+const lensSelector = lens => R.view(R.compose(R.lensProp(SLICE), lens))
+
+const getUploads = lensSelector(itemsLens)
+export const getUpload = R.pipe(itemLens, lensSelector)
+export const getUpdateAll = lensSelector(updateAllLens)
 export const getUploadPKs = R.pipe(
-  R.prop(SLICE),
+  getUploads,
   R.values,
   R.sortBy(R.prop('timestamp')),
   R.pluck('md5'),
   R.reverse
 )
-export const getUpload = pk => R.view(R.lensPath([SLICE, pk]))
 
+const getStories = modelSelectors('stories').getItems
+const activeStatus = s => s > 0 && s < 6
+const isActive = R.propSatisfies(activeStatus, 'publication_status')
+const asChoice = s => ({ value: s.id, display_name: s.working_title })
+export const getStoryChoices = R.pipe(
+  getStories,
+  R.values,
+  R.filter(isActive),
+  R.sortBy(R.prop('working_title')),
+  R.map(asChoice)
+)
+
+// reducer helper functions
 const longerThan = len => R.pipe(R.length, R.lt(len))
+const noNulls = R.none(R.propEq('choice', null))
+
 const cleanFilename = props => {
   const { mimetype, filename } = props
   const extension = mimetype == 'image/png' ? 'png' : 'jpg'
@@ -89,8 +111,6 @@ const cleanFilename = props => {
   )
   return R.assoc('filename', `${base}.${extension}`, props)
 }
-
-const noNulls = R.none(R.propEq('choice', null))
 
 const checkStatus = R.ifElse(
   R.allPass([
@@ -107,38 +127,46 @@ const updateDuplicates = ({ id, choice }) =>
   R.map(R.ifElse(R.propEq('id', id), R.assoc('choice', choice), R.identity))
 
 // REDUCER
-const getReducer = ({ type, payload }) => {
-  const { pk, ...data } = payload || {}
-  const lens = R.lensProp(pk)
+const getReducer = ({ type, payload = {} }) => {
+  const { pk, ...data } = payload
+  const overItem = R.over(itemLens(pk))
   switch (type) {
     case ADD:
-      return R.set(lens, R.mergeDeepRight(baseItemState, data))
-    case UPDATE:
-      return R.over(
-        lens,
-        R.pipe(R.mergeDeepLeft(data), R.when(R.prop('check'), checkStatus))
+      return R.set(itemLens(pk), R.mergeDeepRight(baseItemState, data))
+    case UPDATE: {
+      const { single, verify, ...change } = data
+      const updateItem = R.pipe(
+        R.mergeDeepLeft(change),
+        verify ? checkStatus : R.identity
       )
+      return single
+        ? overItem(updateItem)
+        : R.over(itemsLens, R.map(updateItem))
+    }
+    case TOGGLE_UPDATE_ALL:
+      return R.over(updateAllLens, R.not)
     case POST:
-      return R.over(lens, R.assoc('status', 'uploading'))
+      return overItem(R.assoc('status', 'uploading'))
     case POST_SUCCESS:
-      return R.over(lens, R.mergeDeepLeft({ status: 'uploaded', ...data }))
+      return overItem(R.mergeDeepLeft({ status: 'uploaded', ...data }))
     case POST_ERROR:
-      return R.over(lens, R.assoc('status', 'error'))
+      return overItem(R.assoc('status', 'error'))
     case CHANGE_DUPLICATE:
-      return R.over(
-        lens,
+      return overItem(
         R.pipe(
           R.over(R.lensProp('duplicates'), updateDuplicates(data)),
           checkStatus
         )
       )
     case POST_ERROR:
-      return R.over(lens, R.assoc('status', 'error'))
+      return overItem(R.assoc('status', 'error'))
     case CLOSE:
-      return R.dissoc(pk)
+      return R.over(itemsLens, R.dissoc(pk))
     default:
       return R.identity
   }
 }
 
-export const reducer = (state = {}, action) => getReducer(action)(state)
+const initialState = { updateAll: false, items: [] }
+export const reducer = (state = initialState, action = {}) =>
+  getReducer(action)(state)
