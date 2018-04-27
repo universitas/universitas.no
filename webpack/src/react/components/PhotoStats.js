@@ -26,15 +26,15 @@ const pipeline = component =>
   R.pipe(
     ({
       id,
-      filename,
+      filename = '–',
       created,
       artist,
-      width,
-      height,
+      width = 0,
+      height = 0,
       category,
       usage,
-      filesize,
-      mimetype,
+      filesize = 0,
+      mimetype = '',
     }) => ({
       id,
       filename,

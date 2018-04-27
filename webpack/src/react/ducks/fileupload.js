@@ -90,7 +90,12 @@ export const getUploadPKs = R.pipe(
 const getStories = modelSelectors('stories').getItems
 const activeStatus = s => s > 0 && s < 6
 const isActive = R.propSatisfies(activeStatus, 'publication_status')
-const asChoice = s => ({ value: s.id, display_name: s.working_title })
+const displayName = (s = '?') =>
+  s.length > 40 ? s.substring(0, 34) + ' [...]' : s
+const asChoice = s => ({
+  value: s.id,
+  display_name: displayName(s.working_title),
+})
 export const getStoryChoices = R.pipe(
   getStories,
   R.values,
