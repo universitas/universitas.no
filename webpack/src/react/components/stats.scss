@@ -1,0 +1,31 @@
+$bordercolor: #ddd;
+$labelcolor: #555;
+$basemargin: 0.2rem;
+
+%label {
+  font-size: 0.8rem;
+  color: $labelcolor;
+  line-height: 1;
+}
+
+.PhotoStats {
+  //flex-basis: 20rem;
+  background: $bordercolor;
+  padding: 1px;
+  display: grid;
+  grid-template-columns: 2rem 1fr 1fr auto;
+  grid-gap: 1px 1px;
+  /* prettier-ignore */
+  grid-template-areas: 
+    "filename filename filename filename" 
+    "category artist artist artist"
+    "mimetype size size filesize" 
+    "usage created created id";
+  .stat {
+    @extend %label;
+    background: white;
+    text-align: center;
+    font-size: 0.8rem;
+    padding: $basemargin;
+  }
+}

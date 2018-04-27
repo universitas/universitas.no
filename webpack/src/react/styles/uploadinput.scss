@@ -18,17 +18,6 @@
     display: none;
   }
 }
-.PhotoStats {
-  // background-color: rgba(blue, 0.2);
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
-  .stat {
-    padding: 0.2rem;
-    font-size: 0.8rem;
-    color: #555;
-  }
-}
 
 .UploadActions {
   align-self: start;

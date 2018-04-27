@@ -12,6 +12,9 @@
     font-size: 0.8em;
     height: 20em;
     min-width: 15em;
+    .Thumb {
+      flex: 1;
+    }
     &:hover {
       background-color: #eee;
       border-color: #999;

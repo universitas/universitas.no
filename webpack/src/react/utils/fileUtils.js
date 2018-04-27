@@ -1,4 +1,5 @@
 // helpers for file inputs and upload
+import slugify from 'slugify'
 
 const isObjectURL = str => R.match(/^blob:https?\/\//)
 
@@ -20,10 +21,10 @@ export const slugifyFilename = ({ filename, mimetype }) => {
   const stem = R.pipe(
     R.trim,
     R.replace(/\.[^.]{0,4}$/, ''),
-    R.replace(/_/g, ' '),
-    R.replace(/[^\w.]+/g, ' '),
+    slugify,
+    R.replace(/[^a-z0-9]+/gi, ' '),
     R.trim,
-    R.replace(/ /g, '-')
+    R.replace(/\s+/g, '-')
   )
   //const zeroPad = (n, pad = '00') => (pad + n).slice(-pad.length)
   return stem(filename) + '.' + ext(mimetype)

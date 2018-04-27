@@ -4,21 +4,18 @@ import { push } from 'redux-little-router'
 import { connect } from 'react-redux'
 import { detailFields as fields } from 'photos/model'
 import { modelSelectors } from 'ducks/basemodel'
+import PhotoStats from 'components/PhotoStats'
 import ModelField from 'components/ModelField'
+import Thumb from 'components/Thumb'
 
 const MODEL = 'photos'
 
 const { getItemList, getItem, getCurrentItemId } = modelSelectors(MODEL)
 
-const PhotoField = props => (
-  <ModelField editable={false} model={MODEL} {...props} />
-)
-
-const GridItem = ({ pk, onClick, className = '' }) => (
-  <div key={pk} onClick={onClick} className={cx('GridItem', className)}>
-    <PhotoField pk={pk} {...fields.small} label />
-    <PhotoField pk={pk} {...fields.filename} label />
-    <PhotoField pk={pk} {...fields.created} label />
+const GridItem = ({ pk, onClick, small, className, ...data }) => (
+  <div key={pk} onClick={onClick} className={className}>
+    <Thumb src={small} title={data.filename} />
+    <PhotoStats pk={pk} {...data} />
   </div>
 )
 
@@ -35,7 +32,7 @@ const ConnectedGridItem = connect(
 
 const PhotoGrid = ({ items = [] }) => (
   <div className="ItemGrid">
-    {items.map(pk => <ConnectedGridItem key={pk} fields={fields} pk={pk} />)}
+    {items.map(pk => <ConnectedGridItem key={pk} pk={pk} />)}
   </div>
 )
 export default connect(state => ({ items: getItemList(state) }))(PhotoGrid)
