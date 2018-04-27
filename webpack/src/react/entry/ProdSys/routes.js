@@ -1,7 +1,9 @@
 export default {
   '/': {
     '/:model': {
-      '/:id': {},
+      '/:id': {
+        '/:detail': {},
+      },
     },
   },
 }

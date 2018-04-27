@@ -1,14 +1,14 @@
 import 'styles/storylist.scss'
 import cx from 'classnames'
-import { push } from 'redux-little-router'
 import { connect } from 'react-redux'
 import { detailFields } from 'stories/model'
-import { modelSelectors } from 'ducks/basemodel'
+import { modelActions, modelSelectors } from 'ducks/basemodel'
 import ModelField from 'components/ModelField'
 
 const MODEL = 'stories'
 
 const { getItemList, getItem, getCurrentItemId } = modelSelectors(MODEL)
+const { reverseUrl } = modelActions(MODEL)
 
 const listFields = R.pipe(
   R.pick([
@@ -46,7 +46,7 @@ const ConnectedTableRow = connect(
     const className = cx(`status-${status}`, 'TableRow', { dirty, selected })
     return { ...data, className, model: MODEL }
   },
-  (dispatch, { pk }) => ({ onClick: e => dispatch(push(`/${MODEL}/${pk}`)) })
+  (dispatch, { pk }) => ({ onClick: e => dispatch(reverseUrl({ id: pk })) })
 )(TableRow)
 
 const StoryTable = ({ items = [], fields = listFields }) => (

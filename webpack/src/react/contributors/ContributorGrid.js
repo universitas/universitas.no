@@ -1,14 +1,14 @@
 import 'styles/storylist.scss'
 import cx from 'classnames'
-import { push } from 'redux-little-router'
 import { connect } from 'react-redux'
 import { detailFields as fields } from 'contributors/model'
-import { modelSelectors } from 'ducks/basemodel'
+import { modelActions, modelSelectors } from 'ducks/basemodel'
 import ModelField from 'components/ModelField'
 
 const MODEL = 'contributors'
 
 const { getItemList, getItem, getCurrentItemId } = modelSelectors(MODEL)
+const { reverseUrl } = modelActions(MODEL)
 
 const ContributorField = ({ editable, ...props }) => (
   <ModelField editable={false} model={MODEL} {...props} />
@@ -31,7 +31,7 @@ const ConnectedGridItem = connect(
     const className = cx('GridItem', { dirty, selected })
     return { ...data, className, model: MODEL }
   },
-  (dispatch, { pk }) => ({ onClick: e => dispatch(push(`/${MODEL}/${pk}`)) })
+  (dispatch, { pk }) => ({ onClick: e => dispatch(reverseUrl({ id: pk })) })
 )(GridItem)
 
 const ContributorGrid = ({ items = [] }) => (

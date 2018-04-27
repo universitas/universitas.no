@@ -2,7 +2,6 @@ import { formatDate, formatFileSize } from 'utils/text'
 import { slugifyFilename } from 'utils/fileUtils'
 import React from 'react'
 import cx from 'classnames'
-import './stats.scss'
 
 const formatTime = dt => formatDate(dt, 'YYYY-MM-DD')
 const formatCategory = n =>

@@ -1,8 +1,10 @@
 // base model for prodsys
 import { parseQuery } from 'utils/urls'
-import { combinedToggle, partialMap } from 'utils/fp'
+import { arrayToggle, combinedToggle, partialMap } from 'utils/fp'
 export const ITEM_ADDED = 'model/ITEM_ADDED'
 export const ITEM_SELECTED = 'model/ITEM_SELECTED'
+export const REVERSE_URL = 'model/REVERSE_URL'
+export const ITEM_SELECT_TOGGLED = 'model/ITEM_SELECT_TOGGLE'
 export const ITEM_CLONED = 'model/ITEM_CLONED'
 export const ITEMS_DISCARDED = 'model/ITEMS_DISCARDED'
 export const ITEM_PATCHED = 'model/ITEM_PATCHED'
@@ -15,8 +17,9 @@ export const FILTER_TOGGLED = 'model/FILTER_TOGGLED'
 export const FILTER_SET = 'model/FILTER_SET'
 
 // Lenses
-const currentItemLens = R.lensProp('currentItem')
-const currentItemsLens = R.lensProp('currentItems')
+const selectedItemsLens = R.lensProp('selection')
+const selectedItemLens = R.lensPath(['selection', 0])
+const currentItemsLens = R.lensProp('listItems')
 const queryLens = R.lensProp('query')
 const itemsLens = R.lensProp('items')
 const navigationLens = R.lensProp('navigation')
@@ -38,11 +41,11 @@ export const modelSelectors = partialMap({
   getNavigation: getSelector(navigationLens),
   getItemList: getSelector(currentItemsLens),
   getItems: getSelector(itemsLens),
-  getCurrentItemId: getSelector(currentItemLens),
+  getCurrentItemId: getSelector(selectedItemLens),
   getItem: modelName => id => defaultSelector({})(itemLens(id), modelName),
   getCurrentItem: modelName => state =>
     defaultSelector({})(
-      itemLens(getSelector(currentItemLens, modelName, state)),
+      itemLens(getSelector(selectedItemLens, modelName, state)),
       modelName,
       state
     ),
@@ -65,29 +68,27 @@ const getActionCreator = R.curry((type, payloadTransform, modelName) =>
 )
 // :: modelName => {k: actionCreator} -- (redux action creators factory)
 export const modelActions = partialMap({
+  reverseUrl: getActionCreator(REVERSE_URL, R.identity),
   itemAdded: getActionCreator(ITEM_ADDED, data => data),
   itemCloned: getActionCreator(ITEM_CLONED, id => ({ id })),
   itemSelected: getActionCreator(ITEM_SELECTED, id => ({ id })),
-  itemDeSelected: getActionCreator(ITEM_SELECTED, R.always({ id: 0 })),
+  itemSelectToggled: getActionCreator(ITEM_SELECT_TOGGLED, id => ({ id })),
   itemsDiscarded: getActionCreator(ITEMS_DISCARDED, ids => ({ ids })),
-  itemPatched: getActionCreator(ITEM_PATCHED, response => ({
-    dirty: false,
-    ...response,
+  itemPatched: getActionCreator(ITEM_PATCHED, R.assoc('dirty', false)),
+  itemRequested: getActionCreator(ITEM_REQUESTED, id => ({ id })),
+  itemsRequested: getActionCreator(ITEMS_REQUESTED, params => ({ params })),
+  itemsFetched: getActionCreator(ITEMS_FETCHED, data => data),
+  itemsAppended: getActionCreator(ITEMS_APPENDED, data => data),
+  filterSet: getActionCreator(FILTER_SET, (key, value) => ({ key, value })),
+  filterToggled: getActionCreator(FILTER_TOGGLED, (key, value) => ({
+    key,
+    value,
   })),
   fieldChanged: getActionCreator(FIELD_CHANGED, (id, field, value) => ({
     id,
     field,
     value,
   })),
-  itemRequested: getActionCreator(ITEM_REQUESTED, id => ({ id })),
-  itemsRequested: getActionCreator(ITEMS_REQUESTED, params => ({ params })),
-  itemsFetched: getActionCreator(ITEMS_FETCHED, data => data),
-  itemsAppended: getActionCreator(ITEMS_APPENDED, data => data),
-  filterToggled: getActionCreator(FILTER_TOGGLED, (key, value) => ({
-    key,
-    value,
-  })),
-  filterSet: getActionCreator(FILTER_SET, (key, value) => ({ key, value })),
 })
 
 // :: Url -> Int -- ( Extract pagination offset from DRF url with url attributes )
@@ -102,7 +103,7 @@ const offsetFromUrl = R.compose(
 // :: () => State
 export const baseInitialState = R.pipe(
   R.always({}),
-  R.set(currentItemLens, 0),
+  R.set(selectedItemLens, 0),
   R.set(currentItemsLens, []),
   R.set(itemsLens, {}),
   R.set(queryLens, {}),
@@ -153,7 +154,9 @@ const getReducer = ({ type, payload }) => {
     }
     case ITEM_SELECTED:
       // select single item
-      return R.set(currentItemLens, payload.id)
+      return R.set(selectedItemsLens, [payload.id])
+    case ITEM_SELECT_TOGGLED:
+      return R.over(selectedItemsLens, arrayToggle(payload.id))
     case FILTER_SET:
       // set single filter value
       return R.set(R.compose(queryLens, R.lensProp(payload.key)), payload.value)

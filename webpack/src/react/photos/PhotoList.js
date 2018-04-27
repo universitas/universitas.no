@@ -29,10 +29,10 @@ const filters = [
   },
 ]
 
-const PhotoList = ({ model = MODEL }) => {
+const PhotoList = ({ model = MODEL, ...props }) => {
   return (
     <ListPanel model={MODEL} filters={filters}>
-      <PhotoGrid />
+      <PhotoGrid {...props} />
     </ListPanel>
   )
 }

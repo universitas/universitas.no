@@ -1,9 +1,8 @@
 import 'styles/storylist.scss'
 import cx from 'classnames'
-import { push } from 'redux-little-router'
 import { connect } from 'react-redux'
 import { detailFields as fields } from 'photos/model'
-import { modelSelectors } from 'ducks/basemodel'
+import { modelActions, modelSelectors } from 'ducks/basemodel'
 import PhotoStats from 'components/PhotoStats'
 import ModelField from 'components/ModelField'
 import Thumb from 'components/Thumb'
@@ -11,6 +10,7 @@ import Thumb from 'components/Thumb'
 const MODEL = 'photos'
 
 const { getItemList, getItem, getCurrentItemId } = modelSelectors(MODEL)
+const { reverseUrl } = modelActions(MODEL)
 
 const GridItem = ({ pk, onClick, small, className, ...data }) => (
   <div key={pk} onClick={onClick} className={className}>
@@ -27,12 +27,14 @@ const ConnectedGridItem = connect(
     const className = cx('GridItem', { dirty, selected })
     return { ...data, className, model: MODEL }
   },
-  (dispatch, { pk }) => ({ onClick: e => dispatch(push(`/${MODEL}/${pk}`)) })
+  (dispatch, { clickAction }) => ({ onClick: e => dispatch(clickAction) })
 )(GridItem)
 
-const PhotoGrid = ({ items = [] }) => (
+const PhotoGrid = ({ items = [], clickHandler = id => reverseUrl({ id }) }) => (
   <div className="ItemGrid">
-    {items.map(pk => <ConnectedGridItem key={pk} pk={pk} />)}
+    {items.map(pk => (
+      <ConnectedGridItem clickAction={clickHandler(pk)} key={pk} pk={pk} />
+    ))}
   </div>
 )
 export default connect(state => ({ items: getItemList(state) }))(PhotoGrid)

@@ -1,5 +1,6 @@
 import { put, takeEvery, select, call } from 'redux-saga/effects'
 import { pushImageFile, apiPost, apiList } from 'services/api'
+import { ASSIGN_PHOTO } from 'ducks/storyImage'
 import {
   ADD,
   POST,
@@ -31,6 +32,7 @@ export default function* uploadSaga() {
   yield takeEvery(ADD, newFileSaga)
   yield takeEvery(POST, postFileSaga)
   yield takeEvery(PUSH, pushImageSaga)
+  yield takeEvery(ASSIGN_PHOTO, storyPhotoSaga)
 }
 
 const fetchDupes = ({ md5, fingerprint }) =>
@@ -40,6 +42,10 @@ const errorAction = error => ({
   type: 'api/ERROR',
   error,
 })
+
+function* storyPhotoSaga(action) {
+  console.log(JSON.stringify(action))
+}
 
 function* pushImageSaga(action) {
   const { pk } = action.payload

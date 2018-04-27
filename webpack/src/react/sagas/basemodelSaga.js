@@ -16,6 +16,7 @@ import {
   ITEMS_REQUESTED,
   ITEM_REQUESTED,
   ITEM_SELECTED,
+  REVERSE_URL,
   FILTER_TOGGLED,
   FILTER_SET,
   FIELD_CHANGED,
@@ -28,10 +29,21 @@ import { push } from 'redux-little-router'
 
 const DEBOUNCE_TIMEOUT = 1000
 
+// router selector
+const getRouteParams = R.path(['router', 'params'])
+const reverseRoute = ({ model, id, detail }) =>
+  R.pipe(R.reject(R.isNil), R.map(v => `${v}`), R.join('/'))([
+    '',
+    model,
+    id,
+    detail,
+  ])
+
 export default function* rootSaga() {
   yield takeEvery(ITEMS_FETCHED, itemListScrollTopHack)
   yield takeLatest([FILTER_TOGGLED, FILTER_SET], requestItems)
   yield takeLatest(ITEM_SELECTED, selectItem)
+  yield takeLatest(REVERSE_URL, routePush)
   yield takeLatest(FIELD_CHANGED, patchItem)
   yield takeEvery(ITEMS_REQUESTED, requestItems)
   yield takeEvery(ITEM_REQUESTED, fetchItem)
@@ -47,7 +59,7 @@ const errorAction = error => ({
 const modelFuncs = action => {
   const modelName = R.view(actionModelLens, action)
   const apiFuncs = {
-    detailView: id => push(`/${modelName}/${id}`),
+    // detailView: id => push(`/${modelName}/${id}`),
     // listView: () => push(`/${modelName}/`),
     apiGet: apiGet(modelName),
     apiPost: apiPost(modelName),
@@ -78,10 +90,16 @@ function* watchRouteChange() {
   }
 }
 
+function* routePush(action) {
+  const currentParams = yield select(getRouteParams)
+  const url = reverseRoute({ ...currentParams, ...action.payload })
+  yield put(push(url))
+}
+
 function* selectItem(action) {
-  const { getItem } = modelFuncs(action)
-  const id = R.path(['payload', 'id'], action)
+  const { id } = action.payload
   if (!id) return // id is 0 or null
+  const { getItem } = modelFuncs(action)
   const data = yield select(getItem(id)) // check if item is already fetched
   if (R.isEmpty(data)) yield call(fetchItem, action) // fetch if not
 }
@@ -119,7 +137,7 @@ function* fetchItem(action) {
 function* cloneItem(action) {
   // post a new story
   const { id } = action.payload
-  const { getItem, itemAdded, apiPost, detailView } = modelFuncs(action)
+  const { getItem, itemAdded, apiPost, reverseUrl } = modelFuncs(action)
   const { working_title, story_type, bodytext_markup } = yield select(
     getItem(id)
   )
@@ -132,6 +150,6 @@ function* cloneItem(action) {
   const { response, error } = yield call(apiPost, data)
   if (response) {
     yield put(itemAdded(response))
-    yield put(detailView(response.id))
+    yield put(reverseUrl({ id: response.id, detail: null }))
   } else yield put(errorAction(error))
 }
