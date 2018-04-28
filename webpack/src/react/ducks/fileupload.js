@@ -12,9 +12,6 @@ export const CLOSE = 'fileupload/CANCEL'
 export const UPDATE = 'fileupload/UPDATE'
 export const ADD = 'fileupload/ADD'
 export const TOGGLE_UPDATE_ALL = 'fileupload/TOGGLE_UPDATE_ALL'
-export const PUSH = 'fileupload/PUSH'
-
-export const photoPush = pk => ({ type: PUSH, payload: { pk } })
 
 export const toggleUpdateAll = () => ({ type: TOGGLE_UPDATE_ALL })
 
@@ -65,7 +62,7 @@ const baseItemState = {
   fingerprint: null,
   duplicates: null,
   status: 'new',
-  story: null,
+  story: 0,
 }
 
 // lenses

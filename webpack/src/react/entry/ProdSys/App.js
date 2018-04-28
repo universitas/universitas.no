@@ -15,7 +15,7 @@ import ToolBar from 'components/ToolBar'
 import ErrorTool from 'components/ErrorTool'
 import LoginForm from 'components/LoginForm'
 import { getUser } from 'ducks/auth'
-import { assignPhoto } from 'ducks/storyImage'
+import { assignPhoto } from 'ducks/storyimage'
 import 'styles/prodsys.scss'
 
 const Home = () => <div>home</div>

@@ -1,4 +1,3 @@
-import 'styles/storylist.scss'
 import cx from 'classnames'
 import { connect } from 'react-redux'
 import { detailFields } from 'stories/model'
@@ -16,50 +15,45 @@ const listFields = R.pipe(
     'publication_status',
     'story_type_name',
     'modified',
+    'images',
   ]),
   R.assocPath(['modified', 'relative'], true) // relative time
 )(detailFields)
 
 const renderFields = R.pipe(R.values, R.map(TableCell))
 
-const TableCell = ({ editable, label, ...props }) => (
-  <td key={props.name}>
-    <ModelField editable={false} model={MODEL} {...props} />
-  </td>
+const TableCell = ({ label, className, onClick, ...props }) => (
+  <div title={label} className={className} onClick={onClick}>
+    <ModelField {...props} editable={false} />
+  </div>
 )
 
 // render all headers in table
-const TableRow = ({ pk, onClick, className = '', fields }) => (
-  <tr key={pk} onClick={onClick} className={className}>
-    {R.map(
-      props => <TableCell pk={pk} key={props.name} {...props} />,
-      R.values(listFields)
-    )}
-  </tr>
-)
+const TableRow = props =>
+  R.values(listFields).map((fieldprops, index) => (
+    <TableCell key={fieldprops.name} {...fieldprops} {...props} />
+  ))
 
 const ConnectedTableRow = connect(
-  (state, { pk }) => {
+  (state, { pk, row }) => {
     const data = getItem(pk)(state) || {}
     const { dirty, publication_status: status } = data
     const selected = getCurrentItemId(state) === pk
-    const className = cx(`status-${status}`, 'TableRow', { dirty, selected })
-    return { ...data, className, model: MODEL }
+    const className = cx(`status-${status}`, 'TableCell', {
+      dirty,
+      selected,
+      odd: row % 2,
+    })
+    return { className, model: MODEL }
   },
   (dispatch, { pk }) => ({ onClick: e => dispatch(reverseUrl({ id: pk })) })
 )(TableRow)
 
 const StoryTable = ({ items = [], fields = listFields }) => (
-  <table>
-    <thead>
-      <tr>
-        {R.compose(
-          R.values,
-          R.map(({ name, label }) => <th key={name}>{label}</th>)
-        )(fields)}
-      </tr>
-    </thead>
-    <tbody>{items.map(pk => <ConnectedTableRow key={pk} pk={pk} />)}</tbody>
-  </table>
+  <section className="StoryTable">
+    {items.map((pk, index) => (
+      <ConnectedTableRow key={pk} pk={pk} row={index} />
+    ))}
+  </section>
 )
 export default connect(state => ({ items: getItemList(state) }))(StoryTable)

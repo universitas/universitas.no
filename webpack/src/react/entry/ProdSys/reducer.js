@@ -33,6 +33,7 @@ const photosInitialState = {
     limit: 16,
   },
 }
+
 export default {
   auth,
   errors,
@@ -42,4 +43,5 @@ export default {
   issues: modelReducer('issues', issuesInitialState),
   contributors: modelReducer('contributors', contributorsInitialState),
   photos: modelReducer('photos', photosInitialState),
+  storyimages: modelReducer('storyimages', {}),
 }

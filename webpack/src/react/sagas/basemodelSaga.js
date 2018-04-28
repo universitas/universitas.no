@@ -10,11 +10,20 @@ import {
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { scrollTo } from 'utils/scroll'
-import { apiFetch, apiPatch, apiPost, apiList, apiGet } from '../services/api'
+import {
+  apiFetch,
+  apiPatch,
+  apiPost,
+  apiDelete,
+  apiList,
+  apiGet,
+} from '../services/api'
 import {
   ITEMS_FETCHED,
   ITEMS_REQUESTED,
   ITEM_REQUESTED,
+  ITEM_DELETED,
+  ITEM_CREATED,
   ITEM_SELECTED,
   REVERSE_URL,
   FILTER_TOGGLED,
@@ -41,13 +50,14 @@ const reverseRoute = ({ model, id, detail }) =>
 
 export default function* rootSaga() {
   yield takeEvery(ITEMS_FETCHED, itemListScrollTopHack)
-  yield takeLatest([FILTER_TOGGLED, FILTER_SET], requestItems)
-  yield takeLatest(ITEM_SELECTED, selectItem)
-  yield takeLatest(REVERSE_URL, routePush)
-  yield takeLatest(FIELD_CHANGED, patchItem)
+  yield takeLatest([FILTER_TOGGLED, FILTER_SET], queryChanged)
   yield takeEvery(ITEMS_REQUESTED, requestItems)
-  yield takeEvery(ITEM_REQUESTED, fetchItem)
-  yield takeEvery(ITEM_CLONED, cloneItem)
+  yield takeLatest(REVERSE_URL, routePush)
+  yield takeEvery([ITEM_SELECTED, ITEM_REQUESTED], fetchItem)
+  yield takeLatest(FIELD_CHANGED, patchSaga)
+  yield takeEvery(ITEM_CLONED, cloneSaga)
+  yield takeEvery(ITEM_CREATED, createSaga)
+  yield takeEvery(ITEM_DELETED, deleteSaga)
   yield fork(watchRouteChange)
 }
 
@@ -56,13 +66,14 @@ const errorAction = error => ({
   error,
 })
 
-const modelFuncs = action => {
+export const modelFuncs = action => {
   const modelName = R.view(actionModelLens, action)
   const apiFuncs = {
     // detailView: id => push(`/${modelName}/${id}`),
     // listView: () => push(`/${modelName}/`),
     apiGet: apiGet(modelName),
     apiPost: apiPost(modelName),
+    apiDelete: apiDelete(modelName),
     apiList: apiList(modelName),
     apiPatch: apiPatch(modelName),
   }
@@ -89,34 +100,41 @@ function* watchRouteChange() {
     yield put(itemSelected(parseInt(id || 0)))
   }
 }
-
 function* routePush(action) {
   const currentParams = yield select(getRouteParams)
   const url = reverseRoute({ ...currentParams, ...action.payload })
   yield put(push(url))
 }
 
-function* selectItem(action) {
-  const { id } = action.payload
+function* fetchItem(action) {
+  const { getItem, itemAdded, apiGet } = modelFuncs(action)
+  const { id, force } = action.payload
   if (!id) return // id is 0 or null
-  const { getItem } = modelFuncs(action)
   const data = yield select(getItem(id)) // check if item is already fetched
-  if (R.isEmpty(data)) yield call(fetchItem, action) // fetch if not
+
+  console.log(JSON.stringify({ action, id, force, url: data.url }, null, 2))
+  if (!force && !R.isEmpty(data)) return // already fetched
+  const { error, response } = yield call(apiGet, id)
+  console.log('fetched', id, response ? 'ok' : error)
+  if (response) yield put(itemAdded(response))
+  else yield put(errorAction(error))
+}
+
+function* queryChanged(action) {
+  yield call(delay, 300) // debounce
+  yield call(requestItems, action)
 }
 
 function* requestItems(action) {
   const { itemsFetched, getQuery, apiList } = modelFuncs(action)
-  let params = R.path(['payload', 'params'])(action)
-  if (!params) {
-    yield call(delay, 200) // debounce
-    params = yield select(getQuery)
-  }
+  const params =
+    R.path(['payload', 'params'])(action) || (yield select(getQuery))
   const { response, error } = yield call(apiList, params)
   if (response) yield put(itemsFetched(response))
   else yield put(errorAction(error))
 }
 
-function* patchItem(action) {
+function* patchSaga(action) {
   // debounce
   yield call(delay, DEBOUNCE_TIMEOUT)
   const { itemPatched, apiPatch } = modelFuncs(action)
@@ -126,18 +144,29 @@ function* patchItem(action) {
   else yield put(errorAction(error))
 }
 
-function* fetchItem(action) {
-  const { itemAdded, apiGet } = modelFuncs(action)
-  const id = R.path(['payload', 'id'], action)
-  const { error, response } = yield call(apiGet, id)
-  if (response) yield put(itemAdded(response))
-  else yield put(errorAction(error))
+function* deleteSaga(action) {
+  const { id } = action.payload
+  const { apiDelete, itemsDiscarded } = modelFuncs(action)
+  const { response, error } = yield call(apiDelete, id)
+  if (response) {
+    yield put(itemsDiscarded(id))
+  } else yield put(errorAction(error))
 }
 
-function* cloneItem(action) {
+function* createSaga(action) {
+  const data = action.payload
+  const { apiPost, itemAdded } = modelFuncs(action)
+  const { response, error } = yield call(apiPost, data)
+  if (response) {
+    yield put(itemAdded(response))
+    return response
+  } else yield put(errorAction(error))
+}
+
+function* cloneSaga(action) {
   // post a new story
   const { id } = action.payload
-  const { getItem, itemAdded, apiPost, reverseUrl } = modelFuncs(action)
+  const { getItem, reverseUrl } = modelFuncs(action)
   const { working_title, story_type, bodytext_markup } = yield select(
     getItem(id)
   )
@@ -147,9 +176,6 @@ function* cloneItem(action) {
     bodytext_markup,
     publication_status: 0,
   }
-  const { response, error } = yield call(apiPost, data)
-  if (response) {
-    yield put(itemAdded(response))
-    yield put(reverseUrl({ id: response.id, detail: null }))
-  } else yield put(errorAction(error))
+  const response = yield call(createSaga, { ...action, payload: data })
+  if (response) yield put(reverseUrl({ id: response.id, detail: null }))
 }

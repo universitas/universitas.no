@@ -26,6 +26,8 @@ def test_create_new_storyimage(staff_client, scandal, scandal_photo):
         'imagefile',
         'creditline',
         'index',
+        'filename',
+        'small',
         # 'size',
         # 'created',
         # 'modified',

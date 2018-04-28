@@ -53,6 +53,7 @@ export const apiFetch = (url, head = {}, body = null) => {
     .then(response =>
       response
         .json() // api always should return json
+        .catch(jsonError => {}) // ... except for DELETE
         .then(data => ({ HTTPstatus: response.status, url, ...data }))
         .then(data => (response.ok ? { response: data } : { error: data }))
     )
@@ -112,4 +113,10 @@ export const apiPost = R.curry((model, data) => {
   const url = `${BASE_URL}/${model}/`
   const head = { method: 'POST' }
   return apiFetch(url, head, data)
+})
+
+// Delete model instance in api
+export const apiDelete = R.curry((model, id) => {
+  const url = `${BASE_URL}/${model}/${id}/`
+  return apiFetch(url, { method: 'DELETE' })
 })

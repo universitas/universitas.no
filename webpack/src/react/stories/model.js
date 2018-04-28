@@ -53,4 +53,16 @@ export const detailFields = {
     type: 'text',
     editable: true,
   },
+  byline_set: {
+    name: 'byline_set',
+    label: 'bylines',
+    type: 'count',
+    editable: false,
+  },
+  images: {
+    name: 'images',
+    label: 'foto',
+    type: 'count',
+    editable: false,
+  },
 }

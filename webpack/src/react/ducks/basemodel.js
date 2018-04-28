@@ -6,6 +6,8 @@ export const ITEM_SELECTED = 'model/ITEM_SELECTED'
 export const REVERSE_URL = 'model/REVERSE_URL'
 export const ITEM_SELECT_TOGGLED = 'model/ITEM_SELECT_TOGGLE'
 export const ITEM_CLONED = 'model/ITEM_CLONED'
+export const ITEM_DELETED = 'model/ITEM_DELETED'
+export const ITEM_CREATED = 'model/ITEM_CREATED'
 export const ITEMS_DISCARDED = 'model/ITEMS_DISCARDED'
 export const ITEM_PATCHED = 'model/ITEM_PATCHED'
 export const FIELD_CHANGED = 'model/FIELD_CHANGED'
@@ -61,9 +63,9 @@ export const modelSelectors = partialMap({
 const getActionCreator = R.curry((type, payloadTransform, modelName) =>
   R.pipe(
     R.curry(payloadTransform),
-    R.objOf('payload'),
-    R.assoc('type', type),
-    R.set(actionModelLens, modelName)
+    R.objOf('payload'), //               payload: payloadTransform(?)
+    R.assoc('type', type), //            type: ACTION_TYPE
+    R.set(actionModelLens, modelName) // meta: modelName
   )
 )
 // :: modelName => {k: actionCreator} -- (redux action creators factory)
@@ -71,11 +73,16 @@ export const modelActions = partialMap({
   reverseUrl: getActionCreator(REVERSE_URL, R.identity),
   itemAdded: getActionCreator(ITEM_ADDED, data => data),
   itemCloned: getActionCreator(ITEM_CLONED, id => ({ id })),
+  itemDeleted: getActionCreator(ITEM_DELETED, id => ({ id })),
+  itemCreated: getActionCreator(ITEM_CREATED, data => data),
   itemSelected: getActionCreator(ITEM_SELECTED, id => ({ id })),
   itemSelectToggled: getActionCreator(ITEM_SELECT_TOGGLED, id => ({ id })),
-  itemsDiscarded: getActionCreator(ITEMS_DISCARDED, ids => ({ ids })),
+  itemsDiscarded: getActionCreator(ITEMS_DISCARDED, (...ids) => ({ ids })),
   itemPatched: getActionCreator(ITEM_PATCHED, R.assoc('dirty', false)),
-  itemRequested: getActionCreator(ITEM_REQUESTED, id => ({ id })),
+  itemRequested: getActionCreator(ITEM_REQUESTED, (id, force = false) => ({
+    id,
+    force,
+  })),
   itemsRequested: getActionCreator(ITEMS_REQUESTED, params => ({ params })),
   itemsFetched: getActionCreator(ITEMS_FETCHED, data => data),
   itemsAppended: getActionCreator(ITEMS_APPENDED, data => data),
@@ -134,8 +141,15 @@ const getReducer = ({ type, payload }) => {
         itemsLens,
         R.merge(R.indexBy(R.prop('id'), payload.results))
       )
-    case ITEMS_DISCARDED:
-      return R.over(currentItemsLens, R.without(payload.ids))
+    case ITEMS_DISCARDED: {
+      const { ids = [] } = payload
+      const deleted = R.pipe(R.map(k => [k, { deleted: true }]), R.fromPairs)
+      return R.compose(
+        R.over(selectedItemsLens, R.without(ids)),
+        R.over(currentItemsLens, R.without(ids)),
+        R.over(itemsLens, R.mergeDeepLeft(deleted(ids)))
+      )
+    }
     case ITEM_PATCHED:
       // received single item patch from server
       return R.set(itemLens(payload.id), payload)

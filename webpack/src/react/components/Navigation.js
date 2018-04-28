@@ -3,9 +3,11 @@ import { modelSelectors, modelActions } from 'ducks/basemodel'
 
 const NavInfo = ({ results, last, count, offset }) => (
   <div className="NavInfo info">
-    {results
-      ? `resultat ${1 + last - results}–${last} av ${count}`
-      : 'Laster inn ...'}
+    {R.cond([
+      [R.isNil, () => 'Laster inn ...'],
+      [R.lt(0), () => `resultat ${1 + last - results}–${last} av ${count}`],
+      [R.T, () => 'ingen resultater'],
+    ])(results)}
   </div>
 )
 

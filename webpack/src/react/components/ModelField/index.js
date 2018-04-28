@@ -10,6 +10,8 @@ import * as image from './ImageField'
 import * as pdfs from './PdfField'
 import * as email from './EmailField'
 import * as phone from './PhoneField'
+import * as count from './CountField'
+import * as concat from './ConcatField'
 import * as stints from './StintsField'
 import * as filesize from './FileSizeField'
 import { connect } from 'react-redux'
@@ -35,6 +37,8 @@ const fieldTypes = {
   text,
   thumb,
   shorttext: text,
+  count,
+  concat,
 }
 export const fieldNames = R.keys(fieldTypes)
 

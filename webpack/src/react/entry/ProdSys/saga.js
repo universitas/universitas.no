@@ -3,6 +3,7 @@ import authSaga from 'sagas/authSaga'
 import errorSaga from 'sagas/errorSaga'
 import basemodelSaga from 'sagas/basemodelSaga'
 import uploadSaga from 'sagas/uploadSaga'
+import storyimageSaga from 'sagas/storyimageSaga'
 import { modelActions } from 'ducks/basemodel'
 import { requestUser } from 'ducks/auth'
 import { push, LOCATION_CHANGED } from 'redux-little-router'
@@ -13,15 +14,17 @@ function* rootSaga() {
     fork(basemodelSaga),
     fork(errorSaga),
     fork(authSaga),
+    fork(storyimageSaga),
     call(loadInitialData),
   ]
 }
 
 function* loadInitialData() {
-  yield put(modelActions('storytypes').itemsRequested())
   yield put(modelActions('stories').itemsRequested())
-  yield put(modelActions('contributors').itemsRequested())
   yield put(modelActions('photos').itemsRequested())
+  yield put(modelActions('storyimages').itemsRequested())
+  yield put(modelActions('storytypes').itemsRequested())
+  yield put(modelActions('contributors').itemsRequested())
   yield put(modelActions('issues').itemsRequested())
   yield put(requestUser())
   const action = yield take(LOCATION_CHANGED)
