@@ -276,6 +276,10 @@ class Story(  # type: ignore
 
         super().save(*args, **kwargs)
 
+        if self.publication_status == self.STATUS_TO_DESK:
+            from apps.stories.tasks import upload_storyimages
+            upload_storyimages.delay(self.pk)
+
         if new:
             # make inline elements
             self.bodytext_markup = self.place_all_inline_elements()
