@@ -58,7 +58,6 @@ const stripNull = R.when(R.is(String), R.pipe(R.replace(/\0/g, ''), R.trim))
 
 // :: {...tags} -> {artist, created, description}
 const _extractExifTags = R.pipe(
-  // R.tap(t => console.log(JSON.stringify(t.ImageDescription))),
   tags => ({
     artist: tags.Artist,
     created: tags.DateTimeOriginal || tags.DateTime,

@@ -129,7 +129,7 @@ const updateDuplicates = ({ id, choice }) =>
   R.map(R.ifElse(R.propEq('id', id), R.assoc('choice', choice), R.identity))
 
 // REDUCER
-const getReducer = ({ type, payload = {} }) => {
+const getReducer = ({ type, payload = {}, error }) => {
   const { pk, ...data } = payload
   const overItem = R.over(itemLens(pk))
   switch (type) {
@@ -152,7 +152,7 @@ const getReducer = ({ type, payload = {} }) => {
     case POST_SUCCESS:
       return overItem(R.mergeDeepLeft({ status: 'uploaded', ...data }))
     case POST_ERROR:
-      return overItem(R.assoc('status', 'error'))
+      return overItem(R.mergeDeepLeft({ status: 'error', error }))
     case CHANGE_DUPLICATE:
       return overItem(
         R.pipe(
@@ -160,8 +160,6 @@ const getReducer = ({ type, payload = {} }) => {
           checkStatus
         )
       )
-    case POST_ERROR:
-      return overItem(R.assoc('status', 'error'))
     case CLOSE:
       return R.over(itemsLens, R.dissoc(pk))
     default:

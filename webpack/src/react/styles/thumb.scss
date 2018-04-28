@@ -5,7 +5,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #ddd;
+  background-color: rgba(black, 0.15);
   &.dropshadow img {
     max-width: calc(100% - #{2 * $margin});
     max-height: calc(100% - #{2 * $margin});

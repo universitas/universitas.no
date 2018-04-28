@@ -6,9 +6,10 @@ from datetime import timedelta
 from pathlib import Path
 from typing import BinaryIO, List
 
-from apps.core import staging
 from celery import shared_task
 from celery.task import periodic_task
+
+from apps.core import staging
 from django.conf import settings
 from django.core.files import File
 from utils.model_fields import AttrDict
@@ -136,14 +137,14 @@ def new_image_file(fp: BinaryIO, filename: str) -> ImageFile:
 
 
 @shared_task
-def upload_imagefile_to_desken(pk):
+def upload_imagefile_to_desken(pk, target='INCOMING'):
     """Upload imagefile to desken server."""
     # rsync -azv --progress  --include='UNI*000.pdf' --exclude='*'
     outdir = staging.get_staging_dir('OUT')
     outdir.mkdir(exist_ok=True)
     image = ImageFile.objects.get(pk=pk)
     dest = copy_image_to_local_filesystem(image, outdir)
-    remote_path = Path(settings.TASSEN_DESKEN_PATH) / 'INCOMING'
+    remote_path = Path(settings.TASSEN_DESKEN_PATH) / target
     remote_login = settings.TASSEN_DESKEN_LOGIN
     desken = f'{remote_login}:{remote_path}/'
     subprocess.check_call(['ssh', remote_login, 'mkdir', '-p', remote_path])
@@ -153,7 +154,6 @@ def upload_imagefile_to_desken(pk):
         f'{dest}',
         f'{desken}',
     ]
-
     logger.debug(f'call rsync: {args}')
     subprocess.check_call(args)
 

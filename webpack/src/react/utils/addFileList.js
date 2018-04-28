@@ -1,39 +1,9 @@
-/*
-Allows files to be added to jsdom input elements.
-
-addFileList(input, file_paths)
-  Effects: puts the file_paths as File object in input.files as a FileList
-  Returns: input
-  Arguments:
-    input - HTML input element
-    file_paths
-      - String of a file path
-      - Array of strings of file paths
-
-Read File Example:
-  const input = document.querySelector('input[type=file]')
-
-  addFileList(input, 'path/to/file')
-  const file = input.files[0]
-
-  const fr = new FileReader()
-  fr.readAsText(file)
-
-  fr.onload = () => {
-    console.log('fr.result', fr.result)
-    console.log('fr.result.length', fr.result.length)
-  }
-
-Unresolved jsdom issue that references this:
-https://github.com/jsdom/jsdom/issues/1272
-*/
+// Allows files to be added to jsdom input elements.
 
 import fs from 'fs'
 import path from 'path'
 import mime from 'mime-types'
 import { JSDOM } from 'jsdom'
-
-// const { File, FileList } = new JSDOM().window
 
 export function addFileList(input, file_paths) {
   if (typeof file_paths === 'string') file_paths = [file_paths]
@@ -49,7 +19,6 @@ export function addFileList(input, file_paths) {
     value: file_list,
     writeable: false,
   })
-
   return input
 }
 

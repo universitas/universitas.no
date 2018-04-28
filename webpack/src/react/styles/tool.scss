@@ -35,6 +35,9 @@ $bblack: rgba(black, 0.2);
   width: 1.5em;
   height: 1.5em;
   color: white;
+  &.active {
+    color: yellow;
+  }
   &.disabled {
     color: #ddd;
   }

@@ -107,16 +107,15 @@ function* routePush(action) {
 }
 
 function* fetchItem(action) {
-  const { getItem, itemAdded, apiGet } = modelFuncs(action)
+  const { getItem, itemAdded, itemPatched, apiGet } = modelFuncs(action)
   const { id, force } = action.payload
   if (!id) return // id is 0 or null
-  const data = yield select(getItem(id)) // check if item is already fetched
-
-  console.log(JSON.stringify({ action, id, force, url: data.url }, null, 2))
-  if (!force && !R.isEmpty(data)) return // already fetched
+  const data = yield select(getItem(id))
+  const exists = R.not(R.isEmpty(data))
+  if (!force && exists) return // already fetched
+  const updateAction = exists ? itemPatched : itemAdded
   const { error, response } = yield call(apiGet, id)
-  console.log('fetched', id, response ? 'ok' : error)
-  if (response) yield put(itemAdded(response))
+  if (response) yield put(updateAction(response))
   else yield put(errorAction(error))
 }
 

@@ -57,7 +57,7 @@ export const apiFetch = (url, head = {}, body = null) => {
         .then(data => ({ HTTPstatus: response.status, url, ...data }))
         .then(data => (response.ok ? { response: data } : { error: data }))
     )
-    .catch(error => ({ error })) // fetch error – not status code
+    .catch(error => ({ error: error.toString() })) // fetch error – not status code
 }
 
 // login user and set session cookie

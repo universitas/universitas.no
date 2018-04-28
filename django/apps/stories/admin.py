@@ -8,8 +8,11 @@ from django.forms import Textarea, TextInput
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from .models import (Aside, Byline, InlineHtml, InlineLink, Pullquote, Section,
-                     Story, StoryImage, StoryType, StoryVideo)
+from .models import (
+    Aside, Byline, InlineHtml, InlineLink, Pullquote, Section, Story,
+    StoryImage, StoryType, StoryVideo
+)
+from .tasks import upload_storyimages
 
 
 class SmallTextArea:
@@ -141,12 +144,6 @@ class StoryTypeInline(admin.TabularInline):
     extra = 1
 
 
-def make_frontpage_story(modeladmin, request, queryset):
-    make_frontpage_story.short_description = _('make frontpage story')
-    for story in queryset:
-        FrontpageStory.objects.autocreate(story=story)
-
-
 class PublicationStatusFilter(admin.SimpleListFilter):
     title = _('status')
     parameter_name = 'status'
@@ -199,8 +196,25 @@ class PublicationStatusFilter(admin.SimpleListFilter):
             )
 
 
+def make_frontpage_story(modeladmin, request, queryset):
+    make_frontpage_story.short_description = _('make frontpage story')
+    for story in queryset:
+        FrontpageStory.objects.autocreate(story=story)
+
+
+def upload_images(modeladmin, request, queryset):
+    upload_images.short_description = _('upload images')
+    for story in queryset:
+        upload_storyimages.delay(story.pk)
+
+
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
+    actions = [
+        make_frontpage_story,
+        upload_images,
+    ]
+
     def get_title(self, instance):
         text = ''
         if instance.kicker:
@@ -215,9 +229,6 @@ class StoryAdmin(admin.ModelAdmin):
 
     get_title.short_description = _('title')  # type: ignore
 
-    actions = [
-        make_frontpage_story,
-    ]
     date_hierarchy = 'publication_date'
     actions_on_top = True
     actions_on_bottom = True

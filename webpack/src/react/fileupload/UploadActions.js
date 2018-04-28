@@ -46,7 +46,7 @@ const ButtonB = ({ uploadClose, status }) =>
     <Tool label="avbryt" className="warn" icon="Close" onClick={uploadClose} />
   )
 const UploadActions = props => (
-  <div className="UploadActions">
+  <div className="Actions">
     <ButtonA {...props} />
     <ButtonB {...props} />
   </div>

@@ -2,8 +2,12 @@
 
 from datetime import timedelta
 
+from celery import shared_task
 from celery.task import periodic_task
 from celery.utils.log import get_task_logger
+
+from apps.issues.models import current_issue
+from apps.photo.tasks import upload_imagefile_to_desken
 from django.core.cache import cache
 from django.db.models import F, Q
 from django.utils import timezone
@@ -22,11 +26,20 @@ PERSIST_STORY_VISITS = timedelta(minutes=1)
 def update_search_task():
     """Update database search index for newly modified stories."""
     qs = Story.objects.filter(
-        Q(search_vector=None) |
-        Q(modified__gt=timezone.now() - UPDATE_SEARCH * 1.5)
+        Q(search_vector=None)
+        | Q(modified__gt=timezone.now() - UPDATE_SEARCH * 1.5)
     )
     qs.update_search_vector()
     return qs.count()
+
+
+@shared_task
+def upload_storyimages(pk):
+    story = Story.objects.get(pk=pk)
+    target = f'{current_issue().number}/{story.section}/'
+    for im in story.images.all():
+        upload_imagefile_to_desken.delay(im.imagefile.pk, target)
+    return target
 
 
 @periodic_task(run_every=PERSIST_STORY_VISITS)

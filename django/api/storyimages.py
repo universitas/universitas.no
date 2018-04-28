@@ -8,16 +8,16 @@ class StoryImageSerializer(serializers.ModelSerializer):
     """ModelSerializer for StoryImage"""
 
     filename = serializers.CharField(
-        required=False, source='imagefile.filename'
+        read_only=True, source='imagefile.filename'
     )
-    small = serializers.SerializerMethodField()
+    thumb = serializers.SerializerMethodField()
 
     def _build_uri(self, url):
         return self._context['request'].build_absolute_uri(url)
 
-    def get_small(self, instance):
+    def get_thumb(self, instance):
         try:
-            return self._build_uri(instance.imagefile.small.url)
+            return self._build_uri(instance.imagefile.large.url)
         except Exception as e:
             return str(e)
 
@@ -31,7 +31,7 @@ class StoryImageSerializer(serializers.ModelSerializer):
             'imagefile',
             'creditline',
             'index',
-            'small',
+            'thumb',
             'filename',
             # 'size',
         ]

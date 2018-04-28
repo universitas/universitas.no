@@ -81,11 +81,13 @@ function* postUploadSaga(action) {
   const formBody = yield call(jsonToFormData, { original, ...data })
   const { response, error } = yield call(apiPost, 'upload', formBody)
   if (response) {
+    const { id } = response
     yield put(uploadPostSuccess(pk, { filename, ...response }))
     if (story) yield put(assignPhoto(id, parseInt(story)))
-    yield put(photosDiscarded(duplicates))
-    yield put(photoRequested(response.id))
+    yield put(photosDiscarded(...duplicates))
+    yield put(photoRequested(id))
   } else {
-    yield put(uploadPostError(pk))
+    console.error(error)
+    yield put(uploadPostError(pk, error))
   }
 }

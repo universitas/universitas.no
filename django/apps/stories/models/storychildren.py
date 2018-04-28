@@ -3,16 +3,16 @@
 import logging
 import re
 
+from model_utils.models import TimeStampedModel
 from requests import request
 from requests.exceptions import MissingSchema, Timeout
+from slugify import Slugify
 
 from apps.photo.models import ImageFile
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
 
 from .mixins import MARKUP_TAGS, MarkupCharField, MarkupModelMixin, TextContent
 
@@ -214,6 +214,7 @@ class StoryImage(StoryMedia):
     class Meta:
         verbose_name = _('Image')
         verbose_name_plural = _('Images')
+        unique_together = [('parent_story', 'imagefile')]
 
     parent_story = models.ForeignKey(
         'Story',

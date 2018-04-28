@@ -19,13 +19,18 @@ const StoryTools = ({
   textDetail,
   edit_url,
   public_url,
+  detail,
   ...props
 }) => (
   <DetailTopBar {...props}>
     <Tool icon="Close" title="lukk saken" onClick={closeStory} />
     <Tool icon="Add" title="kopier saken" onClick={cloneStory} />
-    <Tool icon="Camera" title="bilder" onClick={imagesDetail} />
-    <Tool icon="TextFields" title="tekst" onClick={textDetail} />
+    <Tool
+      icon="Camera"
+      active={detail == 'images'}
+      title="bilder"
+      onClick={detail == 'images' ? textDetail : imagesDetail}
+    />
     <Tool
       icon="Newspaper"
       title="se saken på universitas.no"
