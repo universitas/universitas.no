@@ -1,10 +1,11 @@
 import logging
 import re
 
-from apps.photo.models import ImageFile
-from django.conf import settings
 from rest_framework import mixins, permissions, serializers, viewsets
 from rest_framework.parsers import FormParser, MultiPartParser
+
+from apps.photo.models import ImageFile
+from django.conf import settings
 
 from .photos import ImageFileSerializer
 
@@ -26,6 +27,7 @@ class UploadFileSerializer(ImageFileSerializer):
             'original',
             'created',
             'description',
+            'filename',
             'artist',
             'category',
             'duplicates',

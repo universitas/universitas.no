@@ -48,16 +48,15 @@ def test_indesign_create_story(staff_client, scandal_photo):
 
 def test_indesign_update_photos(scandal, scandal_photo, staff_client):
     """Client updates story images from indesign"""
-    data = {
-        'bilete': [{'bildefil': 'scandal.jpg', 'bildetekst': 'one'},
-                   {'bildefil': 'scandal.jpg', 'bildetekst': 'two'}]
-    }
+    data = {'bilete': [
+        {'bildefil': 'scandal.22.jpg', 'bildetekst': 'one'},
+    ]}
     url = f'{api_url}{scandal.pk}/'
     response = staff_client.patch(url, format='json', data=data)
     assert response.status_code == status.HTTP_200_OK
 
     captions = scandal.images.values_list('caption', flat=True)
-    assert sorted(captions) == ['one', 'two']
+    assert sorted(captions) == ['one']
 
     updated_data = staff_client.get(url).data
-    assert updated_data['bilete'][0]['bildefil'] == 'scandal.jpg'
+    assert updated_data['bilete'][0]['bildefil'] == 'scandal.22.jpg'

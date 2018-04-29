@@ -1,12 +1,13 @@
 import json
 import logging
 
-from apps.photo.models import ImageFile
-from apps.stories.models import Story, StoryImage, StoryType
 from rest_framework import authentication, serializers, viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from url_filter.integrations.drf import DjangoFilterBackend
+
+from apps.photo.models import ImageFile
+from apps.stories.models import Story, StoryImage, StoryType
 
 logger = logging.getLogger('apps')
 
@@ -32,7 +33,7 @@ class ProdBildeSerializer(serializers.ModelSerializer):
 
 
 def get_imagefile(filename):
-    img = ImageFile.objects.filter(original__endswith=filename).last()
+    img = ImageFile.objects.search(filename=filename).last()
     if img is None:
         raise MissingImageFileException('ImageFile("%s") not found' % filename)
     return img
@@ -58,16 +59,13 @@ def update_story_image(
         story_image = StoryImage.objects.get(pk=pk, parent_story=story)
     except StoryImage.DoesNotExist:
         story_image = StoryImage(parent_story=story)
-    if bildefil and bildefil != story_image.filename:
         story_image.image_file = get_imagefile(bildefil)
     if prioritet is not None:
         story_image.size = prioritet
     if bildetekst is not None:
         story_image.caption = bildetekst
-    try:
-        story_image.save()
-    except Exception:
-        logger.exception('could not save image')
+    story_image.save()
+    print(story_image)
 
     return story_image
 

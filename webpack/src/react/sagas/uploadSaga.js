@@ -1,4 +1,5 @@
 import { put, takeEvery, select, call } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
 import { pushImageFile, apiPost, apiList } from 'services/api'
 import { assignPhoto } from 'ducks/storyimage'
 import {
@@ -82,10 +83,13 @@ function* postUploadSaga(action) {
   const { response, error } = yield call(apiPost, 'upload', formBody)
   if (response) {
     const { id } = response
-    yield put(uploadPostSuccess(pk, { filename, ...response }))
-    if (story) yield put(assignPhoto(id, parseInt(story)))
+    yield put(uploadPostSuccess(pk, response))
     yield put(photosDiscarded(...duplicates))
     yield put(photoRequested(id))
+    if (story) {
+      yield call(delay, 5000) // wait 5s for image data to return from server.
+      yield put(assignPhoto(id, parseInt(story)))
+    }
   } else {
     console.error(error)
     yield put(uploadPostError(pk, error))

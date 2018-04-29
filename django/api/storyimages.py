@@ -33,7 +33,7 @@ class StoryImageSerializer(serializers.ModelSerializer):
             'index',
             'thumb',
             'filename',
-            # 'size',
+            'size',
         ]
 
 

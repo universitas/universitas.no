@@ -3,10 +3,11 @@ import shutil
 from pathlib import Path
 
 import pytest
+from rest_framework.test import APIClient
+
 from apps.photo.models import ImageFile
 from apps.stories.models import Section, Story, StoryType
 from django.contrib.auth.models import Permission
-from rest_framework.test import APIClient
 
 
 @pytest.fixture()
@@ -41,7 +42,7 @@ def staff_client(db, journalist):
     client = APIClient()
     client.login(username=journalist.username, password='password')
     yield client
-    client.logout()  # maybe not needed?
+    # client.logout()  # maybe not needed?
 
 
 @pytest.fixture(scope='session')
@@ -76,6 +77,7 @@ def scandal_photo(db):
     source = Path(__file__).parent / 'fixtures' / 'dummy.jpg'
     shutil.copy(source, Path('/var/media/scandal.jpg'))
     return ImageFile.objects.create(
+        id=22,
         original='scandal.jpg',
         description=description,
     )

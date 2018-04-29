@@ -16,6 +16,20 @@ const fields = {
     label: 'Bildetekst byline',
     editable: true,
   },
+  size: {
+    type: 'choice',
+    required: true,
+    label: 'prioritet',
+    editable: true,
+    choices: [
+      { value: '5', display_name: '5 (høyest)' },
+      { value: '4', display_name: '4' },
+      { value: '3', display_name: '3' },
+      { value: '2', display_name: '2' },
+      { value: '1', display_name: '1 (lavest)' },
+      { value: '0', display_name: '0 (skal ikke brukes)' },
+    ],
+  },
 }
 
 const mapFields = fields => fn =>

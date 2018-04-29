@@ -1,5 +1,6 @@
 """Celery tasks for stories"""
 
+import re
 from datetime import timedelta
 
 from celery import shared_task
@@ -36,7 +37,8 @@ def update_search_task():
 @shared_task
 def upload_storyimages(pk):
     story = Story.objects.get(pk=pk)
-    target = f'{current_issue().number}/{story.section}/'
+    folder = re.sub(r'[_\W]+', '-', str(story.section))
+    target = f'{current_issue().number}/{folder}/'
     for im in story.images.all():
         upload_imagefile_to_desken.delay(im.imagefile.pk, target)
     return target

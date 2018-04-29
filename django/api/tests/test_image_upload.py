@@ -1,5 +1,6 @@
-from apps.photo.models import ImageFile
 from rest_framework import status
+
+from apps.photo.models import ImageFile
 from utils.testhelpers import dummy_image
 
 api_path = '/api/upload/'
@@ -26,6 +27,7 @@ def test_upload_image(staff_client):
     assert set(response.data) == {
         'id',
         'url',
+        'filename',
         'original',
         'description',
         'artist',

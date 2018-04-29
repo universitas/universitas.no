@@ -6,8 +6,13 @@ import re
 from pathlib import Path
 from typing import Union
 
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
+
 from apps.contributors.models import Contributor
-from apps.issues.models import current_issue
+# from apps.issues.models import current_issue
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import TrigramSimilarity
@@ -15,10 +20,6 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
@@ -185,6 +186,7 @@ class ImageFile(  # type: ignore
         height_field='full_height',
         width_field='full_width',
         max_length=1024,
+        null=True,  # get id before saving image
     )
     full_height = models.PositiveIntegerField(
         verbose_name=_('height'),
@@ -266,17 +268,18 @@ class ImageFile(  # type: ignore
 
     @property
     def filename(self) -> str:
-        return f'{self.stem}{self.suffix}'
+        return f'{self.stem}.{self.pk}{self.suffix}'
 
     @property
     def suffix(self) -> str:
-        if self.stat.mimetype == 'image/jpeg':
-            return '.jpg'
+        if self.stat.mimetype:
+            if self.stat.mimetype == 'image/jpeg':
+                return '.jpg'
+            return mimetypes.guess_extension(self.stat.mimetype)
+        elif self.original:
+            return Path(self.original.name).suffix
         else:
-            return (
-                mimetypes.guess_extension(self.stat.mimetype or '')
-                or Path(self.original.name).suffix
-            )
+            return '.xxx'
 
     @property
     def small(self) -> Thumbnail:
@@ -370,11 +373,23 @@ class ImageFile(  # type: ignore
         if not file_operations.valid_image(img):
             raise ValueError('invalid image file')
         self.stat.mimetype = file_operations.get_mimetype(img)
-        self.build_thumbs()
 
     def save(self, *args, **kwargs):
         if self.pk is None:
+            # make sure image has a id before saving original file
             self.new_image()
+            imagefile = self.original
+            self.original = None
+            self.full_width = 0
+            self.full_height = 0
+            super().save(*args, **kwargs)  # get id
+            # rest framework includes `force_insert=True`, but we only want to
+            # use this for the first save, since otherwise the db will complain
+            # since the image already has a pk, and this must be unique.
+            kwargs.pop('force_insert', '')
+            self.original = imagefile
+            self.build_thumbs()
+
         if not self.stem:
             self.stem = slugify_filename(self.original.name).stem
         super().save(*args, **kwargs)

@@ -10,6 +10,7 @@ from celery import shared_task
 from celery.task import periodic_task
 
 from apps.core import staging
+from apps.issues.models import current_issue
 from django.conf import settings
 from django.core.files import File
 from utils.model_fields import AttrDict
@@ -137,9 +138,11 @@ def new_image_file(fp: BinaryIO, filename: str) -> ImageFile:
 
 
 @shared_task
-def upload_imagefile_to_desken(pk, target='INCOMING'):
+def upload_imagefile_to_desken(pk, target=None):
     """Upload imagefile to desken server."""
     # rsync -azv --progress  --include='UNI*000.pdf' --exclude='*'
+    if target is None:
+        target = Path(f'{current_issue().number}') / 'Prodsys'
     outdir = staging.get_staging_dir('OUT')
     outdir.mkdir(exist_ok=True)
     image = ImageFile.objects.get(pk=pk)
@@ -168,57 +171,3 @@ def copy_image_to_local_filesystem(image, dest=Path('/var/media/')) -> None:
     path.write_bytes(data)
     path.chmod(0o660)
     return path
-
-
-@periodic_task(run_every=timedelta(minutes=1))
-def import_staging_images(max_age=timedelta(minutes=10)) -> List[Path]:
-    """
-    Check staging directories for new or changed image files, and save to
-    database.
-    """
-    files_saved: List[Path] = []
-    for file in staging.new_staging_images(max_age=max_age):
-        if import_image(file):
-            files_saved.append(file)
-    return files_saved
-
-
-def import_image(file: Path) -> bool:
-    """Import image file from staging directory if it passes checks.
-
-    - the file is a valid image file
-    - there's no image with the same md5 in the database
-    - there's no larger image with the same image hash
-
-    returns False if the checks failed and image was not imported
-    """
-    if not ops.valid_image(file):
-        return False
-
-    img = ImageFile(
-        imagehash=ops.get_imagehash(file),
-        stat=AttrDict(
-            md5=ops.get_md5(file),
-            size=ops.get_filesize(file),
-            mtime=ops.get_mtime(file),
-        )
-    )
-    same_md5 = img.similar('md5').first()
-    if same_md5:
-        return False
-
-    same_imghash = img.similar('imagehash').first()
-    if same_imghash:
-        if same_imghash.stat.size > img.stat.size:
-            return False  # do not overwrite
-        else:
-            img.pk = same_imghash.pk  # overwrite smaller file
-
-    img.original.save(
-        file.name,
-        File(file.open('rb')),
-        save=True,
-    )
-
-    logger.debug(f'saved: {img}')
-    return True
