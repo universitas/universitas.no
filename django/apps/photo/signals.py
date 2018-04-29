@@ -23,6 +23,9 @@ def image_pre_delete(sender, instance, **kwargs):
 def image_post_save(sender, instance, created, update_fields, **kwargs):
     """Schedule autocropping and rebuild thumbnail"""
 
+    if instance.original is None:
+        # wait until image was saved with image file
+        return
     # Celery tasks immutable signatures
     autocrop_signature = tasks.autocrop_image_file.si(instance.pk)
     post_save_signature = tasks.post_save_task.si(instance.pk)
