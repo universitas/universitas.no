@@ -95,7 +95,7 @@ function* watchRouteChange() {
   while (true) {
     const action = yield take('ROUTER_LOCATION_CHANGED')
     const { id, model } = R.pathOr({}, ['payload', 'params'], action)
-    if (!model) return
+    if (!model) continue
     const { itemSelected } = modelActions(model)
     yield put(itemSelected(parseInt(id || 0)))
   }
