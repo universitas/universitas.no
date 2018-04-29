@@ -373,22 +373,22 @@ class ImageFile(  # type: ignore
         if not file_operations.valid_image(img):
             raise ValueError('invalid image file')
         self.stat.mimetype = file_operations.get_mimetype(img)
+        return (img.width, img.height)
 
     def save(self, *args, **kwargs):
         if self.pk is None:
             # make sure image has a id before saving original file
-            self.new_image()
+            width, height = self.new_image()
+            self.build_thumbs()
             imagefile = self.original
             self.original = None
-            self.full_width = 0
-            self.full_height = 0
+            self.full_width, self.full_height = width, height
             super().save(*args, **kwargs)  # get id
             # rest framework includes `force_insert=True`, but we only want to
             # use this for the first save, since otherwise the db will complain
             # since the image already has a pk, and this must be unique.
             kwargs.pop('force_insert', '')
             self.original = imagefile
-            self.build_thumbs()
 
         if not self.stem:
             self.stem = slugify_filename(self.original.name).stem
