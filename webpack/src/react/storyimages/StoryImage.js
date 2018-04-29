@@ -39,13 +39,13 @@ const ImageFile = connect(
     props.id ? (
       <ImageData pk={pk} {...props} thumb={small} />
     ) : (
-      <div ref={fetch('photos', pk)} />
+      <div ref={fetch} />
     )
 )
 
 const StoryImageItem = ({ pk, id, filename, fetch, ...props }) =>
   R.isNil(id) ? (
-    <div ref={fetch}>...</div>
+    <div ref={fetch} />
   ) : (
     <div className="StoryImageItem">
       <StoryImageActions {...props} />
