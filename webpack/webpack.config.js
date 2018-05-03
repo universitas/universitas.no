@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const BundleTracker = require('webpack-bundle-tracker')
-const build_dir = process.env.BUILD_DIR || '../build'
+const build_dir = process.env.BUILD_DIR || path.resolve('../build')
 
 module.exports = {
   entry: {
@@ -22,6 +22,18 @@ module.exports = {
     path: path.join(build_dir, ''),
     filename: '[name].js',
   },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          name: 'commons',
+          minChunks: 2,
+          chunks: 'initial',
+          priority: -10,
+        },
+      },
+    },
+  },
   plugins: [
     new webpack.ProvidePlugin({
       // implicitly `import`
@@ -37,16 +49,16 @@ module.exports = {
       path: build_dir,
       filename: 'webpack-stats.json',
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      // output a react-common chunk
-      name: 'react-common',
-      chunks: ['prodsys', 'photo_list_view', 'photo_crop_app'],
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      // output a chunk to bootstrap react
-      name: 'webpack-bootstrap',
-      minChunks: Infinity,
-    }),
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   // output a react-common chunk
+    //   name: 'react-common',
+    //   chunks: ['prodsys', 'photo_list_view', 'photo_crop_app'],
+    // }),
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   // output a chunk to bootstrap react
+    //   name: 'webpack-bootstrap',
+    //   minChunks: Infinity,
+    // }),
   ],
   module: {
     rules: [

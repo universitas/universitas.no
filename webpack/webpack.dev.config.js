@@ -2,6 +2,7 @@ const config = require('./webpack.config.js')
 const webpack = require('webpack')
 // config.devtool = 'eval'  // fast rebuild times
 config.devtool = 'cheap-module-source-map' // also fast
+config.mode = 'development'
 
 function hotify(entry) {
   return [
@@ -15,7 +16,6 @@ function hotify(entry) {
 for (let entry in config.entry) {
   config.entry[entry] = hotify(config.entry[entry])
 }
-
 config.output.publicPath = 'http://localhost:3000/static/'
 config.plugins.push(
   new webpack.HotModuleReplacementPlugin(),
