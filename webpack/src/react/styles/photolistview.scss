@@ -3,9 +3,10 @@
   flex-direction: column;
   height: calc(100vh - 40px);
   user-select: none;
-  input, button {
+  input,
+  button {
     padding: 5px 10px;
-    margin: 5px ;
+    margin: 5px;
     background: white;
   }
   button {
@@ -23,13 +24,13 @@
     background: #eee;
   }
   .mainPanel {
+    //flex: 1;
     .EditImage {
       padding-right: 10px;
       margin-right: 10px;
       border-right: 2px dashed #ddd;
     }
-    display: flex;
+    //display: flex;
     padding: 5px;
-    flex: 1;
   }
 }

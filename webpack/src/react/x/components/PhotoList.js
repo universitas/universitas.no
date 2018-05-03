@@ -32,7 +32,7 @@ const FullThumb = ({ small, title, width, height }) => (
 
 const CroppedThumb = ({ thumb, title }) => (
   <svg className="Thumb" viewBox={'0 0 1 1'}>
-    <image xlinkHref={thumb} height="100%" />
+    <image xlinkHref={thumb} width="100%" height="100%" />
     <Frame />
   </svg>
 )
@@ -62,7 +62,9 @@ Photo = connect(mapImageStatetoProps, mapImageDispatchToProps)(Photo)
 
 const List = ({ images, style = {} }) => (
   <section className="PhotoList" style={style}>
-    {images.map(img => <Photo key={img} id={img} />)}
+    <div className="grid">
+      {images.map(img => <Photo key={img} id={img} />)}
+    </div>
   </section>
 )
 

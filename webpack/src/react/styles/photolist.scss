@@ -12,22 +12,26 @@
 }
 .ResultsPanel {
   .urlPanel {
-    flex: 1 0
+    flex: 1 0;
   }
-  .urlPanel, .countPanel {
+  .urlPanel,
+  .countPanel {
     padding: 5px 10px;
-    margin: 5px ;
+    margin: 5px;
     background: #ddd;
   }
   display: flex;
   flex: 1 1 100%;
 }
 .PhotoList {
-  overflow-y: scroll;
-  display: flex;
   flex: 1;
-  flex-flow: row wrap;
-  align-content: flex-start; // show at top
+  overflow-y: scroll;
+  .grid {
+    height: 0;
+    display: flex;
+    flex-flow: row wrap;
+    align-content: flex-start; // show at top
+  }
   .Photo {
     box-sizing: border-box;
     display: flex;

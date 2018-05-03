@@ -72,9 +72,10 @@ $down-arrow: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox=
       background-color: #ddd;
       display: flex;
       flex-direction: row;
-      flex-shrink: 1;
       align-items: center;
-      flex-basis: 15rem;
+      flex: 1;
+      min-height: 0; // firefox
+      flex-basis: 0; // firefox
       .PdfThumb {
         flex: 1;
         justify-content: center;

@@ -9,7 +9,7 @@ let PreviewImg = ({ src, crop_box, size, aspect, style = {} }) => {
   }
   return (
     <div className="PreviewImg" style={style}>
-      <svg style={styles} viewBox={`0 0 ${aspect} 1`} />
+      <svg style={styles} viewBox={`0 0 ${aspect * 2} 2`} />
     </div>
   )
 }

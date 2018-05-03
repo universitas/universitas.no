@@ -24,6 +24,7 @@
   }
 }
 .StoryTable {
+  height: 0;
   display: grid;
   grid-template-columns: 5fr 2fr 2fr 2fr auto;
   // grid-gap: 0 1px;

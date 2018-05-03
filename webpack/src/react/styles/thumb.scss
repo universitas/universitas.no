@@ -2,6 +2,7 @@
 @import "globals";
 .Thumb {
   display: flex;
+  min-height: 0; // firefox
   flex-direction: column;
   align-items: center;
   justify-content: center;

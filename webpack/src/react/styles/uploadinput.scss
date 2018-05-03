@@ -6,6 +6,7 @@
     }
   }
   .items {
+    height: 0; // keep inside parent
     display: block; // not flex – enables scroll bar
   }
 }
