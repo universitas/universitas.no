@@ -9,9 +9,9 @@ module.exports = {
     head: 'javascripts/head.js',
     vendor: 'javascripts/vendor.js',
     foot: 'javascripts/foot.js',
-    photo_list_view: 'entry/photo_list_view.js',
-    photo_crop_app: 'entry/photo_crop_app.js',
-    prodsys: 'entry/prodsys.js',
+    photo_list_view: 'entrypoints/photo_list_view.js',
+    photo_crop_app: 'entrypoints/photo_crop_app.js',
+    prodsys: 'entrypoints/prodsys.js',
   },
   plugins: [
     new webpack.ProvidePlugin({

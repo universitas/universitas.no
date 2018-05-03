@@ -28,8 +28,8 @@ const MainToolBar = () => (
   <section className="SideBar">
     <AppTool href="/stories" icon="Edit" label="saker" />
     <AppTool href="/photos" icon="Camera" label="foto" />
-    <AppTool href="/issues" icon="Newspaper" label="utgaver" />
-    <AppTool href="/contributors" icon="Person" label="bidragsytere" />
+    <AppTool href="/issues" icon="Newspaper" label="ut&shy;gaver" />
+    <AppTool href="/contributors" icon="Person" label="personer" />
     <AppTool href="/upload" icon="CameraRoll" label="last opp" />
     <div className="spacer" style={{ flex: 1 }} />
     <ErrorTool />

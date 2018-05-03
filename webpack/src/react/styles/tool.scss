@@ -53,10 +53,11 @@ $bblack: rgba(black, 0.2);
       animation: spin 1s linear infinite;
     }
   }
-  border: 2px solid;
+  border: 1px solid;
   border-color: $bwhite $bblack $bblack $bwhite;
   border-opacity: 0.3;
   .toolLabel {
+    text-align: center;
     font-size: 0.7rem;
   }
 }

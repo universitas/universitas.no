@@ -69,7 +69,7 @@ $down-arrow: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox=
   }
   &.pdfs {
     .value {
-      background-color: #ddd;
+      background: rgba(black, 0.15);
       display: flex;
       flex-direction: row;
       align-items: center;

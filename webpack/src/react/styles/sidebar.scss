@@ -5,7 +5,7 @@
   position: relative;
   z-index: 10;
   flex-direction: column;
-  font-size: 3em;
+  font-size: 2.5em;
   color: white;
   background-color: $darkgrey;
 }
@@ -44,7 +44,7 @@
   display: flex;
   flex-direction: column;
   .Avatar {
-    border: 0.05em solid rgba(black, 0.2);
+    border: 1px solid rgba(black, 0.8);
     border-radius: 50%;
     width: 1.2em;
     height: 1.2em;

@@ -7,10 +7,13 @@
   align-items: center;
   justify-content: center;
   background-color: rgba(black, 0.15);
-  &.dropshadow img {
-    max-width: calc(100% - #{2 * $margin});
-    max-height: calc(100% - #{2 * $margin});
-    box-shadow: 0.2em 0.4em 0.5em rgba(black, 0.3);
+  &.dropshadow {
+    background: none;
+    img {
+      max-width: calc(100% - #{2 * $margin});
+      max-height: calc(100% - #{2 * $margin});
+      box-shadow: 0.2em 0.4em 0.5em rgba(black, 0.3);
+    }
   }
   img {
     min-height: 0;
