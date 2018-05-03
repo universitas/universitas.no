@@ -71,7 +71,7 @@ webpack_build() {
   echo 'build webpack for production'
   COMPOSE_FILE='docker-compose.yml:docker-compose.dev.yml:docker-compose.build.yml'
   export COMPOSE_FILE
-  rm ./build/*
+  find ./build/ -type f -delete
   docker-compose run --rm webpack
 }
 
