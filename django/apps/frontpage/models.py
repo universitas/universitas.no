@@ -11,182 +11,7 @@ from utils.model_mixins import EditURLMixin
 logger = logging.getLogger(__name__)
 
 
-class FrontpageManager(models.Manager):
-    def root(self):
-        return super().get_queryset().first()
-
-    def published(self):
-        return super().get_queryset().filter(published=True)
-
-
-class Frontpage(TimeStampedModel):
-
-    objects = FrontpageManager()
-
-    label = models.CharField(
-        unique=True,
-        help_text=_('Unique label used in url'),
-        max_length=100,
-        blank=True,
-    )
-
-    published = models.BooleanField(
-        help_text=_('This page is published.'), default=False
-    )
-
-    def __str__(self):
-        return self.label
-
-    def top_position(self):
-        top_story = self.storymodule_set.order_by('-position').first()
-        if top_story is None:
-            return 0
-        else:
-            return top_story.position
-
-    class Meta:
-        verbose_name = _('Frontpage')
-        verbose_name_plural = _('Frontpages')
-
-    def __unicode__(self):
-        return self.label
-
-
-def validate_columns(value, minvalue=1, maxvalue=12):
-    if not minvalue <= value <= maxvalue:
-        raise ValidationError(
-            _('{} is not a number between {} and {}')
-            .format(value, minvalue, maxvalue)
-        )
-
-
-def validate_height(value, minvalue=1, maxvalue=12):
-    if not minvalue <= value <= maxvalue:
-        raise ValidationError(
-            _('{} is not a number between {} and {}')
-            .format(value, minvalue, maxvalue)
-        )
-
-
-class FrontPageModule(TimeStampedModel, EditURLMixin):
-    """ A single item on the front page """
-
-    class Meta:
-        abstract = True
-
-    frontpage = models.ForeignKey(
-        Frontpage,
-        default=1,
-        editable=True,
-        on_delete=models.CASCADE,
-    )
-
-    height = models.PositiveSmallIntegerField(
-        help_text=_('height - minimum 1 maximum 12'),
-        default=2,
-        validators=[
-            validate_height,
-        ],
-    )
-
-    columns = models.PositiveSmallIntegerField(
-        help_text=_('width - minimum 1 maximum 12'),
-        default=6,
-        validators=[
-            validate_columns,
-        ],
-    )
-
-
-class StoryModule(FrontPageModule):
-    """ Frontpage Story placement module """
-
-    ORDER_GAP = 100
-
-    # positions have free space inbetween to
-    # make reordering possible without changing many objects in the database.
-
-    class Meta:
-        verbose_name = _('Story module')
-        verbose_name_plural = _('Story module')
-        ordering = ['-position']
-
-    frontpage_story = models.ForeignKey(
-        'FrontpageStory',
-        editable=False,
-        on_delete=models.CASCADE,
-    )
-
-    position = models.PositiveIntegerField(
-        help_text=_('larger numbers come first'),
-    )
-
-    def save(self):
-        if not self.position:
-            self.position = self.position_default()
-        super().save()
-
-    def __str__(self):
-        return '{headline} {columns} {height} {position}'.format(
-            headline=self.frontpage_story.headline,
-            columns=self.columns,
-            height=self.height,
-            position=self.position,
-        )
-
-    def position_default(self):
-        return self.frontpage.top_position() + self.ORDER_GAP
-
-    @property
-    def publication_date(self):
-        # TODO: Frontpagestory publication date eget felt i modellen, i stedet
-        # for å hentes fra related story.
-        return self.frontpage_story.story.publication_date
-
-
-class StaticModule(FrontPageModule):
-    """ Block with static placement containing special content """
-
-    class Meta:
-        verbose_name = _('Static module')
-        verbose_name_plural = _('Static modules')
-        ordering = ['position']
-
-    name = models.CharField(max_length=50)
-    content = models.TextField()
-
-    position = models.IntegerField(help_text=_('Placement on front page'), )
-
-    render_template = models.BooleanField(
-        help_text=_('Use django template rendering'), default=False
-    )
-
-    def save(self, *args, **kwargs):
-        if '{' in self.content or '}' in self.content:
-            self.render_template = True
-        super().save(*args, **kwargs)
-
-
 class FrontpageStoryManager(models.Manager):
-    SIZES = [
-        (3, 1),
-        (3, 1),
-        (3, 1),
-        (3, 2),
-        (3, 1),
-        (3, 2),
-        (3, 2),
-        (4, 1),
-        (4, 2),
-        (4, 2),
-        (6, 1),
-        (6, 2),
-        (9, 2),
-        (9, 2),
-        (12, 1),
-        (12, 2),
-    ]
-
     def published(self):
 
         from apps.stories.models import Story
@@ -194,50 +19,26 @@ class FrontpageStoryManager(models.Manager):
             story__publication_status=Story.STATUS_PUBLISHED
         )
 
-    def autocreate(self, story):
-        frontpage = Frontpage.objects.root()
-        html_class = story.section.slug + \
-            random.choice([' negative'] + [''] * 4)
-        lede = (story.lede or story.get_plaintext().strip())[:190]
-        kicker = story.kicker[:190]
-        headline = story.title[:190]
-        vignette = str(story.story_type)[:40]
-
+    def create_for_story(self, story):
         try:
             main_image = story.main_image().imagefile
         except AttributeError:
             main_image = None
 
-        frontpage_story = FrontpageStory(
+        frontpage_story = FrontpageStory.objects.create(
             story=story,
-            headline=headline,
-            lede=lede,
-            kicker=kicker,
-            vignette=vignette,
-            html_class=html_class,
+            headline=story.title[:190],
+            vignette='{story.story_type[:40]}',
+            html_class=story.section.slug,
             imagefile=main_image,
+            priority=story.priority,
         )
-
-        frontpage_story.save()
-
-        priority = story.priority
-        size = self.SIZES[priority + random.randint(0, 3)]
-        msg = 'p:{} size:{}'.format(priority, size)
-        logger.debug(msg)
-
-        columns = size[0]
-        height = size[1] + bool(main_image)
-
-        content_block = StoryModule(
-            frontpage_story=frontpage_story,
-            frontpage=frontpage,
-            columns=columns,
-            height=height,
-        )
-        content_block.save()
+        return frontpage_story
 
 
 class FrontpageStory(TimeStampedModel, EditURLMixin):
+    SIZE_CHOICES = [(n, f'{n}') for n in (2, 3, 4, 6)]
+
     class Meta:
         verbose_name = _('Frontpage Story')
         verbose_name_plural = _('Frontpage Stories')
@@ -247,11 +48,6 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
     story = models.ForeignKey(
         'stories.Story',
         on_delete=models.CASCADE,
-    )
-    placements = models.ManyToManyField(
-        Frontpage,
-        through=StoryModule,
-        help_text=_('position and size of story element.'),
     )
     imagefile = models.ForeignKey(
         ImageFile,
@@ -285,6 +81,41 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
         max_length=200,
         help_text=_('html_class'),
     )
+    columns = models.PositiveSmallIntegerField(
+        default=3,
+        choices=SIZE_CHOICES,
+        verbose_name=_('columns'),
+        help_text=_('base width'),
+    )
+    rows = models.PositiveIntegerField(
+        default=2,
+        choices=SIZE_CHOICES,
+        verbose_name=_('rows'),
+        help_text=_('base height'),
+    )
+    priority = models.FloatField(
+        default=0,
+        verbose_name=_('priority'),
+        help_text=_('Modify ordering.'),
+    )
+    order = models.PositiveIntegerField(
+        default=0,
+        editable=False,
+        verbose_name=_('order'),
+    )
+    published = models.BooleanField(
+        default=True,
+        verbose_name=_('published'),
+        help_text=_('published'),
+    )
+
+    def save(self, *args, **kwargs):
+        hours_pub = self.story.publication_date.timestamp() / 3600
+        hours_pri = self.priority * 24
+        self.order = int(hours_pub + hours_pri)
+        if not self.story.is_published:
+            self.published = False
+        super().save(*args, **kwargs)
 
     @property
     def url(self):
@@ -293,6 +124,10 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
     @property
     def story_type_url(self):
         return self.story.story_type.get_absolute_url()
+
+    @property
+    def size(self):
+        return (self.columns, self.rows)
 
     @property
     def preview(self):

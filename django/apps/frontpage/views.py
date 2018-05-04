@@ -2,7 +2,7 @@
 import logging
 from functools import wraps
 
-from apps.frontpage.models import Frontpage, StoryModule
+from apps.frontpage.models import FrontpageStory
 from apps.stories.models import Section, Story, StoryType
 from django.http import Http404  # HttpResponsePermanentRedirect,
 from django.http import HttpResponseRedirect
@@ -57,7 +57,7 @@ def frontpage_layout(blocks):
     }
 
     for block in blocks:
-        if block.columns + columns_used > MAX_COLUMNS:
+        if block.columns * 2 + columns_used > MAX_COLUMNS:
             ad_channel = ad_channels.get(floor_number)
             floor_number += 1
             if ad_channel:
@@ -66,12 +66,11 @@ def frontpage_layout(blocks):
                     'channel': ad_channel,
                 })
             # floor is filled. Finish it.
-            floorheight = max(item.height for item in floor)
+            floorheight = max(item.rows for item in floor)
             ratio = MAX_COLUMNS / columns_used + 0.1
             columns_used = 0
-            for bb in floor:
-                story = bb.frontpage_story
-                columns = round(bb.columns * ratio)
+            for story in floor:
+                columns = round(story.columns * ratio * 2)
                 columns_used += columns
                 if columns_used > 12:
                     columns = columns + 12 - columns_used
@@ -104,42 +103,33 @@ def frontpage_layout(blocks):
                     'story': story,
                     'url': story.url,
                     'alt': story.headline,
-                    'block': bb,
                 }
                 items.append(item)
             floor = []
             columns_used = 0
 
         floor.append(block)
-        columns_used += block.columns
+        columns_used += block.columns * 2
     return items
 
 
-def get_frontpage_stories(story_queryset, frontpage=None):
+def get_frontpage_stories(stories, num=40):
     """ Find frontpage stories connected to queryset """
-    if frontpage is None:
-        frontpage = Frontpage.objects.root()
-
-    stories = story_queryset.is_on_frontpage(frontpage)
-    result = StoryModule.objects.filter(
-        frontpage=frontpage, frontpage_story__story__in=stories
-    ).prefetch_related(
-        'frontpage_story__imagefile',
-        'frontpage_story__story__story_type__section',
-    )
-    return result
+    qs = FrontpageStory.objects.filter(published=True).prefetch_related(
+        'imagefile',
+        'story__story_type__section',
+    ).order_by('-order')
+    if stories:
+        qs = qs.filter(story__in=stories)
+    return qs[:num]
 
 
 @anonymous_cache(60 * 3)
 def frontpage_view(request, stories=None, frontpage=None):
     """ Shows the newspaper frontpage. """
     context = {}
-    if stories is None:
-        stories = Story.objects.published()
-
-    blocks = get_frontpage_stories(stories).order_by('-position')[:40]
-
-    context['frontpage_items'] = frontpage_layout(blocks)
+    frontpage_stories = get_frontpage_stories(stories)
+    context['frontpage_items'] = frontpage_layout(frontpage_stories)
 
     return render(request, 'frontpage.html', context)
 

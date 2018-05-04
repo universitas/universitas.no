@@ -1,5 +1,3 @@
-
-import apps.frontpage.models
 from django.db import migrations, models
 
 
@@ -11,18 +9,24 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='staticmodule', name='height',
+            model_name='staticmodule',
+            name='height',
             field=models.PositiveSmallIntegerField(
-                help_text='height - minimum 1 maximum 12',
-                validators=[apps.frontpage.models.validate_height],
-                default=2),),
+                help_text='height - minimum 1 maximum 12', default=2
+            ),
+        ),
         migrations.AlterField(
-            model_name='staticmodule', name='render_template',
+            model_name='staticmodule',
+            name='render_template',
             field=models.BooleanField(
-                help_text='Use django template rendering', default=False),),
+                help_text='Use django template rendering', default=False
+            ),
+        ),
         migrations.AlterField(
-            model_name='storymodule', name='height',
+            model_name='storymodule',
+            name='height',
             field=models.PositiveSmallIntegerField(
-                help_text='height - minimum 1 maximum 12',
-                validators=[apps.frontpage.models.validate_height],
-                default=2),), ]
+                help_text='height - minimum 1 maximum 12', default=2
+            ),
+        ),
+    ]

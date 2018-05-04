@@ -39,9 +39,6 @@ class StoryQuerySet(FullTextSearchQuerySet, models.QuerySet):
         ).filter(publication_date__lt=now
                  ).select_related('story_type__section')
 
-    def is_on_frontpage(self, frontpage):
-        return self.filter(frontpagestory__placements=frontpage)
-
 
 class PublishedStoryManager(models.Manager):
     def get_queryset(self):
@@ -287,7 +284,7 @@ class Story(  # type: ignore
 
             if self.frontpagestory_set.count() == 0:
                 # make random frontpage story
-                FrontpageStory.objects.autocreate(story=self)
+                FrontpageStory.objects.create_for_story(story=self)
 
     @property
     def parent_story(self):
