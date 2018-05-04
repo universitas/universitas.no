@@ -2,11 +2,8 @@ const path = require('path')
 const webpack = require('webpack')
 
 // load the default config generator.
-const genDefaultConfig = require('@storybook/react/dist/server/config/defaults/webpack.config.js')
 
-module.exports = (baseConfig, env) => {
-  const config = genDefaultConfig(baseConfig, env)
-
+module.exports = (baseConfig, env, config) => {
   config.resolve.modules.push('../src/react') // import modules from here
 
   config.plugins.push(
