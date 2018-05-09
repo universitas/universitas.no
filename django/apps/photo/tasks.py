@@ -12,10 +12,6 @@ from celery.task import periodic_task
 from apps.core import staging
 from apps.issues.models import current_issue
 from django.conf import settings
-from django.core.files import File
-from utils.model_fields import AttrDict
-
-from . import file_operations as ops
 from .cropping.boundingbox import CropBox
 from .cropping.crop_detector import Feature, HybridDetector
 from .models import ImageFile
@@ -37,6 +33,9 @@ def autocrop_image_file(pk: int) -> bool:
     try:
         instance = ImageFile.objects.get(pk=pk)
     except ImageFile.DoesNotExist:
+        return False
+    if not instance.original:
+        logger.warn(f'Try to autocrop ImageFile with no file: {pk}')
         return False
     imgdata = instance.large.read()  # should be at least 600 x 600 px
     if instance.is_profile_image():
@@ -115,9 +114,11 @@ def clean_up_pending_autocrop() -> int:
     limit = 200  # do in batches
     image_pks = ImageFile.objects.filter(
         cropping_method=ImageFile.CROP_PENDING
+    ).exclude(
+        original=None,
     ).order_by('?').values_list(
         'pk', flat=True
-    )
+    )[:limit]
 
     for image_pk in image_pks[:limit]:
         try:

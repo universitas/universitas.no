@@ -313,7 +313,7 @@ class HybridDetector(FeatureDetector):
     def detect_features(self, source: Image) -> List[Feature]:
         """Find faces and/or keypoints in the image."""
         faces = self.primary.detect_features(source)
-        if faces and sum(faces).size > self.breakpoint:
+        if sum(faces, Box(0, 0, 0, 0)).size > self.breakpoint:
             return faces
         features = faces + self.fallback.detect_features(source)
         return features[:self._number]
