@@ -122,9 +122,12 @@ class ProdStorySerializer(serializers.ModelSerializer):
         return story
 
     def update(self, instance, validated_data):
+        if instance.is_published:
+            raise ValidationError('Cannot update published story.')
         image_data = validated_data.pop('images', [])
         story = super().update(instance, validated_data)
-        story.images.all().update(size=0)
+        if image_data:
+            story.images.all().update(size=0)
         for data in image_data:
             create_or_update_story_image(story=story, **data)
         story.full_clean()
