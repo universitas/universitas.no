@@ -62,8 +62,8 @@ def create_or_update_story_image(
             parent_story=story,
             imagefile=imagefile,
         )
-    story_image.priority = prioritet
-    story_image.caption = bildetekst
+    story_image.size = prioritet or 0
+    story_image.caption = bildetekst or ''
     story_image.save()
     return story_image
 
@@ -124,6 +124,7 @@ class ProdStorySerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         image_data = validated_data.pop('images', [])
         story = super().update(instance, validated_data)
+        story.images.all().update(size=0)
         for data in image_data:
             create_or_update_story_image(story=story, **data)
         story.full_clean()
