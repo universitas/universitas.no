@@ -39,45 +39,33 @@ def get_imagefile(filename):
     return img
 
 
-def update_images(images, story):
-    for img_data in images:
-        pk = img_data.get('prodbilde_id', 0)
-        logger.debug(json.dumps(img_data))
+def create_or_update_story_image(
+    story,
+    prodbilde_id=None,
+    bildefil=None,
+    prioritet=None,
+    bildetekst=None,
+):
+    if bildefil:
         try:
-            if pk:
-                update_story_image(story, pk, **img_data)
-            else:
-                create_story_image(story, **img_data)
+            imagefile = get_imagefile(bildefil)
         except MissingImageFileException as err:
             logger.warn(f'ignore missing image {err}')
+            return
+    elif prodbilde_id is None:
+        raise ValidationError('missing image')
 
-
-def update_story_image(
-    story, pk, bildefil=None, prioritet=None, bildetekst=None, **kwargs
-):
-    try:
-        story_image = StoryImage.objects.get(pk=pk, parent_story=story)
-    except StoryImage.DoesNotExist:
-        story_image = StoryImage(parent_story=story)
-        story_image.image_file = get_imagefile(bildefil)
-    if prioritet is not None:
-        story_image.size = prioritet
-    if bildetekst is not None:
-        story_image.caption = bildetekst
+    if prodbilde_id:
+        story_image = StoryImage.objects.get(pk=prodbilde_id)
+    else:
+        story_image, _ = StoryImage.objects.get_or_create(
+            parent_story=story,
+            imagefile=imagefile,
+        )
+    story_image.priority = prioritet
+    story_image.caption = bildetekst
     story_image.save()
-    print(story_image)
-
     return story_image
-
-
-def create_story_image(story, bildefil, prioritet=0, bildetekst='', **kwargs):
-    image_file = get_imagefile(bildefil)
-    return StoryImage.objects.create(
-        parent_story=story,
-        imagefile=image_file,
-        size=prioritet,
-        caption=bildetekst,
-    )
 
 
 class ProdStorySerializer(serializers.ModelSerializer):
@@ -125,17 +113,19 @@ class ProdStorySerializer(serializers.ModelSerializer):
         return out
 
     def create(self, validated_data):
-        bilete = validated_data.pop('images', [])
+        image_data = validated_data.pop('images', [])
         if Story.objects.filter(pk=validated_data.get('id')):
             raise ValidationError('Story exists')
         story = super().create(validated_data)
-        update_images(bilete, story)
+        for data in image_data:
+            create_or_update_story_image(story=story, **data)
         return story
 
     def update(self, instance, validated_data):
-        bilete = validated_data.pop('images', [])
+        image_data = validated_data.pop('images', [])
         story = super().update(instance, validated_data)
-        update_images(bilete, story)
+        for data in image_data:
+            create_or_update_story_image(story=story, **data)
         story.full_clean()
         story.save()
         return story
