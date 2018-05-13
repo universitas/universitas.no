@@ -70,10 +70,12 @@ class PositionAdmin(admin.ModelAdmin):
         'total',
         'active_now',
         'groups_list',
+        'is_management',
     ]
     search_fields = [
         'title',
     ]
+    list_editable = ['is_management']
 
     def active_now(self, instance):
         active = instance.active()

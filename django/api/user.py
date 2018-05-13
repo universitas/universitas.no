@@ -3,27 +3,18 @@ from rest_framework import serializers
 
 
 class AvatarUserDetailsSerializer(UserDetailsSerializer):
+    """Custom django rest-auth user details serializer."""
 
-    avatar = serializers.SerializerMethodField()
-    contributor_name = serializers.SerializerMethodField()
-
-    def get_avatar(self, instance):
-        try:
-            img = instance.contributor.byline_photo.preview
-            return self._build_uri(img.url)
-        except AttributeError:
-            # no byline photo
-            return None
-
-    def get_contributor_name(self, instance):
-        try:
-            return instance.contributor.display_name
-        except AttributeError:
-            return None
-
-    def _build_uri(self, url):
-        return self._context['request'].build_absolute_uri(url)
+    avatar = serializers.ImageField(
+        source='contributor.byline_photo.preview', read_only=True)
+    contributor_name = serializers.CharField(
+        source='contributor.display_name', read_only=True)
+    contributor = serializers.HyperlinkedRelatedField(
+        view_name='contributor-detail',
+        read_only=True,
+    )
 
     class Meta(UserDetailsSerializer.Meta):
-        fields = list(UserDetailsSerializer.Meta.fields
-                      ) + ['avatar', 'contributor', 'contributor_name']
+        fields = list(UserDetailsSerializer.Meta.fields) + [
+            'avatar', 'contributor', 'contributor_name'
+        ]

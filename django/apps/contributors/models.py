@@ -42,6 +42,12 @@ class ContributorQuerySet(models.QuerySet):
             similarity=TrigramSimilarity('display_name', query)
         ).filter(similarity__gt=cutoff).order_by('-similarity')
 
+    def management(self):
+        managers = Stint.objects.active().management().values_list(
+            'contributor', flat=True
+        )
+        return self.filter(pk__in=managers)
+
 
 class Contributor(FuzzyNameSearchMixin, models.Model):
     """ Someone who contributes content to the newspaper or other staff. """
@@ -186,6 +192,13 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
             logger.debug('added %s to %s' % (self, groups))
         return True
 
+    @property
+    def position(self):
+        stint = self.stint_set.last()
+        if stint:
+            return stint.position.title
+        return None
+
 
 class Position(models.Model):
     """ A postion or job in the publication. """
@@ -222,7 +235,7 @@ class Position(models.Model):
         groups = default_groups()
 
         if self.is_management:
-            self.groups.add(groups.managment)
+            self.groups.add(groups.management)
             self.groups.remove(groups.staff)
         else:
             self.groups.remove(groups.management)

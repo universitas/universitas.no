@@ -36,6 +36,7 @@ class ContributorSerializer(serializers.HyperlinkedModelSerializer):
             'thumb',
             'verified',
             'stint_set',
+            'position',
         ]
 
     byline_photo = serializers.HyperlinkedRelatedField(
@@ -44,14 +45,9 @@ class ContributorSerializer(serializers.HyperlinkedModelSerializer):
         view_name='imagefile-detail',
     )
     stint_set = StintSerializer(many=True, read_only=True)
-    thumb = serializers.SerializerMethodField()
-
-    def get_thumb(self, instance):
-        if not instance.byline_photo:
-            return None
-        build_uri = self._context['request'].build_absolute_uri
-        thumbfile = instance.byline_photo.preview
-        return build_uri(thumbfile.url)
+    thumb = serializers.ImageField(
+        source='byline_photo.preview', read_only=True
+    )
 
 
 class ContributorViewSet(viewsets.ModelViewSet):

@@ -96,3 +96,6 @@ class StoryType(models.Model):
             },
         )
         return url
+
+    def count(self):
+        return self.story_set.count()
