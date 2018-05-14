@@ -1,6 +1,8 @@
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from apps.stories.models import Byline
+
 api_url = '/api/legacy/'
 
 
@@ -11,6 +13,19 @@ def test_indesign_get_stories(scandal):
     assert len(stories) == 1
     assert stories[0]['arbeidstittel'] == scandal.working_title
     assert stories[0]['bilete'] == []
+
+
+def test_indesign_byline(scandal, writer):
+    Byline.objects.create(
+        story=scandal,
+        contributor=writer,
+        credit='text',
+    )
+    response = APIClient().get(f'{api_url}{scandal.pk}/')
+    text = response.data.get('tekst')
+    assert f'@tit: {scandal.title}\n' in text
+    assert f'@tema: {scandal.theme_word}\n' in text
+    assert f'@bl: Tekst: {writer.display_name}\n' in text
 
 
 def test_indesign_patch_anonymous(scandal):
