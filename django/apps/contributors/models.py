@@ -38,9 +38,14 @@ class ContributorQuerySet(models.QuerySet):
     def search(self, query):
         """fuzzy name search"""
         cutoff = 0.3 if len(query) < 6 else 0.5
-        return self.annotate(
+        qs = self.annotate(
             similarity=TrigramSimilarity('display_name', query)
         ).filter(similarity__gt=cutoff).order_by('-similarity')
+        if not qs:
+            qs = self.filter(display_name__search=query)
+        if not qs:
+            qs = self.filter(display_name__icontains=query)
+        return qs
 
 
 class Contributor(FuzzyNameSearchMixin, models.Model):
