@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux'
+import newsFeed from 'ducks/newsFeed'
+import site from 'ducks/site'
 
-const stories = (state = {}, action) => state
-const site = (state = {}, action) => state
-
-export default combineReducers({ stories, site })
+export default combineReducers({ site, newsFeed })

@@ -7,16 +7,9 @@ from apps.stories.models import Section, StoryType
 from apps.issues.models import Issue
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
+from utils.serializers import AbsoluteURLField
 
 from .issues import IssueSerializer
-
-
-class AbsoluteURLField(serializers.URLField):
-    def to_representation(self, value):
-        request = self.context.get('request', None)
-        if not value or request is None:
-            return value
-        return request.build_absolute_uri(value)
 
 
 class StoryTypeSerializer(serializers.ModelSerializer):

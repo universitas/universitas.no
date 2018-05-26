@@ -1,8 +1,10 @@
 import { connect } from 'react-redux'
 import 'styles/universitas.scss'
-import NewsFeed from './components/NewsFeed'
 
 const Menu = ({ sections }) => <section className="Menu">Top menu</section>
+const NewsFeed = ({ sections }) => (
+  <section className="NewsFeed">News feed</section>
+)
 
 const App = ({}) => (
   <div className="Universitas">
@@ -10,7 +12,3 @@ const App = ({}) => (
     <NewsFeed />
   </div>
 )
-
-const mapStateToProps = (state, ownProps) => ({})
-const mapDispatchToProps = (dispatch, ownProps) => ({})
-export default connect(mapStateToProps, mapDispatchToProps)(App)

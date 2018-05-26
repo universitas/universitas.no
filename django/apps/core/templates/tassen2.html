@@ -1,0 +1,28 @@
+{% extends "react-base.html" %}
+{% load render_bundle from webpack_loader %}
+{% block title %}universitas.no{% endblock title %}
+{% block head %}
+<meta property="og:url" content="{{ request.build_absolute_uri }}" />
+<meta property="fb:app_id" content="{{ facebook.app_id }}" />
+<meta property="fb:pages" content="{{ facebook.page_id }}" />
+{% include "_favicons.html" %}
+{% endblock %}
+{% block content %}
+<div id="ReactApp">
+  <div class=loaderWrapper>
+    <div class=loader></div>
+  </div>
+</div>
+{% endblock content %}
+{% block final %}
+  {% render_bundle "universitas" %}
+{% if messages %}
+<script>
+  setTimeout((function() {
+  {% for message in messages %}
+    showMessage('{{message}}', '{{message.level_tag}}');
+  {% endfor %}
+  }), 200);
+</script>
+{% endif %}
+{% endblock final %}
