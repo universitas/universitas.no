@@ -1,7 +1,7 @@
+from apps.stories.models import StoryImage
 from rest_framework import serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
-
-from apps.stories.models import StoryImage
+from utils.serializers import AbsoluteURLField
 
 
 class StoryImageSerializer(serializers.ModelSerializer):
@@ -10,16 +10,8 @@ class StoryImageSerializer(serializers.ModelSerializer):
     filename = serializers.CharField(
         read_only=True, source='imagefile.filename'
     )
-    thumb = serializers.SerializerMethodField()
 
-    def _build_uri(self, url):
-        return self._context['request'].build_absolute_uri(url)
-
-    def get_thumb(self, instance):
-        try:
-            return self._build_uri(instance.imagefile.large.url)
-        except Exception as e:
-            return str(e)
+    thumb = AbsoluteURLField(source='imagefile.large.url')
 
     class Meta:
         model = StoryImage

@@ -1,13 +1,12 @@
 import json
 import logging
 
+from apps.photo.models import ImageFile
+from apps.stories.models import Story, StoryImage, StoryType
 from rest_framework import authentication, serializers, viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from url_filter.integrations.drf import DjangoFilterBackend
-
-from apps.photo.models import ImageFile
-from apps.stories.models import Story, StoryImage, StoryType
 
 logger = logging.getLogger('apps')
 
@@ -104,9 +103,6 @@ class ProdStorySerializer(serializers.ModelSerializer):
     produsert = serializers.IntegerField(source='publication_status')
     tekst = serializers.CharField(style={'base_template': 'textarea.html'})
     version_no = serializers.SerializerMethodField()
-
-    def _build_uri(self, url):
-        return self._context['request'].build_absolute_uri(url)
 
     def get_mappe(self, instance):
         return instance.story_type.prodsys_mappe

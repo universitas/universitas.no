@@ -1,10 +1,10 @@
 import logging
 
-from rest_framework import filters, serializers, viewsets
-from url_filter.integrations.drf import DjangoFilterBackend
-
 from apps.stories.models import Byline, Story, StoryImage, StoryType
 from django.core.exceptions import FieldError
+from rest_framework import filters, serializers, viewsets
+from url_filter.integrations.drf import DjangoFilterBackend
+from utils.serializers import AbsoluteURLField
 
 logger = logging.getLogger('apps')
 
@@ -51,16 +51,6 @@ class StoryTypeSerializer(serializers.ModelSerializer):
 class StorySerializer(serializers.HyperlinkedModelSerializer):
     """ModelSerializer for Story"""
 
-    byline_set = BylineSerializer(
-        many=True,
-        read_only=True,
-    )
-    # images = StoryImageSerializer(
-    #     many=True,
-    #     read_only=True,
-    # )
-    images = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-
     class Meta:
         model = Story
         fields = [
@@ -79,24 +69,16 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
             'images',
         ]
 
+    byline_set = BylineSerializer(many=True, read_only=True)
+    images = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     story_type = serializers.PrimaryKeyRelatedField(
-        queryset=StoryType.objects.all(),
-        read_only=False,
+        queryset=StoryType.objects.all(), read_only=False
     )
     story_type_name = serializers.StringRelatedField(source='story_type')
-    public_url = serializers.SerializerMethodField()
-    edit_url = serializers.SerializerMethodField()
+    public_url = AbsoluteURLField(source='get_absolute_url')
+    edit_url = AbsoluteURLField(source='get_edit_url')
     bodytext_markup = serializers.CharField(trim_whitespace=False)
     working_title = serializers.CharField(trim_whitespace=False)
-
-    def _build_uri(self, url):
-        return self._context['request'].build_absolute_uri(url)
-
-    def get_public_url(self, instance):
-        return self._build_uri(instance.get_absolute_url())
-
-    def get_edit_url(self, instance):
-        return self._build_uri(instance.get_edit_url())
 
     def update(self, instance, validated_data):
         clean_model = (

@@ -44,16 +44,6 @@ class PublishedStoryManager(models.Manager):
     def get_queryset(self):
         return StoryQuerySet(self.model, using=self._db)
 
-    def populate_frontpage(self, **kwargs):
-        """ create some random frontpage stories """
-        if not kwargs:
-            this_year = timezone.now().year
-            kwargs = {'publication_date__year': this_year}
-        new_stories = self.filter(**kwargs).order_by('publication_date')
-        for story in new_stories:
-            story.frontpagestory_set.all().delete()
-            story.save(new=True)
-
     def devalue_hotness(self, factor=1.0):
         """Devalue hot count for all stories."""
         hot_stories = self.filter(hot_count__gte=1)
@@ -265,11 +255,20 @@ class Story(  # type: ignore
         )
 
         try:
-            old_markup = Story.objects.get(pk=self.pk).bodytext_markup
-            if self.bodytext_markup != old_markup:
-                self.bodytext_html = ''
+            old = Story.objects.get(pk=self.pk)
+
         except ObjectDoesNotExist:
             pass
+        else:
+            if old.bodytext_markup != self.bodytext_markup:
+                self.bodytext_html = ''
+            if (
+                self.frontpagestory_set.count() == 0 and (
+                    self.publication_status == self.STATUS_FROM_DESK !=
+                    old.publication_status
+                )
+            ):
+                FrontpageStory.objects.create_for_story(story=self)
 
         super().save(*args, **kwargs)
 
@@ -281,10 +280,6 @@ class Story(  # type: ignore
             # make inline elements
             self.bodytext_markup = self.place_all_inline_elements()
             super().save(update_fields=['bodytext_markup'])
-
-            if self.frontpagestory_set.count() == 0:
-                # make random frontpage story
-                FrontpageStory.objects.create_for_story(story=self)
 
     @property
     def parent_story(self):

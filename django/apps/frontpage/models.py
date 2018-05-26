@@ -1,9 +1,8 @@
 import logging
-import random
 
 from apps.photo.models import ImageFile
-from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from model_utils.models import TimeStampedModel
 from utils.model_mixins import EditURLMixin
@@ -110,7 +109,11 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
     )
 
     def save(self, *args, **kwargs):
-        hours_pub = self.story.publication_date.timestamp() / 3600
+        try:
+            timestamp = self.story.publication_date.timestamp()
+        except AttributeError:
+            timestamp = timezone.now().timestamp()
+        hours_pub = timestamp / 3600
         hours_pri = self.priority * 24
         self.order = int(hours_pub + hours_pri)
         if not self.story.is_published:
