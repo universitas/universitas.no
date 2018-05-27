@@ -3,84 +3,29 @@
 from apps.photo.admin import ThumbAdmin
 from django.contrib import admin
 
-from .models import FrontpageStory, StaticModule, StoryModule
-
-
-class StoryModuleInline(admin.TabularInline):
-    model = StoryModule
-    fields = [
-        'position',
-        'columns',
-        'height',
-    ]
-    extra = 0
+from .models import FrontpageStory
 
 
 @admin.register(FrontpageStory)
 class FrontpageStoryAdmin(admin.ModelAdmin, ThumbAdmin):
     save_on_top = True
-    list_per_page = 25
+    list_per_page = 15
     list_display = [
         'id',
-        'kicker',
+        'columns',
+        'rows',
         'headline',
         'lede',
-        'story',
-        'cropped_thumb',
-    ]
-    readonly_fields = [
-        'cropped_thumb',
-    ]
-    autocomplete_fields = [
-        'story',
-        'imagefile',
-    ]
-    list_editable = [
-        'headline',
-    ]
-    inlines = [
-        StoryModuleInline,
-    ]
-    search_fields = [
-        'headline',
         'kicker',
+        'cropped_thumb',
+        'priority',
+        'order',
+        'published',
     ]
-
-
-@admin.register(StoryModule)
-class StoryModuleAdmin(admin.ModelAdmin):
-    save_on_top = True
-    list_per_page = 25
-    list_display = [
-        'id',
-        'frontpage_story',
-        'publication_date',
-        'position',
-        'columns',
-        'height',
-        'frontpage',
-    ]
+    ordering = ['-order']
+    readonly_fields = ['cropped_thumb']
+    autocomplete_fields = ['story', 'imagefile']
     list_editable = [
-        'position',
-        'columns',
-        'height',
+        'priority', 'kicker', 'headline', 'columns', 'rows', 'published'
     ]
-
-
-@admin.register(StaticModule)
-class StaticModuleAdmin(admin.ModelAdmin):
-    save_on_top = True
-    list_per_page = 25
-    list_display = [
-        'id',
-        'position',
-        'columns',
-        'height',
-        'content',
-        'frontpage',
-    ]
-    list_editable = [
-        'position',
-        'columns',
-        'height',
-    ]
+    search_fields = ['headline']

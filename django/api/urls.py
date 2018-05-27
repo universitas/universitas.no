@@ -11,6 +11,7 @@ from .photos import ImageFileViewSet
 from .stories import StoryTypeViewSet, StoryViewSet
 from .storyimages import StoryImageViewSet
 from .upload_image import FileUploadViewSet
+from .site import SiteDataAPIView
 
 router = routers.DefaultRouter()
 
@@ -33,4 +34,5 @@ urlpatterns = [
         include('rest_framework.urls', namespace='rest_framework')
     ),
     url(r'^rest-auth/', include(rest_auth_urls)),
+    url(r'^site/$', SiteDataAPIView.as_view(), name='site-data')
 ]

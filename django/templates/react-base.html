@@ -1,14 +1,14 @@
+{# base template for react.js apps #}
 {% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html class="no-js" lang="{{ LANGUAGE_CODE }}">
   <head>
-    <title>{% block title %}universitas.no {% if debug %}DEBUG{% endif %}{% endblock %}</title>
+    <title>{% block title %}universitas.no{% endblock %}{% if debug %} DEBUG{% endif %}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% include "_favicons.html" %}
     {% block head %}{% endblock head %}
     {% render_bundle 'vendor' %}
-    {# }{% render_bundle 'stylesheets' %} #}
   </head>
 
   <body>
@@ -16,6 +16,6 @@
       <p>Main content of page</p>
     {% endblock content %}
     {% render_bundle 'commons' %}
-    {% block final %} {% endblock final %}
+    {% block final %}{% endblock final %}
   </body>
 </html>

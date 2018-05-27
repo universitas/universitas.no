@@ -199,7 +199,7 @@ class PublicationStatusFilter(admin.SimpleListFilter):
 def make_frontpage_story(modeladmin, request, queryset):
     make_frontpage_story.short_description = _('make frontpage story')
     for story in queryset:
-        FrontpageStory.objects.autocreate(story=story)
+        FrontpageStory.objects.create_for_story(story)
 
 
 def upload_images(modeladmin, request, queryset):
@@ -350,11 +350,13 @@ class StoryTypeAdmin(admin.ModelAdmin):
         'name',
         'section',
         'prodsys_mappe',
+        'active',
     ]
 
     list_editable = [
         'name',
         'section',
+        'active',
     ]
     search_fields = [
         'name',
