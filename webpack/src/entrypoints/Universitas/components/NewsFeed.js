@@ -1,19 +1,8 @@
 import { connect } from 'react-redux'
 import { getFeed, feedRequested } from 'ducks/newsFeed'
+import LoadMore from 'components/LoadMore'
 import cx from 'classnames'
 import './NewsFeed.scss'
-
-class Loading extends React.Component {
-  componentDidMount() {
-    console.log('mounted')
-    this.props.fetch()
-  }
-
-  render() {
-    const { fetching } = this.props
-    return <div className="Loading"> loading {fetching ? '...' : '–'} </div>
-  }
-}
 
 const withChildren = Component => props =>
   props.children ? <Component {...props} /> : null
@@ -77,31 +66,17 @@ const FeedItem = ({
     </article>
   )
 }
-const FetchMore = ({ fetch, fetching }) => (
-  <div className="FetchMore" onClick={fetch}>
-    {fetching ? 'fetching' : 'fetch more stories'}
-  </div>
-)
 
-const Feed = ({ fetching, feedRequested, results, next }) => {
-  const fetch = () => feedRequested({ offset: R.last(results).order })
+const Loading = connect(getFeed, { feedRequested })(LoadMore)
+
+const Feed = ({ results = [] }) => {
+  const offset = results.length ? R.last(results).order : null
   return (
     <section className="NewsFeed">
       {results.map(props => <FeedItem key={props.id} {...props} />)}
-      <FetchMore fetch={fetch} fetching={fetching} />
+      <Loading offset={offset} />
     </section>
   )
 }
 
-const NewsFeed = props => {
-  const { fetching, feedRequested, ...other } = props
-  return R.isEmpty(other) ? (
-    <Loading {...props} fetch={feedRequested} />
-  ) : (
-    <Feed {...props} />
-  )
-}
-
-const mapStateToProps = state => getFeed(state)
-const mapDispatchToProps = { feedRequested }
-export default connect(mapStateToProps, mapDispatchToProps)(NewsFeed)
+export default connect(getFeed)(Feed)
