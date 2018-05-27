@@ -12,6 +12,7 @@ endpoints = [
     'stories',
     'storyimages',
     'storytypes',
+    'site',
 ]
 
 

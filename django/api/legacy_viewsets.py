@@ -82,6 +82,8 @@ def create_story_image(story, bildefil, prioritet=0, bildetekst='', **kwargs):
 class ProdStorySerializer(serializers.ModelSerializer):
     """ModelSerializer for Story based on legacy prodsys"""
 
+    url_field_name = 'URL'
+
     class Meta:
         model = Story
         fields = [
@@ -91,10 +93,10 @@ class ProdStorySerializer(serializers.ModelSerializer):
             'arbeidstittel',
             'produsert',
             'tekst',
-            'url',
+            'URL',
             'version_no',
         ]
-        extra_kwargs = {'url': {'view_name': 'legacy-detail'}}
+        extra_kwargs = {'URL': {'view_name': 'legacy-detail'}}
 
     bilete = ProdBildeSerializer(required=False, many=True, source='images')
     prodsak_id = serializers.IntegerField(source='id', required=False)
@@ -132,7 +134,7 @@ class ProdStorySerializer(serializers.ModelSerializer):
         bilete = validated_data.pop('images', [])
         story = super().update(instance, validated_data)
         update_images(bilete, story)
-        story.full_clean()
+        story.full_clean(exclude=['url'])
         story.save()
         return story
 

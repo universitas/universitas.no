@@ -139,6 +139,11 @@ class Story(  # type: ignore
         ),
         verbose_name=_('kicker'),
     )
+    url = models.URLField(
+        editable=False,
+        blank=True,
+        default='',
+    )
     lede = MarkupTextField(
         blank=True,
         help_text=_('brief introduction or summary of the story'),
@@ -270,6 +275,9 @@ class Story(  # type: ignore
             ):
                 FrontpageStory.objects.create_for_story(story=self)
 
+        self.url = ''
+        if self.pk:
+            self.url = self.get_absolute_url()
         super().save(*args, **kwargs)
 
         if self.publication_status == self.STATUS_TO_DESK:
@@ -279,6 +287,7 @@ class Story(  # type: ignore
         if new:
             # make inline elements
             self.bodytext_markup = self.place_all_inline_elements()
+            self.url = self.get_absolute_url()
             super().save(update_fields=['bodytext_markup'])
 
     @property
@@ -412,16 +421,6 @@ class Story(  # type: ignore
             self.bodytext_html = ''
             self.save(update_fields=['bodytext_html'])
 
-    def get_absolute_url(self):
-        return reverse(
-            viewname='article',
-            kwargs={
-                'story_id': str(self.id),
-                'section': self.section.slug,
-                'slug': self.slug,
-            }
-        )
-
     def get_shortlink(self):
         url = reverse(
             viewname='article_short',
@@ -430,6 +429,18 @@ class Story(  # type: ignore
             },
         )
         return url
+
+    def get_absolute_url(self):
+        if self.url:
+            return self.url
+        return reverse(
+            viewname='article',
+            kwargs={
+                'story_id': str(self.id),
+                'section': self.section.slug,
+                'slug': self.slug,
+            }
+        )
 
     def children_modified(self):
         """ check if any related objects have been

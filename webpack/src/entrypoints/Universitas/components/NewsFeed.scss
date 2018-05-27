@@ -1,0 +1,87 @@
+@import "styles/_googlefonts.scss";
+@import "styles/_colors.scss";
+
+.FetchMore {
+  cursor: pointer;
+  color: white;
+  padding: 2em;
+  background-color: black;
+  grid-column: 1/-1;
+}
+
+.NewsFeed {
+  font-family: $univ-sans;
+  display: grid;
+  width: 100%;
+  background: #eee;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: 6rem;
+  grid-auto-flow: dense;
+  @for $col from 1 through 6 {
+    .col-#{$col} {
+      grid-column-end: span $col;
+    }
+  }
+  @for $col from 1 through 6 {
+    .col-#{$col} {
+      grid-column-end: span $col;
+    }
+    .row-#{$col} {
+      grid-row-end: span $col;
+    }
+  }
+  .text {
+    margin: 0.5rem;
+  }
+  .Vignette {
+    @include section-background-color;
+    background-color: #777;
+    line-height: 1;
+    font-family: $univ-serif;
+    font-weight: 800;
+    padding: 0.2em 0.3em;
+    margin: 0.4em;
+    color: white;
+    justify-self: start;
+    align-self: start;
+  }
+  .Kicker {
+    font-family: $univ-condensed;
+    font-weight: 300;
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  .Headline {
+    line-height: 1;
+    font-family: $univ-condensed;
+    font-size: 2.5rem;
+    margin: 0;
+    a {
+      color: inherit;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  .FeedItem {
+    background: white;
+    &.negative {
+      background: #444;
+      color: white;
+    }
+    display: grid;
+    grid-template-rows: 1fr auto;
+    grid-template-columns: auto auto;
+    .Vignette {
+      grid-area: 1/1/2/2;
+    }
+    .FeedImage {
+      grid-area: 1/1/2/-1;
+    }
+    .text {
+      grid-area: 2/1/-1/-1;
+    }
+  }
+}

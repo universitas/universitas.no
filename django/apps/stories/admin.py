@@ -350,11 +350,13 @@ class StoryTypeAdmin(admin.ModelAdmin):
         'name',
         'section',
         'prodsys_mappe',
+        'active',
     ]
 
     list_editable = [
         'name',
         'section',
+        'active',
     ]
     search_fields = [
         'name',

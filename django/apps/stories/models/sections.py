@@ -59,10 +59,19 @@ class Section(models.Model):
         )
         return url
 
+    def storytypes(self):
+        return self.storytype_set.active()
+
+
+class StoryTypeQueryset(models.QuerySet):
+    def active(self):
+        return self.filter(active=True)
+
 
 class StoryType(models.Model):
     """ A type of story in the publication. """
 
+    objects = StoryTypeQueryset.as_manager()
     name = models.CharField(unique=True, max_length=50)
     section = models.ForeignKey(
         Section,
@@ -78,6 +87,11 @@ class StoryType(models.Model):
         max_length=50,
         overwrite=True,
         slugify_function=slugify,
+    )
+    active = models.BooleanField(
+        verbose_name=_('active'),
+        help_text=_('is this story type active?'),
+        default=True
     )
 
     class Meta:
@@ -98,4 +112,5 @@ class StoryType(models.Model):
         return url
 
     def count(self):
+        """Number of stories."""
         return self.story_set.count()

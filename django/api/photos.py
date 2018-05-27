@@ -1,38 +1,17 @@
-import json
 import logging
 import re
 
 from apps.contributors.models import Contributor
-from apps.photo.cropping.boundingbox import CropBox
 from apps.photo.models import ImageFile
 from apps.photo.tasks import upload_imagefile_to_desken
 from django.db import models
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, permissions, serializers, status, viewsets
+from rest_framework import filters, serializers, status, viewsets
 from rest_framework.decorators import detail_route
-from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from utils.serializers import AbsoluteURLField
+from utils.serializers import AbsoluteURLField, CropBoxField
 
 logger = logging.getLogger('apps')
-
-
-class jsonDict(dict):
-    def __str__(self):
-        return json.dumps(self)
-
-
-class CropBoxField(serializers.Field):
-    def to_representation(self, obj):
-        return jsonDict(obj.serialize())
-
-    def to_internal_value(self, data):
-        try:
-            if isinstance(data, str):
-                data = json.loads(data)
-            return CropBox(**data)
-        except (Exception) as err:
-            raise ValidationError(str(err)) from err
 
 
 class ImageFileSerializer(serializers.HyperlinkedModelSerializer):

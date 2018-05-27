@@ -110,7 +110,7 @@ class QueryOrderableViewSetMixin(object):
 class StoryTypeViewSet(viewsets.ModelViewSet):
     """ API endpoint that allows StoryType to be viewed or updated.  """
 
-    queryset = StoryType.objects.all().prefetch_related(
+    queryset = StoryType.objects.active().prefetch_related(
         'section',
     ).order_by('name')
     serializer_class = StoryTypeSerializer

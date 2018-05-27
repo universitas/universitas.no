@@ -11,9 +11,9 @@ export default function* rootSaga() {
 
 function* requestFeed(action) {
   const DEBOUNCE = 300 // ms debounce
-  const { params } = action.payload
+  const params = action.payload
   if (!R.isEmpty(params)) yield call(delay, DEBOUNCE)
-  const { response, error } = yield call(apiList, 'frontpage', {})
+  const { response, error } = yield call(apiList, 'frontpage', params)
   if (response) yield put(feedFetched(response))
   else console.error(error)
 }

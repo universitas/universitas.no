@@ -11,7 +11,7 @@ export const getFeed = R.view(sliceLens)
 export const FEED_REQUESTED = 'newsfeed/FEED_REQUESTED'
 export const feedRequested = (params = {}) => ({
   type: FEED_REQUESTED,
-  payload: { params },
+  payload: params,
 })
 
 export const FEED_FETCHED = 'newsfeed/FEED_FETCHED'
@@ -21,15 +21,16 @@ export const feedFetched = data => ({
 })
 
 // reducers
-const initialState = { fetching: false, results: [], next: null }
+const initialState = { fetching: false }
 
-const mergeFeed = fetched => state =>
+const mergeFeed = fetched => (state = []) =>
   R.pipe(
-    state => R.concat(state, fetched)
-    // R.indexBy(R.prop('id')),
-    // R.values
-    //R.sortBy(R.prop('order'))
-  )(fetched)
+    state => R.concat(state, fetched),
+    R.indexBy(R.prop('id')),
+    R.values,
+    R.sortBy(R.prop('order')),
+    R.reverse
+  )(state)
 
 // R.compose(
 //   // state => R.concat(fetched, state),
@@ -41,12 +42,12 @@ const mergeFeed = fetched => state =>
 const getReducer = ({ type, payload, error }) => {
   switch (type) {
     case FEED_REQUESTED:
-      return R.over(sliceLens, R.assoc('fetching', true))
+      return R.assoc('fetching', true)
     case FEED_FETCHED: {
       const { results, next } = payload
       return R.compose(
-        R.over(sliceLens, R.assoc('fetching', false)),
-        R.over(sliceLens, R.assoc('next', next)),
+        R.assoc('fetching', false),
+        R.assoc('next', next),
         R.over(feedLens, mergeFeed(results))
       )
     }

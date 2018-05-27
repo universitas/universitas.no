@@ -4,14 +4,18 @@ from apps.frontpage.models import FrontpageStory
 from rest_framework import pagination, serializers, viewsets
 from rest_framework.response import Response
 from rest_framework.utils.urls import replace_query_param
-from utils.serializers import AbsoluteURLField
+from utils.serializers import AbsoluteURLField, CropBoxField
 
 
 class FrontpageStorySerializer(serializers.ModelSerializer):
     """ModelSerializer for FrontpageStory"""
 
     story_url = AbsoluteURLField(source='url')
-    image = AbsoluteURLField(source='imagefile.small.url')
+    image = AbsoluteURLField(source='imagefile.large.url')
+    crop_box = CropBoxField(read_only=True, source='imagefile.crop_box')
+    section = serializers.IntegerField(
+        read_only=True, source='story.story_type.section.pk'
+    )
 
     class Meta:
         model = FrontpageStory
@@ -28,11 +32,13 @@ class FrontpageStorySerializer(serializers.ModelSerializer):
             'published',
             'story_url',
             'image',
+            'crop_box',
+            'section',
         ]
 
 
 class FrontpagePaginator(pagination.LimitOffsetPagination):
-    default_limit = 10
+    default_limit = 15
 
     def get_paginated_response(self, data):
         return Response(
@@ -59,17 +65,25 @@ class FrontpagePaginator(pagination.LimitOffsetPagination):
 
         self.offset = self.get_offset(request)
         self.request = request
-        if self.count > self.limit and self.template is not None:
-            self.display_page_controls = True
 
-        return list(queryset.filter(order__lt=self.offset)[:self.limit])
+        if self.offset:
+            queryset = queryset.filter(order__lt=self.offset)
+        return list(queryset[:self.limit])
 
 
 class FrontpageStoryViewset(viewsets.ModelViewSet):
-    """
-    API endpoint that allows FrontpageStory to be viewed or updated.
-    """
+    """ Frontpage news feed. """
 
-    queryset = FrontpageStory.objects.order_by('-order')
+    queryset = FrontpageStory.objects.order_by('-order').prefetch_related(
+        'imagefile', 'story__story_type__section'
+    )
     serializer_class = FrontpageStorySerializer
     pagination_class = FrontpagePaginator
+
+    def get_queryset(self):
+        """Sort by section"""
+        try:
+            section = int(self.request.query_params.get('section'))
+            return self.queryset.filter(story__story_type__section=section)
+        except TypeError:
+            return self.queryset
