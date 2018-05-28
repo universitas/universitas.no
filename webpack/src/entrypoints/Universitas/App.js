@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import 'styles/universitas.scss'
 import NewsFeed from './components/NewsFeed'
+import 'styles/universitas.scss'
 
 const Menu = ({ sections }) => <section className="Menu">Top menu</section>
 

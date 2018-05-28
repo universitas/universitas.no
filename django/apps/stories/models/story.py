@@ -267,13 +267,6 @@ class Story(  # type: ignore
         else:
             if old.bodytext_markup != self.bodytext_markup:
                 self.bodytext_html = ''
-            if (
-                self.frontpagestory_set.count() == 0 and (
-                    self.publication_status == self.STATUS_FROM_DESK !=
-                    old.publication_status
-                )
-            ):
-                FrontpageStory.objects.create_for_story(story=self)
 
         self.url = ''
         if self.pk:
@@ -289,6 +282,9 @@ class Story(  # type: ignore
             self.bodytext_markup = self.place_all_inline_elements()
             self.url = self.get_absolute_url()
             super().save(update_fields=['bodytext_markup'])
+
+        if (self.publication_status >= self.STATUS_FROM_DESK):
+            FrontpageStory.objects.create_for_story(story=self)
 
     @property
     def parent_story(self):

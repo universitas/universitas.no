@@ -17,8 +17,8 @@ from .tasks import upload_storyimages
 
 class SmallTextArea:
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})},
-        models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 5, 'cols': 20})},
+        models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 20})},
     }
 
 
@@ -45,8 +45,9 @@ class BylineInline(admin.TabularInline):
 class FrontpageStoryInline(SmallTextArea, admin.TabularInline, ThumbAdmin):
     model = FrontpageStory
     fields = [
-        'headline',
+        'vignette',
         'kicker',
+        'headline',
         'lede',
         'imagefile',
         'full_thumb',
@@ -58,6 +59,7 @@ class FrontpageStoryInline(SmallTextArea, admin.TabularInline, ThumbAdmin):
         'full_thumb',
     ]
     extra = 0
+    max_num = 0
 
 
 class AsideInline(
@@ -245,6 +247,7 @@ class StoryAdmin(admin.ModelAdmin):
         'language',
         'story_type',
         'publication_date',
+        'frontpage',
     ]
 
     # list_editable = [ 'publication_status', ]
@@ -323,6 +326,12 @@ class StoryAdmin(admin.ModelAdmin):
 
     def display_bylines(self, instance):
         return mark_safe(instance.bylines_html) or " -- "
+
+    def frontpage(self, instance):
+        fp = instance.frontpagestory_set.first()
+        if fp:
+            return mark_safe(f'<a href="{fp.get_edit_url()}">{fp}</a>')
+        return '-'
 
     display_bylines.short_description = 'Bylines'  # type: ignore
     display_bylines.allow_tags = True  # type: ignore

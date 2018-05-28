@@ -17,6 +17,7 @@ def test_image_exif(img):
     assert img.created == data.datetime
     assert img.copyright_information == data.copyright
     assert img.description == data.description
+    assert img.original.file.name == img.filename
 
 
 @pytest.mark.django_db
@@ -40,7 +41,7 @@ def test_image_hashes(img):
     assert img.stat.get('md5')[:5] == '4eccf'
     assert img.stat.get('size') == 2966
     assert img.stat.get('mtime') > 1000000000
-    assert img._imagehash[:5] == '0e2d1'  # is string
+    assert img._imagehash[:5] == '1e2d1'  # is string
     assert img.imagehash.hash.shape == (8, 8)  # is ndarray
     assert img.pk is None  # did not save
     assert img.large

@@ -56,10 +56,9 @@ def slugify_filename(filename: str) -> Path:
 
 def upload_image_to(instance: 'ImageFile', filename: str) -> str:
     """Image folder name based on issue number and year"""
-    return str(
-        instance.upload_folder() /
-        (instance.filename or slugify_filename(filename))
-    )
+    if instance.pk and instance.stem:
+        filename = instance.filename  # autogenerate
+    return str(instance.upload_folder() / slugify_filename(filename))
 
 
 class ImageFileQuerySet(models.QuerySet):
@@ -286,11 +285,11 @@ class ImageFile(  # type: ignore
 
     @property
     def medium(self) -> Thumbnail:
-        return self.thumbnail('800x800')
+        return self.thumbnail('800x800', upscale=False)
 
     @property
     def large(self) -> Thumbnail:
-        return self.thumbnail('1500x1500')
+        return self.thumbnail('1500x1500', upscale=False)
 
     @property
     def preview(self) -> Thumbnail:
@@ -376,14 +375,17 @@ class ImageFile(  # type: ignore
         if not file_operations.valid_image(img):
             raise ValueError('invalid image file')
         self.stat.mimetype = file_operations.get_mimetype(img)
-        return (img.width, img.height)
+        return (self.original, img.width, img.height)
 
     def save(self, *args, **kwargs):
+        self.stem = slugify_filename(
+            self.stem or Path(self.original.name).stem
+        )
+
         if self.pk is None:
             # make sure image has a id before saving original file
-            width, height = self.new_image()
+            original, width, height = self.new_image()
             self.build_thumbs()
-            imagefile = self.original
             self.original = None
             self.full_width, self.full_height = width, height
             super().save(*args, **kwargs)  # get id
@@ -391,8 +393,8 @@ class ImageFile(  # type: ignore
             # use this for the first save, since otherwise the db will complain
             # since the image already has a pk, and this must be unique.
             kwargs.pop('force_insert', '')
-            self.original = imagefile
+            # original.name = self.filename
+            self.original = original
+            original.file.name = self.filename
 
-        if not self.stem:
-            self.stem = slugify_filename(self.original.name).stem
         super().save(*args, **kwargs)

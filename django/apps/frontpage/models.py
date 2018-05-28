@@ -10,33 +10,53 @@ from utils.model_mixins import EditURLMixin
 logger = logging.getLogger(__name__)
 
 
+def frontpagestry_size(story):
+    priority = story.priority
+    if priority < 6:
+        return (2, 2, 0)
+    if priority < 8:
+        return (2, 4, 0)
+    if priority < 10:
+        return (4, 4, 0.5)
+    return (6, 4, 1)
+
+
 class FrontpageStoryManager(models.Manager):
     def published(self):
 
         from apps.stories.models import Story
-        return super().get_queryset().filter(
-            story__publication_status=Story.STATUS_PUBLISHED
+        return self.get_queryset().filter(
+            published=True,
+            story__publication_status=Story.STATUS_PUBLISHED,
         )
 
     def create_for_story(self, story):
+        if story.frontpagestory_set.count():
+            return None
         try:
             main_image = story.main_image().imagefile
         except AttributeError:
             main_image = None
 
+        columns, rows, priority = frontpagestry_size(story)
+
         frontpage_story = FrontpageStory.objects.create(
             story=story,
             headline=story.title[:190],
-            vignette='{story.story_type[:40]}',
+            vignette=str(story.story_type)[:40],
             html_class=story.section.slug,
             imagefile=main_image,
-            priority=story.priority,
+            published=True,
+            columns=columns,
+            rows=rows,
+            priority=priority,
         )
         return frontpage_story
 
 
 class FrontpageStory(TimeStampedModel, EditURLMixin):
-    SIZE_CHOICES = [(n, f'{n}') for n in (2, 3, 4, 6)]
+    COL_CHOICES = [(n, f'{n}') for n in (2, 3, 4, 6)]
+    ROW_CHOICES = [(n, f'{n}') for n in (1, 2, 3, 4, 6, 8)]
 
     class Meta:
         verbose_name = _('Frontpage Story')
@@ -82,13 +102,13 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
     )
     columns = models.PositiveSmallIntegerField(
         default=3,
-        choices=SIZE_CHOICES,
+        choices=COL_CHOICES,
         verbose_name=_('columns'),
         help_text=_('base width'),
     )
     rows = models.PositiveIntegerField(
         default=2,
-        choices=SIZE_CHOICES,
+        choices=ROW_CHOICES,
         verbose_name=_('rows'),
         help_text=_('base height'),
     )
@@ -116,8 +136,6 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
         hours_pub = timestamp / 3600
         hours_pri = self.priority * 24
         self.order = int(hours_pub + hours_pri)
-        if not self.story.is_published:
-            self.published = False
         super().save(*args, **kwargs)
 
     @property
@@ -136,6 +154,13 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
     def preview(self):
         if self.imagefile:
             return self.imagefile.preview
+        else:
+            return None
+
+    @property
+    def small(self):
+        if self.imagefile:
+            return self.imagefile.small
         else:
             return None
 
