@@ -140,10 +140,11 @@ class Story(  # type: ignore
         ),
         verbose_name=_('kicker'),
     )
-    url = models.URLField(
+    url = models.CharField(
         editable=False,
         blank=True,
         default='',
+        max_length=256,
     )
     lede = MarkupTextField(
         blank=True,

@@ -1,12 +1,12 @@
-import json
 import logging
 
-from apps.photo.models import ImageFile
-from apps.stories.models import Story, StoryImage, StoryType
 from rest_framework import authentication, serializers, viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from url_filter.integrations.drf import DjangoFilterBackend
+
+from apps.photo.models import ImageFile
+from apps.stories.models import Story, StoryImage, StoryType
 
 logger = logging.getLogger('apps')
 
@@ -128,8 +128,6 @@ class ProdStorySerializer(serializers.ModelSerializer):
             story.images.all().update(size=0)
         for data in image_data:
             create_or_update_story_image(story=story, **data)
-        story.full_clean()
-        update_images(bilete, story)
         story.full_clean(exclude=['url'])
         story.save()
         return story
