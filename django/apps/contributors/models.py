@@ -38,9 +38,12 @@ class ContributorQuerySet(models.QuerySet):
     def search(self, query):
         """fuzzy name search"""
         cutoff = 0.3 if len(query) < 6 else 0.5
-        return self.annotate(
+        qs = self.annotate(
             similarity=TrigramSimilarity('display_name', query)
         ).filter(similarity__gt=cutoff).order_by('-similarity')
+        if qs.count():
+            return qs
+        return self.filter(display_name__unaccent__icontains=query)
 
     def management(self):
         managers = Stint.objects.active().management().values_list(

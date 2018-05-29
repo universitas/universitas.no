@@ -1,27 +1,28 @@
 """ Photography and image files in the publication  """
 
-from django.core.files.base import ContentFile
-from io import BytesIO
 import logging
 import mimetypes
 import re
+from io import BytesIO
 from pathlib import Path
 from typing import Union
+
 import PIL
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
 
 from apps.contributors.models import Contributor
 # from apps.issues.models import current_issue
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import TrigramSimilarity
+from django.core.files.base import ContentFile
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
@@ -394,10 +395,11 @@ class ImageFile(  # type: ignore
             blob = BytesIO()
             img.save(blob, img.format, quality=80)
             original.file = ContentFile(blob.getvalue())
+            self.original = original
 
         self.stat.mimetype = file_operations.get_mimetype(img)
-
-        return (original, img.width, img.height)
+        self.full_width = img.width
+        self.full_height = img.height
 
     def save(self, *args, **kwargs):
         self.stem = slugify_filename(
@@ -406,9 +408,11 @@ class ImageFile(  # type: ignore
 
         if self.pk is None:
             # make sure image has a id before saving original file
-            original, width, height = self.new_image()
-            print(original, width, height)
+            self.new_image()
             self.build_thumbs()
+            original, width, height = (
+                self.original, self.full_width, self.full_height
+            )
             self.original = None
             self.full_width, self.full_height = width, height
             super().save(*args, **kwargs)  # get id
@@ -416,7 +420,6 @@ class ImageFile(  # type: ignore
             # use this for the first save, since otherwise the db will complain
             # since the image already has a pk, and this must be unique.
             kwargs.pop('force_insert', '')
-            # original.name = self.filename
             self.original = original
             original.file.name = self.filename
 
