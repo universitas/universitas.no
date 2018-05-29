@@ -41,9 +41,11 @@ class ContributorQuerySet(models.QuerySet):
         qs = self.annotate(
             similarity=TrigramSimilarity('display_name', query)
         ).filter(similarity__gt=cutoff).order_by('-similarity')
-        if qs.count():
-            return qs
-        return self.filter(display_name__unaccent__icontains=query)
+        if not qs:
+            qs = self.filter(display_name__search=query)
+        if not qs:
+            qs = self.filter(display_name__unaccent__icontains=query)
+        return qs
 
     def management(self):
         managers = Stint.objects.active().management().values_list(

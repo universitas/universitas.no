@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 from rest_framework.test import APIClient
 
+from apps.contributors.models import Contributor
 from apps.photo.models import ImageFile
 from apps.stories.models import Section, Story, StoryType
 from django.contrib.auth.models import Permission
@@ -56,11 +57,20 @@ def news():
 
 
 @pytest.fixture
+def writer(db):
+    writer = Contributor.objects.create(display_name='Ernest Hemingway', )
+    yield writer
+    writer.delete()
+
+
+@pytest.fixture
 def scandal(db, news):
     """A typical news story"""
     story = Story.objects.create(
         story_type=news,
         working_title='A shocking scandal!',
+        title='A shocking scandal!',
+        theme_word='scandal',
     )
     yield story
     story.delete()

@@ -3,10 +3,9 @@ from collections import OrderedDict
 from pathlib import Path
 from typing import List, Union
 
+import cv2
 import numpy
 from numpy import ndarray as CVImage
-
-import cv2
 
 from .boundingbox import Box
 
@@ -313,7 +312,7 @@ class HybridDetector(FeatureDetector):
     def detect_features(self, source: Image) -> List[Feature]:
         """Find faces and/or keypoints in the image."""
         faces = self.primary.detect_features(source)
-        if faces and sum(faces).size > self.breakpoint:
+        if sum(faces, Box(0, 0, 0, 0)).size > self.breakpoint:
             return faces
         features = faces + self.fallback.detect_features(source)
         return features[:self._number]

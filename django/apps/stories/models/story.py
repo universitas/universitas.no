@@ -2,6 +2,10 @@
 
 import logging
 
+from django_extensions.db.fields import AutoSlugField
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+
 from apps.contributors.models import Contributor
 from apps.frontpage.models import FrontpageStory
 from apps.markup.models import Alias
@@ -12,9 +16,6 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django_extensions.db.fields import AutoSlugField
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
 from utils.model_mixins import EditURLMixin
 
 from .byline import Byline, clean_up_bylines
@@ -139,10 +140,11 @@ class Story(  # type: ignore
         ),
         verbose_name=_('kicker'),
     )
-    url = models.URLField(
+    url = models.CharField(
         editable=False,
         blank=True,
         default='',
+        max_length=256,
     )
     lede = MarkupTextField(
         blank=True,
@@ -506,8 +508,8 @@ class Story(  # type: ignore
         for tag, attr in head_tags:
             text = getattr(self, attr)
             if text:
-                output.append(f'@{tag}:{text}')
-        for bl in self.bylines.all():
+                output.append(f'@{tag}: {text}')
+        for bl in self.byline_set.all():
             output.append(str(bl))
         output.append(self.bodytext_markup)
         for aside in self.asides.all():
