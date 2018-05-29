@@ -44,8 +44,14 @@ class ContributorQuerySet(models.QuerySet):
         if not qs:
             qs = self.filter(display_name__search=query)
         if not qs:
-            qs = self.filter(display_name__icontains=query)
+            qs = self.filter(display_name__unaccent__icontains=query)
         return qs
+
+    def management(self):
+        managers = Stint.objects.active().management().values_list(
+            'contributor', flat=True
+        )
+        return self.filter(pk__in=managers)
 
 
 class Contributor(FuzzyNameSearchMixin, models.Model):
@@ -191,6 +197,13 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
             logger.debug('added %s to %s' % (self, groups))
         return True
 
+    @property
+    def position(self):
+        stint = self.stint_set.last()
+        if stint:
+            return stint.position.title
+        return None
+
 
 class Position(models.Model):
     """ A postion or job in the publication. """
@@ -227,7 +240,7 @@ class Position(models.Model):
         groups = default_groups()
 
         if self.is_management:
-            self.groups.add(groups.managment)
+            self.groups.add(groups.management)
             self.groups.remove(groups.staff)
         else:
             self.groups.remove(groups.management)

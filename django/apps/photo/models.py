@@ -3,9 +3,11 @@
 import logging
 import mimetypes
 import re
+from io import BytesIO
 from pathlib import Path
 from typing import Union
 
+import PIL
 from model_utils.models import TimeStampedModel
 from slugify import Slugify
 from sorl import thumbnail
@@ -16,6 +18,7 @@ from apps.contributors.models import Contributor
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import TrigramSimilarity
+from django.core.files.base import ContentFile
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
@@ -29,7 +32,10 @@ from .exif import ExifData, exif_to_json, extract_exif_data
 from .imagehash import ImageHashModelMixin
 
 logger = logging.getLogger(__name__)
+
 PROFILE_IMAGE_UPLOAD_FOLDER = 'byline-photo'
+SIZE_LIMIT = 4_000  # Maximum width or height of uploads
+BYTE_LIMIT = 3_000_000  # Maximum filesize of upload or compress
 
 image_file_validator = FileExtensionValidator(['jpg', 'jpeg', 'png'])
 
@@ -57,10 +63,9 @@ def slugify_filename(filename: str) -> Path:
 
 def upload_image_to(instance: 'ImageFile', filename: str) -> str:
     """Image folder name based on issue number and year"""
-    return str(
-        instance.upload_folder() /
-        (instance.filename or slugify_filename(filename))
-    )
+    if instance.pk and instance.stem:
+        filename = instance.filename  # autogenerate
+    return str(instance.upload_folder() / slugify_filename(filename))
 
 
 class ImageFileQuerySet(models.QuerySet):
@@ -286,8 +291,12 @@ class ImageFile(  # type: ignore
         return self.thumbnail('200x200')
 
     @property
+    def medium(self) -> Thumbnail:
+        return self.thumbnail('800x800', upscale=False)
+
+    @property
     def large(self) -> Thumbnail:
-        return self.thumbnail('1500x1500')
+        return self.thumbnail('1500x1500', upscale=False)
 
     @property
     def preview(self) -> Thumbnail:
@@ -319,26 +328,27 @@ class ImageFile(  # type: ignore
         self.preview
         logger.info(f'built thumbs {self}')
 
-    def add_exif_from_file(self) -> dict:
-        if self.pk:
-            raw = self.small.read()
-        else:
-            fp = self.original
-            if fp.closed:
-                fp.open('rb')
-            fp.seek(0)
-            raw = fp.read()
-            fp.seek(0)
-        self.exif_data = exif_to_json(raw)
-        data = extract_exif_data(self.exif_data)
-        if not self.description:
-            self.description = data.description
-        if not self.copyright_information:
-            self.copyright_information = data.copyright
-        if data.datetime:
-            self.created = data.datetime
+    def add_exif_from_file(self, img=None) -> dict:
+        if img is None:
+            if self.pk:
+                src = self.small
+            else:
+                src = self.original
+            img = file_operations.pil_image(src)
+        try:
+            data = exif_to_json(img)
+        except Exception:
+            raise
+            data = {}
 
-        return self.exif_data
+        self.exif_data = data
+        if not self.description:
+            self.description = self.exif.description
+        if not self.copyright_information:
+            self.copyright_information = self.exif.copyright
+        if self.exif.datetime:
+            self.created = self.exif.datetime
+        return data
 
     def delete_thumbnails(self, delete_file=False) -> None:
         """Delete all thumbnails, optinally delete original too"""
@@ -367,20 +377,42 @@ class ImageFile(  # type: ignore
         merge_instances(self, *list(others)).save()
 
     def new_image(self):
-        """Check image file and record metadata"""
-        self.add_exif_from_file()
-        img = file_operations.pil_image(self.original)
+        """Check image file, compress if needed, and record metadata"""
+        original = self.original
+        img = file_operations.pil_image(original)
         if not file_operations.valid_image(img):
             raise ValueError('invalid image file')
+        img = file_operations.pil_image(original)
+        self.add_exif_from_file(img)
+        if any([
+            original.size > BYTE_LIMIT,
+            img.width > SIZE_LIMIT,
+            img.height > SIZE_LIMIT,
+        ]):
+            img.thumbnail(
+                size=(SIZE_LIMIT, SIZE_LIMIT), resample=PIL.Image.LANCZOS
+            )
+            blob = BytesIO()
+            img.save(blob, img.format, quality=80)
+            original.file = ContentFile(blob.getvalue())
+            self.original = original
+
         self.stat.mimetype = file_operations.get_mimetype(img)
-        return (img.width, img.height)
+        self.full_width = img.width
+        self.full_height = img.height
 
     def save(self, *args, **kwargs):
+        self.stem = slugify_filename(
+            self.stem or Path(self.original.name).stem
+        )
+
         if self.pk is None:
             # make sure image has a id before saving original file
-            width, height = self.new_image()
+            self.new_image()
             self.build_thumbs()
-            imagefile = self.original
+            original, width, height = (
+                self.original, self.full_width, self.full_height
+            )
             self.original = None
             self.full_width, self.full_height = width, height
             super().save(*args, **kwargs)  # get id
@@ -388,8 +420,7 @@ class ImageFile(  # type: ignore
             # use this for the first save, since otherwise the db will complain
             # since the image already has a pk, and this must be unique.
             kwargs.pop('force_insert', '')
-            self.original = imagefile
+            self.original = original
+            original.file.name = self.filename
 
-        if not self.stem:
-            self.stem = slugify_filename(self.original.name).stem
         super().save(*args, **kwargs)

@@ -781,41 +781,42 @@ class Migration(migrations.Migration):
         ),
         migrations.CreateModel(
             name='StoryType',
-            fields=[
-                (
-                    'id',
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name='ID'
-                    )
+            fields=[(
+                'id',
+                models.AutoField(
+                    auto_created=True,
+                    primary_key=True,
+                    serialize=False,
+                    verbose_name='ID'
+                )
+            ), ('name', models.CharField(max_length=50, unique=True)), (
+                'prodsys_mappe',
+                models.CharField(blank=True, max_length=20, null=True)
+            ), (
+                'slug',
+                django_extensions.db.fields.AutoSlugField(
+                    blank=True,
+                    default='storytype-slug',
+                    editable=False,
+                    overwrite=True,
+                    populate_from=['name'],
+                    verbose_name='slug'
+                )
+            ), (
+                'section',
+                models.ForeignKey(
+                    default=apps.stories.models.sections.default_section,
+                    on_delete=django.db.models.deletion.SET_DEFAULT,
+                    to='stories.Section'
+                )
+            ), (
+                'active',
+                models.BooleanField(
+                    default=True,
+                    help_text='is this story type active?',
+                    verbose_name='active'
                 ),
-                ('name', models.CharField(max_length=50, unique=True)),
-                (
-                    'prodsys_mappe',
-                    models.CharField(blank=True, max_length=20, null=True)
-                ),
-                (
-                    'slug',
-                    django_extensions.db.fields.AutoSlugField(
-                        blank=True,
-                        default='storytype-slug',
-                        editable=False,
-                        overwrite=True,
-                        populate_from=['name'],
-                        verbose_name='slug'
-                    )
-                ),
-                (
-                    'section',
-                    models.ForeignKey(
-                        default=apps.stories.models.sections.default_section,
-                        on_delete=django.db.models.deletion.SET_DEFAULT,
-                        to='stories.Section'
-                    )
-                ),
-            ],
+            )],
             options={
                 'verbose_name': 'StoryType',
                 'verbose_name_plural': 'StoryTypes',

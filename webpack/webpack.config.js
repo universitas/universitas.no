@@ -16,6 +16,7 @@ module.exports = {
     photo_list_view: 'entrypoints/photo_list_view.js',
     photo_crop_app: 'entrypoints/photo_crop_app.js',
     prodsys: 'entrypoints/prodsys.js',
+    universitas: 'entrypoints/universitas.js',
   },
   output: {
     // for example ../build/head.[hash].js

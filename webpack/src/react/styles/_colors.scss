@@ -1,0 +1,104 @@
+@charset "UTF-8";
+
+$separator-line: 1px solid #eee;
+
+$light-grey: #999;
+$medium-grey: #777;
+$dark-grey: #333;
+$medium-yellow: #ffb653;
+
+$section-colors: (
+  nyheter: #c44530,
+  nett: #c44530,
+  kultur: #6fab50,
+  anmeldelser: #6fab50,
+  debatt: #3b7e9c,
+  side-2: #3b7e9c,
+  magasin: #ffb653
+);
+
+$header-font-family: $univ-condensed;
+$header-font-weight: 700;
+$header-font-style: normal;
+$header-font-color: $medium-grey;
+$header-line-height: 1.1;
+$header-top-margin: 0.3rem;
+
+@function color-get($section, $change: none) {
+  $base-color: map-get($section-colors, $section);
+  $color: none;
+  @if $change == darker {
+    $color: scale-color($base-color, $lightness: -25%, $saturation: -15%);
+  } @else if $change == lighter {
+    $color: scale-color($base-color, $lightness: 20%, $saturation: 25%);
+  } @else {
+    $color: $base-color;
+  }
+  @return $color;
+}
+
+.swatches {
+  @each $section, $color in $section-colors {
+    .#{$section} {
+      border: 0.2em solid white;
+      color: white;
+      $medium: color-get($section, $change: medium);
+      $dark: color-get($section, $change: darker);
+      $light: color-get($section, $change: lighter);
+      background-color: $medium;
+      &:after {
+        content: "#{$medium}";
+      }
+      &.dark {
+        background-color: $dark;
+        &:after {
+          content: "#{$dark}";
+        }
+      }
+      &.light {
+        background-color: $light;
+        &:after {
+          content: "#{$light}";
+        }
+      }
+    }
+  }
+}
+
+@mixin section-color( $section, $change: medium, $text: false) {
+  $color: color-get($section, $change);
+  @if $text {
+    color: $color;
+  } @else {
+    background-color: $color;
+  }
+}
+
+%faximile {
+  box-shadow: 1px 4px 8px -1px rgba(0, 0, 0, 0.3);
+}
+
+%section-vignette-text {
+  font-family: $univ-serif;
+  font-weight: 700;
+}
+
+@mixin section-text-color {
+  @each $section, $color in $section-colors {
+    .#{$section} & {
+      @include section-color($section, $text: true);
+    }
+  }
+}
+
+@mixin section-background-color {
+  @each $section, $color in $section-colors {
+    $i: index(($section-colors),  ($section $color));
+    &.section-#{$i} {
+      @include section-color($section, lighter);
+    }
+    &.#{$section} {
+      @include section-color($section, lighter);
+    }
+  }
+}

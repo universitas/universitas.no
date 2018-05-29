@@ -1,13 +1,12 @@
 import json
 import logging
 
+from apps.photo.models import ImageFile
+from apps.stories.models import Story, StoryImage, StoryType
 from rest_framework import authentication, serializers, viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from url_filter.integrations.drf import DjangoFilterBackend
-
-from apps.photo.models import ImageFile
-from apps.stories.models import Story, StoryImage, StoryType
 
 logger = logging.getLogger('apps')
 
@@ -71,6 +70,8 @@ def create_or_update_story_image(
 class ProdStorySerializer(serializers.ModelSerializer):
     """ModelSerializer for Story based on legacy prodsys"""
 
+    url_field_name = 'URL'
+
     class Meta:
         model = Story
         fields = [
@@ -80,10 +81,10 @@ class ProdStorySerializer(serializers.ModelSerializer):
             'arbeidstittel',
             'produsert',
             'tekst',
-            'url',
+            'URL',
             'version_no',
         ]
-        extra_kwargs = {'url': {'view_name': 'legacy-detail'}}
+        extra_kwargs = {'URL': {'view_name': 'legacy-detail'}}
 
     bilete = ProdBildeSerializer(required=False, many=True, source='images')
     prodsak_id = serializers.IntegerField(source='id', required=False)
@@ -92,9 +93,6 @@ class ProdStorySerializer(serializers.ModelSerializer):
     produsert = serializers.IntegerField(source='publication_status')
     tekst = serializers.CharField(style={'base_template': 'textarea.html'})
     version_no = serializers.SerializerMethodField()
-
-    def _build_uri(self, url):
-        return self._context['request'].build_absolute_uri(url)
 
     def get_mappe(self, instance):
         return instance.story_type.prodsys_mappe
@@ -131,6 +129,8 @@ class ProdStorySerializer(serializers.ModelSerializer):
         for data in image_data:
             create_or_update_story_image(story=story, **data)
         story.full_clean()
+        update_images(bilete, story)
+        story.full_clean(exclude=['url'])
         story.save()
         return story
 

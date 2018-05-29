@@ -1,0 +1,58 @@
+// based on: https://github.com/tobiasahlin/SpinKit
+
+$loaderSpeed: 1200ms;
+$blue: lighten(blue, 40%);
+$red: lighten(red, 20%);
+
+.LoadingIndicator {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2em 0;
+}
+
+.cubeGrid {
+  font-size: 4rem;
+  margin: 0.5em;
+  width: 3.1em;
+  height: 3.1em;
+  display: flex;
+  justify-content: space-between;
+  .cube {
+    width: 1em;
+    height: 1em;
+    transition: 0.5s background ease-out;
+    transform: scale(1, 1);
+    animation: cubeGridScaleDelay $loaderSpeed infinite ease-in-out;
+    &.isLoading {
+      background-color: $blue;
+    }
+    &.isQuiet {
+      background-color: #ddd;
+      animation: none;
+      @media (hover: hover) {
+        &:hover {
+          background-color: $red;
+        }
+      }
+    }
+  }
+  flex-flow: row wrap-reverse;
+  @for $n from 0 through 8 {
+    .cube-#{$n} {
+      $delay: floor($n / 3) + ($n % 3);
+      animation-delay: $loaderSpeed / 10 * $delay;
+    }
+  }
+}
+
+@keyframes cubeGridScaleDelay {
+  10%,
+  70% {
+    transform: scale(1, 1);
+  }
+  40% {
+    transform: scale(0, 0);
+  }
+}

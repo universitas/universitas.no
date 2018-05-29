@@ -40,23 +40,10 @@ class StoryQuerySet(FullTextSearchQuerySet, models.QuerySet):
         ).filter(publication_date__lt=now
                  ).select_related('story_type__section')
 
-    def is_on_frontpage(self, frontpage):
-        return self.filter(frontpagestory__placements=frontpage)
-
 
 class PublishedStoryManager(models.Manager):
     def get_queryset(self):
         return StoryQuerySet(self.model, using=self._db)
-
-    def populate_frontpage(self, **kwargs):
-        """ create some random frontpage stories """
-        if not kwargs:
-            this_year = timezone.now().year
-            kwargs = {'publication_date__year': this_year}
-        new_stories = self.filter(**kwargs).order_by('publication_date')
-        for story in new_stories:
-            story.frontpagestory_set.all().delete()
-            story.save(new=True)
 
     def devalue_hotness(self, factor=1.0):
         """Devalue hot count for all stories."""
@@ -152,6 +139,11 @@ class Story(  # type: ignore
             'secondary headline, usually displayed above main headline'
         ),
         verbose_name=_('kicker'),
+    )
+    url = models.URLField(
+        editable=False,
+        blank=True,
+        default='',
     )
     lede = MarkupTextField(
         blank=True,
@@ -269,12 +261,17 @@ class Story(  # type: ignore
         )
 
         try:
-            old_markup = Story.objects.get(pk=self.pk).bodytext_markup
-            if self.bodytext_markup != old_markup:
-                self.bodytext_html = ''
+            old = Story.objects.get(pk=self.pk)
+
         except ObjectDoesNotExist:
             pass
+        else:
+            if old.bodytext_markup != self.bodytext_markup:
+                self.bodytext_html = ''
 
+        self.url = ''
+        if self.pk:
+            self.url = self.get_absolute_url()
         super().save(*args, **kwargs)
 
         if self.publication_status == self.STATUS_TO_DESK:
@@ -284,11 +281,11 @@ class Story(  # type: ignore
         if new:
             # make inline elements
             self.bodytext_markup = self.place_all_inline_elements()
+            self.url = self.get_absolute_url()
             super().save(update_fields=['bodytext_markup'])
 
-            if self.frontpagestory_set.count() == 0:
-                # make random frontpage story
-                FrontpageStory.objects.autocreate(story=self)
+        if (self.publication_status >= self.STATUS_FROM_DESK):
+            FrontpageStory.objects.create_for_story(story=self)
 
     @property
     def parent_story(self):
@@ -421,16 +418,6 @@ class Story(  # type: ignore
             self.bodytext_html = ''
             self.save(update_fields=['bodytext_html'])
 
-    def get_absolute_url(self):
-        return reverse(
-            viewname='article',
-            kwargs={
-                'story_id': str(self.id),
-                'section': self.section.slug,
-                'slug': self.slug,
-            }
-        )
-
     def get_shortlink(self):
         url = reverse(
             viewname='article_short',
@@ -439,6 +426,18 @@ class Story(  # type: ignore
             },
         )
         return url
+
+    def get_absolute_url(self):
+        if self.url:
+            return self.url
+        return reverse(
+            viewname='article',
+            kwargs={
+                'story_id': str(self.id),
+                'section': self.section.slug,
+                'slug': self.slug,
+            }
+        )
 
     def children_modified(self):
         """ check if any related objects have been

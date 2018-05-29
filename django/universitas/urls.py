@@ -1,8 +1,9 @@
 """Base url router for universitas.no"""
 from api.urls import urlpatterns as api_urls
 from apps.core.views import HumansTxtView, RobotsTxtView, search_404_view
-from apps.frontpage.views import (frontpage_view, section_frontpage,
-                                  storytype_frontpage)
+from apps.frontpage.views import (
+    frontpage_view, section_frontpage, storytype_frontpage
+)
 from apps.issues.views import PdfArchiveView, PubPlanView
 from apps.photo.views import PhotoAppView
 from apps.search import urls as search_urls
@@ -35,6 +36,11 @@ urlpatterns = [
         r'^prodsys',
         TemplateView.as_view(template_name='prodsys.html'),
         name='prodsys'
+    ),
+    re_path(
+        r'^dev/',
+        TemplateView.as_view(template_name='tassen2.html'),
+        name='frontpage2'
     ),
 
     # Flat pages

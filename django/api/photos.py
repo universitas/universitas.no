@@ -1,38 +1,18 @@
-import json
 import logging
 import re
 
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, permissions, serializers, status, viewsets
+from rest_framework import filters, serializers, status, viewsets
 from rest_framework.decorators import detail_route
-from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from apps.contributors.models import Contributor
-from apps.photo.cropping.boundingbox import CropBox
 from apps.photo.models import ImageFile
 from apps.photo.tasks import upload_imagefile_to_desken
 from django.db import models
+from utils.serializers import AbsoluteURLField, CropBoxField
 
 logger = logging.getLogger('apps')
-
-
-class jsonDict(dict):
-    def __str__(self):
-        return json.dumps(self)
-
-
-class CropBoxField(serializers.Field):
-    def to_representation(self, obj):
-        return jsonDict(obj.serialize())
-
-    def to_internal_value(self, data):
-        try:
-            if isinstance(data, str):
-                data = json.loads(data)
-            return CropBox(**data)
-        except (Exception) as err:
-            raise ValidationError(str(err)) from err
 
 
 class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
@@ -66,19 +46,16 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
     artist = serializers.CharField(allow_blank=True)
-    thumb = serializers.SerializerMethodField()
-    small = serializers.SerializerMethodField()
-    large = serializers.SerializerMethodField()
     width = serializers.IntegerField(source='full_width')
     height = serializers.IntegerField(source='full_height')
     mimetype = serializers.SerializerMethodField()
-    original = serializers.SerializerMethodField()
     method = serializers.SerializerMethodField()
     usage = serializers.IntegerField(read_only=True)
     crop_box = CropBoxField()
-
-    def _build_uri(self, url):
-        return self._context['request'].build_absolute_uri(url)
+    original = AbsoluteURLField(source='original.url')
+    small = AbsoluteURLField(source='small.url')
+    large = AbsoluteURLField(source='large.url')
+    thumb = AbsoluteURLField(source='preview.url')
 
     def find_artist(self, validated_data):
         """Assign artist to contributor if able."""
@@ -105,18 +82,6 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_mimetype(self, instance):
         return instance.stat.mimetype
-
-    def get_original(self, instance):
-        return self._build_uri(instance.original.url)
-
-    def get_thumb(self, instance):
-        return self._build_uri(instance.preview.url)
-
-    def get_small(self, instance):
-        return self._build_uri(instance.small.url)
-
-    def get_large(self, instance):
-        return self._build_uri(instance.large.url)
 
 
 class ImageFileViewSet(viewsets.ModelViewSet):

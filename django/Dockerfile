@@ -32,5 +32,8 @@ RUN mkdir /home/django/.ptpython &&\
     ln -s /var/logs/.ptpython_history /home/django/.ptpython_history &&\
     ln -s /app/ptpython_config.py /home/django/.ptpython/config.py
 
+RUN sed -i '/name="memory"/s/256MiB/1GiB/' /etc/ImageMagick-6/policy.xml &&\
+    sed -i '/name="disk"/s/1GiB/4GiB/' /etc/ImageMagick-6/policy.xml
+
 WORKDIR /app/
 ENTRYPOINT ["/app/docker-entrypoint.sh"]

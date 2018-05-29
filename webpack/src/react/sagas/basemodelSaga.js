@@ -36,7 +36,8 @@ import {
 } from 'ducks/basemodel'
 import { push } from 'redux-little-router'
 
-const DEBOUNCE_TIMEOUT = 1000
+const PATCH_DEBOUNCE = 1000
+const SEARCH_DEBOUNCE = 300
 
 // router selector
 const getRouteParams = R.path(['router', 'params'])
@@ -120,7 +121,7 @@ function* fetchItem(action) {
 }
 
 function* queryChanged(action) {
-  yield call(delay, 300) // debounce
+  yield call(delay, SEARCH_DEBOUNCE) // debounce
   yield call(requestItems, action)
 }
 
@@ -135,7 +136,7 @@ function* requestItems(action) {
 
 function* patchSaga(action) {
   // debounce
-  yield call(delay, DEBOUNCE_TIMEOUT)
+  yield call(delay, PATCH_DEBOUNCE)
   const { itemPatched, apiPatch } = modelFuncs(action)
   const { id, field, value } = action.payload
   const { error, response } = yield call(apiPatch, id, { [field]: value })

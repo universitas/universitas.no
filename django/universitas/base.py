@@ -166,7 +166,7 @@ THUMBNAIL_BACKEND = 'apps.photo.thumb_backend.KeepNameThumbnailBackend'
 # With boto and amazon s3, we don't check if file exist.
 # Automatic overwrite if not found in cache key
 THUMBNAIL_FORCE_OVERWRITE = True
-THUMBNAIL_PREFIX = 'thumb-cache/'
+THUMBNAIL_PREFIX = 'imgcache/'
 THUMBNAIL_REDIS_DB = 1
 THUMBNAIL_REDIS_HOST = redis_host
 THUMBNAIL_KEY_PREFIX = SITE_URL

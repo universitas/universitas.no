@@ -117,6 +117,8 @@ export const baseInitialState = R.pipe(
   R.set(navigationLens, {})
 )
 
+const mergeLeft = R.flip(R.merge)
+
 // :: Action -> State -> State -- (pointfree redux reducer)
 const getReducer = ({ type, payload }) => {
   switch (type) {
@@ -124,7 +126,7 @@ const getReducer = ({ type, payload }) => {
       // items fetched and pagination updated
       const { results, next, previous, count, url } = payload
       return R.compose(
-        R.over(itemsLens, R.merge(R.indexBy(R.prop('id'), results))),
+        R.over(itemsLens, mergeLeft(R.indexBy(R.prop('id'), results))),
         R.set(currentItemsLens, R.pluck('id', results)),
         R.set(navigationLens, {
           results: results.length,
@@ -139,7 +141,7 @@ const getReducer = ({ type, payload }) => {
       // items fetched, but no change in selection (current pagination)
       return R.over(
         itemsLens,
-        R.merge(R.indexBy(R.prop('id'), payload.results))
+        mergeLeft(R.indexBy(R.prop('id'), payload.results))
       )
     case ITEMS_DISCARDED: {
       const { ids = [] } = payload

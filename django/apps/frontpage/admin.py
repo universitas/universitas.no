@@ -1,86 +1,66 @@
 """ Admin for frontpage app.  """
 
 from apps.photo.admin import ThumbAdmin
+from django import forms
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 
-from .models import FrontpageStory, StaticModule, StoryModule
+from .models import FrontpageStory
+
+smallTextArea = forms.Textarea(attrs={'cols': '16', 'rows': '4'})
 
 
-class StoryModuleInline(admin.TabularInline):
-    model = StoryModule
-    fields = [
-        'position',
-        'columns',
-        'height',
-    ]
-    extra = 0
+class FrontPageListForm(forms.ModelForm):
+    class Meta:
+        widgets = {
+            'lede': smallTextArea,
+            'headline': smallTextArea,
+            'kicker': smallTextArea,
+            'html_class': smallTextArea,
+            'vignette': forms.TextInput(attrs={'size': '10'}),
+            'priority': forms.NumberInput(attrs={'style': 'width: 3em'}),
+        }
 
 
 @admin.register(FrontpageStory)
 class FrontpageStoryAdmin(admin.ModelAdmin, ThumbAdmin):
     save_on_top = True
-    list_per_page = 25
+    list_per_page = 15
     list_display = [
         'id',
+        'published',
+        'order',
+        'priority',
+        'columns',
+        'rows',
+        'vignette',
         'kicker',
         'headline',
         'lede',
-        'story',
-        'cropped_thumb',
+        'html_class',
+        'full_thumb',
+        'for_story',
     ]
-    readonly_fields = [
-        'cropped_thumb',
-    ]
-    autocomplete_fields = [
-        'story',
-        'imagefile',
-    ]
+    ordering = ['-order']
+    autocomplete_fields = ['story', 'imagefile']
     list_editable = [
-        'headline',
-    ]
-    inlines = [
-        StoryModuleInline,
-    ]
-    search_fields = [
-        'headline',
+        'priority',
         'kicker',
-    ]
-
-
-@admin.register(StoryModule)
-class StoryModuleAdmin(admin.ModelAdmin):
-    save_on_top = True
-    list_per_page = 25
-    list_display = [
-        'id',
-        'frontpage_story',
-        'publication_date',
-        'position',
+        'headline',
+        'lede',
+        'vignette',
         'columns',
-        'height',
-        'frontpage',
+        'rows',
+        'published',
+        'html_class',
     ]
-    list_editable = [
-        'position',
-        'columns',
-        'height',
-    ]
+    search_fields = ['headline']
 
+    def for_story(self, instance):
+        url = instance.story.get_edit_url()
+        style = 'display: block; width:150px;'
+        html = f'<a style="{style} "href="{url}">{instance.story}</a>'
+        return mark_safe(html)
 
-@admin.register(StaticModule)
-class StaticModuleAdmin(admin.ModelAdmin):
-    save_on_top = True
-    list_per_page = 25
-    list_display = [
-        'id',
-        'position',
-        'columns',
-        'height',
-        'content',
-        'frontpage',
-    ]
-    list_editable = [
-        'position',
-        'columns',
-        'height',
-    ]
+    def get_changelist_form(self, request, **kwargs):
+        return FrontPageListForm

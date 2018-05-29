@@ -1,4 +1,3 @@
-import apps.frontpage.models
 import django.utils.timezone
 import model_utils.fields
 from django.db import migrations, models
@@ -162,17 +161,13 @@ class Migration(migrations.Migration):
                 (
                     'height',
                     models.PositiveSmallIntegerField(
-                        validators=[apps.frontpage.models.validate_height],
-                        help_text='height - minimum 1 maximum 3',
-                        default=1
+                        help_text='height - minimum 1 maximum 3', default=1
                     )
                 ),
                 (
                     'columns',
                     models.PositiveSmallIntegerField(
-                        validators=[apps.frontpage.models.validate_columns],
-                        help_text='width - minimum 1 maximum 12',
-                        default=6
+                        help_text='width - minimum 1 maximum 12', default=6
                     )
                 ),
                 ('name', models.CharField(max_length=50)),
@@ -232,17 +227,13 @@ class Migration(migrations.Migration):
                 (
                     'height',
                     models.PositiveSmallIntegerField(
-                        validators=[apps.frontpage.models.validate_height],
-                        help_text='height - minimum 1 maximum 3',
-                        default=1
+                        help_text='height - minimum 1 maximum 3', default=1
                     )
                 ),
                 (
                     'columns',
                     models.PositiveSmallIntegerField(
-                        validators=[apps.frontpage.models.validate_columns],
-                        help_text='width - minimum 1 maximum 12',
-                        default=6
+                        help_text='width - minimum 1 maximum 12', default=6
                     )
                 ),
                 (
