@@ -98,6 +98,7 @@ class ImageFileManager(models.Manager):
         fingerprint=None,
         imagehash=None,
         filename=None,
+        cutoff=0.5,
     ):
         """Search for images matching query."""
         qs = self.get_queryset()
@@ -116,10 +117,10 @@ class ImageFileManager(models.Manager):
             if results.count():
                 return results
         if filename:
-            return qs.annotate(
-                similarity=TrigramSimilarity('stem',
-                                             Path(filename).stem)
-            ).filter(similarity__gt=0.5).order_by('-similarity')
+            trigram = TrigramSimilarity('stem', Path(filename).stem)
+            return qs.annotate(similarity=trigram
+                               ).filter(similarity__gt=cutoff
+                                        ).order_by('-similarity')
         return qs.none()
 
     def filename_search(self, file_name, similarity=0.5):

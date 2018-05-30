@@ -35,17 +35,22 @@ def default_groups():
 
 
 class ContributorQuerySet(models.QuerySet):
-    def search(self, query):
-        """fuzzy name search"""
-        cutoff = 0.3 if len(query) < 6 else 0.5
-        qs = self.annotate(
+    def match(self, query, cutoff=0.5):
+        """stricter name search"""
+        return self.annotate(
             similarity=TrigramSimilarity('display_name', query)
         ).filter(similarity__gt=cutoff).order_by('-similarity')
-        if not qs:
-            qs = self.filter(display_name__search=query)
-        if not qs:
-            qs = self.filter(display_name__unaccent__icontains=query)
-        return qs
+
+    def search(self, query, cutoff=0.5):
+        """fuzzy name search"""
+        trigram = TrigramSimilarity('display_name', query)
+        queryset = self.annotate(similarity=trigram).order_by('-similarity')
+        result = queryset.filter(similarity__gt=cutoff)
+        if not result:
+            result = queryset.filter(display_name__search=query)
+        if not result:
+            result = queryset.filter(display_name__unaccent__icontains=query)
+        return result
 
     def management(self):
         managers = Stint.objects.active().management().values_list(
@@ -118,7 +123,8 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
         from apps.photo.models import ImageFile
         img = ImageFile.objects.search(
             filename=f'{self}.jpg',
-        ).filter(category=ImageFile.PROFILE).first()
+            cutoff=0.8,
+        ).profile_images().first()
 
         if img:
             self.byline_photo = img

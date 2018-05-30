@@ -60,20 +60,34 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
     def find_artist(self, validated_data):
         """Assign artist to contributor if able."""
         # this is slightly hacky ....
-        artist = validated_data.pop('artist', None)
-        if not artist:
-            return
-        contributor = Contributor.objects.search(artist).first()
-        validated_data['contributor'] = contributor
-        if contributor is None:
-            validated_data['copyright_information'] = artist
-            validated_data['category'] = ImageFile.EXTERNAL
+        logger.info(str(validated_data))
+        artist = validated_data.pop('artist', '?')
+        if artist != '?':
+            if validated_data.get('category') != ImageFile.EXTERNAL:
+                contributor = Contributor.objects.search(artist, 0.2).first()
+            else:
+                contributor = None
+            validated_data['contributor'] = contributor
+            if contributor is None:
+                validated_data['copyright_information'] = artist
+                if artist:
+                    validated_data['category'] = ImageFile.EXTERNAL
+
+        logger.info(str(validated_data))
 
     def create(self, validated_data):
         self.find_artist(validated_data)
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
+        category = validated_data.get('category')
+        artist = validated_data.get('artist')
+
+        if not category:
+            validated_data['category'] = instance.category
+        elif category != instance.category and not artist:
+            validated_data['artist'] = instance.artist
+
         self.find_artist(validated_data)
         return super().update(instance, validated_data)
 
