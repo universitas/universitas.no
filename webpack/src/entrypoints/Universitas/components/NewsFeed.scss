@@ -1,8 +1,6 @@
-@import "styles/_googlefonts.scss";
-@import "styles/_colors.scss";
+@import "styles/_common.scss";
 
-$feed-width: 1400px;
-$row-height: 6rem;
+$gap: 1rem;
 
 .FetchMore {
   cursor: pointer;
@@ -13,29 +11,28 @@ $row-height: 6rem;
 }
 
 .NewsFeed {
-  max-width: $feed-width;
+  padding: $gap/2 0;
+  background: #eee;
+  max-width: $content-width;
   font-family: $univ-sans;
   display: grid;
-  background: #eee;
-  grid-gap: 1rem;
+  grid-gap: $gap;
   grid-template-columns: repeat(6, 1fr);
-  grid-auto-rows: $row-height;
+  grid-auto-rows: minmax($row-height, auto);
   grid-auto-flow: dense;
-  @for $col from 1 through 6 {
-    .col-#{$col} {
-      grid-column-end: span $col;
+  @for $n from 1 through 6 {
+    .col-#{$n} {
+      grid-column-end: span $n;
+    }
+    .row-#{$n} {
+      grid-row-end: span $n;
     }
   }
-  @for $col from 1 through 6 {
-    .col-#{$col} {
-      grid-column-end: span $col;
-    }
-    .row-#{$col} {
-      grid-row-end: span $col;
-    }
-  }
-  .text {
-    margin: 0.5rem;
+  .Kicker,
+  .Headline,
+  .Lede,
+  .Vignette {
+    margin: 0.4rem;
   }
   .Vignette {
     @include section-background-color;
@@ -44,7 +41,6 @@ $row-height: 6rem;
     font-family: $univ-serif;
     font-weight: 800;
     padding: 0.2em 0.3em;
-    margin: 0.4em;
     color: white;
     justify-self: start;
     align-self: start;
@@ -53,13 +49,11 @@ $row-height: 6rem;
     font-family: $univ-condensed;
     font-weight: 300;
     font-size: 1.2rem;
-    margin: 0;
+    margin-bottom: 0;
   }
   .Headline {
-    line-height: 1;
-    font-family: $univ-condensed;
+    @extend %headline;
     font-size: 2.5rem;
-    margin: 0;
     a {
       color: inherit;
       text-decoration: none;
@@ -68,23 +62,27 @@ $row-height: 6rem;
       }
     }
   }
+  .Lede {
+    margin-top: 0;
+  }
   .FeedItem {
     background: white;
-    &.negative {
-      background: #444;
-      color: white;
-    }
     display: grid;
-    grid-template-rows: 1fr auto;
-    grid-template-columns: auto auto;
+    grid-template-rows: [image-start] 1fr [image-end title-start] auto
+      [title-end];
+    grid-template-columns: [image-start title-start] auto [image-end title-end];
+    &.negative {
+      background: $dark-grey;
+      color: white;
+      .Headline {
+        color: inherit;
+      }
+    }
     .Vignette {
-      grid-area: 1/1/2/2;
+      grid-area: image;
     }
     .FeedImage {
-      grid-area: 1/1/2/-1;
-    }
-    .text {
-      grid-area: 2/1/-1/-1;
+      grid-area: image;
     }
   }
 }

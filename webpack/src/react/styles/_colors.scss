@@ -1,7 +1,5 @@
 @charset "UTF-8";
 
-$separator-line: 1px solid #eee;
-
 $light-grey: #999;
 $medium-grey: #777;
 $dark-grey: #333;
@@ -16,13 +14,6 @@ $section-colors: (
   side-2: #3b7e9c,
   magasin: #ffb653
 );
-
-$header-font-family: $univ-condensed;
-$header-font-weight: 700;
-$header-font-style: normal;
-$header-font-color: $medium-grey;
-$header-line-height: 1.1;
-$header-top-margin: 0.3rem;
 
 @function color-get($section, $change: none) {
   $base-color: map-get($section-colors, $section);
@@ -72,15 +63,6 @@ $header-top-margin: 0.3rem;
   } @else {
     background-color: $color;
   }
-}
-
-%faximile {
-  box-shadow: 1px 4px 8px -1px rgba(0, 0, 0, 0.3);
-}
-
-%section-vignette-text {
-  font-family: $univ-serif;
-  font-weight: 700;
 }
 
 @mixin section-text-color {

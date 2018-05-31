@@ -1,0 +1,25 @@
+@import "_sanitize.scss";
+@import "_googlefonts.scss";
+@import "_colors.scss";
+
+$content-width: 1400px;
+$row-height: 4rem;
+$separator-line: 1px solid #eee;
+
+%headline {
+  font-family: $univ-condensed;
+  font-weight: 600;
+  font-style: normal;
+  color: $dark-grey;
+  margin-top: 0.3rem;
+  line-height: 1;
+}
+
+%faximile {
+  box-shadow: 1px 4px 8px -1px rgba(0, 0, 0, 0.3);
+}
+
+%section-vignette-text {
+  font-family: $univ-serif;
+  font-weight: 700;
+}

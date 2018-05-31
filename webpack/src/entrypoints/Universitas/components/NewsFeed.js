@@ -58,11 +58,10 @@ const FeedItem = ({
     <article className={className} title={title}>
       <FeedImage href={story_url} image={image} crop_box={crop_box} />
       <Vignette section={section}>{vignette}</Vignette>
-      <div className="text">
-        <Kicker>{kicker}</Kicker>
-        <Headline href={story_url}>{headline}</Headline>
-        <Lede>{lede}</Lede>
-      </div>
+      <Kicker>{kicker}</Kicker>
+      <Headline href={story_url}>{headline}</Headline>
+
+      <Lede>{lede}</Lede>
     </article>
   )
 }

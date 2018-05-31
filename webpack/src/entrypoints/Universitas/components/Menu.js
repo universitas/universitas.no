@@ -1,24 +1,27 @@
-import { connect } from 'react-redux'
 import cx from 'classnames'
 import 'styles/universitas.scss'
-import { getSite, siteRequested } from 'ducks/site'
-import { requestData } from 'utils/hoc'
 import Logo from 'components/Universitas'
+import Sections from './Sections.js'
 import './Menu.scss'
 
-const SectionItem = ({ id, title, url, storytypes = [] }) => (
-  <div className={cx('SectionItem')}>{title}</div>
+const Level = ({ children, className }) => (
+  <div className={cx('Level', className)}>{children}</div>
 )
 
-export const Menu = ({ sections = [], ...props }) => (
+const Search = ({}) => (
+  <div className="Search">
+    <input type="text" placeholder="søk..." />
+  </div>
+)
+
+const Menu = ({ sections = [], ...props }) => (
   <section className={cx('Menu')}>
-    <Logo />
-    {sections.map(props => <SectionItem key={props.id} {...props} />)}
+    <Level>
+      <Logo className={cx('Logo')} />
+      <Sections />
+      <Search />
+    </Level>
   </section>
 )
 
-const mapStateToProps = getSite
-const mapDispatchToProps = { fetchData: siteRequested }
-export default connect(mapStateToProps, mapDispatchToProps)(
-  requestData(Menu, 'sections')
-)
+export default Menu

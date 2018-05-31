@@ -1,3 +1,10 @@
+@import "styles/_common.scss";
+
+body {
+  font-family: $univ-sans, sans-serif;
+  font-size: 16px;
+}
+
 .Universitas {
   display: flex;
   flex-direction: column;
