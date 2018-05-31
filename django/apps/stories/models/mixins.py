@@ -145,6 +145,13 @@ class TextContent(models.Model, MarkupModelMixin):
         verbose_name=_('bodytext html tagged')
     )
 
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old = self.__class__.objects.get(pk=self.pk)
+            if old.bodytext_markup != self.bodytext_markup:
+                self.bodytext_html = ''
+        super().save(*args, **kwargs)
+
     def get_html(self):
         """ Returns text content as html. """
         if self.bodytext_markup and not self.bodytext_html:

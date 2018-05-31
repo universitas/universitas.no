@@ -261,15 +261,6 @@ class Story(  # type: ignore
             self.working_title or self.title or f'[{self.story_type}]'
         )
 
-        try:
-            old = Story.objects.get(pk=self.pk)
-
-        except ObjectDoesNotExist:
-            pass
-        else:
-            if old.bodytext_markup != self.bodytext_markup:
-                self.bodytext_html = ''
-
         self.url = ''
         if self.pk:
             self.url = self.get_absolute_url()
