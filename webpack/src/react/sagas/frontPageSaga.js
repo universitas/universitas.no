@@ -19,7 +19,7 @@ function* requestFeed(action) {
 }
 
 function* requestSite(action) {
-  const { response, error } = yield call(apiList, 'site')
+  const { response, error } = yield call(apiList, 'site', {})
   if (response) yield put(siteFetched(response))
-  else console.error(error)
+  else console.log(error)
 }

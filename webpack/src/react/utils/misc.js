@@ -1,9 +1,9 @@
 import * as Redux from 'redux'
+import * as R from 'ramda'
 
 export const compose = // use redux devtools if available
   (typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
   Redux.compose
-import * as R from 'ramda'
 
 // AnimationFrame based debounce function
 export const debounce = (func, wait) => {

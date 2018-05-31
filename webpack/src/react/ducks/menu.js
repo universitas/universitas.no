@@ -19,7 +19,6 @@ const getReducer = ({ type, payload, error }) => {
     case SITE_REQUESTED:
       return R.assoc('fetching', true)
     case SITE_FETCHED:
-    case 'hello':
       return R.compose(R.assoc('fetching', false), R.merge(payload))
     default:
       return R.identity

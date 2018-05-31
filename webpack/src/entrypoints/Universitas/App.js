@@ -1,8 +1,7 @@
-import { connect } from 'react-redux'
-import NewsFeed from './components/NewsFeed'
+import { hot } from 'react-hot-loader'
 import 'styles/universitas.scss'
-
-const Menu = ({ sections }) => <section className="Menu">Top menu</section>
+import Menu from './components/Menu'
+import NewsFeed from './components/NewsFeed'
 
 const App = ({}) => (
   <div className="Universitas">
@@ -11,6 +10,4 @@ const App = ({}) => (
   </div>
 )
 
-const mapStateToProps = (state, ownProps) => ({})
-const mapDispatchToProps = (dispatch, ownProps) => ({})
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default hot(module)(App)

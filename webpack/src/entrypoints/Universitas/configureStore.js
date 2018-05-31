@@ -1,22 +1,29 @@
-import { createStore, applyMiddleware, combineReducers } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
+import { compose } from 'utils/misc' // use devtools if available
 import createSagaMiddleware from 'redux-saga'
-
-import { compose } from 'utils/misc'
 import rootReducer from './reducer'
-import rootSaga from 'sagas/frontPageSaga'
+import rootSaga from './saga'
 
-export default initialState => {
+// creates a redux store with hot reloaded reducer and redux-saga
+const configureStore = (initialState = {}) => {
   const sagaMiddleware = createSagaMiddleware()
   const middlewares = compose(applyMiddleware(sagaMiddleware))
   const store = createStore(rootReducer, initialState, middlewares)
+  let sagaTask = sagaMiddleware.run(rootSaga) // start sagas
   if (module.hot) {
-    // Enable Webpack hot module replacement for reducers
+    // Hot module replacement for reducer
     module.hot.accept('./reducer', () => {
-      const nextRootReducer = require('./reducer')
-      store.replaceReducer(nextRootReducer)
+      store.replaceReducer(require('./reducer').default)
+    })
+    // Hot module replacement for saga
+    module.hot.accept('./saga', () => {
+      sagaTask.cancel() // stop old saga
+      sagaTask.done.then(() => {
+        sagaTask = sagaMiddleware.run(require('./saga').default)
+      })
     })
   }
-
-  sagaMiddleware.run(rootSaga)
   return store
 }
+
+export default configureStore

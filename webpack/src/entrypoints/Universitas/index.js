@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux'
-import configureStore from './configureStore'
 import App from './App'
+import configureStore from './configureStore'
 
 export default () => (
   <Provider store={configureStore()}>
