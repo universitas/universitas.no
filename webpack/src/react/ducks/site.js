@@ -3,6 +3,7 @@ const sliceLens = R.lensProp('site')
 
 // Selectors
 export const getSite = R.view(sliceLens)
+export const getSections = R.view(R.compose(sliceLens, R.lensProp('sections')))
 
 // Actions
 export const SITE_REQUESTED = 'site/SITE_REQUESTED'

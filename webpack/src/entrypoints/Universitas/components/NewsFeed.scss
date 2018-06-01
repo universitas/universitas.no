@@ -7,13 +7,16 @@ $gap: 1rem;
   color: white;
   padding: 2em;
   background-color: black;
-  grid-column: 1/-1;
+  grid-column: 1/6;
 }
 
 .NewsFeed {
+  flex: 1;
+  width: 100%;
+  max-width: $content-width;
+  background-color: yellow;
   padding: $gap/2 0;
   background: #eee;
-  max-width: $content-width;
   font-family: $univ-sans;
   display: grid;
   grid-gap: $gap;
@@ -84,5 +87,13 @@ $gap: 1rem;
     .FeedImage {
       grid-area: image;
     }
+  }
+  .FeedEnd {
+    grid-column: 1 /-1;
+    text-align: center;
+    opacity: 0.3;
+    font-size: 120%;
+    font-weight: 100;
+    padding: 1em;
   }
 }

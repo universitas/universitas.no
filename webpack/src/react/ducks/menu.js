@@ -1,28 +1,61 @@
+const SLICE = 'menu'
 // Lenses
-const sliceLens = R.lensProp('site')
+const sliceLens = R.lensProp(SLICE)
 
 // Selectors
-export const getSite = R.view(sliceLens)
+const activeKeys = R.pipe(R.filter(R.identity), R.keys)
+export const getMenu = R.view(sliceLens)
+export const getFrontpageQuery = R.pipe(
+  getMenu,
+  R.evolve({ search: R.trim, language: activeKeys, section: activeKeys }),
+  R.filter(R.complement(R.isEmpty))
+)
 
 // Actions
-export const SITE_REQUESTED = 'site/SITE_REQUESTED'
-export const siteRequested = () => ({ type: SITE_REQUESTED, payload: {} })
+export const TOGGLE_SECTION = 'sections/TOGGLE_SECTION'
+export const toggleSection = section => ({
+  type: TOGGLE_SECTION,
+  payload: { section },
+})
 
-export const SITE_FETCHED = 'site/SITE_FETCHED'
-export const siteFetched = data => ({ type: SITE_FETCHED, payload: data })
+export const ONLY_SECTION = 'sections/ONLY_SECTION'
+export const onlySection = section => ({
+  type: ONLY_SECTION,
+  payload: { section },
+})
+
+export const TOGGLE_LANGUAGE = 'languages/TOGGLE_LANGUAGE'
+export const toggleLanguage = language => ({
+  type: TOGGLE_LANGUAGE,
+  payload: { language },
+})
+
+export const SEARCH_QUERY = 'menu/SEARCH_QUERY'
+export const searchQuery = search => ({
+  type: SEARCH_QUERY,
+  payload: { search },
+})
 
 // reducers
-const initialState = { fetching: false }
+export const initialState = {
+  section: {},
+  language: { nor: true, eng: false },
+  search: '',
+}
 
 const getReducer = ({ type, payload, error }) => {
   switch (type) {
-    case SITE_REQUESTED:
-      return R.assoc('fetching', true)
-    case SITE_FETCHED:
-      return R.compose(R.assoc('fetching', false), R.merge(payload))
+    case TOGGLE_SECTION:
+    case TOGGLE_LANGUAGE:
+      return R.over(R.lensPath(R.head(R.toPairs(payload))), R.not)
+    case ONLY_SECTION:
+      return R.assoc('section', { [payload.section]: true })
+    case SEARCH_QUERY:
+      return R.assoc('search', payload.search)
     default:
       return R.identity
   }
 }
 
-export default (state = initialState, action) => getReducer(action)(state)
+export const reducer = (state = initialState, action = {}) =>
+  getReducer(action)(state)

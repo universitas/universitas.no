@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
 from apps.frontpage.models import FrontpageStory
+from apps.stories.models import Story
 from rest_framework import pagination, serializers, viewsets
 from rest_framework.response import Response
 from rest_framework.utils.urls import replace_query_param
@@ -47,8 +48,8 @@ class FrontpagePaginator(pagination.LimitOffsetPagination):
                          ('results', data)])
         )
 
-    def get_next_link(self, data=None):
-        if not data:
+    def get_next_link(self, data=[]):
+        if len(data) < self.limit:
             return None
 
         url = self.request.build_absolute_uri()
@@ -74,7 +75,8 @@ class FrontpagePaginator(pagination.LimitOffsetPagination):
 class FrontpageStoryViewset(viewsets.ModelViewSet):
     """ Frontpage news feed. """
 
-    queryset = FrontpageStory.objects.order_by('-order').prefetch_related(
+    queryset = FrontpageStory.objects.published(
+    ).order_by('-order').prefetch_related(
         'imagefile', 'story__story_type__section'
     )
     serializer_class = FrontpageStorySerializer
@@ -82,8 +84,23 @@ class FrontpageStoryViewset(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Sort by section"""
-        try:
-            section = int(self.request.query_params.get('section'))
-            return self.queryset.filter(story__story_type__section=section)
-        except TypeError:
-            return self.queryset
+        qs = super().get_queryset()
+        params = self.request.query_params
+        section = params.get('section')
+        language = params.get('language')
+        search = params.get('search')
+        if section:
+            sections = [int(s) for s in section.split(',')]
+            qs = qs.filter(story__story_type__section__in=sections)
+        if language:
+            if language == 'eng':
+                qs = qs.filter(story__language='en')
+            elif language == 'nor':
+                qs = qs.exclude(story__language='en')
+
+        if search:
+            stories = Story.objects.published().search(search)
+            pks = stories.values_list('frontpagestory', flat=True)
+            return qs.filter(pk__in=pks)
+
+        return qs

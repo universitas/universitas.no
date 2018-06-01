@@ -19,6 +19,11 @@ export const feedFetched = data => ({
   type: FEED_FETCHED,
   payload: data,
 })
+export const FEED_CLEAR = 'newsfeed/FEED_CLEAR'
+export const feedClear = () => ({
+  type: FEED_CLEAR,
+  payload: {},
+})
 
 // reducers
 const initialState = { fetching: false }
@@ -51,6 +56,8 @@ const getReducer = ({ type, payload, error }) => {
         R.over(feedLens, mergeFeed(results))
       )
     }
+    case FEED_CLEAR:
+      return R.always(initialState)
     default:
       return R.identity
   }

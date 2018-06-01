@@ -1,6 +1,7 @@
 @import "styles/_common.scss";
 
 body {
+  overflow-y: scroll;
   font-family: $univ-sans, sans-serif;
   font-size: 16px;
 }
@@ -9,8 +10,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  .Menu {
-  }
-  .Feed {
-  }
+  min-height: 100vh;
+  width: 100%;
 }

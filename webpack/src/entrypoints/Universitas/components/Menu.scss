@@ -1,4 +1,10 @@
 @import "styles/_common.scss";
+@keyframes spin {
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
 .Menu {
   height: 1.8rem;
   display: flex;
@@ -29,17 +35,52 @@
   }
   .SectionItem {
     margin-left: 0.5rem;
+    cursor: pointer;
+    color: #eee;
+    &:hover {
+      color: white;
+    }
+    &.active {
+      color: white;
+      font-weight: bolder;
+    }
   }
-  .Search {
+  .LanguageWidget {
+    display: flex;
+    .LanguageButton {
+      color: $light-grey;
+      padding: 0 0.2em;
+      cursor: pointer;
+      &.active {
+        color: white;
+      }
+    }
+  }
+  .SearchWidget {
     margin-left: auto;
     padding: 0 0.2rem;
     display: flex;
+    align-items: center;
+    .Icon {
+      font-size: 1.6rem;
+      color: #ddd;
+      line-height: 1;
+      &.fetching svg {
+        transform-origin: 50% 50%;
+        animation: spin 1s linear infinite;
+      }
+    }
     input {
       width: 11em;
-      padding: 0.2em 0.2em;
+      padding: 0.3em;
+      margin: 0.2em;
       color: white;
       background-color: rgba(black, 0.3);
       border: none;
+      &:focus {
+        outline: none;
+        background-color: rgba(black, 0.2);
+      }
       &::placeholder {
         color: rgba(white, 0.5);
       }

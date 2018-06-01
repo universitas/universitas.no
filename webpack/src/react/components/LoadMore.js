@@ -1,7 +1,15 @@
 import { debounce, isVisible } from 'utils/misc'
 import LoadingIndicator from 'components/LoadingIndicator'
 
-export const LoadMore = ({ fetching, feedRequested, offset = null }) => {
+const FeedEnd = ({}) => <div className="FeedEnd">ingen flere saker</div>
+
+export const LoadMore = ({
+  fetching,
+  feedRequested,
+  offset = null,
+  next = true,
+}) => {
+  if (!next) return <FeedEnd />
   const fetch = () => feedRequested({ offset })
   const scrollHandler = el => fetching || (isVisible(el, 500) && fetch())
   const clickHandler = () => fetching || fetch()
