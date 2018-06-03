@@ -6,7 +6,7 @@
 }
 
 .Menu {
-  height: 1.8rem;
+  user-select: none;
   display: flex;
   justify-content: center;
   color: white;
@@ -15,6 +15,7 @@
   position: sticky;
   top: 0;
   .Level {
+    padding: 2px;
     display: flex;
     flex-direction: row;
     flex: 0 1 $content-width;
@@ -22,8 +23,7 @@
     height: 100%;
   }
   .Logo {
-    height: 100%;
-    padding: 1px 0.2rem;
+    height: 1.7rem;
     margin-right: 0.5rem;
     .universitas {
       fill: currentColor;
@@ -47,6 +47,7 @@
   }
   .LanguageWidget {
     display: flex;
+    text-transform: uppercase;
     .LanguageButton {
       color: $light-grey;
       padding: 0 0.2em;
@@ -73,7 +74,6 @@
     input {
       width: 11em;
       padding: 0.3em;
-      margin: 0.2em;
       color: white;
       background-color: rgba(black, 0.3);
       border: none;

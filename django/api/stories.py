@@ -1,12 +1,31 @@
 import logging
 
-from apps.stories.models import Byline, Story, StoryImage, StoryType
+from apps.stories.models import (
+    Aside, Byline, Pullquote, Story, StoryImage, StoryType
+)
 from django.core.exceptions import FieldError
+from django.db.models import Prefetch
 from rest_framework import filters, serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
 from utils.serializers import AbsoluteURLField
 
 logger = logging.getLogger('apps')
+
+
+class PullquoteSerializer(serializers.ModelSerializer):
+    """ModelSerializer for Pullquote"""
+
+    class Meta:
+        model = Pullquote
+        fields = ['id', 'index', 'bodytext_markup']
+
+
+class AsideSerializer(serializers.ModelSerializer):
+    """ModelSerializer for Aside"""
+
+    class Meta:
+        model = Aside
+        fields = ['id', 'index', 'bodytext_markup']
 
 
 class StoryImageSerializer(serializers.ModelSerializer):
@@ -66,11 +85,15 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
             'story_type',
             'story_type_name',
             'byline_set',
+            'pullquotes',
+            'asides',
             'images',
         ]
 
     byline_set = BylineSerializer(many=True, read_only=True)
-    images = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    pullquotes = PullquoteSerializer(many=True, read_only=True)
+    asides = AsideSerializer(many=True, read_only=True)
+    images = StoryImageSerializer(many=True, read_only=True)
     story_type = serializers.PrimaryKeyRelatedField(
         queryset=StoryType.objects.all(), read_only=False
     )
@@ -145,6 +168,11 @@ class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
     serializer_class = StorySerializer
     queryset = Story.objects.all().prefetch_related(
         'story_type__section',
-        'bylines',
-        'byline_set',
+        Prefetch(
+            'byline_set',
+            queryset=Byline.objects.select_related('contributor')
+        ),
+        'asides',
+        'pullquotes',
+        'images',
     )

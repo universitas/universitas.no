@@ -64,6 +64,7 @@
     "ramda": "^0.25",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-error-boundary": "^1.2.3",
     "react-hot-loader": "^4",
     "react-icons": "^2.2.7",
     "react-redux": "^5",

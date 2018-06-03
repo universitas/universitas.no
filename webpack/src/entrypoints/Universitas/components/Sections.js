@@ -5,11 +5,7 @@ import { requestData } from 'utils/hoc'
 import cx from 'classnames'
 
 let SectionItem = ({ id, title, storytypes = [], active, onClick }) => (
-  <div
-    title={`${active} ${onClick}`}
-    className={cx('SectionItem', title, { active })}
-    onClick={onClick}
-  >
+  <div className={cx('SectionItem', title, { active })} onClick={onClick}>
     {title}
   </div>
 )

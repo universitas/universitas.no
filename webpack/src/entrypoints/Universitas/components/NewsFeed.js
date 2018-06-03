@@ -3,6 +3,7 @@ import { getFeed, feedRequested } from 'ducks/newsFeed'
 import LoadMore from 'components/LoadMore'
 import cx from 'classnames'
 import './NewsFeed.scss'
+import ErrorBoundary from 'react-error-boundary'
 
 const withChildren = Component => props =>
   props.children ? <Component {...props} /> : null
@@ -56,12 +57,14 @@ const FeedItem = ({
   const title = `${order} ${className}`
   return (
     <article className={className} title={title}>
-      <FeedImage href={story_url} image={image} crop_box={crop_box} />
-      <Vignette section={section}>{vignette}</Vignette>
-      <Kicker>{kicker}</Kicker>
-      <Headline href={story_url}>{headline}</Headline>
+      <ErrorBoundary>
+        <FeedImage href={story_url} image={image} crop_box={crop_box} />
+        <Vignette section={section}>{vignette}</Vignette>
+        <Kicker>{kicker}</Kicker>
+        <Headline href={story_url}>{headline}</Headline>
 
-      <Lede>{lede}</Lede>
+        <Lede>{lede}</Lede>
+      </ErrorBoundary>
     </article>
   )
 }

@@ -29,14 +29,10 @@ function* changeFeed(action) {
   const DEBOUNCE = 400 // ms debounce
   const params = yield select(getFrontpageQuery)
   const { search } = params
-  console.log(params)
 
-  if (search && action.type == SEARCH_QUERY && search.length < 4) {
-    console.log('bail', search)
-    return
-  }
-
+  if (search && action.type == SEARCH_QUERY && search.length < 3) return
   yield call(delay, DEBOUNCE)
+
   const { response, error } = yield call(apiList, 'frontpage', params)
   yield call(scrollTop)
   yield put(feedClear())

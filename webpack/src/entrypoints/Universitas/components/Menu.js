@@ -4,6 +4,7 @@ import Logo from 'components/Universitas'
 import Sections from './Sections.js'
 import LanguageWidget from './LanguageWidget.js'
 import SearchWidget from './SearchWidget.js'
+import ErrorBoundary from 'react-error-boundary'
 import './Menu.scss'
 
 const Level = ({ children, className }) => (
