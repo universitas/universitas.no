@@ -14,8 +14,10 @@ while (( $# > 0 )); do
   dc      ) docker-compose $rest; exit ;; # docker-compose [...args]
   da      ) docker-compose run --rm web django-admin $rest; exit ;; # django-admin [...args]
 
-  dumpdb  ) dump_db ;;  # dump postgresql database
-  loaddb  ) load_db $rest; exit;;  # load database from dump file [filename]
+  pgdump  ) dump_postgres ;;  # dump postgresql database
+  pgload  ) load_postgres $rest; exit;;  # load database from dump file [filename]
+  rddump  ) dump_redis ;; # dump redis database
+  rdload  ) load_redis $rest; exit;; # load redis database
 
   enable  ) enable_service ;; # enable systemd service file for web server - starts all docker images
   djbuild ) build_django ;;   # download and build all images, migrate database
@@ -130,7 +132,26 @@ lint_python() {
   [[ -n $py_files ]] && exists isort && isort --verbose $py_files && exists yapf && yapf --verbose --in-place $py_files
 }
 
-load_db() {
+dump_redis() {
+  DUMP=$(date +"dump.%d-%m-%Y_%H.%M.%S.rdb")
+  docker run -udjango --rm --volumes-from tassen_redis_1 -v $(pwd):/backup \
+    universitas/django cp /data/dump.rdb /backup/$DUMP
+}
+
+load_redis() {
+  dumpfile=$(ls *.rdb -1t 2>/dev/null | head -n1)
+  dumpfile=${1:-$dumpfile}
+  [[ -e $dumpfile ]] || exit 1
+  echo "found database dump: $dumpfile"
+  cp $dumpfile __dump.rdb
+  docker-compose stop redis
+  docker run --rm --volumes-from tassen_redis_1 -v $(pwd):/backup \
+    universitas/django cp /backup/__dump.rdb /data/dump.rdb 
+  docker-compose start redis
+  rm __dump.rdb
+}
+
+load_postgres() {
   dumpfile=$(ls *.sql -1t 2>/dev/null | head -n1)
   dumpfile=${1:-$dumpfile}
   [[ -e $dumpfile ]] || exit 1
@@ -146,8 +167,8 @@ load_db() {
   echo "done"
 }
 
-dump_db() {
-  DUMP=$(date +"dbdump_%d-%m-%Y_%H.%M.%S.sql")
+dump_postgres() {
+  DUMP=$(date +"pgdump_%d-%m-%Y_%H.%M.%S.sql")
   docker-compose up -d postgres
   echo "dumping database to $DUMP"
   docker-compose exec postgres pg_dump --no-owner -U postgres -d postgres > $DUMP

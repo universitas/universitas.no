@@ -1,3 +1,5 @@
 deployment.env
 Session.vim
 tags
+*.rdb
+*.sql
