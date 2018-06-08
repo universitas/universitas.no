@@ -25,6 +25,7 @@
   .Logo {
     height: 1.7rem;
     margin-right: 0.5rem;
+    color: white;
     .universitas {
       fill: currentColor;
     }
@@ -33,7 +34,8 @@
     display: flex;
     flex-flow: row wrap;
   }
-  .SectionItem {
+  .MenuItem {
+    text-decoration: none;
     margin-left: 0.5rem;
     cursor: pointer;
     color: #eee;

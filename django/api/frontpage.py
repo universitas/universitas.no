@@ -17,6 +17,13 @@ class FrontpageStorySerializer(serializers.ModelSerializer):
     section = serializers.IntegerField(
         read_only=True, source='story.story_type.section.pk'
     )
+    language = serializers.SerializerMethodField()
+
+    def get_language(self, instance):
+        if instance.story.language == 'en':
+            return 'eng'
+        else:
+            return 'nor'
 
     class Meta:
         model = FrontpageStory
@@ -35,6 +42,7 @@ class FrontpageStorySerializer(serializers.ModelSerializer):
             'image',
             'crop_box',
             'section',
+            'language',
         ]
 
 

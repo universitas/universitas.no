@@ -5,10 +5,17 @@ const sliceLens = R.lensProp(SLICE)
 // Selectors
 const activeKeys = R.pipe(R.filter(R.identity), R.keys)
 export const getMenu = R.view(sliceLens)
+export const getLanguage = R.pipe(
+  getMenu,
+  R.prop('language'),
+  activeKeys,
+  R.ifElse(l => l.length == 1, R.head, R.always(null)),
+  R.objOf('language'),
+)
 export const getFrontpageQuery = R.pipe(
   getMenu,
   R.evolve({ search: R.trim, language: activeKeys, section: activeKeys }),
-  R.filter(R.complement(R.isEmpty))
+  R.filter(R.complement(R.isEmpty)),
 )
 
 // Actions
@@ -27,6 +34,12 @@ export const onlySection = section => ({
 export const TOGGLE_LANGUAGE = 'languages/TOGGLE_LANGUAGE'
 export const toggleLanguage = language => ({
   type: TOGGLE_LANGUAGE,
+  payload: { language },
+})
+
+export const ONLY_LANGUAGE = 'languages/ONLY_LANGUAGE'
+export const onlyLanguage = language => ({
+  type: ONLY_LANGUAGE,
   payload: { language },
 })
 
@@ -50,6 +63,8 @@ const getReducer = ({ type, payload, error }) => {
       return R.over(R.lensPath(R.head(R.toPairs(payload))), R.not)
     case ONLY_SECTION:
       return R.assoc('section', { [payload.section]: true })
+    case ONLY_LANGUAGE:
+      return R.assoc('language', { [payload.language]: true })
     case SEARCH_QUERY:
       return R.assoc('search', payload.search)
     default:

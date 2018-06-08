@@ -2,21 +2,25 @@ import { debounce, isVisible } from 'utils/misc'
 import LoadingIndicator from 'components/LoadingIndicator'
 
 const FeedEnd = ({}) => <div className="FeedEnd">ingen flere saker</div>
+const SCROLLOFFSET = 500
 
 export const LoadMore = ({
   fetching,
   feedRequested,
   offset = null,
   next = true,
+  ...params
 }) => {
-  if (!next) return <FeedEnd />
-  const fetch = () => feedRequested({ offset })
-  const scrollHandler = el => fetching || (isVisible(el, 500) && fetch())
+  const fetch = () => feedRequested({ offset, ...params })
+  const scrollHandler = el =>
+    fetching || (isVisible(el, SCROLLOFFSET) && fetch())
   const clickHandler = () => fetching || fetch()
-  return (
+  return next ? (
     <ScrollSpy onScroll={scrollHandler}>
       <LoadingIndicator onClick={clickHandler} isLoading={fetching} />
     </ScrollSpy>
+  ) : (
+    <FeedEnd />
   )
 }
 
@@ -40,6 +44,9 @@ class ScrollSpy extends React.Component {
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this.scrollHandler)
+  }
+  componentDidUpdate() {
+    this.scrollHandler()
   }
   render() {
     return (

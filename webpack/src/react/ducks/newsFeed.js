@@ -34,7 +34,7 @@ const mergeFeed = fetched => (state = []) =>
     R.indexBy(R.prop('id')),
     R.values,
     R.sortBy(R.prop('order')),
-    R.reverse
+    R.reverse,
   )(state)
 
 // R.compose(
@@ -53,7 +53,7 @@ const getReducer = ({ type, payload, error }) => {
       return R.compose(
         R.assoc('fetching', false),
         R.assoc('next', next),
-        R.over(feedLens, mergeFeed(results))
+        R.over(feedLens, mergeFeed(results)),
       )
     }
     case FEED_CLEAR:
