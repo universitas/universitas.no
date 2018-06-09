@@ -1,6 +1,5 @@
 import { connect } from 'react-redux'
-import { getMenu, searchQuery } from 'ducks/menu'
-import { getFeed } from 'ducks/newsFeed'
+import { changeSearch, getFeed } from 'ducks/newsFeed'
 import { Search, Sync } from 'components/Icons'
 import cx from 'classnames'
 
@@ -10,11 +9,11 @@ const Icon = ({ fetching }) => (
   </div>
 )
 
-const SearchWidget = ({ search = '', searchQuery, fetching }) => (
+const SearchWidget = ({ search = '', changeSearch, fetching }) => (
   <div className={cx('SearchWidget')}>
     <Icon fetching={fetching} />
     <input
-      onChange={e => searchQuery(e.target.value)}
+      onChange={e => changeSearch(e.target.value)}
       type="text"
       placeholder="søk..."
       value={search}
@@ -22,9 +21,6 @@ const SearchWidget = ({ search = '', searchQuery, fetching }) => (
   </div>
 )
 
-const mapStateToProps = (state, ownProps) => ({
-  ...getMenu(state),
-  ...getFeed(state),
-})
-const mapDispatchToProps = { searchQuery }
+const mapStateToProps = getFeed
+const mapDispatchToProps = { changeSearch }
 export default connect(mapStateToProps, mapDispatchToProps)(SearchWidget)

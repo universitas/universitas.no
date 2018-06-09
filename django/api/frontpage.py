@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 from apps.frontpage.models import FrontpageStory
 from apps.stories.models import Story
+from django.db.models import Case, Q, When
 from rest_framework import pagination, serializers, viewsets
 from rest_framework.response import Response
 from rest_framework.utils.urls import replace_query_param
@@ -90,25 +91,41 @@ class FrontpageStoryViewset(viewsets.ModelViewSet):
     serializer_class = FrontpageStorySerializer
     pagination_class = FrontpagePaginator
 
-    def get_queryset(self):
-        """Sort by section"""
-        qs = super().get_queryset()
-        params = self.request.query_params
-        section = params.get('section')
-        language = params.get('language')
-        search = params.get('search')
+    def _sections(self, qs):
+        section = self.request.query_params.get('section')
         if section:
-            sections = [int(s) for s in section.split(',')]
-            qs = qs.filter(story__story_type__section__in=sections)
-        if language:
-            if language == 'eng':
-                qs = qs.filter(story__language='en')
-            elif language == 'nor':
-                qs = qs.exclude(story__language='en')
+            try:
+                sections = map(int, section.split(','))
+                qs = qs.filter(story__story_type__section__in=sections)
+            except ValueError:
+                pass
+        return qs
 
+    def _language(self, qs):
+        language = self.request.query_params.get('language')
+        english = Q(story__language='en')
+        if language == 'eng':
+            qs = qs.filter(english)
+        if language == 'nor':
+            qs = qs.exclude(english)
+        return qs
+
+    def _search(self, qs):
+        search = self.request.query_params.get('search')
         if search:
             stories = Story.objects.published().search(search)
             pks = stories.values_list('frontpagestory', flat=True)
-            return qs.filter(pk__in=pks)
-
+            if pks:
+                order = Case(
+                    *[When(pk=pk, then=pos) for pos, pk in enumerate(pks)]
+                )
+                qs = qs.filter(pk__in=pks).order_by(order)
+            else:
+                qs = qs.none()
         return qs
+
+    def get_queryset(self):
+        """Sort by section"""
+        return self._search(
+            self._language(self._sections(super().get_queryset()))
+        )

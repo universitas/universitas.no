@@ -1,49 +1,45 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { apiList } from 'services/api'
-import { FEED_REQUESTED, feedFetched, feedClear } from 'ducks/newsFeed'
+import {
+  FEED_REQUESTED,
+  TOGGLE_LANGUAGE,
+  SEARCH,
+  feedFetched,
+  searchFetched,
+  getFeedQuery,
+} from 'ducks/newsFeed'
 import { SITE_REQUESTED, siteFetched } from 'ducks/site'
 import { scrollTo } from 'utils/scroll'
-import {
-  ONLY_SECTION,
-  TOGGLE_SECTION,
-  TOGGLE_LANGUAGE,
-  SEARCH_QUERY,
-  getFrontpageQuery,
-} from 'ducks/menu'
+
+const DEBOUNCE = 300 // ms debounce
 
 export default function* rootSaga() {
   yield takeLatest(FEED_REQUESTED, requestFeed)
   yield takeLatest(SITE_REQUESTED, requestSite)
-  yield takeLatest(
-    [SEARCH_QUERY, ONLY_SECTION, TOGGLE_SECTION, TOGGLE_LANGUAGE],
-    changeFeed
-  )
+  yield takeLatest(SEARCH, requestSearch)
 }
 
 const scrollTop = () => {
   document.documentElement.scrollTop = 0
 }
 
-function* changeFeed(action) {
-  const DEBOUNCE = 400 // ms debounce
-  const params = yield select(getFrontpageQuery)
+function* requestSearch(action) {
+  const params = yield select(getFeedQuery)
   const { search } = params
-
-  if (search && action.type == SEARCH_QUERY && search.length < 3) return
-  yield call(delay, DEBOUNCE)
-
-  const { response, error } = yield call(apiList, 'frontpage', params)
-  yield call(scrollTop)
-  yield put(feedClear())
-  if (response) yield put(feedFetched(response))
-  else console.error(error)
+  if (!search) yield put(searchFetched({ results: [], next: false }))
+  else {
+    yield call(delay, search.length > 3 ? DEBOUNCE : DEBOUNCE * 3)
+    const { response, error } = yield call(apiList, 'frontpage', params)
+    if (response) yield put(searchFetched(response))
+    else console.error(error)
+  }
 }
 
 function* requestFeed(action) {
-  const DEBOUNCE = 300 // ms debounce
-  const queryParams = yield select(getFrontpageQuery)
-  const params = { ...queryParams, ...action.payload }
+  let params = yield select(getFeedQuery)
+  params = R.merge(params, action.payload)
+
   if (!R.isEmpty(params)) yield call(delay, DEBOUNCE)
   const { response, error } = yield call(apiList, 'frontpage', params)
   if (response) yield put(feedFetched(response))

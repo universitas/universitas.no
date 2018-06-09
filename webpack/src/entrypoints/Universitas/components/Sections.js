@@ -1,24 +1,17 @@
-import { connect } from 'react-redux'
-import { getSite, siteRequested } from 'ducks/site'
-import { requestData } from 'utils/hoc'
-import { withRouter, NavLink } from 'react-router-dom'
+import { NavLink } from 'redux-first-router-link'
+import { toSection } from 'ducks/router'
 import cx from 'classnames'
 
-const SectionItem = ({ title }) => (
-  <NavLink className={cx('MenuItem')} to={`/seksjon/${title}/`}>
-    {title}
-  </NavLink>
-)
-
-const Sections = ({ sections = [] }) => (
+const Sections = ({ sections = ['nyhet', 'kultur', 'magasin', 'debatt'] }) => (
   <nav className="Sections">
-    {sections
-      .slice(0, 5)
-      .map(props => <SectionItem key={props.id} {...props} />)}
+    {sections.map(title => (
+      <NavLink
+        key={title}
+        className={cx('MenuItem')}
+        to={toSection(title)}
+        children={title}
+      />
+    ))}
   </nav>
 )
-export default withRouter(
-  connect(getSite, { fetchData: siteRequested })(
-    requestData(Sections, 'sections'),
-  ),
-)
+export default Sections

@@ -4,17 +4,10 @@ import LoadingIndicator from 'components/LoadingIndicator'
 const FeedEnd = ({}) => <div className="FeedEnd">ingen flere saker</div>
 const SCROLLOFFSET = 500
 
-export const LoadMore = ({
-  fetching,
-  feedRequested,
-  offset = null,
-  next = true,
-  ...params
-}) => {
-  const fetch = () => feedRequested({ offset, ...params })
+export const LoadMore = ({ fetchMore, fetching, next = true }) => {
   const scrollHandler = el =>
-    fetching || (isVisible(el, SCROLLOFFSET) && fetch())
-  const clickHandler = () => fetching || fetch()
+    fetching || (isVisible(el, SCROLLOFFSET) && fetchMore())
+  const clickHandler = () => fetching || fetchMore()
   return next ? (
     <ScrollSpy onScroll={scrollHandler}>
       <LoadingIndicator onClick={clickHandler} isLoading={fetching} />

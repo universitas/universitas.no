@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
-import { getMenu, toggleLanguage, onlyLanguage } from 'ducks/menu'
+import { getLanguage, toggleLanguage } from 'ducks/newsFeed'
 import cx from 'classnames'
 
-const LanguageButton = ({ code, language, toggleLanguage, onlyLanguage }) => (
+const LanguageButton = ({ code, language, toggleLanguage }) => (
   <div
-    className={cx('LanguageButton', { active: language[code] })}
-    onClick={() => (language[code] ? toggleLanguage(code) : onlyLanguage(code))}
+    className={cx('LanguageButton', { active: code == language })}
+    onClick={() => toggleLanguage(code)}
   >
     {code}
   </div>
@@ -18,6 +18,6 @@ const LanguageWidget = props => (
   </nav>
 )
 
-export default connect(getMenu, { toggleLanguage, onlyLanguage })(
-  LanguageWidget,
-)
+export default connect(state => ({ language: getLanguage(state) }), {
+  toggleLanguage,
+})(LanguageWidget)
