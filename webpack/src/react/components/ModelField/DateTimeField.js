@@ -9,7 +9,7 @@ const formatDateTime = (
   value,
   timeformat = TIMEFORMAT,
   locale = LOCALE,
-  relative = false
+  relative = false,
 ) =>
   relative
     ? distanceInWordsToNow(new Date(value), { addSuffix: true, locale })

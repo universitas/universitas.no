@@ -3,16 +3,17 @@
 import logging
 import re
 
-from model_utils.models import TimeStampedModel
 from requests import request
 from requests.exceptions import MissingSchema, Timeout
-from slugify import Slugify
 
 from apps.photo.models import ImageFile
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from utils.decorators import cache_memoize
 
 from .mixins import MARKUP_TAGS, MarkupCharField, MarkupModelMixin, TextContent
 
@@ -215,6 +216,7 @@ class StoryImage(StoryMedia):
         verbose_name = _('Image')
         verbose_name_plural = _('Images')
         unique_together = [('parent_story', 'imagefile')]
+        ordering = ['-top', 'index']
 
     parent_story = models.ForeignKey(
         'Story',
@@ -260,9 +262,20 @@ class StoryImage(StoryMedia):
     def small(self):
         return self.imagefile.small
 
-    @property
-    def preview(self):
-        return self.imagefile.preview
+    @cache_memoize()
+    def large(self):
+        return self.imagefile.large.url
+
+    @cache_memoize()
+    def cropped(self, width=1200, height=700):
+        im = self.imagefile
+        if self.aspect_ratio in [self.DEFAULT_RATIO, self.ORIGINAL_RATIO]:
+            if not im.is_photo:
+                height = width * self.original_ratio()
+        else:
+            height = width * self.aspect_ratio
+        size = f'{int(width)}x{int(height)}'
+        return im.thumbnail(size, crop_box=im.get_crop_box(), expand=1).url
 
 
 class StoryVideo(StoryMedia):

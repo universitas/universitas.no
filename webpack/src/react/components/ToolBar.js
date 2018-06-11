@@ -28,7 +28,7 @@ ToolBar.propTypes = {
       active: PropTypes.bool,
       onClick: PropTypes.func,
       toolTip: PropTypes.string,
-    })
+    }),
   ),
 }
 export default ToolBar

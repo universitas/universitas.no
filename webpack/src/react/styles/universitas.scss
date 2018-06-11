@@ -9,7 +9,19 @@ body {
 .Universitas {
   display: flex;
   flex-direction: column;
-  align-items: center;
   min-height: 100vh;
   width: 100%;
+}
+
+.Page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  > * {
+    padding: $gridgap/2 0;
+    width: 100%;
+    max-width: $content-width;
+  }
 }

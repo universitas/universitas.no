@@ -53,7 +53,7 @@ export const Field = ({
   const { EditableField, DetailField } = R.propOr(
     fieldTypes.string,
     type,
-    fieldTypes
+    fieldTypes,
   )
   const fieldProps = R.omit(['model', 'pk', 'name'], props)
   const ModelField = editable ? EditableField : DetailField

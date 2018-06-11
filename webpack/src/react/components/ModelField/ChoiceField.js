@@ -7,7 +7,7 @@ const stringEq = R.curry((a, b) => String(a) == String(b))
 export const getDisplayName = value =>
   R.compose(
     R.propOr(value, 'display_name'),
-    R.find(R.propSatisfies(stringEq(value), 'value'))
+    R.find(R.propSatisfies(stringEq(value), 'value')),
   )
 
 export const DetailField = ({ choices = [], value, ...args }) => (

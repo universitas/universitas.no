@@ -50,3 +50,6 @@ export const parseQuery = R.pipe(
   R.fromPairs,
   R.map(parseParam)
 )
+
+// Relative to absolute url (requires global `location`)
+export const absoluteURL = url => new URL(url, location.href).toString()

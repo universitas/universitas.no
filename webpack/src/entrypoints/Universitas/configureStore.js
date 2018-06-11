@@ -4,16 +4,12 @@ import { compose } from 'utils/misc' // use devtools if available
 import createSagaMiddleware from 'redux-saga'
 import * as reducers from './reducers'
 import rootSaga from './saga'
-import { routesMap } from 'ducks/router'
-
-const options = {
-  scrollTop: true,
-}
+import { routesMap, routerOptions } from 'ducks/router'
 
 // creates a redux store with hot reloaded reducer and redux-saga
-const configureStore = (initialState = {}, history) => {
+const configureStore = (initialState = {}) => {
   const sagaMiddleware = createSagaMiddleware()
-  const router = connectRoutes(history, routesMap, options)
+  const router = connectRoutes(routesMap, routerOptions)
   const middlewares = compose(
     router.enhancer,
     applyMiddleware(router.middleware, sagaMiddleware)

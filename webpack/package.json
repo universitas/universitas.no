@@ -10,8 +10,7 @@
     "build": "webpack-cli --config webpack.prod.config.js ",
     "tern": "tern --persistent --host 0.0.0.0 --port 33000",
     "rebuild": "npm run build",
-    "stats":
-      "webpack-cli --config webpack.prod.config.js --profile --json > webpack-stats.json",
+    "stats": "webpack-cli --config webpack.prod.config.js --profile --json > webpack-stats.json",
     "dev": "webpack-dev-server --config webpack.dev.config.js",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "build-storybook": "build-storybook -c .storybook -o docs"
@@ -22,9 +21,17 @@
   },
   "jest": {
     "verbose": true,
-    "setupFiles": ["<rootDir>/jest.setup.js"],
-    "moduleDirectories": ["node_modules", "src/react"],
-    "roots": ["<rootDir>/src/react/", "<rootDir>/src/storybooks/"]
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "src/react"
+    ],
+    "roots": [
+      "<rootDir>/src/react/",
+      "<rootDir>/src/storybooks/"
+    ]
   },
   "dependencies": {
     "ajv": "^6.2.1",
@@ -59,12 +66,13 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-error-boundary": "^1.2.3",
+    "react-helmet": "^5.2.0",
     "react-hot-loader": "^4",
     "react-icons": "^2.2.7",
     "react-redux": "^5",
     "redux": "^4",
-    "redux-first-router": "0.0.16-next",
-    "redux-first-router-link": "^1.4.2",
+    "redux-first-router": "0.0.9-rudy",
+    "redux-first-router-link": "0.0.3-rudy",
     "redux-little-router": "^14",
     "redux-logger": "^3",
     "redux-persist": "^5",

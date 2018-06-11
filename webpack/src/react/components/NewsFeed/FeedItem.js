@@ -1,29 +1,27 @@
 import cx from 'classnames'
 import ErrorBoundary from 'react-error-boundary'
-
-const withChildren = Component => props =>
-  props.children ? <Component {...props} /> : null
-
-const Vignette = withChildren(({ children, section }) => (
-  <div className={cx('Vignette', `section-${section}`)}>{children}</div>
-))
-const Headline = withChildren(({ href, children }) => (
-  <h1 className="Headline">
-    <a href={href}>{children}</a>
-  </h1>
-))
-const Kicker = withChildren(({ children }) => (
-  <h3 className="Kicker">{children}</h3>
-))
-const Lede = withChildren(({ children }) => <p className="Lede">{children}</p>)
+import Link from 'redux-first-router-link'
+import { toStory } from 'ducks/router'
 
 const position = ({ x = 0.5, y = 0.5 }) => `${x * 100}% ${y * 100}%`
 
-const FeedImage = ({ href, image, crop_box }) =>
+const ifChildren = Component => props =>
+  props.children ? <Component {...props} /> : null
+
+const Vignette = ifChildren(({ children, section }) => (
+  <div className={cx('Vignette', `section-${section}`)}>{children}</div>
+))
+const Headline = ifChildren(({ children }) => (
+  <h1 className="Headline">{children}</h1>
+))
+const Kicker = ifChildren(({ children }) => (
+  <h3 className="Kicker">{children}</h3>
+))
+const Lede = ifChildren(({ children }) => <p className="Lede">{children}</p>)
+
+const FeedImage = ({ image, crop_box }) =>
   image ? (
-    <a
-      href={href}
-      title={href}
+    <div
       className="FeedImage"
       style={{
         backgroundRepeat: 'none',
@@ -40,7 +38,6 @@ const FeedItem = ({
   vignette,
   kicker,
   lede,
-  story_url,
   columns,
   section,
   rows,
@@ -49,19 +46,20 @@ const FeedItem = ({
   html_class,
   language,
   order,
+  story,
 }) => {
   const className = cx('FeedItem', `col-${columns}`, `row-${rows}`, html_class)
   const title = `${order} ${className}`
   return (
-    <article className={className} title={title}>
+    <Link to={toStory(story)} className={className}>
       <ErrorBoundary>
-        <FeedImage href={story_url} image={image} crop_box={crop_box} />
+        <FeedImage image={image} crop_box={crop_box} />
         <Vignette section={section}>{vignette}</Vignette>
         <Kicker>{kicker}</Kicker>
-        <Headline href={story_url}>{headline}</Headline>
+        <Headline>{headline}</Headline>
         <Lede>{lede}</Lede>
       </ErrorBoundary>
-    </article>
+    </Link>
   )
 }
 

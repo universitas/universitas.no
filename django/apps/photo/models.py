@@ -8,10 +8,6 @@ from pathlib import Path
 from typing import Union
 
 import PIL
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 
 from apps.contributors.models import Contributor
 # from apps.issues.models import current_issue
@@ -23,6 +19,10 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
@@ -321,6 +321,10 @@ class ImageFile(  # type: ignore
 
     def is_profile_image(self) -> bool:
         return self.category == ImageFile.PROFILE
+
+    @property
+    def is_photo(self) -> bool:
+        return self.category not in [ImageFile.DIAGRAM, ImageFile.ILLUSTRATION]
 
     def build_thumbs(self) -> None:
         """Make sure thumbs exists"""

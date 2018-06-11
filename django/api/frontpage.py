@@ -9,15 +9,25 @@ from rest_framework.utils.urls import replace_query_param
 from utils.serializers import AbsoluteURLField, CropBoxField
 
 
+class NestedStorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Story
+        fields = [
+            'id',
+            'title',
+            'language',
+        ]
+
+
 class FrontpageStorySerializer(serializers.ModelSerializer):
     """ModelSerializer for FrontpageStory"""
 
-    story_url = AbsoluteURLField(source='url')
     image = AbsoluteURLField(source='imagefile.large.url')
     crop_box = CropBoxField(read_only=True, source='imagefile.crop_box')
     section = serializers.IntegerField(
         read_only=True, source='story.story_type.section.pk'
     )
+    story = NestedStorySerializer(read_only=True)
     language = serializers.SerializerMethodField()
 
     def get_language(self, instance):
@@ -39,11 +49,11 @@ class FrontpageStorySerializer(serializers.ModelSerializer):
             'rows',
             'order',
             'published',
-            'story_url',
             'image',
             'crop_box',
             'section',
             'language',
+            'story',
         ]
 
 
@@ -86,7 +96,7 @@ class FrontpageStoryViewset(viewsets.ModelViewSet):
 
     queryset = FrontpageStory.objects.published(
     ).order_by('-order').prefetch_related(
-        'imagefile', 'story__story_type__section'
+        'imagefile', 'story', 'story__story_type__section'
     )
     serializer_class = FrontpageStorySerializer
     pagination_class = FrontpagePaginator

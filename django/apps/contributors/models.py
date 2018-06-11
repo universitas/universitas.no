@@ -13,6 +13,7 @@ from django.core.files import File
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from utils.decorators import cache_memoize
 
 from .fuzzy_name_search import FuzzyNameSearchMixin
 
@@ -133,13 +134,18 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
 
         return False
 
+    # @property  # type: ignore
+    @cache_memoize()
+    def thumb(self):
+        img = self.get_byline_image()
+        if not img:
+            return None
+        else:
+            return img.preview.url
+
+    @cache_memoize()
     def has_byline_image(self):
-        cache_key = f'{self.pk}_has_byline_image'
-        value = cache.get(cache_key)
-        if value is None:
-            value = bool(self.get_byline_image())
-            cache.set(cache_key, value, 60 * 30)
-        return value
+        return bool(self.get_byline_image())
 
     @property
     def first_name(self):

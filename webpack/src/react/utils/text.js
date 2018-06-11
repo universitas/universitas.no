@@ -22,6 +22,23 @@ export const stringify = R.cond([
   [R.T, R.toString],
 ])
 
+// like unix `tr` tranlate program
+// :: str -> str -> str -> str
+export const tr = R.curry((a, b, text) => {
+  const trans = R.zipObj(R.split('', a), R.split('', b))
+  return R.pipe(R.map(l => trans[l] || l), R.join(''))(text)
+})
+
+// slugify
+export const slugify = R.pipe(
+  R.toLower,
+  R.replace(/'"-_/g, ''),
+  tr('æåàáäâèéëêìíïîòóøöôùúüûñç', 'aaaaaaeeeeiiiiooooouuuunc'),
+  R.replace(/[^a-z0-9]+/g, ' '),
+  R.trim,
+  R.replace(/ +/g, '-')
+)
+
 // :: int|string -> string
 export const phoneFormat = R.pipe(
   stringify,

@@ -18,7 +18,7 @@ const Tool = ({
       className={cx(
         'Tool',
         { disabled, active, clickable: onClick },
-        className
+        className,
       )}
       title={title}
       onMouseDown={e => e.preventDefault()}

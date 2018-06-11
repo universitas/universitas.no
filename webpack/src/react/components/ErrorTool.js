@@ -48,5 +48,5 @@ ErrorTool.propTypes = {
   clearError: PropTypes.func.isRequired,
 }
 export default connect(state => ({ errors: getErrors(state) }), { clearError })(
-  ErrorTool
+  ErrorTool,
 )

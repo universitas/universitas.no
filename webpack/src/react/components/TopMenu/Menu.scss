@@ -19,8 +19,13 @@
     display: flex;
     flex-direction: row;
     flex: 0 1 $content-width;
-    align-items: center;
-    height: 100%;
+    justify-content: space-between;
+    .Group {
+      height: 100%;
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+    }
   }
   .Logo {
     height: 1.7rem;

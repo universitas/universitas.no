@@ -28,20 +28,33 @@ class Cube extends React.Component {
   }
 }
 
-const CubeGrid = ({ isLoading }) => (
-  <div className={cx({ isLoading, cubeGrid: true })}>
-    {R.map(n => <Cube n={n} key={n} isLoading={isLoading} />, R.range(0, 9))}
+const CubeGrid = ({ fetching }) => (
+  <div className={cx({ fetching, cubeGrid: true })}>
+    {R.map(n => <Cube n={n} key={n} isLoading={fetching} />, R.range(0, 9))}
   </div>
 )
 
-const LoadingIndicator = ({ children, isLoading, ...props }) => (
-  <div
-    {...props}
-    className="LoadingIndicator"
-    style={{ cursor: props.onClick ? 'pointer' : 'unset' }}
-  >
-    <CubeGrid isLoading={isLoading} />
+export const JsonLoader = ({ children, ...props }) => (
+  <div className="LoadingIndicator">
+    <pre style={{ whiteSpace: 'pre-wrap' }} className="Loading">
+      {JSON.stringify(props, null, 2)}
+    </pre>
     {children}
   </div>
 )
+
+const LoadingIndicator = ({ debug, ...props }) =>
+  debug ? (
+    <JsonLoader {...props} />
+  ) : (
+    <div
+      className="LoadingIndicator"
+      style={{ cursor: props.onClick ? 'pointer' : 'unset' }}
+      onClick={props.onClick}
+    >
+      <CubeGrid {...props} />
+      {props.children}
+    </div>
+  )
+
 export default LoadingIndicator

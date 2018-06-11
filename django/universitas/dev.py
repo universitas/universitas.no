@@ -17,13 +17,19 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 # TEMPLATES[0]['OPTIONS']['string_if_invalid'] = 'INVALID'  # type: ignore
 
+
+def show_toolbar(request):
+    return request.get_full_path().startswith('/api/')
+
+
 DEBUG_TOOLBAR_CONFIG = {
     'DISABLE_PANELS': {
         'debug_toolbar.panels.redirects.RedirectsPanel',
         'debug_toolbar.panels.sql.SQLPanel',
         'debug_toolbar.panels.templates.TemplatesPanel',
         'debug_toolbar.panels.loggin.LoggingPanel',
-    }, "SHOW_TOOLBAR_CALLBACK": lambda request: True
+    },
+    "SHOW_TOOLBAR_CALLBACK": show_toolbar,
 }
 
 WEBPACK_LOADER['DEFAULT'].update({

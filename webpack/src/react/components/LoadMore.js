@@ -10,7 +10,7 @@ export const LoadMore = ({ fetchMore, fetching, next = true }) => {
   const clickHandler = () => fetching || fetchMore()
   return next ? (
     <ScrollSpy onScroll={scrollHandler}>
-      <LoadingIndicator onClick={clickHandler} isLoading={fetching} />
+      <LoadingIndicator onClick={clickHandler} fetching={fetching} />
     </ScrollSpy>
   ) : (
     <FeedEnd />

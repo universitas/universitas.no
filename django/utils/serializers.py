@@ -11,7 +11,7 @@ class jsonDict(dict):
 
 class AbsoluteURLField(serializers.Field):
     def __init__(self, *args, **kwargs):
-        kwargs['read_only'] = kwargs.get('read_only', True)
+        kwargs = {'read_only': True, **kwargs}
         super().__init__(*args, **kwargs)
 
     def to_representation(self, value):

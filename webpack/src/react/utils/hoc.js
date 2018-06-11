@@ -5,8 +5,9 @@ export const requestData = (
   sentinel,
   Loader = () => null
 ) => props => {
-  const ready = sentinel ? R.has(sentinel, props) : R.isEmpty(props)
-  if (ready) return <Wrapped {...props} />
-  props.fetching || props.fetchData()
+  const { fetching, fetchData, ...data } = props
+  const isReady = sentinel ? R.has(sentinel) : R.isEmpty
+  if (isReady(data)) return <Wrapped {...props} />
+  if (!fetching) fetchData()
   return <Loader {...props} />
 }

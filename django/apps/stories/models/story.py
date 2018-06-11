@@ -2,10 +2,6 @@
 
 import logging
 
-from django_extensions.db.fields import AutoSlugField
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-
 from apps.contributors.models import Contributor
 from apps.frontpage.models import FrontpageStory
 from apps.markup.models import Alias
@@ -16,6 +12,10 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django_extensions.db.fields import AutoSlugField
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from utils.decorators import cache_memoize
 from utils.model_mixins import EditURLMixin
 
 from .byline import Byline, clean_up_bylines
@@ -385,8 +385,9 @@ class Story(  # type: ignore
 
     def main_image(self):
         """ Get the top image if there is any. """
-        return self.images.order_by('-top', 'index').first()
+        return self.images.first()
 
+    @cache_memoize()
     def facebook_thumb(self):
         if self.main_image():
             imagefile = self.main_image().imagefile

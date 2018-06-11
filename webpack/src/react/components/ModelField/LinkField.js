@@ -7,5 +7,7 @@ export const EditableField = ({ value, ...args }) => (
 )
 
 export const DetailField = ({ value, label = LABEL, ...args }) => (
-  <span {...args}><a href={value}>{label || value}</a></span>
+  <span {...args}>
+    <a href={value}>{label || value}</a>
+  </span>
 )

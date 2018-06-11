@@ -1,15 +1,17 @@
-import { HOME, SECTION } from 'ducks/router'
+import { HOME, SECTION, STORY } from 'ducks/router'
+
 // Lenses
 const lens = R.pipe(R.split('.'), R.lensPath)
 const sliceLens = lens('newsFeed')
+const selectorFromLens = l => R.view(R.compose(sliceLens, l))
+
 const feedLens = lens('results')
 const searchLens = lens('search')
-const searchResultsLens = lens('searchResults')
 const fetchingLens = lens('fetching')
 const languageLens = lens('language')
+const searchResultsLens = lens('searchResults')
 
 // Selectors
-const selectorFromLens = l => R.view(R.compose(sliceLens, l))
 export const getFeed = R.view(sliceLens)
 
 const getSections = title =>
@@ -94,14 +96,17 @@ const mergeLeft = R.flip(R.merge)
 
 const getReducer = ({ type, payload, error }) => {
   switch (type) {
+    case STORY:
+      return R.assoc('search', '')
     case HOME:
-    case SECTION:
       return mergeLeft({
-        ...payload,
+        section: null,
         next: true,
         search: '',
         searchResults: [],
       })
+    case SECTION:
+      return mergeLeft({ ...payload, next: true })
     case FEED_REQUESTED:
       return R.assoc('fetching', true)
     case FEED_FETCHED: {

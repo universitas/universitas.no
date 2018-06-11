@@ -1,12 +1,12 @@
 import { hot } from 'react-hot-loader'
 import 'styles/universitas.scss'
-import Menu from './components/Menu'
-import Page from './components/Page'
+import TopMenu from 'components/TopMenu'
+import PageSwitch from 'components/PageSwitch'
 
 const App = ({}) => (
   <div className="Universitas">
-    <Menu />
-    <Page />
+    <TopMenu />
+    <PageSwitch />
   </div>
 )
 

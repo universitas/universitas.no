@@ -124,8 +124,8 @@ show_help() {
 }
 
 lint_javascript() {
-  js_files=$(git diff --staged --name-status | awk '/^[AM].*\.js$/ {print $2}' | sed '/^build/d')
-  [[ -n $js_files ]] && prettier --write --semi false --single-quote --trailing-comma es5 $js_files
+  js_files=$(git diff --staged --name-status | awk '/^[AM].*\.js$/ {print $2}' | sed -r '/^(build|docs)/d')
+  [[ -n $js_files ]] && prettier --write --semi false --single-quote --trailing-comma all $js_files
 }
 lint_python() {
   py_files=$(git diff --staged --name-status | awk '/^[AM].*\.py$/ {print $2}' | grep -v 'migrations')

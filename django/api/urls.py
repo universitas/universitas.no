@@ -8,10 +8,11 @@ from .issues import IssueViewSet, PrintIssueViewSet
 from .legacy_viewsets import ProdStoryViewSet
 from .permissions import PermissionViewSet
 from .photos import ImageFileViewSet
+from .publicstories import PublicStoryViewSet
+from .site import SiteDataAPIView
 from .stories import StoryTypeViewSet, StoryViewSet
 from .storyimages import StoryImageViewSet
 from .upload_image import FileUploadViewSet
-from .site import SiteDataAPIView
 
 router = routers.DefaultRouter()
 
@@ -26,6 +27,7 @@ router.register(r'stories', StoryViewSet, 'story')
 router.register(r'storyimages', StoryImageViewSet)
 router.register(r'storytypes', StoryTypeViewSet)
 router.register(r'upload', FileUploadViewSet, 'upload')
+router.register(r'publicstories', PublicStoryViewSet, 'publicstory')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

@@ -45,7 +45,7 @@ const pipeline = component =>
       mimetype,
       filesize,
     }),
-    component
+    component,
   )
 
 const Stat = ({ value, name, title }) => (
@@ -58,7 +58,7 @@ const PhotoStats = (props = { filename, artist }) => (
   <div className="PhotoStats">
     {mapObject(
       (value, key, obj) => <Stat key={key} {...reformat({ key, value })} />,
-      props
+      props,
     )}
   </div>
 )

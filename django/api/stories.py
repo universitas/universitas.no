@@ -67,14 +67,21 @@ class StoryTypeSerializer(serializers.ModelSerializer):
     section = serializers.StringRelatedField()
 
 
+class StorySerializerAllFields(serializers.ModelSerializer):
+    class Meta:
+        model = Story
+        fields = '__all__'
+
+
 class StorySerializer(serializers.HyperlinkedModelSerializer):
     """ModelSerializer for Story"""
+    url_field_name = 'uri'
 
     class Meta:
         model = Story
         fields = [
             'id',
-            'url',
+            'uri',
             'public_url',
             'edit_url',
             'modified',
@@ -88,6 +95,15 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
             'pullquotes',
             'asides',
             'images',
+            # for frontend
+            'kicker',
+            'title',
+            'lede',
+            'theme_word',
+            'language',
+            'fb_image',
+            'comment_field',
+            'publication_date',
         ]
 
     byline_set = BylineSerializer(many=True, read_only=True)
@@ -102,6 +118,9 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
     edit_url = AbsoluteURLField(source='get_edit_url')
     bodytext_markup = serializers.CharField(trim_whitespace=False)
     working_title = serializers.CharField(trim_whitespace=False)
+    fb_image = AbsoluteURLField(source='facebook_thumb.url')
+
+    # url = serializers.HyperlinkedIdentityField()
 
     def update(self, instance, validated_data):
         clean_model = (
@@ -176,3 +195,8 @@ class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
         'pullquotes',
         'images',
     )
+
+    def get_serializer_class(self):
+        if self.request.query_params.get('all'):
+            return StorySerializerAllFields
+        return super().get_serializer_class()
