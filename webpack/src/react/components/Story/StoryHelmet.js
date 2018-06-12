@@ -15,6 +15,7 @@ const StoryHelmet = ({
   publication_status,
 }) => (
   <Helmet>
+    <title>universitas.no | {title}</title>
     <link rel="canonical" href={reverseFull(toStory({ id, title }))} />
     <link rel="shortlink" href={reverseFull(toShortUrl({ id }))} />
     <meta name="description" content={lede} />

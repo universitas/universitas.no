@@ -9,7 +9,6 @@ const parse = R.pipe(
   R.split(/\n/),
   R.map(R.trim),
   R.filter(R.length),
-  R.tap(console.log),
   R.map(parseLine),
 )
 
@@ -44,7 +43,6 @@ const mapping = {
 }
 
 const mapTag = ({ type, text }) => {
-  console.log(type, text)
   const Component = mapping[type]
   if (Component) return <Component>{text}</Component>
   else

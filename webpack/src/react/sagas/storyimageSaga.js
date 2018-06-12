@@ -62,6 +62,5 @@ function* deleteStoryImageSaga(action) {
 function* pushPhotoSaga(action) {
   const { id } = action.payload
   const { response, error } = yield call(pushImageFile, id)
-  if (response) console.log(response)
-  else yield put(errorAction(error))
+  if (error) put(errorAction(error))
 }

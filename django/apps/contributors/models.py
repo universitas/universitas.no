@@ -134,7 +134,6 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
 
         return False
 
-    # @property  # type: ignore
     @cache_memoize()
     def thumb(self):
         img = self.get_byline_image()

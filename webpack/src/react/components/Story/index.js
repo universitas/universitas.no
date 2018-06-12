@@ -7,6 +7,7 @@ import { redirect } from 'redux-first-router'
 import StoryHelmet from './StoryHelmet.js'
 import StoryHead from './StoryHead.js'
 import StoryBody from './StoryBody.js'
+import StorySidebar from './StorySidebar.js'
 import './Story.scss'
 
 const Title = ({ title }) => <h1 className="Title"> {title} </h1>
@@ -22,7 +23,10 @@ export const Story = ({ redirect, ...props }) => {
     <article className="Story">
       <StoryHelmet {...props} />
       <StoryHead {...props} />
-      <StoryBody {...props} />
+      <section className="mainContent">
+        <StorySidebar {...props} />
+        <StoryBody {...props} />
+      </section>
     </article>
   )
 }

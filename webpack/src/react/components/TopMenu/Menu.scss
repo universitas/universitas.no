@@ -16,7 +16,8 @@
   position: sticky;
   top: 0;
   .Level {
-    padding: 2px;
+    height: $menuheight;
+    padding: 0 2px;
     display: flex;
     flex-direction: row;
     flex: 0 1 $content-width;
@@ -29,20 +30,20 @@
     }
   }
   .Logo {
-    height: 1.7rem;
-    margin-right: 0.5rem;
+    width: $logowidth;
     color: white;
     .universitas {
       fill: currentColor;
     }
   }
   .Sections {
+    margin: 0 $gridgap;
     display: flex;
     flex-flow: row wrap;
   }
   .MenuItem {
     text-decoration: none;
-    margin-left: 0.5rem;
+    padding-right: 0.3em;
     cursor: pointer;
     color: #eee;
     &:hover {

@@ -1,9 +1,10 @@
 import logging
 
-from apps.stories.models import Byline, Story, StoryImage, StoryType
-from django.db.models import Prefetch
 from rest_framework import serializers, viewsets
 from rest_framework.filters import BaseFilterBackend
+
+from apps.stories.models import Byline, Story, StoryImage, StoryType
+from django.db.models import Prefetch
 from utils.serializers import AbsoluteURLField, CropBoxField
 
 from .stories import StorySerializer
@@ -23,7 +24,7 @@ class StoryImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = StoryImage
         fields = [
-            'imagefile_id',
+            'id',
             'top',
             'caption',
             'creditline',
@@ -47,6 +48,7 @@ class BylineSerializer(serializers.ModelSerializer):
             'title',
             'contributor',
             'thumb',
+            'ordering',
         ]
 
 
@@ -57,7 +59,6 @@ class StoryTypeSerializer(serializers.ModelSerializer):
         model = StoryType
         fields = [
             'id',
-            'url',
             'name',
             'section',
         ]
@@ -83,7 +84,7 @@ class PublicStorySerializer(StorySerializer):
             'pullquotes',
             'asides',
             'images',
-            'storytype',
+            'story_type',
             'publication_status',
             'language',
             'comment_field',
@@ -96,7 +97,7 @@ class PublicStorySerializer(StorySerializer):
     url = serializers.HyperlinkedIdentityField(view_name='publicstory-detail')
     bylines = BylineSerializer(source='byline_set', many=True, read_only=True)
     images = StoryImageSerializer(many=True, read_only=True)
-    storytype = StoryTypeSerializer(read_only=True)
+    story_type = StoryTypeSerializer(read_only=True)
     public_url = AbsoluteURLField(source='get_absolute_url')
     edit_url = AbsoluteURLField(source='get_edit_url')
     bodytext_markup = serializers.CharField(trim_whitespace=False)

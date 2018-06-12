@@ -1,6 +1,7 @@
-from apps.contributors.models import Contributor, Stint
 from rest_framework import serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
+
+from apps.contributors.models import Contributor, Stint
 from utils.serializers import AbsoluteURLField
 
 
@@ -46,7 +47,7 @@ class ContributorSerializer(serializers.HyperlinkedModelSerializer):
         view_name='imagefile-detail',
     )
     stint_set = StintSerializer(many=True, read_only=True)
-    thumb = AbsoluteURLField(source='byline_photo.preview.url')
+    thumb = AbsoluteURLField()
 
 
 class ContributorViewSet(viewsets.ModelViewSet):

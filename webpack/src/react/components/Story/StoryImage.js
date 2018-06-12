@@ -20,23 +20,24 @@ const Caption = ({ caption, creditline }) => {
   )
 }
 
-const Image = ({ cropped, large, aspect_ratio, caption, crop_box }) => (
-  <div
-    className="imgWrapper"
-    style={{
-      paddingBottom: `${100 *
-        (aspect_ratio == 0 || aspect_ratio == 100 ? 7 / 12 : aspect_ratio)}%`,
-    }}
-  >
-    <img
+const Image = ({ id, cropped, large, aspect_ratio, caption, crop_box = {} }) =>
+  id ? (
+    <div
+      className="imgWrapper"
       style={{
-        objectPosition: position(crop_box),
+        paddingBottom: `${100 *
+          (aspect_ratio == 0 || aspect_ratio == 100 ? 7 / 12 : aspect_ratio)}%`,
       }}
-      src={cropped || large}
-      alt={caption}
-    />
-  </div>
-)
+    >
+      <img
+        style={{
+          objectPosition: position(crop_box),
+        }}
+        src={cropped || large}
+        alt={caption}
+      />
+    </div>
+  ) : null
 
 const StoryImage = props => (
   <div className="StoryImage">
