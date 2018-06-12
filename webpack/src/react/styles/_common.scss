@@ -16,6 +16,12 @@ $gridgap: 1rem;
   line-height: 1;
 }
 
+%smaller {
+  font-size: 0.9rem;
+  line-height: 1.1rem;
+  color: $medium-grey;
+}
+
 %faximile {
   box-shadow: 1px 4px 8px -1px rgba(0, 0, 0, 0.3);
 }

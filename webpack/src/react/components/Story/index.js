@@ -5,6 +5,9 @@ import { getStory, storyRequested } from 'ducks/publicstory'
 import { reverse, toStory } from 'ducks/router'
 import { redirect } from 'redux-first-router'
 import StoryHelmet from './StoryHelmet.js'
+import StoryHead from './StoryHead.js'
+import StoryBody from './StoryBody.js'
+import './Story.scss'
 
 const Title = ({ title }) => <h1 className="Title"> {title} </h1>
 const Lede = ({ lede }) => <p className="Lede"> {lede} </p>
@@ -16,10 +19,10 @@ export const Story = ({ redirect, ...props }) => {
     return null
   }
   return (
-    <article className="StoryPage">
+    <article className="Story">
       <StoryHelmet {...props} />
-      <Title {...props} />
-      <Lede {...props} />
+      <StoryHead {...props} />
+      <StoryBody {...props} />
     </article>
   )
 }

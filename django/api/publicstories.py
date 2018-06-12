@@ -4,7 +4,7 @@ from apps.stories.models import Byline, Story, StoryImage, StoryType
 from django.db.models import Prefetch
 from rest_framework import serializers, viewsets
 from rest_framework.filters import BaseFilterBackend
-from utils.serializers import AbsoluteURLField
+from utils.serializers import AbsoluteURLField, CropBoxField
 
 from .stories import StorySerializer
 
@@ -15,16 +15,22 @@ class StoryImageSerializer(serializers.ModelSerializer):
 
     large = AbsoluteURLField()
     cropped = AbsoluteURLField()
+    crop_box = CropBoxField(
+        read_only=True,
+        source='imagefile.crop_box',
+    )
 
     class Meta:
         model = StoryImage
         fields = [
             'imagefile_id',
+            'top',
             'caption',
             'creditline',
             'aspect_ratio',
             'large',
             'cropped',
+            'crop_box',
         ]
 
 
@@ -98,10 +104,10 @@ class PublicStorySerializer(StorySerializer):
     fb_image = AbsoluteURLField(source='facebook_thumb.url')
 
 
-class MyFilterBackend(BaseFilterBackend):
+class ListPublishedStoriesFilter(BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         if 'pk' not in view.kwargs:
-            return queryset.published()
+            return queryset.published().order_by('-pk')
         return queryset
 
 
@@ -109,12 +115,14 @@ class PublicStoryViewSet(viewsets.ReadOnlyModelViewSet):
     """ API endpoint that allows Story to be viewed or updated.  """
 
     serializer_class = PublicStorySerializer
-    filter_backends = [MyFilterBackend]
+    filter_backends = [ListPublishedStoriesFilter]
     queryset = Story.objects.prefetch_related(
         'story_type__section',
         'asides',
         'pullquotes',
-        'images',
+        Prefetch(
+            'images', queryset=StoryImage.objects.select_related('imagefile')
+        ),
         Prefetch(
             'byline_set',
             queryset=Byline.objects.select_related('contributor')

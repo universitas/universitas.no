@@ -1,0 +1,24 @@
+@import "styles/_common.scss";
+.StoryImage {
+  .imgWrapper {
+    width: 100%;
+    position: relative;
+    img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .Caption {
+    @extend %smaller;
+    margin: 0.2em 0;
+    .stikk {
+      text-transform: uppercase;
+    }
+    .creditline {
+      float: right;
+      text-transform: uppercase;
+    }
+  }
+}

@@ -1,4 +1,6 @@
 """Development settings and globals."""
+import re
+
 from .base import *  # NOQA
 # flake8: noqa F403
 from .base import DEBUG, INSTALLED_APPS, MIDDLEWARE, WEBPACK_LOADER
@@ -19,7 +21,7 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 
 def show_toolbar(request):
-    return request.get_full_path().startswith('/api/')
+    return re.match(r'^/(api|__debug__)/', request.get_full_path())
 
 
 DEBUG_TOOLBAR_CONFIG = {
