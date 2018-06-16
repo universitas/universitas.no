@@ -1,4 +1,16 @@
-import { utf8Decode, formatFileSize, cleanup, stringify } from './text'
+import { utf8Decode, formatFileSize, cleanup, stringify, toJson } from './text'
+
+test('pretty json', () => {
+  expect(toJson({ a: ['hello', 'world'] })).toEqual('{"a": ["hello", "world"]}')
+})
+
+test('circular json returns error', () => {
+  const obj = {}
+  obj.a = obj
+  expect(JSON.parse(toJson(obj))).toMatchObject({
+    message: 'Converting circular structure to JSON',
+  })
+})
 
 test('cleanup', () => {
   expect(cleanup('')).toEqual('')
@@ -26,7 +38,7 @@ test('formatFileSize', () => {
 
 test('utf8Decode', () => {
   expect(utf8Decode('Marta gÅ\x92r pÅ\x92 universitetet')).toEqual(
-    'Marta går på universitetet'
+    'Marta går på universitetet',
   )
   expect(utf8Decode('hello')).toEqual('hello')
   expect(utf8Decode('«Håken»')).toEqual('«Håken»')

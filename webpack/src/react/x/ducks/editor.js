@@ -26,21 +26,13 @@ export const moveCaret = caret => ({
 export const getEditor = R.prop('editor')
 export const getContent = R.compose(R.prop('content'), getEditor)
 export const getActiveIndex = R.compose(R.prop('activeIndex'), getEditor)
-export const getNodes = R.compose(blockParser, getContent)
+export const getNodes = R.compose(R.prop('nodes'), getEditor)
 
 // reducers
-const defaultTextState = {
-  content: '',
-  caret: 0,
-  activeIndex: 0,
-  nodes: [],
-}
-
 const paragraphSplits = (content = '') => {
   const regex = /\s*$/gm
   const splits = [0]
-  while (regex.exec(content) !== null)
-    splits.push(regex.lastIndex)
+  while (regex.exec(content) !== null) splits.push(regex.lastIndex)
   return splits
 }
 const addText = (text, content, caret = 0) =>
@@ -57,30 +49,54 @@ const replaceTag = (tag, content, caret = 0) => {
   )
 }
 
-export const reducer = (state = defaultTextState, { type, payload }) => {
-  switch (type) {
-    case TEXT_CHANGED:
-      return { ...state, ...payload }
-    case MOVE_CARET:
-      return {
-        ...state,
-        caret: payload.caret,
-        activeIndex: (state.content
-          .slice(0, payload.caret)
-          .trim()
-          .match(/\n+/g) || []).length,
-      }
-    case CHANGE_TAG:
-      return {
-        ...state,
-        content: replaceTag(payload.tag, state.content, state.caret),
-      }
-    case INSERT_TEXT:
-      return {
-        ...state,
-        content: addText(payload.text, state.content, state.caret),
-      }
-    default:
-      return state
-  }
+const moveIndex = ({ content, caret }) =>
+  (content
+    .slice(0, caret)
+    .trim()
+    .match(/\n+/g) || []
+  ).length
+
+const mergeNodes = state => ({
+  ...state,
+  nodes: blockParser(state.content),
+})
+
+const reducers = R.fromPairs([
+  [
+    TEXT_CHANGED,
+    ({ content }) => R.pipe(R.assoc('content', content), mergeNodes),
+  ],
+  [
+    CHANGE_TAG,
+    ({ tag }) => state =>
+      R.merge(state, { content: replaceTag(tag, state.content, state.caret) }),
+  ],
+  [
+    INSERT_TEXT,
+    ({ text }) => state =>
+      R.merge(state, { content: addText(text, state.content, state.caret) }),
+  ],
+  [
+    MOVE_CARET,
+    payload =>
+      R.pipe(R.merge(R.__, payload), s =>
+        R.assoc('activeIndex', moveIndex(s), s),
+      ),
+  ],
+])
+
+const getReducer = ({ type, payload }) => {
+  const reducer = reducers[type]
+  if (!reducer) return R.identity
+  return reducer(payload)
 }
+
+const defaultTextState = {
+  content: '',
+  caret: 0,
+  activeIndex: 0,
+  nodes: [],
+}
+
+export const reducer = (state = defaultTextState, action) =>
+  getReducer(action)(state)

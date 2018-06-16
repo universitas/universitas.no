@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import { scrollElement } from 'utils/scroll'
 import { getNodes, getActiveIndex } from 'x/ducks/editor'
+import ErrorBoundary from 'react-error-boundary'
 
 const Tingo = (n = 0, { children, ...props }) => {
   const tingoPattern = n ? `(?:\\S+\\s+){1,${n}}` : '.{1,12}\\S*'
@@ -20,8 +21,10 @@ const Tingo = (n = 0, { children, ...props }) => {
   return <p {...props}>{text}</p>
 }
 
-const Link = ({ target, ...props }) => (
-  <a href={target} title={target} {...props} />
+const Link = ({ target, children, ...props }) => (
+  <a href={target} title={target} {...props}>
+    {children}
+  </a>
 )
 
 const elements = {
@@ -29,7 +32,7 @@ const elements = {
   ing: props => <p {...props} style={{ fontSize: '1.5em' }} />,
   txt: props => <p {...props} />,
   spm: props => <p className="question" {...props} />,
-  //  link: props => <em {...props} />,
+  //link: props => <em {...props} />,
   mt: props => <h3 className="mellomtittel" {...props} />,
   tingo: Tingo.bind(null, 0),
   tingo1: Tingo.bind(null, 1),
@@ -46,7 +49,7 @@ const elements = {
   strong: props => <strong {...props} />,
 }
 
-const Node = ({ type, children, ...props }) => {
+const Node = ({ type, children = [], ...props }) => {
   let Element = elements[type]
   if (Element === undefined) {
     props.style = { fontWeight: 'bolder', color: 'red' }
@@ -57,10 +60,14 @@ const Node = ({ type, children, ...props }) => {
       Element = elements.em
     }
   }
-  const renderChild = (props, key) => {
-    return props.type ? <Node key={key} {...props} /> : props.children
-  }
-  return <Element {...props}>{children.map(renderChild)}</Element>
+  const renderChild = (props, key) =>
+    props.type ? <Node key={key} {...props} /> : props.children
+
+  return (
+    <ErrorBoundary>
+      <Element {...props}>{children.map(renderChild)}</Element>
+    </ErrorBoundary>
+  )
 }
 
 const NodeWrapper = ({ scrollTo, ...props }) =>

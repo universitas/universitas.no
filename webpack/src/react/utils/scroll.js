@@ -1,7 +1,7 @@
 const STEPS = 10
 const TICK = 10
 
-const scrollElement = (element, duration = STEPS) => {
+export const scrollElement = (element, duration = STEPS) => {
   if (!element) return
   const container = element.parentElement
   const target =
@@ -9,7 +9,7 @@ const scrollElement = (element, duration = STEPS) => {
   scrollTo(container, target, duration)
 }
 
-const scrollTo = (element, target, duration) => {
+export const scrollTo = (element, target, duration) => {
   const pos = element.scrollTop
   if (duration <= 0 || pos === target) return
   if (duration === 1) {
@@ -22,4 +22,10 @@ const scrollTo = (element, target, duration) => {
   }, TICK)
 }
 
-export { scrollTo, scrollElement }
+// get scrollposition as number in range [0, 1]
+export const getScroll = el =>
+  el.scrollTop / (el.scrollHeight - el.clientHeight)
+
+// set scrollposition as number in range [0, 1]
+export const setScroll = (el, pos) =>
+  (el.scrollTop = pos * (el.scrollHeight - el.clientHeight))

@@ -16,6 +16,7 @@ export const debounce = (func, wait) => {
     })
   }
 }
+
 // setTimeout based debounce function. Doesn't perform well in android chrome
 export const timeoutDebounce = (func, wait) => {
   let timeout = null
@@ -24,7 +25,7 @@ export const timeoutDebounce = (func, wait) => {
     timeout = setTimeout(() => {
       timeout = null
       func(...args)
-    }, 100)
+    }, wait)
   }
 }
 

@@ -1,5 +1,11 @@
 import { distanceInWordsToNow, format } from 'date-fns'
 import norwayLocale from 'date-fns/locale/nb'
+import prettyJson from 'json-stringify-pretty-compact'
+//import safeJson from 'json-stringify-safe'
+
+export const toJson = R.tryCatch(prettyJson, (e, data) =>
+  JSON.stringify(e, Object.getOwnPropertyNames(e)),
+)
 
 export const cleanup = text => {
   return text
@@ -29,14 +35,14 @@ export const tr = R.curry((a, b, text) => {
   return R.pipe(R.map(l => trans[l] || l), R.join(''))(text)
 })
 
-// slugify
+// :: string -> string
 export const slugify = R.pipe(
   R.toLower,
-  R.replace(/'"-_/g, ''),
+  R.replace(/['"]/g, ''),
   tr('æåàáäâèéëêìíïîòóøöôùúüûñç', 'aaaaaaeeeeiiiiooooouuuunc'),
   R.replace(/[^a-z0-9]+/g, ' '),
   R.trim,
-  R.replace(/ +/g, '-')
+  R.replace(/ +/g, '-'),
 )
 
 // :: int|string -> string
@@ -45,7 +51,7 @@ export const phoneFormat = R.pipe(
   R.trim,
   R.ifElse(Boolean, R.identity, R.always('–')),
   R.replace(/ /g, ''),
-  R.replace(/(\+\d\d)?(\d{3})(\d{2})(\d{3})$/, '$1 $2 $3 $4')
+  R.replace(/(\+\d\d)?(\d{3})(\d{2})(\d{3})$/, '$1 $2 $3 $4'),
 )
 
 // :: string|Date -> string
@@ -53,7 +59,7 @@ export const formatDate = (
   value,
   dateformat = 'ddd DD. MMM YYYY',
   locale = norwayLocale,
-  relative = false
+  relative = false,
 ) =>
   relative
     ? distanceInWordsToNow(new Date(value), { addSuffix: true, locale })
@@ -79,6 +85,15 @@ export const utf8Decode = R.when(
     R.replace(/\xc5\x92/g, 'å'), // unknown encoding
     R.replace(/\xc2\xbf/g, 'ø'), // unknown encoding
     R.tryCatch(R.pipe(escape, decodeURIComponent), R.nthArg(1)),
-    R.trim
-  )
+    R.trim,
+  ),
 )
+
+// simple text hasher
+// :: string -> number
+export const hashText = text => {
+  let hash = 0
+  let i = text.length
+  while (i--) hash = ((hash << 5) - hash + text.charCodeAt(i)) << 0
+  return hash
+}

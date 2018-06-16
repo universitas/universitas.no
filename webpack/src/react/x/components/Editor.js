@@ -41,8 +41,7 @@ class Editor extends React.Component {
         <EditorToolBar />
         <textarea
           className="TextArea"
-          autoCapitalize="sentences"
-          lang="no-nn"
+          lang="nn"
           onChange={this.onChange}
           onKeyUp={moveCaret}
           onMouseUp={moveCaret}

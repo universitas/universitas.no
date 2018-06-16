@@ -4,8 +4,9 @@ const makeRule = (type, re) => text => {
   const m = re.exec(text)
   return m && [{ type, children: m[1] }, text.slice(m[0].length)]
 }
+
 const link = text => {
-  const m = /^\[([^\]]+)\]\(([^\)]+)\)/.exec(text)
+  const m = /^\[(.*?)\]\((.*?)\)/.exec(text)
   return (
     m && [
       { type: 'link', children: m[1], target: m[2] },
