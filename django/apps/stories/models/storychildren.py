@@ -45,6 +45,21 @@ class StoryChild(TimeStampedModel):
         abstract = True
         ordering = ['index']
 
+    ordering = models.SmallIntegerField(
+        default=0,
+        blank=True,
+        null=True,
+        help_text=_('Internal order within placement'),
+        verbose_name=_('ordering'),
+    )
+    placement = models.CharField(
+        max_length=100,
+        default='auto',
+        blank='true',
+        help_text=_('Placement of this element'),
+        verbose_name=_('placement'),
+    )
+
     index = models.PositiveSmallIntegerField(
         default=0,
         blank=True,
