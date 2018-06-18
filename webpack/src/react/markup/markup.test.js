@@ -1,4 +1,4 @@
-import { parseText, renderText } from './index.js'
+import { rules, makeParser, parseText, renderText } from './index.js'
 
 const cases = {
   title: [
@@ -9,11 +9,16 @@ const cases = {
     'Hello World',
     [{ type: 'paragraph', children: ['Hello World'] }],
   ],
+  place: ['[[ here ]]', [{ type: 'place', name: 'here' }]],
+  'place flag': [
+    '[[ here | left ]]',
+    [{ type: 'place', name: 'here', flags: 'left' }],
+  ],
   quote: [
     '@sitat: Hello\n@txt: World',
     [{ type: 'pullquote', children: [{ type: 'paragraph' }, { tag: 'txt' }] }],
   ],
-  quotesplit: [
+  'quote split': [
     '@sitat: Hello\n\n@sitatbyline: World',
     [{ type: 'pullquote', children: ['Hello'] }, { type: 'blockTag' }],
   ],
@@ -31,7 +36,10 @@ const cases = {
     '[hello](//world',
     [{ children: [{ children: ['hello'], ref: 'hello' }, '(//world'] }],
   ],
-  'partial link 2': ['hello [world', [{ children: ['hello ', {}, 'world'] }]],
+  'another partial link': [
+    'hello [world',
+    [{ children: ['hello ', {}, 'world'] }],
+  ],
 }
 
 describe('parseText', () => {
@@ -51,4 +59,28 @@ describe('renderText', () => {
     expect(reverse('"hello "world""')).toEqual('«hello «world»»')
     expect(reverse('"hello" "world"')).toEqual('«hello» «world»')
   })
+})
+
+test('makeParser', () => {
+  const parser = makeParser({ pattern: /he/, type: 'greeting' })
+  expect(parser('hei')).toMatchObject({
+    content: 'he',
+    type: 'greeting',
+  })
+  expect(parser('ei')).toEqual(null)
+})
+
+describe('rules', () => {
+  const expected = expect.objectContaining({
+    type: expect.any(String),
+    order: expect.any(Number),
+    pattern: expect.any(RegExp),
+    reverse: expect.any(Function),
+    inline: expect.any(Boolean),
+    leaf: expect.any(Boolean),
+  })
+  R.forEach(
+    rule => test(rule.type, () => expect(rule).toEqual(expected)),
+    R.values(rules),
+  )
 })

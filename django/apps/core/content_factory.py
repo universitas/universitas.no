@@ -2,6 +2,7 @@ import random
 from io import BytesIO
 from pathlib import Path
 
+from faker import Factory
 from PIL import Image, ImageChops, ImageFilter, ImageOps
 
 from apps.contributors.models import Contributor
@@ -9,7 +10,6 @@ from apps.photo.models import ImageFile
 from apps.stories.models import Story, StoryImage, StoryType
 from django.core.files import File
 from django.utils import timezone
-from faker import Factory
 
 SOURCE_IMG = Path(__file__).parent / 'judgement2.jpg'
 FAKE = Factory.create('no')
@@ -145,7 +145,7 @@ def fake_story():
     story.refresh_from_db()
     story.full_clean()
     story.frontpagestory_set.all().delete()
-    story.save(new=True)
+    story.save()
     return story
 
 

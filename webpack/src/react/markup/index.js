@@ -1,19 +1,46 @@
-import { tags, blockTags, inlineTags } from './tags'
+import rules from './rules'
 import { hashText } from 'utils/text'
+
+export const makeParser = ({
+  type,
+  pattern,
+  inline,
+  process = R.identity,
+}) => text => {
+  const regex = new RegExp(pattern, inline ? 'uy' : 'muy')
+  const result = regex.exec(text)
+  return (
+    result &&
+    process({
+      match: result,
+      content: result[1] || result[0],
+      index: regex.lastIndex,
+      type,
+      ...result.groups,
+    })
+  )
+}
+
+const [inlineRules, blockRules] = R.pipe(
+  R.map(tag => ({ parse: makeParser(tag), ...tag })),
+  R.values,
+  R.sortBy(R.prop('order')),
+  R.partition(R.prop('inline')),
+)(rules)
 
 // Parse markup text to render tree
 export const parseText = (text, multiline = true, lastIndex = 0) => {
   const nodes = []
-  const rules = multiline ? blockTags : inlineTags
+  const rules = multiline ? blockRules : inlineRules
   const types = R.pipe(R.pluck('type'), R.join(' '))(rules)
   let looplimit = 99 // hack to avoid infinite loops during development. Should not be needed when tests are passing.
   while (looplimit-- && text) {
     for (const rule of rules) {
       const result = rule.parse(text)
       if (result) {
-        const { index, content, match, ...node } = result
+        const { index, content, ...node } = result
         if (rule.type != 'whitespace') {
-          if (rule.type == 'text') nodes.push(content)
+          if (R.contains(rule.type, ['text', 'character'])) nodes.push(content)
           else {
             const children = rule.leaf
               ? content ? [content] : []
@@ -43,16 +70,18 @@ const cleanMarkup = R.pipe(
 )
 
 // Render parse tree to markup text
-export const renderText = tree => {
+const renderText = tree => {
   let res = []
   for (const node of tree) {
     if (R.is(String, node)) {
       res.push(node)
     } else {
-      const rule = tags[node.type]
+      const rule = rules[node.type]
       res.push(rule.reverse({ ...node, content: renderText(node.children) }))
       if (!rule.inline) res.push('\n')
     }
   }
   return cleanMarkup(R.join('', res))
 }
+
+export { rules, renderText }

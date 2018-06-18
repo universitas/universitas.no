@@ -2,25 +2,22 @@
 
 import logging
 
+from django_extensions.db.fields import AutoSlugField
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+
 from apps.contributors.models import Contributor
 from apps.frontpage.models import FrontpageStory
-from apps.markup.models import Alias
 from django.conf import settings
 from django.core.cache import cache
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django_extensions.db.fields import AutoSlugField
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
 from utils.decorators import cache_memoize
 from utils.model_mixins import EditURLMixin
 
-from .byline import Byline, clean_up_bylines
 from .mixins import MarkupCharField, MarkupTextField, TextContent
-from .place_inlines import InlineElementsMixin
 from .search_mixin import FullTextSearchMixin, FullTextSearchQuerySet
 from .sections import StoryType, default_story_type
 from .storychildren import Aside, Pullquote
@@ -58,7 +55,6 @@ class Story(  # type: ignore
     EditURLMixin,
     TimeStampedModel,
     TextContent,
-    InlineElementsMixin,
 ):
     """ An article or story in the newspaper. """
 
@@ -214,11 +210,6 @@ class Story(  # type: ignore
         help_text=_('calculated value representing recent page views.'),
         verbose_name=_('recent page views')
     )
-    bylines_html = models.TextField(
-        default='',
-        editable=False,
-        verbose_name=_('all bylines as html.'),
-    )
     legacy_html_source = models.TextField(
         blank=True,
         null=True,
@@ -256,48 +247,42 @@ class Story(  # type: ignore
             return title
 
     def save(self, *args, **kwargs):
-        new = kwargs.pop('new', (self.pk is None))
-        self.working_title = (
-            self.working_title or self.title or f'[{self.story_type}]'
-        )
+        if not self.working_title:
+            self.working_title = self.title or f'[{self.story_type}]'
 
-        self.url = ''
-        if self.pk:
-            self.url = self.get_absolute_url()
+        self.url = self.get_absolute_url() if self.pk else ''
+
+        if self.is_published(False) and not self.publication_date:
+            self.publication_date = timezone.now()
+
         super().save(*args, **kwargs)
 
         if self.publication_status == self.STATUS_TO_DESK:
             from apps.stories.tasks import upload_storyimages
             upload_storyimages.delay(self.pk)
 
-        if new:
-            # make inline elements
-            self.bodytext_markup = self.place_all_inline_elements()
-            self.url = self.get_absolute_url()
-            super().save(update_fields=['bodytext_markup'])
-
         if (self.publication_status >= self.STATUS_FROM_DESK):
             FrontpageStory.objects.create_for_story(story=self)
 
     @property
-    def parent_story(self):
-        # for polymorphism with related content.
-        return self
-
-    @property
     def comments_plugin(self):
-        if self.is_published:
+        if self.is_published():
             return self.comment_field
         return 'off'
 
-    @property
-    def is_published(self):
-        # Is this Story public
+    def is_published(self, check_date=True):
+        """Is this Story public"""
         public = [Story.STATUS_NOINDEX, Story.STATUS_PUBLISHED]
-        return (
-            self.publication_date and self.publication_status in public
-            and self.publication_date <= timezone.now()
-        )
+        if self.publication_status in public:
+            if check_date:
+                try:
+                    return self.publication_date <= timezone.now()
+                except TypeError:
+                    return False
+            else:
+                return True
+        else:
+            return False
 
     @property
     def priority(self):
@@ -314,7 +299,7 @@ class Story(  # type: ignore
 
     def valid_page_view(self, request):
         """Check if page view looks like a valid visit"""
-        if not self.is_published:
+        if not self.is_published():
             # Only count hits on published pages.
             return False
         user_agent = request.META.get('HTTP_USER_AGENT', '').lower()
@@ -347,22 +332,6 @@ class Story(  # type: ignore
         except ValueError:
             NEVER = None
             cache.add(hit_key, n, timeout=NEVER)
-
-    def get_bylines_as_html(self):
-        """ create html table of bylines in db for search and admin display """
-        # translation.activate(settings.LANGUAGE_CODE)
-        all_bylines = ['<table class="admin-bylines">']
-        for bl in self.byline_set.select_related('contributor'):
-            all_bylines.append(
-                '<tr><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-                    bl.get_credit_display(),
-                    bl.contributor.display_name,
-                    bl.title,
-                )
-            )
-        # translation.deactivate()
-        all_bylines.append('</table>')
-        return '\n'.join(all_bylines)
 
     def get_bylines(self):
         # with translation.override()
@@ -444,56 +413,9 @@ class Story(  # type: ignore
             for qs in children
         )
 
-    def clean(self):
-        """ Clean user input and populate fields """
-
-        # run cleanup only when preparing for web
-        cleanup = [Story.STATUS_FROM_DESK, Story.STATUS_PUBLISHED]
-
-        published = [Story.STATUS_PUBLISHED, Story.STATUS_NOINDEX]
-
-        if self.publication_status in cleanup:
-            if not self.title and '@headline:' not in self.bodytext_markup:
-                self.bodytext_markup = self.bodytext_markup.replace(
-                    '@tit:', '@headline:', 1
-                )
-            self.parse_markup()
-
-        self.bodytext_markup = Alias.objects.replace(
-            content=self.bodytext_markup, timing=Alias.TIMING_CLEAN
-        )
-
-        # self.bodytext_markup = self.reindex_inlines()
-        # TODO: Fix redindeksering av placeholders for video og bilder.
-
-        self.bylines_html = self.get_bylines_as_html()
-        if self.publication_status in published:
-            self.publication_date = self.publication_date or timezone.now()
-
-        # fix tag typos etc.
-        super().clean()
-
-    def _block_new(self, tag, content, element):
-        """ Add a story element to the main story """
-        if element == "byline":
-            bylines_raw = clean_up_bylines(content)
-            for raw_byline in bylines_raw.splitlines():
-                Byline.create(
-                    story=self,
-                    full_byline=raw_byline,
-                    initials='',
-                    # TODO: legg inn initialer i bylines som er importert fra
-                    # prodsys.
-                )
-            return self
-        elif element == "aside":
-            new_element = Aside(parent_story=self, )
-        elif element == "pullquote":
-            new_element = Pullquote(parent_story=self, )
-        return new_element._block_append(tag, content)
-
     @property
     def tekst(self):
+        """Property getter used by legacy api for indesign"""
         output = []
         head_tags = [('tit', 'title'), ('ing', 'lede'), ('tema', 'theme_word'),
                      ('stikktit', 'kicker')]
@@ -512,6 +434,7 @@ class Story(  # type: ignore
 
     @tekst.setter
     def tekst(self, value):
+        """Property setter used by legacy api for indesign"""
         self.title = ''
         self.lede = ''
         self.theme_word = ''

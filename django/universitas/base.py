@@ -163,6 +163,7 @@ FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
 FILE_UPLOAD_PERMISSIONS = 0o664
 # Enable original file names for resized images.
 THUMBNAIL_BACKEND = 'apps.photo.thumb_backend.KeepNameThumbnailBackend'
+THUMBNAIL_DEBUG = False
 # With boto and amazon s3, we don't check if file exist.
 # Automatic overwrite if not found in cache key
 THUMBNAIL_FORCE_OVERWRITE = True

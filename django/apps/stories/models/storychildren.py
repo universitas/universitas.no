@@ -3,38 +3,40 @@
 import logging
 import re
 
+from model_utils.models import TimeStampedModel
 from requests import request
 from requests.exceptions import MissingSchema, Timeout
+from slugify import Slugify
 
 from apps.photo.models import ImageFile
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
 from utils.decorators import cache_memoize
 
-from .mixins import MARKUP_TAGS, MarkupCharField, MarkupModelMixin, TextContent
+from .mixins import MarkupCharField, MarkupModelMixin, TextContent
 
 slugify = Slugify(max_length=50, to_lower=True)
 logger = logging.getLogger(__name__)
+
+TOP = 'head'
 
 
 class ElementQuerySet(models.QuerySet):
     def top(self):
         """ Elements that are placed at the start of the parent article """
-        return self.published().filter(top=True)
+        return self.published().filter(placement=TOP)
 
     def inline(self):
         """ Elements that are placed inside the story """
-        return self.published().filter(top=False)
+        return self.published().exclude(placement=TOP)
 
     def published(self):
-        return self.filter(index__isnull=False)
+        return self.filter(placement__isnull=False)
 
     def unpublished(self):
-        return self.filter(index__isnull=True)
+        return self.filter(placement__isnull=True)
 
 
 class StoryChild(TimeStampedModel):
@@ -67,40 +69,17 @@ class StoryChild(TimeStampedModel):
         help_text=_('Leave blank to unpublish'),
         verbose_name=_('index'),
     )
-    top = models.BooleanField(
-        default=False,
-        help_text=_('Is this element placed on top?'),
-    )
 
-    @classmethod
-    def markup_tag(cls):
-        tag = MARKUP_TAGS.get(cls.__name__, '')
-        return f'@{tag}:'
+    @property
+    def top(self):
+        return self.placement == TOP
 
     @property
     def published(self):
-        return bool(self.index)
+        return bool(self.placement)
 
     def siblings(self):
         return self.__class__.objects.filter(parent_story=self.parent_story)
-
-    def needle(self):
-        return None
-
-    def save(self, *args, **kwargs):
-        if self.pk is None:
-            if self.index == 0:
-                last_item = self.siblings().filter(index__isnull=False
-                                                   ).order_by('index').last()
-                if last_item:
-                    # Set index to be higher than the previous object of the
-                    # same class.
-                    self.index = last_item.index + 1
-                else:
-                    self.index = 1
-
-        super().save(*args, **kwargs)
-        self.parent_story.clear_html()
 
 
 class Pullquote(TextContent, StoryChild):  # type: ignore
@@ -111,11 +90,6 @@ class Pullquote(TextContent, StoryChild):  # type: ignore
         related_name='pullquotes',
         on_delete=models.CASCADE,
     )
-
-    def needle(self):
-        firstline = self.bodytext_markup.splitlines()[0]
-        needle = re.sub('@\S+:|«|»', '', firstline)
-        return needle
 
     class Meta:
         verbose_name = _('Pullquote')
@@ -216,13 +190,6 @@ class StoryMedia(StoryChild, MarkupModelMixin):
             height = width * self.aspect_ratio
         return int(height)
 
-    def save(self, *args, **kwargs):
-        self.caption = self.caption.replace('*', '')
-        self.creditline = self.creditline.replace('*', '')
-        if self.pk is None and not self.siblings().filter(top=True).exists():
-            self.top = True
-        super().save(*args, **kwargs)
-
 
 class StoryImage(StoryMedia):
     """ Photo or illustration connected to a story """
@@ -231,7 +198,7 @@ class StoryImage(StoryMedia):
         verbose_name = _('Image')
         verbose_name_plural = _('Images')
         unique_together = [('parent_story', 'imagefile')]
-        ordering = ['-top', 'index']
+        ordering = ['-ordering']
 
     parent_story = models.ForeignKey(
         'Story',
@@ -257,14 +224,6 @@ class StoryImage(StoryMedia):
                 'cannot calculate ratio for image %s' % (self.imagefile, )
             )
             return super().original_ratio()
-
-    def needle(self):
-        """ Look for a name in the text """
-        needle = re.sub(r'^.+:', '', self.caption)
-        name = re.search(r'([A-ZÆØÅ]\w+ ){2,}', needle)
-        if name:
-            needle = name.group(0)
-        return needle.strip()[:60] or str(self.imagefile)
 
     @property
     def filename(self):

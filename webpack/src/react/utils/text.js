@@ -1,11 +1,26 @@
 import { distanceInWordsToNow, format } from 'date-fns'
 import norwayLocale from 'date-fns/locale/nb'
 import prettyJson from 'json-stringify-pretty-compact'
-//import safeJson from 'json-stringify-safe'
+import FuzzySet from 'fuzzyset'
 
+// pretty JSON
 export const toJson = R.tryCatch(prettyJson, (e, data) =>
   JSON.stringify(e, Object.getOwnPropertyNames(e)),
 )
+
+// Fuzzy matcher
+// :: ([str], number) -> str -> str
+export const makeFuzzer = (candidates, cutoff = 0.5) => {
+  const fuzzer = FuzzySet(candidates)
+  return R.either(
+    R.pipe(
+      t => fuzzer.get(t) || [],
+      R.filter(R.propSatisfies(R.lt(cutoff), '0')),
+      R.path([0, 1]),
+    ),
+    R.identity,
+  )
+}
 
 export const cleanup = text => {
   return text

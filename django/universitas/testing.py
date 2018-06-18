@@ -2,7 +2,7 @@
 from .base import *  # noqa
 
 DEBUG = False
-LOGGING = {}  # type: dict
+LOGGING = {'version': 1, 'loggers': {'sorl.thumbnail': {'level': 'CRITICAL'}}}
 PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # MEDIA_ROOT = tempfile.mkdtemp(prefix='djangotest_')

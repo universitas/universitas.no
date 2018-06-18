@@ -321,20 +321,13 @@ class StoryAdmin(admin.ModelAdmin):
     search_fields = [
         'title',
         'lede',
-        'bylines_html',
     ]
-
-    def display_bylines(self, instance):
-        return mark_safe(instance.bylines_html) or " -- "
 
     def frontpage(self, instance):
         fp = instance.frontpagestory_set.first()
         if fp:
             return mark_safe(f'<a href="{fp.get_edit_url()}">{fp}</a>')
         return '-'
-
-    display_bylines.short_description = 'Bylines'  # type: ignore
-    display_bylines.allow_tags = True  # type: ignore
 
 
 @admin.register(Section)

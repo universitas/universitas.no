@@ -2,12 +2,12 @@
 
 from io import BytesIO
 
+import pytest
 from PIL import Image
 
-import pytest
-from apps.markup.models import BlockTag
+# from apps.markup.models import BlockTag
 from apps.photo.models import ImageFile
-from apps.stories.models import Section, Story, StoryImage, StoryType
+from apps.stories.models import Byline, Section, Story, StoryImage, StoryType
 from apps.stories.models.sections import default_story_type
 from django.core.files.uploadedfile import SimpleUploadedFile
 
@@ -64,10 +64,10 @@ def another_hope():
         stolen plans that can save her
         people and restore
         freedom to the galaxy....
-        @bl:text: George Lucas, film director
         """
     )
     story.save()
+    Byline.create('text: George Lucas, film director', story)
     return story
 
 
@@ -115,27 +115,3 @@ def test_new_story_type():
     """It's possible to create an empty story"""
     stype = StoryType.objects.create(name='Test Story Type')
     assert stype.slug == 'test-story-type'
-
-
-@pytest.mark.django_db
-def test_that_there_are_tags():
-    tag_count = BlockTag.objects.count()
-    assert tag_count == 20
-
-
-@pytest.mark.django_db
-def test_create_story_from_xtags():
-    source = """
-    @tit:Hello World!
-    @ing:A test story for you
-    @txt:This story will rock the world!
-    """.strip()
-    new_story = Story(
-        bodytext_markup=source, publication_status=Story.STATUS_FROM_DESK
-    )
-    new_story.clean()
-    new_story.save()
-
-    assert new_story.title == 'Hello World!'
-    assert new_story.lede == 'A test story for you'
-    assert 'bodytext' in new_story.get_html()

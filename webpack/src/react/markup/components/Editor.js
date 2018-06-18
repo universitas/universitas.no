@@ -1,10 +1,6 @@
 import { toJson } from 'utils/text'
 import { parseText, renderText } from 'markup/index'
-import { tags } from 'markup/tags'
 import { getScroll, setScroll } from 'utils/scroll'
-import { timeoutDebounce as debounce } from 'utils/misc'
-import ErrorBoundary from 'react-error-boundary'
-import { FallBack } from 'markup/components/Block'
 
 import './Editor.scss'
 
@@ -22,20 +18,6 @@ const PreviewTree = ({ nodeTree, _ref, ...props }) => (
   <pre className="PreviewTree" ref={_ref} {...props}>
     {toJson(nodeTree)}
   </pre>
-)
-
-const renderNode = (node, key) => {
-  if (typeof node === 'string') return node
-  const { children, type, ...props } = node
-  if (type === 'character') return children
-  const rule = tags[type]
-  return rule.react({ ...props, key, children: children.map(renderNode) })
-}
-
-const PreviewStory = ({ nodeTree, _ref, ...props }) => (
-  <article className="PreviewStory" ref={_ref} {...props}>
-    {nodeTree.map(renderNode)}
-  </article>
 )
 
 const Reverse = ({ nodeTree, _ref, ...props }) => (
@@ -86,11 +68,6 @@ class Editor extends React.Component {
           nodeTree={nodeTree}
           onClick={this.syncronizeScroll}
           _ref={el => (this.reverse = el)}
-        />
-        <PreviewStory
-          nodeTree={nodeTree}
-          onClick={this.syncronizeScroll}
-          _ref={el => (this.preview = el)}
         />
         <PreviewTree
           nodeTree={nodeTree}

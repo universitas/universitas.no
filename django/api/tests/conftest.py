@@ -86,7 +86,7 @@ def scandal_photo(db):
         pass
     source = Path(__file__).parent / 'fixtures' / 'dummy.jpg'
     shutil.copy(source, Path('/var/media/scandal.jpg'))
-    return ImageFile.objects.create(
+    yield ImageFile.objects.create(
         id=22,
         original='scandal.jpg',
         description=description,

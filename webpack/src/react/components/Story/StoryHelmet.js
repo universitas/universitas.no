@@ -2,13 +2,16 @@ import { Helmet } from 'react-helmet'
 import { reverseFull, toStory, toShortUrl } from 'ducks/router'
 const STATUS_PUBLISHED = 10
 
-const authors = R.pipe(R.pluck('name'), R.join(', '))
+const authors = R.tryCatch(
+  R.pipe(R.pluck('name'), R.join(', ')),
+  R.always(console.error),
+)
 
 const StoryHelmet = ({
   id,
   title,
   lede,
-  bylines,
+  bylines = [],
   language,
   modified,
   fb_image,

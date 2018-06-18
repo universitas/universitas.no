@@ -3,13 +3,23 @@ import logging
 from rest_framework import serializers, viewsets
 from rest_framework.filters import BaseFilterBackend
 
-from apps.stories.models import Byline, Story, StoryImage, StoryType
+from apps.stories.models import (
+    Byline, InlineHtml, InlineLink, Story, StoryImage, StoryType, StoryVideo
+)
 from django.db.models import Prefetch
 from utils.serializers import AbsoluteURLField, CropBoxField
 
 from .stories import StorySerializer
 
 logger = logging.getLogger('apps')
+
+
+class InlineHtmlSerializer(serializers.ModelSerializer):
+    """ModelSerializer for InlineHtml"""
+
+    class Meta:
+        model = InlineHtml
+        fields = ['id', 'bodytext_html']
 
 
 class StoryImageSerializer(serializers.ModelSerializer):
@@ -25,13 +35,42 @@ class StoryImageSerializer(serializers.ModelSerializer):
         model = StoryImage
         fields = [
             'id',
-            'top',
+            'placement',
+            'ordering',
             'caption',
             'creditline',
             'aspect_ratio',
             'large',
             'cropped',
             'crop_box',
+        ]
+
+
+class StoryVideoSerializer(serializers.ModelSerializer):
+    """ModelSerializer for StoryVideo"""
+
+    class Meta:
+        model = StoryVideo
+        fields = [
+            'id',
+            'placement',
+            'ordering',
+            'caption',
+            'creditline',
+            'embed',
+        ]
+
+
+class InlineLinkSerializer(serializers.ModelSerializer):
+    """ModelSerializer for InlineLink"""
+
+    class Meta:
+        model = InlineLink
+        fields = [
+            'id',
+            'number',
+            'linked_story',
+            'href',
         ]
 
 
@@ -43,12 +82,13 @@ class BylineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Byline
         fields = [
+            'id',
+            'ordering',
             'credit',
             'name',
             'title',
             'contributor',
             'thumb',
-            'ordering',
         ]
 
 
@@ -81,9 +121,12 @@ class PublicStorySerializer(StorySerializer):
             'theme_word',
             'bodytext_markup',
             'bylines',
+            'images',
+            'videos',
             'pullquotes',
             'asides',
-            'images',
+            'inline_html_blocks',
+            'links',
             'story_type',
             'publication_status',
             'language',
@@ -95,8 +138,11 @@ class PublicStorySerializer(StorySerializer):
         ]
 
     url = serializers.HyperlinkedIdentityField(view_name='publicstory-detail')
-    bylines = BylineSerializer(source='byline_set', many=True, read_only=True)
-    images = StoryImageSerializer(many=True, read_only=True)
+    bylines = BylineSerializer(source='byline_set', many=True)
+    images = StoryImageSerializer(many=True)
+    videos = StoryVideoSerializer(many=True)
+    links = InlineLinkSerializer(source='inline_links', many=True)
+    inline_html_blocks = InlineHtmlSerializer(many=True)
     story_type = StoryTypeSerializer(read_only=True)
     public_url = AbsoluteURLField(source='get_absolute_url')
     edit_url = AbsoluteURLField(source='get_edit_url')
@@ -121,6 +167,9 @@ class PublicStoryViewSet(viewsets.ReadOnlyModelViewSet):
         'story_type__section',
         'asides',
         'pullquotes',
+        'inline_links',
+        'videos',
+        'inline_html_blocks',
         Prefetch(
             'images', queryset=StoryImage.objects.select_related('imagefile')
         ),
