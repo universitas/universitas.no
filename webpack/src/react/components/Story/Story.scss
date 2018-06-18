@@ -1,5 +1,31 @@
 @import "styles/_common.scss";
 
+%bullet-list {
+  list-style: none;
+  margin-left: 1.2em;
+  &:before {
+    position: absolute;
+    margin-left: -1.2em;
+    color: $medium-yellow;
+    height: 1em;
+    width: 1em;
+    content: " ";
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect fill='#ffb653' y='1' width='8' height='8' rx='1' ry='1' /%3E%3C/svg%3E");
+  }
+}
+
+$aside-width: 15rem;
+
+%left {
+  width: calc(100% - #{$aside-width + 1rem});
+}
+%right {
+  float: right;
+  clear: right;
+  width: $aside-width;
+  margin: 0 0 1rem 1rem;
+}
+
 .Story {
   line-height: 1.4em;
   .Headline {
@@ -19,20 +45,24 @@
     border-bottom: 1px solid #ddd;
     padding-bottom: 0.8rem;
   }
-  .StoryBody {
-    max-width: 45rem;
+  .mainContent {
   }
   .Question {
     font-style: italic;
     font-weight: 500;
   }
   .Subheading {
+    @extend %left;
     @extend %headline;
     font-size: 1.4rem;
     margin: 1em 0 0.2em 0;
   }
   p {
+    @extend %left;
     margin: 0.2em 0 0.8em 0;
+  }
+  .ListItem {
+    @extend %bullet-list;
   }
   .mainContent {
     display: flex;
@@ -84,5 +114,78 @@
     }
     .title {
     }
+  }
+}
+
+%quotemark {
+  color: $medium-yellow;
+  font-family: "Roboto Slab";
+  position: absolute;
+  font-style: normal;
+  font-weight: bolder;
+  font-size: 6em;
+  line-height: 1rem;
+}
+
+.Place {
+  &.right {
+    float: right;
+    width: 5rem;
+  }
+}
+
+.Facts {
+  @extend %smaller;
+  @extend %right;
+  .AsideHeading {
+    @extend %headline;
+    font-size: 1.1rem;
+    color: $medium-grey;
+    margin: 1em 0 0.3em 0;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+%quote-left {
+  position: relative;
+  padding-left: 2.5rem;
+  &:before {
+    @extend %quotemark;
+    content: "«";
+    top: 0.04em;
+    left: -0.2em;
+  }
+}
+
+%quote-right {
+  position: relative;
+  padding-right: 2.5em;
+  &:after {
+    @extend %quotemark;
+    content: "»";
+    top: 0.04em;
+    right: -0.2em;
+  }
+}
+
+.PullQuote {
+  @extend %quote-left;
+  // @extend %quote-right;
+  margin: 0;
+  margin: 2rem;
+  color: $medium-grey;
+  p {
+    font-size: 1.5rem;
+    font-weight: 200;
+    line-height: 1.1;
+    display: block;
+    margin: 0;
+  }
+  .QuoteCit {
+    display: block;
+    font-size: 0.8rem;
+    text-align: right;
   }
 }

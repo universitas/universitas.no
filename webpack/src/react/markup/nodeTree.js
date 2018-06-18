@@ -47,8 +47,8 @@ export const buildNodeTree = story => {
               ...child,
               children: R.pipe(
                 R.prop('bodytext_markup'),
-                R.replace(/@fakta:/g, '@faktatit:'),
-                R.replace(/@sitat:/g, ''),
+                R.replace(/@fakta:/gi, '@faktatit:'),
+                R.replace(/@sitat:/gi, ''),
                 parseText,
                 walk,
               )(child),
@@ -74,17 +74,18 @@ export const buildNodeTree = story => {
             return null
           case 'tit':
             if (!title) {
-              title = match[0]
+              title = match[1]
               return null
             }
+            break
           case 'tema':
-            theme_word = match[0]
+            theme_word = match[1]
             return null
           case 'ing':
-            lede += match[0]
+            lede += match[1]
             return null
           case 'kicker':
-            kicker = match[0]
+            kicker = match[1]
             return null
         }
         break

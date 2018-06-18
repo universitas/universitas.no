@@ -11,7 +11,7 @@ const Lede = ifChildren(props => <p className="Lede" {...props} />)
 
 const MainImage = R.pipe(
   R.prop('images'),
-  R.find(R.prop('top')),
+  R.find(R.pathEq(['placement'], 'head')),
   StoryImage,
   R.defaultTo(null),
 )

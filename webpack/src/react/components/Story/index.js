@@ -14,9 +14,9 @@ const Title = ({ title }) => <h1 className="Title"> {title} </h1>
 const Lede = ({ lede }) => <p className="Lede"> {lede} </p>
 
 export const Story = ({ redirect, ...props }) => {
-  const action = toStory(props)
-  if (props.pathname != reverse(action)) {
-    redirect(action)
+  const routeAction = toStory(props)
+  if (props.pathname != reverse(routeAction)) {
+    redirect(routeAction)
     return null
   }
   return (
@@ -34,7 +34,7 @@ export const Story = ({ redirect, ...props }) => {
 const mapStateToProps = (state, { id }) => getStory(id)(state) || {}
 const mapDispatchToProps = (dispatch, { id }) => ({
   fetchData: () => dispatch(storyRequested(id)),
-  redirect: action => dispatch(redirect(action)),
+  redirect: routeAction => dispatch(redirect(routeAction)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(
