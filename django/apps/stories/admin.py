@@ -109,8 +109,8 @@ class VideoInline(
         models.CharField: {'widget': Textarea(attrs={'rows': 5, 'cols': 30})},
     }
     fields = [
-        'top',
-        'index',
+        'ordering',
+        'placement',
         'caption',
         'creditline',
         'video_host',
@@ -128,8 +128,8 @@ class ImageInline(
     }
     model = StoryImage
     fields = [
-        'top',
-        'index',
+        'ordering',
+        'placement',
         'caption',
         'creditline',
         'imagefile',

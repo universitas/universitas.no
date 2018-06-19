@@ -24,6 +24,12 @@ const baseRules = {
     pattern: /\s+/m,
     order: 0,
   },
+  escaped: {
+    inline,
+    order: 0,
+    type: 'character',
+    pattern: /\\(\W)/,
+  },
   character: {
     inline,
     leaf,
@@ -33,7 +39,7 @@ const baseRules = {
   text: {
     inline,
     leaf,
-    pattern: /[^\n_[]+/,
+    pattern: /[^\n\\_[]+/,
     order: 0,
   },
   link: {

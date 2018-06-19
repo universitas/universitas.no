@@ -10,6 +10,7 @@
 <main id="ReactApp" />
 {% endblock content %}
 {% block final %}
+  {% include "_facebook.sdk.html" %}
   {% render_bundle "universitas" "js" %}
 {% if messages %}
 <script>

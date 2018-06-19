@@ -120,7 +120,6 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
     edit_url = AbsoluteURLField(source='get_edit_url')
     bodytext_markup = serializers.CharField(trim_whitespace=False)
     working_title = serializers.CharField(trim_whitespace=False)
-    fb_image = AbsoluteURLField(source='facebook_thumb.url')
 
     # url = serializers.HyperlinkedIdentityField()
 

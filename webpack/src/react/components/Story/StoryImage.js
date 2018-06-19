@@ -22,13 +22,7 @@ const Caption = ({ caption, creditline }) => {
 
 const Image = ({ id, cropped, large, aspect_ratio, caption, crop_box = {} }) =>
   id ? (
-    <div
-      className="imgWrapper"
-      style={{
-        paddingBottom: `${100 *
-          (aspect_ratio == 0 || aspect_ratio == 100 ? 7 / 12 : aspect_ratio)}%`,
-      }}
-    >
+    <div className="imgWrapper">
       <img
         style={{
           objectPosition: position(crop_box),

@@ -2,8 +2,10 @@ import { toJson } from 'utils/text'
 import { toShortUrl } from 'ducks/router'
 import RouterLink from 'redux-first-router-link'
 import Tingo from './Tingo'
+import Debug from 'components/Debug'
 import StoryImage from './StoryImage'
 
+const SectionHeading = props => <h2 className="SectionHeading" {...props} />
 const Subheading = props => <h3 className="Subheading" {...props} />
 const AsideHeading = props => <h3 className="AsideHeading" {...props} />
 const Paragraph = props => <p className="Paragraph" {...props} />
@@ -43,26 +45,26 @@ const typeMap = {
 }
 
 const tagMap = {
-  spm: Question,
+  tit: SectionHeading,
   mt: Subheading,
-  tit: Subheading,
   txt: Paragraph,
+  spm: Question,
   tingo: Tingo,
   sitatbyline: QuoteCit,
   faktatit: AsideHeading,
 }
 
-const renderNodes = R.map(
-  R.ifElse(R.is(String), R.identity, node => {
+const renderNodes = R.addIndex(R.map)(
+  R.ifElse(R.is(String), R.identity, (node, idx) => {
     const { children = [], ...props } = node
     const { tag, type } = props
     const Component = tag ? tagMap[tag] : typeMap[type]
     return Component ? (
-      <Component title={toJson(node)} {...props}>
+      <Component title={toJson(node)} {...props} key={idx}>
         {renderNodes(children)}
       </Component>
     ) : (
-      <JSON {...node} />
+      <Debug {...node} />
     )
   }),
 )
@@ -70,25 +72,5 @@ const renderNodes = R.map(
 const StoryBody = ({ bodytext_markup, parseTree, nodeTree, ...props }) => {
   return <main>{renderNodes(nodeTree)}</main>
 }
-
-const JSON = props => (
-  <div
-    className="JSON"
-    style={{
-      background: '#010',
-      borderRadius: '0.5em',
-      color: '#af5',
-      padding: '0.5em',
-      fontFamily: 'monospace',
-      fontSize: '0.7rem',
-      lineHeight: 1.1,
-      whiteSpace: 'pre-wrap',
-      flex: 1,
-      overflowY: 'auto',
-    }}
-  >
-    {toJson(props)}
-  </div>
-)
 
 export default StoryBody

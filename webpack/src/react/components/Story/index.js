@@ -8,6 +8,7 @@ import StoryHelmet from './StoryHelmet.js'
 import StoryHead from './StoryHead.js'
 import StoryBody from './StoryBody.js'
 import StorySidebar from './StorySidebar.js'
+import StoryFoot from './StoryFoot.js'
 import './Story.scss'
 
 const Title = ({ title }) => <h1 className="Title"> {title} </h1>
@@ -27,6 +28,7 @@ export const Story = ({ redirect, ...props }) => {
         <StorySidebar {...props} />
         <StoryBody {...props} />
       </section>
+      <StoryFoot {...props} />
     </article>
   )
 }

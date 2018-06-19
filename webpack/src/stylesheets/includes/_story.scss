@@ -2,17 +2,17 @@
 
 %small-text {
   // @extend small;
-  font-size: .8rem;
+  font-size: 0.8rem;
   line-height: 1.2;
   color: $medium-grey;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 %bullet-list {
   list-style: none;
   margin-left: 1.2em;
   &:before {
-    font-family: 'universitas-icons';
+    font-family: "universitas-icons";
     position: absolute;
     margin-left: -1.2em;
     color: $medium-yellow;
@@ -22,23 +22,21 @@
 
 %quotation {
   $indent: 3rem;
-  padding-left: $indent + .5rem;
-  padding-right: .5rem;
+  padding-left: $indent + 0.5rem;
+  padding-right: 0.5rem;
   margin: $half-gutter 0;
-  // padding-right: 3rem;
   position: relative;
-  // background: #EFE;
   &:before {
-    font-family: 'Roboto Slab';
+    font-family: "Roboto Slab";
     font-style: normal;
     font-weight: bolder;
     position: absolute;
     margin-left: -$indent;
     line-height: 1rem;
-    top: .5rem;
+    top: 0.5rem;
     color: $medium-yellow;
     font-size: 5em;
-    content: "«"
+    content: "«";
   }
   // &:after {
   //   font-family: 'Roboto Slab';
@@ -59,12 +57,13 @@
   display: inline-block;
 }
 
-#story, .Preview {
+#story,
+.Preview {
   border-bottom: $separator-line;
 
-  header{
+  header {
     margin-bottom: 1rem;
-    .header-text{
+    .header-text {
       font-size: 1.3em;
       line-height: 1.2;
       border-bottom: $separator-line;
@@ -73,7 +72,7 @@
         font-weight: lighter;
         color: $medium-grey;
       }
-      .headline{
+      .headline {
         color: $dark-grey;
       }
     }
@@ -85,15 +84,15 @@
     // margin-left: 10px;
     // margin-right: 30px;
     // display: inline-block;
-    width:100%;
+    width: 100%;
   }
-  .left-sidebar{
+  .left-sidebar {
     padding: 0 20px 0 10px;
     text-align: center;
     @extend %small-text;
-    .story-info{
+    .story-info {
       @extend %line-below;
-      font-family: 'Roboto Slab';
+      font-family: "Roboto Slab";
       font-size: 1.2rem;
       .temaord {
         font-weight: 200;
@@ -103,43 +102,43 @@
         font-weight: 800;
       }
     }
-    .dateline{
+    .dateline {
       color: $light-grey;
       @extend %line-below;
     }
-    .bylines{
+    .bylines {
       display: inline-block;
       .byline {
         @extend %line-below;
-        .byline-photo img{
+        .byline-photo img {
           width: 6rem;
           height: 100%;
           border-radius: 50%;
           border: $separator-line;
         }
-        .byline-text{
-          .credit{
-            &:after{
-              content:':';
+        .byline-text {
+          .credit {
+            &:after {
+              content: ":";
             }
           }
-          .name{
+          .name {
             font-weight: bold;
           }
         }
       }
     }
-    .social-share{
+    .social-share {
       .share-icon {
         // border: 1px solid grey;
         display: inline-block;
         font-size: 2.2rem;
         width: 1.2em;
-        margin: .1em;
+        margin: 0.1em;
         a {
           color: $light-grey;
-          opacity: .6;
-          &:hover{
+          opacity: 0.6;
+          &:hover {
             color: $light-grey;
             opacity: 1;
           }
@@ -150,8 +149,7 @@
   .mellomtittel {
     color: $dark-grey;
     font-size: 1.4rem;
-    margin: 1rem 0 .2rem 0;
-
+    margin: 1rem 0 0.2rem 0;
   }
   ul {
     list-style: none;
@@ -206,7 +204,7 @@
     @extend .small-12;
     @extend .medium-3;
     @extend .medium-offset-9;
-    @include breakpoint(medium){
+    @include breakpoint(medium) {
       height: 0;
       border-left: $separator-line;
     }
@@ -217,21 +215,21 @@
   }
 
   .inline-aside {
-
     h2 {
       font-size: 1rem;
       font-weight: medium;
       color: $medium-grey;
     }
 
-    p, ul li {
+    p,
+    ul li {
       @extend %small-text;
-      margin-bottom: .3em;
+      margin-bottom: 0.3em;
     }
 
-    $listindent: .5rem;
+    $listindent: 0.5rem;
 
-    ul li{
+    ul li {
       @extend %bullet-list;
     }
   }
@@ -239,26 +237,19 @@
   .inline-pullquote {
     @extend %quotation;
     display: block;
-    // font-style: italic;
     color: $medium-grey;
-    // padding: 0 2rem;
 
     bq {
-      padding-top: .2em;
-      // border-left: $separator-line;
-      display: block;
-      // padding: .5rem 2rem 0 2rem;
-      // text-align: center;
       font-size: 1.5rem;
-      line-height: 1.1;
       font-weight: 200;
+      line-height: 1.1;
+      display: block;
+      padding-top: 0.2em;
     }
     .by {
-      // padding: 0 2rem .5rem 2rem;
       font-size: 0.8rem;
       text-align: right;
     }
-
   }
 
   .image-caption {
@@ -267,6 +258,4 @@
       font-weight: 500;
     }
   }
-
 }
-

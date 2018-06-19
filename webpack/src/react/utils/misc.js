@@ -1,7 +1,8 @@
 import * as Redux from 'redux'
 import * as R from 'ramda'
 
-export const compose = // use redux devtools if available
+// use redux devtools if available
+export const compose =
   (typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
   Redux.compose
 
@@ -60,7 +61,7 @@ export const scrollToElement = (centerFromTop = 0.5) => element => {
 // scroll to top of page
 export const scrollToTop = () => window.scrollTo(window.scrollX, 0)
 
-// fetch image file without adding it to the dom
+// fetch image file without a dom element to require it
 const preFetchImage = ({ image }) => {
   if (!image) return
   const im = new Image()

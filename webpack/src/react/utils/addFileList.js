@@ -1,4 +1,4 @@
-// Allows files to be added to jsdom input elements.
+// Testing helpers for front-end file handling – upload, read etc.
 
 import fs from 'fs'
 import path from 'path'
@@ -9,7 +9,7 @@ export function addFileList(input, file_paths) {
   if (typeof file_paths === 'string') file_paths = [file_paths]
   else if (!Array.isArray(file_paths))
     throw new Error(
-      'file_paths needs to be a file path string or an Array of file path strings'
+      'file_paths needs to be a file path string or an Array of file path strings',
     )
 
   const file_list = file_paths.map(fp => createFile(fp))

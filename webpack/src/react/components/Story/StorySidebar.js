@@ -37,7 +37,6 @@ const Byline = ({ credit, name, title, contributor, thumb }) => (
 const Bylines = ({ bylines }) =>
   R.pipe(
     R.sortBy(R.prop('ordering')),
-    R.reverse,
     R.map(props => <Byline key={props.contributor} {...props} />),
   )(bylines)
 

@@ -10,12 +10,15 @@ from utils.serializers import AbsoluteURLField, CropBoxField
 
 
 class NestedStorySerializer(serializers.ModelSerializer):
+    section = serializers.CharField(source='story_type.section')
+
     class Meta:
         model = Story
         fields = [
             'id',
             'title',
             'language',
+            'section',
         ]
 
 

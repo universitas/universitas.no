@@ -1,6 +1,7 @@
 // helpers for file inputs and upload
 import slugify from 'slugify'
 
+// :: str -> bool
 const isObjectURL = str => R.match(/^blob:https?\/\//)
 
 // Turn serializable data into FormData. Fetches any object URLs
@@ -24,7 +25,7 @@ export const slugifyFilename = ({ filename, mimetype }) => {
     slugify,
     R.replace(/[^a-z0-9]+/gi, ' '),
     R.trim,
-    R.replace(/\s+/g, '-')
+    R.replace(/\s+/g, '-'),
   )
   //const zeroPad = (n, pad = '00') => (pad + n).slice(-pad.length)
   return stem(filename) + '.' + ext(mimetype)

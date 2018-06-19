@@ -16,9 +16,13 @@ export const SHORT_URL = 'router/SHORT_URL'
 export const toHome = () => ({ type: HOME, payload: { section: null } })
 export const toSection = section => ({ type: SECTION, payload: { section } })
 export const toPdf = () => ({ type: PDF, payload: {} })
-export const toStory = ({ id, title = '' }) => ({
+export const toStory = ({ id, title = '', section, story_type = {} }) => ({
   type: STORY,
-  payload: { id, slug: slugify(title) || null },
+  payload: {
+    id,
+    slug: slugify(title),
+    section: slugify(section || story_type.section || 'sak') || null,
+  },
 })
 export const toShortUrl = ({ id }) => ({ type: SHORT_URL, payload: { id } })
 
@@ -28,13 +32,13 @@ export const routesMap = {
   [HOME]: '/',
   [PDF]: '/pdf/',
   [SECTION]: '/seksjon/:section/',
-  [STORY]: '/sak/:id(\\d+)/:slug?/',
+  [STORY]: '/:section/:id(\\d+)/:slug?/',
   [SHORT_URL]: '/:section?/:id(\\d+)/:slug?/',
   [NOT_FOUND]: '/not-found/',
 }
 
 export const routerOptions = {
-  scrollTop: true,
+  // scrollTop: true,
   basename: '/dev',
 }
 
@@ -42,7 +46,7 @@ export const reverse = action => actionToPath(action, routesMap)
 export const reverseFull = R.pipe(
   reverse,
   R.concat(routerOptions.basename || ''),
-  absoluteURL
+  absoluteURL,
 )
 
 export const getLocation = R.prop(SLICE)
