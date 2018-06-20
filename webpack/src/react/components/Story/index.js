@@ -9,28 +9,34 @@ import StoryHead from './StoryHead.js'
 import StoryBody from './StoryBody.js'
 import StorySidebar from './StorySidebar.js'
 import StoryFoot from './StoryFoot.js'
+import PageNotFound from 'components/PageNotFound'
+import Debug from 'components/Debug'
 import './Story.scss'
 
-const Title = ({ title }) => <h1 className="Title"> {title} </h1>
-const Lede = ({ lede }) => <p className="Lede"> {lede} </p>
+export const Story = props => (
+  <article className="Story">
+    <StoryHead {...props} />
+    <main className="mainContent">
+      <StorySidebar {...props} />
+      <StoryBody {...props} />
+    </main>
+    <StoryFoot {...props} />
+  </article>
+)
 
-export const Story = ({ redirect, ...props }) => {
+const StoryRoute = ({ redirect, ...props }) => {
+  if (props.HTTPstatus != 200)
+    return <PageNotFound {...props}>Fant ikke saken</PageNotFound>
+
   const routeAction = toStory(props)
   if (props.pathname != reverse(routeAction)) {
     redirect(routeAction)
     return null
   }
-  return (
-    <article className="Story">
-      <StoryHelmet {...props} />
-      <StoryHead {...props} />
-      <section className="mainContent">
-        <StorySidebar {...props} />
-        <StoryBody {...props} />
-      </section>
-      <StoryFoot {...props} />
-    </article>
-  )
+  return [
+    <StoryHelmet key="helmet" {...props} />,
+    <Story key="story" {...props} />,
+  ]
 }
 
 const mapStateToProps = (state, { id }) => getStory(id)(state) || {}
@@ -40,5 +46,5 @@ const mapDispatchToProps = (dispatch, { id }) => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  requestData(Story, 'title', props => <LoadingIndicator {...props} />),
+  requestData(StoryRoute, 'HTTPstatus', LoadingIndicator),
 )

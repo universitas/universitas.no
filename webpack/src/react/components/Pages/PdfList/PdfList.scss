@@ -1,0 +1,62 @@
+@import "styles/_common.scss";
+.PdfList {
+  display: grid;
+  /* prettier-ignore */
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+  grid-gap: 2rem;
+
+  .Issue {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    &.two {
+      grid-column-end: span 2;
+      .Faximile {
+        &:nth-child(1) {
+          z-index: 10;
+          transform: scale(0.95) rotateZ(0deg) translateX(15%);
+        }
+        &:nth-child(2) {
+          transform: scale(0.95) rotateZ(5deg) translateX(-15%);
+        }
+      }
+    }
+    &:hover {
+      .text {
+        color: $dark-grey;
+      }
+      .pdf {
+        .Faximile {
+          transform: scale(1);
+        }
+      }
+    }
+    .text {
+      border-bottom: 1px solid #eee;
+      margin-bottom: 0.5em;
+      .name {
+        font-weight: bold;
+      }
+      @extend %smaller;
+      // font-size: 0.8em;
+      display: flex;
+      justify-content: space-around;
+    }
+    .pdf {
+      display: grid;
+      grid-auto-flow: column;
+      grid-gap: 2rem;
+      flex: 1;
+      .Faximile {
+        background: white;
+        @extend %faximile;
+        transition: transform 300ms ease;
+        transition-delay: 200ms;
+        transform: scale(0.95);
+        img {
+          max-width: 100%;
+        }
+      }
+    }
+  }
+}

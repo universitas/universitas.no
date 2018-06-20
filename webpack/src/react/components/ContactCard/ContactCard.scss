@@ -1,0 +1,32 @@
+.ContactCard {
+  display: grid;
+  gap: 0.5em 1em;
+  margin-bottom: 1em;
+  justify-content: start;
+  /* prettier-ignore */
+  grid: 
+  "thumb thumb" 5em
+  "position name" 1fr
+    "phone email" 1fr 
+    / minmax(6em, auto) minmax(15em, auto) ;
+  .thumb {
+    height: 100%;
+    width: auto;
+    // border-radius: 50%;
+    grid-area: thumb;
+  }
+  .position {
+    font-weight: bold;
+    grid-area: position;
+  }
+  .name {
+    font-weight: bold;
+    grid-area: name;
+  }
+  .phone {
+    grid-area: phone;
+  }
+  .email {
+    grid-area: email;
+  }
+}

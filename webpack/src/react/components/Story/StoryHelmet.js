@@ -10,6 +10,7 @@ const authors = R.tryCatch(
 const StoryHelmet = ({
   id,
   title,
+  story_type,
   lede,
   bylines = [],
   language,
@@ -18,8 +19,11 @@ const StoryHelmet = ({
   publication_status,
 }) => (
   <Helmet>
-    <title>universitas.no | {title}</title>
-    <link rel="canonical" href={reverseFull(toStory({ id, title }))} />
+    <title>{`${title} | ${story_type.name} | universitas.no`}</title>
+    <link
+      rel="canonical"
+      href={reverseFull(toStory({ id, title, story_type }))}
+    />
     <link rel="shortlink" href={reverseFull(toShortUrl({ id }))} />
     <meta name="description" content={lede} />
     <meta name="author" content={authors(bylines)} />

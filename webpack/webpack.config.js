@@ -38,10 +38,10 @@ module.exports = {
   plugins: [
     new webpack.ProvidePlugin({
       // implicitly `import`
-      $: 'jquery',
-      jQuery: 'jquery',
       React: 'react',
       R: 'ramda',
+      $: 'jquery',
+      jQuery: 'jquery',
       PropTypes: 'prop-types',
     }),
     new BundleTracker({

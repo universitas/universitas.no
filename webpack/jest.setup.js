@@ -2,5 +2,7 @@
 //
 // import the same modules as in  ProvidePlugin in webpack.config.js
 
+import React from 'react'
 import R from 'ramda'
-window.R = R // make R available in global scope for test runner.
+global.R = R
+global.React = React

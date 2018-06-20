@@ -2,8 +2,18 @@
 
 body {
   overflow-y: scroll;
+  overflow-x: hidden;
   font-family: $univ-sans, sans-serif;
   font-size: 16px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @extend %headline;
 }
 
 .Universitas {
@@ -23,5 +33,39 @@ body {
     padding: $gridgap/2 0;
     width: 100%;
     max-width: $content-width;
+    position: relative;
+  }
+}
+
+.univTable {
+  margin-bottom: 1rem;
+  width: 100%;
+  caption {
+    @extend %headline;
+    font-size: 1.3rem;
+    margin: 0.5em;
+  }
+  th,
+  td {
+    text-align: left;
+    padding: 0.2em 0.5em;
+  }
+  &.prices {
+    th,
+    td {
+      text-align: left;
+      &:not(:first-child) {
+        width: 8rem;
+        text-align: right;
+      }
+    }
+  }
+  thead {
+    // background: lighten(#bbb, 10%);
+  }
+  tr {
+    &:nth-child(even) {
+      background: lighten(#bbb, 20%);
+    }
   }
 }

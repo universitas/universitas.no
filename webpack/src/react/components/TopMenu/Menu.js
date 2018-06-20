@@ -1,9 +1,9 @@
 import cx from 'classnames'
 import Link, { NavLink } from 'redux-first-router-link'
-import Logo from 'components/Universitas'
+import { Universitas } from 'components/Logos'
 import Sections from './Sections.js'
 import ErrorBoundary from 'react-error-boundary'
-import { toHome, toPdf } from 'ducks/router'
+import { toHome, toPdf, toPubSchedule, toAbout, toAdInfo } from 'ducks/router'
 import LanguageWidget from './LanguageWidget.js'
 import SearchWidget from './SearchWidget.js'
 
@@ -13,18 +13,29 @@ const Level = ({ children, className }) => (
 
 const Group = ({ children }) => <div className="Group">{children}</div>
 
+const year = new Date().getFullYear()
+
 const Menu = ({ sections = [], ...props }) => (
   <section className={cx('Menu')}>
     <Level>
       <Group>
         <Link to={toHome()}>
-          <Logo className={cx('Logo')} />
+          <Universitas className={cx('Logo')} />
         </Link>
         <Sections />
       </Group>
       <Group>
-        <NavLink className={cx('MenuItem')} to={toPdf()}>
+        <NavLink className={cx('MenuItem')} to={toPdf(year)}>
           pdf
+        </NavLink>
+        <NavLink className={cx('MenuItem')} to={toPubSchedule(year)}>
+          utgivelsesplan
+        </NavLink>
+        <NavLink className={cx('MenuItem')} to={toAbout()}>
+          om universitas
+        </NavLink>
+        <NavLink className={cx('MenuItem')} to={toAdInfo()}>
+          annonsér
         </NavLink>
       </Group>
       <Group>

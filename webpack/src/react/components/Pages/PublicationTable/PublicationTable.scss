@@ -1,0 +1,5 @@
+.PublicationTable {
+  .past + .future {
+    background: lighten(yellow, 20);
+  }
+}
