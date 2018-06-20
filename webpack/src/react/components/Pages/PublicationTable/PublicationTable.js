@@ -1,7 +1,7 @@
 import cx from 'classnames'
 import { formatDate } from 'utils/text'
 
-const PublicationTable = ({ year, issues }) => (
+const PublicationTable = ({ year, issues = [] }) => (
   <table className={cx('PublicationTable', 'univTable')}>
     <thead>
       <tr className="IssueRow" key="issue_name">

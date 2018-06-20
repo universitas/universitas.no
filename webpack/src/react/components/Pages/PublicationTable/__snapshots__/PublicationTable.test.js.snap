@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PublicationTable renders correctly 1`] = `
+<table
+  className="PublicationTable univTable"
+>
+  <thead>
+    <tr
+      className="IssueRow"
+    >
+      <th>
+        Nummer
+      </th>
+      <th>
+        Bilag
+      </th>
+      <th>
+        Utgivelsesdato
+      </th>
+      <th>
+        Reklamefrist
+      </th>
+    </tr>
+  </thead>
+  <tbody />
+</table>
+`;

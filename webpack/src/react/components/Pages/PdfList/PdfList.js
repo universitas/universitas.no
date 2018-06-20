@@ -26,7 +26,7 @@ const Issue = ({ publication_date, issue_name, pdfs }) => (
   </div>
 )
 
-const PdfList = ({ issues }) => (
+const PdfList = ({ issues = [] }) => (
   <section className="PdfList">
     {R.pipe(
       R.filter(R.propSatisfies(R.length, 'pdfs')),

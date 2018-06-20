@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`YearNavigation renders correctly 1`] = `
+<nav
+  className="YearNavigation"
+>
+  <span
+    className="empty last year"
+  >
+    NaN
+  </span>
+  <span
+    className="current year"
+  />
+  <span
+    className="empty next year"
+  >
+    NaN
+  </span>
+</nav>
+`;

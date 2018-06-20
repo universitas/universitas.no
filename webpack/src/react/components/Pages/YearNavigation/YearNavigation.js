@@ -1,7 +1,7 @@
 import Link from 'redux-first-router-link'
 import cx from 'classnames'
 
-const YearLink = ({ issues, year, toUrl, className }) =>
+const YearLink = ({ issues = [], year, toUrl, className }) =>
   R.find(R.propEq('year', year), issues) ? (
     <Link className={cx('ok', className)} to={toUrl(year)}>
       {year}
