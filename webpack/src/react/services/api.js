@@ -13,7 +13,7 @@ const contentType = R.assocPath(['headers', 'Content-Type'])
 const wrapBody = R.cond([
   [R.isNil, R.always({})], // no body
   [R.is(String), R.objOf('body')], // plain string (content-type auto)
-  [R.is(FormData), R.objOf('body')], // multipart form (content-type auto)
+  [R.is(global.FormData), R.objOf('body')], // multipart form (content-type auto)
   [
     R.T, // anything else is converted to JSON
     R.pipe(JSON.stringify, R.objOf('body'), contentType('application/json')),
@@ -55,7 +55,7 @@ export const apiFetch = (url, head = {}, body = null) => {
         .json() // api always should return json
         .catch(jsonError => {}) // ... except for DELETE
         .then(data => ({ HTTPstatus: response.status, url, ...data }))
-        .then(data => (response.ok ? { response: data } : { error: data }))
+        .then(data => (response.ok ? { response: data } : { error: data })),
     )
     .catch(error => ({ error: error.toString() })) // fetch error – not status code
 }
@@ -65,7 +65,7 @@ export const apiLogin = ({ username, password }) =>
   apiFetch(
     `${BASE_URL}/rest-auth/login/`,
     { method: 'POST' },
-    { username, password }
+    { username, password },
   )
 
 // logout user (invalidates cookies)
@@ -78,7 +78,7 @@ export const apiUser = () =>
 
 // generic action
 const apiAction = R.curry((model, action, head, data, pk) =>
-  apiFetch(`${BASE_URL}/${model}/${pk}/${action}/`, head, data)
+  apiFetch(`${BASE_URL}/${model}/${pk}/${action}/`, head, data),
 )
 
 // Push image file to desken
@@ -87,7 +87,7 @@ export const pushImageFile = apiAction(
   'photos',
   'push_file',
   { method: 'POST' },
-  null
+  null,
 )
 
 // Get list data of `model` from django rest api

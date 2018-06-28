@@ -1,6 +1,17 @@
 # overrides for development
 version: '2.1'
 services:
+  express:
+    image: universitas/webpack:${IMAGE_VERSION:-edge}
+    command: serve
+    tty: true
+    ports:
+      - "9000:9000"
+
+    volumes:
+      - ./webpack:/app/
+      - node_modules:/app/node_modules/
+
   webpack:
     image: universitas/webpack:${IMAGE_VERSION:-edge}
     command: dev-server

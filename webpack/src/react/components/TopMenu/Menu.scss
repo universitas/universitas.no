@@ -81,11 +81,12 @@
       }
     }
     input {
-      width: 11em;
       padding: 0.3em;
       color: white;
       background-color: rgba(black, 0.3);
       border: none;
+      flex: 1;
+      max-width: 12em;
       &:focus {
         outline: none;
         background-color: rgba(black, 0.2);

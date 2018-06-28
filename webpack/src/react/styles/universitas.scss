@@ -17,6 +17,7 @@ h6 {
 }
 
 .Universitas {
+  max-width: 100vw;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -24,6 +25,7 @@ h6 {
 }
 
 .Page {
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;

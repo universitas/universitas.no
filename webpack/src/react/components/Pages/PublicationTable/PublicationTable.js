@@ -5,7 +5,7 @@ const PublicationTable = ({ year, issues = [] }) => (
   <table className={cx('PublicationTable', 'univTable')}>
     <thead>
       <tr className="IssueRow" key="issue_name">
-        <th>Nummer</th>
+        <th>Nr</th>
         <th>Bilag</th>
         <th>Utgivelsesdato</th>
         <th>Reklamefrist</th>

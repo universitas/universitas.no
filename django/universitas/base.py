@@ -14,6 +14,7 @@ redis_port = env.redis_port or 6379
 
 TASSEN_DESKEN_LOGIN = env.desken_login
 TASSEN_DESKEN_PATH = env.desken_path
+EXPRESS_SERVER_URL = 'http://express:9000'
 
 DEBUG = True if env.debug.lower() == 'true' else False
 TEMPLATE_DEBUG = DEBUG

@@ -33,7 +33,7 @@ const PageHelmet = ({
   pageTitle ? (
     <Helmet>
       <title>{`${pageTitle} | universitas.no`}</title>
-      <link rel="canonical" href={global.location.href} />
+      <link rel="canonical" href={R.path(['location', 'href'], global)} />
       <meta name="description" content={lede} />
       <meta property="og:type" content="website" />
       <meta property="og:title" content={pageTitle} />

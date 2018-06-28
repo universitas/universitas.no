@@ -9,7 +9,7 @@ exports[`PublicationTable renders correctly 1`] = `
       className="IssueRow"
     >
       <th>
-        Nummer
+        Nr
       </th>
       <th>
         Bilag
