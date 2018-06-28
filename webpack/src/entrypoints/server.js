@@ -10,6 +10,8 @@ const handleRender = (req, res) => {
   const actions = req.body
   const url = req.url
   const result = render(url, actions)
+  // const data = { location: result.state.location }
+  // console.log(JSON.stringify(data, null, 2))
   res.json({ url, ...result })
 }
 

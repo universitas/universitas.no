@@ -13,7 +13,7 @@ const Question = props => <p className="Question" {...props} />
 const ListItem = props => <li className="ListItem" {...props} />
 
 const PullQuote = props => <blockquote className="PullQuote" {...props} />
-const QuoteCit = props => <cit className="QuoteCit" {...props} />
+const QuoteCit = props => <div className="QuoteCit" {...props} />
 const Aside = props => <aside className="Facts" {...props} />
 
 const Place = ({ name, ...props }) => (

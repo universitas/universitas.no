@@ -25,7 +25,7 @@ export const Story = props => (
 )
 
 const StoryRoute = ({ redirect, ...props }) => {
-  if (props.HTTPstatus != 200)
+  if (props.HTTPstatus == 404)
     return <PageNotFound {...props}>Fant ikke saken</PageNotFound>
 
   const routeAction = toStory(props)
@@ -46,5 +46,5 @@ const mapDispatchToProps = (dispatch, { id }) => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  requestData(StoryRoute, 'HTTPstatus', LoadingIndicator),
+  requestData(StoryRoute, 'url', LoadingIndicator),
 )

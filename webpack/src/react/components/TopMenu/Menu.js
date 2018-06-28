@@ -13,35 +13,35 @@ const Level = ({ children, className }) => (
 
 const Group = ({ children }) => <div className="Group">{children}</div>
 
+const PageLinks = ({ year }) => (
+  <Group>
+    <NavLink className={cx('MenuItem')} to={toPdf(year)}>
+      pdf
+    </NavLink>
+    <NavLink className={cx('MenuItem')} to={toPubSchedule(year)}>
+      utgivelsesplan
+    </NavLink>
+    <NavLink className={cx('MenuItem')} to={toAbout()}>
+      om universitas
+    </NavLink>
+    <NavLink className={cx('MenuItem')} to={toAdInfo()}>
+      annonsér
+    </NavLink>
+  </Group>
+)
+
 const year = new Date().getFullYear()
 
 const Menu = ({ sections = [], ...props }) => (
   <section className={cx('Menu')}>
     <Level>
-      <Group>
-        <Link to={toHome()}>
-          <Universitas className={cx('Logo')} />
-        </Link>
-        <Sections />
-      </Group>
-      <Group>
-        <NavLink className={cx('MenuItem')} to={toPdf(year)}>
-          pdf
-        </NavLink>
-        <NavLink className={cx('MenuItem')} to={toPubSchedule(year)}>
-          utgivelsesplan
-        </NavLink>
-        <NavLink className={cx('MenuItem')} to={toAbout()}>
-          om universitas
-        </NavLink>
-        <NavLink className={cx('MenuItem')} to={toAdInfo()}>
-          annonsér
-        </NavLink>
-      </Group>
-      <Group>
-        <LanguageWidget />
-        <SearchWidget />
-      </Group>
+      <Link to={toHome()}>
+        <Universitas className={cx('Logo')} />
+      </Link>
+      <Sections />
+      <PageLinks {...props} />
+      <LanguageWidget />
+      <SearchWidget />
     </Level>
   </section>
 )

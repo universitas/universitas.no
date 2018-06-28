@@ -6,7 +6,7 @@
   "description": "frontend universitas",
   "scripts": {
     "buildssr": "webpack-cli --config webpack.server.config.js ",
-    "serve": "NODE_ENV=production node ./dist/server.bundle.js",
+    "serve": "TARGET=server node ./dist/server.bundle.js",
     "test": "jest --watchAll --verbose",
     "testonce": "jest",
     "build": "webpack-cli --config webpack.prod.config.js ",

@@ -7,28 +7,20 @@ import App from './Universitas/App'
 import configureStore from './Universitas/configureStore.js'
 
 const headers = () => {
-  // const attrs = [
-  //   'base',
-  //   'bodyAttributes',
-  //   'htmlAttributes',
-  //   'link',
-  //   'meta',
-  //   'noscript',
-  //   'script',
-  //   'style',
-  //   'title',
-  // ]
   const helmet = Helmet.renderStatic()
-  return R.map(attr => attr.toString(), helmet)
+  return R.unless(R.is(String), R.map(attr => attr.toString()), helmet)
 }
 
-export default (url, actions) => {
+const notFetching = R.map(R.when(R.has('fetching'), R.assoc('fetching', false)))
+
+export default (url, actions = []) => {
   const store = configureStore(undefined, url)
+  global.location = { href: `http://universitas.no${url}` }
   R.forEach(action => store.dispatch(action), actions)
   const html = renderToString(
     <Provider store={store}>
       <App />
     </Provider>,
   )
-  return { html, state: store.getState(), headers: headers() }
+  return { html, state: notFetching(store.getState()), headers: headers() }
 }

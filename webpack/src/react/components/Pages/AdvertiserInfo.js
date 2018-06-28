@@ -68,7 +68,7 @@ const AdvertiserInfo = ({ pageTitle, state }) => (
             </tr>
             {R.map(Row, AD_MODULES)}
             <tr>
-              <td colspan="4">Ta kontakt for andre formater</td>
+              <td colSpan="4">Ta kontakt for andre formater</td>
             </tr>
           </tbody>
         </table>
@@ -76,13 +76,16 @@ const AdvertiserInfo = ({ pageTitle, state }) => (
           <caption>Tillegg</caption>
           <tbody>
             <tr>
-              <td>Farge per annonse</td> <td>1575,-</td>
+              <td>Farge per annonse</td>
+              <td>1575,-</td>
             </tr>
             <tr>
-              <td>Nyhetsside</td> <td>800,-</td>
+              <td>Nyhetsside</td>
+              <td>800,-</td>
             </tr>
             <tr>
-              <td>Kulturside</td> <td>600,-</td>
+              <td>Kulturside</td>
+              <td>600,-</td>
             </tr>
           </tbody>
         </table>
@@ -108,7 +111,7 @@ const AdvertiserInfo = ({ pageTitle, state }) => (
               <td>19 900,-</td>
             </tr>
             <tr>
-              <td colspan="4">Ta kontakt for andre formater</td>
+              <td colSpan="4">Ta kontakt for andre formater</td>
             </tr>
           </tbody>
         </table>

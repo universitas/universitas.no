@@ -10,7 +10,7 @@ export const cleanValues = R.pipe(
   String,
   R.trim,
   R.replace(/\s+/g, ' '),
-  encodeURIComponent
+  encodeURIComponent,
 )
 
 // Emptiness test where the falsy values 0 and false are not empty
@@ -28,7 +28,7 @@ const mapObject = fn =>
 export const queryString = R.pipe(
   R.reject(isEmpty),
   mapObject(paramPairs),
-  R.join('&')
+  R.join('&'),
 )
 
 // Parse query param string to value
@@ -44,12 +44,12 @@ export const parseParam = R.cond([
 export const parseQuery = R.pipe(
   R.tryCatch(
     R.pipe(R.constructN(1, URL), url => url.searchParams),
-    R.pipe(R.nthArg(1), R.constructN(1, URLSearchParams))
+    R.pipe(R.nthArg(1), R.constructN(1, URLSearchParams)),
   ),
   Array.from,
   R.fromPairs,
-  R.map(parseParam)
+  R.map(parseParam),
 )
 
 // Relative to absolute url (requires global `location`)
-export const absoluteURL = url => new URL(url, location.href).toString()
+export const absoluteURL = url => new URL(url, global.location.href).toString()
