@@ -50,16 +50,6 @@ module.exports = {
       path: build_dir,
       filename: 'webpack-stats.json',
     }),
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   // output a react-common chunk
-    //   name: 'react-common',
-    //   chunks: ['prodsys', 'photo_list_view', 'photo_crop_app'],
-    // }),
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   // output a chunk to bootstrap react
-    //   name: 'webpack-bootstrap',
-    //   minChunks: Infinity,
-    // }),
   ],
   module: {
     rules: [

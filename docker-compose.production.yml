@@ -2,6 +2,14 @@
 version: '2.1'
 services:
 
+  express:
+    image: universitas/webpack:${IMAGE_VERSION:-edge}
+    command: serve
+    tty: true
+    volumes:
+      - ./webpack:/app/
+      - node_modules:/app/node_modules/
+         
   nginx:
     ports:
       - "${NGINX_PORT:-80}:80"

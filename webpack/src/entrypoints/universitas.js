@@ -4,14 +4,12 @@ import ReactDOM from 'react-dom'
 import Universitas from './Universitas'
 
 const ROOT_ID = 'ReactApp'
+
+const render = (rootNode, initialState = null) =>
+  initialState
+    ? ReactDOM.hydrate(Universitas(initialState), rootNode)
+    : ReactDOM.render(Universitas(), rootNode)
+
 const DOMNode = document.getElementById(ROOT_ID)
-
-const render = () => {
-  ReactDOM.render(<Universitas />, DOMNode)
-}
-
-if (DOMNode) {
-  render()
-} else {
-  console.error(`Could not mount React App, because  #${ROOT_ID} was not found`)
-}
+if (DOMNode) render(DOMNode, window.__REDUX_STATE__)
+else console.error(`#${ROOT_ID} was not found`)

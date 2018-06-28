@@ -7,12 +7,15 @@ import rootSaga from './saga'
 import { routesMap, routerOptions } from 'ducks/router'
 
 // creates a redux store with hot reloaded reducer and redux-saga
-const configureStore = (initialState = {}) => {
+const configureStore = (initialState = {}, initialEntries = []) => {
   const sagaMiddleware = createSagaMiddleware()
-  const router = connectRoutes(routesMap, routerOptions)
+  const router = connectRoutes(routesMap, {
+    ...routerOptions,
+    initialEntries,
+  })
   const middlewares = compose(
     router.enhancer,
-    applyMiddleware(router.middleware, sagaMiddleware)
+    applyMiddleware(router.middleware, sagaMiddleware),
   )
   const rootReducer = combineReducers({ location: router.reducer, ...reducers })
   const store = createStore(rootReducer, initialState, middlewares)
