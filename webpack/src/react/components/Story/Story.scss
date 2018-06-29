@@ -19,13 +19,13 @@
 $aside-width: 15rem;
 
 %left {
-  @media (min-width: 800px) {
+  @include size(m) {
     width: calc(100% - #{$aside-width + 1rem});
   }
 }
 
 %right {
-  @media (min-width: 800px) {
+  @include size(m) {
     float: right;
     clear: right;
     width: $aside-width;
@@ -89,16 +89,22 @@ $aside-width: 15rem;
   }
   .mainContent {
     display: flex;
+    flex-direction: column;
+    @include size(s) {
+      flex-direction: row;
+    }
   }
 }
 
 .StorySidebar {
-  align-self: flex-start;
-  position: sticky;
-  flex-shrink: 0;
-  width: $logowidth;
-  margin-right: $gridgap;
-  top: $menuheight + $gridgap;
+  @include size(s) {
+    align-self: flex-start;
+    position: sticky;
+    flex-shrink: 0;
+    width: $logowidth;
+    margin-right: $gridgap;
+    top: $menuheight + $gridgap;
+  }
   %item {
     padding-bottom: 0.5rem;
     margin-bottom: 0.5rem;
@@ -138,6 +144,10 @@ $aside-width: 15rem;
     .title {
     }
   }
+}
+
+.StoryFoot {
+  min-height: 300px;
 }
 
 %quotemark {

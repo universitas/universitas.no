@@ -151,11 +151,12 @@
       }
 
       /***/
-    } /*!********************************************!*\
-  !*** ./src/entrypoints/Universitas/App.js ***!
-  \********************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!********************************************!*\
+  !*** ./src/entrypoints/Universitas/App.js ***!
+  \********************************************/
+    /*! exports provided: default */
     /***/ './src/entrypoints/Universitas/App.js': function(
       module,
       __webpack_exports__,
@@ -163,8 +164,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React) {
         /* harmony import */ var react_hot_loader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! react-hot-loader */ 'react-hot-loader',
         )
@@ -289,11 +289,12 @@
       ))
 
       /***/
-    } /*!*******************************************************!*\
-  !*** ./src/entrypoints/Universitas/configureStore.js ***!
-  \*******************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!*******************************************************!*\
+  !*** ./src/entrypoints/Universitas/configureStore.js ***!
+  \*******************************************************/
+    /*! exports provided: default */
     /***/ './src/entrypoints/Universitas/configureStore.js': function(
       module,
       __webpack_exports__,
@@ -301,8 +302,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module) {
+      /* WEBPACK VAR INJECTION */ ;(function(module) {
         /* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! redux */ 'redux',
         )
@@ -346,6 +346,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -563,11 +564,12 @@
       ))
 
       /***/
-    } /*!*************************************************!*\
-  !*** ./src/entrypoints/Universitas/reducers.js ***!
-  \*************************************************/,
+    },
 
-    /***/ /*! exports provided: newsFeed, site, publicstory, issues */
+    /***/ /*!*************************************************!*\
+  !*** ./src/entrypoints/Universitas/reducers.js ***!
+  \*************************************************/
+    /*! exports provided: newsFeed, site, publicstory, issues */
     /***/ './src/entrypoints/Universitas/reducers.js': function(
       module,
       __webpack_exports__,
@@ -668,11 +670,12 @@
       }, 0)
 
       /***/
-    } /*!*********************************************!*\
-  !*** ./src/entrypoints/Universitas/saga.js ***!
-  \*********************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!*********************************************!*\
+  !*** ./src/entrypoints/Universitas/saga.js ***!
+  \*********************************************/
+    /*! exports provided: default */
     /***/ './src/entrypoints/Universitas/saga.js': function(
       module,
       __webpack_exports__,
@@ -680,8 +683,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module) {
+      /* WEBPACK VAR INJECTION */ ;(function(module) {
         /* harmony import */ var sagas_frontPageSaga__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! sagas/frontPageSaga */ './src/react/sagas/frontPageSaga.js',
         )
@@ -737,11 +739,12 @@
       ))
 
       /***/
-    } /*!***********************************!*\
-  !*** ./src/entrypoints/server.js ***!
-  \***********************************/,
+    },
 
-    /***/ /*! no exports provided */
+    /***/ /*!***********************************!*\
+  !*** ./src/entrypoints/server.js ***!
+  \***********************************/
+    /*! no exports provided */
     /***/ './src/entrypoints/server.js': function(
       module,
       __webpack_exports__,
@@ -749,8 +752,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module) {
+      /* WEBPACK VAR INJECTION */ ;(function(module) {
         /* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! express */ 'express',
         )
@@ -779,6 +781,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -887,11 +890,12 @@
       ))
 
       /***/
-    } /*!*****************************************!*\
-  !*** ./src/entrypoints/serverRender.js ***!
-  \*****************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!*****************************************!*\
+  !*** ./src/entrypoints/serverRender.js ***!
+  \*****************************************/
+    /*! exports provided: default */
     /***/ './src/entrypoints/serverRender.js': function(
       module,
       __webpack_exports__,
@@ -899,8 +903,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R, React) {
         /* harmony import */ var babel_polyfill__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! babel-polyfill */ 'babel-polyfill',
         )
@@ -1016,7 +1019,16 @@
         }
 
         var notFetching = R.map(
-          R.when(R.has('fetching'), R.assoc('fetching', false)),
+          R.cond([
+            [R.has('fetching'), R.assoc('fetching', false)],
+            [
+              R.is(Array),
+              function(a) {
+                return R.map(notFetching, a)
+              },
+            ],
+            [R.T, R.identity],
+          ]),
         )
 
         var _default = function _default(url) {
@@ -1095,11 +1107,12 @@
       ))
 
       /***/
-    } /*!**********************************!*\
-  !*** ./src/images/modulkart.png ***!
-  \**********************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!**********************************!*\
+  !*** ./src/images/modulkart.png ***!
+  \**********************************/
+    /*! no static exports found */
     /***/ './src/images/modulkart.png': function(
       module,
       exports,
@@ -1109,11 +1122,12 @@
         __webpack_require__.p + 'assets/modulkart-ee3ae499cdfc.png'
 
       /***/
-    } /*!****************************************!*\
-  !*** ./src/images/modulkart_liten.png ***!
-  \****************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!****************************************!*\
+  !*** ./src/images/modulkart_liten.png ***!
+  \****************************************/
+    /*! no static exports found */
     /***/ './src/images/modulkart_liten.png': function(
       module,
       exports,
@@ -1123,11 +1137,12 @@
         __webpack_require__.p + 'assets/modulkart_liten-ad6e5eb96d09.png'
 
       /***/
-    } /*!*********************************************************!*\
-  !*** ./src/react/components/ContactCard/ContactCard.js ***!
-  \*********************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!*********************************************************!*\
+  !*** ./src/react/components/ContactCard/ContactCard.js ***!
+  \*********************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/ContactCard/ContactCard.js': function(
       module,
       __webpack_exports__,
@@ -1135,8 +1150,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React) {
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -1204,22 +1218,24 @@
       ))
 
       /***/
-    } /*!***********************************************************!*\
-  !*** ./src/react/components/ContactCard/ContactCard.scss ***!
-  \***********************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***********************************************************!*\
+  !*** ./src/react/components/ContactCard/ContactCard.scss ***!
+  \***********************************************************/
+    /*! no static exports found */
     /***/ './src/react/components/ContactCard/ContactCard.scss': function(
       module,
       exports,
     ) {
       // empty (null-loader)
       /***/
-    } /*!***************************************************!*\
-  !*** ./src/react/components/ContactCard/index.js ***!
-  \***************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!***************************************************!*\
+  !*** ./src/react/components/ContactCard/index.js ***!
+  \***************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/ContactCard/index.js': function(
       module,
       __webpack_exports__,
@@ -1227,8 +1243,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module) {
+      /* WEBPACK VAR INJECTION */ ;(function(module) {
         /* harmony import */ var _ContactCard_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! ./ContactCard.scss */ './src/react/components/ContactCard/ContactCard.scss',
         )
@@ -1288,11 +1303,12 @@
       ))
 
       /***/
-    } /*!***************************************!*\
-  !*** ./src/react/components/Debug.js ***!
-  \***************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!***************************************!*\
+  !*** ./src/react/components/Debug.js ***!
+  \***************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Debug.js': function(
       module,
       __webpack_exports__,
@@ -1300,8 +1316,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React) {
         /* harmony import */ var utils_text__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! utils/text */ './src/react/utils/text.js',
         )
@@ -1404,11 +1419,12 @@
       ))
 
       /***/
-    } /*!***************************************!*\
-  !*** ./src/react/components/Icons.js ***!
-  \***************************************/,
+    },
 
-    /***/ /*! exports provided: Add, Announce, ArtTrack, Aside, BulletList, Camera, CameraRoll, Clear, Close, Comment, Crop, Delete, Description, Done, Download, Edit, Email, Error, Eye, Fallback, FileUpload, Forward, GridView, Heading, Info, Laptop, ListView, Link, Loop, Magic, Newspaper, Pdf, Person, Phone, Question, Quote, Search, Sync, TextFields, Time, Transform, Tune */
+    /***/ /*!***************************************!*\
+  !*** ./src/react/components/Icons.js ***!
+  \***************************************/
+    /*! exports provided: Add, Announce, ArtTrack, Aside, BulletList, Camera, CameraRoll, Clear, Close, Comment, Crop, Delete, Description, Done, Download, Edit, Email, Error, Eye, Fallback, FileUpload, Forward, GridView, Heading, Info, Laptop, ListView, Link, Loop, Magic, Menu, Newspaper, Pdf, Person, Phone, Question, Quote, Search, Sync, TextFields, Time, Transform, Tune */
     /***/ './src/react/components/Icons.js': function(
       module,
       __webpack_exports__,
@@ -1806,164 +1822,176 @@
           return react_icons_lib_fa_magic__WEBPACK_IMPORTED_MODULE_29___default.a
         },
       )
-      /* harmony import */ var react_icons_lib_md_import_contacts__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(
+      /* harmony import */ var react_icons_lib_md_menu__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(
+        /*! react-icons/lib/md/menu */ 'react-icons/lib/md/menu',
+      )
+      /* harmony import */ var react_icons_lib_md_menu__WEBPACK_IMPORTED_MODULE_30___default = /*#__PURE__*/ __webpack_require__.n(
+        react_icons_lib_md_menu__WEBPACK_IMPORTED_MODULE_30__,
+      )
+      /* harmony reexport (default from non-harmony) */ __webpack_require__.d(
+        __webpack_exports__,
+        'Menu',
+        function() {
+          return react_icons_lib_md_menu__WEBPACK_IMPORTED_MODULE_30___default.a
+        },
+      )
+      /* harmony import */ var react_icons_lib_md_import_contacts__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(
         /*! react-icons/lib/md/import-contacts */ 'react-icons/lib/md/import-contacts',
       )
-      /* harmony import */ var react_icons_lib_md_import_contacts__WEBPACK_IMPORTED_MODULE_30___default = /*#__PURE__*/ __webpack_require__.n(
-        react_icons_lib_md_import_contacts__WEBPACK_IMPORTED_MODULE_30__,
+      /* harmony import */ var react_icons_lib_md_import_contacts__WEBPACK_IMPORTED_MODULE_31___default = /*#__PURE__*/ __webpack_require__.n(
+        react_icons_lib_md_import_contacts__WEBPACK_IMPORTED_MODULE_31__,
       )
       /* harmony reexport (default from non-harmony) */ __webpack_require__.d(
         __webpack_exports__,
         'Newspaper',
         function() {
-          return react_icons_lib_md_import_contacts__WEBPACK_IMPORTED_MODULE_30___default.a
+          return react_icons_lib_md_import_contacts__WEBPACK_IMPORTED_MODULE_31___default.a
         },
       )
-      /* harmony import */ var react_icons_lib_md_picture_as_pdf__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(
+      /* harmony import */ var react_icons_lib_md_picture_as_pdf__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(
         /*! react-icons/lib/md/picture-as-pdf */ 'react-icons/lib/md/picture-as-pdf',
       )
-      /* harmony import */ var react_icons_lib_md_picture_as_pdf__WEBPACK_IMPORTED_MODULE_31___default = /*#__PURE__*/ __webpack_require__.n(
-        react_icons_lib_md_picture_as_pdf__WEBPACK_IMPORTED_MODULE_31__,
+      /* harmony import */ var react_icons_lib_md_picture_as_pdf__WEBPACK_IMPORTED_MODULE_32___default = /*#__PURE__*/ __webpack_require__.n(
+        react_icons_lib_md_picture_as_pdf__WEBPACK_IMPORTED_MODULE_32__,
       )
       /* harmony reexport (default from non-harmony) */ __webpack_require__.d(
         __webpack_exports__,
         'Pdf',
         function() {
-          return react_icons_lib_md_picture_as_pdf__WEBPACK_IMPORTED_MODULE_31___default.a
+          return react_icons_lib_md_picture_as_pdf__WEBPACK_IMPORTED_MODULE_32___default.a
         },
       )
-      /* harmony import */ var react_icons_lib_md_person__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(
+      /* harmony import */ var react_icons_lib_md_person__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(
         /*! react-icons/lib/md/person */ 'react-icons/lib/md/person',
       )
-      /* harmony import */ var react_icons_lib_md_person__WEBPACK_IMPORTED_MODULE_32___default = /*#__PURE__*/ __webpack_require__.n(
-        react_icons_lib_md_person__WEBPACK_IMPORTED_MODULE_32__,
+      /* harmony import */ var react_icons_lib_md_person__WEBPACK_IMPORTED_MODULE_33___default = /*#__PURE__*/ __webpack_require__.n(
+        react_icons_lib_md_person__WEBPACK_IMPORTED_MODULE_33__,
       )
       /* harmony reexport (default from non-harmony) */ __webpack_require__.d(
         __webpack_exports__,
         'Person',
         function() {
-          return react_icons_lib_md_person__WEBPACK_IMPORTED_MODULE_32___default.a
+          return react_icons_lib_md_person__WEBPACK_IMPORTED_MODULE_33___default.a
         },
       )
-      /* harmony import */ var react_icons_lib_md_phone__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(
+      /* harmony import */ var react_icons_lib_md_phone__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(
         /*! react-icons/lib/md/phone */ 'react-icons/lib/md/phone',
       )
-      /* harmony import */ var react_icons_lib_md_phone__WEBPACK_IMPORTED_MODULE_33___default = /*#__PURE__*/ __webpack_require__.n(
-        react_icons_lib_md_phone__WEBPACK_IMPORTED_MODULE_33__,
+      /* harmony import */ var react_icons_lib_md_phone__WEBPACK_IMPORTED_MODULE_34___default = /*#__PURE__*/ __webpack_require__.n(
+        react_icons_lib_md_phone__WEBPACK_IMPORTED_MODULE_34__,
       )
       /* harmony reexport (default from non-harmony) */ __webpack_require__.d(
         __webpack_exports__,
         'Phone',
         function() {
-          return react_icons_lib_md_phone__WEBPACK_IMPORTED_MODULE_33___default.a
+          return react_icons_lib_md_phone__WEBPACK_IMPORTED_MODULE_34___default.a
         },
       )
-      /* harmony import */ var react_icons_lib_fa_question_circle__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(
+      /* harmony import */ var react_icons_lib_fa_question_circle__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(
         /*! react-icons/lib/fa/question-circle */ 'react-icons/lib/fa/question-circle',
       )
-      /* harmony import */ var react_icons_lib_fa_question_circle__WEBPACK_IMPORTED_MODULE_34___default = /*#__PURE__*/ __webpack_require__.n(
-        react_icons_lib_fa_question_circle__WEBPACK_IMPORTED_MODULE_34__,
+      /* harmony import */ var react_icons_lib_fa_question_circle__WEBPACK_IMPORTED_MODULE_35___default = /*#__PURE__*/ __webpack_require__.n(
+        react_icons_lib_fa_question_circle__WEBPACK_IMPORTED_MODULE_35__,
       )
       /* harmony reexport (default from non-harmony) */ __webpack_require__.d(
         __webpack_exports__,
         'Question',
         function() {
-          return react_icons_lib_fa_question_circle__WEBPACK_IMPORTED_MODULE_34___default.a
+          return react_icons_lib_fa_question_circle__WEBPACK_IMPORTED_MODULE_35___default.a
         },
       )
-      /* harmony import */ var react_icons_lib_md_format_quote__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(
+      /* harmony import */ var react_icons_lib_md_format_quote__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(
         /*! react-icons/lib/md/format-quote */ 'react-icons/lib/md/format-quote',
       )
-      /* harmony import */ var react_icons_lib_md_format_quote__WEBPACK_IMPORTED_MODULE_35___default = /*#__PURE__*/ __webpack_require__.n(
-        react_icons_lib_md_format_quote__WEBPACK_IMPORTED_MODULE_35__,
+      /* harmony import */ var react_icons_lib_md_format_quote__WEBPACK_IMPORTED_MODULE_36___default = /*#__PURE__*/ __webpack_require__.n(
+        react_icons_lib_md_format_quote__WEBPACK_IMPORTED_MODULE_36__,
       )
       /* harmony reexport (default from non-harmony) */ __webpack_require__.d(
         __webpack_exports__,
         'Quote',
         function() {
-          return react_icons_lib_md_format_quote__WEBPACK_IMPORTED_MODULE_35___default.a
+          return react_icons_lib_md_format_quote__WEBPACK_IMPORTED_MODULE_36___default.a
         },
       )
-      /* harmony import */ var react_icons_lib_md_search__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(
+      /* harmony import */ var react_icons_lib_md_search__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(
         /*! react-icons/lib/md/search */ 'react-icons/lib/md/search',
       )
-      /* harmony import */ var react_icons_lib_md_search__WEBPACK_IMPORTED_MODULE_36___default = /*#__PURE__*/ __webpack_require__.n(
-        react_icons_lib_md_search__WEBPACK_IMPORTED_MODULE_36__,
+      /* harmony import */ var react_icons_lib_md_search__WEBPACK_IMPORTED_MODULE_37___default = /*#__PURE__*/ __webpack_require__.n(
+        react_icons_lib_md_search__WEBPACK_IMPORTED_MODULE_37__,
       )
       /* harmony reexport (default from non-harmony) */ __webpack_require__.d(
         __webpack_exports__,
         'Search',
         function() {
-          return react_icons_lib_md_search__WEBPACK_IMPORTED_MODULE_36___default.a
+          return react_icons_lib_md_search__WEBPACK_IMPORTED_MODULE_37___default.a
         },
       )
-      /* harmony import */ var react_icons_lib_md_sync__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(
+      /* harmony import */ var react_icons_lib_md_sync__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(
         /*! react-icons/lib/md/sync */ 'react-icons/lib/md/sync',
       )
-      /* harmony import */ var react_icons_lib_md_sync__WEBPACK_IMPORTED_MODULE_37___default = /*#__PURE__*/ __webpack_require__.n(
-        react_icons_lib_md_sync__WEBPACK_IMPORTED_MODULE_37__,
+      /* harmony import */ var react_icons_lib_md_sync__WEBPACK_IMPORTED_MODULE_38___default = /*#__PURE__*/ __webpack_require__.n(
+        react_icons_lib_md_sync__WEBPACK_IMPORTED_MODULE_38__,
       )
       /* harmony reexport (default from non-harmony) */ __webpack_require__.d(
         __webpack_exports__,
         'Sync',
         function() {
-          return react_icons_lib_md_sync__WEBPACK_IMPORTED_MODULE_37___default.a
+          return react_icons_lib_md_sync__WEBPACK_IMPORTED_MODULE_38___default.a
         },
       )
-      /* harmony import */ var react_icons_lib_md_text_fields__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(
+      /* harmony import */ var react_icons_lib_md_text_fields__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(
         /*! react-icons/lib/md/text-fields */ 'react-icons/lib/md/text-fields',
       )
-      /* harmony import */ var react_icons_lib_md_text_fields__WEBPACK_IMPORTED_MODULE_38___default = /*#__PURE__*/ __webpack_require__.n(
-        react_icons_lib_md_text_fields__WEBPACK_IMPORTED_MODULE_38__,
+      /* harmony import */ var react_icons_lib_md_text_fields__WEBPACK_IMPORTED_MODULE_39___default = /*#__PURE__*/ __webpack_require__.n(
+        react_icons_lib_md_text_fields__WEBPACK_IMPORTED_MODULE_39__,
       )
       /* harmony reexport (default from non-harmony) */ __webpack_require__.d(
         __webpack_exports__,
         'TextFields',
         function() {
-          return react_icons_lib_md_text_fields__WEBPACK_IMPORTED_MODULE_38___default.a
+          return react_icons_lib_md_text_fields__WEBPACK_IMPORTED_MODULE_39___default.a
         },
       )
-      /* harmony import */ var react_icons_lib_md_access_time__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(
+      /* harmony import */ var react_icons_lib_md_access_time__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(
         /*! react-icons/lib/md/access-time */ 'react-icons/lib/md/access-time',
       )
-      /* harmony import */ var react_icons_lib_md_access_time__WEBPACK_IMPORTED_MODULE_39___default = /*#__PURE__*/ __webpack_require__.n(
-        react_icons_lib_md_access_time__WEBPACK_IMPORTED_MODULE_39__,
+      /* harmony import */ var react_icons_lib_md_access_time__WEBPACK_IMPORTED_MODULE_40___default = /*#__PURE__*/ __webpack_require__.n(
+        react_icons_lib_md_access_time__WEBPACK_IMPORTED_MODULE_40__,
       )
       /* harmony reexport (default from non-harmony) */ __webpack_require__.d(
         __webpack_exports__,
         'Time',
         function() {
-          return react_icons_lib_md_access_time__WEBPACK_IMPORTED_MODULE_39___default.a
+          return react_icons_lib_md_access_time__WEBPACK_IMPORTED_MODULE_40___default.a
         },
       )
-      /* harmony import */ var react_icons_lib_md_transform__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(
+      /* harmony import */ var react_icons_lib_md_transform__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(
         /*! react-icons/lib/md/transform */ 'react-icons/lib/md/transform',
       )
-      /* harmony import */ var react_icons_lib_md_transform__WEBPACK_IMPORTED_MODULE_40___default = /*#__PURE__*/ __webpack_require__.n(
-        react_icons_lib_md_transform__WEBPACK_IMPORTED_MODULE_40__,
+      /* harmony import */ var react_icons_lib_md_transform__WEBPACK_IMPORTED_MODULE_41___default = /*#__PURE__*/ __webpack_require__.n(
+        react_icons_lib_md_transform__WEBPACK_IMPORTED_MODULE_41__,
       )
       /* harmony reexport (default from non-harmony) */ __webpack_require__.d(
         __webpack_exports__,
         'Transform',
         function() {
-          return react_icons_lib_md_transform__WEBPACK_IMPORTED_MODULE_40___default.a
+          return react_icons_lib_md_transform__WEBPACK_IMPORTED_MODULE_41___default.a
         },
       )
-      /* harmony import */ var react_icons_lib_md_tune__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(
+      /* harmony import */ var react_icons_lib_md_tune__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(
         /*! react-icons/lib/md/tune */ 'react-icons/lib/md/tune',
       )
-      /* harmony import */ var react_icons_lib_md_tune__WEBPACK_IMPORTED_MODULE_41___default = /*#__PURE__*/ __webpack_require__.n(
-        react_icons_lib_md_tune__WEBPACK_IMPORTED_MODULE_41__,
+      /* harmony import */ var react_icons_lib_md_tune__WEBPACK_IMPORTED_MODULE_42___default = /*#__PURE__*/ __webpack_require__.n(
+        react_icons_lib_md_tune__WEBPACK_IMPORTED_MODULE_42__,
       )
       /* harmony reexport (default from non-harmony) */ __webpack_require__.d(
         __webpack_exports__,
         'Tune',
         function() {
-          return react_icons_lib_md_tune__WEBPACK_IMPORTED_MODULE_41___default.a
+          return react_icons_lib_md_tune__WEBPACK_IMPORTED_MODULE_42___default.a
         },
       )
-      // http://gorangajic.github.io/react-icons/md.html
-      //
+      // http://react-icons.github.io/react-icons/md.html
 
       setTimeout(function() {
         console.assert(
@@ -2327,7 +2355,19 @@
 
       setTimeout(function() {
         console.assert(
-          typeof react_icons_lib_md_import_contacts__WEBPACK_IMPORTED_MODULE_30___default.a !==
+          typeof react_icons_lib_md_menu__WEBPACK_IMPORTED_MODULE_30___default.a !==
+            'undefined',
+          '[IMPORT]:',
+          '_Menu',
+          'from',
+          'react-icons/lib/md/menu',
+          'is undefined.',
+        )
+      }, 0)
+
+      setTimeout(function() {
+        console.assert(
+          typeof react_icons_lib_md_import_contacts__WEBPACK_IMPORTED_MODULE_31___default.a !==
             'undefined',
           '[IMPORT]:',
           '_Newspaper',
@@ -2339,7 +2379,7 @@
 
       setTimeout(function() {
         console.assert(
-          typeof react_icons_lib_md_picture_as_pdf__WEBPACK_IMPORTED_MODULE_31___default.a !==
+          typeof react_icons_lib_md_picture_as_pdf__WEBPACK_IMPORTED_MODULE_32___default.a !==
             'undefined',
           '[IMPORT]:',
           '_Pdf',
@@ -2351,7 +2391,7 @@
 
       setTimeout(function() {
         console.assert(
-          typeof react_icons_lib_md_person__WEBPACK_IMPORTED_MODULE_32___default.a !==
+          typeof react_icons_lib_md_person__WEBPACK_IMPORTED_MODULE_33___default.a !==
             'undefined',
           '[IMPORT]:',
           '_Person',
@@ -2363,7 +2403,7 @@
 
       setTimeout(function() {
         console.assert(
-          typeof react_icons_lib_md_phone__WEBPACK_IMPORTED_MODULE_33___default.a !==
+          typeof react_icons_lib_md_phone__WEBPACK_IMPORTED_MODULE_34___default.a !==
             'undefined',
           '[IMPORT]:',
           '_Phone',
@@ -2375,7 +2415,7 @@
 
       setTimeout(function() {
         console.assert(
-          typeof react_icons_lib_fa_question_circle__WEBPACK_IMPORTED_MODULE_34___default.a !==
+          typeof react_icons_lib_fa_question_circle__WEBPACK_IMPORTED_MODULE_35___default.a !==
             'undefined',
           '[IMPORT]:',
           '_Question',
@@ -2387,7 +2427,7 @@
 
       setTimeout(function() {
         console.assert(
-          typeof react_icons_lib_md_format_quote__WEBPACK_IMPORTED_MODULE_35___default.a !==
+          typeof react_icons_lib_md_format_quote__WEBPACK_IMPORTED_MODULE_36___default.a !==
             'undefined',
           '[IMPORT]:',
           '_Quote',
@@ -2399,7 +2439,7 @@
 
       setTimeout(function() {
         console.assert(
-          typeof react_icons_lib_md_search__WEBPACK_IMPORTED_MODULE_36___default.a !==
+          typeof react_icons_lib_md_search__WEBPACK_IMPORTED_MODULE_37___default.a !==
             'undefined',
           '[IMPORT]:',
           '_Search',
@@ -2411,7 +2451,7 @@
 
       setTimeout(function() {
         console.assert(
-          typeof react_icons_lib_md_sync__WEBPACK_IMPORTED_MODULE_37___default.a !==
+          typeof react_icons_lib_md_sync__WEBPACK_IMPORTED_MODULE_38___default.a !==
             'undefined',
           '[IMPORT]:',
           '_Sync',
@@ -2423,7 +2463,7 @@
 
       setTimeout(function() {
         console.assert(
-          typeof react_icons_lib_md_text_fields__WEBPACK_IMPORTED_MODULE_38___default.a !==
+          typeof react_icons_lib_md_text_fields__WEBPACK_IMPORTED_MODULE_39___default.a !==
             'undefined',
           '[IMPORT]:',
           '_TextFields',
@@ -2435,7 +2475,7 @@
 
       setTimeout(function() {
         console.assert(
-          typeof react_icons_lib_md_access_time__WEBPACK_IMPORTED_MODULE_39___default.a !==
+          typeof react_icons_lib_md_access_time__WEBPACK_IMPORTED_MODULE_40___default.a !==
             'undefined',
           '[IMPORT]:',
           '_Time',
@@ -2447,7 +2487,7 @@
 
       setTimeout(function() {
         console.assert(
-          typeof react_icons_lib_md_transform__WEBPACK_IMPORTED_MODULE_40___default.a !==
+          typeof react_icons_lib_md_transform__WEBPACK_IMPORTED_MODULE_41___default.a !==
             'undefined',
           '[IMPORT]:',
           '_Transform',
@@ -2459,7 +2499,7 @@
 
       setTimeout(function() {
         console.assert(
-          typeof react_icons_lib_md_tune__WEBPACK_IMPORTED_MODULE_41___default.a !==
+          typeof react_icons_lib_md_tune__WEBPACK_IMPORTED_MODULE_42___default.a !==
             'undefined',
           '[IMPORT]:',
           '_Tune',
@@ -2470,11 +2510,12 @@
       }, 0)
 
       /***/
-    } /*!******************************************!*\
-  !*** ./src/react/components/LoadMore.js ***!
-  \******************************************/,
+    },
 
-    /***/ /*! exports provided: LoadMore, ScrollSpy, default */
+    /***/ /*!******************************************!*\
+  !*** ./src/react/components/LoadMore.js ***!
+  \******************************************/
+    /*! exports provided: LoadMore, ScrollSpy, default */
     /***/ './src/react/components/LoadMore.js': function(
       module,
       __webpack_exports__,
@@ -2482,8 +2523,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'LoadMore',
@@ -2757,11 +2797,12 @@
       ))
 
       /***/
-    } /*!*******************************************************************!*\
-  !*** ./src/react/components/LoadingIndicator/LoadingIndicator.js ***!
-  \*******************************************************************/,
+    },
 
-    /***/ /*! exports provided: JsonLoader, default */
+    /***/ /*!*******************************************************************!*\
+  !*** ./src/react/components/LoadingIndicator/LoadingIndicator.js ***!
+  \*******************************************************************/
+    /*! exports provided: JsonLoader, default */
     /***/ './src/react/components/LoadingIndicator/LoadingIndicator.js': function(
       module,
       __webpack_exports__,
@@ -2769,8 +2810,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React, R) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'JsonLoader',
@@ -3025,22 +3065,24 @@
       ))
 
       /***/
-    } /*!*********************************************************************!*\
-  !*** ./src/react/components/LoadingIndicator/LoadingIndicator.scss ***!
-  \*********************************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*********************************************************************!*\
+  !*** ./src/react/components/LoadingIndicator/LoadingIndicator.scss ***!
+  \*********************************************************************/
+    /*! no static exports found */
     /***/ './src/react/components/LoadingIndicator/LoadingIndicator.scss': function(
       module,
       exports,
     ) {
       // empty (null-loader)
       /***/
-    } /*!********************************************************!*\
-  !*** ./src/react/components/LoadingIndicator/index.js ***!
-  \********************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!********************************************************!*\
+  !*** ./src/react/components/LoadingIndicator/index.js ***!
+  \********************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/LoadingIndicator/index.js': function(
       module,
       __webpack_exports__,
@@ -3073,11 +3115,12 @@
       }, 0)
 
       /***/
-    } /*!***************************************************!*\
-  !*** ./src/react/components/Logos/Universitas.js ***!
-  \***************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!***************************************************!*\
+  !*** ./src/react/components/Logos/Universitas.js ***!
+  \***************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Logos/Universitas.js': function(
       module,
       __webpack_exports__,
@@ -3085,8 +3128,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module) {
+      /* WEBPACK VAR INJECTION */ ;(function(module) {
         /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! react */ 'react',
         )
@@ -3106,6 +3148,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -3173,11 +3216,12 @@
       ))
 
       /***/
-    } /*!******************************************************!*\
-  !*** ./src/react/components/Logos/Velferdstinget.js ***!
-  \******************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!******************************************************!*\
+  !*** ./src/react/components/Logos/Velferdstinget.js ***!
+  \******************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Logos/Velferdstinget.js': function(
       module,
       __webpack_exports__,
@@ -3185,8 +3229,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module) {
+      /* WEBPACK VAR INJECTION */ ;(function(module) {
         /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! react */ 'react',
         )
@@ -3206,6 +3249,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -3285,11 +3329,12 @@
       ))
 
       /***/
-    } /*!*********************************************!*\
-  !*** ./src/react/components/Logos/index.js ***!
-  \*********************************************/,
+    },
 
-    /***/ /*! exports provided: Universitas, Velferdstinget */
+    /***/ /*!*********************************************!*\
+  !*** ./src/react/components/Logos/index.js ***!
+  \*********************************************/
+    /*! exports provided: Universitas, Velferdstinget */
     /***/ './src/react/components/Logos/index.js': function(
       module,
       __webpack_exports__,
@@ -3344,11 +3389,12 @@
       }, 0)
 
       /***/
-    } /*!***************************************************!*\
-  !*** ./src/react/components/NewsFeed/FeedItem.js ***!
-  \***************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!***************************************************!*\
+  !*** ./src/react/components/NewsFeed/FeedItem.js ***!
+  \***************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/NewsFeed/FeedItem.js': function(
       module,
       __webpack_exports__,
@@ -3356,8 +3402,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React) {
         /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! classnames */ 'classnames',
         )
@@ -3609,11 +3654,12 @@
       ))
 
       /***/
-    } /*!***************************************************!*\
-  !*** ./src/react/components/NewsFeed/NewsFeed.js ***!
-  \***************************************************/,
+    },
 
-    /***/ /*! exports provided: Feed, default */
+    /***/ /*!***************************************************!*\
+  !*** ./src/react/components/NewsFeed/NewsFeed.js ***!
+  \***************************************************/
+    /*! exports provided: Feed, default */
     /***/ './src/react/components/NewsFeed/NewsFeed.js': function(
       module,
       __webpack_exports__,
@@ -3621,8 +3667,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R, React) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'Feed',
@@ -3658,6 +3703,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -3820,22 +3866,24 @@
       ))
 
       /***/
-    } /*!*****************************************************!*\
-  !*** ./src/react/components/NewsFeed/NewsFeed.scss ***!
-  \*****************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*****************************************************!*\
+  !*** ./src/react/components/NewsFeed/NewsFeed.scss ***!
+  \*****************************************************/
+    /*! no static exports found */
     /***/ './src/react/components/NewsFeed/NewsFeed.scss': function(
       module,
       exports,
     ) {
       // empty (null-loader)
       /***/
-    } /*!*****************************************************!*\
-  !*** ./src/react/components/NewsFeed/SearchFeed.js ***!
-  \*****************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!*****************************************************!*\
+  !*** ./src/react/components/NewsFeed/SearchFeed.js ***!
+  \*****************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/NewsFeed/SearchFeed.js': function(
       module,
       __webpack_exports__,
@@ -3843,8 +3891,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module) {
+      /* WEBPACK VAR INJECTION */ ;(function(module) {
         /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! react-redux */ 'react-redux',
         )
@@ -3870,6 +3917,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -4003,11 +4051,12 @@
       ))
 
       /***/
-    } /*!************************************************!*\
-  !*** ./src/react/components/NewsFeed/index.js ***!
-  \************************************************/,
+    },
 
-    /***/ /*! exports provided: NewsFeed, SearchFeed */
+    /***/ /*!************************************************!*\
+  !*** ./src/react/components/NewsFeed/index.js ***!
+  \************************************************/
+    /*! exports provided: NewsFeed, SearchFeed */
     /***/ './src/react/components/NewsFeed/index.js': function(
       module,
       __webpack_exports__,
@@ -4068,11 +4117,12 @@
       }, 0)
 
       /***/
-    } /*!***********************************************************!*\
-  !*** ./src/react/components/PageNotFound/PageNotFound.js ***!
-  \***********************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!***********************************************************!*\
+  !*** ./src/react/components/PageNotFound/PageNotFound.js ***!
+  \***********************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/PageNotFound/PageNotFound.js': function(
       module,
       __webpack_exports__,
@@ -4080,8 +4130,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React) {
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -4140,22 +4189,24 @@
       ))
 
       /***/
-    } /*!*************************************************************!*\
-  !*** ./src/react/components/PageNotFound/PageNotFound.scss ***!
-  \*************************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*************************************************************!*\
+  !*** ./src/react/components/PageNotFound/PageNotFound.scss ***!
+  \*************************************************************/
+    /*! no static exports found */
     /***/ './src/react/components/PageNotFound/PageNotFound.scss': function(
       module,
       exports,
     ) {
       // empty (null-loader)
       /***/
-    } /*!****************************************************!*\
-  !*** ./src/react/components/PageNotFound/index.js ***!
-  \****************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!****************************************************!*\
+  !*** ./src/react/components/PageNotFound/index.js ***!
+  \****************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/PageNotFound/index.js': function(
       module,
       __webpack_exports__,
@@ -4163,8 +4214,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module) {
+      /* WEBPACK VAR INJECTION */ ;(function(module) {
         /* harmony import */ var _PageNotFound_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! ./PageNotFound.js */ './src/react/components/PageNotFound/PageNotFound.js',
         )
@@ -4225,11 +4275,12 @@
       ))
 
       /***/
-    } /*!********************************************!*\
-  !*** ./src/react/components/PageSwitch.js ***!
-  \********************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!********************************************!*\
+  !*** ./src/react/components/PageSwitch.js ***!
+  \********************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/PageSwitch.js': function(
       module,
       __webpack_exports__,
@@ -4237,8 +4288,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R, React) {
         /* harmony import */ var react_error_boundary__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! react-error-boundary */ 'react-error-boundary',
         )
@@ -4299,6 +4349,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -4810,11 +4861,12 @@
       ))
 
       /***/
-    } /*!********************************************************!*\
-  !*** ./src/react/components/Pages/AboutUniversitas.js ***!
-  \********************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!********************************************************!*\
+  !*** ./src/react/components/Pages/AboutUniversitas.js ***!
+  \********************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Pages/AboutUniversitas.js': function(
       module,
       __webpack_exports__,
@@ -4822,8 +4874,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React, R) {
         /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! react-redux */ 'react-redux',
         )
@@ -5234,11 +5285,12 @@
       ))
 
       /***/
-    } /*!******************************************************!*\
-  !*** ./src/react/components/Pages/AdvertiserInfo.js ***!
-  \******************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!******************************************************!*\
+  !*** ./src/react/components/Pages/AdvertiserInfo.js ***!
+  \******************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Pages/AdvertiserInfo.js': function(
       module,
       __webpack_exports__,
@@ -5246,8 +5298,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R, React) {
         /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! react-redux */ 'react-redux',
         )
@@ -5410,7 +5461,7 @@
                       null,
                       React.createElement(
                         'td',
-                        { colspan: '4' },
+                        { colSpan: '4' },
                         'Ta kontakt for andre formater',
                       ),
                     ),
@@ -5427,21 +5478,18 @@
                       'tr',
                       null,
                       React.createElement('td', null, 'Farge per annonse'),
-                      ' ',
                       React.createElement('td', null, '1575,-'),
                     ),
                     React.createElement(
                       'tr',
                       null,
                       React.createElement('td', null, 'Nyhetsside'),
-                      ' ',
                       React.createElement('td', null, '800,-'),
                     ),
                     React.createElement(
                       'tr',
                       null,
                       React.createElement('td', null, 'Kulturside'),
-                      ' ',
                       React.createElement('td', null, '600,-'),
                     ),
                   ),
@@ -5486,7 +5534,7 @@
                       null,
                       React.createElement(
                         'td',
-                        { colspan: '4' },
+                        { colSpan: '4' },
                         'Ta kontakt for andre formater',
                       ),
                     ),
@@ -5578,11 +5626,12 @@
       ))
 
       /***/
-    } /*!**************************************************!*\
-  !*** ./src/react/components/Pages/PDFArchive.js ***!
-  \**************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!**************************************************!*\
+  !*** ./src/react/components/Pages/PDFArchive.js ***!
+  \**************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Pages/PDFArchive.js': function(
       module,
       __webpack_exports__,
@@ -5590,8 +5639,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React, R) {
         /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! react-redux */ 'react-redux',
         )
@@ -5801,11 +5849,12 @@
       ))
 
       /***/
-    } /*!*******************************************************!*\
-  !*** ./src/react/components/Pages/PdfList/PdfList.js ***!
-  \*******************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!*******************************************************!*\
+  !*** ./src/react/components/Pages/PdfList/PdfList.js ***!
+  \*******************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Pages/PdfList/PdfList.js': function(
       module,
       __webpack_exports__,
@@ -5813,8 +5862,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React, R) {
         /* harmony import */ var utils_text__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! utils/text */ './src/react/utils/text.js',
         )
@@ -5974,22 +6022,24 @@
       ))
 
       /***/
-    } /*!*********************************************************!*\
-  !*** ./src/react/components/Pages/PdfList/PdfList.scss ***!
-  \*********************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*********************************************************!*\
+  !*** ./src/react/components/Pages/PdfList/PdfList.scss ***!
+  \*********************************************************/
+    /*! no static exports found */
     /***/ './src/react/components/Pages/PdfList/PdfList.scss': function(
       module,
       exports,
     ) {
       // empty (null-loader)
       /***/
-    } /*!*****************************************************!*\
-  !*** ./src/react/components/Pages/PdfList/index.js ***!
-  \*****************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!*****************************************************!*\
+  !*** ./src/react/components/Pages/PdfList/index.js ***!
+  \*****************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Pages/PdfList/index.js': function(
       module,
       __webpack_exports__,
@@ -5997,8 +6047,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module) {
+      /* WEBPACK VAR INJECTION */ ;(function(module) {
         /* harmony import */ var _PdfList_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! ./PdfList.js */ './src/react/components/Pages/PdfList/PdfList.js',
         )
@@ -6059,11 +6108,12 @@
       ))
 
       /***/
-    } /*!***********************************************************!*\
-  !*** ./src/react/components/Pages/PublicationSchedule.js ***!
-  \***********************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!***********************************************************!*\
+  !*** ./src/react/components/Pages/PublicationSchedule.js ***!
+  \***********************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Pages/PublicationSchedule.js': function(
       module,
       __webpack_exports__,
@@ -6071,8 +6121,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React) {
         /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! react-redux */ 'react-redux',
         )
@@ -6311,11 +6360,12 @@
       ))
 
       /***/
-    } /*!*************************************************************************!*\
-  !*** ./src/react/components/Pages/PublicationTable/PublicationTable.js ***!
-  \*************************************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!*************************************************************************!*\
+  !*** ./src/react/components/Pages/PublicationTable/PublicationTable.js ***!
+  \*************************************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Pages/PublicationTable/PublicationTable.js': function(
       module,
       __webpack_exports__,
@@ -6323,8 +6373,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React, R) {
         /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! classnames */ 'classnames',
         )
@@ -6520,22 +6569,24 @@
       ))
 
       /***/
-    } /*!***************************************************************************!*\
-  !*** ./src/react/components/Pages/PublicationTable/PublicationTable.scss ***!
-  \***************************************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***************************************************************************!*\
+  !*** ./src/react/components/Pages/PublicationTable/PublicationTable.scss ***!
+  \***************************************************************************/
+    /*! no static exports found */
     /***/ './src/react/components/Pages/PublicationTable/PublicationTable.scss': function(
       module,
       exports,
     ) {
       // empty (null-loader)
       /***/
-    } /*!**************************************************************!*\
-  !*** ./src/react/components/Pages/PublicationTable/index.js ***!
-  \**************************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!**************************************************************!*\
+  !*** ./src/react/components/Pages/PublicationTable/index.js ***!
+  \**************************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Pages/PublicationTable/index.js': function(
       module,
       __webpack_exports__,
@@ -6543,8 +6594,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module) {
+      /* WEBPACK VAR INJECTION */ ;(function(module) {
         /* harmony import */ var _PublicationTable_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! ./PublicationTable.js */ './src/react/components/Pages/PublicationTable/PublicationTable.js',
         )
@@ -6607,11 +6657,12 @@
       ))
 
       /***/
-    } /*!*********************************************************************!*\
-  !*** ./src/react/components/Pages/YearNavigation/YearNavigation.js ***!
-  \*********************************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!*********************************************************************!*\
+  !*** ./src/react/components/Pages/YearNavigation/YearNavigation.js ***!
+  \*********************************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Pages/YearNavigation/YearNavigation.js': function(
       module,
       __webpack_exports__,
@@ -6619,8 +6670,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R, React) {
         /* harmony import */ var redux_first_router_link__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! redux-first-router-link */ 'redux-first-router-link',
         )
@@ -6646,6 +6696,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -6779,22 +6830,24 @@
       ))
 
       /***/
-    } /*!***********************************************************************!*\
-  !*** ./src/react/components/Pages/YearNavigation/YearNavigation.scss ***!
-  \***********************************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***********************************************************************!*\
+  !*** ./src/react/components/Pages/YearNavigation/YearNavigation.scss ***!
+  \***********************************************************************/
+    /*! no static exports found */
     /***/ './src/react/components/Pages/YearNavigation/YearNavigation.scss': function(
       module,
       exports,
     ) {
       // empty (null-loader)
       /***/
-    } /*!************************************************************!*\
-  !*** ./src/react/components/Pages/YearNavigation/index.js ***!
-  \************************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!************************************************************!*\
+  !*** ./src/react/components/Pages/YearNavigation/index.js ***!
+  \************************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Pages/YearNavigation/index.js': function(
       module,
       __webpack_exports__,
@@ -6802,8 +6855,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module) {
+      /* WEBPACK VAR INJECTION */ ;(function(module) {
         /* harmony import */ var _YearNavigation_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! ./YearNavigation.js */ './src/react/components/Pages/YearNavigation/YearNavigation.js',
         )
@@ -6866,19 +6918,21 @@
       ))
 
       /***/
-    } /*!***********************************************!*\
-  !*** ./src/react/components/Story/Story.scss ***!
-  \***********************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***********************************************!*\
+  !*** ./src/react/components/Story/Story.scss ***!
+  \***********************************************/
+    /*! no static exports found */
     /***/ './src/react/components/Story/Story.scss': function(module, exports) {
       // empty (null-loader)
       /***/
-    } /*!*************************************************!*\
-  !*** ./src/react/components/Story/StoryBody.js ***!
-  \*************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!*************************************************!*\
+  !*** ./src/react/components/Story/StoryBody.js ***!
+  \*************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Story/StoryBody.js': function(
       module,
       __webpack_exports__,
@@ -6886,28 +6940,21 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React, R) {
         /* harmony import */ var utils_text__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! utils/text */ './src/react/utils/text.js',
         )
-        /* harmony import */ var ducks_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
-          /*! ducks/router */ './src/react/ducks/router.js',
-        )
-        /* harmony import */ var redux_first_router_link__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
-          /*! redux-first-router-link */ 'redux-first-router-link',
-        )
-        /* harmony import */ var redux_first_router_link__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/ __webpack_require__.n(
-          redux_first_router_link__WEBPACK_IMPORTED_MODULE_2__,
-        )
-        /* harmony import */ var _Tingo__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+        /* harmony import */ var _Tingo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
           /*! ./Tingo */ './src/react/components/Story/Tingo.js',
         )
-        /* harmony import */ var components_Debug__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+        /* harmony import */ var components_Debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
           /*! components/Debug */ './src/react/components/Debug.js',
         )
-        /* harmony import */ var _StoryImage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+        /* harmony import */ var _StoryImage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
           /*! ./StoryImage */ './src/react/components/Story/StoryImage.js',
+        )
+        /* harmony import */ var _StoryLink__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+          /*! ./StoryLink */ './src/react/components/Story/StoryLink.js',
         )
         var _extends =
           Object.assign ||
@@ -6922,6 +6969,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -6954,31 +7002,7 @@
 
         setTimeout(function() {
           console.assert(
-            typeof ducks_router__WEBPACK_IMPORTED_MODULE_1__['toShortUrl'] !==
-              'undefined',
-            '[IMPORT]:',
-            'toShortUrl',
-            'from',
-            'ducks/router',
-            'is undefined.',
-          )
-        }, 0)
-
-        setTimeout(function() {
-          console.assert(
-            typeof redux_first_router_link__WEBPACK_IMPORTED_MODULE_2___default.a !==
-              'undefined',
-            '[IMPORT]:',
-            'RouterLink',
-            'from',
-            'redux-first-router-link',
-            'is undefined.',
-          )
-        }, 0)
-
-        setTimeout(function() {
-          console.assert(
-            typeof _Tingo__WEBPACK_IMPORTED_MODULE_3__['default'] !==
+            typeof _Tingo__WEBPACK_IMPORTED_MODULE_1__['default'] !==
               'undefined',
             '[IMPORT]:',
             'Tingo',
@@ -6990,7 +7014,7 @@
 
         setTimeout(function() {
           console.assert(
-            typeof components_Debug__WEBPACK_IMPORTED_MODULE_4__['default'] !==
+            typeof components_Debug__WEBPACK_IMPORTED_MODULE_2__['default'] !==
               'undefined',
             '[IMPORT]:',
             'Debug',
@@ -7002,12 +7026,24 @@
 
         setTimeout(function() {
           console.assert(
-            typeof _StoryImage__WEBPACK_IMPORTED_MODULE_5__['default'] !==
+            typeof _StoryImage__WEBPACK_IMPORTED_MODULE_3__['default'] !==
               'undefined',
             '[IMPORT]:',
             'StoryImage',
             'from',
             './StoryImage',
+            'is undefined.',
+          )
+        }, 0)
+
+        setTimeout(function() {
+          console.assert(
+            typeof _StoryLink__WEBPACK_IMPORTED_MODULE_4__['default'] !==
+              'undefined',
+            '[IMPORT]:',
+            'StoryLink',
+            'from',
+            './StoryLink',
             'is undefined.',
           )
         }, 0)
@@ -7056,7 +7092,7 @@
         }
         var QuoteCit = function QuoteCit(props) {
           return React.createElement(
-            'cit',
+            'div',
             _extends({ className: 'QuoteCit' }, props),
           )
         }
@@ -7077,47 +7113,14 @@
           )
         }
 
-        var Link = function Link(_ref2) {
-          var _ref2$link = _ref2.link,
-            link = _ref2$link === undefined ? {} : _ref2$link,
-            props = _objectWithoutProperties(_ref2, ['link'])
-
-          var linked_story = link.linked_story,
-            href = link.href
-
-          return linked_story
-            ? React.createElement(
-                redux_first_router_link__WEBPACK_IMPORTED_MODULE_2___default.a,
-                _extends(
-                  {
-                    to: Object(
-                      ducks_router__WEBPACK_IMPORTED_MODULE_1__['toShortUrl'],
-                    )({ id: linked_story }),
-                  },
-                  props,
-                ),
-              )
-            : React.createElement(
-                'a',
-                _extends(
-                  {
-                    style: { textDecoration: 'underline' },
-                    href: href,
-                    title: href,
-                  },
-                  props,
-                ),
-              )
-        }
-
         var typeMap = {
           paragraph: Paragraph,
           place: Place,
           pullquote: PullQuote,
-          link: Link,
+          link: _StoryLink__WEBPACK_IMPORTED_MODULE_4__['default'],
           aside: Aside,
           listItem: ListItem,
-          image: _StoryImage__WEBPACK_IMPORTED_MODULE_5__['default'],
+          image: _StoryImage__WEBPACK_IMPORTED_MODULE_3__['default'],
         }
 
         var tagMap = {
@@ -7125,7 +7128,7 @@
           mt: Subheading,
           txt: Paragraph,
           spm: Question,
-          tingo: _Tingo__WEBPACK_IMPORTED_MODULE_3__['default'],
+          tingo: _Tingo__WEBPACK_IMPORTED_MODULE_1__['default'],
           sitatbyline: QuoteCit,
           faktatit: AsideHeading,
         }
@@ -7155,17 +7158,17 @@
                   renderNodes(children),
                 )
               : React.createElement(
-                  components_Debug__WEBPACK_IMPORTED_MODULE_4__['default'],
+                  components_Debug__WEBPACK_IMPORTED_MODULE_2__['default'],
                   node,
                 )
           }),
         )
 
-        var StoryBody = function StoryBody(_ref3) {
-          var bodytext_markup = _ref3.bodytext_markup,
-            parseTree = _ref3.parseTree,
-            nodeTree = _ref3.nodeTree,
-            props = _objectWithoutProperties(_ref3, [
+        var StoryBody = function StoryBody(_ref2) {
+          var bodytext_markup = _ref2.bodytext_markup,
+            parseTree = _ref2.parseTree,
+            nodeTree = _ref2.nodeTree,
+            props = _objectWithoutProperties(_ref2, [
               'bodytext_markup',
               'parseTree',
               'nodeTree',
@@ -7240,11 +7243,6 @@
             '/app/src/react/components/Story/StoryBody.js',
           )
           reactHotLoader.register(
-            Link,
-            'Link',
-            '/app/src/react/components/Story/StoryBody.js',
-          )
-          reactHotLoader.register(
             typeMap,
             'typeMap',
             '/app/src/react/components/Story/StoryBody.js',
@@ -7282,11 +7280,12 @@
       ))
 
       /***/
-    } /*!*************************************************!*\
-  !*** ./src/react/components/Story/StoryFoot.js ***!
-  \*************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!*************************************************!*\
+  !*** ./src/react/components/Story/StoryFoot.js ***!
+  \*************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Story/StoryFoot.js': function(
       module,
       __webpack_exports__,
@@ -7294,8 +7293,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React) {
         /* harmony import */ var ducks_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! ducks/router */ './src/react/ducks/router.js',
         )
@@ -7394,10 +7392,16 @@
             return _this
           }
 
+          FacebookComments.prototype.shouldComponentUpdate = function shouldComponentUpdate(
+            nextProps,
+          ) {
+            return nextProps.url != this.props.url
+          }
+
           FacebookComments.prototype.render = function render() {
             return React.createElement('div', {
               className: 'fb-comments',
-              'data-href': this.props.url || global.location.href,
+              'data-href': this.props.url,
               'data-numposts': 10,
               'data-width': '100%',
               ref: this.element,
@@ -7416,20 +7420,27 @@
           return FacebookComments
         })(React.Component)
 
-        var StoryFoot = function StoryFoot(props) {
+        var StoryFoot = function StoryFoot(_ref) {
+          var comment_field = _ref.comment_field,
+            id = _ref.id,
+            title = _ref.title,
+            section = _ref.section
+
+          var url =
+            'http://universitas.no' +
+            Object(ducks_router__WEBPACK_IMPORTED_MODULE_0__['reverse'])(
+              Object(ducks_router__WEBPACK_IMPORTED_MODULE_0__['toStory'])({
+                id: id,
+                section: section,
+                title: title,
+              }),
+            )
+
           return React.createElement(
             'footer',
             { className: 'StoryFoot' },
-            props.comment_field == 'facebook' &&
-              React.createElement(FacebookComments, {
-                url:
-                  'http://universitas.no' +
-                  Object(ducks_router__WEBPACK_IMPORTED_MODULE_0__['reverse'])(
-                    Object(
-                      ducks_router__WEBPACK_IMPORTED_MODULE_0__['toStory'],
-                    )(props),
-                  ),
-              }),
+            comment_field == 'facebook' &&
+              React.createElement(FacebookComments, { url: url }),
           )
         }
 
@@ -7475,11 +7486,12 @@
       ))
 
       /***/
-    } /*!*************************************************!*\
-  !*** ./src/react/components/Story/StoryHead.js ***!
-  \*************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!*************************************************!*\
+  !*** ./src/react/components/Story/StoryHead.js ***!
+  \*************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Story/StoryHead.js': function(
       module,
       __webpack_exports__,
@@ -7487,10 +7499,12 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React, R) {
         /* harmony import */ var _StoryImage_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! ./StoryImage.js */ './src/react/components/Story/StoryImage.js',
+        )
+        /* harmony import */ var utils_text__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+          /*! utils/text */ './src/react/utils/text.js',
         )
         var _extends =
           Object.assign ||
@@ -7505,6 +7519,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -7531,6 +7546,18 @@
             'StoryImage',
             'from',
             './StoryImage.js',
+            'is undefined.',
+          )
+        }, 0)
+
+        setTimeout(function() {
+          console.assert(
+            typeof utils_text__WEBPACK_IMPORTED_MODULE_1__['cleanText'] !==
+              'undefined',
+            '[IMPORT]:',
+            'cleanText',
+            'from',
+            'utils/text',
             'is undefined.',
           )
         }, 0)
@@ -7589,7 +7616,13 @@
             { className: 'StoryHead' },
             React.createElement(MainImage, props),
             React.createElement(Kicker, null, kicker),
-            React.createElement(Headline, null, title),
+            React.createElement(
+              Headline,
+              null,
+              Object(utils_text__WEBPACK_IMPORTED_MODULE_1__['cleanText'])(
+                title,
+              ),
+            ),
             React.createElement(Lede, null, lede),
           )
         }
@@ -7662,11 +7695,12 @@
       ))
 
       /***/
-    } /*!***************************************************!*\
-  !*** ./src/react/components/Story/StoryHelmet.js ***!
-  \***************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!***************************************************!*\
+  !*** ./src/react/components/Story/StoryHelmet.js ***!
+  \***************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Story/StoryHelmet.js': function(
       module,
       __webpack_exports__,
@@ -7674,8 +7708,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R, React) {
         /* harmony import */ var react_helmet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! react-helmet */ 'react-helmet',
         )
@@ -7872,11 +7905,12 @@
       ))
 
       /***/
-    } /*!**************************************************!*\
-  !*** ./src/react/components/Story/StoryImage.js ***!
-  \**************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!**************************************************!*\
+  !*** ./src/react/components/Story/StoryImage.js ***!
+  \**************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Story/StoryImage.js': function(
       module,
       __webpack_exports__,
@@ -7884,8 +7918,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R, React) {
         /* harmony import */ var _StoryImage_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! ./StoryImage.scss */ './src/react/components/Story/StoryImage.scss',
         )
@@ -8020,22 +8053,284 @@
       ))
 
       /***/
-    } /*!****************************************************!*\
-  !*** ./src/react/components/Story/StoryImage.scss ***!
-  \****************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!****************************************************!*\
+  !*** ./src/react/components/Story/StoryImage.scss ***!
+  \****************************************************/
+    /*! no static exports found */
     /***/ './src/react/components/Story/StoryImage.scss': function(
       module,
       exports,
     ) {
       // empty (null-loader)
       /***/
-    } /*!****************************************************!*\
-  !*** ./src/react/components/Story/StorySidebar.js ***!
-  \****************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!*************************************************!*\
+  !*** ./src/react/components/Story/StoryLink.js ***!
+  \*************************************************/
+    /*! exports provided: default */
+    /***/ './src/react/components/Story/StoryLink.js': function(
+      module,
+      __webpack_exports__,
+      __webpack_require__,
+    ) {
+      'use strict'
+      __webpack_require__.r(__webpack_exports__)
+      /* WEBPACK VAR INJECTION */ ;(function(module, React, R) {
+        /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+          /*! react-redux */ 'react-redux',
+        )
+        /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/ __webpack_require__.n(
+          react_redux__WEBPACK_IMPORTED_MODULE_0__,
+        )
+        /* harmony import */ var ducks_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+          /*! ducks/router */ './src/react/ducks/router.js',
+        )
+        /* harmony import */ var ducks_publicstory__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+          /*! ducks/publicstory */ './src/react/ducks/publicstory.js',
+        )
+        /* harmony import */ var redux_first_router_link__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+          /*! redux-first-router-link */ 'redux-first-router-link',
+        )
+        /* harmony import */ var redux_first_router_link__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/ __webpack_require__.n(
+          redux_first_router_link__WEBPACK_IMPORTED_MODULE_3__,
+        )
+        var _extends =
+          Object.assign ||
+          function(target) {
+            for (var i = 1; i < arguments.length; i++) {
+              var source = arguments[i]
+              for (var key in source) {
+                if (Object.prototype.hasOwnProperty.call(source, key)) {
+                  target[key] = source[key]
+                }
+              }
+            }
+            return target
+          }
+
+        ;(function() {
+          var enterModule = __webpack_require__(
+            /*! react-hot-loader */ 'react-hot-loader',
+          ).enterModule
+
+          enterModule && enterModule(module)
+        })()
+
+        function _objectWithoutProperties(obj, keys) {
+          var target = {}
+          for (var i in obj) {
+            if (keys.indexOf(i) >= 0) continue
+            if (!Object.prototype.hasOwnProperty.call(obj, i)) continue
+            target[i] = obj[i]
+          }
+          return target
+        }
+
+        setTimeout(function() {
+          console.assert(
+            typeof react_redux__WEBPACK_IMPORTED_MODULE_0__['connect'] !==
+              'undefined',
+            '[IMPORT]:',
+            'connect',
+            'from',
+            'react-redux',
+            'is undefined.',
+          )
+        }, 0)
+
+        setTimeout(function() {
+          console.assert(
+            typeof ducks_router__WEBPACK_IMPORTED_MODULE_1__['toShortUrl'] !==
+              'undefined',
+            '[IMPORT]:',
+            'toShortUrl',
+            'from',
+            'ducks/router',
+            'is undefined.',
+          )
+        }, 0)
+        setTimeout(function() {
+          console.assert(
+            typeof ducks_router__WEBPACK_IMPORTED_MODULE_1__['toStory'] !==
+              'undefined',
+            '[IMPORT]:',
+            'toStory',
+            'from',
+            'ducks/router',
+            'is undefined.',
+          )
+        }, 0)
+
+        setTimeout(function() {
+          console.assert(
+            typeof ducks_publicstory__WEBPACK_IMPORTED_MODULE_2__[
+              'storyRequested'
+            ] !== 'undefined',
+            '[IMPORT]:',
+            'storyRequested',
+            'from',
+            'ducks/publicstory',
+            'is undefined.',
+          )
+        }, 0)
+        setTimeout(function() {
+          console.assert(
+            typeof ducks_publicstory__WEBPACK_IMPORTED_MODULE_2__[
+              'getStory'
+            ] !== 'undefined',
+            '[IMPORT]:',
+            'getStory',
+            'from',
+            'ducks/publicstory',
+            'is undefined.',
+          )
+        }, 0)
+
+        setTimeout(function() {
+          console.assert(
+            typeof redux_first_router_link__WEBPACK_IMPORTED_MODULE_3___default.a !==
+              'undefined',
+            '[IMPORT]:',
+            'RouterLink',
+            'from',
+            'redux-first-router-link',
+            'is undefined.',
+          )
+        }, 0)
+        var StoryLink = function StoryLink(_ref) {
+          var href = _ref.href,
+            story = _ref.story,
+            id = _ref.id,
+            storyRequested = _ref.storyRequested,
+            props = _objectWithoutProperties(_ref, [
+              'href',
+              'story',
+              'id',
+              'storyRequested',
+            ])
+
+          return story
+            ? story.id
+              ? React.createElement(
+                  redux_first_router_link__WEBPACK_IMPORTED_MODULE_3___default.a,
+                  _extends(
+                    {
+                      ref: function ref() {
+                        return console.log(story)
+                      },
+                      to: Object(
+                        ducks_router__WEBPACK_IMPORTED_MODULE_1__['toStory'],
+                      )(story),
+                    },
+                    props,
+                  ),
+                )
+              : React.createElement(
+                  redux_first_router_link__WEBPACK_IMPORTED_MODULE_3___default.a,
+                  _extends(
+                    {
+                      to: Object(
+                        ducks_router__WEBPACK_IMPORTED_MODULE_1__['toShortUrl'],
+                      )({ id: id }),
+                      onMouseOver: function onMouseOver() {
+                        return story.fetching || storyRequested(id, true)
+                      },
+                    },
+                    props,
+                  ),
+                )
+            : React.createElement(
+                'a',
+                _extends(
+                  {
+                    style: { textDecoration: 'underline' },
+                    href: href,
+                    title: href,
+                  },
+                  props,
+                ),
+              )
+        }
+
+        var mapStateToProps = function mapStateToProps(state, props) {
+          var id = R.path(['link', 'linked_story'], props)
+          var href = R.path(['link', 'href'], props)
+          console.log({ id: id, href: href })
+          if (id)
+            return {
+              id: id,
+              story:
+                Object(
+                  ducks_publicstory__WEBPACK_IMPORTED_MODULE_2__['getStory'],
+                )(id)(state) || {},
+            }
+          return { href: href }
+        }
+        var mapDispatchToProps = {
+          storyRequested:
+            ducks_publicstory__WEBPACK_IMPORTED_MODULE_2__['storyRequested'],
+        }
+
+        var _default = Object(
+          react_redux__WEBPACK_IMPORTED_MODULE_0__['connect'],
+        )(mapStateToProps, mapDispatchToProps)(StoryLink)
+
+        /* harmony default export */ __webpack_exports__['default'] = _default
+        ;(function() {
+          var reactHotLoader = __webpack_require__(
+            /*! react-hot-loader */ 'react-hot-loader',
+          ).default
+
+          var leaveModule = __webpack_require__(
+            /*! react-hot-loader */ 'react-hot-loader',
+          ).leaveModule
+
+          if (!reactHotLoader) {
+            return
+          }
+
+          reactHotLoader.register(
+            StoryLink,
+            'StoryLink',
+            '/app/src/react/components/Story/StoryLink.js',
+          )
+          reactHotLoader.register(
+            mapStateToProps,
+            'mapStateToProps',
+            '/app/src/react/components/Story/StoryLink.js',
+          )
+          reactHotLoader.register(
+            mapDispatchToProps,
+            'mapDispatchToProps',
+            '/app/src/react/components/Story/StoryLink.js',
+          )
+          reactHotLoader.register(
+            _default,
+            'default',
+            '/app/src/react/components/Story/StoryLink.js',
+          )
+          leaveModule(module)
+        })()
+        /* WEBPACK VAR INJECTION */
+      }.call(
+        this,
+        __webpack_require__(
+          /*! ./../../../../node_modules/webpack/buildin/harmony-module.js */ './node_modules/webpack/buildin/harmony-module.js',
+        )(module),
+        __webpack_require__(/*! react */ 'react'),
+        __webpack_require__(/*! ramda */ 'ramda'),
+      ))
+
+      /***/
+    },
+
+    /***/ /*!****************************************************!*\
+  !*** ./src/react/components/Story/StorySidebar.js ***!
+  \****************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Story/StorySidebar.js': function(
       module,
       __webpack_exports__,
@@ -8043,8 +8338,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React, R) {
         /* harmony import */ var utils_text__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! utils/text */ './src/react/utils/text.js',
         )
@@ -8061,6 +8355,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -8251,11 +8546,12 @@
       ))
 
       /***/
-    } /*!*********************************************!*\
-  !*** ./src/react/components/Story/Tingo.js ***!
-  \*********************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!*********************************************!*\
+  !*** ./src/react/components/Story/Tingo.js ***!
+  \*********************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/Story/Tingo.js': function(
       module,
       __webpack_exports__,
@@ -8263,8 +8559,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R, React) {
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -8354,11 +8649,12 @@
       ))
 
       /***/
-    } /*!*********************************************!*\
-  !*** ./src/react/components/Story/index.js ***!
-  \*********************************************/,
+    },
 
-    /***/ /*! exports provided: Story, default */
+    /***/ /*!*********************************************!*\
+  !*** ./src/react/components/Story/index.js ***!
+  \*********************************************/
+    /*! exports provided: Story, default */
     /***/ './src/react/components/Story/index.js': function(
       module,
       __webpack_exports__,
@@ -8366,8 +8662,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'Story',
@@ -8439,6 +8734,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -8790,11 +9086,12 @@
       ))
 
       /***/
-    } /*!********************************************************!*\
-  !*** ./src/react/components/TopMenu/LanguageWidget.js ***!
-  \********************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!********************************************************!*\
+  !*** ./src/react/components/TopMenu/LanguageWidget.js ***!
+  \********************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/TopMenu/LanguageWidget.js': function(
       module,
       __webpack_exports__,
@@ -8802,8 +9099,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React) {
         /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! react-redux */ 'react-redux',
         )
@@ -8832,6 +9128,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -8979,11 +9276,12 @@
       ))
 
       /***/
-    } /*!**********************************************!*\
-  !*** ./src/react/components/TopMenu/Menu.js ***!
-  \**********************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!**********************************************!*\
+  !*** ./src/react/components/TopMenu/Menu.js ***!
+  \**********************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/TopMenu/Menu.js': function(
       module,
       __webpack_exports__,
@@ -8991,8 +9289,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React) {
         /* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! classnames */ 'classnames',
         )
@@ -9026,6 +9323,9 @@
         /* harmony import */ var _SearchWidget_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
           /*! ./SearchWidget.js */ './src/react/components/TopMenu/SearchWidget.js',
         )
+        /* harmony import */ var components_Icons__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
+          /*! components/Icons */ './src/react/components/Icons.js',
+        )
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -9033,6 +9333,48 @@
 
           enterModule && enterModule(module)
         })()
+
+        function _classCallCheck(instance, Constructor) {
+          if (!(instance instanceof Constructor)) {
+            throw new TypeError('Cannot call a class as a function')
+          }
+        }
+
+        function _possibleConstructorReturn(self, call) {
+          if (!self) {
+            throw new ReferenceError(
+              "this hasn't been initialised - super() hasn't been called",
+            )
+          }
+          return call &&
+            (typeof call === 'object' || typeof call === 'function')
+            ? call
+            : self
+        }
+
+        function _inherits(subClass, superClass) {
+          if (typeof superClass !== 'function' && superClass !== null) {
+            throw new TypeError(
+              'Super expression must either be null or a function, not ' +
+                typeof superClass,
+            )
+          }
+          subClass.prototype = Object.create(
+            superClass && superClass.prototype,
+            {
+              constructor: {
+                value: subClass,
+                enumerable: false,
+                writable: true,
+                configurable: true,
+              },
+            },
+          )
+          if (superClass)
+            Object.setPrototypeOf
+              ? Object.setPrototypeOf(subClass, superClass)
+              : (subClass.__proto__ = superClass)
+        }
 
         function _objectWithoutProperties(obj, keys) {
           var target = {}
@@ -9198,6 +9540,29 @@
             'is undefined.',
           )
         }, 0)
+
+        setTimeout(function() {
+          console.assert(
+            typeof components_Icons__WEBPACK_IMPORTED_MODULE_8__['Close'] !==
+              'undefined',
+            '[IMPORT]:',
+            'Close',
+            'from',
+            'components/Icons',
+            'is undefined.',
+          )
+        }, 0)
+        setTimeout(function() {
+          console.assert(
+            typeof components_Icons__WEBPACK_IMPORTED_MODULE_8__['Menu'] !==
+              'undefined',
+            '[IMPORT]:',
+            'Menu',
+            'from',
+            'components/Icons',
+            'is undefined.',
+          )
+        }, 0)
         var Level = function Level(_ref) {
           var children = _ref.children,
             className = _ref.className
@@ -9214,15 +9579,45 @@
         }
 
         var Group = function Group(_ref2) {
-          var children = _ref2.children
-          return React.createElement('div', { className: 'Group' }, children)
+          var children = _ref2.children,
+            props = _objectWithoutProperties(_ref2, ['children'])
+
+          return React.createElement(
+            'div',
+            {
+              className: classnames__WEBPACK_IMPORTED_MODULE_0___default()(
+                'Group',
+                props,
+              ),
+            },
+            children,
+          )
         }
 
-        var PageLinks = function PageLinks(_ref3) {
-          var year = _ref3.year
+        var MenuIcon = function MenuIcon(_ref3) {
+          var _ref3$expanded = _ref3.expanded,
+            expanded = _ref3$expanded === undefined ? false : _ref3$expanded,
+            onClick = _ref3.onClick
+          return React.createElement(
+            'div',
+            { className: 'MenuIcon' },
+            expanded
+              ? React.createElement(
+                  components_Icons__WEBPACK_IMPORTED_MODULE_8__['Close'],
+                  { onClick: onClick },
+                )
+              : React.createElement(
+                  components_Icons__WEBPACK_IMPORTED_MODULE_8__['Menu'],
+                  { onClick: onClick },
+                ),
+          )
+        }
+
+        var PageLinks = function PageLinks(_ref4) {
+          var year = _ref4.year
           return React.createElement(
             Group,
-            null,
+            { pageLinks: true },
             React.createElement(
               redux_first_router_link__WEBPACK_IMPORTED_MODULE_1__['NavLink'],
               {
@@ -9276,55 +9671,90 @@
 
         var year = new Date().getFullYear()
 
-        var Menu = function Menu(_ref4) {
-          var _ref4$sections = _ref4.sections,
-            sections = _ref4$sections === undefined ? [] : _ref4$sections,
-            props = _objectWithoutProperties(_ref4, ['sections'])
+        var TopMenu = (function(_React$Component) {
+          _inherits(TopMenu, _React$Component)
 
-          return React.createElement(
-            'section',
-            {
-              className: classnames__WEBPACK_IMPORTED_MODULE_0___default()(
-                'Menu',
-              ),
-            },
-            React.createElement(
-              Level,
-              null,
-              React.createElement(
-                redux_first_router_link__WEBPACK_IMPORTED_MODULE_1___default.a,
-                {
-                  to: Object(
-                    ducks_router__WEBPACK_IMPORTED_MODULE_5__['toHome'],
-                  )(),
-                },
-                React.createElement(
-                  components_Logos__WEBPACK_IMPORTED_MODULE_2__['Universitas'],
-                  {
-                    className: classnames__WEBPACK_IMPORTED_MODULE_0___default()(
-                      'Logo',
-                    ),
-                  },
+          function TopMenu(props) {
+            _classCallCheck(this, TopMenu)
+
+            var _this = _possibleConstructorReturn(
+              this,
+              _React$Component.call(this, props),
+            )
+
+            _this.state = { expanded: false }
+            _this.toggleExpand = function() {
+              return _this.setState({ expanded: !_this.state.expanded })
+            }
+            return _this
+          }
+
+          TopMenu.prototype.render = function render() {
+            var expanded = this.state.expanded
+
+            return React.createElement(
+              'section',
+              {
+                className: classnames__WEBPACK_IMPORTED_MODULE_0___default()(
+                  'TopMenu',
                 ),
-              ),
+              },
               React.createElement(
-                _Sections_js__WEBPACK_IMPORTED_MODULE_3__['default'],
+                Level,
                 null,
+                React.createElement(
+                  redux_first_router_link__WEBPACK_IMPORTED_MODULE_1___default.a,
+                  {
+                    to: Object(
+                      ducks_router__WEBPACK_IMPORTED_MODULE_5__['toHome'],
+                    )(),
+                  },
+                  React.createElement(
+                    components_Logos__WEBPACK_IMPORTED_MODULE_2__[
+                      'Universitas'
+                    ],
+                    {
+                      className: classnames__WEBPACK_IMPORTED_MODULE_0___default()(
+                        'Logo',
+                      ),
+                    },
+                  ),
+                ),
+                React.createElement(
+                  _Sections_js__WEBPACK_IMPORTED_MODULE_3__['default'],
+                  null,
+                ),
+                React.createElement(PageLinks, this.props),
+                React.createElement(
+                  _LanguageWidget_js__WEBPACK_IMPORTED_MODULE_6__['default'],
+                  null,
+                ),
+                React.createElement(
+                  _SearchWidget_js__WEBPACK_IMPORTED_MODULE_7__['default'],
+                  null,
+                ),
+                React.createElement(MenuIcon, {
+                  expanded: expanded,
+                  onClick: this.toggleExpand,
+                }),
               ),
-              React.createElement(PageLinks, props),
-              React.createElement(
-                _LanguageWidget_js__WEBPACK_IMPORTED_MODULE_6__['default'],
-                null,
-              ),
-              React.createElement(
-                _SearchWidget_js__WEBPACK_IMPORTED_MODULE_7__['default'],
-                null,
-              ),
-            ),
-          )
-        }
+            )
+          }
 
-        var _default = Menu
+          // @ts-ignore
+          TopMenu.prototype.__reactstandin__regenerateByEval = function __reactstandin__regenerateByEval(
+            key,
+            code,
+          ) {
+            // @ts-ignore
+            this[key] = eval(code)
+          }
+
+          return TopMenu
+        })(React.Component)
+
+        var _default = TopMenu
+
         /* harmony default export */ __webpack_exports__['default'] = _default
         ;(function() {
           var reactHotLoader = __webpack_require__(
@@ -9350,6 +9780,11 @@
             '/app/src/react/components/TopMenu/Menu.js',
           )
           reactHotLoader.register(
+            MenuIcon,
+            'MenuIcon',
+            '/app/src/react/components/TopMenu/Menu.js',
+          )
+          reactHotLoader.register(
             PageLinks,
             'PageLinks',
             '/app/src/react/components/TopMenu/Menu.js',
@@ -9360,8 +9795,8 @@
             '/app/src/react/components/TopMenu/Menu.js',
           )
           reactHotLoader.register(
-            Menu,
-            'Menu',
+            TopMenu,
+            'TopMenu',
             '/app/src/react/components/TopMenu/Menu.js',
           )
           reactHotLoader.register(
@@ -9381,22 +9816,24 @@
       ))
 
       /***/
-    } /*!************************************************!*\
-  !*** ./src/react/components/TopMenu/Menu.scss ***!
-  \************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!************************************************!*\
+  !*** ./src/react/components/TopMenu/Menu.scss ***!
+  \************************************************/
+    /*! no static exports found */
     /***/ './src/react/components/TopMenu/Menu.scss': function(
       module,
       exports,
     ) {
       // empty (null-loader)
       /***/
-    } /*!******************************************************!*\
-  !*** ./src/react/components/TopMenu/SearchWidget.js ***!
-  \******************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!******************************************************!*\
+  !*** ./src/react/components/TopMenu/SearchWidget.js ***!
+  \******************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/TopMenu/SearchWidget.js': function(
       module,
       __webpack_exports__,
@@ -9404,8 +9841,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React) {
         /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! react-redux */ 'react-redux',
         )
@@ -9610,11 +10046,12 @@
       ))
 
       /***/
-    } /*!**************************************************!*\
-  !*** ./src/react/components/TopMenu/Sections.js ***!
-  \**************************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!**************************************************!*\
+  !*** ./src/react/components/TopMenu/Sections.js ***!
+  \**************************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/TopMenu/Sections.js': function(
       module,
       __webpack_exports__,
@@ -9622,8 +10059,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, React) {
         /* harmony import */ var redux_first_router_link__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! redux-first-router-link */ 'redux-first-router-link',
         )
@@ -9746,11 +10182,12 @@
       ))
 
       /***/
-    } /*!***********************************************!*\
-  !*** ./src/react/components/TopMenu/index.js ***!
-  \***********************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!***********************************************!*\
+  !*** ./src/react/components/TopMenu/index.js ***!
+  \***********************************************/
+    /*! exports provided: default */
     /***/ './src/react/components/TopMenu/index.js': function(
       module,
       __webpack_exports__,
@@ -9758,8 +10195,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module) {
+      /* WEBPACK VAR INJECTION */ ;(function(module) {
         /* harmony import */ var styles_universitas_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! styles/universitas.scss */ './src/react/styles/universitas.scss',
         )
@@ -9825,11 +10261,12 @@
       ))
 
       /***/
-    } /*!***********************************!*\
-  !*** ./src/react/ducks/issues.js ***!
-  \***********************************/,
+    },
 
-    /***/ /*! exports provided: getIssues, ISSUES_REQUESTED, issuesRequested, ISSUES_FETCHED, issuesFetched, default */
+    /***/ /*!***********************************!*\
+  !*** ./src/react/ducks/issues.js ***!
+  \***********************************/
+    /*! exports provided: getIssues, ISSUES_REQUESTED, issuesRequested, ISSUES_FETCHED, issuesFetched, default */
     /***/ './src/react/ducks/issues.js': function(
       module,
       __webpack_exports__,
@@ -9837,8 +10274,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'getIssues',
@@ -9999,11 +10435,12 @@
       ))
 
       /***/
-    } /*!*************************************!*\
-  !*** ./src/react/ducks/newsFeed.js ***!
-  \*************************************/,
+    },
 
-    /***/ /*! exports provided: getFeed, getItems, getSearch, getSearchResults, getFetching, getLanguage, getFeedQuery, FEED_REQUESTED, feedRequested, FEED_FETCHED, feedFetched, SEARCH_FETCHED, searchFetched, TOGGLE_LANGUAGE, toggleLanguage, SEARCH, changeSearch, default */
+    /***/ /*!*************************************!*\
+  !*** ./src/react/ducks/newsFeed.js ***!
+  \*************************************/
+    /*! exports provided: getFeed, getItems, getSearch, getSearchResults, getFetching, getLanguage, getFeedQuery, FEED_REQUESTED, feedRequested, FEED_FETCHED, feedFetched, SEARCH_FETCHED, searchFetched, TOGGLE_LANGUAGE, toggleLanguage, SEARCH, changeSearch, default */
     /***/ './src/react/ducks/newsFeed.js': function(
       module,
       __webpack_exports__,
@@ -10011,8 +10448,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'getFeed',
@@ -10148,6 +10584,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -10564,11 +11001,12 @@
       ))
 
       /***/
-    } /*!****************************************!*\
-  !*** ./src/react/ducks/publicstory.js ***!
-  \****************************************/,
+    },
 
-    /***/ /*! exports provided: getStory, STORY_REQUESTED, storyRequested, STORY_FETCHED, storyFetched, default */
+    /***/ /*!****************************************!*\
+  !*** ./src/react/ducks/publicstory.js ***!
+  \****************************************/
+    /*! exports provided: getStory, STORY_REQUESTED, storyRequested, STORY_FETCHED, storyFetched, default */
     /***/ './src/react/ducks/publicstory.js': function(
       module,
       __webpack_exports__,
@@ -10576,8 +11014,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'getStory',
@@ -10662,9 +11099,13 @@
         // Actions
         var STORY_REQUESTED = 'publicstory/STORY_REQUESTED'
         var storyRequested = function storyRequested(id) {
+          var prefetch =
+            arguments.length > 1 && arguments[1] !== undefined
+              ? arguments[1]
+              : false
           return {
             type: STORY_REQUESTED,
-            payload: { id: id },
+            payload: { id: id, prefetch: prefetch },
           }
         }
         var STORY_FETCHED = 'publicstory/STORY_FETCHED'
@@ -10691,11 +11132,7 @@
             case STORY_FETCHED:
               return R.over(
                 storyLens(payload.id),
-                R.pipe(
-                  R.defaultTo({}),
-                  mergeLeft(payload),
-                  R.assoc('fetching', false),
-                ),
+                R.pipe(mergeLeft(payload), R.assoc('fetching', false)),
               )
             default:
               return R.identity
@@ -10797,11 +11234,12 @@
       ))
 
       /***/
-    } /*!***********************************!*\
-  !*** ./src/react/ducks/router.js ***!
-  \***********************************/,
+    },
 
-    /***/ /*! exports provided: HOME, SECTION, PDF, ABOUT, AD_INFO, STORY, SCHEDULE, SHORT_URL, NOT_FOUND, toHome, toSection, toPdf, toPubSchedule, toAbout, toAdInfo, toStory, toShortUrl, routesMap, routerOptions, reverse, reverseFull, getLocation */
+    /***/ /*!***********************************!*\
+  !*** ./src/react/ducks/router.js ***!
+  \***********************************/
+    /*! exports provided: HOME, SECTION, PDF, ABOUT, AD_INFO, STORY, SCHEDULE, SHORT_URL, NOT_FOUND, toHome, toSection, toPdf, toPubSchedule, toAbout, toAdInfo, toStory, toShortUrl, routesMap, routerOptions, reverse, reverseFull, getLocation */
     /***/ './src/react/ducks/router.js': function(
       module,
       __webpack_exports__,
@@ -10809,8 +11247,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'HOME',
@@ -10979,6 +11416,7 @@
           /*! utils/urls */ './src/react/utils/urls.js',
         )
         var _routesMap
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -11258,11 +11696,12 @@
       ))
 
       /***/
-    } /*!*********************************!*\
-  !*** ./src/react/ducks/site.js ***!
-  \*********************************/,
+    },
 
-    /***/ /*! exports provided: getSite, getSections, SITE_REQUESTED, siteRequested, SITE_FETCHED, siteFetched, default */
+    /***/ /*!*********************************!*\
+  !*** ./src/react/ducks/site.js ***!
+  \*********************************/
+    /*! exports provided: getSite, getSections, SITE_REQUESTED, siteRequested, SITE_FETCHED, siteFetched, default */
     /***/ './src/react/ducks/site.js': function(
       module,
       __webpack_exports__,
@@ -11270,8 +11709,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'getSite',
@@ -11443,11 +11881,12 @@
       ))
 
       /***/
-    } /*!***********************************!*\
-  !*** ./src/react/markup/index.js ***!
-  \***********************************/,
+    },
 
-    /***/ /*! exports provided: makeParser, parseText, rules, renderText */
+    /***/ /*!***********************************!*\
+  !*** ./src/react/markup/index.js ***!
+  \***********************************/
+    /*! exports provided: makeParser, parseText, rules, renderText */
     /***/ './src/react/markup/index.js': function(
       module,
       __webpack_exports__,
@@ -11455,8 +11894,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'makeParser',
@@ -11505,6 +11943,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -11702,6 +12141,7 @@
           }
           return cleanMarkup(R.join('', res))
         }
+
         ;(function() {
           var reactHotLoader = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -11757,11 +12197,12 @@
       ))
 
       /***/
-    } /*!**************************************!*\
-  !*** ./src/react/markup/nodeTree.js ***!
-  \**************************************/,
+    },
 
-    /***/ /*! exports provided: getChildren, getPlaces, getLink, getPlaceChildren, buildNodeTree */
+    /***/ /*!**************************************!*\
+  !*** ./src/react/markup/nodeTree.js ***!
+  \**************************************/
+    /*! exports provided: getChildren, getPlaces, getLink, getPlaceChildren, buildNodeTree */
     /***/ './src/react/markup/nodeTree.js': function(
       module,
       __webpack_exports__,
@@ -11769,8 +12210,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'getChildren',
@@ -11809,6 +12249,9 @@
         /* harmony import */ var markup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
           /*! markup */ './src/react/markup/index.js',
         )
+        /* harmony import */ var utils_text__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+          /*! utils/text */ './src/react/utils/text.js',
+        )
         var _extends =
           Object.assign ||
           function(target) {
@@ -11822,6 +12265,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -11858,6 +12302,18 @@
             'parseText',
             'from',
             'markup',
+            'is undefined.',
+          )
+        }, 0)
+
+        setTimeout(function() {
+          console.assert(
+            typeof utils_text__WEBPACK_IMPORTED_MODULE_1__['cleanText'] !==
+              'undefined',
+            '[IMPORT]:',
+            'cleanText',
+            'from',
+            'utils/text',
             'is undefined.',
           )
         }, 0)
@@ -11991,6 +12447,7 @@
             nodeTree: nodeTree,
           })
         }
+
         ;(function() {
           var reactHotLoader = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -12046,11 +12503,12 @@
       ))
 
       /***/
-    } /*!***********************************!*\
-  !*** ./src/react/markup/rules.js ***!
-  \***********************************/,
+    },
 
-    /***/ /*! exports provided: TAGS, default */
+    /***/ /*!***********************************!*\
+  !*** ./src/react/markup/rules.js ***!
+  \***********************************/
+    /*! exports provided: TAGS, default */
     /***/ './src/react/markup/rules.js': function(
       module,
       __webpack_exports__,
@@ -12058,8 +12516,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'TAGS',
@@ -12083,6 +12540,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -12101,6 +12559,11 @@
           return target
         }
 
+        // lexer rules for the universitas markup language
+
+        // These are the markup tags.
+        // Usage example:
+        // @txt: [content]
         setTimeout(function() {
           console.assert(
             typeof utils_text__WEBPACK_IMPORTED_MODULE_0__['makeFuzzer'] !==
@@ -12112,9 +12575,6 @@
             'is undefined.',
           )
         }, 0)
-        var leaf = true,
-          inline = true
-
         var TAGS = [
           'txt',
           'tingo',
@@ -12130,9 +12590,8 @@
           'sitat',
         ]
 
-        var tagFuzzer = Object(
-          utils_text__WEBPACK_IMPORTED_MODULE_0__['makeFuzzer'],
-        )(TAGS, 0.5)
+        var leaf = true,
+          inline = true // helpers for object shorthand
 
         var baseRules = {
           whitespace: {
@@ -12206,7 +12665,11 @@
               var space = R.contains(tag, ['mt', 'spm', 'tingo']) ? '\n' : ''
               return space + '@' + tag + ': ' + content
             },
-            process: R.evolve({ tag: tagFuzzer }),
+            process: R.evolve({
+              tag: Object(
+                utils_text__WEBPACK_IMPORTED_MODULE_0__['makeFuzzer'],
+              )(TAGS, 0.5),
+            }), // fuzzy match
           },
           listItem: {
             pattern: /^(\* |# |@li:) *(?<content>.*)$/,
@@ -12236,8 +12699,9 @@
               return '\n@sitat: ' + content + '\n'
             },
           },
-        }
 
+          // fallback lexer rule
+        }
         var defaultRule = {
           order: 10,
           leaf: false,
@@ -12267,6 +12731,11 @@
           }
 
           reactHotLoader.register(
+            TAGS,
+            'TAGS',
+            '/app/src/react/markup/rules.js',
+          )
+          reactHotLoader.register(
             leaf,
             'leaf',
             '/app/src/react/markup/rules.js',
@@ -12274,16 +12743,6 @@
           reactHotLoader.register(
             inline,
             'inline',
-            '/app/src/react/markup/rules.js',
-          )
-          reactHotLoader.register(
-            TAGS,
-            'TAGS',
-            '/app/src/react/markup/rules.js',
-          )
-          reactHotLoader.register(
-            tagFuzzer,
-            'tagFuzzer',
             '/app/src/react/markup/rules.js',
           )
           reactHotLoader.register(
@@ -12313,11 +12772,12 @@
       ))
 
       /***/
-    } /*!******************************************!*\
-  !*** ./src/react/sagas/frontPageSaga.js ***!
-  \******************************************/,
+    },
 
-    /***/ /*! exports provided: default */
+    /***/ /*!******************************************!*\
+  !*** ./src/react/sagas/frontPageSaga.js ***!
+  \******************************************/
+    /*! exports provided: default */
     /***/ './src/react/sagas/frontPageSaga.js': function(
       module,
       __webpack_exports__,
@@ -12325,8 +12785,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'default',
@@ -12374,6 +12833,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -12482,6 +12942,18 @@
           )
         }, 0)
 
+        setTimeout(function() {
+          console.assert(
+            typeof ducks_publicstory__WEBPACK_IMPORTED_MODULE_3__[
+              'getStory'
+            ] !== 'undefined',
+            '[IMPORT]:',
+            'getStory',
+            'from',
+            'ducks/publicstory',
+            'is undefined.',
+          )
+        }, 0)
         setTimeout(function() {
           console.assert(
             typeof ducks_publicstory__WEBPACK_IMPORTED_MODULE_3__[
@@ -12710,15 +13182,37 @@
         }
 
         function fetchStory(action) {
-          var id, _ref, response, error
+          var _action$payload, id, prefetch, story, _ref, response, error
 
           return regeneratorRuntime.wrap(
             function fetchStory$(_context2) {
               while (1) {
                 switch ((_context2.prev = _context2.next)) {
                   case 0:
-                    id = R.path(['payload', 'id'], action)
+                    ;(_action$payload = action.payload),
+                      (id = _action$payload.id),
+                      (prefetch = _action$payload.prefetch)
                     _context2.next = 3
+                    return Object(
+                      redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__['select'],
+                    )(
+                      ducks_publicstory__WEBPACK_IMPORTED_MODULE_3__[
+                        'getStory'
+                      ],
+                    )
+
+                  case 3:
+                    story = _context2.sent
+
+                    if (!(prefetch && story.fetching)) {
+                      _context2.next = 6
+                      break
+                    }
+
+                    return _context2.abrupt('return')
+
+                  case 6:
+                    _context2.next = 8
                     return Object(
                       redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__['call'],
                     )(
@@ -12727,17 +13221,17 @@
                       id,
                     )
 
-                  case 3:
+                  case 8:
                     _ref = _context2.sent
                     response = _ref.response
                     error = _ref.error
 
                     if (!response) {
-                      _context2.next = 11
+                      _context2.next = 16
                       break
                     }
 
-                    _context2.next = 9
+                    _context2.next = 14
                     return Object(
                       redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__['put'],
                     )(
@@ -12748,23 +13242,23 @@
                       )(response),
                     )
 
-                  case 9:
-                    _context2.next = 16
+                  case 14:
+                    _context2.next = 21
                     break
 
-                  case 11:
-                    _context2.next = 13
+                  case 16:
+                    _context2.next = 18
                     return Object(
                       redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__['call'],
                     )(handleError, _extends({ id: id }, error))
 
-                  case 13:
+                  case 18:
                     if (!error.HTTPstatus) {
-                      _context2.next = 16
+                      _context2.next = 21
                       break
                     }
 
-                    _context2.next = 16
+                    _context2.next = 21
                     return Object(
                       redux_saga_effects__WEBPACK_IMPORTED_MODULE_0__['put'],
                     )(
@@ -12775,7 +13269,7 @@
                       )(_extends({ id: id }, error)),
                     )
 
-                  case 16:
+                  case 21:
                   case 'end':
                     return _context2.stop()
                 }
@@ -13155,11 +13649,12 @@
       ))
 
       /***/
-    } /*!***********************************!*\
-  !*** ./src/react/services/api.js ***!
-  \***********************************/,
+    },
 
-    /***/ /*! exports provided: httpOptions, searchUrl, apiFetch, apiLogin, apiLogout, apiUser, pushImageFile, apiList, apiGet, apiPatch, apiPost, apiDelete */
+    /***/ /*!***********************************!*\
+  !*** ./src/react/services/api.js ***!
+  \***********************************/
+    /*! exports provided: httpOptions, searchUrl, apiFetch, apiLogin, apiLogout, apiUser, pushImageFile, apiList, apiGet, apiPatch, apiPost, apiDelete */
     /***/ './src/react/services/api.js': function(
       module,
       __webpack_exports__,
@@ -13167,8 +13662,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'httpOptions',
@@ -13281,6 +13775,7 @@
             }
             return target
           }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -13604,19 +14099,21 @@
       ))
 
       /***/
-    } /*!*******************************************!*\
-  !*** ./src/react/styles/universitas.scss ***!
-  \*******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*******************************************!*\
+  !*** ./src/react/styles/universitas.scss ***!
+  \*******************************************/
+    /*! no static exports found */
     /***/ './src/react/styles/universitas.scss': function(module, exports) {
       // empty (null-loader)
       /***/
-    } /*!********************************!*\
-  !*** ./src/react/utils/hoc.js ***!
-  \********************************/,
+    },
 
-    /***/ /*! exports provided: requestData */
+    /***/ /*!********************************!*\
+  !*** ./src/react/utils/hoc.js ***!
+  \********************************/
+    /*! exports provided: requestData */
     /***/ './src/react/utils/hoc.js': function(
       module,
       __webpack_exports__,
@@ -13624,8 +14121,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R, React) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R, React) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'requestData',
@@ -13671,6 +14167,7 @@
             return React.createElement(Loader, props)
           }
         }
+
         ;(function() {
           var reactHotLoader = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -13702,11 +14199,12 @@
       ))
 
       /***/
-    } /*!*********************************!*\
-  !*** ./src/react/utils/misc.js ***!
-  \*********************************/,
+    },
 
-    /***/ /*! exports provided: compose, debounce, timeoutDebounce, isTouchDevice, isAndroid, isPWA, isIphone, isVisible, scrollToElement, scrollToTop, preFetchImages, eventHandler, staleAfter */
+    /***/ /*!*********************************!*\
+  !*** ./src/react/utils/misc.js ***!
+  \*********************************/
+    /*! exports provided: compose, debounce, timeoutDebounce, isTouchDevice, isAndroid, isPWA, isIphone, isVisible, scrollToElement, scrollToTop, preFetchImages, eventHandler, staleAfter */
     /***/ './src/react/utils/misc.js': function(
       module,
       __webpack_exports__,
@@ -13714,8 +14212,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module) {
+      /* WEBPACK VAR INJECTION */ ;(function(module) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'compose',
@@ -13832,6 +14329,7 @@
                   ? 'symbol'
                   : typeof obj
               }
+
         ;(function() {
           var enterModule = __webpack_require__(
             /*! react-hot-loader */ 'react-hot-loader',
@@ -14098,11 +14596,12 @@
       ))
 
       /***/
-    } /*!*********************************!*\
-  !*** ./src/react/utils/text.js ***!
-  \*********************************/,
+    },
 
-    /***/ /*! exports provided: toJson, makeFuzzer, cleanup, stringify, tr, slugify, phoneFormat, formatDate, formatFileSize, utf8Decode, hashText */
+    /***/ /*!*********************************!*\
+  !*** ./src/react/utils/text.js ***!
+  \*********************************/
+    /*! exports provided: toJson, makeFuzzer, cleanText, cleanup, stringify, tr, slugify, phoneFormat, formatDate, formatFileSize, utf8Decode, hashText */
     /***/ './src/react/utils/text.js': function(
       module,
       __webpack_exports__,
@@ -14110,8 +14609,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'toJson',
@@ -14124,6 +14622,13 @@
           'makeFuzzer',
           function() {
             return makeFuzzer
+          },
+        )
+        /* harmony export (binding) */ __webpack_require__.d(
+          __webpack_exports__,
+          'cleanText',
+          function() {
+            return cleanText
           },
         )
         /* harmony export (binding) */ __webpack_require__.d(
@@ -14311,6 +14816,21 @@
           )
         }
 
+        // :: string -> string
+
+        var NBRS = '\xA0'
+        var WORDJOINER = '\u2060'
+
+        // Fixify stuff
+        var cleanText = R.pipe(
+          R.replace(/--/g, '–'),
+          R.replace(
+            /(^|[!\.:\?] +)[\-\u2013] ?\b/gm,
+            '$1\u2013' + WORDJOINER + NBRS,
+          ),
+        )
+
+        // old cleanup function
         var cleanup = function cleanup(text) {
           return text
             .replace(/^(@\S+:)/gm, function(s) {
@@ -14418,12 +14938,13 @@
           return unit ? '' + number + nbrspace + unit : 'very bigly large size'
         }
 
+        // Exif utility. Text fields are often encoded in utf8.
         // :: utf-8 encoded string -> unicode string
         var utf8Decode = R.when(
           R.is(String),
           R.pipe(
-            R.replace(/\xc5\x92/g, 'å'), // unknown encoding
-            R.replace(/\xc2\xbf/g, 'ø'), // unknown encoding
+            R.replace(/\xc5\x92/g, 'å'), // workaround unknown encoding
+            R.replace(/\xc2\xbf/g, 'ø'), // workaround unknown encoding
             R.tryCatch(R.pipe(escape, decodeURIComponent), R.nthArg(1)),
             R.trim,
           ),
@@ -14460,6 +14981,17 @@
           reactHotLoader.register(
             makeFuzzer,
             'makeFuzzer',
+            '/app/src/react/utils/text.js',
+          )
+          reactHotLoader.register(NBRS, 'NBRS', '/app/src/react/utils/text.js')
+          reactHotLoader.register(
+            WORDJOINER,
+            'WORDJOINER',
+            '/app/src/react/utils/text.js',
+          )
+          reactHotLoader.register(
+            cleanText,
+            'cleanText',
             '/app/src/react/utils/text.js',
           )
           reactHotLoader.register(
@@ -14520,11 +15052,12 @@
       ))
 
       /***/
-    } /*!*********************************!*\
-  !*** ./src/react/utils/urls.js ***!
-  \*********************************/,
+    },
 
-    /***/ /*! exports provided: paramPairs, cleanValues, isEmpty, queryString, parseParam, parseQuery, absoluteURL */
+    /***/ /*!*********************************!*\
+  !*** ./src/react/utils/urls.js ***!
+  \*********************************/
+    /*! exports provided: paramPairs, cleanValues, isEmpty, queryString, parseParam, parseQuery, absoluteURL */
     /***/ './src/react/utils/urls.js': function(
       module,
       __webpack_exports__,
@@ -14532,8 +15065,7 @@
     ) {
       'use strict'
       __webpack_require__.r(__webpack_exports__)
-      /* WEBPACK VAR INJECTION */
-      ;(function(module, R) {
+      /* WEBPACK VAR INJECTION */ ;(function(module, R) {
         /* harmony export (binding) */ __webpack_require__.d(
           __webpack_exports__,
           'paramPairs',
@@ -14730,578 +15262,652 @@
       ))
 
       /***/
-    } /*!*********************************!*\
-  !*** external "babel-polyfill" ***!
-  \*********************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*********************************!*\
+  !*** external "babel-polyfill" ***!
+  \*********************************/
+    /*! no static exports found */
     /***/ 'babel-polyfill': function(module, exports) {
       module.exports = require('babel-polyfill')
 
       /***/
-    } /*!*****************************!*\
-  !*** external "classnames" ***!
-  \*****************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*****************************!*\
+  !*** external "classnames" ***!
+  \*****************************/
+    /*! no static exports found */
     /***/ classnames: function(module, exports) {
       module.exports = require('classnames')
 
       /***/
-    } /*!***************************!*\
-  !*** external "date-fns" ***!
-  \***************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***************************!*\
+  !*** external "date-fns" ***!
+  \***************************/
+    /*! no static exports found */
     /***/ 'date-fns': function(module, exports) {
       module.exports = require('date-fns')
 
       /***/
-    } /*!*************************************!*\
-  !*** external "date-fns/locale/nb" ***!
-  \*************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*************************************!*\
+  !*** external "date-fns/locale/nb" ***!
+  \*************************************/
+    /*! no static exports found */
     /***/ 'date-fns/locale/nb': function(module, exports) {
       module.exports = require('date-fns/locale/nb')
 
       /***/
-    } /*!**************************!*\
-  !*** external "express" ***!
-  \**************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!**************************!*\
+  !*** external "express" ***!
+  \**************************/
+    /*! no static exports found */
     /***/ express: function(module, exports) {
       module.exports = require('express')
 
       /***/
-    } /*!***************************!*\
-  !*** external "fuzzyset" ***!
-  \***************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***************************!*\
+  !*** external "fuzzyset" ***!
+  \***************************/
+    /*! no static exports found */
     /***/ fuzzyset: function(module, exports) {
       module.exports = require('fuzzyset')
 
       /***/
-    } /*!***********************************!*\
-  !*** external "isomorphic-fetch" ***!
-  \***********************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***********************************!*\
+  !*** external "isomorphic-fetch" ***!
+  \***********************************/
+    /*! no static exports found */
     /***/ 'isomorphic-fetch': function(module, exports) {
       module.exports = require('isomorphic-fetch')
 
       /***/
-    } /*!****************************!*\
-  !*** external "js-cookie" ***!
-  \****************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!****************************!*\
+  !*** external "js-cookie" ***!
+  \****************************/
+    /*! no static exports found */
     /***/ 'js-cookie': function(module, exports) {
       module.exports = require('js-cookie')
 
       /***/
-    } /*!************************************************!*\
-  !*** external "json-stringify-pretty-compact" ***!
-  \************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!************************************************!*\
+  !*** external "json-stringify-pretty-compact" ***!
+  \************************************************/
+    /*! no static exports found */
     /***/ 'json-stringify-pretty-compact': function(module, exports) {
       module.exports = require('json-stringify-pretty-compact')
 
       /***/
-    } /*!*************************!*\
-  !*** external "morgan" ***!
-  \*************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*************************!*\
+  !*** external "morgan" ***!
+  \*************************/
+    /*! no static exports found */
     /***/ morgan: function(module, exports) {
       module.exports = require('morgan')
 
       /***/
-    } /*!************************!*\
-  !*** external "ramda" ***!
-  \************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!************************!*\
+  !*** external "ramda" ***!
+  \************************/
+    /*! no static exports found */
     /***/ ramda: function(module, exports) {
       module.exports = require('ramda')
 
       /***/
-    } /*!************************!*\
-  !*** external "react" ***!
-  \************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!************************!*\
+  !*** external "react" ***!
+  \************************/
+    /*! no static exports found */
     /***/ react: function(module, exports) {
       module.exports = require('react')
 
       /***/
-    } /*!***********************************!*\
-  !*** external "react-dom/server" ***!
-  \***********************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***********************************!*\
+  !*** external "react-dom/server" ***!
+  \***********************************/
+    /*! no static exports found */
     /***/ 'react-dom/server': function(module, exports) {
       module.exports = require('react-dom/server')
 
       /***/
-    } /*!***************************************!*\
-  !*** external "react-error-boundary" ***!
-  \***************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***************************************!*\
+  !*** external "react-error-boundary" ***!
+  \***************************************/
+    /*! no static exports found */
     /***/ 'react-error-boundary': function(module, exports) {
       module.exports = require('react-error-boundary')
 
       /***/
-    } /*!*******************************!*\
-  !*** external "react-helmet" ***!
-  \*******************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*******************************!*\
+  !*** external "react-helmet" ***!
+  \*******************************/
+    /*! no static exports found */
     /***/ 'react-helmet': function(module, exports) {
       module.exports = require('react-helmet')
 
       /***/
-    } /*!***********************************!*\
-  !*** external "react-hot-loader" ***!
-  \***********************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***********************************!*\
+  !*** external "react-hot-loader" ***!
+  \***********************************/
+    /*! no static exports found */
     /***/ 'react-hot-loader': function(module, exports) {
       module.exports = require('react-hot-loader')
 
       /***/
-    } /*!**********************************************************!*\
-  !*** external "react-icons/lib/fa/exclamation-triangle" ***!
-  \**********************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!**********************************************************!*\
+  !*** external "react-icons/lib/fa/exclamation-triangle" ***!
+  \**********************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/fa/exclamation-triangle': function(module, exports) {
       module.exports = require('react-icons/lib/fa/exclamation-triangle')
 
       /***/
-    } /*!********************************************!*\
-  !*** external "react-icons/lib/fa/header" ***!
-  \********************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!********************************************!*\
+  !*** external "react-icons/lib/fa/header" ***!
+  \********************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/fa/header': function(module, exports) {
       module.exports = require('react-icons/lib/fa/header')
 
       /***/
-    } /*!*******************************************!*\
-  !*** external "react-icons/lib/fa/magic" ***!
-  \*******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*******************************************!*\
+  !*** external "react-icons/lib/fa/magic" ***!
+  \*******************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/fa/magic': function(module, exports) {
       module.exports = require('react-icons/lib/fa/magic')
 
       /***/
-    } /*!*****************************************************!*\
-  !*** external "react-icons/lib/fa/question-circle" ***!
-  \*****************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*****************************************************!*\
+  !*** external "react-icons/lib/fa/question-circle" ***!
+  \*****************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/fa/question-circle': function(module, exports) {
       module.exports = require('react-icons/lib/fa/question-circle')
 
       /***/
-    } /*!*************************************************!*\
-  !*** external "react-icons/lib/md/access-time" ***!
-  \*************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*************************************************!*\
+  !*** external "react-icons/lib/md/access-time" ***!
+  \*************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/access-time': function(module, exports) {
       module.exports = require('react-icons/lib/md/access-time')
 
       /***/
-    } /*!************************************************!*\
-  !*** external "react-icons/lib/md/add-circle" ***!
-  \************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!************************************************!*\
+  !*** external "react-icons/lib/md/add-circle" ***!
+  \************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/add-circle': function(module, exports) {
       module.exports = require('react-icons/lib/md/add-circle')
 
       /***/
-    } /*!**************************************************!*\
-  !*** external "react-icons/lib/md/announcement" ***!
-  \**************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!**************************************************!*\
+  !*** external "react-icons/lib/md/announcement" ***!
+  \**************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/announcement': function(module, exports) {
       module.exports = require('react-icons/lib/md/announcement')
 
       /***/
-    } /*!***************************************************!*\
-  !*** external "react-icons/lib/md/arrow-forward" ***!
-  \***************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***************************************************!*\
+  !*** external "react-icons/lib/md/arrow-forward" ***!
+  \***************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/arrow-forward': function(module, exports) {
       module.exports = require('react-icons/lib/md/arrow-forward')
 
       /***/
-    } /*!***********************************************!*\
-  !*** external "react-icons/lib/md/art-track" ***!
-  \***********************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***********************************************!*\
+  !*** external "react-icons/lib/md/art-track" ***!
+  \***********************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/art-track': function(module, exports) {
       module.exports = require('react-icons/lib/md/art-track')
 
       /***/
-    } /*!*************************************************!*\
-  !*** external "react-icons/lib/md/camera-roll" ***!
-  \*************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*************************************************!*\
+  !*** external "react-icons/lib/md/camera-roll" ***!
+  \*************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/camera-roll': function(module, exports) {
       module.exports = require('react-icons/lib/md/camera-roll')
 
       /***/
-    } /*!*******************************************!*\
-  !*** external "react-icons/lib/md/clear" ***!
-  \*******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*******************************************!*\
+  !*** external "react-icons/lib/md/clear" ***!
+  \*******************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/clear': function(module, exports) {
       module.exports = require('react-icons/lib/md/clear')
 
       /***/
-    } /*!*******************************************!*\
-  !*** external "react-icons/lib/md/close" ***!
-  \*******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*******************************************!*\
+  !*** external "react-icons/lib/md/close" ***!
+  \*******************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/close': function(module, exports) {
       module.exports = require('react-icons/lib/md/close')
 
       /***/
-    } /*!*********************************************!*\
-  !*** external "react-icons/lib/md/comment" ***!
-  \*********************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*********************************************!*\
+  !*** external "react-icons/lib/md/comment" ***!
+  \*********************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/comment': function(module, exports) {
       module.exports = require('react-icons/lib/md/comment')
 
       /***/
-    } /*!******************************************!*\
-  !*** external "react-icons/lib/md/crop" ***!
-  \******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!******************************************!*\
+  !*** external "react-icons/lib/md/crop" ***!
+  \******************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/crop': function(module, exports) {
       module.exports = require('react-icons/lib/md/crop')
 
       /***/
-    } /*!********************************************!*\
-  !*** external "react-icons/lib/md/delete" ***!
-  \********************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!********************************************!*\
+  !*** external "react-icons/lib/md/delete" ***!
+  \********************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/delete': function(module, exports) {
       module.exports = require('react-icons/lib/md/delete')
 
       /***/
-    } /*!*************************************************!*\
-  !*** external "react-icons/lib/md/description" ***!
-  \*************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*************************************************!*\
+  !*** external "react-icons/lib/md/description" ***!
+  \*************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/description': function(module, exports) {
       module.exports = require('react-icons/lib/md/description')
 
       /***/
-    } /*!******************************************!*\
-  !*** external "react-icons/lib/md/done" ***!
-  \******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!******************************************!*\
+  !*** external "react-icons/lib/md/done" ***!
+  \******************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/done': function(module, exports) {
       module.exports = require('react-icons/lib/md/done')
 
       /***/
-    } /*!******************************************!*\
-  !*** external "react-icons/lib/md/edit" ***!
-  \******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!******************************************!*\
+  !*** external "react-icons/lib/md/edit" ***!
+  \******************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/edit': function(module, exports) {
       module.exports = require('react-icons/lib/md/edit')
 
       /***/
-    } /*!*******************************************!*\
-  !*** external "react-icons/lib/md/email" ***!
-  \*******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*******************************************!*\
+  !*** external "react-icons/lib/md/email" ***!
+  \*******************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/email': function(module, exports) {
       module.exports = require('react-icons/lib/md/email')
 
       /***/
-    } /*!*******************************************!*\
-  !*** external "react-icons/lib/md/error" ***!
-  \*******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*******************************************!*\
+  !*** external "react-icons/lib/md/error" ***!
+  \*******************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/error': function(module, exports) {
       module.exports = require('react-icons/lib/md/error')
 
       /***/
-    } /*!***************************************************!*\
-  !*** external "react-icons/lib/md/file-download" ***!
-  \***************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***************************************************!*\
+  !*** external "react-icons/lib/md/file-download" ***!
+  \***************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/file-download': function(module, exports) {
       module.exports = require('react-icons/lib/md/file-download')
 
       /***/
-    } /*!*************************************************!*\
-  !*** external "react-icons/lib/md/file-upload" ***!
-  \*************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*************************************************!*\
+  !*** external "react-icons/lib/md/file-upload" ***!
+  \*************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/file-upload': function(module, exports) {
       module.exports = require('react-icons/lib/md/file-upload')
 
       /***/
-    } /*!**********************************************************!*\
-  !*** external "react-icons/lib/md/format-list-bulleted" ***!
-  \**********************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!**********************************************************!*\
+  !*** external "react-icons/lib/md/format-list-bulleted" ***!
+  \**********************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/format-list-bulleted': function(module, exports) {
       module.exports = require('react-icons/lib/md/format-list-bulleted')
 
       /***/
-    } /*!**************************************************!*\
-  !*** external "react-icons/lib/md/format-quote" ***!
-  \**************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!**************************************************!*\
+  !*** external "react-icons/lib/md/format-quote" ***!
+  \**************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/format-quote': function(module, exports) {
       module.exports = require('react-icons/lib/md/format-quote')
 
       /***/
-    } /*!*****************************************************!*\
-  !*** external "react-icons/lib/md/import-contacts" ***!
-  \*****************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*****************************************************!*\
+  !*** external "react-icons/lib/md/import-contacts" ***!
+  \*****************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/import-contacts': function(module, exports) {
       module.exports = require('react-icons/lib/md/import-contacts')
 
       /***/
-    } /*!******************************************!*\
-  !*** external "react-icons/lib/md/info" ***!
-  \******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!******************************************!*\
+  !*** external "react-icons/lib/md/info" ***!
+  \******************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/info': function(module, exports) {
       module.exports = require('react-icons/lib/md/info')
 
       /***/
-    } /*!*******************************************************!*\
-  !*** external "react-icons/lib/md/laptop-chromebook" ***!
-  \*******************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*******************************************************!*\
+  !*** external "react-icons/lib/md/laptop-chromebook" ***!
+  \*******************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/laptop-chromebook': function(module, exports) {
       module.exports = require('react-icons/lib/md/laptop-chromebook')
 
       /***/
-    } /*!******************************************!*\
-  !*** external "react-icons/lib/md/link" ***!
-  \******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!******************************************!*\
+  !*** external "react-icons/lib/md/link" ***!
+  \******************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/link': function(module, exports) {
       module.exports = require('react-icons/lib/md/link')
 
       /***/
-    } /*!******************************************!*\
-  !*** external "react-icons/lib/md/loop" ***!
-  \******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!******************************************!*\
+  !*** external "react-icons/lib/md/loop" ***!
+  \******************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/loop': function(module, exports) {
       module.exports = require('react-icons/lib/md/loop')
 
       /***/
-    } /*!********************************************!*\
-  !*** external "react-icons/lib/md/person" ***!
-  \********************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!******************************************!*\
+  !*** external "react-icons/lib/md/menu" ***!
+  \******************************************/
+    /*! no static exports found */
+    /***/ 'react-icons/lib/md/menu': function(module, exports) {
+      module.exports = require('react-icons/lib/md/menu')
+
+      /***/
+    },
+
+    /***/ /*!********************************************!*\
+  !*** external "react-icons/lib/md/person" ***!
+  \********************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/person': function(module, exports) {
       module.exports = require('react-icons/lib/md/person')
 
       /***/
-    } /*!*******************************************!*\
-  !*** external "react-icons/lib/md/phone" ***!
-  \*******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*******************************************!*\
+  !*** external "react-icons/lib/md/phone" ***!
+  \*******************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/phone': function(module, exports) {
       module.exports = require('react-icons/lib/md/phone')
 
       /***/
-    } /*!**************************************************!*\
-  !*** external "react-icons/lib/md/photo-camera" ***!
-  \**************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!**************************************************!*\
+  !*** external "react-icons/lib/md/photo-camera" ***!
+  \**************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/photo-camera': function(module, exports) {
       module.exports = require('react-icons/lib/md/photo-camera')
 
       /***/
-    } /*!****************************************************!*\
-  !*** external "react-icons/lib/md/picture-as-pdf" ***!
-  \****************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!****************************************************!*\
+  !*** external "react-icons/lib/md/picture-as-pdf" ***!
+  \****************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/picture-as-pdf': function(module, exports) {
       module.exports = require('react-icons/lib/md/picture-as-pdf')
 
       /***/
-    } /*!****************************************************!*\
-  !*** external "react-icons/lib/md/remove-red-eye" ***!
-  \****************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!****************************************************!*\
+  !*** external "react-icons/lib/md/remove-red-eye" ***!
+  \****************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/remove-red-eye': function(module, exports) {
       module.exports = require('react-icons/lib/md/remove-red-eye')
 
       /***/
-    } /*!********************************************!*\
-  !*** external "react-icons/lib/md/search" ***!
-  \********************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!********************************************!*\
+  !*** external "react-icons/lib/md/search" ***!
+  \********************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/search': function(module, exports) {
       module.exports = require('react-icons/lib/md/search')
 
       /***/
-    } /*!*********************************************!*\
-  !*** external "react-icons/lib/md/subject" ***!
-  \*********************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*********************************************!*\
+  !*** external "react-icons/lib/md/subject" ***!
+  \*********************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/subject': function(module, exports) {
       module.exports = require('react-icons/lib/md/subject')
 
       /***/
-    } /*!******************************************!*\
-  !*** external "react-icons/lib/md/sync" ***!
-  \******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!******************************************!*\
+  !*** external "react-icons/lib/md/sync" ***!
+  \******************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/sync': function(module, exports) {
       module.exports = require('react-icons/lib/md/sync')
 
       /***/
-    } /*!*************************************************!*\
-  !*** external "react-icons/lib/md/text-fields" ***!
-  \*************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*************************************************!*\
+  !*** external "react-icons/lib/md/text-fields" ***!
+  \*************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/text-fields': function(module, exports) {
       module.exports = require('react-icons/lib/md/text-fields')
 
       /***/
-    } /*!***********************************************!*\
-  !*** external "react-icons/lib/md/transform" ***!
-  \***********************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***********************************************!*\
+  !*** external "react-icons/lib/md/transform" ***!
+  \***********************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/transform': function(module, exports) {
       module.exports = require('react-icons/lib/md/transform')
 
       /***/
-    } /*!******************************************!*\
-  !*** external "react-icons/lib/md/tune" ***!
-  \******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!******************************************!*\
+  !*** external "react-icons/lib/md/tune" ***!
+  \******************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/tune': function(module, exports) {
       module.exports = require('react-icons/lib/md/tune')
 
       /***/
-    } /*!***********************************************!*\
-  !*** external "react-icons/lib/md/view-list" ***!
-  \***********************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!***********************************************!*\
+  !*** external "react-icons/lib/md/view-list" ***!
+  \***********************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/view-list': function(module, exports) {
       module.exports = require('react-icons/lib/md/view-list')
 
       /***/
-    } /*!*************************************************!*\
-  !*** external "react-icons/lib/md/view-module" ***!
-  \*************************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*************************************************!*\
+  !*** external "react-icons/lib/md/view-module" ***!
+  \*************************************************/
+    /*! no static exports found */
     /***/ 'react-icons/lib/md/view-module': function(module, exports) {
       module.exports = require('react-icons/lib/md/view-module')
 
       /***/
-    } /*!******************************!*\
-  !*** external "react-redux" ***!
-  \******************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!******************************!*\
+  !*** external "react-redux" ***!
+  \******************************/
+    /*! no static exports found */
     /***/ 'react-redux': function(module, exports) {
       module.exports = require('react-redux')
 
       /***/
-    } /*!************************!*\
-  !*** external "redux" ***!
-  \************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!************************!*\
+  !*** external "redux" ***!
+  \************************/
+    /*! no static exports found */
     /***/ redux: function(module, exports) {
       module.exports = require('redux')
 
       /***/
-    } /*!*************************************!*\
-  !*** external "redux-first-router" ***!
-  \*************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*************************************!*\
+  !*** external "redux-first-router" ***!
+  \*************************************/
+    /*! no static exports found */
     /***/ 'redux-first-router': function(module, exports) {
       module.exports = require('redux-first-router')
 
       /***/
-    } /*!******************************************!*\
-  !*** external "redux-first-router-link" ***!
-  \******************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!******************************************!*\
+  !*** external "redux-first-router-link" ***!
+  \******************************************/
+    /*! no static exports found */
     /***/ 'redux-first-router-link': function(module, exports) {
       module.exports = require('redux-first-router-link')
 
       /***/
-    } /*!*****************************!*\
-  !*** external "redux-saga" ***!
-  \*****************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*****************************!*\
+  !*** external "redux-saga" ***!
+  \*****************************/
+    /*! no static exports found */
     /***/ 'redux-saga': function(module, exports) {
       module.exports = require('redux-saga')
 
       /***/
-    } /*!*************************************!*\
-  !*** external "redux-saga/effects" ***!
-  \*************************************/,
+    },
 
-    /***/ /*! no static exports found */
+    /***/ /*!*************************************!*\
+  !*** external "redux-saga/effects" ***!
+  \*************************************/
+    /*! no static exports found */
     /***/ 'redux-saga/effects': function(module, exports) {
       module.exports = require('redux-saga/effects')
 

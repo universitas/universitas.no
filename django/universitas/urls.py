@@ -40,7 +40,7 @@ urlpatterns = [
         name='prodsys'
     ),
     re_path(
-        r'^dev/(?P<section>[\w-]+)/(?P<story>\d+)/(?P<slug>[\w-]+)/?$',
+        r'^dev/(?:[\w-]+/)?(?P<story>\d+)(/.*)?$',
         react_frontpage_view,
         name='ssrstory',
     ),

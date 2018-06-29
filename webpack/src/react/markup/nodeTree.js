@@ -1,4 +1,5 @@
 import { parseText, rules } from 'markup'
+import { cleanText } from 'utils/text'
 
 const childTypes = [
   // child types in story redux state

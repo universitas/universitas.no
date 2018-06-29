@@ -1,4 +1,5 @@
 import StoryImage from './StoryImage.js'
+import { cleanText } from 'utils/text'
 const ifChildren = Component => props =>
   props.children ? <Component {...props} /> : null
 
@@ -20,7 +21,7 @@ const StoryHead = ({ title, kicker, lede, ...props }) => (
   <div className="StoryHead">
     <MainImage {...props} />
     <Kicker>{kicker}</Kicker>
-    <Headline>{title}</Headline>
+    <Headline>{cleanText(title)}</Headline>
     <Lede>{lede}</Lede>
   </div>
 )

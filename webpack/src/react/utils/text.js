@@ -22,6 +22,18 @@ export const makeFuzzer = (candidates, cutoff = 0.5) => {
   )
 }
 
+// :: string -> string
+
+const NBRS = '\xA0'
+const WORDJOINER = '\u2060'
+
+// Fixify stuff
+export const cleanText = R.pipe(
+  R.replace(/--/g, '–'),
+  R.replace(/(^|[.:?!] +)[-–] ?\b/gmu, `$1–${WORDJOINER}${NBRS}`),
+)
+
+// old cleanup function
 export const cleanup = text => {
   return text
     .replace(/^(@\S+:)/gm, s => s.toLowerCase())
@@ -93,12 +105,13 @@ export const formatFileSize = (size = 0, digits = 3) => {
   return unit ? `${number}${nbrspace}${unit}` : 'very bigly large size'
 }
 
+// Exif utility. Text fields are often encoded in utf8.
 // :: utf-8 encoded string -> unicode string
 export const utf8Decode = R.when(
   R.is(String),
   R.pipe(
-    R.replace(/\xc5\x92/g, 'å'), // unknown encoding
-    R.replace(/\xc2\xbf/g, 'ø'), // unknown encoding
+    R.replace(/\xc5\x92/g, 'å'), // workaround unknown encoding
+    R.replace(/\xc2\xbf/g, 'ø'), // workaround unknown encoding
     R.tryCatch(R.pipe(escape, decodeURIComponent), R.nthArg(1)),
     R.trim,
   ),

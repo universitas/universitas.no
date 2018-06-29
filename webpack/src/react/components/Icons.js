@@ -1,5 +1,5 @@
-// http://gorangajic.github.io/react-icons/md.html
-//
+// http://react-icons.github.io/react-icons/md.html
+
 export Add from 'react-icons/lib/md/add-circle'
 export Announce from 'react-icons/lib/md/announcement'
 export ArtTrack from 'react-icons/lib/md/art-track'
@@ -30,6 +30,7 @@ export ListView from 'react-icons/lib/md/view-list'
 export Link from 'react-icons/lib/md/link'
 export Loop from 'react-icons/lib/md/loop'
 export Magic from 'react-icons/lib/fa/magic'
+export Menu from 'react-icons/lib/md/menu'
 export Newspaper from 'react-icons/lib/md/import-contacts'
 export Pdf from 'react-icons/lib/md/picture-as-pdf'
 export Person from 'react-icons/lib/md/person'

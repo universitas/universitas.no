@@ -107,7 +107,6 @@ INSTALLED_APPS = [
     'apps.core',
     'apps.photo',
     'apps.frontpage',
-    'apps.markup',
     'apps.adverts',
     'apps.search',
 ]

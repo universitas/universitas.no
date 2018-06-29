@@ -1,4 +1,4 @@
-import { results as stories } from './apidata.json'
+import { results as stories } from './fixture.apidata.json'
 import {
   getChildren,
   getPlaces,

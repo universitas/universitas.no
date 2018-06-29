@@ -11,7 +11,13 @@ const headers = () => {
   return R.unless(R.is(String), R.map(attr => attr.toString()), helmet)
 }
 
-const notFetching = R.map(R.when(R.has('fetching'), R.assoc('fetching', false)))
+const notFetching = R.map(
+  R.cond([
+    [R.has('fetching'), R.assoc('fetching', false)],
+    [R.is(Array), a => R.map(notFetching, a)],
+    [R.T, R.identity],
+  ]),
+)
 
 export default (url, actions = []) => {
   const store = configureStore(undefined, url)

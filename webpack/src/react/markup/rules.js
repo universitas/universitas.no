@@ -1,7 +1,10 @@
+// lexer rules for the universitas markup language
+
 import { makeFuzzer } from 'utils/text'
 
-const [leaf, inline] = [true, true]
-
+// These are the markup tags.
+// Usage example:
+// @txt: [content]
 export const TAGS = [
   'txt',
   'tingo',
@@ -17,8 +20,7 @@ export const TAGS = [
   'sitat',
 ]
 
-const tagFuzzer = makeFuzzer(TAGS, 0.5)
-
+const [leaf, inline] = [true, true] // helpers for object shorthand
 const baseRules = {
   whitespace: {
     pattern: /\s+/m,
@@ -69,7 +71,7 @@ const baseRules = {
       const space = R.contains(tag, ['mt', 'spm', 'tingo']) ? '\n' : ''
       return `${space}@${tag}: ${content}`
     },
-    process: R.evolve({ tag: tagFuzzer }),
+    process: R.evolve({ tag: makeFuzzer(TAGS, 0.5) }), // fuzzy match
   },
   listItem: {
     pattern: /^(\* |# |@li:) *(?<content>.*)$/,
@@ -92,6 +94,7 @@ const baseRules = {
   },
 }
 
+// fallback lexer rule
 const defaultRule = {
   order: 10,
   leaf: false,

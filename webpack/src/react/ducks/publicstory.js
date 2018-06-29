@@ -18,9 +18,9 @@ export const getStory = id => state => {
 
 // Actions
 export const STORY_REQUESTED = 'publicstory/STORY_REQUESTED'
-export const storyRequested = id => ({
+export const storyRequested = (id, prefetch = false) => ({
   type: STORY_REQUESTED,
-  payload: { id },
+  payload: { id, prefetch },
 })
 export const STORY_FETCHED = 'publicstory/STORY_FETCHED'
 export const storyFetched = data => ({
@@ -37,7 +37,7 @@ const getReducer = ({ type, payload, error }) => {
     case STORY_FETCHED:
       return R.over(
         storyLens(payload.id),
-        R.pipe(R.defaultTo({}), mergeLeft(payload), R.assoc('fetching', false)),
+        R.pipe(mergeLeft(payload), R.assoc('fetching', false)),
       )
     default:
       return R.identity

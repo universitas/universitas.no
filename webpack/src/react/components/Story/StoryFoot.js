@@ -9,12 +9,15 @@ class FacebookComments extends React.Component {
     this.componentDidMount = facebookParse
     this.componentDidUpdate = facebookParse
   }
+  shouldComponentUpdate(nextProps) {
+    return nextProps.url != this.props.url
+  }
 
   render() {
     return (
       <div
         className="fb-comments"
-        data-href={this.props.url || global.location.href}
+        data-href={this.props.url}
         data-numposts={10}
         data-width={'100%'}
         ref={this.element}
@@ -23,14 +26,14 @@ class FacebookComments extends React.Component {
   }
 }
 
-const StoryFoot = props => (
-  <footer className="StoryFoot">
-    {props.comment_field == 'facebook' && (
-      <FacebookComments
-        url={`http://universitas.no${reverse(toStory(props))}`}
-      />
-    )}
-  </footer>
-)
+const StoryFoot = ({ comment_field, id, title, section }) => {
+  const url = `http://universitas.no${reverse(toStory({ id, section, title }))}`
+
+  return (
+    <footer className="StoryFoot">
+      {comment_field == 'facebook' && <FacebookComments url={url} />}
+    </footer>
+  )
+}
 
 export default StoryFoot

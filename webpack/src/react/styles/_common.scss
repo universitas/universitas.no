@@ -1,4 +1,3 @@
-@import "_sanitize.scss";
 @import "_googlefonts.scss";
 @import "_colors.scss";
 
@@ -31,4 +30,12 @@ $gridgap: 1rem;
 %section-vignette-text {
   font-family: $univ-serif;
   font-weight: 700;
+}
+
+$breakpoints: (xs: 450px, s: 700px, m: 1000px, l: 1400px);
+
+@mixin size($size) {
+  @media only screen and (min-width: map_get($breakpoints, $size)) {
+    @content;
+  }
 }

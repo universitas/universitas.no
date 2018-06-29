@@ -3,6 +3,8 @@
 import json
 import logging
 import re
+import time
+from functools import wraps
 
 import requests
 
@@ -10,19 +12,33 @@ from api.frontpage import FrontpageStoryViewset
 from api.publicstories import PublicStoryViewSet
 from django.conf import settings
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic.base import TemplateView
 
 logger = logging.getLogger(__name__)
+BASEPATH = 'dev'
 
 
+def timeit(fn):
+    @wraps(fn)
+    def wrapped(*args, **kwargs):
+        t0 = time.time()
+        res = fn(*args, **kwargs)
+        delta = (time.time() - t0) * 1000
+        logger.debug(f'{fn.__name__} took {delta:.1f}ms')
+        return res
+
+    return wrapped
+
+
+@timeit
 def _react_render(redux_actions, request):
+    path = request.path.replace('//', '/')
     try:
         context = requests.post(
-            f'{settings.EXPRESS_SERVER_URL}{request.path}', json=redux_actions
+            f'{settings.EXPRESS_SERVER_URL}{path}', json=redux_actions
         ).json()
-        context['state'] = json.dumps(context.get('state', {}))
         return context
     except requests.ConnectionError:
         logger.exception('Could not connect to express server')
@@ -45,7 +61,14 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
         })
 
     ssr_context = _react_render(redux_actions, request)
-    logger.debug(f'{redux_actions} {ssr_context.get("state")}')
+    try:
+        pathname = f"/{BASEPATH}{ssr_context['state']['location']['pathname']}"
+        if pathname != request.path:
+            return redirect(pathname)
+        ssr_context['state'] = json.dumps(ssr_context['state'])
+    except KeyError:
+        pass
+
     return render(
         request, 'universitas-server-side-render.html',
         {'ssr': ssr_context}
