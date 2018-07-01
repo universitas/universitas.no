@@ -115,7 +115,7 @@ def frontpage_layout(blocks):
 
 def get_frontpage_stories(stories, num=40):
     """ Find frontpage stories connected to queryset """
-    qs = FrontpageStory.objects.filter(published=True).prefetch_related(
+    qs = FrontpageStory.objects.published().prefetch_related(
         'imagefile',
         'story__story_type__section',
     ).order_by('-order')

@@ -27,7 +27,9 @@ class FrontpageStoryManager(models.Manager):
         from apps.stories.models import Story
         return self.get_queryset().filter(
             published=True,
-            story__publication_status=Story.STATUS_PUBLISHED,
+            story__publication_status__in=[
+                Story.STATUS_PUBLISHED, Story.STATUS_NOINDEX
+            ]
         )
 
     def create_for_story(self, story):

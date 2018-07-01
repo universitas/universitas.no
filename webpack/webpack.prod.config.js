@@ -5,7 +5,7 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 
 config.mode = 'production'
 // Disable devtool to speed up build
-config.devtool = false
+config.devtool = 'source-map'
 
 // Use chunkhash in filenames
 const outputhash = '[name].[chunkhash:12]'

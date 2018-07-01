@@ -4,6 +4,7 @@
 {% load inline_elements %}
 {% load facebook_comments %}
 {% load advert_channel %}
+{% load parse_markup %}
 {% block title %}{{ story.title }} | universitas.no{% endblock title %}
 {% block head %}
   <link rel="canonical" href="{{request.build_absolute_uri}}" />
@@ -31,16 +32,16 @@
       {% header_image %}
       <div class="header-text">
         {% if story.kicker %}
-          <h2 id="kicker">{{ story.html.kicker }}</h2>
+          <h2 id="kicker">{{ story.kicker | inline_tags }}</h2>
         {% endif %}
 {# Main headline and lede #}
-        <h1 class="headline">{{ story.html.title }}
+        <h1 class="headline">{{ story.title | inline_tags }}
         {% if perms.stories %}
         {% include "_story-edit-menu.html" with story=story %}
         {% endif %}
         </h1>
         {% if story.lede %}
-          <p class="lede">{{ story.html.lede }}</p>
+          <p class="lede">{{ story.lede | inline_tags }}</p>
         {% endif %}
       </div>
     </header>
