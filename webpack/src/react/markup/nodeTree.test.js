@@ -15,7 +15,7 @@ test('getChildren', () => {
 test('getPlaces', () => expect(getPlaces(stories[0])).toEqual(['head']))
 
 test('getLink', () =>
-  expect(getLink({ ref: '1' })(stories[0])).toMatchObject({ number: 1 }))
+  expect(getLink({ name: '1' })(stories[0])).toMatchObject({ number: 1 }))
 
 test('getPlaceChildren', () =>
   expect(getPlaceChildren({ name: 'head' })(stories[0])).toMatchObject([

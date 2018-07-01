@@ -46,11 +46,11 @@ const baseRules = {
   },
   link: {
     inline,
-    pattern: /\[(?<content>.*?)\](\((?<ref>.*)\))?/,
-    reverse: ({ ref, content }) =>
-      ref != content ? `[${content}](${ref})` : `[${content}]`,
-    process: ({ ref, ...node }) => ({
-      ref: ref || node.content,
+    pattern: /\[(?<content>.*?)\](\((?<name>.*)\))?/,
+    reverse: ({ name, content }) =>
+      name != content ? `[${content}](${name})` : `[${content}]`,
+    process: ({ name, ...node }) => ({
+      name: name || node.content,
       ...node,
     }),
   },

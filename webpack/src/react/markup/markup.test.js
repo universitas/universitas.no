@@ -27,14 +27,18 @@ const cases = {
     [{ type: 'facts', children: [{}, {}, {}] }, { tag: 'mt' }],
   ],
   place: ['[[ faktaboks 1 ]]', [{ type: 'place', name: 'faktaboks 1' }]],
-  link: ['[hi]', [{ children: [{ children: ['hi'], ref: 'hi' }] }]],
+  link: ['[hi]', [{ children: [{ children: ['hi'], name: 'hi' }] }]],
   'full link': [
     '[hello](//world.com)',
-    [{ children: [{ type: 'link', children: ['hello'], ref: '//world.com' }] }],
+    [
+      {
+        children: [{ type: 'link', children: ['hello'], name: '//world.com' }],
+      },
+    ],
   ],
   'partial link': [
     '[hello](//world',
-    [{ children: [{ children: ['hello'], ref: 'hello' }, '(//world'] }],
+    [{ children: [{ children: ['hello'], name: 'hello' }, '(//world'] }],
   ],
   'another partial link': [
     'hello [world',

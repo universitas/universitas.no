@@ -3,7 +3,7 @@ import { toStory, toShortUrl } from 'ducks/router'
 import { getStory, storyRequested } from 'ducks/publicstory'
 import RouterLink from 'redux-first-router-link'
 
-const StoryLink = ({ href, story, id, storyRequested, ...props }) =>
+const StoryLink = ({ href, story, id, storyRequested, ref, ...props }) =>
   story ? (
     story.id ? (
       <RouterLink to={toStory(story)} {...props} />
@@ -26,6 +26,7 @@ const StoryLink = ({ href, story, id, storyRequested, ...props }) =>
 const mapStateToProps = (state, props) => {
   const id = R.path(['link', 'linked_story'], props)
   const href = R.path(['link', 'href'], props)
+  if (props.ref) console.error('unexpected ref')
   if (id) return { id, story: getStory(id)(state) || {} }
   return { href }
 }
