@@ -30,15 +30,15 @@ const cases = {
   link: ['[hi]', [{ children: [{ children: ['hi'], name: 'hi' }] }]],
   'full link': [
     '[hello](//world.com)',
-    [
-      {
-        children: [{ type: 'link', children: ['hello'], name: '//world.com' }],
-      },
-    ],
+    [{ children: [{ children: ['hello'], name: '//world.com' }] }],
   ],
   'partial link': [
     '[hello](//world',
     [{ children: [{ children: ['hello'], name: 'hello' }, '(//world'] }],
+  ],
+  'two links': [
+    '[one](first) foo [two](second)',
+    [{ children: [{ name: 'first' }, ' foo ', { name: 'second' }] }],
   ],
   'another partial link': [
     'hello [world',
