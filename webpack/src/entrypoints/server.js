@@ -18,7 +18,7 @@ const handleRender = (req, res) => {
 const app = express()
 app.use(express.json({ limit: '10mb' }))
 app.set('json spaces', 2)
-app.use(morgan('combined'))
+app.use(morgan('dev'))
 app.get(/\.ico$/, (req, res) => res.status(404).send())
 app.use(handleRender)
 app.listen(PORT, () => console.log(`listening on port ${PORT}`))
