@@ -6,7 +6,7 @@
   "description": "frontend universitas",
   "scripts": {
     "buildssr": "webpack-cli --config webpack.server.config.js ",
-    "serve": "TARGET=server node ./dist/server.bundle.js",
+    "serve": "TARGET=server node ./build/server.bundle.js",
     "test": "jest --watchAll --verbose",
     "testonce": "jest",
     "build": "webpack-cli --config webpack.prod.config.js ",
@@ -93,11 +93,11 @@
     "webpack": "^4.6.0",
     "webpack-bundle-tracker": "^0.3",
     "webpack-cli": "^2.1.4",
-    "webpack-dev-server": "^3.1.4",
-    "webpack-hot-server-middleware": "^0.5.0",
     "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {
+    "webpack-dev-server": "^3.1.4",
+    "webpack-hot-server-middleware": "^0.5.0",
     "@storybook/addon-a11y": "^4.0.0-alpha.9",
     "@storybook/addon-actions": "^4.0.0-alpha.9",
     "@storybook/addon-knobs": "^4.0.0-alpha.9",

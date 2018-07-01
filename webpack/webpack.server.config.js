@@ -1,5 +1,6 @@
 const webpack = require('webpack')
 const nodeExternals = require('webpack-node-externals')
+const path = require('path')
 
 module.exports = {
   target: 'node',
@@ -7,7 +8,7 @@ module.exports = {
   externals: [nodeExternals()],
   devtool: 'source-map',
   entry: { server: 'entrypoints/server.js' },
-  output: { filename: '[name].bundle.js' },
+  output: { path: path.resolve('./build'), filename: '[name].bundle.js' },
   plugins: [new webpack.ProvidePlugin({ React: 'react', R: 'ramda' })],
   module: {
     rules: [
