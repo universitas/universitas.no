@@ -32,7 +32,7 @@ function* fetchStory(action) {
   const { response, error } = yield call(apiGet, 'publicstories', id)
   if (response) yield put(storyFetched(response))
   else {
-    yield call(handleError, { id, ...error })
+    yield call(handleError, error)
     if (error.HTTPstatus) yield put(storyFetched({ id, ...error }))
   }
 }

@@ -43,7 +43,7 @@ export const parseParam = R.cond([
 // String -> {String: String|Number|Array}
 export const parseQuery = R.pipe(
   R.tryCatch(
-    R.pipe(R.constructN(1, URL), url => url.searchParams),
+    R.pipe(R.constructN(1, global.URL), url => url.searchParams),
     R.pipe(R.nthArg(1), R.constructN(1, URLSearchParams)),
   ),
   Array.from,
