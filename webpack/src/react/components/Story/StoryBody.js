@@ -14,6 +14,7 @@ const ListItem = props => <li className="ListItem" {...props} />
 const PullQuote = props => <blockquote className="PullQuote" {...props} />
 const QuoteCit = props => <div className="QuoteCit" {...props} />
 const Aside = props => <aside className="Facts" {...props} />
+const Emphasis = props => <em {...props} />
 
 const Place = ({ name, ...props }) => (
   <section title={name} className="Place" {...props} />
@@ -27,6 +28,7 @@ const typeMap = {
   aside: Aside,
   listItem: ListItem,
   image: StoryImage,
+  em: Emphasis,
 }
 
 const tagMap = {

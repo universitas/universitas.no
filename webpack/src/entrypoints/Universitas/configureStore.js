@@ -19,7 +19,6 @@ const configureStore = (initialState = {}, initialEntries = []) => {
   )
   const rootReducer = combineReducers({ location: router.reducer, ...reducers })
   const store = createStore(rootReducer, initialState, middlewares)
-  console.log(process.env.TARGET)
   if (process.env.TARGET == 'server') return store
   let sagaTask = sagaMiddleware.run(rootSaga) // start sagas
   if (module.hot) {

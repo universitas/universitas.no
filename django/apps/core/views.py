@@ -64,7 +64,8 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
     try:
         pathname = f"/{BASEPATH}{ssr_context['state']['location']['pathname']}"
         if pathname != request.path:
-            return redirect(pathname)
+            logger.warn(f'should redirect {request.path} to {pathname}')
+            # return redirect(pathname)
         ssr_context['state'] = json.dumps(ssr_context['state'])
     except KeyError:
         pass

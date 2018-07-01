@@ -3,7 +3,6 @@ import { reverse, toStory } from 'ducks/router'
 class FacebookComments extends React.Component {
   constructor(props) {
     super(props)
-    this.element = React.createRef()
     const facebookParse = () =>
       global.FB && global.FB.XFBML.parse(this.element.parentElement)
     this.componentDidMount = facebookParse
@@ -20,7 +19,7 @@ class FacebookComments extends React.Component {
         data-href={this.props.url}
         data-numposts={10}
         data-width={'100%'}
-        ref={this.element}
+        ref={el => (this.element = el)}
       />
     )
   }

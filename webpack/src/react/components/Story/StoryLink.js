@@ -6,11 +6,7 @@ import RouterLink from 'redux-first-router-link'
 const StoryLink = ({ href, story, id, storyRequested, ...props }) =>
   story ? (
     story.id ? (
-      <RouterLink
-        ref={() => console.log(story)}
-        to={toStory(story)}
-        {...props}
-      />
+      <RouterLink to={toStory(story)} {...props} />
     ) : (
       <RouterLink
         to={toShortUrl({ id })}
@@ -30,7 +26,6 @@ const StoryLink = ({ href, story, id, storyRequested, ...props }) =>
 const mapStateToProps = (state, props) => {
   const id = R.path(['link', 'linked_story'], props)
   const href = R.path(['link', 'href'], props)
-  console.log({ id, href })
   if (id) return { id, story: getStory(id)(state) || {} }
   return { href }
 }
