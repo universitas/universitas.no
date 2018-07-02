@@ -5,7 +5,6 @@ services:
   express:
     image: universitas/webpack:${IMAGE_VERSION:-edge}
     command: express
-    tty: true
     volumes:
       - ./webpack:/app/
     environment:
