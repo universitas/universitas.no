@@ -2,6 +2,12 @@ import { distanceInWordsToNow, format } from 'date-fns'
 import norwayLocale from 'date-fns/locale/nb'
 import prettyJson from 'json-stringify-pretty-compact'
 import FuzzySet from 'fuzzyset'
+import Hypher from 'hypher'
+import norwegian from 'hyphenation.nb-no'
+
+// hyphenate text
+const hyphenator_no = new Hypher({ ...norwegian, rightmin: 4, leftmin: 4 })
+export const hyphenate = text => hyphenator_no.hyphenateText(text, 10)
 
 // pretty JSON
 export const toJson = R.tryCatch(prettyJson, (e, data) =>

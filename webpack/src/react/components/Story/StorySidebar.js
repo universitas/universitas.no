@@ -1,4 +1,4 @@
-import { formatDate } from 'utils/text'
+import { hyphenate, formatDate } from 'utils/text'
 
 const DateLine = ({ publication_date }) => (
   <div className="DateLine">{formatDate(publication_date)}</div>
@@ -21,7 +21,7 @@ const creditDisplay = credit =>
 const StoryInfo = ({ theme_word, story_type }) => (
   <div className="StoryInfo">
     <div className="storytype">{story_type.name}</div>
-    <div className="themeword">{theme_word}</div>
+    <div className="themeword">{hyphenate(theme_word)}</div>
   </div>
 )
 

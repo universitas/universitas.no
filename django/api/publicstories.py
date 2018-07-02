@@ -43,6 +43,7 @@ class StoryImageSerializer(serializers.ModelSerializer):
             'large',
             'cropped',
             'crop_box',
+            'crop_size',
         ]
 
 

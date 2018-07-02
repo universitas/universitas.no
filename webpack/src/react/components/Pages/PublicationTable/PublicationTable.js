@@ -7,8 +7,8 @@ const PublicationTable = ({ year, issues = [] }) => (
       <tr className="IssueRow" key="issue_name">
         <th>Nr</th>
         <th>Bilag</th>
-        <th>Utgivelsesdato</th>
-        <th>Reklamefrist</th>
+        <th>{'Utgivelses\xaddato'}</th>
+        <th>{'Reklame\xadfrist'}</th>
       </tr>
     </thead>
     <tbody>
@@ -37,7 +37,7 @@ const IssueRow = ({
 )
 
 const DAY = 1000 * 60 * 60 * 24 // milliseconds in a day
-const ISSUE_TYPES = ['?', 'vanlig', 'magasin', 'velkomstbilag']
+const ISSUE_TYPES = ['?', 'vanlig', 'magasin', 'velkomst\xadbilag']
 
 const dataTransform = R.pipe(
   R.sortBy(R.prop('publication_date')),

@@ -6,12 +6,11 @@
   justify-content: space-between;
   align-items: center;
   position: sticky;
-  z-index: 999;
+  z-index: 99;
   font-size: 1.5rem;
   background: white;
-  margin-top: 0.5em;
   height: 3rem;
-  top: 2rem;
+  top: $menuheight;
   font-weight: 300;
   .year {
   }

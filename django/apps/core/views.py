@@ -22,14 +22,14 @@ BASEPATH = 'dev'
 
 def timeit(fn):
     @wraps(fn)
-    def wrapped(*args, **kwargs):
+    def timeit_wrapper(*args, **kwargs):
         t0 = time.time()
         res = fn(*args, **kwargs)
         delta = (time.time() - t0) * 1000
         logger.debug(f'{fn.__name__} took {delta:.1f}ms')
         return res
 
-    return wrapped
+    return timeit_wrapper
 
 
 @timeit

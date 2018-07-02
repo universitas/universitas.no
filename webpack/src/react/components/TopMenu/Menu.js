@@ -8,8 +8,10 @@ import LanguageWidget from './LanguageWidget.js'
 import SearchWidget from './SearchWidget.js'
 import { Menu, Close } from 'components/Icons'
 
-const Level = ({ children, className }) => (
-  <div className={cx('Level', className)}>{children}</div>
+const Level = ({ children, ...props }) => (
+  <div className={cx('Level', props)}>
+    <div className="inner">{children}</div>
+  </div>
 )
 
 const Group = ({ children, ...props }) => (
@@ -17,8 +19,8 @@ const Group = ({ children, ...props }) => (
 )
 
 const MenuIcon = ({ expanded = false, onClick }) => (
-  <div className="MenuIcon">
-    {expanded ? <Close onClick={onClick} /> : <Menu onClick={onClick} />}
+  <div onClick={onClick} className={cx('MenuIcon', { expanded })}>
+    {expanded ? <Close /> : <Menu />}
   </div>
 )
 
@@ -52,8 +54,8 @@ class TopMenu extends React.Component {
     const { expanded } = this.state
     return (
       <section className={cx('TopMenu')}>
-        <Level>
-          <Link to={toHome()}>
+        <Level one>
+          <Link className={cx('logoLink')} to={toHome()}>
             <Universitas className={cx('Logo')} />
           </Link>
           <Sections />
@@ -61,6 +63,12 @@ class TopMenu extends React.Component {
           <LanguageWidget />
           <SearchWidget />
           <MenuIcon expanded={expanded} onClick={this.toggleExpand} />
+        </Level>
+        <Level two expanded={expanded}>
+          <SearchWidget />
+          <LanguageWidget />
+          <Sections />
+          <PageLinks {...this.props} />
         </Level>
       </section>
     )

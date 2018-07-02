@@ -31,7 +31,11 @@ LOGGING['filters'] = {
 }
 LOGGING['formatters'] = {
     'minimal': {'format': '%(message)s'},
-    'simple': {'format': '%(name)s %(levelname)3s: %(message)s'},
+    'simple': {
+        'format': '%(levelname)-8s'
+        '%(filename)12s:%(lineno)-4d'
+        '%(message)s'
+    },
     'verbose': {
         'format': (
             '%(asctime)s [%(levelname)5s] %(name)12s '
@@ -59,7 +63,7 @@ LOGGING['handlers'] = {
         'filters': ['debug_on'],
         'level': 'DEBUG',
         'class': 'logging.StreamHandler',
-        'formatter': 'verbose',
+        'formatter': 'simple',
     },
 }
 LOGGING['root'] = {
@@ -69,7 +73,7 @@ LOGGING['root'] = {
 LOGGING['loggers'] = {
     'werkzeug': {
         'level': 'DEBUG',
-        'propagate': True,
+        'propagate': False,
         'handlers': ['console'],
     },
     'bylines': {

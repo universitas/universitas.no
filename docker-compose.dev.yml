@@ -3,14 +3,16 @@ version: '2.1'
 services:
   express:
     image: universitas/webpack:${IMAGE_VERSION:-edge}
-    command: serve
+    command: expressdev
     tty: true
     ports:
       - "9000:9000"
-
     volumes:
       - ./webpack:/app/
       - node_modules:/app/node_modules/
+    environment:
+      - PUBLIC_PATH=http://localhost:3000/static/
+
 
   webpack:
     image: universitas/webpack:${IMAGE_VERSION:-edge}
@@ -18,13 +20,13 @@ services:
     tty: true
     ports:
       - "3000:3000"
-
     volumes:
       - ./webpack:/app/
       - webpack_build:/var/build/
       - node_modules:/app/node_modules/
     environment:
       - BUILD_DIR=/var/build/
+      - PUBLIC_PATH=http://localhost:3000/static/
 
 
   web:

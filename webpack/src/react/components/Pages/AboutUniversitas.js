@@ -28,7 +28,7 @@ const SiO = ({}) => (
 
 const NextIssue = ({ publication_date, issue_name }) => (
   <p className="NextIssue">
-    Neste avis er nr {issue_name.replace(/\/.*/, '')} og kommer ut{' '}
+    Neste avis er nr {issue_name} og kommer ut{' '}
     {formatDate(publication_date, 'dddd D. MMMM')}.
   </p>
 )
@@ -68,7 +68,6 @@ const AboutUniversitas = ({ pageTitle, issues, staff }) => (
       Telefon: 907 69 866 Faks: 22 85 32 74 Postadresse: Boks 89 Blindern, 0314
       Oslo Besøksadresse: Moltke Moes vei 33
     </p>
-    <Debug {...issues} />
     <h3>Utgivelsesplan</h3>
     <NextIssue {...issues.next} />
     <p>

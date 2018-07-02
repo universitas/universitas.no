@@ -48,13 +48,16 @@
       grid-gap: 2rem;
       flex: 1;
       .Faximile {
-        background: white;
+        background: #ccc;
         @extend %faximile;
         transition: transform 300ms ease;
         transition-delay: 200ms;
         transform: scale(0.95);
+        padding-top: 143.5%;
         img {
-          max-width: 100%;
+          top: 0;
+          position: absolute;
+          width: 100%;
         }
       }
     }

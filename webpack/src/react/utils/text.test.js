@@ -1,4 +1,15 @@
-import { utf8Decode, formatFileSize, cleanup, stringify, toJson } from './text'
+import {
+  hyphenate,
+  utf8Decode,
+  formatFileSize,
+  cleanup,
+  stringify,
+  toJson,
+} from './text'
+
+test('hyphenate', () => {
+  expect(hyphenate('studentforeninger')).toEqual('student\xadfor\xadeninger')
+})
 
 test('pretty json', () => {
   expect(toJson({ a: ['hello', 'world'] })).toEqual('{"a": ["hello", "world"]}')

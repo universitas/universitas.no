@@ -6,7 +6,9 @@
   "description": "frontend universitas",
   "scripts": {
     "buildssr": "webpack-cli --config webpack.server.config.js ",
+    "watchssr": "webpack-cli --watch --config webpack.server.config.js ",
     "serve": "TARGET=server pm2-runtime ./build/server.bundle.js",
+    "servedev": "TARGET=server pm2-dev ./build/server.bundle.js",
     "test": "jest --watchAll --verbose",
     "testonce": "jest",
     "build": "webpack-cli --config webpack.prod.config.js ",
@@ -56,6 +58,8 @@
     "foundation-sites": "^6",
     "fuzzyset": "0.0.4",
     "history": "^4.7.2",
+    "hyphenation.nb-no": "^0.2.1",
+    "hypher": "^0.2.5",
     "isomorphic-fetch": "^2",
     "js-cookie": "^2.2.0",
     "json-stringify-pretty-compact": "^1.2.0",

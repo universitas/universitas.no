@@ -16,13 +16,12 @@ function hotify(entry) {
 for (let entry in config.entry) {
   config.entry[entry] = hotify(config.entry[entry])
 }
-config.output.publicPath = 'http://localhost:3000/static/'
 config.plugins.push(
   new webpack.HotModuleReplacementPlugin(),
   // enable HMR globally
   new webpack.NamedModulesPlugin(),
   // prints more readable module names in the browser console on HMR updates
-  new webpack.NoEmitOnErrorsPlugin()
+  new webpack.NoEmitOnErrorsPlugin(),
   // do not emit compiled assets that include errors
 )
 // use sourcemaps for sass-loader and css-loader
@@ -38,7 +37,7 @@ config.module.rules.forEach(rule => {
 config.devServer = {
   host: '0.0.0.0',
   port: 3000,
-  publicPath: 'http://localhost:3000/static/',
+  publicPath: config.output.publicPath,
   hot: true,
   // clientLogLevel: 'warning',
   // noInfo: true,

@@ -6,44 +6,108 @@
 }
 
 .TopMenu {
-  z-index: 100;
-  user-select: none;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   color: white;
-  background-color: #555;
   width: 100%;
   position: sticky;
   top: 0;
-  .Level {
-    height: $menuheight;
-    padding: 0 2px;
-    display: flex;
-    flex-direction: row;
-    flex: 0 1 $content-width;
+  z-index: 999;
+  user-select: none;
+  .Group {
     align-items: center;
-    justify-content: space-between;
-    .Group {
+  }
+  .Level {
+    min-height: $menuheight;
+    background-color: #444;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    .inner {
+      width: 100%;
+      max-width: $content-width;
+      padding: 0 0.5rem;
+      display: flex;
+      flex-direction: row;
       align-items: center;
+      justify-content: space-between;
+    }
+    &.one {
+      .Sections {
+        display: none;
+        @include size(s) {
+          display: flex;
+        }
+      }
+      .pageLinks,
+      .SearchWidget,
+      .LanguageWidget {
+        display: none;
+        @include size(l) {
+          display: flex;
+        }
+      }
+      .MenuIcon {
+        @include size(l) {
+          display: none;
+        }
+      }
+    }
+    &.two {
+      @include size(l) {
+        display: none;
+      }
+      .inner {
+        display: flex;
+        flex-flow: row wrap;
+        .SearchWidget {
+          flex: 1;
+          flex-basis: 80%;
+          input {
+            max-width: none;
+          }
+        }
+        .Sections,
+        .Group {
+          flex: 1;
+          flex-basis: 40%;
+          // background-color: yellow;
+          align-items: center;
+          display: flex;
+          flex-direction: column;
+        }
+      }
+      position: absolute;
+      z-index: -10;
+      background-color: #222;
+      transform: translateY(-100%);
+      top: 100%;
+      transition: transform 150ms ease;
+
+      &.expanded {
+        transform: translateY(0);
+      }
     }
   }
-  .Logo {
-    width: $logowidth;
-    color: white;
-    .universitas {
-      fill: currentColor;
+  .logoLink {
+    align-self: stretch;
+    .Logo {
+      width: $logowidth;
+      margin-right: 1rem;
+      height: 100%;
+      color: white;
+      .universitas {
+        fill: currentColor;
+      }
     }
   }
+
   .pageLinks {
     flex: 1;
   }
   .Sections {
-    margin: 0 $gridgap;
     flex: 1;
-    display: none;
-    @include size(s) {
-      display: flex;
-    }
     flex-flow: row wrap;
   }
   .MenuItem {
@@ -82,22 +146,11 @@
     &:hover {
       color: #fff;
     }
-    display: flex;
-    @include size(l) {
-      display: none;
-    }
-  }
-  .pageLinks,
-  .SearchWidget,
-  .LanguageWidget {
-    display: none;
-    @include size(l) {
-      display: flex;
-    }
   }
   .SearchWidget {
     margin-left: auto;
     padding: 0 0.2rem;
+    display: flex;
     align-items: center;
     .Icon {
       &.fetching svg {

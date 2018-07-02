@@ -20,7 +20,15 @@ const Caption = ({ caption, creditline }) => {
   )
 }
 
-const Image = ({ id, cropped, large, aspect_ratio, caption, crop_box = {} }) =>
+const Image = ({
+  id,
+  cropped,
+  large,
+  aspect_ratio,
+  caption,
+  crop_box = {},
+  crop_size = [],
+}) =>
   id ? (
     <div className="imgWrapper">
       <img
@@ -28,6 +36,8 @@ const Image = ({ id, cropped, large, aspect_ratio, caption, crop_box = {} }) =>
           objectPosition: position(crop_box),
         }}
         src={cropped || large}
+        width={crop_size[0]}
+        height={crop_size[1]}
         alt={caption}
       />
     </div>

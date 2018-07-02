@@ -240,16 +240,24 @@ class StoryImage(StoryMedia):
     def large(self):
         return self.imagefile.large.url
 
-    @cache_memoize()
-    def cropped(self, width=1200, height=700):
+    @property
+    def crop_size(self):
+        width, height = 1200, 700
         im = self.imagefile
         if self.aspect_ratio in [self.DEFAULT_RATIO, self.ORIGINAL_RATIO]:
             if not im.is_photo:
                 height = width * self.original_ratio()
         else:
             height = width * self.aspect_ratio
-        size = f'{int(width)}x{int(height)}'
-        return im.thumbnail(size, crop_box=im.get_crop_box(), expand=1).url
+        return int(width), int(height)
+
+    @cache_memoize()
+    def cropped(self):
+        width, height = self.crop_size
+        im = self.imagefile
+        return im.thumbnail(
+            f'{width}x{height}', crop_box=im.get_crop_box(), expand=1
+        ).url
 
 
 class StoryVideo(StoryMedia):

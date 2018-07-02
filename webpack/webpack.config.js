@@ -2,6 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 const BundleTracker = require('webpack-bundle-tracker')
 const build_dir = process.env.BUILD_DIR || path.resolve('../build')
+const publicPath = process.env.PUBLIC_PATH
 
 module.exports = {
   entry: {
@@ -20,6 +21,7 @@ module.exports = {
   },
   output: {
     // for example ../build/head.[hash].js
+    publicPath,
     path: path.join(build_dir, ''),
     filename: '[name].js',
   },

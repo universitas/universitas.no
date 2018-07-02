@@ -1,10 +1,12 @@
 import { formatDate } from 'utils/text'
 import cx from 'classnames'
 
+const filename = R.replace(/.*\//, '')
+
 const Faximile = ({ cover_page, pages, pdf }) => (
   <div className="Faximile" key={cover_page}>
     <a href={pdf}>
-      <img src={cover_page} />
+      <img alt={filename(pdf)} src={cover_page} />
     </a>
   </div>
 )

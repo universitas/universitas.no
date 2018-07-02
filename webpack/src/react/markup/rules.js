@@ -66,7 +66,7 @@ const baseRules = {
       `\n[[ ${name}${flags && ' | '}${flags} ]]\n`,
   },
   blockTag: {
-    pattern: /^@(?<tag>[^:]*): ?(?<content>.*)$/,
+    pattern: /^@(?<tag>[^:]+): ?(?<content>.*)$/,
     reverse: ({ tag, content }) => {
       const space = R.contains(tag, ['mt', 'spm', 'tingo']) ? '\n' : ''
       return `${space}@${tag}: ${content}`
