@@ -1,0 +1,15 @@
+@import "styles/_common.scss";
+.AdvertiserInfo {
+  .ad-prices {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    .tables {
+      flex: 2;
+    }
+    .ModulKart {
+      order: 1;
+      margin: 2*$pad;
+    }
+  }
+}

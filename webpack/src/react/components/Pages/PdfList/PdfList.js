@@ -14,10 +14,7 @@ const Faximile = ({ cover_page, pages, pdf }) => (
 const sortPdfs = R.propSatisfies(R.test(/_mag/), 'pdf')
 
 const Issue = ({ publication_date, issue_name, pdfs }) => (
-  <div
-    className={cx('Issue', { two: pdfs.length == 2 })}
-    key={publication_date}
-  >
+  <div className={cx('Issue', { two: pdfs.length == 2 })} key={issue_name}>
     <div className="text">
       <div className="name">{issue_name}</div>
       <div className="date">{formatDate(publication_date, 'dddd D. MMMM')}</div>

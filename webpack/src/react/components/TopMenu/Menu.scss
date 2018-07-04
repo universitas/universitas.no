@@ -58,11 +58,11 @@
       @include size(l) {
         display: none;
       }
-      font-size: 1.3rem;
       .inner {
         display: flex;
         flex-flow: row wrap;
         .SearchWidget {
+          font-size: 1.4rem;
           padding: $pad;
           min-width: 80%;
           flex: 1;
@@ -76,7 +76,9 @@
         }
         .Sections,
         .Group {
+          font-size: 1.2rem;
           padding: 2 * $pad;
+          white-space: pre;
           flex: 1;
           flex-basis: 40%;
           // background-color: yellow;

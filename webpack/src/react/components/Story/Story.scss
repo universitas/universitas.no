@@ -73,6 +73,8 @@ $aside-width: 15rem;
       display: flex;
       flex-direction: column;
       .imgWrapper {
+        flex-basis: 700px;
+        background-color: #dddfe9;
         flex-direction: row;
         display: flex;
       }
@@ -177,7 +179,12 @@ $aside-width: 15rem;
 }
 
 .StoryFoot {
-  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  .fb-comments {
+    height: 190px;
+  }
 }
 
 %quotemark {

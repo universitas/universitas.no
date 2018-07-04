@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import modulKartLiten from 'images/modulkart_liten.png'
 import modulKart from 'images/modulkart.png'
+import './page.scss'
 
 const AD_MODULES = [
   { name: 'Modul 2 forside', width: 245, height: 55, price: 9100 },
@@ -37,12 +38,7 @@ const Row = ({ name, width, height, price }) => (
 
 const ModulKart = ({}) => (
   <a href={modulKart} className="ModulKart">
-    <img
-      style={{ paddingLeft: '1rem' }}
-      title="Modulkart"
-      alt="modulkart"
-      src={modulKartLiten}
-    />
+    <img title="Modulkart" alt="modulkart" src={modulKartLiten} />
   </a>
 )
 
@@ -55,8 +51,9 @@ const AdvertiserInfo = ({ pageTitle, state }) => (
       Oslo og Akershus, Idrettshøgskolen, Musikkhøgskolen, Politihøgskolen,
       Kunsthøgskolen og Menighetsfakultetet.
     </p>
-    <div style={{ display: 'flex' }}>
-      <div style={{ flex: 1 }}>
+    <section className="ad-prices">
+      <ModulKart />
+      <div className="tables">
         <table className="univTable prices">
           <caption>Annonsepriser</caption>
           <tbody>
@@ -116,8 +113,7 @@ const AdvertiserInfo = ({ pageTitle, state }) => (
           </tbody>
         </table>
       </div>
-      <ModulKart />
-    </div>
+    </section>
   </div>
 )
 const mapStateToProps = (state, ownProps) => ({})
