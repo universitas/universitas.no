@@ -41,6 +41,7 @@ const ISSUE_TYPES = ['?', 'vanlig', 'magasin', 'velkomst\xadbilag']
 
 const dataTransform = R.pipe(
   R.sortBy(R.prop('publication_date')),
+  R.filter(R.prop('issue_name')),
   R.map(
     R.converge(R.merge, [
       R.identity,
