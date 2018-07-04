@@ -67,6 +67,7 @@
           min-width: 80%;
           flex: 1;
           input {
+            min-width: 0;
             width: auto;
             max-width: none;
           }
