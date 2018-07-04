@@ -46,13 +46,19 @@ $aside-width: 15rem;
   line-height: 1.4em;
   .Headline {
     @extend %headline;
-    font-size: 3.5rem;
+    font-size: 2.4rem;
+    @include size(m) {
+      font-size: 3.5rem;
+    }
     margin: 1rem 0 0 0;
   }
   .Lede {
     font-weight: lighter;
     color: $dark-grey;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    @include size(m) {
+      font-size: 1.5rem;
+    }
     margin: 0.6rem 0 0 0;
     line-height: 1.3em;
   }
@@ -111,25 +117,34 @@ $aside-width: 15rem;
     border-bottom: 1px solid #eee;
   }
   display: flex;
-  flex-direction: column;
+  flex-flow: row wrap;
+  align-items: stretch;
   text-align: center;
   .StoryInfo {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    width: 100%;
     @extend %item;
     font-family: "Roboto Slab", serif;
     color: $medium-grey;
     font-size: 1.2rem;
     .storytype {
+      margin: 0 0.2rem;
       font-weight: 700;
     }
     .themeword {
+      margin: 0 0.2rem;
       font-weight: 300;
     }
   }
   .DateLine {
+    width: 100%;
     @extend %smaller;
     @extend %item;
   }
   .Byline {
+    flex: 1;
     @extend %smaller;
     @extend %item;
     .face {

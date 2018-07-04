@@ -48,7 +48,7 @@ export const routesMap = {
 }
 
 export const routerOptions = {
-  // scrollTop: true,
+  scrollTop: true,
   basename: '/dev',
 }
 

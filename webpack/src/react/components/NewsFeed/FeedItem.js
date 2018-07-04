@@ -2,6 +2,7 @@ import cx from 'classnames'
 import ErrorBoundary from 'react-error-boundary'
 import Link from 'redux-first-router-link'
 import { toStory } from 'ducks/router'
+import { hyphenate } from 'utils/text'
 
 const position = ({ x = 0.5, y = 0.5 }) => `${x * 100}% ${y * 100}%`
 
@@ -55,8 +56,8 @@ const FeedItem = ({
       <ErrorBoundary>
         <FeedImage image={image} crop_box={crop_box} />
         <Vignette section={section}>{vignette}</Vignette>
-        <Kicker>{kicker}</Kicker>
-        <Headline>{headline}</Headline>
+        <Kicker>{hyphenate(kicker)}</Kicker>
+        <Headline>{hyphenate(headline)}</Headline>
         <Lede>{lede}</Lede>
       </ErrorBoundary>
     </Link>

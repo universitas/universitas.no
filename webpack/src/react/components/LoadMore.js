@@ -43,11 +43,7 @@ class ScrollSpy extends React.Component {
   }
   render() {
     return (
-      <div
-        className="ScrollSpy"
-        style={{ gridColumnEnd: 'span 6', gridRowEnd: 'span 3' }}
-        ref={el => (this.element = el)}
-      >
+      <div className="ScrollSpy" ref={el => (this.element = el)}>
         {this.props.children}
       </div>
     )

@@ -15,10 +15,10 @@ exports[`PublicationTable renders correctly 1`] = `
         Bilag
       </th>
       <th>
-        Utgivelsesdato
+        Utgivelses­dato
       </th>
       <th>
-        Reklamefrist
+        Reklame­frist
       </th>
     </tr>
   </thead>
