@@ -7,6 +7,7 @@ $separator-line: 1px solid #eee;
 $logowidth: 8.5rem;
 $menuheight: 2.5rem;
 $gridgap: 1rem;
+$pad: 0.5rem;
 
 %headline {
   font-family: $univ-condensed;
@@ -32,7 +33,7 @@ $gridgap: 1rem;
   font-weight: 700;
 }
 
-$breakpoints: (xs: 450px, s: 700px, m: 1000px, l: 1400px);
+$breakpoints: (xs: 450px, s: 700px, m: 900px, l: 1400px);
 
 @mixin size($size) {
   @media only screen and (min-width: map_get($breakpoints, $size)) {

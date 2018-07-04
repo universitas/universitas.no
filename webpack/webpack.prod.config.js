@@ -10,7 +10,7 @@ config.devtool = 'source-map'
 // Use chunkhash in filenames
 const outputhash = '[name].[chunkhash:12]'
 config.output.filename = outputhash + '.js'
-delete config.output.publicPath
+// delete config.output.publicPath
 
 // Plugins
 const productionEnv = new webpack.DefinePlugin({

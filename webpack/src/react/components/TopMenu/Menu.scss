@@ -58,18 +58,25 @@
       @include size(l) {
         display: none;
       }
+      font-size: 1.3rem;
       .inner {
         display: flex;
         flex-flow: row wrap;
         .SearchWidget {
+          padding: $pad;
+          min-width: 80%;
           flex: 1;
-          flex-basis: 80%;
           input {
+            width: auto;
             max-width: none;
           }
         }
+        .MenuItem {
+          padding: 0.5 * $pad;
+        }
         .Sections,
         .Group {
+          padding: 2 * $pad;
           flex: 1;
           flex-basis: 40%;
           // background-color: yellow;

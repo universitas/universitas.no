@@ -47,6 +47,9 @@ $aside-width: 15rem;
   .Headline {
     @extend %headline;
     font-size: 2.4rem;
+    @include size(s) {
+      font-size: 3rem;
+    }
     @include size(m) {
       font-size: 3.5rem;
     }
@@ -63,9 +66,21 @@ $aside-width: 15rem;
     line-height: 1.3em;
   }
   .StoryHead {
+    display: flex;
+    flex-direction: column;
+    .StoryImage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      .imgWrapper {
+        flex-direction: row;
+        display: flex;
+      }
+    }
     margin-bottom: 0.8rem;
     border-bottom: 1px solid #ddd;
     padding-bottom: 0.8rem;
+    max-height: calc(100vh - 3rem);
   }
   .mainContent {
   }

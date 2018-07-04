@@ -3,8 +3,15 @@
 import { NOT_FOUND, actionToPath } from 'redux-first-router'
 import { slugify } from 'utils/text'
 import { absoluteURL } from 'utils/urls'
+import restoreScroll from 'redux-first-router-restore-scroll'
 
+const BASENAME = '/dev'
 const SLICE = 'location'
+
+export const routerOptions = {
+  basename: BASENAME,
+  restoreScroll: restoreScroll(),
+}
 
 export const HOME = 'router/HOME'
 export const SECTION = 'router/SECTION'
@@ -45,11 +52,6 @@ export const routesMap = {
   [AD_INFO]: '/annonser/',
   [SECTION]: '/:section/forside/',
   [NOT_FOUND]: '/not-found/',
-}
-
-export const routerOptions = {
-  scrollTop: true,
-  basename: '/dev',
 }
 
 export const reverse = action => actionToPath(action, routesMap)

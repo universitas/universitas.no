@@ -47,7 +47,7 @@ const renderNodes = R.addIndex(R.map)(
     const { tag, type } = props
     const Component = tag ? tagMap[tag] : typeMap[type]
     return Component ? (
-      <Component title={toJson(node)} {...props} key={idx}>
+      <Component {...props} key={idx}>
         {renderNodes(children)}
       </Component>
     ) : (
