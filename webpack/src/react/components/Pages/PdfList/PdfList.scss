@@ -12,18 +12,24 @@
   }
 
   .Issue {
-    position: relative;
-    display: flex;
-    flex-direction: column;
     &.two {
       grid-column-end: span 2;
-      .Faximile {
-        &:nth-child(1) {
-          z-index: 10;
-          transform: scale(0.95) rotateZ(0deg) translateX(15%);
-        }
-        &:nth-child(2) {
-          transform: scale(0.95) rotateZ(5deg) translateX(-15%);
+      .pdf {
+        display: flex;
+        // grid-gap: 2rem;
+        // grid-template-columns: 1fr 1fr;
+        // grid-template-rows: 10rem;
+        .Faximile {
+          padding-top: calc(143.5% * 0.5 - 1.35rem);
+          &:nth-child(1) {
+            margin-right: 1rem;
+            z-index: 10;
+            transform: scale(0.95) rotateZ(0deg) translateX(15%);
+          }
+          &:nth-child(2) {
+            margin-left: 1rem;
+            transform: scale(0.95) rotateZ(5deg) translateX(-15%);
+          }
         }
       }
     }
@@ -54,9 +60,6 @@
       justify-content: space-around;
     }
     .pdf {
-      display: grid;
-      grid-auto-flow: column;
-      grid-gap: 2rem;
       flex: 1;
       .Faximile {
         background: #eee;
@@ -64,6 +67,7 @@
         transition: transform 300ms ease;
         transition-delay: 200ms;
         transform: scale(0.95);
+        width: 100%;
         padding-top: 143.5%;
         img {
           top: 0;
