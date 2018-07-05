@@ -198,15 +198,17 @@ $aside-width: 15rem;
 }
 
 .Place {
+  margin-bottom: 1.5rem;
+  &.left {
+    @extend %left;
+  }
   &.right {
-    float: right;
-    width: 5rem;
+    @extend %right;
   }
 }
 
 .Facts {
   @extend %smaller;
-  @extend %right;
   .AsideHeading {
     @extend %headline;
     font-size: 1.1rem;

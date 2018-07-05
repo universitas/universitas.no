@@ -1,0 +1,28 @@
+$chevron: 'data:image/svg+xml;utf8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" fill="white" width="32" height="32" viewBox="0 0 32 32"><path d="M20.942 15.058l-8-8c-0.517-0.517-1.367-0.517-1.883 0s-0.517 1.367 0 1.883l7.058 7.058-7.058 7.058c-0.517 0.517-0.517 1.367 0 1.883 0.258 0.258 0.6 0.392 0.942 0.392s0.683-0.133 0.942-0.392l8-8c0.525-0.517 0.525-1.367 0-1.883z"></path></svg>';
+.SlideShow {
+  overflow: hidden;
+  display: grid;
+  grid: "left center right" 1fr / 1fr 2fr 1fr;
+  .next,
+  .prev {
+    z-index: 10;
+    grid-area: right;
+    background: no-repeat 100% 45% url($chevron);
+    background-size: 40%;
+    cursor: pointer;
+    opacity: 0.3;
+    &:hover {
+      opacity: 1;
+    }
+  }
+  .prev {
+    grid-area: left;
+    transform: scaleX(-1); // flip chevron
+  }
+  .slide {
+    background: white;
+    user-select: none;
+    grid-area: 1/1/2/4;
+    transition: transform 300ms ease-in-out;
+  }
+}

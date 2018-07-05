@@ -1,6 +1,7 @@
 import { withErrorBoundary } from 'react-error-boundary'
 import { Helmet } from 'react-helmet'
 import { connect } from 'react-redux'
+import ScrollContext from 'components/ScrollContext'
 
 import {
   HOME,

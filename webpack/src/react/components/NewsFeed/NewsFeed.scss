@@ -9,7 +9,7 @@
 }
 
 .NewsFeed {
-  overflow-x: hidden;
+  // overflow-x: hidden;
   font-family: $univ-sans;
   display: grid;
   grid-gap: $gridgap;
@@ -45,15 +45,20 @@
   .Headline,
   .Lede,
   .Vignette {
-    margin: 0.4rem;
+    margin: 0.3rem;
   }
   .Vignette {
-    @include section-background-color;
-    background-color: #777;
     line-height: 1;
     font-family: $univ-serif;
     font-weight: 800;
-    padding: 0.2em 0.3em;
+    min-height: 2rem;
+    position: relative;
+    div {
+      position: absolute; // trick to fix android chrome render bug
+      background-color: #777;
+      @include section-background-color;
+      padding: 0.2em 0.3em;
+    }
     color: white;
     justify-self: start;
     align-self: start;
@@ -71,7 +76,7 @@
     margin-top: 0;
   }
   .FeedItem {
-    overflow-x: hidden;
+    // overflow-x: hidden;
     &:hover .Headline {
       text-decoration: underline;
     }

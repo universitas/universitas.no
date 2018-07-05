@@ -38,5 +38,4 @@ WEBPACK_LOADER['DEFAULT'].update({
     'CACHE': not DEBUG,
     'POLL_INTERVAL': 0.5,
     'TIMEOUT': None,
-    # 'IGNORE': ['.+\.hot-update.js', '.+\.map']
 })

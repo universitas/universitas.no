@@ -10,7 +10,9 @@ const ifChildren = Component => props =>
   props.children ? <Component {...props} /> : null
 
 const Vignette = ifChildren(({ children, section }) => (
-  <div className={cx('Vignette', `section-${section}`)}>{children}</div>
+  <div className="Vignette">
+    <div className={cx(`section-${section}`)}>{children}</div>
+  </div>
 ))
 const Headline = ifChildren(({ children }) => (
   <h1 className="Headline">{children}</h1>

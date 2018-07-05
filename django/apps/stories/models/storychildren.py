@@ -3,16 +3,16 @@
 import logging
 import re
 
-from model_utils.models import TimeStampedModel
 from requests import request
 from requests.exceptions import MissingSchema, Timeout
-from slugify import Slugify
 
 from apps.photo.models import ImageFile
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
 from utils.decorators import cache_memoize
 
 from .mixins import MarkupCharField, MarkupModelMixin, TextContent
