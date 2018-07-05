@@ -93,7 +93,7 @@ const renderNodes = R.addIndex(R.map)(
         const { children, tag, type, ...props } = node
         const [media, other] = splitContent(children)
         return (
-          <Place {...props}>
+          <Place key={idx} {...props}>
             {renderNodes(other)}
             <SlideShow>{renderNodes(media)}</SlideShow>
           </Place>

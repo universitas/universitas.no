@@ -1,12 +1,15 @@
 @import "styles/_common.scss";
 .StoryImage {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
   .imgWrapper {
-    width: 100%;
+    flex: 1;
+    min-height: 0;
+    max-height: 85vh;
     img {
       width: 100%;
       height: auto;
-      max-height: 90vh;
-      object-fit: cover;
     }
   }
   .Caption {

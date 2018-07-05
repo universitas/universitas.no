@@ -4,21 +4,22 @@ import { hashText } from 'utils/text'
 export const makeParser = ({
   type,
   pattern,
+  groups = ['content'],
   inline,
   process = R.identity,
 }) => text => {
   const regex = new RegExp(pattern, inline ? 'uy' : 'muy')
   const result = regex.exec(text)
-  return (
-    result &&
-    process({
-      match: result,
-      content: result[1] || result[0],
-      index: regex.lastIndex,
-      type,
-      ...result.groups,
-    })
-  )
+  if (!result) return null
+  const [content, ...rest] = result
+  const groupmatches = R.zipObj(groups, rest)
+  return process({
+    match: result,
+    content,
+    index: regex.lastIndex,
+    type,
+    ...groupmatches,
+  })
 }
 
 const [inlineRules, blockRules] = R.pipe(

@@ -14,16 +14,24 @@ const Lede = ifChildren(props => <p className="Lede" {...props} />)
 const images = R.pipe(
   R.prop('images'),
   R.filter(R.pathEq(['placement'], 'head')),
-  R.map(StoryImage),
 )
 
-const StoryHead = ({ title, kicker, lede, ...props }) => (
-  <div className="StoryHead">
-    <SlideShow>{images(props)}</SlideShow>
-    <Kicker>{kicker}</Kicker>
-    <Headline>{cleanText(title)}</Headline>
-    <Lede>{lede}</Lede>
-  </div>
-)
+const StoryHead = ({ title, kicker, lede, ...props }) => {
+  const mainImage = images(props).map((props, idx) => (
+    <StoryImage key={idx} {...props} />
+  ))
+  return (
+    <div className="StoryHead">
+      {mainImage.length ? (
+        <div className="mainImage">
+          <SlideShow>{mainImage}</SlideShow>
+        </div>
+      ) : null}
+      <Kicker>{cleanText(kicker)}</Kicker>
+      <Headline>{cleanText(title)}</Headline>
+      <Lede>{cleanText(lede)}</Lede>
+    </div>
+  )
+}
 
 export default StoryHead

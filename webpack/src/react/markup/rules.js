@@ -46,7 +46,8 @@ const baseRules = {
   },
   link: {
     inline,
-    pattern: /\[(?<content>.*?)\](\((?<name>.*?)\))?/,
+    pattern: /\[(.*?)\](?:\((.*?)\))?/,
+    groups: ['content', 'name'],
     reverse: ({ name, content }) =>
       name != content ? `[${content}](${name})` : `[${content}]`,
     process: ({ name, ...node }) => ({
@@ -56,17 +57,19 @@ const baseRules = {
   },
   em: {
     inline,
-    pattern: /_(?<content>.*?)_/,
+    pattern: /_(.*?)_/,
     reverse: ({ content }) => `_${content}_`,
   },
   place: {
     leaf,
-    pattern: /^ *\[\[ *(?<name>.*?) ( *\| *(?<flags>.*?))? *\]\] *$/,
+    pattern: /^ *\[\[ *(.*?) (?: *\| *(.*?))? *\]\] *$/,
+    groups: ['name', 'flags'],
     reverse: ({ name, flags = '' }) =>
       `\n[[ ${name}${flags && ' | '}${flags} ]]\n`,
   },
   blockTag: {
-    pattern: /^@(?<tag>[^:]+): ?(?<content>.*)$/,
+    pattern: /^@([^:]+): ?(.*)$/,
+    groups: ['tag', 'content'],
     reverse: ({ tag, content }) => {
       const space = R.contains(tag, ['mt', 'spm', 'tingo']) ? '\n' : ''
       return `${space}@${tag}: ${content}`
@@ -74,7 +77,7 @@ const baseRules = {
     process: R.evolve({ tag: makeFuzzer(TAGS, 0.5) }), // fuzzy match
   },
   listItem: {
-    pattern: /^(\* |# |@li:) *(?<content>.*)$/,
+    pattern: /^(?:\* |# |@li:) *(.*)$/,
     order: 9,
     reverse: ({ content }) => `# ${content}`,
   },
@@ -83,12 +86,12 @@ const baseRules = {
     order: 100,
   },
   facts: {
-    pattern: /^@fakta:\s?(?<content>(\n?.+)+)$/,
+    pattern: /^@fakta:\s?((\n?.+)+)$/,
     order: 1,
     reverse: ({ content }) => `\n@fakta: ${content}\n`,
   },
   pullquote: {
-    pattern: /^@sitat:\s?(?<content>(\n?.+)+)$/,
+    pattern: /^@sitat:\s?((\n?.+)+)$/,
     order: 1,
     reverse: ({ content }) => `\n@sitat: ${content}\n`,
   },

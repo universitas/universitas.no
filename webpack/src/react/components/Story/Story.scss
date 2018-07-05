@@ -68,16 +68,18 @@ $aside-width: 15rem;
   .StoryHead {
     display: flex;
     flex-direction: column;
-    .StoryImage {
-      flex: 1;
+    .mainImage {
       display: flex;
-      flex-direction: column;
       .imgWrapper {
-        flex-basis: 700px;
         background-color: #dddfe9;
-        flex-direction: row;
-        display: flex;
       }
+      img {
+        height: 100%;
+        object-fit: cover;
+      }
+      min-height: 0;
+      flex: 1;
+      flex-basis: 700px;
     }
     margin-bottom: 0.8rem;
     border-bottom: 1px solid #ddd;
