@@ -19,18 +19,10 @@ const Aside = props => <aside className="Facts" {...props} />
 const Emphasis = props => <em {...props} />
 
 const Place = ({ name, flags, children, ...props }) => {
-  if (R.isEmpty(children)) return <pre>{name}</pre>
-  const [media, other] = R.partition(
-    R.pathSatisfies(R.flip(R.contains)(['StoryImage', 'Video']), [
-      'type',
-      'displayName',
-    ]),
-    children,
-  )
+  if (R.isEmpty(children)) return null
   return (
     <section title={name} className={cx('Place', flags)} {...props}>
-      {media && <SlideShow>{media}</SlideShow>}
-      {other}
+      {children}
     </section>
   )
 }
@@ -90,8 +82,24 @@ const tagMap = {
   faktatit: AsideHeading,
 }
 
+const splitContent = R.partition(
+  R.pathSatisfies(R.flip(R.contains)(['image', 'video']), ['type']),
+)
+
 const renderNodes = R.addIndex(R.map)(
   R.ifElse(R.is(String), R.identity, (node, idx) => {
+    if (node.type == 'place') {
+      if (node.children && node.children.length) {
+        const { children, tag, type, ...props } = node
+        const [media, other] = splitContent(children)
+        return (
+          <Place {...props}>
+            {renderNodes(other)}
+            <SlideShow>{renderNodes(media)}</SlideShow>
+          </Place>
+        )
+      } else return null
+    }
     const { children = [], ...props } = node
     const { tag, type } = props
     const Component = tag ? tagMap[tag] : typeMap[type]
