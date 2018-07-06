@@ -108,6 +108,7 @@ function* routePush(action) {
 }
 
 function* fetchItem(action) {
+  console.log('fetch', action)
   const { getItem, itemAdded, itemPatched, apiGet } = modelFuncs(action)
   const { id, force } = action.payload
   if (!id) return // id is 0 or null
@@ -168,7 +169,7 @@ function* cloneSaga(action) {
   const { id } = action.payload
   const { getItem, reverseUrl } = modelFuncs(action)
   const { working_title, story_type, bodytext_markup } = yield select(
-    getItem(id)
+    getItem(id),
   )
   const data = {
     working_title: 'ny ' + working_title,

@@ -8,10 +8,6 @@ from pathlib import Path
 from typing import Union
 
 import PIL
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 
 from apps.contributors.models import Contributor
 # from apps.issues.models import current_issue
@@ -23,6 +19,10 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
@@ -167,6 +167,20 @@ class ImageCategoryMixin(models.Model):
         choices=CATEGORY_CHOICES,
         default=UNKNOWN,
     )
+
+    @property
+    def api_category(self):
+        """simplified string category for rest api."""
+        mapping = {
+            self.EXTERNAL: 'photo',
+            self.PHOTO: 'photo',
+            self.UNKNOWN: 'photo',
+            self.PROFILE: 'profile',
+            self.DIAGRAM: 'diagram',
+            self.ILLUSTRATION: 'illustration',
+        }
+        return mapping.get(self.category)
+
 
 
 class ImageFile(  # type: ignore

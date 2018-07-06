@@ -25,13 +25,12 @@ def test_create_new_storyimage(staff_client, scandal, scandal_photo):
         'parent_story',
         'imagefile',
         'creditline',
-        'index',
         'filename',
         'thumb',
         'size',
-        # 'created',
-        # 'modified',
-        # 'top',
+        'aspect_ratio',
+        'ordering',
+        'placement',
     }
     assert scandal.images.count() == 1
     assert response.data.get('caption') == ''

@@ -25,7 +25,7 @@ def header_image(context):
     if images:
         first_image = images[0]
         height = first_image.get_height(width, height)
-        if first_image.aspect_ratio == first_image.ORIGINAL_RATIO:
+        if first_image.aspect_ratio == first_image.AUTO_RATIO:
             context['expand'] = 1
 
     if len(context['elements']) > 1:

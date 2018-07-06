@@ -90,7 +90,7 @@ export const phoneFormat = R.pipe(
 // :: string|Date -> string
 export const formatDate = (
   value,
-  dateformat = 'ddd DD. MMM YYYY',
+  dateformat = 'dddd DD. MMM YYYY',
   locale = norwayLocale,
   relative = false,
 ) =>

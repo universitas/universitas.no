@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import LoadingIndicator from 'components/LoadingIndicator'
 import { requestData } from 'utils/hoc'
-import { getStory, storyRequested } from 'ducks/publicstory'
+import { getStoryTree, storyRequested } from 'ducks/publicstory'
 import { reverse, toStory } from 'ducks/router'
 import { redirect } from 'redux-first-router'
 import StoryHelmet from './StoryHelmet.js'
@@ -39,12 +39,12 @@ const StoryRoute = ({ redirect, ...props }) => {
   ]
 }
 
-const mapStateToProps = (state, { id }) => getStory(id)(state) || {}
+const mapStateToProps = (state, { id }) => getStoryTree(id)(state) || {}
 const mapDispatchToProps = (dispatch, { id }) => ({
   fetchData: () => dispatch(storyRequested(id)),
   redirect: routeAction => dispatch(redirect(routeAction)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  requestData(StoryRoute, 'url', LoadingIndicator),
+  requestData(StoryRoute, 'HTTPstatus', LoadingIndicator),
 )

@@ -10,6 +10,7 @@ import requests
 
 from api.frontpage import FrontpageStoryViewset
 from api.publicstories import PublicStoryViewSet
+from api.user import AvatarUserDetailsSerializer
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -53,11 +54,25 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
     })
 
     if story:
+        response = PublicStoryViewSet.as_view({'get': 'retrieve'})(
+            request, pk=story
+        )
+        payload = {
+            **response.data,
+            'HTTPstatus': response.status_code,
+            'id': int(story),
+        }
+
         redux_actions.append({
-            'type': 'publicstory/STORY_FETCHED',
-            'payload': PublicStoryViewSet.as_view({'get': 'retrieve'})(
-                request, pk=story
-            ).data
+            'type': 'publicstory/STORY_FETCHED', 'payload': payload
+        })
+
+    if request.user:
+        redux_actions.append({
+            'type': 'auth/REQUEST_USER_SUCCESS',
+            'payload': AvatarUserDetailsSerializer(
+                request.user, context={'request': request}
+            ).data,
         })
 
     ssr_context = _react_render(redux_actions, request)

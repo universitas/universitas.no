@@ -6,6 +6,7 @@ from apps.stories.models import (
 from django.db.models import Prefetch
 from rest_framework import serializers, viewsets
 from rest_framework.filters import BaseFilterBackend
+from url_filter.integrations.drf import DjangoFilterBackend
 from utils.serializers import AbsoluteURLField, CropBoxField
 
 from .stories import StorySerializer
@@ -25,9 +26,13 @@ class StoryImageSerializer(serializers.ModelSerializer):
 
     large = AbsoluteURLField()
     cropped = AbsoluteURLField()
+
     crop_box = CropBoxField(
         read_only=True,
         source='imagefile.crop_box',
+    )
+    category = serializers.CharField(
+        read_only=True, source='imagefile.api_category'
     )
 
     class Meta:
@@ -43,6 +48,7 @@ class StoryImageSerializer(serializers.ModelSerializer):
             'cropped',
             'crop_box',
             'crop_size',
+            'category',
         ]
 
 
@@ -164,7 +170,8 @@ class PublicStoryViewSet(viewsets.ReadOnlyModelViewSet):
     """ API endpoint that allows Story to be viewed or updated.  """
 
     serializer_class = PublicStorySerializer
-    filter_backends = [ListPublishedStoriesFilter]
+    filter_backends = [DjangoFilterBackend, ListPublishedStoriesFilter]
+    filter_fields = ['id']
     queryset = Story.objects.prefetch_related(
         'story_type__section',
         'asides',

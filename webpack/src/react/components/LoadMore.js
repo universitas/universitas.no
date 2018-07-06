@@ -20,7 +20,6 @@ export const LoadMore = ({ fetchMore, fetching, next = true }) => {
 class ScrollSpy extends React.Component {
   constructor(props) {
     super(props)
-    const { onVisible, onScroll } = props
     this.scrollHandler = this.scrollHandler.bind(this)
   }
 

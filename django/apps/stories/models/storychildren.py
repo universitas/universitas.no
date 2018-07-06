@@ -21,6 +21,7 @@ slugify = Slugify(max_length=50, to_lower=True)
 logger = logging.getLogger(__name__)
 
 TOP = 'head'
+DEFAULT_IMAGE_SIZE = (1200, 675)  # 16:9 ratio
 
 
 class ElementQuerySet(models.QuerySet):
@@ -128,23 +129,27 @@ class InlineHtml(StoryChild):
         return mark_safe(self.bodytext_html)
 
 
+def ratio(w, h):
+    """Calculate ratio as float"""
+    return round(h / w, 4)
+
+
 class StoryMedia(StoryChild, MarkupModelMixin):
     """ Video, photo or illustration connected to a story """
 
-    ORIGINAL_RATIO = 100.0
-    DEFAULT_RATIO = 0.0
+    AUTO_RATIO = 0.0
 
     ASPECT_RATIO_CHOICES = [
-        (DEFAULT_RATIO, _('auto')),
-        (round(2 / 5, 3), _('5:2 landscape')),
-        (round(1 / 2, 3), _('2:1 landscape')),
-        (round(2 / 3, 3), _('3:2 landscape')),
-        (round(3 / 4, 3), _('4:3 landscape')),
-        (round(1 / 1, 3), _('square')),
-        (round(4 / 3, 3), _('3:4 portrait')),
-        (round(3 / 2, 3), _('2:3 portrait')),
-        (round(2 / 1, 3), _('1:2 portrait')),
-        (ORIGINAL_RATIO, _('graph (force original ratio)')),
+        (AUTO_RATIO, _('auto')),
+        (ratio(5, 2), _('5:2 landscape')),
+        (ratio(2, 1), _('2:1 landscape')),
+        (ratio(16, 9), _('16:9 landscape (youtube)')),
+        (ratio(3, 2), _('3:2 landscape')),
+        (ratio(4, 3), _('4:3 landscape')),
+        (ratio(1, 1), _('1:1 square')),
+        (ratio(3, 4), _('3:4 portrait')),
+        (ratio(2, 3), _('2:3 portrait')),
+        (ratio(1, 2), _('1:2 portrait')),
     ]
 
     class Meta:
@@ -172,7 +177,7 @@ class StoryMedia(StoryChild, MarkupModelMixin):
         verbose_name=_('aspect ratio'),
         help_text=_('height / width'),
         choices=ASPECT_RATIO_CHOICES,
-        default=DEFAULT_RATIO,
+        default=AUTO_RATIO,
     )
 
     def original_ratio(self):
@@ -182,10 +187,8 @@ class StoryMedia(StoryChild, MarkupModelMixin):
     def get_height(self, width, height):
         """ Calculate pixel height based on builtin ratio """
 
-        if self.aspect_ratio == self.DEFAULT_RATIO:
+        if self.aspect_ratio == self.AUTO_RATIO:
             height = height
-        elif self.aspect_ratio == self.ORIGINAL_RATIO:
-            height = width * self.original_ratio()
         else:
             height = width * self.aspect_ratio
         return int(height)
@@ -242,9 +245,9 @@ class StoryImage(StoryMedia):
 
     @property
     def crop_size(self):
-        width, height = 1200, 700
+        width, height = DEFAULT_IMAGE_SIZE
         im = self.imagefile
-        if self.aspect_ratio in [self.DEFAULT_RATIO, self.ORIGINAL_RATIO]:
+        if self.aspect_ratio == self.AUTO_RATIO:
             if not im.is_photo:
                 height = width * self.original_ratio()
         else:

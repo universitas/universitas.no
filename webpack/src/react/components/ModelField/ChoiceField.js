@@ -14,10 +14,12 @@ export const DetailField = ({ choices = [], value, ...args }) => (
   <span {...args}>{getDisplayName(value)(choices)}</span>
 )
 
+const str = R.unless(R.is(String), R.toString)
+
 export const EditableField = ({ choices = [], value, ...args }) => (
   <select value={value} {...args}>
     {choices.map(({ value, display_name }) => (
-      <option key={value} value={value}>
+      <option key={value} value={str(value)}>
         {display_name}
       </option>
     ))}

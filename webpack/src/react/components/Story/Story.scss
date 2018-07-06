@@ -75,11 +75,11 @@ $aside-width: 15rem;
       }
       img {
         height: 100%;
-        object-fit: cover;
+        min-height: 0;
       }
-      min-height: 0;
-      flex: 1;
-      flex-basis: 700px;
+      &.autoCrop {
+        flex: 1 1 675px;
+      }
     }
     margin-bottom: 0.8rem;
     border-bottom: 1px solid #ddd;
@@ -97,6 +97,9 @@ $aside-width: 15rem;
     @extend %headline;
     font-size: 1.4rem;
     margin: 1em 0 0.2em 0;
+    &:first-child {
+      margin-top: 0;
+    }
   }
   .SectionHeading {
     @extend %headline;

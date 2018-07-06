@@ -27,20 +27,20 @@ const StoryImageActions = ({ deleteHandler, viewPhoto, imagefile }) => (
 )
 
 const { reverseUrl: viewPhoto, itemRequested: fetchPhoto } = modelActions(
-  'photos'
+  'photos',
 )
 const { itemRequested: fetchStoryImage } = modelActions('storyimages')
 
 const ImageFile = connect(
   (state, { pk }) => modelSelectors('photos').getItem(pk)(state),
-  (dispatch, { pk }) => ({ fetch: () => dispatch(fetchPhoto(pk)) })
+  (dispatch, { pk }) => ({ fetch: () => dispatch(fetchPhoto(pk)) }),
 )(
   ({ pk, fetch, thumb, small, ...props }) =>
     props.id ? (
       <ImageData pk={pk} {...props} thumb={small} />
     ) : (
       <div ref={fetch} />
-    )
+    ),
 )
 
 const StoryImageItem = ({ pk, id, filename, fetch, ...props }) =>

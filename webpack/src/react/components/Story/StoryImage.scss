@@ -1,20 +1,32 @@
 @import "styles/_common.scss";
 .StoryImage {
   display: flex;
-  width: 100%;
+  // width: 100%;
   flex-direction: column;
   .imgWrapper {
     flex: 1;
     min-height: 0;
-    max-height: 85vh;
     img {
       width: 100%;
       height: auto;
+      min-height: 40vh;
+      @include size(s) {
+        min-height: 20vh;
+      }
+      max-height: 85vh;
+      object-fit: cover;
+      &.diagram {
+        object-fit: scale-down;
+      }
+      &.illustration {
+        // object-fit: scale-down;
+      }
     }
   }
   .Caption {
     @extend %smaller;
     margin: 0.2em 0;
+    background: white;
     .stikk {
       text-transform: uppercase;
     }

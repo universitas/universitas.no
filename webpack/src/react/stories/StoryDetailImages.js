@@ -6,8 +6,8 @@ import StoryImage from 'storyimages/StoryImage'
 
 const StoryDetailImages = ({ images = [], createHandler, deleteHandler }) => (
   <div className="panelContent">
-    {images.map(pk => (
-      <StoryImage key={pk} pk={pk} deleteHandler={deleteHandler} />
+    {images.map(({ id }) => (
+      <StoryImage key={id} pk={id} deleteHandler={deleteHandler} />
     ))}
   </div>
 )

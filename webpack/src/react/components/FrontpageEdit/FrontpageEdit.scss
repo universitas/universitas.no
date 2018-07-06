@@ -1,0 +1,22 @@
+.FrontpageEdit {
+  z-index: 9999;
+  cursor: pointer;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  max-height: 90vh;
+  overflow: auto;
+  opacity: 0.9;
+  font-size: 2rem;
+  svg {
+    opacity: 0.5;
+    color: white;
+    background: black;
+    &:hover {
+      opacity: 1;
+    }
+    padding: 0.15em;
+    line-height: 0;
+    border-radius: 50%;
+  }
+}

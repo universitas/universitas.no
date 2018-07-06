@@ -27,17 +27,16 @@ const Image = ({
   aspect_ratio,
   caption,
   crop_box = {},
-  crop_size = [],
+  category,
 }) =>
   id ? (
     <div className="imgWrapper">
       <img
+        className={category}
         style={{
           objectPosition: position(crop_box),
         }}
         src={cropped || large}
-        width={crop_size[0]}
-        height={crop_size[1]}
         alt={caption}
       />
     </div>

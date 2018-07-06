@@ -22,10 +22,12 @@ class StoryImageSerializer(serializers.ModelSerializer):
             'parent_story',
             'imagefile',
             'creditline',
-            'index',
             'thumb',
             'filename',
+            'ordering',
+            'placement',
             'size',
+            'aspect_ratio',
         ]
 
 

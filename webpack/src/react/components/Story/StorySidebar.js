@@ -1,7 +1,9 @@
 import { hyphenate, formatDate } from 'utils/text'
 
+const datelineFormat = R.pipe(formatDate, R.replace(/^(...)\S+/, '$1'))
+
 const DateLine = ({ publication_date }) => (
-  <div className="DateLine">{formatDate(publication_date)}</div>
+  <div className="DateLine">{datelineFormat(publication_date)}</div>
 )
 
 const creditDisplay = credit =>

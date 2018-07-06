@@ -47,6 +47,17 @@
   .Vignette {
     margin: 0.3rem;
   }
+  .FetchIndicator {
+    line-height: 0;
+    border-radius: 50%;
+    color: white;
+    font-size: 2rem;
+    padding: 0.2rem;
+    margin: 0.2rem;
+    background-color: rgba(black, 0.3);
+    justify-self: end;
+    align-self: start;
+  }
   .Vignette {
     line-height: 1;
     font-family: $univ-serif;
@@ -85,7 +96,7 @@
     background: white;
     display: grid;
     grid-template-rows: [image-start] 1fr [image-end title-start] auto
-      [title-end];
+      [title-end] auto auto;
     grid-template-columns: [image-start title-start] auto [image-end title-end];
     &.negative {
       background: $dark-grey;
@@ -93,9 +104,11 @@
       .Lede,
       .Headline,
       .Kicker {
+        grid-area: "title";
         color: inherit;
       }
     }
+    .FetchIndicator,
     .Vignette {
       grid-area: image;
     }

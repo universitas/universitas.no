@@ -7,9 +7,9 @@ export const compose =
   Redux.compose
 
 // AnimationFrame based debounce function
-export const debounce = (func, wait) => {
+export const debounce = function(func, wait) {
   let minutes = null
-  return (...args) => {
+  return function(...args) {
     minutes && window.cancelAnimationFrame(minutes)
     minutes = window.requestAnimationFrame(() => {
       minutes = null
@@ -19,10 +19,12 @@ export const debounce = (func, wait) => {
 }
 
 // setTimeout based debounce function. Doesn't perform well in android chrome
-export const timeoutDebounce = (func, wait) => {
+export const timeoutDebounce = function(func, wait) {
   let timeout = null
-  return (...args) => {
-    timeout && clearTimeout(timeout)
+  return function(...args) {
+    try {
+      clearTimeout(timeout)
+    } catch (e) {}
     timeout = setTimeout(() => {
       timeout = null
       func(...args)
@@ -48,6 +50,15 @@ export const isIphone = () => navigator && /iphone/i.test(navigator.userAgent)
 export const isVisible = (element, padding = 0) => {
   if (!element) return false
   return window.scrollY + window.innerHeight > element.offsetTop - padding
+}
+
+// check if element is in viewport
+export const inViewPort = (element, padding = 0) => {
+  if (!element) return false
+  return (
+    window.scrollY + window.innerHeight > element.offsetTop &&
+    window.scrollY < element.offsetTop + element.offsetHeight
+  )
 }
 
 // scroll to element vertically. center window on element

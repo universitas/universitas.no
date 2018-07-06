@@ -1,6 +1,7 @@
 import cx from 'classnames'
 import ErrorBoundary from 'react-error-boundary'
 import Link from 'redux-first-router-link'
+import { Done, Sync, Clear } from 'components/Icons'
 import { toStory } from 'ducks/router'
 import { hyphenate } from 'utils/text'
 
@@ -36,6 +37,15 @@ const FeedImage = ({ image, crop_box }) =>
     />
   ) : null
 
+const FetchIndicator = ({ fetchStatus }) => {
+  const Icon = { unfetched: Clear, fetching: Sync, fetched: Done }[fetchStatus]
+  return (
+    <div title={fetchStatus} className="FetchIndicator">
+      <Icon />
+    </div>
+  )
+}
+
 const FeedItem = ({
   headline,
   vignette,
@@ -47,9 +57,11 @@ const FeedItem = ({
   image,
   crop_box,
   html_class,
+  fetchStatus,
   language,
   order,
   story,
+  _ref = null,
 }) => {
   const className = cx('FeedItem', `col-${columns}`, `row-${rows}`, html_class)
   const title = `${order} ${className}`
@@ -58,9 +70,11 @@ const FeedItem = ({
       <ErrorBoundary>
         <FeedImage image={image} crop_box={crop_box} />
         <Vignette section={section}>{vignette}</Vignette>
+        {module.hot && <FetchIndicator fetchStatus={fetchStatus} />}
         <Kicker>{hyphenate(kicker)}</Kicker>
         <Headline>{hyphenate(headline)}</Headline>
         <Lede>{lede}</Lede>
+        {_ref && <div style={{ gridArea: '1/1' }} ref={_ref} />}
       </ErrorBoundary>
     </Link>
   )

@@ -1,7 +1,22 @@
-import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
+import {
+  takeLatest,
+  takeEvery,
+  call,
+  put,
+  select,
+  fork,
+} from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { apiList, apiGet } from 'services/api'
-import { STORY_REQUESTED, storyFetched, getStory } from 'ducks/publicstory'
+import {
+  STORY_REQUESTED,
+  STORIES_REQUESTED,
+  storyRequested,
+  storyFetched,
+  storiesFetched,
+  getStory,
+  getStoryIds,
+} from 'ducks/publicstory'
 import { SITE_REQUESTED, siteFetched } from 'ducks/site'
 import { ISSUES_REQUESTED, issuesFetched } from 'ducks/issues'
 import {
@@ -21,14 +36,26 @@ export default function* rootSaga() {
   yield takeLatest(ISSUES_REQUESTED, fetchIssues)
   yield takeLatest(SEARCH, fetchSearch)
   yield takeEvery(STORY_REQUESTED, fetchStory)
+  yield takeEvery(STORIES_REQUESTED, fetchStories)
 }
 
 const handleError = error => console.error(error)
 
+function* fetchStories(action) {
+  const fetched = yield select(getStoryIds)
+  const ids = R.difference(action.payload.ids, fetched)
+  if (R.isEmpty(ids)) return
+  const { response, error } = yield call(apiList, 'publicstories', {
+    id__in: ids,
+  })
+  if (response) yield put(storiesFetched(response))
+  else yield call(handleError, error)
+}
+
 function* fetchStory(action) {
   const { id, prefetch } = action.payload
   const story = yield select(getStory)
-  if (prefetch && story.fetching) return
+  if (prefetch && (story.fetching || story.id)) return
   const { response, error } = yield call(apiGet, 'publicstories', id)
   if (response) yield put(storyFetched(response))
   else {
