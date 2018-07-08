@@ -46,8 +46,8 @@ def staff_client(db, journalist):
     # client.logout()  # maybe not needed?
 
 
-@pytest.fixture(scope='session')
-def news():
+@pytest.fixture
+def news(db):
     """News StoryType"""
     try:
         return StoryType.objects.get(name='News')

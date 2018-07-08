@@ -67,7 +67,7 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
             'type': 'publicstory/STORY_FETCHED', 'payload': payload
         })
 
-    if request.user:
+    if request.user.is_authenticated:
         redux_actions.append({
             'type': 'auth/REQUEST_USER_SUCCESS',
             'payload': AvatarUserDetailsSerializer(

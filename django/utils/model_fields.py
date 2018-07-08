@@ -77,6 +77,9 @@ class AttrDict(dict):
         else:
             return super().__getattr___(name)
 
+    def __dir__(self):
+        return list(self.keys())
+
 
 class AttrJSONField(JSONField):
     """JSON field with getattrib access"""

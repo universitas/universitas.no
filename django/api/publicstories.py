@@ -1,12 +1,13 @@
 import logging
 
+from rest_framework import serializers, viewsets
+from rest_framework.filters import BaseFilterBackend
+from url_filter.integrations.drf import DjangoFilterBackend
+
 from apps.stories.models import (
     Byline, InlineHtml, InlineLink, Story, StoryImage, StoryType, StoryVideo
 )
 from django.db.models import Prefetch
-from rest_framework import serializers, viewsets
-from rest_framework.filters import BaseFilterBackend
-from url_filter.integrations.drf import DjangoFilterBackend
 from utils.serializers import AbsoluteURLField, CropBoxField
 
 from .stories import StorySerializer
@@ -76,7 +77,7 @@ class InlineLinkSerializer(serializers.ModelSerializer):
         model = InlineLink
         fields = [
             'id',
-            'number',
+            'name',
             'linked_story',
             'href',
         ]

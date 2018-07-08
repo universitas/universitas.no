@@ -7,7 +7,12 @@ from io import BytesIO
 from pathlib import Path
 from typing import Union
 
+import piexif
 import PIL
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
 
 from apps.contributors.models import Contributor
 # from apps.issues.models import current_issue
@@ -19,10 +24,6 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
@@ -395,28 +396,56 @@ class ImageFile(  # type: ignore
         # TODO: is `save` needed here?
         merge_instances(self, *list(others)).save()
 
-    def new_image(self):
-        """Check image file, compress if needed, and record metadata"""
-        original = self.original
-        img = file_operations.pil_image(original)
-        if not file_operations.valid_image(img):
-            raise ValueError('invalid image file')
-        img = file_operations.pil_image(original)
-        self.add_exif_from_file(img)
+    def reduce_image_filesize(self, img=None):
+        """Remove thumbnail exif from original image"""
+        if img is None:
+            img = file_operations.pil_image(self.original)
+
+        exif_bytes = img.info.get('exif')
+        if exif_bytes:
+            data_dict = piexif.load(exif_bytes)
+            thumb = data_dict.pop('thumbnail', None)
+            data_dict.pop('1st', None)
+            exif_bytes = piexif.dump(data_dict)
+        else:
+            thumb = False
+
         if any([
-            original.size > BYTE_LIMIT,
             img.width > SIZE_LIMIT,
             img.height > SIZE_LIMIT,
+            self.original.size > BYTE_LIMIT,
         ]):
             img.thumbnail(
-                size=(SIZE_LIMIT, SIZE_LIMIT), resample=PIL.Image.LANCZOS
+                size=(SIZE_LIMIT, SIZE_LIMIT),
+                resample=PIL.Image.LANCZOS,
             )
+            resized = True
+        else:
+            resized = False
+
+        if thumb or resized:
             blob = BytesIO()
-            img.save(blob, img.format, quality=80)
-            original.file = ContentFile(blob.getvalue())
-            self.original = original
+            img.save(blob, img.format, exif=exif_bytes, quality=80)
+            if self.pk is None:
+                self.original.file = ContentFile(blob.getvalue())
+            else:
+                self.stat.size = self.stat.md5 = None
+                self.delete_thumbnails()
+                self.original.save(self.filename, blob)
+        return img
+
+    def new_image(self):
+        """Check image file, compress if needed, and record metadata"""
+        img = file_operations.pil_image(self.original)
+        if not file_operations.valid_image(img):
+            raise ValueError('invalid image file')
+
+        img = file_operations.pil_image(self.original)
 
         self.stat.mimetype = file_operations.get_mimetype(img)
+        self.add_exif_from_file(img)
+
+        img = self.reduce_image_filesize(img)
         self.full_width = img.width
         self.full_height = img.height
 

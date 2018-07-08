@@ -56,15 +56,14 @@ class CloseCropEngine(WandEngine):
     """Sorl thumbnail crop engine"""
 
     def create(self, image, geometry, options):
-        cropbox = options.pop('crop_box', None)
-        try:
-            expand = options.pop('expand', 0)
-            expand = float(expand)
-        except (KeyError, TypeError):
-            expand = 0.0
-            logger.exception('foo')
 
+        cropbox = options.pop('crop_box', None)
         if cropbox:
+            try:
+                # expand cropbox area
+                expand = float(options.pop('expand', 0))
+            except TypeError:
+                expand = 0.0
             new_geometry = calculate_crop(
                 image.width,
                 image.height,
@@ -73,7 +72,8 @@ class CloseCropEngine(WandEngine):
                 cropbox,
                 expand,
             )
-            image.crop(*new_geometry)
+            image.crop(*new_geometry)  # close crop
+            image.strip()  # remove metadata
 
         image.background_color = Color('white')
         image.alpha_channel = 'remove'
