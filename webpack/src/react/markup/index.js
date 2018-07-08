@@ -34,7 +34,7 @@ export const parseText = (text, multiline = true, lastIndex = 0) => {
   const nodes = []
   const rules = multiline ? blockRules : inlineRules
   const types = R.pipe(R.pluck('type'), R.join(' '))(rules)
-  let looplimit = 99 // hack to avoid infinite loops during development. Should not be needed when tests are passing.
+  let looplimit = 99999 // hack to avoid infinite loops during development.
   while (looplimit-- && text) {
     for (const rule of rules) {
       const result = rule.parse(text)

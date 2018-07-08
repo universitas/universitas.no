@@ -169,8 +169,9 @@ $aside-width: 15rem;
     flex: 1;
     @extend %smaller;
     @extend %item;
+    width: 6rem;
     .face {
-      width: 6rem;
+      width: 100%;
       border-radius: 50%;
     }
     .credit {
