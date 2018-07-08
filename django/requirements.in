@@ -48,6 +48,7 @@ diff-match-patch
 awesome-slugify
 faker
 ftfy
+piexif
 
 # TASK RUNNER
 celery
