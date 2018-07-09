@@ -70,7 +70,6 @@ const FeedItem = ({
       <ErrorBoundary>
         <FeedImage image={image} crop_box={crop_box} />
         <Vignette section={section}>{vignette}</Vignette>
-        {module.hot && <FetchIndicator fetchStatus={fetchStatus} />}
         <Kicker>{hyphenate(kicker)}</Kicker>
         <Headline>{hyphenate(headline)}</Headline>
         <Lede>{lede}</Lede>

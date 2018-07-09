@@ -1,4 +1,5 @@
 @import "styles/_common.scss";
+$asidewidth: 15rem;
 
 %bullet-list {
   $indent: 1.3em;
@@ -16,11 +17,9 @@
   }
 }
 
-$aside-width: 15rem;
-
 %left {
   @include size(m) {
-    width: calc(100% - #{$aside-width + 1rem});
+    width: calc(100% - #{$asidewidth + 1rem});
   }
 }
 
@@ -28,7 +27,7 @@ $aside-width: 15rem;
   @include size(m) {
     float: right;
     clear: right;
-    width: $aside-width;
+    width: $asidewidth;
     margin: 0 0 1rem 1rem;
   }
 }
@@ -132,6 +131,7 @@ $aside-width: 15rem;
     width: $logowidth;
     margin-right: $gridgap;
     top: $menuheight + $gridgap;
+    justify-content: center;
   }
   %item {
     padding-bottom: 0.5rem;
@@ -166,10 +166,9 @@ $aside-width: 15rem;
     @extend %item;
   }
   .Byline {
-    flex: 1;
+    flex: 0 0 6rem;
     @extend %smaller;
     @extend %item;
-    width: 6rem;
     .face {
       width: 100%;
       border-radius: 50%;
