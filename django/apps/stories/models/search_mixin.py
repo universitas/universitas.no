@@ -18,7 +18,8 @@ class LogAge(Func):
 
     template = (
         f'log(greatest({MIN_AGE},'
-        '@ extract(epoch FROM (TIMESTAMP \'%(when)s\' - %(timefield)s))'
+        '@ extract(epoch FROM (TIMESTAMP '
+        "'%(when)s' - %(table)s.%(timefield)s))"
         '/ (60 * 60)))::real'
     )
 
@@ -93,7 +94,11 @@ class FullTextSearchQuerySet(QuerySet):
     def with_age(self, field='created', when=None):
         if when is None:
             when = now()
-        return self.annotate(age=LogAge(when=when, timefield=field))
+        return self.annotate(
+            age=LogAge(
+                when=when, timefield=field, table=self.model._meta.db_table
+            )
+        )
 
     def update_search_vector(self):
         """Calculate and store search vector in the database."""
