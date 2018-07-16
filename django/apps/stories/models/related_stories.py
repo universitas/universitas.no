@@ -19,7 +19,7 @@ class RelatedStoriesMixin(models.Model):
             language=self.language
         ).exclude(id=self.id).with_age(
             when=self.publication_date or self.created,
-        ).order_by('-age')
+        ).order_by('age')
         linked = self.inline_links.values_list('linked_story', flat=True)
         related = list(others.filter(pk__in=linked))
         if self.theme_word:

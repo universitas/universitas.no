@@ -191,7 +191,7 @@ $asidewidth: 15rem;
   flex-direction: column;
   justify-content: stretch;
   .fb-comments {
-    height: 190px;
+    min-height: 190px;
   }
 }
 
