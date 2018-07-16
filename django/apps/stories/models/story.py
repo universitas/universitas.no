@@ -18,6 +18,7 @@ from utils.decorators import cache_memoize
 from utils.model_mixins import EditURLMixin
 
 from .mixins import MarkupCharField, MarkupTextField, TextContent
+from .related_stories import RelatedStoriesMixin
 from .search_mixin import FullTextSearchMixin, FullTextSearchQuerySet
 from .sections import StoryType, default_story_type
 from .storychildren import Aside, Pullquote
@@ -55,6 +56,7 @@ class Story(  # type: ignore
     EditURLMixin,
     TimeStampedModel,
     TextContent,
+    RelatedStoriesMixin,
 ):
     """ An article or story in the newspaper. """
 

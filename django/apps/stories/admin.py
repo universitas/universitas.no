@@ -253,10 +253,13 @@ class StoryAdmin(admin.ModelAdmin):
     # list_editable = [ 'publication_status', ]
 
     readonly_fields = [
-        'legacy_html_source', 'legacy_prodsys_source', 'get_html'
+        'legacy_html_source',
+        'legacy_prodsys_source',
+        'get_html',
     ]
     autocomplete_fields = [
         'story_type',
+        'related_stories',
     ]
 
     formfield_overrides = {
@@ -279,6 +282,7 @@ class StoryAdmin(admin.ModelAdmin):
                         'publication_date',
                         'publication_status',
                         'comment_field',
+                        'related_stories',
                     ),
                 ),
             }

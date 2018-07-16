@@ -35,7 +35,6 @@ class NewsFeed extends React.Component {
   }
 
   componentDidMount() {
-    console.log('mounted feed')
     if (module.hot) this.addHandler()
     window.addEventListener('scroll', this.scrollHandler, {
       capture: true,
@@ -47,7 +46,6 @@ class NewsFeed extends React.Component {
     window.removeEventListener('scroll', this.scrollHandler)
   }
   componentDidUpdate() {
-    console.log('updated feed')
     if (module.hot) this.addHandler()
     this.scrollHandler()
   }

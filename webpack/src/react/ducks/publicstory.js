@@ -50,7 +50,6 @@ const getReducer = ({ type, payload, error }) => {
     case STORY_REQUESTED:
       return R.over(storyLens(payload.id), mergeLeft({ fetching: true }))
     case STORIES_REQUESTED:
-      console.log({ payload, type })
       return mergeLeft(
         R.pipe(R.map(R.flip(R.objOf)({ fetching: true })), R.mergeAll)(
           payload.ids,

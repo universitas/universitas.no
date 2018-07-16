@@ -124,6 +124,10 @@ $asidewidth: 15rem;
 }
 
 .StorySidebar {
+  margin-bottom: 1rem;
+  text-align: center;
+  display: flex;
+  flex-flow: row wrap;
   @include size(s) {
     align-self: flex-start;
     position: sticky;
@@ -131,20 +135,18 @@ $asidewidth: 15rem;
     width: $logowidth;
     margin-right: $gridgap;
     top: $menuheight + $gridgap;
-    justify-content: center;
+    flex-flow: column;
+    .StoryInfo {
+      flex-flow: column;
+    }
   }
   %item {
     padding-bottom: 0.5rem;
     margin-bottom: 0.5rem;
     border-bottom: 1px solid #eee;
   }
-  display: flex;
-  flex-flow: row wrap;
-  align-items: stretch;
-  text-align: center;
   .StoryInfo {
     display: flex;
-    flex-flow: row wrap;
     justify-content: center;
     width: 100%;
     @extend %item;
@@ -166,11 +168,12 @@ $asidewidth: 15rem;
     @extend %item;
   }
   .Byline {
-    flex: 0 0 6rem;
+    flex: 1 1 6rem;
+    margin: $pad;
     @extend %smaller;
     @extend %item;
     .face {
-      width: 100%;
+      width: 6rem;
       border-radius: 50%;
     }
     .credit {

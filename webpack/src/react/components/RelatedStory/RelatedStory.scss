@@ -1,0 +1,25 @@
+@import "styles/_common.scss";
+.RelatedStories {
+  border-top: $separator-line;
+  padding-top: 1rem;
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: 1fr;
+  @include size(s) {
+    grid-template-columns: 1fr 1fr 1fr;
+    .sectionTitle {
+      grid-column: 1/4;
+    }
+  }
+}
+.RelatedStory {
+  a {
+    max-width: 100%;
+  }
+  .title {
+    font-size: 1.4rem;
+  }
+  img {
+    width: 100%;
+  }
+}

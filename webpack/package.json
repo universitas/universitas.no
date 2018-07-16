@@ -10,7 +10,7 @@
     "serve": "TARGET=server pm2-runtime ./build/server.bundle.js",
     "servedev": "TARGET=server pm2-dev ./build/server.bundle.js",
     "test": "jest --watchAll --verbose",
-    "testonce": "jest",
+    "testonce": "jest --updateSnapshot",
     "build": "webpack-cli --config webpack.prod.config.js ",
     "tern": "tern --persistent --host 0.0.0.0 --port 33000",
     "rebuild": "npm run build",

@@ -1,22 +1,24 @@
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import (SearchQuery, SearchRank,
-                                            SearchVector, SearchVectorField,
-                                            TrigramSimilarity)
+from django.contrib.postgres.search import (
+    SearchQuery, SearchRank, SearchVector, SearchVectorField, TrigramSimilarity
+)
 from django.db.models import FloatField  # Manager,
-from django.db.models import ExpressionWrapper, F, Func, Model, QuerySet
+from django.db.models import (
+    Case, ExpressionWrapper, F, Func, Model, QuerySet, Value, When
+)
+from django.utils.timezone import now
 
 
 class LogAge(Func):
     """Calculate log 10 of hours since datetime column"""
-    arity = 1
-    # Accept only single field as input `expressions`
     MIN_AGE = 2.0
     # Minimum age 2 hours. Prevent log of zero error and unintended large
     # effect of log of very small inputs.
+    output_field = FloatField()
 
     template = (
         f'log(greatest({MIN_AGE},'
-        'extract(epoch FROM (now() - %(expressions)s))'
+        '@ extract(epoch FROM (TIMESTAMP \'%(when)s\' - %(timefield)s))'
         '/ (60 * 60)))::real'
     )
 
@@ -25,9 +27,10 @@ class LogAge(Func):
     # log(greatest(x, y))
     # base 10 logarithm of largest number of x and y
 
-    # extract(epoch FROM (now() - then))
+    # @ extract(epoch FROM (when - then))
     # Extract total seconds from timedelta `now - then`
     # `epoch` = 1970-01-01 = unix epoch = total seconds
+    # @ is absolute number math operator
 
     # / (60 * 60)
     # Divide by minutes and seconds: seconds -> hours
@@ -40,6 +43,9 @@ class LogAge(Func):
 class FullTextSearchQuerySet(QuerySet):
     """Queryset mixin for performing search and indexing for the Story model"""
     config = 'norwegian'
+    case_config = Case(
+        When(language='en', then=Value('english')), default=Value(config)
+    )
     vector = (
         SearchVector(
             'working_title',
@@ -47,15 +53,15 @@ class FullTextSearchQuerySet(QuerySet):
             'kicker',
             'theme_word',
             weight='A',
-            config=config,
+            config=case_config,
         ) + SearchVector(
             'lede',
             weight='B',
-            config=config,
+            config=case_config,
         ) + SearchVector(
             'bodytext_markup',
             weight='C',
-            config=config,
+            config=case_config,
         )
     )
 
@@ -74,6 +80,9 @@ class FullTextSearchQuerySet(QuerySet):
         ).order_by('-rank')
 
     def with_search_rank(self, query):
+        if not isinstance(query, str):
+            msg = f'expected query to be str, got {type(query)}, {query!r}'
+            raise ValueError(msg)
         search = SearchQuery(query, config=self.config)
         return self.filter(
             search_vector=search,
@@ -81,12 +90,14 @@ class FullTextSearchQuerySet(QuerySet):
             search_rank=SearchRank(F('search_vector'), search),
         )
 
-    def with_age(self, field='created'):
-        return self.annotate(age=LogAge(field))
+    def with_age(self, field='created', when=None):
+        if when is None:
+            when = now()
+        return self.annotate(age=LogAge(when=when, timefield=field))
 
     def update_search_vector(self):
         """Calculate and store search vector in the database."""
-        self.update(search_vector=self.vector)
+        return self.update(search_vector=self.vector)
 
 
 class FullTextSearchMixin(Model):

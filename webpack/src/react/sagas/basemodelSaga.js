@@ -108,7 +108,6 @@ function* routePush(action) {
 }
 
 function* fetchItem(action) {
-  console.log('fetch', action)
   const { getItem, itemAdded, itemPatched, apiGet } = modelFuncs(action)
   const { id, force } = action.payload
   if (!id) return // id is 0 or null

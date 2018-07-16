@@ -6,6 +6,17 @@ export const compose =
   (typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
   Redux.compose
 
+// Shuffle array
+export const shuffle = array => {
+  const a = [...array]
+  let i = a.length
+  while (i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
 // AnimationFrame based debounce function
 export const debounce = function(func, wait) {
   let minutes = null

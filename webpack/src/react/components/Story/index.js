@@ -1,7 +1,11 @@
 import { connect } from 'react-redux'
 import LoadingIndicator from 'components/LoadingIndicator'
 import { requestData } from 'utils/hoc'
-import { getStoryTree, storyRequested } from 'ducks/publicstory'
+import {
+  getStoryTree,
+  storiesRequested,
+  storyRequested,
+} from 'ducks/publicstory'
 import { reverse, toStory } from 'ducks/router'
 import { redirect } from 'redux-first-router'
 import StoryHelmet from './StoryHelmet.js'
@@ -13,16 +17,33 @@ import PageNotFound from 'components/PageNotFound'
 import Debug from 'components/Debug'
 import './Story.scss'
 
-export const Story = props => (
-  <article className="Story">
-    <StoryHead {...props} />
-    <main className="mainContent">
-      <StorySidebar {...props} />
-      <StoryBody {...props} />
-    </main>
-    <StoryFoot {...props} />
-  </article>
-)
+class Story extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  componentDidMount() {
+    if (this.props.related_stories)
+      this.props.fetchRelated(this.props.related_stories)
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.id == this.props.id) return
+    if (this.props.related_stories)
+      this.props.fetchRelated(this.props.related_stories)
+  }
+
+  render() {
+    return (
+      <article className="Story">
+        <StoryHead {...this.props} />
+        <main className="mainContent">
+          <StorySidebar {...this.props} />
+          <StoryBody {...this.props} />
+        </main>
+        <StoryFoot {...this.props} />
+      </article>
+    )
+  }
+}
 
 const StoryRoute = ({ redirect, ...props }) => {
   if (props.HTTPstatus == 404)
@@ -42,6 +63,7 @@ const StoryRoute = ({ redirect, ...props }) => {
 const mapStateToProps = (state, { id }) => getStoryTree(id)(state) || {}
 const mapDispatchToProps = (dispatch, { id }) => ({
   fetchData: () => dispatch(storyRequested(id)),
+  fetchRelated: related_stories => dispatch(storiesRequested(related_stories)),
   redirect: routeAction => dispatch(redirect(routeAction)),
 })
 

@@ -144,8 +144,12 @@ class PublicStorySerializer(StorySerializer):
             'modified',
             'created',
             'publication_date',
+            'related_stories',
         ]
 
+    related_stories = serializers.PrimaryKeyRelatedField(
+        many=True, read_only=True
+    )
     url = serializers.HyperlinkedIdentityField(view_name='publicstory-detail')
     bylines = BylineSerializer(source='byline_set', many=True)
     images = StoryImageSerializer(many=True)
@@ -180,6 +184,7 @@ class PublicStoryViewSet(viewsets.ReadOnlyModelViewSet):
         'inline_links',
         'videos',
         'inline_html_blocks',
+        'related_stories',
         Prefetch(
             'images', queryset=StoryImage.objects.select_related('imagefile')
         ),

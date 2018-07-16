@@ -1,4 +1,6 @@
 import { reverse, toStory } from 'ducks/router'
+import RelatedStory from 'components/RelatedStory'
+import { shuffle } from 'utils/misc'
 
 class FacebookComments extends React.Component {
   constructor(props) {
@@ -25,12 +27,24 @@ class FacebookComments extends React.Component {
   }
 }
 
-const StoryFoot = ({ comment_field, id, title, section }) => {
+const pickRelated = R.pipe(shuffle, R.take(3))
+
+const RelatedStories = ({ related_stories }) => (
+  <section className="RelatedStories">
+    <h2 className="sectionTitle">Les også disse sakene:</h2>
+    {pickRelated(related_stories).map((id, idx) => (
+      <RelatedStory key={idx} id={id} />
+    ))}
+  </section>
+)
+
+const StoryFoot = ({ comment_field, id, title, section, related_stories }) => {
   const url = `http://universitas.no${reverse(toStory({ id, section, title }))}`
 
   return (
     <footer className="StoryFoot">
       {comment_field == 'facebook' && <FacebookComments url={url} />}
+      <RelatedStories related_stories={related_stories} />
     </footer>
   )
 }
