@@ -1,19 +1,21 @@
 @import "styles/_common.scss";
 $asidewidth: 15rem;
+$bullet: "data:image/svg+xml," +
+  "<svg xmlns='http://www.w3.org/2000/svg' height='1.3ex' viewBox='0 0 10 10'>" +
+  "<rect width='10' height='10' rx='1' ry='1' fill='" +
+  str-replace("#", "%23", #{$medium-yellow}) + "'/>" + "</svg>";
 
 %bullet-list {
   $indent: 1.3em;
   list-style: none;
   margin-left: $indent;
   &:before {
-    display: inline-flex;
+    width: $indent;
     vertical-align: baseline;
+    display: inline-block;
     margin-left: -$indent;
     color: $medium-yellow;
-    height: 1.4ex;
-    width: $indent;
-    content: "";
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect fill='#ffb653' width='10' height='10' rx='1' ry='1' /%3E%3C/svg%3E");
+    content: url(str-replace("#", "%23", $bullet));
   }
 }
 

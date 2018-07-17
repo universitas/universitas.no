@@ -16,9 +16,6 @@
       grid-column-end: span 2;
       .pdf {
         display: flex;
-        // grid-gap: 2rem;
-        // grid-template-columns: 1fr 1fr;
-        // grid-template-rows: 10rem;
         .Faximile {
           padding-top: calc(143.5% * 0.5 - 1.35rem);
           &:nth-child(1) {
@@ -36,11 +33,6 @@
     &:hover {
       .text {
         color: $dark-grey;
-      }
-      .pdf {
-        .Faximile {
-          transform: scale(1);
-        }
       }
     }
     .text {
@@ -65,8 +57,11 @@
         background: #eee;
         @extend %faximile;
         transition: transform 300ms ease;
-        transition-delay: 200ms;
+        transition-delay: 100ms;
         transform: scale(0.95);
+        &:hover {
+          transform: scale(1) !important;
+        }
         width: 100%;
         padding-top: 143.5%;
         img {
