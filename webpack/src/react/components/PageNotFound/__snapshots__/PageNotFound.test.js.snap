@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`PageNotFound renders correctly 1`] = `
-<main
+<article
   className="PageNotFound"
 >
   Fant ikke siden
-</main>
+</article>
 `;

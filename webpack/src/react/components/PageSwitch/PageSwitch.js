@@ -81,7 +81,7 @@ const PageSwitch = ({ location = {}, search = '' }) => {
     <main className="PageSwitch">
       <PageHelmet {...props} />
       <TransitionGroup component={null}>
-        <CSSTransition key={props.pathname} timeout={2000} classNames="page">
+        <CSSTransition key={props.pathname} timeout={400} classNames="page">
           <PageComponent className="Page" {...props} />
         </CSSTransition>
       </TransitionGroup>
