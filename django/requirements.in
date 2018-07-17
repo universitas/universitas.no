@@ -38,6 +38,7 @@ boto
 # OTHER LIBRARIES
 pillow
 wand
+cython
 imagehash
 beautifulsoup4
 pypdf2
