@@ -1,7 +1,7 @@
 import { withErrorBoundary } from 'react-error-boundary'
 import { Helmet } from 'react-helmet'
 import { connect } from 'react-redux'
-import ScrollContext from 'components/ScrollContext'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 
 import {
   HOME,
@@ -17,7 +17,7 @@ import {
 } from 'ducks/router'
 import { getSearch } from 'ducks/newsFeed'
 import { NewsFeed, SearchFeed } from 'components/NewsFeed'
-import StoryPage from 'components/Story'
+import Story from 'components/Story'
 import PDFArchive from 'components/Pages/PDFArchive'
 import PublicationSchedule from 'components/Pages/PublicationSchedule'
 import AboutUniversitas from 'components/Pages/AboutUniversitas'
@@ -44,27 +44,24 @@ const PageHelmet = ({
   ) : null
 
 const pageWrapper = (Page, toTitle = R.F) => {
-  const PageComponent = withErrorBoundary(Page)
-  const pageTitle = R.pipe(
+  const title = R.pipe(
     toTitle,
     R.unless(R.is(String), R.always('')),
     R.trim,
     captitalize,
   )
-  return R.pipe(
-    R.converge(R.assoc('pageTitle'), [pageTitle, R.identity]),
-    props => [
-      <PageHelmet key="head" {...props} />,
-      <PageComponent key="body" {...props} />,
-    ],
+  const locationToProps = R.pipe(
+    R.converge(R.merge, [R.prop('payload'), R.pick(['pathname'])]),
+    R.converge(R.assoc('pageTitle'), [title, R.identity]),
   )
+  return [withErrorBoundary(Page), locationToProps]
 }
 
 const pages = {
   [HOME]: pageWrapper(NewsFeed, R.always('Forsiden')),
   [SECTION]: pageWrapper(NewsFeed, R.prop('section')),
-  [STORY]: pageWrapper(StoryPage, R.prop('title')),
-  [SHORT_URL]: pageWrapper(StoryPage, R.prop('id')),
+  [STORY]: pageWrapper(Story, R.prop('title')),
+  [SHORT_URL]: pageWrapper(Story, R.prop('id')),
   [PDF]: pageWrapper(PDFArchive, ({ year = '' }) => `PDF-arkiv ${year}`),
   [SCHEDULE]: pageWrapper(
     PublicationSchedule,
@@ -76,12 +73,18 @@ const pages = {
 }
 
 const PageSwitch = ({ location = {}, search = '' }) => {
-  const PageComponent = search
+  const [PageComponent, locationToProps] = search
     ? SearchFeed
     : pages[location.type] || pages[NOT_FOUND]
+  const props = locationToProps(location)
   return (
-    <main className="Page">
-      <PageComponent {...location.payload} pathname={location.pathname} />
+    <main className="PageSwitch">
+      <PageHelmet {...props} />
+      <TransitionGroup component={null}>
+        <CSSTransition key={props.pathname} timeout={400} classNames="page">
+          <PageComponent className="Page" {...props} />
+        </CSSTransition>
+      </TransitionGroup>
     </main>
   )
 }

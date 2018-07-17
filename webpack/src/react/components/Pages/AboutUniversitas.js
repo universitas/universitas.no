@@ -8,6 +8,7 @@ import { requestData } from 'utils/hoc'
 import { getSite, siteRequested } from 'ducks/site'
 import Debug from 'components/Debug'
 import ContactCard from 'components/ContactCard'
+import cx from 'classnames'
 
 const style = {
   lineHeight: 0,
@@ -33,8 +34,8 @@ const NextIssue = ({ publication_date, issue_name }) => (
   </p>
 )
 
-const AboutUniversitas = ({ pageTitle, issues, staff }) => (
-  <div className="AboutUniversitas">
+const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
+  <article className={cx('AboutUniversitas', className)}>
     <h1>{pageTitle}</h1>
     <p>Universitas er Norges største studentavis.</p>
     <p>Avisen har et opplag på 14 000, og kommer ut 35 ganger i året.</p>
@@ -81,7 +82,7 @@ const AboutUniversitas = ({ pageTitle, issues, staff }) => (
     </p>
     <h3>Redaksjonen</h3>
     {R.map(ContactCard, staff)}
-  </div>
+  </article>
 )
 
 const mapStateToProps = getSite

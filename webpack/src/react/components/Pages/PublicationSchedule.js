@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import cx from 'classnames'
 import { Helmet } from 'react-helmet'
 import { requestData } from 'utils/hoc'
 
@@ -10,8 +11,13 @@ import LoadingIndicator from 'components/LoadingIndicator'
 
 const currentYear = new Date().getFullYear()
 
-const PublicationSchedule = ({ pageTitle, issues, year = currentYear }) => (
-  <div className="PublicationSchedule">
+const PublicationSchedule = ({
+  pageTitle,
+  issues,
+  year = currentYear,
+  className,
+}) => (
+  <article className={cx('PublicationSchedule', className)}>
     <YearNavigation year={year} issues={issues} toUrl={toPubSchedule} />
     <h1>{pageTitle}</h1>
     <p>Magasin er Universitas' månedlige featurebilag</p>
@@ -20,7 +26,7 @@ const PublicationSchedule = ({ pageTitle, issues, year = currentYear }) => (
       studenter. Det samme bilaget legges ved i avisenes to første utgaver
     </p>
     <PublicationTable year={year} issues={issues} />
-  </div>
+  </article>
 )
 
 export default connect(getIssues, { fetchData: issuesRequested })(

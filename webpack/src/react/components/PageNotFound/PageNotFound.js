@@ -1,8 +1,13 @@
-const PageNotFound = ({ HTTPstatus, children = 'Fant ikke siden' }) => (
-  <main className="PageNotFound">
+import cx from 'classnames'
+const PageNotFound = ({
+  HTTPstatus,
+  children = 'Fant ikke siden',
+  className = '',
+}) => (
+  <article className={cx('PageNotFound', className)}>
     {HTTPstatus && <h1>HTTP {HTTPstatus}</h1>}
     {children}
-  </main>
+  </article>
 )
 
 export default PageNotFound

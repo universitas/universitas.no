@@ -25,20 +25,15 @@ h6 {
   width: 100%;
 }
 
-.Page {
-  position: relative;
+.PageSwitch {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: center;
-  > * {
-    padding: $gridgap/2 0;
-    width: 100%;
-    max-width: $content-width;
-    position: relative;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: minmax(auto, $content-width);
+  .Page {
+    margin: $pad;
+    grid-area: 1/1/2/2;
   }
-  padding: 0 $pad;
 }
 
 .univTable {
