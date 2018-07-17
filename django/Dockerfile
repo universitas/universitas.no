@@ -20,16 +20,15 @@ RUN apt-get update && apt-get install -y \
   postgresql-client \
 && rm -rf /var/lib/apt/lists/*
 
-# install jupyter notebook with vim key bindings
-RUN /app/install-jupyter.sh
-
 # create `var` folders that django uses
 RUN cd /var && mkdir staging media static logs &&\
   chown 1000:1000 staging media static logs
 
-
 # install python dependencies for django
 RUN pip install --no-cache wheel && pip install --no-cache -r /app/requirements.txt
+
+# install jupyter notebook with vim key bindings
+RUN /app/install-jupyter.sh
 
 # set up ptpython with persistent history and custom config
 RUN mkdir /home/django/.ptpython &&\

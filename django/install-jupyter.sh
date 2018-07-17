@@ -3,7 +3,7 @@
 REPO=https://github.com/lambdalisue/jupyter-vim-binding
 
 # globally install jupyter
-pip install jupyter ipywidgets tqdm
+pip install --no-cache jupyter ipywidgets tqdm
 
 # install vim bindings for user 1000
 
