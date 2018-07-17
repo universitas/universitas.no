@@ -74,7 +74,7 @@ const pages = {
 
 const PageSwitch = ({ location = {}, search = '' }) => {
   const [PageComponent, locationToProps] = search
-    ? SearchFeed
+    ? [SearchFeed, R.identity]
     : pages[location.type] || pages[NOT_FOUND]
   const props = locationToProps(location)
   return (

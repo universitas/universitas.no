@@ -1,5 +1,5 @@
 const ContactCard = ({ id, position, display_name, phone, email, thumb }) => (
-  <div className="ContactCard" key={id}>
+  <div className="ContactCard">
     <img className="thumb" src={thumb} alt={display_name} />
     <div className="position">{position}</div>
     <div className="name">{display_name}</div>

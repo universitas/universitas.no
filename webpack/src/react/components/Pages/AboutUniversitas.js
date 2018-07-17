@@ -81,7 +81,7 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
       64 496, eller <Link to={toAdInfo()}>les mer om annonsering.</Link>
     </p>
     <h3>Redaksjonen</h3>
-    {R.map(ContactCard, staff)}
+    {R.map(props => <ContactCard key={props.id} {...props} />, staff)}
   </article>
 )
 

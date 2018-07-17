@@ -58,7 +58,7 @@ function* fetchStory(action) {
   const { id, prefetch } = action.payload
   const story = yield select(getStory)
   if (prefetch && (story.fetching || story.id)) return
-  yield put(storyFetching, id)
+  yield put(storyFetching(id))
   const { response, error } = yield call(apiGet, 'publicstories', id)
   if (response) yield put(storyFetched(response))
   else {

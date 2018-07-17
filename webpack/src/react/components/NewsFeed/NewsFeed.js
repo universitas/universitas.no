@@ -32,7 +32,7 @@ class NewsFeed extends React.Component {
       R.keys,
     )(this.itemRefs)
     if (R.isEmpty(itemsVisible)) return
-    this.props.storiesRequested(itemsVisible)
+    if (this.props.storiesRequested) this.props.storiesRequested(itemsVisible)
   }
 
   componentDidMount() {
