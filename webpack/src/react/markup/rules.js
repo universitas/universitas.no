@@ -62,7 +62,7 @@ const baseRules = {
   },
   place: {
     leaf,
-    pattern: /^ *\[\[ *(.*?) (?: *\| *(.*?))? *\]\] *$/,
+    pattern: /^ *\[\[ *(.*?)(?: *\| *(.*?))? *\]\] *$/,
     groups: ['name', 'flags'],
     reverse: ({ name, flags = '' }) =>
       `\n[[ ${name}${flags && ' | '}${flags} ]]\n`,

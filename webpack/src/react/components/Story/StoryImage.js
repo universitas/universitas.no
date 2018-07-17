@@ -1,16 +1,10 @@
 import './StoryImage.scss'
 
-const position = ({ x = 0.5, y = 0.5 }) => `${x * 100}% ${y * 100}%`
-
-const Caption = ({ caption, creditline }) => {
+const Caption = ({ caption = '', creditline = '' }) => {
   if (!(caption || creditline)) return null
   const match = R.match(/^([^:.\n]*:)(.*)$/, caption)
   let intro = ''
-  if (match) {
-    intro = match[1]
-    caption = match[2]
-  }
-
+  if (match) [intro, caption] = match
   return (
     <div className="Caption">
       {intro && <strong className="stikk">{intro}</strong>}
@@ -19,6 +13,10 @@ const Caption = ({ caption, creditline }) => {
     </div>
   )
 }
+
+const imageStyle = ({ category, crop_box: { x = 0.5, y = 0.5 } }) => ({
+  objectPosition: category == 'diagram' ? 'center' : `${x * 100}% ${y * 100}%`,
+})
 
 const Image = ({
   id,
@@ -33,9 +31,7 @@ const Image = ({
     <div className="imgWrapper">
       <img
         className={category}
-        style={{
-          objectPosition: position(crop_box),
-        }}
+        style={imageStyle({ crop_box, category })}
         src={cropped || large}
         alt={caption}
       />
