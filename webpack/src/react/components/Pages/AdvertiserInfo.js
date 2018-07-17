@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import cx from 'classnames'
 import modulKartLiten from 'images/modulkart_liten.png'
 import modulKart from 'images/modulkart.png'
 import './page.scss'
@@ -42,8 +43,8 @@ const ModulKart = ({}) => (
   </a>
 )
 
-const AdvertiserInfo = ({ pageTitle, state }) => (
-  <div className="AdvertiserInfo">
+const AdvertiserInfo = ({ pageTitle, state, className = '' }) => (
+  <article className={cx('AdvertiserInfo', className)}>
     <h1>{pageTitle}</h1>
     <p>
       Avisen har et opplag på 14 000 og distribueres til læresteder tilknyttet
@@ -114,7 +115,7 @@ const AdvertiserInfo = ({ pageTitle, state }) => (
         </table>
       </div>
     </section>
-  </div>
+  </article>
 )
 const mapStateToProps = (state, ownProps) => ({})
 const mapDispatchToProps = (dispatch, ownProps) => ({})

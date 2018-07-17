@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import cx from 'classnames'
 import LoadingIndicator from 'components/LoadingIndicator'
 import { requestData } from 'utils/hoc'
 import {
@@ -33,7 +34,7 @@ class Story extends React.Component {
 
   render() {
     return (
-      <article className="Story">
+      <article className={cx('Story', this.props.className)}>
         <StoryHead {...this.props} />
         <main className="mainContent">
           <StorySidebar {...this.props} />

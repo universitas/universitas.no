@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import cx from 'classnames'
 import { timeoutDebounce, inViewPort } from 'utils/misc'
 import { getItems, getFeed, feedRequested } from 'ducks/newsFeed'
 import { getStory, storiesRequested } from 'ducks/publicstory'
@@ -51,11 +52,11 @@ class NewsFeed extends React.Component {
   }
 
   render() {
-    const { items, fetching, next, feedRequested } = this.props
+    const { items, fetching, next, feedRequested, className } = this.props
     const offset = items.length ? R.last(items).order : null
     const fetchMore = () => feedRequested({ offset })
     return (
-      <section className="NewsFeed">
+      <article className={cx('NewsFeed', className)}>
         {items.map(props => (
           <ConnectedFeedItem
             addRef={this.addRef(props.story.id)}
@@ -64,7 +65,7 @@ class NewsFeed extends React.Component {
           />
         ))}
         <LoadMore fetchMore={fetchMore} fetching={fetching} next={next} />
-      </section>
+      </article>
     )
   }
 }
