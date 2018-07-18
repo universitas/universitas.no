@@ -1,5 +1,5 @@
 # parent image based on python:3-stretch
-FROM haakenlid/opencv:3.7
+FROM haakenlid/opencv:3.6
 MAINTAINER haakenlid
 WORKDIR /app/
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
