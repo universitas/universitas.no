@@ -76,9 +76,14 @@ class FullTextSearchQuerySet(QuerySet):
 
     def search(self, query):
         """Perform postgresql full text search using search vector."""
-        return self.with_search_rank(query).with_age('created').annotate(
+        qs = self.with_age('created')
+        result = qs.with_search_rank(query).annotate(
             rank=ExpressionWrapper(F('search_rank') / F('age'), FloatField())
         ).order_by('-rank')
+        if result:
+            return result
+        # fallback to icontains search
+        return qs.filter(bodytext_markup__icontains=query).order_by('-age')
 
     def with_search_rank(self, query):
         if not isinstance(query, str):

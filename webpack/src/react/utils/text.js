@@ -33,13 +33,18 @@ export const makeFuzzer = (candidates, cutoff = 0.5) => {
 const NBRS = '\xA0'
 const WORDJOINER = '\u2060'
 
-// Fixify stuff
+// cleanup some markup
 export const cleanText = R.pipe(
-  R.replace(/--/g, '–'),
+  R.replace(/“/g, '«'), // left curly quote
+  R.replace(/”/g, '»'), // right curly quote
+  R.replace(/\B"(.*?)"\B/gu, '«$1»'), // straight quotes
+  R.replace(/--/g, '–'), // en-dash
   R.replace(/(^|[.:?!] +)[-–] ?\b/gmu, `$1–${WORDJOINER}${NBRS}`),
+  R.trim,
+  R.replace(/\n{3,}/g, '\n\n'), // multi newlines
 )
 
-// old cleanup function
+// legacy cleanup function
 export const cleanup = text => {
   return text
     .replace(/^(@\S+:)/gm, s => s.toLowerCase())

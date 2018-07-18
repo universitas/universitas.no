@@ -1,10 +1,11 @@
 import StoryImage from './StoryImage.js'
 import SlideShow from 'components/SlideShow'
-import { hyphenate, cleanText } from 'utils/text'
+import { hyphenate } from 'utils/text'
+import { inlineText } from 'markup/render'
 import cx from 'classnames'
 
-const ifChildren = Component => props =>
-  props.children ? <Component {...props} /> : null
+const ifChildren = Component => ({ children, ...props }) =>
+  children ? <Component {...props}>{inlineText(children)}</Component> : null
 
 const Vignette = ifChildren(({ section, ...props }) => (
   <div className={cx('Vignette', `section-${section}`)} {...props} />
@@ -31,9 +32,9 @@ const StoryHead = ({ title, kicker, lede, ...props }) => {
           </SlideShow>
         </div>
       ) : null}
-      <Kicker>{cleanText(kicker)}</Kicker>
-      <Headline>{cleanText(hyphenate(title))}</Headline>
-      <Lede>{cleanText(lede)}</Lede>
+      <Kicker>{kicker}</Kicker>
+      <Headline>{hyphenate(title)}</Headline>
+      <Lede>{lede}</Lede>
     </div>
   )
 }

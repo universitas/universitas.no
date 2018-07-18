@@ -1,5 +1,6 @@
 import rules from './rules'
-import { hashText } from 'utils/text'
+import { cleanText, hashText } from 'utils/text'
+export { rules }
 
 export const makeParser = ({
   type,
@@ -30,6 +31,7 @@ const [inlineRules, blockRules] = R.pipe(
 )(rules)
 
 // Parse markup text to render tree
+// :: string -> [{nodes}]
 export const parseText = (text, multiline = true, lastIndex = 0) => {
   const nodes = []
   const rules = multiline ? blockRules : inlineRules
@@ -51,7 +53,7 @@ export const parseText = (text, multiline = true, lastIndex = 0) => {
             nodes.push({ ...node, children })
           }
         }
-        lastIndex += index
+        // lastIndex += index
         text = text.slice(index)
         break
       }
@@ -60,29 +62,18 @@ export const parseText = (text, multiline = true, lastIndex = 0) => {
   return nodes
 }
 
-const cleanMarkup = R.pipe(
-  R.replace(/“/g, '«'),
-  R.replace(/”/g, '»'),
-  R.replace(/--/g, '–'),
-  R.replace(/([.!?;:] |^) ?[-–] ?/gm, '$1– '),
-  R.replace(/\B"(.*?)"\B/gu, '«$1»'),
-  R.trim,
-  R.replace(/\n{3,}/g, '\n\n'),
-)
-
 // Render parse tree to markup text
-const renderText = tree => {
-  let res = []
+// :: [{nodes}] -> string
+export const renderText = tree => {
+  const text = []
   for (const node of tree) {
     if (R.is(String, node)) {
-      res.push(node)
+      text.push(node)
     } else {
       const rule = rules[node.type]
-      res.push(rule.reverse({ ...node, content: renderText(node.children) }))
-      if (!rule.inline) res.push('\n')
+      text.push(rule.reverse({ ...node, content: renderText(node.children) }))
+      if (!rule.inline) text.push('\n')
     }
   }
-  return cleanMarkup(R.join('', res))
+  return cleanText(R.join('', text))
 }
-
-export { rules, renderText }

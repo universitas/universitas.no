@@ -2,7 +2,7 @@ import {
   hyphenate,
   utf8Decode,
   formatFileSize,
-  cleanup,
+  cleanText,
   stringify,
   toJson,
 } from './text'
@@ -23,11 +23,11 @@ test('circular json returns error', () => {
   })
 })
 
-test('cleanup', () => {
-  expect(cleanup('')).toEqual('')
-  expect(cleanup('@text: --@text')).toEqual('@txt: –@text')
-  expect(cleanup('hello "hello"')).toEqual('Hello «hello»')
-  expect(cleanup('@t:«hello"')).toEqual('@txt: «hello»')
+test('cleanText', () => {
+  const SPACER = '\u2060\xA0'
+  expect(cleanText('')).toEqual('')
+  expect(cleanText('@txt: -- text')).toEqual(`@txt: –${SPACER}text`)
+  expect(cleanText('-Hello "hello"')).toEqual(`–${SPACER}Hello «hello»`)
 })
 
 test('stringify', () => {

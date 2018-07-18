@@ -1,14 +1,14 @@
 import './StoryImage.scss'
+import { inlineText } from 'markup/render'
 
 const Caption = ({ caption = '', creditline = '' }) => {
   if (!(caption || creditline)) return null
-  const match = R.match(/^([^:.\n]*:)(.*)$/, caption)
-  let intro = ''
-  if (match) [intro, caption] = match
+  const match = R.match(/^([^:.\n]*:)(.*)$/, caption) || [, '', caption]
+  const [, intro, body] = match
   return (
     <div className="Caption">
-      {intro && <strong className="stikk">{intro}</strong>}
-      {caption}
+      {intro && <span className="stikk">{intro}</span>}
+      {body}
       {creditline && <span className="creditline">{creditline}</span>}
     </div>
   )

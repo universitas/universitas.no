@@ -44,6 +44,10 @@ const cases = {
     'hello [world',
     [{ children: ['hello ', {}, 'world'] }],
   ],
+  emphasis: [
+    'hello _world_!',
+    [{ children: ['hello ', { type: 'em', children: ['world'] }, '!'] }],
+  ],
 }
 
 describe('parseText', () => {
@@ -58,8 +62,11 @@ describe('renderText', () => {
     test(c, () => expect(reverse(cases[c][0])).toEqual(cases[c][0]))
 
   test('cleanup after', () => {
+    const SPACE = /\u2060\xa0/g
     expect(reverse('hello _world_, [link]')).toEqual('hello _world_, [link]')
-    expect(reverse('-hi \n@mt:- hi. -hi!')).toEqual('– hi\n\n@mt: – hi. – hi!')
+    expect(reverse('-hi \n@mt:- hi. -hi!').replace(SPACE, ' ')).toEqual(
+      '– hi\n\n@mt: – hi. – hi!',
+    )
     expect(reverse('"hello "world""')).toEqual('«hello «world»»')
     expect(reverse('"hello" "world"')).toEqual('«hello» «world»')
   })
