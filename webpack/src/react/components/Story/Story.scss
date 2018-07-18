@@ -1,9 +1,20 @@
 @import "styles/_common.scss";
+$linkcolor: #1779ba;
 $asidewidth: 15rem;
 $bullet: "data:image/svg+xml," +
   "<svg xmlns='http://www.w3.org/2000/svg' height='1.3ex' viewBox='0 0 10 10'>" +
   "<rect width='10' height='10' rx='1' ry='1' fill='" +
   str-replace("#", "%23", #{$medium-yellow}) + "'/>" + "</svg>";
+
+$externallink: "data:image/svg+xml," +
+  "<svg xmlns='http://www.w3.org/2000/svg' height='0.85em' viewBox='0 0 16 14'>" +
+  "<path d='M 9 2 L 9 3 L 12.292969 3 L 6.023438 9.273438 L 6.726563 " +
+  "9.976563 L 13 3.707031 L 13 7 L 14 7 L 14 2 Z M 4 4 C 2.894531 4 2 " +
+  "4.894531 2 6 L 2 12 C 2 13.105469 2.894531 14 4 14 L 10 14 C 11.105469 " +
+  "14 12 13.105469 12 12 L 12 7 L 11 8 L 11 12 C 11 12.550781 10.550781 " +
+  "13 10 13 L 4 13 C 3.449219 13 3 12.550781 3 12 L 3 6 C 3 5.449219 " +
+  "3.449219 5 4 5 L 8 5 L 9 4 Z' " + "fill='" +
+  str-replace("#", "%23", #{$linkcolor}) + "'/>" + "</svg>";
 
 %bullet-list {
   $indent: 1.3em;
@@ -36,12 +47,23 @@ $bullet: "data:image/svg+xml," +
 
 .Story {
   a {
-    color: #1779ba;
+    color: $linkcolor;
     text-decoration: none;
+    &.internal {
+    }
+    &.external:after {
+      opacity: 0.4;
+      padding-left: 0.1em;
+      content: url($externallink);
+      display: inline;
+    }
     &:hover,
     &:focus {
       color: #1468a0;
       text-decoration: underline;
+      &:after {
+        opacity: 1;
+      }
     }
   }
   line-height: 1.4em;

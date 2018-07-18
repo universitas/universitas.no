@@ -4,31 +4,24 @@ import Debug from 'components/Debug'
 // import { getSite } from 'ducks/site'
 import { getUser } from 'ducks/auth'
 import { getLocation } from 'ducks/router'
+import { getUx, toggleUx } from 'ducks/site'
 
-class FrontpageEdit extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { open: false }
-    this.toggleOpen = () => this.setState({ open: !this.state.open })
-  }
-
-  render() {
-    const { user } = this.props
-    const { open } = this.state
-    if (!user) return null
-    return (
-      <div className="FrontpageEdit" onClick={this.toggleOpen}>
-        {open ? <Debug {...this.props.location} /> : <Edit />}
-      </div>
-    )
-  }
-}
+const FrontpageEdit = ({ editing, location, user, toggleUx }) =>
+  user && module.hot ? (
+    <div
+      className="FrontpageEdit"
+      onClick={() => toggleUx({ editing: !editing })}
+    >
+      {editing ? <Debug {...location} /> : <Edit />}
+    </div>
+  ) : null
 
 const mapStateToProps = (state, ownProps) => ({
   user: getUser(state),
   location: getLocation(state),
+  editing: getUx(state).editing,
 })
 
 export { FrontpageEdit }
-const mapDispatchToProps = (dispatch, ownProps) => ({})
+const mapDispatchToProps = { toggleUx }
 export default connect(mapStateToProps, mapDispatchToProps)(FrontpageEdit)

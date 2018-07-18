@@ -2,11 +2,8 @@ import { connect } from 'react-redux'
 import cx from 'classnames'
 import LoadingIndicator from 'components/LoadingIndicator'
 import { requestData } from 'utils/hoc'
-import {
-  getStoryTree,
-  storiesRequested,
-  storyRequested,
-} from 'ducks/publicstory'
+import { getStory, storiesRequested, storyRequested } from 'ducks/publicstory'
+import { buildNodeTree } from 'markup/nodeTree'
 import { reverse, toStory } from 'ducks/router'
 import { redirect } from 'redux-first-router'
 import StoryHelmet from './StoryHelmet.js'
@@ -17,7 +14,6 @@ import StoryFoot from './StoryFoot.js'
 import PageNotFound from 'components/PageNotFound'
 import Debug from 'components/Debug'
 import './Story.scss'
-
 class Story extends React.Component {
   constructor(props) {
     super(props)
@@ -33,12 +29,13 @@ class Story extends React.Component {
   }
 
   render() {
+    const tree = buildNodeTree(this.props)
     return (
       <article className={cx('Story', this.props.className)}>
-        <StoryHead {...this.props} />
+        <StoryHead {...tree} />
         <main className="mainContent">
-          <StorySidebar {...this.props} />
-          <StoryBody {...this.props} />
+          <StorySidebar {...tree} />
+          <StoryBody {...tree} />
         </main>
         <StoryFoot {...this.props} />
       </article>
@@ -61,7 +58,7 @@ const StoryRoute = ({ redirect, ...props }) => {
   ]
 }
 
-const mapStateToProps = (state, { id }) => getStoryTree(id)(state) || {}
+const mapStateToProps = (state, { id }) => R.defaultTo({}, getStory(id)(state))
 const mapDispatchToProps = (dispatch, { id }) => ({
   fetchData: () => dispatch(storyRequested(id)),
   fetchRelated: related_stories => dispatch(storiesRequested(related_stories)),

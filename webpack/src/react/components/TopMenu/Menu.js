@@ -7,6 +7,8 @@ import { toHome, toPdf, toPubSchedule, toAbout, toAdInfo } from 'ducks/router'
 import LanguageWidget from './LanguageWidget.js'
 import SearchWidget from './SearchWidget.js'
 import { Menu, Close } from 'components/Icons'
+import { connect } from 'react-redux'
+import { getUx, toggleUx } from 'ducks/site'
 
 const Level = ({ children, ...props }) => (
   <div className={cx('Level', props)}>
@@ -43,36 +45,31 @@ const PageLinks = ({ year }) => (
 
 const year = new Date().getFullYear()
 
-class TopMenu extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { expanded: false }
-    this.toggleExpand = () => this.setState({ expanded: !this.state.expanded })
-  }
+const TopMenu = ({ expanded, toggleUx }) => (
+  <section className={cx('TopMenu')}>
+    <Level one>
+      <Link className={cx('logoLink')} to={toHome()}>
+        <Universitas className={cx('Logo')} />
+      </Link>
+      <Sections />
+      <PageLinks />
+      <LanguageWidget />
+      <SearchWidget />
+      <MenuIcon
+        expanded={expanded}
+        onClick={() => toggleUx({ menuExpanded: !expanded })}
+      />
+    </Level>
+    <Level two expanded={expanded}>
+      <SearchWidget />
+      <LanguageWidget />
+      <Sections />
+      <PageLinks />
+    </Level>
+  </section>
+)
 
-  render() {
-    const { expanded } = this.state
-    return (
-      <section className={cx('TopMenu')}>
-        <Level one>
-          <Link className={cx('logoLink')} to={toHome()}>
-            <Universitas className={cx('Logo')} />
-          </Link>
-          <Sections />
-          <PageLinks {...this.props} />
-          <LanguageWidget />
-          <SearchWidget />
-          <MenuIcon expanded={expanded} onClick={this.toggleExpand} />
-        </Level>
-        <Level two expanded={expanded}>
-          <SearchWidget />
-          <LanguageWidget />
-          <Sections />
-          <PageLinks {...this.props} />
-        </Level>
-      </section>
-    )
-  }
-}
+const mapStateToProps = state => ({ expanded: getUx(state).menuExpanded })
+const mapDispatchToProps = { toggleUx }
 
-export default TopMenu
+export default connect(mapStateToProps, mapDispatchToProps)(TopMenu)

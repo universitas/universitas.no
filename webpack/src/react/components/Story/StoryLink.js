@@ -3,25 +3,19 @@ import { toStory, toShortUrl } from 'ducks/router'
 import { getStory, storyRequested } from 'ducks/publicstory'
 import RouterLink from 'redux-first-router-link'
 
-const StoryLink = ({ href, story, id, storyRequested, ref, ...props }) =>
+const StoryLink = ({ href, story, id, storyRequested, ref, children }) =>
   story ? (
-    story.id ? (
-      <RouterLink to={toStory(story)} {...props} />
-    ) : (
-      <RouterLink
-        to={toShortUrl({ id })}
-        onMouseOver={() => story.fetching || storyRequested(id, true)}
-        {...props}
-      />
-    )
-  ) : (
-    <a
-      style={{ textDecoration: 'underline' }}
-      href={href}
-      title={href}
-      {...props}
+    <RouterLink
+      className="internal"
+      to={story.id ? toStory(story) : toShortUrl({ id })}
+      children={children}
+      title={story.title || id}
     />
-  )
+  ) : href ? (
+    <a className="external" href={href} title={href} children={children} />
+  ) : children.length ? (
+    `[${children}]`
+  ) : null
 
 const mapStateToProps = (state, props) => {
   const id = R.path(['link', 'linked_story'], props)

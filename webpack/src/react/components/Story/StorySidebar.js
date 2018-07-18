@@ -39,7 +39,8 @@ const Byline = ({ credit, name, title, contributor, thumb }) => (
 const Bylines = ({ bylines }) =>
   R.pipe(
     R.sortBy(R.prop('ordering')),
-    R.map(props => <Byline key={props.contributor} {...props} />),
+    R.uniqBy(R.pick(['contributor', 'credit'])),
+    R.map(props => <Byline key={props.id} {...props} />),
   )(bylines)
 
 const StorySidebar = ({ bylines = [], ...props }) => (

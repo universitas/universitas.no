@@ -8,14 +8,6 @@ const storyLens = R.lensProp
 // Selectors
 const selectorFromLens = l => R.view(R.compose(sliceLens, l))
 export const getStory = id => selectorFromLens(storyLens(id))
-export const getStoryTree = id => state => {
-  const story = getStory(id)(state)
-  if (story && story.id) {
-    const obj = buildNodeTree(story)
-    return obj
-  }
-  return story
-}
 export const getStoryIds = R.pipe(R.view(sliceLens), R.keys, R.map(parseFloat))
 
 // Actions
