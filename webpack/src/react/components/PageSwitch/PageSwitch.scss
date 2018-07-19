@@ -1,11 +1,14 @@
 .PageSwitch {
   .Page {
-    transition: opacity 300ms ease-in;
+    transition: opacity 200ms ease;
     background: white;
-  }
-  .page-enter {
     opacity: 0;
   }
+  .page-enter {
+    transition: opacity 200ms ease 100ms;
+    opacity: 0;
+  }
+  .page-enter-done,
   .page-enter-active {
     opacity: 1;
   }

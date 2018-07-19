@@ -1,14 +1,12 @@
 {
-  "presets": [
-    ["env", {"modules": false, "loose": true}],
-    "stage-1",
-    "react"
-  ],
+  "presets": [["env", { "modules": false, "loose": true }], "stage-1", "react"],
   "plugins": [
-    "lodash", "react-hot-loader/babel"
+    "lodash",
+    "react-hot-loader/babel",
+    ["transform-remove-console", { "exclude": ["error", "warn"] }]
   ],
   "env": {
     "development": { "plugins": ["import-asserts"] },
-    "test": { "presets": [["env"], "stage-1", "react"]}
+    "test": { "presets": [["env"], "stage-1", "react"] }
   }
 }
