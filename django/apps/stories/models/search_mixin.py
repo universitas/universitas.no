@@ -18,8 +18,8 @@ class LogAge(Func):
 
     template = (
         f'log(greatest({MIN_AGE},'
-        '@ extract(epoch FROM (TIMESTAMP '
-        "'%(when)s' - %(table)s.%(timefield)s))"
+        'abs(extract(epoch FROM (TIMESTAMP '
+        "'%(when)s' - %(table)s.%(timefield)s)))"
         '/ (60 * 60)))::real'
     )
 

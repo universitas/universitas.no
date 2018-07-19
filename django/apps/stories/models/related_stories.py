@@ -19,6 +19,7 @@ class RelatedStoriesMixin(models.Model):
             language=self.language
         ).exclude(id=self.id).with_age(
             when=self.publication_date or self.created,
+            field='publication_date',
         ).order_by('age')
         linked = self.inline_links.values_list('linked_story', flat=True)
         related = list(others.filter(pk__in=linked))
@@ -28,7 +29,7 @@ class RelatedStoriesMixin(models.Model):
             related += list(others.filter(story_type=self.story_type)[:number])
         if len(related) < number:
             related += list(
-                others.filter(story_type__section=self.story_type.section
+                others.filter(story_type__section=self.story_type.section,
                               )[:number]
             )
         if len(related) < number:
