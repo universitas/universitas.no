@@ -4,15 +4,28 @@ $light-grey: #999;
 $medium-grey: #777;
 $dark-grey: #333;
 $medium-yellow: #ffb653;
+$universitas-red: #c44530;
+
+// Nyheter 1
+// Magasin 2
+// Kultur 3
+// Debatt 4
+// Baksiden 6
+// Side 2 7
+// Anmeldelser 8
+// Feature 9
+// Annet 10
 
 $section-colors: (
   nyheter: #c44530,
-  nett: #c44530,
+  magasin: #ffb653,
   kultur: #6fab50,
-  anmeldelser: #6fab50,
   debatt: #3b7e9c,
+  baksiden: #ffb653,
   side-2: #3b7e9c,
-  magasin: #ffb653
+  anmeldelser: #6fab50,
+  feature: #6fab50,
+  annet: #c44530
 );
 
 @function color-get($section, $change: none) {
@@ -75,10 +88,6 @@ $section-colors: (
 
 @mixin section-background-color {
   @each $section, $color in $section-colors {
-    $i: index(($section-colors),  ($section $color));
-    &.section-#{$i} {
-      @include section-color($section, lighter);
-    }
     &.#{$section} {
       @include section-color($section, lighter);
     }

@@ -1,10 +1,12 @@
 """ Admin for stories app.  """
 
+import logging
+
 from apps.frontpage.models import FrontpageStory
 from apps.photo.admin import ThumbAdmin
 from django.contrib import admin
 from django.db import models
-from django.forms import Textarea, TextInput
+from django.forms import ModelForm, Textarea, TextInput
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
@@ -13,6 +15,8 @@ from .models import (
     StoryImage, StoryType, StoryVideo
 )
 from .tasks import upload_storyimages
+
+logger = logging.getLogger(__name__)
 
 
 class SmallTextArea:
@@ -210,8 +214,27 @@ def upload_images(modeladmin, request, queryset):
         upload_storyimages.delay(story.pk)
 
 
+class StoryForm(ModelForm):
+    def clean(self):
+        super().clean()
+        try:
+            old = set(self.instance.related_stories.all())
+            new = set(self.cleaned_data.get('related_stories'))
+            if old == new:
+                self._meta.exclude.append('related_stories')
+        except AttributeError:
+            pass
+
+    def clean_related_stories(self):
+        # story cannot be related to itself.
+        return self.cleaned_data['related_stories'].exclude(
+            pk=self.instance.pk
+        )
+
+
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
+    form = StoryForm
     actions = [
         make_frontpage_story,
         upload_images,
@@ -403,7 +426,6 @@ def check_link_status(modeladmin, request, queryset):
 
 @admin.register(InlineLink)
 class LinkAdmin(admin.ModelAdmin):
-    # form = modelform_factory(InlineLink, exclude=())
     actions_on_bottom = actions_on_top = True
     actions = [find_linked_story, check_link_status]
     list_display = (

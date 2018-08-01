@@ -1,6 +1,8 @@
 """Related stories"""
 
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -9,8 +11,10 @@ class RelatedStoriesMixin(models.Model):
         abstract = True
 
     related_stories = models.ManyToManyField(
-        'stories.Story',
+        'self',
         verbose_name=_('related stories'),
+        blank=True,
+        symmetrical=True,
     )
 
     def find_related_stories(self, number=5, save=True):
@@ -40,6 +44,13 @@ class RelatedStoriesMixin(models.Model):
         return related[:number]
 
     def save(self, *args, **kwargs):
+        if self.pk:
+            old = self.__class__.objects.get(pk=self.pk)
+            if (
+                self.publication_status in [
+                    self.STATUS_FROM_DESK, self.STATUS_PUBLISHED
+                ] and old.publication_status != self.publication_status
+                and self.related_stories.count() < 3
+            ):
+                self.find_related_stories()
         super().save(*args, **kwargs)
-        if self.is_published() and self.related_stories.count() == 0:
-            self.find_related_stories()

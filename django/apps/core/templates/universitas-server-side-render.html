@@ -9,7 +9,7 @@
   {% render_bundle "universitas" "css" %}
 {% endblock %}
 {% block content %}
-  <main id="ReactApp" >{{ ssr.html | safe }}</main>
+  <div id="ReactApp" >{{ ssr.html | safe }}</div>
 {% endblock content %}
 {% block final %}
   <script>window.__REDUX_STATE__ = {{ ssr.state | safe }}</script>

@@ -65,6 +65,7 @@
     min-height: 2rem;
     position: relative;
     div {
+      box-shadow: 0.05em 0.05em 0.2em 0 rgba(black, 0.6);
       position: absolute; // trick to fix android chrome render bug
       background-color: #777;
       @include section-background-color;

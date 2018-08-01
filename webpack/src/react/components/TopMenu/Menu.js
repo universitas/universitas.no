@@ -29,16 +29,16 @@ const MenuIcon = ({ expanded = false, onClick }) => (
 const PageLinks = ({ year }) => (
   <Group pageLinks>
     <NavLink className={cx('MenuItem')} to={toPdf(year)}>
-      pdf
+      Pdf
     </NavLink>
     <NavLink className={cx('MenuItem')} to={toPubSchedule(year)}>
-      utgivelsesplan
+      Utgivelsesplan
     </NavLink>
     <NavLink className={cx('MenuItem')} to={toAbout()}>
-      om universitas
+      Om Universitas
     </NavLink>
     <NavLink className={cx('MenuItem')} to={toAdInfo()}>
-      annonsér
+      Annonsér
     </NavLink>
   </Group>
 )

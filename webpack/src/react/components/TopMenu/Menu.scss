@@ -20,7 +20,7 @@
   }
   .Level {
     min-height: $menuheight;
-    background-color: #444;
+    background-color: color-get("nyheter");
     width: 100%;
     display: flex;
     justify-content: center;
@@ -82,7 +82,6 @@
           white-space: pre;
           flex: 1;
           flex-basis: 40%;
-          // background-color: yellow;
           align-items: center;
           display: flex;
           flex-direction: column;
@@ -90,7 +89,7 @@
       }
       position: absolute;
       z-index: -10;
-      background-color: #222;
+      background-color: #333;
       transform: translateY(-100%);
       top: 100%;
       transition: transform 150ms ease;
@@ -101,7 +100,6 @@
     }
   }
   .logoLink {
-    align-self: stretch;
     .Logo {
       width: $logowidth;
       margin-right: 1rem;
@@ -122,7 +120,7 @@
   }
   .MenuItem {
     text-decoration: none;
-    padding-right: 0.3em;
+    padding-right: 0.6em;
     cursor: pointer;
     color: #eee;
     &:hover {
@@ -136,11 +134,11 @@
   .LanguageWidget {
     text-transform: uppercase;
     .LanguageButton {
-      color: $light-grey;
+      opacity: 0.5;
       padding: 0 0.2em;
       cursor: pointer;
       &.active {
-        color: white;
+        opacity: 1;
       }
     }
   }
@@ -182,7 +180,8 @@
         background-color: rgba(black, 0.2);
       }
       &::placeholder {
-        color: rgba(white, 0.5);
+        color: white;
+        opacity: 0.5;
       }
     }
   }

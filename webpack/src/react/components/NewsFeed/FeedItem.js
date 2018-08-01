@@ -3,7 +3,7 @@ import ErrorBoundary from 'react-error-boundary'
 import Link from 'redux-first-router-link'
 import { Done, Sync, Clear } from 'components/Icons'
 import { toStory } from 'ducks/router'
-import { hyphenate } from 'utils/text'
+import { hyphenate, slugify } from 'utils/text'
 
 const position = ({ x = 0.5, y = 0.5 }) => `${x * 100}% ${y * 100}%`
 
@@ -12,7 +12,7 @@ const ifChildren = Component => props =>
 
 const Vignette = ifChildren(({ children, section }) => (
   <div className="Vignette">
-    <div className={cx(`section-${section}`)}>{children}</div>
+    <div className={cx(slugify(section))}>{children}</div>
   </div>
 ))
 const Headline = ifChildren(({ children }) => (
@@ -69,7 +69,7 @@ const FeedItem = ({
     <Link to={toStory(story)} className={className}>
       <ErrorBoundary>
         <FeedImage image={image} crop_box={crop_box} />
-        <Vignette section={section}>{vignette}</Vignette>
+        <Vignette section={story.section}>{vignette}</Vignette>
         <Kicker>{hyphenate(kicker)}</Kicker>
         <Headline>{hyphenate(headline)}</Headline>
         <Lede>{lede}</Lede>
