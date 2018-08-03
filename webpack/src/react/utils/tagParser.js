@@ -1,5 +1,3 @@
-import memoize from 'lodash/memoize'
-
 const makeRule = (type, re) => text => {
   const m = re.exec(text)
   return m && [{ type, children: m[1] }, text.slice(m[0].length)]
@@ -32,7 +30,7 @@ const next_node = (rules, text) => {
   throw 'no matching rules'
 }
 
-export const lineParser = memoize(text => {
+export const lineParser = text => {
   const nodes = []
   let node
   while (text) {
@@ -40,7 +38,7 @@ export const lineParser = memoize(text => {
     nodes.push(node)
   }
   return nodes
-})
+}
 
 const xTag = line => {
   const m = line.match(/^@(\S*):(.*)$/)
@@ -79,7 +77,7 @@ const groupLi = sedon => {
   return result
 }
 
-export const blockParser = memoize(text => {
+export const blockParser = text => {
   const nodes = text
     .split('\n')
     .map(l => l.trim())
@@ -92,4 +90,4 @@ export const blockParser = memoize(text => {
     }))
 
   return groupLi(nodes)
-})
+}

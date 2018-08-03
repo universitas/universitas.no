@@ -14,8 +14,7 @@
     "build": "webpack-cli --config webpack.prod.config.js ",
     "tern": "tern --persistent --host 0.0.0.0 --port 33000",
     "rebuild": "npm run build",
-    "stats":
-      "webpack-cli --config webpack.prod.config.js --profile --json > webpack-stats.json",
+    "stats": "webpack-cli --config webpack.prod.config.js --profile --json > webpack-stats.json",
     "dev": "webpack-dev-server --config webpack.dev.config.js",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "build-storybook": "build-storybook -c .storybook -o docs"
@@ -27,14 +26,21 @@
   "jest": {
     "verbose": true,
     "testURL": "http://localhost",
-    "setupFiles": ["<rootDir>/jest.setup.js"],
-    "moduleDirectories": ["node_modules", "src/react"],
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "src/react"
+    ],
     "moduleNameMapper": {
       "\\.(css|scss|sass|less)$": "<rootDir>/__mocks__/css.jest.mock.js",
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
-        "<rootDir>/__mocks__/file.jest.mock.js"
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/file.jest.mock.js"
     },
-    "roots": ["<rootDir>/src/react/", "<rootDir>/src/storybooks/"]
+    "roots": [
+      "<rootDir>/src/react/",
+      "<rootDir>/src/storybooks/"
+    ]
   },
   "dependencies": {
     "ajv": "^6.2.1",
@@ -42,7 +48,6 @@
     "babel-jest": "^22",
     "babel-loader": "^7.1.4",
     "babel-plugin-import-asserts": "^3",
-    "babel-plugin-lodash": "^3.3.2",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "babel-polyfill": "^6",
     "babel-preset-env": "^1.6.1",
@@ -65,9 +70,8 @@
     "js-cookie": "^2.2.0",
     "json-stringify-pretty-compact": "^1.2.0",
     "localforage": "^1.6",
-    "lodash": "^4.17.5",
     "morgan": "^1.9.0",
-    "node-sass": "^4.9.0",
+    "node-sass": "^4.9.2",
     "null-loader": "^0.1.1",
     "pm2": "^2.10.4",
     "postcss-loader": "^2.1.1",
