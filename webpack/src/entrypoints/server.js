@@ -2,7 +2,7 @@
 
 import express from 'express'
 import morgan from 'morgan'
-import render from './Universita/serverRender'
+import render from './Universitas/serverRender'
 
 const PORT = process.env.NODE_PORT || 9000
 
