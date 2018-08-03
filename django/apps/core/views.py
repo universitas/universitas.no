@@ -37,13 +37,17 @@ def timeit(fn):
 def _react_render(redux_actions, request):
     path = request.path.replace('//', '/')
     try:
-        context = requests.post(
-            f'{settings.EXPRESS_SERVER_URL}{path}', json=redux_actions
-        ).json()
-        return context
+        response = requests.post(
+            f'{settings.EXPRESS_SERVER_URL}{path}',
+            json=redux_actions,
+        )
     except requests.ConnectionError:
         logger.exception('Could not connect to express server')
         return {}
+    try:
+        return response.json()
+    except json.JSONDecodeError:
+        return {'error': response.content}
 
 
 def react_frontpage_view(request, section=None, story=None, slug=None):

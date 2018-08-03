@@ -1,15 +1,16 @@
 {% extends "react-base.html" %}
 {% load render_bundle from webpack %}
 {% block head %}
-  <meta property="fb:app_id" content="{{ facebook.app_id }}" />
-  <meta property="fb:pages" content="{{ facebook.page_id }}" />
   {{ ssr.headers.title | safe }}
   {{ ssr.headers.link | safe }}
   {{ ssr.headers.meta | safe }}
+  <meta property="fb:app_id" content="{{ facebook.app_id }}" />
+  <meta property="fb:pages" content="{{ facebook.page_id }}" />
+  {% include "_google.analytics.tracker.html" %}
   {% render_bundle "universitas" "css" %}
 {% endblock %}
 {% block content %}
-  <div id="ReactApp" >{{ ssr.html | safe }}</div>
+<main id="ReactApp">{{ ssr.html | safe }}</main>
 {% endblock content %}
 {% block final %}
   <script>window.__REDUX_STATE__ = {{ ssr.state | safe }}</script>

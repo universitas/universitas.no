@@ -217,13 +217,14 @@ def upload_images(modeladmin, request, queryset):
 class StoryForm(ModelForm):
     def clean(self):
         super().clean()
-        try:
+        if self.instance.pk:
+            # skip updating related stories if there's no change in form
+            # this makes it possible to update related stories in the Story
+            # save method or with save signals
             old = set(self.instance.related_stories.all())
             new = set(self.cleaned_data.get('related_stories'))
             if old == new:
                 self._meta.exclude.append('related_stories')
-        except AttributeError:
-            pass
 
     def clean_related_stories(self):
         # story cannot be related to itself.

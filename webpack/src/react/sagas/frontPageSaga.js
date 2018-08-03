@@ -31,6 +31,8 @@ import {
 
 const DEBOUNCE = 300 // ms debounce
 
+const routeAction = R.propSatisfies(R.test(/^router/), 'type')
+
 export default function* rootSaga() {
   yield takeLatest(FEED_REQUESTED, fetchFeed)
   yield takeLatest(SITE_REQUESTED, fetchSite)
@@ -38,6 +40,7 @@ export default function* rootSaga() {
   yield takeLatest(SEARCH, fetchSearch)
   yield takeEvery(STORY_REQUESTED, fetchStory)
   yield takeEvery(STORIES_REQUESTED, fetchStories)
+  yield takeLatest(routeAction, pageView)
 }
 
 const handleError = error => console.error(error)
@@ -99,4 +102,21 @@ function* fetchIssues(action) {
   const { response, error } = yield call(apiList, 'issues', {})
   if (response) yield put(issuesFetched(response))
   else yield call(handleError, error)
+}
+
+const googleAnalyticsPageView = () => {
+  // register a new page view with google analytics
+  const document = global.document
+  const ga = global.ga
+  if (!document) return
+  const data = { page: document.location.href, title: document.title }
+  if (ga) {
+    ga('set', data)
+    ga('send', 'pageview')
+  }
+}
+
+function* pageView(action) {
+  yield call(delay, 200) // debounce
+  yield call(googleAnalyticsPageView)
 }

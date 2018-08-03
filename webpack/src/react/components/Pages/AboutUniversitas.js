@@ -65,10 +65,10 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
       under for andre måter å komme i kontakt.
     </p>
     <h3>Generell kontaktinfo</h3>
-    <p>
-      Telefon: 907 69 866 Faks: 22 85 32 74 Postadresse: Boks 89 Blindern, 0314
-      Oslo Besøksadresse: Moltke Moes vei 33
-    </p>
+    <p>Telefon: 907 69 866</p>
+    <p>Faks: 22 85 32 74</p>
+    <p>Postadresse: Boks 89 Blindern, 0314 Oslo</p>
+    <p>Besøksadresse: Moltke Moes vei 33</p>
     <h3>Utgivelsesplan</h3>
     <NextIssue {...issues.next} />
     <p>
