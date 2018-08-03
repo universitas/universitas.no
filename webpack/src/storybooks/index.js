@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
-import '../../src/stylesheets/universitas.scss'
+import '../react/styles/universitas.scss'
 import IconTable from './icons'
 import ColourTable from './colours'
 import Typography from './typography'

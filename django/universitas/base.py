@@ -108,7 +108,6 @@ INSTALLED_APPS = [
     'apps.photo',
     'apps.frontpage',
     'apps.adverts',
-    'apps.search',
 ]
 
 # THIRD PARTY APPS

@@ -6,16 +6,7 @@ const publicPath = process.env.PUBLIC_PATH
 
 module.exports = {
   entry: {
-    // entrypoints
-    // foundation based stylesheets
-    stylesheets: 'stylesheets/universitas.scss',
-    // public page chunks
-    head: 'javascripts/head.js',
-    vendor: 'javascripts/vendor.js',
-    foot: 'javascripts/foot.js',
-    // react apps
     photo_list_view: 'entrypoints/photo_list_view.js',
-    photo_crop_app: 'entrypoints/photo_crop_app.js',
     prodsys: 'entrypoints/prodsys.js',
     universitas: 'entrypoints/universitas.js',
   },

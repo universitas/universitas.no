@@ -10,7 +10,7 @@ from .urls import urlpatterns
 
 urlpatterns = [
     url(r'^__debug__/', include(debug_toolbar_urls)),  # django debug toolbar
-    *urlpatterns,
     # serve media files from development server
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
+    *urlpatterns,
 ]

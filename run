@@ -109,7 +109,8 @@ testing() {
 run_tests() {
   testing
   docker-compose run --rm webpack test || exit 1
-  docker-compose run --rm -u django web pytest --create-db || exit 1
+  docker-compose run --rm -u django web pytest --create-db \
+    -p no:cacheprovider || exit 1
 }
 
 show_help() {
@@ -146,7 +147,7 @@ load_redis() {
   cp $dumpfile __dump.rdb
   docker-compose stop redis
   docker run --rm --volumes-from tassen_redis_1 -v $(pwd):/backup \
-    universitas/django cp /backup/__dump.rdb /data/dump.rdb 
+    universitas/django cp /backup/__dump.rdb /data/dump.rdb
   docker-compose start redis
   rm __dump.rdb
 }

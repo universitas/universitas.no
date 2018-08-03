@@ -20,14 +20,6 @@ urlpatterns = [
     re_path(r'^api/', include(api_urls)),
     # React apps
     re_path(r'^foto/$', PhotoAppView.as_view(), name='photoapp'),
-    # react frontpage
-    re_path(r'^$', react_frontpage_view, name='ssrfront'),
-    # react story
-    re_path(
-        r'^(?P<section>[\w-]+)/?(?P<story>\d+)(?P<slug>/.*)/?$',
-        react_frontpage_view,
-        name='ssr',
-    ),
     # prodsys
     re_path(
         r'^prodsys',
@@ -43,4 +35,13 @@ urlpatterns = [
         lambda request: HttpResponse(settings.FACEBOOK_DOMAIN_VERIFICATION),
         name='facebook_verification'
     ),
+    # react story
+    re_path(
+        r'^(?P<section>[\w-]+)/?(?P<story>\d+)(?P<slug>/.*)/?$',
+        react_frontpage_view,
+        name='ssr',
+    ),
+    re_path(r'^(?P<story>\d+)/$', react_frontpage_view, name='shortlink'),
+    # react frontpage
+    re_path(r'', react_frontpage_view, name='ssr_fallback'),
 ]

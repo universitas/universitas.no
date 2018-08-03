@@ -113,7 +113,6 @@ const googleAnalyticsPageView = action => {
     page: document.location.pathname,
     title: R.replace(/ *\|.*$/, '', document.title),
   }
-  console.log(viewData)
   if (ga) {
     ga('set', viewData)
     ga('send', 'pageview')
