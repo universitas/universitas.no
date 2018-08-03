@@ -1,7 +1,7 @@
 # vim: ft=config:
 
 # Django must be upgraded manually
-django==2.0
+django==2.1
 
 # DJANGO PLUGINS
 django-debug-toolbar
