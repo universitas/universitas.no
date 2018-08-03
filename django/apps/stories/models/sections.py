@@ -52,7 +52,7 @@ class Section(models.Model):
 
     def get_absolute_url(self):
         url = reverse(
-            viewname='section',
+            viewname='ssr',
             kwargs={
                 'section': self.slug,
             },
@@ -100,16 +100,6 @@ class StoryType(models.Model):
 
     def __str__(self):
         return self.name
-
-    def get_absolute_url(self):
-        url = reverse(
-            viewname='storytype',
-            kwargs={
-                'storytype': self.slug,
-                'section': self.section.slug,
-            },
-        )
-        return url
 
     def count(self):
         """Number of stories."""

@@ -5,7 +5,7 @@ import { slugify } from 'utils/text'
 import { absoluteURL } from 'utils/urls'
 import restoreScroll from 'redux-first-router-restore-scroll'
 
-const BASENAME = '/dev'
+const BASENAME = '/'
 const SLICE = 'location'
 
 export const routerOptions = {

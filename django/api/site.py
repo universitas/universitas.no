@@ -1,32 +1,27 @@
 """Site data misc"""
 
-from rest_framework import permissions, response, serializers, views
-
 from apps.contributors.models import Contributor
 from apps.issues.models import Issue
 from apps.stories.models import Section, StoryType
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from utils.serializers import AbsoluteURLField
+from rest_framework import permissions, response, serializers, views
 
 from .issues import IssueSerializer
 
 
 class StoryTypeSerializer(serializers.ModelSerializer):
-    url = AbsoluteURLField(source='get_absolute_url')
-
     class Meta:
         model = StoryType
-        fields = 'name', 'url', 'count'
+        fields = ['name', 'count']
 
 
 class SectionSerializer(serializers.ModelSerializer):
-    url = AbsoluteURLField(source='get_absolute_url')
     storytypes = StoryTypeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Section
-        fields = ['id', 'title', 'url', 'storytypes']
+        fields = ['id', 'title', 'storytypes']
 
 
 class StaffSerializer(serializers.ModelSerializer):

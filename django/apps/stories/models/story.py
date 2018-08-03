@@ -2,10 +2,6 @@
 
 import logging
 
-from django_extensions.db.fields import AutoSlugField
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-
 from apps.contributors.models import Contributor
 from apps.frontpage.models import FrontpageStory
 from django.conf import settings
@@ -14,6 +10,9 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django_extensions.db.fields import AutoSlugField
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
 from utils.decorators import cache_memoize
 from utils.model_mixins import EditURLMixin
 
@@ -395,11 +394,11 @@ class Story(  # type: ignore
         if self.url:
             return self.url
         return reverse(
-            viewname='article',
+            viewname='ssr',
             kwargs={
-                'story_id': str(self.id),
-                'section': self.section.slug,
-                'slug': self.slug,
+                'story': str(self.id),
+                'section': self.section.slug + '/',
+                'slug': '/' + self.slug,
             }
         )
 

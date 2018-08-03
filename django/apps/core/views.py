@@ -18,7 +18,6 @@ from django.urls import reverse
 from django.views.generic.base import TemplateView
 
 logger = logging.getLogger(__name__)
-BASEPATH = 'dev'
 
 
 def timeit(fn):
@@ -81,7 +80,7 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
 
     ssr_context = _react_render(redux_actions, request)
     try:
-        pathname = f"/{BASEPATH}{ssr_context['state']['location']['pathname']}"
+        pathname = f"{ssr_context['state']['location']['pathname']}"
         if pathname != request.path:
             logger.info(f'redirect {request.path} to {pathname}')
             return redirect(pathname)
