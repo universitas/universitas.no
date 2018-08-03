@@ -2,6 +2,7 @@ import { withErrorBoundary } from 'react-error-boundary'
 import { Helmet } from 'react-helmet'
 import { connect } from 'react-redux'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
+import { capitalize } from 'utils/text'
 
 import {
   HOME,
@@ -23,8 +24,6 @@ import PublicationSchedule from 'components/Pages/PublicationSchedule'
 import AboutUniversitas from 'components/Pages/AboutUniversitas'
 import AdvertiserInfo from 'components/Pages/AdvertiserInfo'
 import PageNotFound from 'components/PageNotFound'
-
-const captitalize = str => str.replace(/./, R.toUpper)
 
 const PageHelmet = ({
   pageTitle = '',
@@ -48,7 +47,7 @@ const pageWrapper = (Page, toTitle = R.F) => {
     toTitle,
     R.unless(R.is(String), R.always('')),
     R.trim,
-    captitalize,
+    capitalize,
   )
   const locationToProps = R.pipe(
     R.converge(R.merge, [R.prop('payload'), R.pick(['pathname'])]),

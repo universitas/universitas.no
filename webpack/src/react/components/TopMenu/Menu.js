@@ -29,7 +29,7 @@ const MenuIcon = ({ expanded = false, onClick }) => (
 const PageLinks = ({ year }) => (
   <Group pageLinks>
     <NavLink className={cx('MenuItem')} to={toPdf(year)}>
-      Pdf
+      PDF
     </NavLink>
     <NavLink className={cx('MenuItem')} to={toPubSchedule(year)}>
       Utgivelsesplan

@@ -210,7 +210,8 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
 
     @property
     def position(self):
-        stint = self.stint_set.last()
+        stint = self.stint_set.active().order_by('-position__is_management'
+                                                 ).last()
         if stint:
             return stint.position.title
         return None

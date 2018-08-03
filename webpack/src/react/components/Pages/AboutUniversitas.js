@@ -34,6 +34,25 @@ const NextIssue = ({ publication_date, issue_name }) => (
   </p>
 )
 
+const importance = R.pipe(
+  R.prop('position'),
+  R.propOr(0, R.__, {
+    redaktør: 100,
+    'daglig leder': 90,
+    nyhetsredaktør: 80,
+    nyhetsleder: 80,
+    fotosjef: 70,
+    desksjef: 70,
+    annonseselger: -10,
+    webutvikler: -20,
+  }),
+)
+
+const orderStaff = R.sortWith([
+  R.descend(importance),
+  R.ascend(R.prop('position')),
+])
+
 const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
   <article className={cx('AboutUniversitas', className)}>
     <h1>{pageTitle}</h1>
@@ -81,7 +100,10 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
       64 496, eller <Link to={toAdInfo()}>les mer om annonsering.</Link>
     </p>
     <h3>Redaksjonen</h3>
-    {R.map(props => <ContactCard key={props.id} {...props} />, staff)}
+    {R.map(
+      props => <ContactCard key={props.id} {...props} />,
+      orderStaff(staff),
+    )}
   </article>
 )
 

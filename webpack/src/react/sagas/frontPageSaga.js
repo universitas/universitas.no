@@ -104,19 +104,23 @@ function* fetchIssues(action) {
   else yield call(handleError, error)
 }
 
-const googleAnalyticsPageView = () => {
+const googleAnalyticsPageView = action => {
   // register a new page view with google analytics
   const document = global.document
   const ga = global.ga
   if (!document) return
-  const data = { page: document.location.href, title: document.title }
+  const viewData = {
+    page: document.location.pathname,
+    title: R.replace(/ *\|.*$/, '', document.title),
+  }
+  console.log(viewData)
   if (ga) {
-    ga('set', data)
+    ga('set', viewData)
     ga('send', 'pageview')
   }
 }
 
 function* pageView(action) {
   yield call(delay, 200) // debounce
-  yield call(googleAnalyticsPageView)
+  yield call(googleAnalyticsPageView, action)
 }
