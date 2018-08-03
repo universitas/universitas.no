@@ -17,6 +17,10 @@ class RelatedStoriesMixin(models.Model):
         symmetrical=True,
     )
 
+    @property
+    def related_published(self):
+        return self.related_stories.published()
+
     def find_related_stories(self, number=5, save=True):
         """Finds related stories."""
         others = self.__class__.objects.published().filter(

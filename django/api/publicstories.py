@@ -148,7 +148,7 @@ class PublicStorySerializer(StorySerializer):
         ]
 
     related_stories = serializers.PrimaryKeyRelatedField(
-        many=True, read_only=True
+        many=True, read_only=True, source='related_published'
     )
     url = serializers.HyperlinkedIdentityField(view_name='publicstory-detail')
     bylines = BylineSerializer(source='byline_set', many=True)
