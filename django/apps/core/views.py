@@ -34,12 +34,14 @@ def timeit(fn):
 
 @timeit
 def _react_render(redux_actions, request):
-    path = request.path.replace('//', '/')
+    session = requests.Session()
+    adapter = requests.adapters.HTTPAdapter(max_retries=5)
+    session.mount(settings.EXPRESS_SERVER_URL, adapter)
+
     try:
-        response = requests.post(
-            f'{settings.EXPRESS_SERVER_URL}{path}',
-            json=redux_actions,
-        )
+        path = request.path.replace('//', '/').lstrip('/')
+        url = f'{settings.EXPRESS_SERVER_URL}/{path}'
+        response = session.post(url, json=redux_actions)
     except requests.ConnectionError:
         logger.exception('Could not connect to express server')
         return {}
@@ -79,17 +81,24 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
         })
 
     ssr_context = _react_render(redux_actions, request)
+
     try:
-        pathname = f"{ssr_context['state']['location']['pathname']}"
+        pathname = ssr_context['state']['location']['pathname']
         if pathname != request.path:
             logger.info(f'redirect {request.path} to {pathname}')
             return redirect(pathname)
     except KeyError:
         pass
 
+    status_code = ssr_context.pop('HTTPStatus', 200)
+    if status_code == 404 and request.path[-1] != '/':
+        return redirect(request.path + '/')
+
     return render(
-        request, 'universitas-server-side-render.html',
-        {'ssr': ssr_context}
+        request,
+        template_name='universitas-server-side-render.html',
+        context={'ssr': ssr_context},
+        status=status_code,
     )
 
 

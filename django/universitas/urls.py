@@ -8,14 +8,23 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import include, re_path
 from django.views.generic import TemplateView
-
+from django.views.generic.base import RedirectView
+from django.shortcuts import redirect
+from django.contrib.staticfiles.storage import staticfiles_storage
+ 
 admin.autodiscover()
+
+def favicon(request, filename):
+    return redirect(staticfiles_storage.url(f'favicon/{filename}'))
 
 urlpatterns = [
     # RSS
     re_path(r'^rss/$', LatestStories(), name='rss'),
+    re_path(r'^rss', RedirectView.as_view(pattern_name='rss')),
     # DJANGO-ALLAUTH (login, password etc)
     re_path(r'^auth/', include('allauth.urls')),
+    # FAVICON
+    re_path(r'^.*?([\w\-]+\.(?:png|ico))$', favicon, name='favicon-redirr'),
     # API
     re_path(r'^api/', include(api_urls)),
     # React apps

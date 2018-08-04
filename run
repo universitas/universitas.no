@@ -24,6 +24,7 @@ while (( $# > 0 )); do
 
   webpack ) docker-compose run --rm webpack ${rest:-bash}; exit;;
   build   ) webpack_build ;; # build webpack
+  expressb) docker-compose run --rm express expressb ;; # build express bundle
 
   npmi    ) docker-compose run --rm webpack install $rest; exit ;; # npm install [packages...]
   npmup   ) docker-compose run --rm webpack update ;; # npm update js packages

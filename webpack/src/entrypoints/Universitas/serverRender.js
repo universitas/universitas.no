@@ -28,5 +28,7 @@ export default (url, actions = []) => {
       <App />
     </Provider>,
   )
-  return { html, state: notFetching(store.getState()), headers: headers() }
+  const state = notFetching(store.getState())
+  const HTTPStatus = R.test(/NOT_FOUND$/, state.location.type) ? 404: 200
+  return { html, HTTPStatus, state, headers: headers() }
 }

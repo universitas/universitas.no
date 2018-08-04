@@ -9,8 +9,10 @@ After=docker.service
 
 [Service]
 Restart=always
-ExecStart=/bin/bash -c "cd /srv/tassen; ./run prod static dc up"
+ExecStart=/bin/bash -c "cd /srv/tassen; ./run prod dc up"
 ExecStop=/bin/bash -c "cd /srv/tassen; ./run prod dc down"
+ExecReload=/bin/bash -c "cd /srv/tassen; ./run prod dc up -d"
+ExecReload=/bin/bash -c "cd /srv/tassen; ./run prod static expressb dc up -d --no-deps"
 
 [Install]
 WantedBy=multi-user.target
