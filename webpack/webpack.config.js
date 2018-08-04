@@ -17,6 +17,7 @@ module.exports = {
     filename: '[name].js',
   },
   optimization: {
+    minimizer: [],
     splitChunks: {
       cacheGroups: {
         commons: {
@@ -62,24 +63,15 @@ module.exports = {
         test: /\.scss$/,
         use: [
           { loader: 'style-loader' },
-          { loader: 'css-loader', options: { sourceMap: false } },
+          { loader: 'css-loader', options: { sourceMap: true } },
           {
-            loader: 'postcss-loader', // for autoprefix
+            loader: 'postcss-loader',
             options: {
-              sourceMap: false,
+              sourceMap: true,
               plugins: () => [require('autoprefixer')],
             },
           },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: false,
-              includePaths: [
-                'node_modules/foundation-sites/scss/',
-                'node_modules/slick-carousel/',
-              ],
-            },
-          },
+          { loader: 'sass-loader', options: { sourceMap: true } },
         ],
       },
       {
