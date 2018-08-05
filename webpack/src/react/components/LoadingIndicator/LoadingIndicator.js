@@ -48,7 +48,7 @@ const LoadingIndicator = ({ debug, ...props }) =>
     <JsonLoader {...props} />
   ) : (
     <div
-      className="LoadingIndicator"
+      className={cx('LoadingIndicator', props.className)}
       style={{ cursor: props.onClick ? 'pointer' : 'unset' }}
       onClick={props.onClick}
     >

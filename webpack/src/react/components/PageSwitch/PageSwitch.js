@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet'
 import { connect } from 'react-redux'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import { capitalize } from 'utils/text'
+import cx from 'classnames'
 
 import {
   HOME,
@@ -76,11 +77,20 @@ const PageSwitch = ({ location = {}, search = '' }) => {
     ? [SearchFeed, R.identity]
     : pages[location.type] || pages[NOT_FOUND]
   const props = locationToProps(location)
+  const key = R.contains(location.type, [SECTION, HOME])
+    ? 'newsfeed' // Do not transition between feed pages.
+    : location.pathname // ensure css transition
   return (
     <main className="PageSwitch">
       <PageHelmet {...props} />
       <TransitionGroup component={null}>
-        <CSSTransition key={props.pathname} timeout={500} classNames="page">
+        <CSSTransition
+          key={key}
+          timeout={150}
+          classNames="page"
+          mountOnEnter
+          unmountOnExit
+        >
           <PageComponent className="Page" {...props} />
         </CSSTransition>
       </TransitionGroup>

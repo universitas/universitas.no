@@ -34,10 +34,12 @@ h6 {
   flex: 1;
   display: grid;
   justify-content: center;
+  align-items: start;
   grid-template-columns: minmax(auto, $content-width);
   .Page {
     margin: $pad;
     grid-area: 1/1/2/2;
+    min-height: calc(100vh - #{$menuheight + $gridgap});
   }
 }
 

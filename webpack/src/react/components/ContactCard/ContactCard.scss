@@ -4,11 +4,8 @@
   margin-bottom: 1em;
   justify-content: start;
   /* prettier-ignore */
-  grid: 
-  "thumb thumb" 5em
-  "position name" 1fr
-    "phone email" 1fr 
-    / minmax(6em, auto) minmax(15em, auto) ;
+  grid: "thumb thumb" 5em "position name" 1fr "phone email" 1fr /
+    minmax(5em, auto) minmax(10em, auto);
   .thumb {
     height: 100%;
     width: auto;

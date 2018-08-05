@@ -2,6 +2,12 @@ import { connect } from 'react-redux'
 import { toStory, toShortUrl } from 'ducks/router'
 import { getStory, storyRequested } from 'ducks/publicstory'
 import RouterLink from 'redux-first-router-link'
+import { formatDate } from 'utils/text'
+
+const linkTitle = ({ title, story_type = {}, publication_date }) =>
+  title
+    ? `${title}\n${story_type.name}, ${formatDate(publication_date)}`
+    : 'lenke'
 
 const StoryLink = ({ href, story, id, storyRequested, ref, children }) =>
   story ? (
@@ -9,7 +15,7 @@ const StoryLink = ({ href, story, id, storyRequested, ref, children }) =>
       className="internal"
       to={story.id ? toStory(story) : toShortUrl({ id })}
       children={children}
-      title={story.title || id}
+      title={story.id ? linkTitle(story) : id}
     />
   ) : href ? (
     <a className="external" href={href} title={href} children={children} />

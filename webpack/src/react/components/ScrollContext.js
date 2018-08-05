@@ -5,7 +5,7 @@ import { updateScroll } from 'redux-first-router'
 
 class ScrollContext extends React.Component {
   componentDidUpdate(prevProps) {
-    if (prevProps.path !== this.props.path) updateScroll()
+    if (prevProps.path !== this.props.path) setTimeout(updateScroll, 200)
   }
 
   render() {

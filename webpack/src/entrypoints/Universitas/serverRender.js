@@ -22,6 +22,7 @@ const notFetching = R.map(
 export default (url, actions = []) => {
   const store = configureStore(undefined, url)
   global.location = { href: `http://universitas.no${url}` }
+  global.server = true
   R.forEach(action => store.dispatch(action), actions)
   const html = renderToString(
     <Provider store={store}>
@@ -29,6 +30,6 @@ export default (url, actions = []) => {
     </Provider>,
   )
   const state = notFetching(store.getState())
-  const HTTPStatus = R.test(/NOT_FOUND$/, state.location.type) ? 404: 200
+  const HTTPStatus = R.test(/NOT_FOUND$/, state.location.type) ? 404 : 200
   return { html, HTTPStatus, state, headers: headers() }
 }

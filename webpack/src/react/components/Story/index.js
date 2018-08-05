@@ -14,9 +14,14 @@ import StoryFoot from './StoryFoot.js'
 import PageNotFound from 'components/PageNotFound'
 import Debug from 'components/Debug'
 import './Story.scss'
+
 class Story extends React.Component {
   constructor(props) {
     super(props)
+    const routeAction = toStory(props)
+    if (props.pathname != reverse(routeAction)) {
+      props.redirect(routeAction)
+    }
   }
   componentDidMount() {
     if (this.props.related_stories)
@@ -30,8 +35,12 @@ class Story extends React.Component {
 
   render() {
     const tree = buildNodeTree(this.props)
+    const { className, ...props } = this.props
+    if (props.HTTPstatus == 404)
+      return <PageNotFound {...props}>Fant ikke saken</PageNotFound>
     return (
-      <article className={cx('Story', this.props.className)}>
+      <article className={cx('Story', className)}>
+        <StoryHelmet {...props} />
         <StoryHead {...tree} />
         <main className="mainContent">
           <StorySidebar {...tree} />
@@ -43,21 +52,6 @@ class Story extends React.Component {
   }
 }
 
-const StoryRoute = ({ redirect, ...props }) => {
-  if (props.HTTPstatus == 404)
-    return <PageNotFound {...props}>Fant ikke saken</PageNotFound>
-
-  const routeAction = toStory(props)
-  if (props.pathname != reverse(routeAction)) {
-    redirect(routeAction)
-    return null
-  }
-  return [
-    <StoryHelmet key="helmet" {...props} />,
-    <Story key="story" {...props} />,
-  ]
-}
-
 const mapStateToProps = (state, { id }) => R.defaultTo({}, getStory(id)(state))
 const mapDispatchToProps = (dispatch, { id }) => ({
   fetchData: () => dispatch(storyRequested(id)),
@@ -66,5 +60,5 @@ const mapDispatchToProps = (dispatch, { id }) => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  requestData(StoryRoute, 'HTTPstatus', LoadingIndicator),
+  requestData(Story, 'HTTPstatus', LoadingIndicator),
 )

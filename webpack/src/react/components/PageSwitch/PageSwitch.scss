@@ -1,18 +1,20 @@
 .PageSwitch {
   .Page {
-    transition: opacity 200ms ease;
     background: white;
-    // opacity: 0;
+    overflow-x: hidden;
   }
   .page-enter {
-    transition: opacity 200ms ease 100ms;
     opacity: 0;
   }
-  .page-enter-done,
   .page-enter-active {
+    opacity: 0;
+  }
+  .page-enter-done {
+    transition: opacity 150ms ease-out;
     opacity: 1;
   }
   .page-exit {
+    transition: opacity 50ms ease;
     opacity: 0;
   }
 }
