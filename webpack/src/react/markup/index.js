@@ -37,6 +37,7 @@ export const parseText = (text, multiline = true, lastIndex = 0) => {
   const rules = multiline ? blockRules : inlineRules
   const types = R.pipe(R.pluck('type'), R.join(' '))(rules)
   let looplimit = 99999 // hack to avoid infinite loops during development.
+  let key = 0
   while (looplimit-- && text) {
     for (const rule of rules) {
       const result = rule.parse(text)
@@ -48,9 +49,8 @@ export const parseText = (text, multiline = true, lastIndex = 0) => {
             const children = rule.leaf
               ? content ? [content] : []
               : parseText(content, R.contains('\n', content))
-            // node.index = lastIndex
             // node.hash = hashText(match)
-            nodes.push({ ...node, children })
+            nodes.push({ ...node, children, key: key++ })
           }
         }
         // lastIndex += index
