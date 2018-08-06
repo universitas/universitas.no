@@ -35,20 +35,19 @@ def timeit(fn):
 @timeit
 def _react_render(redux_actions, request):
     session = requests.Session()
-    adapter = requests.adapters.HTTPAdapter(max_retries=5)
+    adapter = requests.adapters.HTTPAdapter(max_retries=8)
     session.mount(settings.EXPRESS_SERVER_URL, adapter)
-
+    path = request.path.replace('//', '/').lstrip('/')
+    url = f'{settings.EXPRESS_SERVER_URL}/{path}'
     try:
-        path = request.path.replace('//', '/').lstrip('/')
-        url = f'{settings.EXPRESS_SERVER_URL}/{path}'
         response = session.post(url, json=redux_actions)
     except requests.ConnectionError:
         logger.exception('Could not connect to express server')
-        return {}
+        return {'state': {}, 'error': 'ConnectionError'}
     try:
         return response.json()
     except json.JSONDecodeError:
-        return {'error': response.content}
+        return {'state': {}, 'error': response.content}
 
 
 def react_frontpage_view(request, section=None, story=None, slug=None):
@@ -82,7 +81,7 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
 
     ssr_context = _react_render(redux_actions, request)
 
-    if request.user.is_anonymous:
+    if request.user.is_anonymous and ssr_context.get('state'):
         ssr_context['state']['auth'] = None
 
     try:

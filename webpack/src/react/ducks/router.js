@@ -52,11 +52,11 @@ export const routesMap = {
   [PDF]: '/pdf/:year?/',
   [SCHEDULE]: '/utgivelsesplan/:year?/',
   [STORY]: '/:section/:id(\\d+)/:slug?/',
-  [SHORT_URL]: '/:section?/:id(\\d+)/:slug?/',
+  [SHORT_URL]: '/:section(.*)?/:id(\\d+)/:slug(.*)?/',
   [ABOUT]: '/om-universitas/',
   [AD_INFO]: '/annonser/',
   [SECTION]: '/:section/forside/',
-  [NOT_FOUND]: '/not-found/',
+  [NOT_FOUND]: '/ikke-funnet/',
 }
 
 export const reverse = action => actionToPath(action, routesMap)
