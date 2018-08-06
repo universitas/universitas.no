@@ -199,6 +199,7 @@ class ImageFile(  # type: ignore
     stem = models.CharField(
         verbose_name=_('file name stem'),
         max_length=1024,
+        blank=True,
     )
     original = thumbnail.ImageField(
         verbose_name=_('original'),

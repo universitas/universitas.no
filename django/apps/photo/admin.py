@@ -63,7 +63,7 @@ upload_to_desken.short_description = _('Upload to desken')  # type: ignore
 
 @admin.register(ImageFile)
 class ImageFileAdmin(
-    AdminImageMixin,
+    # AdminImageMixin,
     ThumbAdmin,
     admin.ModelAdmin,
 ):
