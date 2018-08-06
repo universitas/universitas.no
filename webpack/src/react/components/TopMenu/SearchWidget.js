@@ -9,10 +9,16 @@ const Icon = ({ fetching }) => (
   </div>
 )
 
-const SearchWidget = ({ search = '', changeSearch, fetching }) => (
+const SearchWidget = ({
+  search = '',
+  changeSearch,
+  fetching,
+  autoFocus = false,
+}) => (
   <div className={cx('SearchWidget')}>
     <Icon fetching={fetching} />
     <input
+      autoFocus={autoFocus}
       onChange={e => changeSearch(e.target.value)}
       type="text"
       placeholder="søk..."

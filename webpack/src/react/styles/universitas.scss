@@ -23,23 +23,22 @@ h6 {
 }
 
 .Universitas {
+  width: 100%;
   max-width: 100vw;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  width: 100%;
 }
 
 .PageSwitch {
   flex: 1;
   display: grid;
-  justify-content: center;
   align-items: start;
+  justify-content: center;
   grid-template-columns: minmax(auto, $content-width);
   .Page {
     margin: $pad;
     grid-area: 1/1/2/2;
-    min-height: calc(100vh - #{$menuheight + $gridgap});
   }
 }
 

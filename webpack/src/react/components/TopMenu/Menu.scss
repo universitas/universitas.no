@@ -56,6 +56,7 @@
     }
     &.two {
       @include size(l) {
+        // always hide on large screens
         display: none;
       }
       .inner {
@@ -87,16 +88,8 @@
           flex-direction: column;
         }
       }
-      position: absolute;
       z-index: -10;
       background-color: #333;
-      transform: translateY(-100%);
-      top: 100%;
-      transition: transform 150ms ease;
-
-      &.expanded {
-        transform: translateY(0);
-      }
     }
   }
   .logoLink {

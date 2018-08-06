@@ -56,7 +56,7 @@ class NewsFeed extends React.Component {
     const offset = items.length ? R.last(items).order : null
     const fetchMore = () => feedRequested({ offset })
     return (
-      <article className={cx('NewsFeed', className)}>
+      <section className={cx('NewsFeed', className)}>
         {items.map(props => (
           <ConnectedFeedItem
             addRef={this.addRef(props.story.id)}
@@ -65,7 +65,7 @@ class NewsFeed extends React.Component {
           />
         ))}
         <LoadMore fetchMore={fetchMore} fetching={fetching} next={next} />
-      </article>
+      </section>
     )
   }
 }

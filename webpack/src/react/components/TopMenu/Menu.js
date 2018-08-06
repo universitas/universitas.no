@@ -60,12 +60,14 @@ const TopMenu = ({ expanded, toggleUx }) => (
         onClick={() => toggleUx({ menuExpanded: !expanded })}
       />
     </Level>
-    <Level two expanded={expanded}>
-      <SearchWidget />
-      <LanguageWidget />
-      <Sections />
-      <PageLinks />
-    </Level>
+    {expanded && (
+      <Level two>
+        <SearchWidget autoFocus />
+        <LanguageWidget />
+        <Sections />
+        <PageLinks />
+      </Level>
+    )}
   </section>
 )
 

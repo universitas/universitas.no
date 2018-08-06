@@ -9,7 +9,6 @@
 }
 
 .NewsFeed {
-  min-height: calc(100vh - #{$menuheight + $gridgap});
   font-family: $univ-sans;
   display: grid;
   grid-gap: $gridgap;
