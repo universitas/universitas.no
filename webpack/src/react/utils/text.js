@@ -44,6 +44,7 @@ export const cleanText = R.pipe(
   R.replace(/--/g, '–'), // en-dash
   R.replace(/(^|[.:?!] +)[-–] ?\b/gmu, `$1–${WORDJOINER}${NBRS}`),
   R.trim,
+  R.replace(/\r/g, ''), // no carriage returns
   R.replace(/\n{3,}/g, '\n\n'), // multi newlines
 )
 

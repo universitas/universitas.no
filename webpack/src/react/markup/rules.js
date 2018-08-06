@@ -32,6 +32,14 @@ const baseRules = {
     type: 'character',
     pattern: /\\(\W)/,
   },
+  newline: {
+    // newline in "inline" text (for headlines)
+    inline,
+    leaf,
+    pattern: /\s*\n\s*/,
+    reverse: () => '\n',
+    order: 1,
+  },
   character: {
     inline,
     leaf,

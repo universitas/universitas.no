@@ -30,7 +30,12 @@ export const toPdf = year => ({ type: PDF, payload: { year } })
 export const toPubSchedule = year => ({ type: SCHEDULE, payload: { year } })
 export const toAbout = () => ({ type: ABOUT, payload: {} })
 export const toAdInfo = () => ({ type: AD_INFO, payload: {} })
-export const toStory = ({ id, title = '', section, story_type = {} }) => ({
+export const toStory = ({
+  id,
+  title = 'ingen tittel',
+  section,
+  story_type = {},
+}) => ({
   type: STORY,
   payload: {
     id,
@@ -46,7 +51,7 @@ export const routesMap = {
   [HOME]: '/',
   [PDF]: '/pdf/:year?/',
   [SCHEDULE]: '/utgivelsesplan/:year?/',
-  [STORY]: '/:section/:id(\\d+)/:slug?',
+  [STORY]: '/:section/:id(\\d+)/:slug?/',
   [SHORT_URL]: '/:section?/:id(\\d+)/:slug?/',
   [ABOUT]: '/om-universitas/',
   [AD_INFO]: '/annonser/',

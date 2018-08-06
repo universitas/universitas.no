@@ -55,6 +55,15 @@ describe('parseText', () => {
     test(c, () => expect(parseText(cases[c][0])).toMatchObject(cases[c][1]))
 })
 
+describe('inline text newline', () => {
+  test('parseText', () => {
+    const parsed = parseText('hello\nworld', false)
+    expect(parsed).toMatchObject(['hello', { type: 'newline' }, 'world'])
+    const reversed = renderText(parsed)
+    expect(reversed).toEqual('hello\nworld')
+  })
+})
+
 describe('renderText', () => {
   const reverse = R.pipe(parseText, renderText)
 

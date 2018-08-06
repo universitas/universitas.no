@@ -59,6 +59,9 @@ export const parseText = (text, multiline = true, lastIndex = 0) => {
       }
     }
   }
+  if (looplimit < 1) {
+    throw new Error(`loop limit reached for "${text}"`)
+  }
   return nodes
 }
 

@@ -34,10 +34,10 @@ class Story extends React.Component {
   }
 
   render() {
-    const tree = buildNodeTree(this.props)
     const { className, ...props } = this.props
     if (props.HTTPstatus == 404)
       return <PageNotFound {...props}>Fant ikke saken</PageNotFound>
+    const tree = buildNodeTree(props)
     return (
       <article className={cx('Story', className)}>
         <StoryHelmet {...props} />
@@ -46,7 +46,7 @@ class Story extends React.Component {
           <StorySidebar {...tree} />
           <StoryBody {...tree} />
         </main>
-        <StoryFoot {...this.props} />
+        <StoryFoot {...props} />
       </article>
     )
   }

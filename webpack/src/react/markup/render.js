@@ -8,6 +8,7 @@ export const inlineText = R.pipe(
     R.cond([
       [R.is(String), R.identity],
       [R.propEq('type', 'em'), ({ children }) => <em>{children}</em>],
+      [R.propEq('type', 'newline'), () => <br />],
       [R.T, R.prop('children')],
     ]),
   ),
