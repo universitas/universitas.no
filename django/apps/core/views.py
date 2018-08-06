@@ -82,6 +82,9 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
 
     ssr_context = _react_render(redux_actions, request)
 
+    if request.user.is_anonymous:
+        ssr_context['state']['auth'] = None
+
     try:
         pathname = ssr_context['state']['location']['pathname']
         if pathname != request.path:
