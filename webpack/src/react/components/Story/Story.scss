@@ -93,6 +93,7 @@ $externallink: "data:image/svg+xml," +
     flex-direction: column;
     .mainImage {
       display: flex;
+      min-height: 0;
       .imgWrapper {
         background-color: #dddfe9;
       }
