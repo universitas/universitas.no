@@ -117,18 +117,19 @@ def cache_memoize(
         def inner(*args, **kwargs):
             refresh = kwargs.pop('_refresh', False)
             cache_key = _make_cache_key(*args, **kwargs)
+            sentry = object()
             if refresh:
-                result = None
+                result = sentry
             else:
-                result = cache.get(cache_key)
-            if result is None:
+                result = cache.get(cache_key, sentry)
+            if result is sentry:
                 result = func(*args, **kwargs)
                 if not store_result:
                     # Then the result isn't valuable/important to store but
                     # we want to store something. Just to remember that
                     # it has be done.
                     cache.set(cache_key, True, timeout)
-                elif result is not None:
+                else:
                     cache.set(cache_key, result, timeout)
                 if miss_callable:
                     miss_callable(*args, **kwargs)

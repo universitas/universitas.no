@@ -30,18 +30,22 @@ const PageHelmet = ({
   pageTitle = '',
   lede = 'Norges største studentavis',
   language = 'nb',
-}) =>
-  pageTitle ? (
+}) => {
+  if (!pageTitle) return null
+  const url = R.path(['location', 'href'], global)
+  return (
     <Helmet>
       <title>{`${pageTitle} | universitas.no`}</title>
-      <link rel="canonical" href={R.path(['location', 'href'], global)} />
+      <link rel="canonical" href={url} />
       <meta name="description" content={lede} />
       <meta property="og:type" content="website" />
       <meta property="og:title" content={pageTitle} />
       <meta property="og:description" content={lede} />
       <meta property="og:locale" content={language} />
+      <meta property="og:url" content={url} />
     </Helmet>
-  ) : null
+  )
+}
 
 const pageWrapper = (Page, toTitle = R.F) => {
   const title = R.pipe(

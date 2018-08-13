@@ -43,7 +43,10 @@ export const toStory = ({
     section: slugify(section || story_type.section || 'sak') || null,
   },
 })
-export const toShortUrl = ({ id }) => ({ type: SHORT_URL, payload: { id } })
+export const toShortUrl = ({ id }) => ({
+  type: SHORT_URL,
+  payload: { id, slug: null, section: null },
+})
 
 // url routes action mappings
 
@@ -51,8 +54,8 @@ export const routesMap = {
   [HOME]: '/',
   [PDF]: '/pdf/:year?/',
   [SCHEDULE]: '/utgivelsesplan/:year?/',
-  [STORY]: '/:section/:id(\\d+)/:slug?/',
-  [SHORT_URL]: '/:section(.*)?/:id(\\d+)/:slug(.*)?/',
+  [STORY]: '/:section/:id(\\d+)/:slug/',
+  [SHORT_URL]: '/:section([^/]*)?/:id(\\d+)/:slug([^/]*)?/',
   [ABOUT]: '/om-universitas/',
   [AD_INFO]: '/annonser/',
   [SECTION]: '/:section/forside/',
@@ -60,10 +63,6 @@ export const routesMap = {
 }
 
 export const reverse = action => actionToPath(action, routesMap)
-export const reverseFull = R.pipe(
-  reverse,
-  R.concat(routerOptions.basename || ''),
-  absoluteURL,
-)
+export const reverseFull = R.pipe(reverse, absoluteURL)
 
 export const getLocation = R.prop(SLICE)

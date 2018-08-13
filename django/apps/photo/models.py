@@ -7,23 +7,24 @@ from io import BytesIO
 from pathlib import Path
 from typing import Union
 
-import piexif
 import PIL
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 
+import piexif
 from apps.contributors.models import Contributor
-# from apps.issues.models import current_issue
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.files.base import ContentFile
 from django.core.validators import FileExtensionValidator
 from django.db import models
+# from apps.issues.models import current_issue
+from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
@@ -474,6 +475,20 @@ class ImageFile(  # type: ignore
 
         super().save(*args, **kwargs)
 
-        person = self.person.first()
-        if person:
-            person.thumb.invalidate(person)
+
+@receiver(models.signals.pre_save, sender=ImageFile)
+def imagefile_changed(sender, instance, raw, **kwargs):
+    """cache buster"""
+    nochange = sender.objects.filter(
+        pk=instance.pk,
+        category=instance.category,
+        crop_box=instance.crop_box,
+    )
+    if raw or nochange:
+        return
+
+    from apps.stories.models import Story
+    Story.objects.filter(images__imagefile=instance
+                         ).update(modified=instance.modified)
+    instance.storyimage_set.update(modified=instance.modified)
+    instance.person.update(modified=instance.modified)

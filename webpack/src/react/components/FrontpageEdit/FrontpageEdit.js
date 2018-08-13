@@ -45,7 +45,7 @@ const EditLinks = ({ location, close }) => {
 }
 
 const FrontpageEdit = ({ editing, location, user, toggleUx }) =>
-  user ? (
+  user && user.pk ? (
     <div className="FrontpageEdit">
       {editing ? (
         <EditLinks

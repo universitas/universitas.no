@@ -1,7 +1,7 @@
+from apps.contributors.models import Contributor, Stint
+from django.db.models import Prefetch
 from rest_framework import serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
-
-from apps.contributors.models import Contributor, Stint
 from utils.serializers import AbsoluteURLField
 
 
@@ -54,7 +54,10 @@ class ContributorViewSet(viewsets.ModelViewSet):
     """API endpoint that allows Contributor to be viewed or updated."""
 
     queryset = Contributor.objects.all().prefetch_related(
-        'stint_set__position', 'byline_photo'
+        'byline_photo',
+        Prefetch(
+            'stint_set', queryset=Stint.objects.select_related('position')
+        ),
     )
     serializer_class = ContributorSerializer
     filter_backends = [DjangoFilterBackend]

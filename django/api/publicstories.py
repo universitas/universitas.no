@@ -1,13 +1,12 @@
 import logging
 
-from rest_framework import serializers, viewsets
-from rest_framework.filters import BaseFilterBackend
-from url_filter.integrations.drf import DjangoFilterBackend
-
 from apps.stories.models import (
     Byline, InlineHtml, InlineLink, Story, StoryImage, StoryType, StoryVideo
 )
 from django.db.models import Prefetch
+from rest_framework import pagination, serializers, viewsets
+from rest_framework.filters import BaseFilterBackend
+from url_filter.integrations.drf import DjangoFilterBackend
 from utils.serializers import AbsoluteURLField, CropBoxField
 
 from .stories import StorySerializer
@@ -171,9 +170,14 @@ class ListPublishedStoriesFilter(BaseFilterBackend):
         return queryset
 
 
-class PublicStoryViewSet(viewsets.ReadOnlyModelViewSet):
-    """ API endpoint that allows Story to be viewed or updated.  """
+class SmallerPageSize(pagination.LimitOffsetPagination):
+    default_limit = 10
 
+
+class PublicStoryViewSet(viewsets.ReadOnlyModelViewSet):
+    """ API endpoint for rendering published stories. """
+
+    pagination_class = SmallerPageSize
     serializer_class = PublicStorySerializer
     filter_backends = [DjangoFilterBackend, ListPublishedStoriesFilter]
     filter_fields = ['id']

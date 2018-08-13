@@ -8,11 +8,11 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.postgres.search import TrigramSimilarity
-from django.core.cache import cache
-from django.core.files import File
 from django.db import models
+from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
 from utils.decorators import cache_memoize
 
 from .fuzzy_name_search import FuzzyNameSearchMixin
@@ -60,7 +60,7 @@ class ContributorQuerySet(models.QuerySet):
         return self.filter(pk__in=managers)
 
 
-class Contributor(FuzzyNameSearchMixin, models.Model):
+class Contributor(TimeStampedModel, FuzzyNameSearchMixin, models.Model):
     """ Someone who contributes content to the newspaper or other staff. """
 
     objects = ContributorQuerySet.as_manager()
@@ -125,7 +125,7 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
         img = ImageFile.objects.search(
             filename=f'{self}.jpg',
             cutoff=0.8,
-        ).profile_images().first()
+        ).profile_images().filter(contributor=None).first()
 
         if img:
             self.byline_photo = img
@@ -134,7 +134,7 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
 
         return False
 
-    @cache_memoize()
+    @cache_memoize(60 * 5)  # five minutes
     def thumb(self):
         img = self.get_byline_image()
         if not img:
@@ -208,7 +208,7 @@ class Contributor(FuzzyNameSearchMixin, models.Model):
             logger.debug('added %s to %s' % (self, groups))
         return True
 
-    @property
+    @cache_memoize()
     def position(self):
         stints = self.stint_set.order_by(
             'start_date',
@@ -305,3 +305,9 @@ class Stint(models.Model):
     @property
     def is_management(self):
         return self.position.is_management
+
+
+@receiver(models.signals.post_save, sender=Stint)
+def stint_changed(sender, instance, **kwargs):
+    """cache buster"""
+    instance.contributor.save()

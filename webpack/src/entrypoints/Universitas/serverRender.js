@@ -19,9 +19,9 @@ const notFetching = R.map(
   ]),
 )
 
-export default (url, actions = []) => {
-  const store = configureStore(undefined, url)
-  global.location = { href: `http://universitas.no${url}` }
+export default (path, { actions, url }) => {
+  const store = configureStore(undefined, [path])
+  global.location = { href: url }
   global.server = true
   R.forEach(action => store.dispatch(action), actions)
   const html = renderToString(

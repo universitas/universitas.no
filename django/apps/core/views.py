@@ -34,13 +34,14 @@ def timeit(fn):
 
 @timeit
 def _react_render(redux_actions, request):
+    data = {'actions': redux_actions, 'url': request.build_absolute_uri()}
     session = requests.Session()
     adapter = requests.adapters.HTTPAdapter(max_retries=8)
     session.mount(settings.EXPRESS_SERVER_URL, adapter)
     path = request.path.replace('//', '/').lstrip('/')
     url = f'{settings.EXPRESS_SERVER_URL}/{path}'
     try:
-        response = session.post(url, json=redux_actions)
+        response = session.post(url, json=data)
     except requests.ConnectionError:
         logger.exception('Could not connect to express server')
         return {'state': {}, 'error': 'ConnectionError'}

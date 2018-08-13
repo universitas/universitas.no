@@ -355,7 +355,7 @@ class Story(  # type: ignore
 
     def main_image(self):
         """ Get the top image if there is any. """
-        return self.images.first()
+        return self.images.order_by('-size', '-ordering').first()
 
     @cache_memoize()
     def facebook_thumb(self):

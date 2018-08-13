@@ -9,6 +9,7 @@ from requests.exceptions import MissingSchema, Timeout
 from apps.photo.models import ImageFile
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.dispatch import receiver
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from model_utils.models import TimeStampedModel
@@ -387,3 +388,12 @@ class StoryVideo(StoryMedia):
         except Exception as e:
             logger.debug(e)
             return None
+
+
+@receiver(models.signals.post_save)
+def story_modified(sender, instance, **kwargs):
+    if not issubclass(sender, StoryChild):
+        return
+    from apps.stories.models import Story
+    Story.objects.filter(pk=instance.parent_story.pk
+                         ).update(modified=instance.modified)
