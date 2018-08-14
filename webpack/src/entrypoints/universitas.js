@@ -6,9 +6,22 @@ import Universitas from './Universitas'
 const ROOT_ID = 'ReactApp'
 const JSON_ID = 'redux-state'
 
+const rehydrate = (state, node) => {
+  // rehydrate with error fallback
+  const html = node.innerHtml
+  const user = state && state.auth && state.auth.id
+  try {
+    ReactDOM.hydrate(Universitas(state), node)
+    if (window.__RENDER_ERROR__) throw new Error(window.__RENDER_ERROR__)
+  } catch (e) {
+    console.error(e)
+    if (!user && html) node.innerHtml = html
+  }
+}
+
 const render = (rootNode, initialState = null) =>
   initialState
-    ? ReactDOM.hydrate(Universitas(initialState), rootNode)
+    ? rehydrate(initialState, rootNode)
     : ReactDOM.render(Universitas(), rootNode)
 
 const stateJson = document.getElementById(JSON_ID)

@@ -1,5 +1,4 @@
 const SLICE = 'publicstory'
-import { buildNodeTree } from 'markup/nodeTree'
 
 // Lenses
 const sliceLens = R.lensProp(SLICE)

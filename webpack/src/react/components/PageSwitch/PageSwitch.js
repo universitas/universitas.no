@@ -47,6 +47,8 @@ const PageHelmet = ({
   )
 }
 
+const onError = err => (window.__RENDER_ERROR__ = err || true)
+
 const pageWrapper = (Page, toTitle = R.F) => {
   const title = R.pipe(
     toTitle,
@@ -58,7 +60,7 @@ const pageWrapper = (Page, toTitle = R.F) => {
     R.converge(R.merge, [R.prop('payload'), R.pick(['pathname'])]),
     R.converge(R.assoc('pageTitle'), [title, R.identity]),
   )
-  return [withErrorBoundary(Page), locationToProps]
+  return [withErrorBoundary(Page, undefined, onError), locationToProps]
 }
 
 const pages = {

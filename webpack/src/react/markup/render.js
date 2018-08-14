@@ -3,6 +3,7 @@ import { cleanText } from 'utils/text'
 
 export const inlineText = R.pipe(
   cleanText,
+  R.trim,
   text => parseText(text, false),
   R.map(
     R.cond([

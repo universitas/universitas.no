@@ -43,25 +43,9 @@ export const cleanText = R.pipe(
   R.replace(/\B"(.*?)"\B/gu, '«$1»'), // straight quotes
   R.replace(/--/g, '–'), // en-dash
   R.replace(/(^|[.:?!] +)[-–] ?\b/gmu, `$1–${WORDJOINER}${NBRS}`),
-  R.trim,
   R.replace(/\r/g, ''), // no carriage returns
   R.replace(/\n{3,}/g, '\n\n'), // multi newlines
 )
-
-// legacy cleanup function
-export const cleanup = text => {
-  return text
-    .replace(/^(@\S+:)/gm, s => s.toLowerCase())
-    .replace(/^ *(@\S+:) *\b/gm, '$1 ')
-    .replace(/^@t: */gm, '@txt: ')
-    .replace(/[«"]([^"»«]*)"/g, '«$1»')
-    .replace(/"/g, '«')
-    .replace(/--/g, '–')
-    .replace(/^[-–] *\b/gm, '– ')
-    .replace(/^@text:/gm, '@txt:')
-    .replace(/\n+@m$/gm, '\n\n@mt: ')
-    .replace(/^./gm, s => s.toUpperCase())
-}
 
 // :: * -> string
 export const stringify = R.cond([

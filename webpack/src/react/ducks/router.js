@@ -30,16 +30,11 @@ export const toPdf = year => ({ type: PDF, payload: { year } })
 export const toPubSchedule = year => ({ type: SCHEDULE, payload: { year } })
 export const toAbout = () => ({ type: ABOUT, payload: {} })
 export const toAdInfo = () => ({ type: AD_INFO, payload: {} })
-export const toStory = ({
-  id,
-  title = 'ingen tittel',
-  section,
-  story_type = {},
-}) => ({
+export const toStory = ({ id, title, section, story_type = {} }) => ({
   type: STORY,
   payload: {
     id,
-    slug: slugify(title).substr(0, 50),
+    slug: slugify(title || 'ingen tittel').substr(0, 50),
     section: slugify(section || story_type.section || 'sak') || null,
   },
 })

@@ -1,5 +1,6 @@
 import { parseText, rules } from 'markup'
 import { cleanText } from 'utils/text'
+import { parseByline } from './byline.js'
 
 const childTypes = [
   // child types in story redux state
@@ -34,65 +35,69 @@ export const getPlaceChildren = ({ name }) =>
 // :: {story} -> {...story, nodeTree}
 export const buildNodeTree = story => {
   let { title, kicker, lede, theme_word, bylines } = story
-  const walk = R.map(parseNode => {
-    if (R.is(String, parseNode)) return parseNode
-    let { type, children, match, ...props } = parseNode
-    if (children) props.children = walk(children)
-    switch (type) {
-      case 'place':
-        props.children = R.pipe(
-          getPlaceChildren(parseNode),
-          R.sortBy(R.prop('ordering')),
-          R.map(
-            R.when(R.prop('bodytext_markup'), child => ({
-              ...child,
-              children: R.pipe(
-                R.prop('bodytext_markup'),
-                R.replace(/@fakta:/gi, '@faktatit:'),
-                R.replace(/@sitat:/gi, ''),
-                parseText,
-                walk,
-              )(child),
-            })),
-          ),
-        )(story)
-        break
-      case 'link':
-        props.link = getLink(props)(story)
-        break
-      case 'blockTag':
-        switch (props.tag) {
-          case 'fakta':
-            props.type = 'place'
-            props.children = [{ type: 'aside', children }]
-            break
-          case 'sitat':
-            props.type = 'place'
-            props.children = [{ type: 'pullquote', children }]
-            break
-          case 'bl':
-            bylines = R.append(parseByline(children[0]), bylines)
-            return null
-          case 'tit':
-            if (!title) {
-              title = match[1]
+  const walk = R.compose(
+    R.map(R.when(R.is(String), cleanText)),
+    R.reject(R.isNil),
+    R.map(parseNode => {
+      if (R.is(String, parseNode)) return parseNode
+      let { type, children, match, ...props } = parseNode
+      if (children) props.children = walk(children)
+      switch (type) {
+        case 'place':
+          props.children = R.pipe(
+            getPlaceChildren(parseNode),
+            R.sortBy(R.prop('ordering')),
+            R.map(
+              R.when(R.prop('bodytext_markup'), child => ({
+                ...child,
+                children: R.pipe(
+                  R.prop('bodytext_markup'),
+                  R.replace(/@fakta:/gi, '@faktatit:'),
+                  R.replace(/@sitat:/gi, ''),
+                  parseText,
+                  walk,
+                )(child),
+              })),
+            ),
+          )(story)
+          break
+        case 'link':
+          props.link = getLink(props)(story)
+          break
+        case 'blockTag':
+          switch (props.tag) {
+            case 'fakta':
+              props.type = 'place'
+              props.children = [{ type: 'aside', children }]
+              break
+            case 'sitat':
+              props.type = 'place'
+              props.children = [{ type: 'pullquote', children }]
+              break
+            case 'bl':
+              bylines = R.append(parseByline(children[0]), bylines)
               return null
-            }
-            break
-          case 'tema':
-            theme_word = match[1]
-            return null
-          case 'ing':
-            lede += match[1]
-            return null
-          case 'kicker':
-            kicker = match[1]
-            return null
-        }
-        break
-    }
-    return { type, ...props }
-  })
+            case 'tit':
+              if (!title) {
+                title = match[2]
+                return null
+              }
+              break
+            case 'tema':
+              theme_word = match[2]
+              return null
+            case 'ing':
+              lede += match[2]
+              return null
+            case 'kicker':
+              kicker = match[2]
+              return null
+          }
+          break
+      }
+      return { type, ...props }
+    }),
+  )
 
   const parseTree = parseText(story.bodytext_markup)
   const nodeTree = walk(parseTree)

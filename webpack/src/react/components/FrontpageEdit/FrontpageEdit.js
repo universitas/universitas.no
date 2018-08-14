@@ -1,8 +1,10 @@
 import { connect } from 'react-redux'
-import { Close, Edit, Tune, GridView } from 'components/Icons'
+import { Info, Close, Edit, Tune, GridView } from 'components/Icons'
 import Debug from 'components/Debug'
 // import { getSite } from 'ducks/site'
 import { getUser } from 'ducks/auth'
+import { getStory } from 'ducks/publicstory'
+import { buildNodeTree } from 'markup/nodeTree'
 import { getLocation, STORY, HOME, SECTION } from 'ducks/router'
 import { getUx, toggleUx } from 'ducks/site'
 
@@ -29,6 +31,35 @@ const djangoUrl = location => {
   }
 }
 
+const selectDebugData = state => {
+  const location = getLocation(state)
+  switch (location.type) {
+    case STORY:
+      return R.pipe(getStory(location.payload.id), buildNodeTree)(state)
+    default:
+      return state
+  }
+}
+
+const StateData = connect(selectDebugData)(Debug)
+
+class DebugToggle extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { open: false }
+    this.clickHandler = () => this.setState(R.over(R.lensProp('open'), R.not))
+  }
+
+  render() {
+    return (
+      <span title="debug data" onClick={this.clickHandler}>
+        <Info />
+        {this.state.open && <StateData />}
+      </span>
+    )
+  }
+}
+
 const EditLinks = ({ location, close }) => {
   const urls = djangoUrl(location)
   return (
@@ -40,6 +71,7 @@ const EditLinks = ({ location, close }) => {
       <a title="Django-admin" href={urls[0]}>
         <Tune />
       </a>
+      <DebugToggle />
     </React.Fragment>
   )
 }

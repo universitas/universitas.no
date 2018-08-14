@@ -5,7 +5,7 @@ import DetailTopBar from 'components/DetailTopBar'
 
 const model = 'stories'
 const { fieldChanged, reverseUrl, itemCloned, itemDeSelected } = modelActions(
-  model
+  model,
 )
 const { getItem } = modelSelectors(model)
 
@@ -33,7 +33,7 @@ const StoryTools = ({
     />
     <Tool
       icon="Newspaper"
-      title="se saken på universitas.no"
+      title={`se saken på universitas.no\n${public_url}`}
       onClick={openUrl(public_url)}
     />
     <Tool

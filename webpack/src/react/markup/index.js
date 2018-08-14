@@ -78,5 +78,5 @@ export const renderText = tree => {
       if (!rule.inline) text.push('\n')
     }
   }
-  return cleanText(R.join('', text))
+  return R.pipe(R.join(''), cleanText, R.trim)(text)
 }

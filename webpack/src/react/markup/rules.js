@@ -49,7 +49,7 @@ const baseRules = {
   text: {
     inline,
     leaf,
-    pattern: /[^\n\\_[]+/,
+    pattern: /[^\n\\_\[]+/,
     order: 0,
   },
   link: {
