@@ -10,6 +10,7 @@ const rehydrate = (state, node) => {
   // rehydrate with error fallback
   const html = node.innerHtml
   const user = state && state.auth && state.auth.id
+  delete window.__RENDER_ERROR__
   try {
     ReactDOM.hydrate(Universitas(state), node)
     if (window.__RENDER_ERROR__) throw new Error(window.__RENDER_ERROR__)

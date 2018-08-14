@@ -13,8 +13,10 @@
       @include size(s) {
         min-height: 20vh;
       }
-      max-height: 85vh;
       object-fit: cover;
+      &.autoCrop {
+        max-height: 85vh;
+      }
       &.diagram {
         object-fit: scale-down;
       }
