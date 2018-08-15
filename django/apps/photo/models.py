@@ -7,9 +7,13 @@ from io import BytesIO
 from pathlib import Path
 from typing import Union
 
-import PIL
-
 import piexif
+import PIL
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
+
 from apps.contributors.models import Contributor
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
@@ -21,10 +25,6 @@ from django.db import models
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
@@ -109,20 +109,34 @@ class ImageFileManager(models.Manager):
                 image = file_operations.image_from_fingerprint(fingerprint)
             except ValueError as err:
                 raise ValueError('incorrect fingerprint: %s' % err) from err
-            imagehash = str(file_operations.get_imagehash(image))
+            imagehash = file_operations.get_imagehash(image)
         if md5:
             results = qs.filter(stat__md5=md5)
             if results.count():
                 return results
         if imagehash:
-            results = qs.filter(_imagehash__trigram_similar=imagehash)
-            if results.count():
-                return results
+            # filter(_imagehash__trigram_similar=imagehash)
+            limit = 0.2
+            annotated = qs.annotate(
+                hash_similar=TrigramSimilarity('_imagehash', str(imagehash))
+            )
+            results = annotated.filter(hash_similar__gt=limit)
+            while results.count() > 3:
+                limit += 0.1
+                r2 = results.filter(hash_similar__gt=limit)
+                if not r2:
+                    break
+                results = r2
+
+            if results:
+                return results.order_by('-hash_similar')
         if filename:
             trigram = TrigramSimilarity('stem', Path(filename).stem)
-            return qs.annotate(similarity=trigram
-                               ).filter(similarity__gt=cutoff
-                                        ).order_by('-similarity')
+            return qs.annotate(
+                similarity=trigram,
+            ).filter(
+                similarity__gt=cutoff,
+            ).order_by('-similarity')
         return qs.none()
 
     def filename_search(self, file_name, similarity=0.5):
@@ -182,8 +196,6 @@ class ImageCategoryMixin(models.Model):
             self.ILLUSTRATION: 'illustration',
         }
         return mapping.get(self.category)
-
-
 
 class ImageFile(  # type: ignore
     ImageHashModelMixin, TimeStampedModel, EditURLMixin, AutoCropImage,
@@ -403,7 +415,7 @@ class ImageFile(  # type: ignore
         if img is None:
             img = file_operations.pil_image(self.original)
 
-        exif_bytes = img.info.get('exif')
+        exif_bytes = img.info.get('exif', b'')
         if exif_bytes:
             data_dict = piexif.load(exif_bytes)
             thumb = data_dict.pop('thumbnail', None)

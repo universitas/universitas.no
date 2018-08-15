@@ -5,7 +5,8 @@ import logging
 from django.contrib import admin, messages
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from sorl.thumbnail.admin import AdminImageMixin
+#from sorl.thumbnail.admin import AdminImageMixin
+from utils.sorladmin import AdminImageMixin
 
 from .models import ImageFile
 from .tasks import upload_imagefile_to_desken
@@ -63,7 +64,7 @@ upload_to_desken.short_description = _('Upload to desken')  # type: ignore
 
 @admin.register(ImageFile)
 class ImageFileAdmin(
-    # AdminImageMixin,
+    AdminImageMixin,
     ThumbAdmin,
     admin.ModelAdmin,
 ):

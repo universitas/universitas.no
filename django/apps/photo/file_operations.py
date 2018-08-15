@@ -5,9 +5,9 @@ from io import BytesIO
 from pathlib import Path
 from typing import Union
 
+import imagehash
 import PIL
 
-import imagehash
 from django.core.files import File as DjangoFile
 
 try:
@@ -91,10 +91,12 @@ def get_filesize(fp: Fileish) -> int:
 def get_imagehash(fp, size=11) -> imagehash.ImageHash:
     """Calculate perceptual hash for comparison of identical images"""
     try:
-        img = pil_image(fp).convert('L').resize((size, size))
+        img = pil_image(fp)
+        thumb = img.resize((size, size), PIL.Image.BILINEAR).convert('L')
+        return imagehash.dhash(thumb)
     except OSError:  # corrupt image file probably
+        logger.exception('Cannot calculate image hash')
         return None
-    return imagehash.dhash(img)
 
 
 def get_exif(fp: Fileish) -> dict:
@@ -102,7 +104,7 @@ def get_exif(fp: Fileish) -> dict:
         return pil_image(fp)._getexif() or {}
     except (AttributeError, OSError):
         pass  # file format has no exif.
-    except Exception:
+    except Exception:  # unexpected error
         logger.exception('Cannot extract exif data')
     return {}
 

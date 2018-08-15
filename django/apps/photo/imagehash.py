@@ -3,6 +3,7 @@ from pathlib import Path
 
 import boto
 import imagehash
+
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -64,7 +65,7 @@ class ImageHashModelMixin(models.Model):
         """Calculate or retrieve imagehash value."""
         if not self._imagehash:
             try:
-                self.imagehash = get_imagehash(self.large)
+                self.imagehash = get_imagehash(self.small)
             except (IOError, FileNotFoundError):
                 self.imagehash = get_imagehash(self.original)
         try:

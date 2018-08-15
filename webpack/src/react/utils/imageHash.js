@@ -1,5 +1,9 @@
 // utils for image hashing
 
+// ITU-R 601-2 luma transform:
+// L = R * 299/1000 + G * 587/1000 + B * 114/1000
+const LUMA_TRANSFORM = [299 / 1000, 587 / 1000, 114 / 1000]
+
 // create an image fingerprint to compare with api
 // :: (Image, Number) -> String
 export const imageFingerPrint = (src, size = 11) => {
@@ -68,7 +72,7 @@ const canvasImageData = canvas => {
 
 // Extract one dimensional luminosity channel from ImageData
 // :: ImageData -> Uint8ClampedArray
-const imageDataToLumen = (imageData, rgb = [0.2126, 0.7152, 0.0722]) => {
+const imageDataToLumen = (imageData, rgb = LUMA_TRANSFORM) => {
   const [R, G, B] = rgb
   const data = imageData.data
   const L = []
@@ -98,7 +102,7 @@ const hexToHash = hex => {
     .map(h =>
       parseInt(h, 16)
         .toString(2)
-        .padStart(4, 0)
+        .padStart(4, 0),
     )
     .join('')
   return digits.split('').map(d => d === '1')
@@ -125,7 +129,7 @@ const hashToCanvas = hash => {
   const w = hash.length ** 0.5
   const ctx = DOM.context2d(w, w)
   const pixelData = [].concat(
-    ...hash.map(bit => (bit ? [255, 255, 255, 255] : [0, 0, 0, 255]))
+    ...hash.map(bit => (bit ? [255, 255, 255, 255] : [0, 0, 0, 255])),
   )
   const data = new ImageData(Uint8ClampedArray.from(pixelData), w, w)
   ctx.putImageData(data, 0, 0)
@@ -150,5 +154,5 @@ const b64tou8 = b64 =>
   Uint8ClampedArray.from(
     atob(b64)
       .split('')
-      .map(c => c.charCodeAt(0))
+      .map(c => c.charCodeAt(0)),
   )

@@ -1,12 +1,19 @@
 """ Admin for printissues app """
+import logging
+
+from sorl.thumbnail import get_thumbnail
+
 from django.contrib import admin, messages
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from sorl.thumbnail import get_thumbnail
-from sorl.thumbnail.admin import AdminImageMixin
+# from sorl.thumbnail.admin import AdminImageMixin
+from utils.sorladmin import AdminImageMixin
 
 from .models import Issue, PrintIssue
 from .tasks import create_print_issue_pdf
+
+logger = logging.getLogger(__name__)
 
 
 def create_pdf(modeladmin, request, queryset):
@@ -20,11 +27,11 @@ class ThumbAdmin:
     def thumbnail(self, instance, width=200, height=200):
         """ Show thumbnail of pdf frontpage """
         try:
-            source = instance.get_thumbnail()
-            thumb = get_thumbnail(source, '%sx%s' % (width, height))
+            thumb = instance.thumbnail()
             url = thumb.url
-        except (AttributeError, FileNotFoundError):  # noqa
-            url = '/static/admin/img/icon-no.svg'
+        except (AttributeError, FileNotFoundError) as e:  # noqa
+            logger.exception('thumb error')
+            url = staticfiles_storage.url('/admin/img/icon-no.svg')
         if instance.pdf:
             html = '<a href="{pdf}"><img src="{thumb}"></a>'.format(
                 thumb=url,
