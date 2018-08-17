@@ -10,6 +10,9 @@ import {
   call,
   put,
   all,
+  cancel,
+  fork,
+  take,
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { searchUrl, apiFetch, apiPatch, apiGet } from 'services/api'
@@ -25,16 +28,30 @@ import {
   addImage,
   imageFilePatched,
   AUTOCROP_IMAGE,
+  CROP_IMAGE,
 } from 'x/ducks/images'
-import { END_DRAG_HANDLE, getCropWidget } from 'x/ducks/cropWidget'
+
+const takeLatestById = (pattern, saga, ...args) =>
+  fork(function*() {
+    const tasks = {}
+    while (true) {
+      const action = yield take(pattern)
+      const { id } = action.payload || { id: 0 }
+      const lastTask = tasks[id]
+      if (lastTask) {
+        yield cancel(lastTask) // cancel is no-op if the task has already terminated
+      }
+      tasks[id] = yield fork(saga, ...args.concat(action))
+    }
+  })
 
 export default function* rootSaga() {
   yield all([
     takeLatest(SEARCH_CHANGED, searchChanged),
     takeLatest(SEARCH_URL_CHANGED, performSearch),
     takeLatest(IMAGE_CLICKED, selectImage),
+    takeLatestById(CROP_IMAGE, updateCropBox),
     takeEvery(AUTOCROP_IMAGE, autoCrop),
-    takeLatest(END_DRAG_HANDLE, updateCropBox),
   ])
 }
 
@@ -85,10 +102,15 @@ function* searchChanged(action) {
   }
 }
 function* updateCropBox(action) {
-  const { crop_box } = yield select(getCropWidget)
-  yield call(patchImage, action.payload.id, { crop_box })
+  const { id, crop_box } = action.payload
+  yield call(delay, 2000) // two seconds debounce
+  yield call(patchImage, id, { crop_box })
 }
+
 function* autoCrop(action) {
-  const cropping_method = AUTOCROP
-  yield call(patchImage, action.payload.id, { cropping_method })
+  const { id } = action.payload
+  yield call(patchImage, id, { cropping_method: AUTOCROP })
+  yield call(delay, 2000) // wait two seconds
+  const imageState = yield call(fetchImage, id)
+  yield put(addImage(imageState))
 }

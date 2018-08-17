@@ -7,6 +7,7 @@ export const ADD_IMAGE = 'images/ADD_IMAGE'
 export const IMAGE_FILE_PATCHED = 'images/IMAGE_FILE_PATCHED'
 export const REQUEST_IMAGE_FILE = 'images/REQUEST_IMAGE_FILE'
 export const AUTOCROP_IMAGE = 'images/AUTOCROP_IMAGE'
+export const CROP_IMAGE = 'images/CROP_IMAGE'
 
 // Selectors
 export const getImage = (state, id) => state.images[id]
@@ -20,6 +21,11 @@ export const addImage = json => ({
 export const autocropImage = id => ({
   type: AUTOCROP_IMAGE,
   payload: { id },
+})
+
+export const cropImage = (id, crop_box) => ({
+  type: CROP_IMAGE,
+  payload: { id, crop_box },
 })
 
 export const imageFilePatched = json => ({
@@ -37,6 +43,8 @@ const transformImageData2Api = ({ crop_box, cropping_method }) => ({
 
 const image = (state = {}, action) => {
   switch (action.type) {
+    case CROP_IMAGE:
+      return { ...state, crop_box: action.payload.crop_box }
     case AUTOCROP_IMAGE:
       return { ...state, cropping_method: 100 }
     case IMAGE_FILE_PATCHED:
@@ -59,6 +67,7 @@ export const reducer = (state = {}, action) => {
     case ADD_IMAGE:
     case IMAGE_FILE_PATCHED:
     case AUTOCROP_IMAGE:
+    case CROP_IMAGE:
     case REQUEST_IMAGE_FILE: {
       let key = action.payload.id
       let im = state[key]

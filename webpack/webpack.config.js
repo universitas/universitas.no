@@ -48,7 +48,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(svg|gif|jpg|png|woff|woff2|eot|ttf|svg)$/,
+        test: /\.(svg|gif|jpg|png|woff|woff2|eot|ttf)$/,
         use: [
           {
             loader: 'url-loader',
@@ -60,7 +60,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.scss$/,
+        test: /\.s?css$/,
         use: [
           { loader: 'style-loader' },
           { loader: 'css-loader', options: { sourceMap: true } },

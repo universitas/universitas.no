@@ -46,7 +46,7 @@ export const reducer = (state = defaultState, action) => {
     case SEARCH_URL_CHANGED:
       return { ...state, url: action.payload.url }
     case THUMB_STYLE_CYCLE:
-      return { ...state, thumbStyle: (state.thumbStyle + 1) % 3 }
+      return { ...state, thumbStyle: (state.thumbStyle + 1) % 2 }
     case IMAGES_FETCH_SUCCESS: {
       const { results, ...payload } = action.payload
       const ids = R.values(R.pluck('id', results))

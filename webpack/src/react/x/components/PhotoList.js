@@ -38,7 +38,7 @@ const CroppedThumb = ({ thumb, title }) => (
 )
 
 const Frame = () => <rect className="Frame" width="100%" height="100%" />
-const thumbStyles = [CroppedThumb, FullThumbWithCropBox, FullThumb]
+const thumbStyles = [FullThumbWithCropBox, FullThumb]
 
 let Photo = ({ onClick, original = 'foo.jpg', thumbStyle = 0, ...props }) => {
   const Thumb = thumbStyles[thumbStyle]

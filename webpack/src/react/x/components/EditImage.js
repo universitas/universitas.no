@@ -2,10 +2,10 @@ import 'styles/editimage.scss'
 import { connect } from 'react-redux'
 import format from 'date-fns/format'
 
-import CropBox from 'x/components/CropBox'
-import CropPreview from 'x/components/CropPreview'
-import { getImage, autocropImage } from 'x/ducks/images'
-import { getCropWidget } from 'x/ducks/cropWidget'
+import CropBox from '@haakenlid/photocrop'
+// import CropBox from 'x/components/CropBox'
+// import CropPreview from 'x/components/CropPreview'
+import { getImage, cropImage, autocropImage } from 'x/ducks/images'
 import {
   getCropPanel,
   dismissPanel,
@@ -76,8 +76,7 @@ export const EditImage = ({
   image = {},
   data,
   expanded,
-  crop_box,
-  dragging,
+  cropImage,
 }) => {
   const style = expanded ? { flex: 3 } : { flex: 1 }
   style.pointerEvents = 'all'
@@ -90,25 +89,27 @@ export const EditImage = ({
     )
   }
   const pdata = [subset0, subset1, subset2][data](image)
-  const { large: src, cropping_method } = image
-  const size = [image.width, image.height]
-  const pending = cropping_method === 1
-  const aspects = [1, 0.5, 2.5]
-  const cropBoxProps = { id, src, size, dragging, crop_box, pending }
-  const previewsProps = { src, size, crop_box, aspects }
+  const { large: src, crop_box } = image
+  const previews = [1, 0.5, 2.5]
   return (
     <div className="EditImage" style={style}>
-      <CropPreview {...previewsProps} />
-      <CropBox {...cropBoxProps} />
+      <CropBox
+        src={src}
+        value={crop_box}
+        previews={previews}
+        onChange={value => cropImage(id, value)}
+      />
       <ImageData {...pdata} />
       <Buttons id={id} expanded={expanded} />
     </div>
   )
 }
 
-export default connect(state => {
-  const { image: id, expanded, data } = getCropPanel(state)
-  const { dragging, crop_box } = getCropWidget(state)
-  const image = getImage(state, id)
-  return { id, image, dragging, crop_box, expanded, data }
-})(EditImage)
+export default connect(
+  state => {
+    const { image: id, expanded, data } = getCropPanel(state)
+    const image = getImage(state, id)
+    return { id, image, expanded, data }
+  },
+  { cropImage },
+)(EditImage)

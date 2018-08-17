@@ -1,4 +1,4 @@
-$margin: .5rem;
+$margin: 0.5rem;
 .EditImage {
   svg {
     display: block;
@@ -10,8 +10,9 @@ $margin: .5rem;
   .ImageData {
     flex: 0;
     font-size: smaller;
-    td, th {
-      padding:.3em 1em;
+    td,
+    th {
+      padding: 0.3em 1em;
     }
     td {
       user-select: auto;
@@ -37,13 +38,14 @@ $margin: .5rem;
   }
   .Buttons {
     display: flex;
+    flex-shrink: 0;
     justify-content: space-between;
     align-self: flex-start;
     button {
       cursor: pointer;
       background: #ddd;
-      padding: .2em;
-      margin: .2em;
+      padding: 0.2em;
+      margin: 0.2em;
       &:hover {
         background: lighter(blue, 30%);
       }

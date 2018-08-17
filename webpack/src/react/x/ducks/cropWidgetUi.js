@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux'
 import { getImage } from 'x/ducks/images'
-import { reducer as cropWidget } from 'x/ducks/cropWidget'
 import { reducer as cropPanel } from 'x/ducks/cropPanel'
 import { reducer as imageList } from 'x/ducks/imageList'
 
@@ -29,6 +28,5 @@ export const imageClicked = id => ({
 // Reducers
 export const reducer = combineReducers({
   cropPanel,
-  cropWidget,
   imageList,
 })

@@ -2,7 +2,8 @@ import EditImage from 'x/components/EditImage'
 import PhotoList from 'x/components/PhotoList'
 import SearchField from 'x/components/SearchField'
 import ResultsPanel from 'x/components/ResultsPanel'
-import 'styles/app.scss'
+import './app.scss'
+import CropBox from '@haakenlid/photocrop'
 
 const App = () => {
   return (
