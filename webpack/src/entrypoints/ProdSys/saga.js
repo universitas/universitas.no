@@ -9,14 +9,14 @@ import { requestUser } from 'ducks/auth'
 import { push, LOCATION_CHANGED } from 'redux-little-router'
 
 function* rootSaga() {
-  yield [
+  yield all([
     fork(uploadSaga),
     fork(basemodelSaga),
     fork(errorSaga),
     fork(authSaga),
     fork(storyimageSaga),
     call(loadInitialData),
-  ]
+  ])
 }
 
 function* loadInitialData() {

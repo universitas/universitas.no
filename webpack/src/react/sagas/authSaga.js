@@ -1,5 +1,6 @@
 import { takeEvery, select, call, put } from 'redux-saga/effects'
 import { apiLogin, apiLogout, apiUser } from 'services/api'
+import Raven from 'raven-js'
 import {
   LOG_IN,
   LOG_OUT,
@@ -14,6 +15,14 @@ export default function* rootSaga() {
   yield takeEvery(LOG_OUT, logOutSaga)
   yield takeEvery(LOG_IN, logInSaga)
   yield takeEvery(REQUEST_USER, fetchUserSaga)
+}
+
+const setUserContext = ({ pk, email, contributor_name }) => {
+  Raven.setUserContext({
+    id: pk,
+    name: contributor_name,
+    email,
+  })
 }
 
 function* logInSaga(action) {
@@ -37,5 +46,6 @@ function* fetchUserSaga(action) {
     yield put(requestUserFailed(error))
   } else {
     yield put(requestUserSuccess(response))
+    yield call(setUserContext, response)
   }
 }

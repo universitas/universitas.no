@@ -4,7 +4,9 @@ import { AppContainer } from 'react-hot-loader'
 
 import ProdSys, { rootStore } from './ProdSys'
 import { loginFailed } from 'ducks/auth'
+import Raven from 'raven-js'
 
+const SENTRY_URL = 'https://39de0aa2b6b3440da82c9f41ef232d39@sentry.io/51254'
 const ROOT_ID = 'ReactApp'
 const DOMNode = document.getElementById(ROOT_ID)
 
@@ -18,13 +20,13 @@ const showMessage = (msg, level) => {
 }
 
 const render = () => {
-  window.showMessage = showMessage
-  ReactDOM.render(
+  const app = (
     <AppContainer>
       <ProdSys />
-    </AppContainer>,
-    DOMNode
+    </AppContainer>
   )
+  Raven.config(SENTRY_URL).install()
+  Raven.context(() => ReactDOM.render(app, DOMNode))
 }
 
 if (DOMNode) {

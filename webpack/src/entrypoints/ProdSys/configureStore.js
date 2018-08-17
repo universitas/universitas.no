@@ -4,6 +4,7 @@ import {
   routerForBrowser,
   initializeCurrentLocation,
 } from 'redux-little-router'
+import Raven from 'raven-js'
 
 import { compose } from 'utils/misc'
 import reducers from './reducer'
@@ -14,11 +15,13 @@ const BASENAME = '/prodsys'
 
 export default initialState => {
   const router = routerForBrowser({ routes, basename: BASENAME })
-  const sagaMiddleware = createSagaMiddleware()
+  const sagaMiddleware = createSagaMiddleware({
+    onError: Raven.captureException,
+  })
   const middleware_list = [sagaMiddleware, router.middleware]
   const middlewares = compose(
     router.enhancer,
-    applyMiddleware(...middleware_list)
+    applyMiddleware(...middleware_list),
   )
   const rootReducer = combineReducers({ ...reducers, router: router.reducer })
   const store = createStore(rootReducer, initialState, middlewares)

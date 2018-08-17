@@ -1,4 +1,4 @@
-import { Fragment, push } from 'redux-little-router'
+import { Fragment as RouterFragment, push } from 'redux-little-router'
 import { connect } from 'react-redux'
 import IssueList from 'issues/IssueList'
 import IssueDetail from 'issues/IssueDetail'
@@ -14,11 +14,17 @@ import Tool from 'components/Tool'
 import ToolBar from 'components/ToolBar'
 import ErrorTool from 'components/ErrorTool'
 import LoginForm from 'components/LoginForm'
+import RavenBoundary from 'components/RavenBoundary'
 import { getUser } from 'ducks/auth'
 import { assignPhoto } from 'ducks/storyimage'
 import 'styles/prodsys.scss'
 
 const Home = () => <div>home</div>
+const Fragment = ({ children, ...props }) => (
+  <RouterFragment {...props}>
+    <RavenBoundary>{children}</RavenBoundary>
+  </RouterFragment>
+)
 
 const AppTool = connect(null, { push })(({ href, push, ...props }) => (
   <Tool onClick={() => push(href)} {...props} />
