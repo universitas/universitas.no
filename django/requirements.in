@@ -43,6 +43,7 @@ imagehash
 beautifulsoup4
 pypdf2
 requests
+requests-html
 fuzzywuzzy
 python-Levenshtein
 diff-match-patch
