@@ -2,6 +2,7 @@ from django.conf.urls import include, url
 from rest_auth import urls as rest_auth_urls
 from rest_framework import routers
 
+from .adverts import AdvertViewSet
 from .contributors import ContributorViewSet
 from .frontpage import FrontpageStoryViewset
 from .issues import IssueViewSet, PrintIssueViewSet
@@ -28,6 +29,7 @@ router.register(r'storyimages', StoryImageViewSet)
 router.register(r'storytypes', StoryTypeViewSet)
 router.register(r'upload', FileUploadViewSet, 'upload')
 router.register(r'publicstories', PublicStoryViewSet, 'publicstory')
+router.register(r'adverts', AdvertViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),
