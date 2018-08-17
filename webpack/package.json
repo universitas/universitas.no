@@ -81,6 +81,7 @@
     "progress-bar-webpack-plugin": "^1.11.0",
     "prop-types": "^15.6.2",
     "ramda": "^0.25",
+    "raven-js": "^3.26.4",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-error-boundary": "^1.2.3",
