@@ -58,12 +58,13 @@ def fetch_user(request):
 
 @cache_memoize(timeout=60 * 5, args_rewrite=only_anon)
 def fetch_story(request, pk):
-    response = PublicStoryViewSet.as_view({'get': 'retrieve'})(request, pk)
+    response = PublicStoryViewSet.as_view({'get': 'retrieve'})(request, pk=pk)
     payload = {
         **response.data,
         'HTTPstatus': response.status_code,
-        'id': int(pk),
+        'id': pk,
     }
+    payload = json.loads(json.dumps(payload))
     return {'type': 'publicstory/STORY_FETCHED', 'payload': payload}
 
 
@@ -95,7 +96,7 @@ def get_redux_actions(request, story):
     ]
     actions.append(fetch_user(request))
     if story:
-        actions.append(fetch_story(request, story))
+        actions.append(fetch_story(request, int(story)))
     logger.debug(json.dumps(actions[2], indent=2))
     return actions
 
