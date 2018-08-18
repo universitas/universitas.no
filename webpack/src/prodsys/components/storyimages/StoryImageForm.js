@@ -10,9 +10,9 @@ const mapFields = fn =>
 
 const StoryImageForm = ({ pk }) => (
   <form className="StoryImageForm">
-    {mapFields(fields)(fp => (
+    {mapFields(fp => (
       <ModelField {...fp} model="storyimages" pk={pk} key={fp.name} />
-    ))}
+    ))(fields)}
   </form>
 )
 
