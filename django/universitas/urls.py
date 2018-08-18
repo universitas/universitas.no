@@ -1,21 +1,20 @@
 """Base url router for universitas.no"""
 from api.urls import urlpatterns as api_urls
 from apps.core.views import HumansTxtView, RobotsTxtView, react_frontpage_view
-from apps.photo.views import PhotoAppView
 from apps.stories.feeds import LatestStories
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.urls import include, re_path
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
-from django.shortcuts import redirect
-from django.contrib.staticfiles.storage import staticfiles_storage
 
 admin.autodiscover()
 
 
-def favicon(request, filename):
+def favicon_redirect(request, filename):
     return redirect(staticfiles_storage.url(f'favicon/{filename}'))
 
 
@@ -26,15 +25,13 @@ urlpatterns = [
     # DJANGO-ALLAUTH (login, password etc)
     re_path(r'^auth/', include('allauth.urls')),
     # FAVICON
-    re_path(r'^.*?([\w\-]+\.(?:png|ico))$', favicon, name='favicon-redirr'),
+    re_path(r'^.*?([\w\-]+\.(?:png|ico))$', favicon_redirect),
     # API
     re_path(r'^api/', include(api_urls)),
     # React apps
-    re_path(r'^foto/$', PhotoAppView.as_view(), name='photoapp'),
     re_path(
         r'^adsense-fallback/$',
-        TemplateView.as_view(template_name='adsense-fallback.html'),
-        name='adsense-fallback',
+        TemplateView.as_view(template_name='adsense-fallback.html')
     ),
     # prodsys
     re_path(

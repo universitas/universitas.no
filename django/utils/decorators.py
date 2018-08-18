@@ -2,6 +2,7 @@
 import hashlib
 import inspect
 import logging
+import time
 from functools import wraps
 
 from django.core.cache import cache
@@ -10,20 +11,16 @@ from django.utils.encoding import force_bytes, force_text
 logger = logging.getLogger('apps')
 
 
-def ismethod(func):
-    return next(iter(inspect.signature(func).parameters.keys()),
-                None) == 'self'
+def timeit(fn):
+    @wraps(fn)
+    def timeit_wrapper(*args, **kwargs):
+        t0 = time.time()
+        res = fn(*args, **kwargs)
+        milliseconds = (time.time() - t0) * 1000
+        logger.debug(f'{fn.__name__} took {milliseconds:.1f}ms')
+        return res
 
-
-def func_rewrite(*args):
-    return args
-
-
-def method_rewrite(self, *args):
-    try:
-        return [f'{self.pk}{self.modified}', *args]
-    except AttributeError:
-        return [self, *args]
+    return timeit_wrapper
 
 
 def cache_memoize(
@@ -95,13 +92,29 @@ def cache_memoize(
 
     """
 
+    def _ismethod(func):
+        """Check if first argument name is "self"."""
+        return next(iter(inspect.signature(func).parameters.keys()),
+                    None) == 'self'
+
+    def _funcargs_rewrite(*args):
+        """noop"""
+        return args
+
+    def _methodargs_rewrite(self, *args):
+        """Use object "pk" and "modified" attributes if possible"""
+        try:
+            return [f'{self.pk}{self.modified}', *args]
+        except AttributeError:
+            return [self, *args]
+
     def decorator(func):
         rewrite = args_rewrite
         if rewrite is None:
-            if ismethod(func):
-                rewrite = method_rewrite
+            if _ismethod(func):
+                rewrite = _methodargs_rewrite
             else:
-                rewrite = func_rewrite
+                rewrite = _funcargs_rewrite
 
         def _make_cache_key(*args, **kwargs):
             cache_key = ':'.join([

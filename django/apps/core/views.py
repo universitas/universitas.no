@@ -2,32 +2,21 @@
 
 import json
 import logging
-import time
-from functools import wraps
 
 import requests
 
 from api.frontpage import FrontpageStoryViewset
+from api.issues import IssueViewSet
 from api.publicstories import PublicStoryViewSet
+from api.site import SiteDataAPIView
 from api.user import AvatarUserDetailsSerializer
 from django.conf import settings
+from django.core.cache import cache
 from django.shortcuts import redirect, render
 from django.views.generic.base import TemplateView
-from django.core.cache import cache
+from utils.decorators import cache_memoize, timeit
 
 logger = logging.getLogger(__name__)
-
-
-def timeit(fn):
-    @wraps(fn)
-    def timeit_wrapper(*args, **kwargs):
-        t0 = time.time()
-        res = fn(*args, **kwargs)
-        delta = (time.time() - t0) * 1000
-        logger.debug(f'{fn.__name__} took {delta:.1f}ms')
-        return res
-
-    return timeit_wrapper
 
 
 @timeit
@@ -50,43 +39,64 @@ def _react_render(redux_actions, request):
         return {'state': {}, 'error': response.content}
 
 
+def only_anon(request, *args):
+    user_id = 0 if request.user.is_anonymous else request.user.pk
+    return [user_id, *args]
+
+
+@cache_memoize(args_rewrite=only_anon)
+def fetch_user(request):
+    if request.user.is_authenticated:
+        serializer = AvatarUserDetailsSerializer(
+            request.user, context={'request': request}
+        )
+        payload = json.loads(json.dumps(serializer.data))
+        return {'type': 'auth/REQUEST_USER_SUCCESS', 'payload': payload}
+    else:
+        return {'type': 'auth/REQUEST_USER_FAILED'}
+
+
+@cache_memoize(timeout=60 * 5, args_rewrite=only_anon)
+def fetch_story(request, pk):
+    response = PublicStoryViewSet.as_view({'get': 'retrieve'})(request, pk)
+    payload = {
+        **response.data,
+        'HTTPstatus': response.status_code,
+        'id': int(pk),
+    }
+    return {'type': 'publicstory/STORY_FETCHED', 'payload': payload}
+
+
+@cache_memoize(timeout=60, args_rewrite=only_anon)
+def fetch_newsfeed(request):
+    response = FrontpageStoryViewset.as_view({'get': 'list'})(request)
+    return {'type': 'newsfeed/FEED_FETCHED', 'payload': response.data}
+
+
+@cache_memoize(timeout=60 * 60, args_rewrite=only_anon)
+def fetch_issues(request):
+    response = IssueViewSet.as_view({'get': 'list'})(request)
+    payload = {'issues': response.data.get('results')}
+    return {'type': 'issues/ISSUES_FETCHED', 'payload': payload}
+
+
+@cache_memoize(timeout=60 * 60, args_rewrite=only_anon)
+def fetch_site(request):
+    response = SiteDataAPIView.as_view()(request)
+    return {'type': 'site/SITE_FETCHED', 'payload': response.data}
+
+
 def get_redux_actions(request, story):
     """Redux actions to simulate data prefetching server side rendering."""
-    actions = []
-
-    # frontpage news feed
-    news_feed = FrontpageStoryViewset.as_view({'get': 'list'})(request)
-    actions.append({
-        'type': 'newsfeed/FEED_FETCHED', 'payload': news_feed.data
-    })
-
-    # user authentication
-    if request.user.is_authenticated:
-        actions.append({
-            'type': 'auth/REQUEST_USER_SUCCESS',
-            'payload': AvatarUserDetailsSerializer(
-                request.user, context={'request': request}
-            ).data,
-        })
-    else:
-        actions.append({
-            'type': 'auth/REQUEST_USER_FAILED', 'payload': {},
-            'error': 'anonymous user'
-        })
-
-    # story content
+    actions = [
+        fetch_newsfeed(request),
+        fetch_site(request),
+        fetch_issues(request)
+    ]
+    actions.append(fetch_user(request))
     if story:
-        response = PublicStoryViewSet.as_view({'get': 'retrieve'})(
-            request, pk=story
-        )
-        actions.append({
-            'type': 'publicstory/STORY_FETCHED', 'payload': {
-                **response.data,
-                'HTTPstatus': response.status_code,
-                'id': int(story),
-            }
-        })
-
+        actions.append(fetch_story(request, story))
+    logger.debug(json.dumps(actions[2], indent=2))
     return actions
 
 
