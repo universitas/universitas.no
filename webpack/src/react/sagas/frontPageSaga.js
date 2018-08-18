@@ -29,6 +29,8 @@ import {
   getFeedQuery,
 } from 'ducks/newsFeed'
 
+import * as adverts from 'ducks/adverts'
+
 const DEBOUNCE = 300 // ms debounce
 
 const routeAction = R.propSatisfies(R.test(/^router/), 'type')
@@ -41,9 +43,18 @@ export default function* rootSaga() {
   yield takeEvery(STORY_REQUESTED, fetchStory)
   yield takeEvery(STORIES_REQUESTED, fetchStories)
   yield takeLatest(routeAction, pageView)
+  yield takeLatest(adverts.ADVERTS_REQUESTED, fetchAdverts)
 }
 
 const handleError = error => console.error(error)
+
+function* fetchAdverts(action) {
+  // fetch Qmedia ads
+  yield put(adverts.advertsFetching())
+  const { response, error } = yield call(apiGet, 'adverts', 'qmedia')
+  if (response) yield put(adverts.advertsFetchSuccess(response))
+  else yield call(handleError, error)
+}
 
 function* fetchStories(action) {
   const fetched = yield select(getStoryIds)

@@ -4,6 +4,7 @@ import { timeoutDebounce, inViewPort } from 'utils/misc'
 import { getItems, getFeed, feedRequested } from 'ducks/newsFeed'
 import { getStory, storiesRequested } from 'ducks/publicstory'
 import LoadMore from 'components/LoadMore'
+import Advert from 'components/Advert'
 import FeedItem from './FeedItem'
 
 const mapItemStateToProps = (state, { story, addRef }) => {
@@ -52,20 +53,35 @@ class NewsFeed extends React.Component {
   }
 
   render() {
-    const { items, fetching, next, feedRequested, className } = this.props
+    const {
+      items,
+      fetching,
+      next,
+      feedRequested,
+      className,
+      section,
+    } = this.props
     const offset = items.length ? R.last(items).order : null
     const fetchMore = () => feedRequested({ offset })
+    let feed = items.map(props => (
+      <ConnectedFeedItem
+        addRef={this.addRef(props.story.id)}
+        key={props.id}
+        {...props}
+      />
+    ))
+    const qmedia = <Advert.Qmedia key="qmedia" className="col-6 row-2" />
+    const adwords = (
+      <Advert.Google key={`adsense ${section}`} className="col-6 row-2" />
+    )
+    feed = R.insert(5, qmedia, feed)
+    feed = R.insert(15, adwords, feed)
+
     return (
-      <section className={cx('NewsFeed', className)}>
-        {items.map(props => (
-          <ConnectedFeedItem
-            addRef={this.addRef(props.story.id)}
-            key={props.id}
-            {...props}
-          />
-        ))}
+      <React.Fragment>
+        <section className={cx('NewsFeed', className)}>{feed}</section>
         <LoadMore fetchMore={fetchMore} fetching={fetching} next={next} />
-      </section>
+      </React.Fragment>
     )
   }
 }

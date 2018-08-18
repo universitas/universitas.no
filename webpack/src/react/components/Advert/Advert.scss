@@ -1,0 +1,53 @@
+.Advert {
+  $color: #999;
+  padding: 0.2rem 0;
+  border: 1px solid lighten($color, 20);
+  border-width: 1px 0;
+  position: relative;
+  &:before {
+    color: $color;
+    $width: 6em;
+    content: "annonse";
+    font-size: 0.7rem;
+    text-align: center;
+    background: white;
+    position: absolute;
+    top: -0.7em;
+    width: $width;
+    left: calc(50% - #{$width/2});
+  }
+}
+.Qmedia {
+  margin: 0 -1em;
+  padding: 1em 0;
+  display: flex;
+  .QmediaSub {
+    &:hover {
+      text-decoration: underline;
+    }
+    text-decoration: none;
+    color: #535b7d;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    img {
+      align-self: center;
+    }
+    border: 1px solid #aaa;
+    border-width: 0 0 0 1px;
+    padding: 0 1em;
+    &:first-child {
+      border: none !important;
+    }
+  }
+  &.vertical {
+    margin: -1em 0;
+    padding: 0 1em;
+    flex-direction: column;
+    .QmediaSub {
+      border-width: 1px 0 0 0;
+      padding: 1em 0;
+    }
+  }
+}
