@@ -72,7 +72,7 @@ class NewsFeed extends React.Component {
     ))
     const qmedia = <Advert.Qmedia key="qmedia" className="col-6 row-2" />
     const adwords = (
-      <Advert.Google key={`adsense ${section}`} className="col-6 row-2" />
+      <Advert.Google key={`adsense ${section}`} className="col-6 row-1" />
     )
     feed = R.insert(5, qmedia, feed)
     feed = R.insert(15, adwords, feed)

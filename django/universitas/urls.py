@@ -11,11 +11,13 @@ from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 from django.shortcuts import redirect
 from django.contrib.staticfiles.storage import staticfiles_storage
- 
+
 admin.autodiscover()
+
 
 def favicon(request, filename):
     return redirect(staticfiles_storage.url(f'favicon/{filename}'))
+
 
 urlpatterns = [
     # RSS
@@ -29,6 +31,11 @@ urlpatterns = [
     re_path(r'^api/', include(api_urls)),
     # React apps
     re_path(r'^foto/$', PhotoAppView.as_view(), name='photoapp'),
+    re_path(
+        r'^adsense-fallback/$',
+        TemplateView.as_view(template_name='adsense-fallback.html'),
+        name='adsense-fallback',
+    ),
     # prodsys
     re_path(
         r'^prodsys',
