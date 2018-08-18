@@ -9,7 +9,7 @@ module.exports = {
   mode: 'development',
   externals: [nodeExternals()],
   devtool: 'none',
-  entry: { server: 'entrypoints/server.js' },
+  entry: { server: './src/entrypoints/server.js' },
   output: {
     path: path.resolve('./build'),
     filename: '[name].bundle.js',

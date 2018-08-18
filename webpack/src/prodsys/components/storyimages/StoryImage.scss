@@ -1,0 +1,35 @@
+.StoryImage {
+  margin: 0.3rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid #bbb;
+  // min-height: 13rem;
+  // height: auto;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: 2.5rem 2fr 4fr;
+  grid-gap: 0.5rem;
+  .actions {
+    grid-row-start: 1;
+    grid-column-start: 1;
+  }
+  .ImageData {
+    grid-column-start: 2;
+  }
+  form {
+    grid-column-start: 3;
+    display: flex;
+    flex-direction: column;
+    .ModelField:first-child {
+      flex: 1;
+    }
+  }
+}
+.ImageData {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  .Thumb {
+    height: 5rem;
+    flex-grow: 1;
+  }
+}

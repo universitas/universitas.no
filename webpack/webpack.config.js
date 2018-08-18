@@ -6,9 +6,8 @@ const publicPath = process.env.PUBLIC_PATH
 
 module.exports = {
   entry: {
-    photo_list_view: 'entrypoints/photo_list_view.js',
-    prodsys: 'entrypoints/prodsys.js',
-    universitas: 'entrypoints/universitas.js',
+    prodsys: './src/entrypoints/prodsys.js',
+    universitas: './src/entrypoints/universitas.js',
   },
   output: {
     // for example ../build/head.[hash].js
@@ -34,8 +33,6 @@ module.exports = {
       // implicitly `import`
       React: 'react',
       R: 'ramda',
-      $: 'jquery',
-      jQuery: 'jquery',
       PropTypes: 'prop-types',
     }),
     new BundleTracker({
@@ -89,12 +86,8 @@ module.exports = {
     ],
   },
   resolve: {
-    modules: ['src/react', 'src', 'node_modules'],
+    modules: ['src/universitas', 'src/prodsys', 'src/common', 'node_modules'],
     unsafeCache: true,
-    alias: {
-      // use unminified jquery source to enable deduping etc.
-      // http://stackoverflow.com/a/28989476/1977847
-      jquery: 'jquery/src/jquery',
-    },
+    alias: {},
   },
 }
