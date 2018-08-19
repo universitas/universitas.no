@@ -14,29 +14,32 @@ from django.conf import settings
 from django.core.cache import cache
 from django.shortcuts import redirect, render
 from django.views.generic.base import TemplateView
-from utils.decorators import cache_memoize, timeit
+from utils.decorators import cache_memoize
 
 logger = logging.getLogger(__name__)
 
 
-@timeit
-def _react_render(redux_actions, request):
+def express_render(redux_actions, request):
     """Server side rendering of react app"""
-    data = {'actions': redux_actions, 'url': request.build_absolute_uri()}
-    session = requests.Session()
     adapter = requests.adapters.HTTPAdapter(max_retries=8)
+    session = requests.Session()
     session.mount(settings.EXPRESS_SERVER_URL, adapter)
+    data = {'actions': redux_actions, 'url': request.build_absolute_uri()}
     path = request.path.replace('//', '/').lstrip('/')
-    url = f'{settings.EXPRESS_SERVER_URL}/{path}'
     try:
-        response = session.post(url, json=data)
-    except requests.ConnectionError:
+        response = session.post(
+            url=f'{settings.EXPRESS_SERVER_URL}/{path}',
+            json=data,
+            timeout=5,
+        )
+    except (requests.ConnectionError, request.Timeout) as e:
         logger.exception('Could not connect to express server')
-        return {'state': {}, 'error': 'ConnectionError'}
+        return {'state': {}, 'error': f'{e}'}
     try:
         return response.json()
-    except json.JSONDecodeError:
-        return {'state': {}, 'error': response.content}
+    except json.JSONDecodeError as e:
+        logger.exception('Invalid JSON from express')
+        return {'state': {}, 'error': f'{e}\n{response.content}'}
 
 
 def only_anon(request, *args):
@@ -44,7 +47,7 @@ def only_anon(request, *args):
     return [user_id, *args]
 
 
-@cache_memoize(args_rewrite=only_anon)
+@cache_memoize(timeout=60 * 60, args_rewrite=only_anon)
 def fetch_user(request):
     if request.user.is_authenticated:
         serializer = AvatarUserDetailsSerializer(
@@ -56,7 +59,6 @@ def fetch_user(request):
         return {'type': 'auth/REQUEST_USER_FAILED'}
 
 
-@cache_memoize(timeout=60 * 5, args_rewrite=only_anon)
 def fetch_story(request, pk):
     response = PublicStoryViewSet.as_view({'get': 'retrieve'})(request, pk=pk)
     payload = {
@@ -92,12 +94,11 @@ def get_redux_actions(request, story):
     actions = [
         fetch_newsfeed(request),
         fetch_site(request),
-        fetch_issues(request)
+        fetch_issues(request),
+        fetch_user(request),
     ]
-    actions.append(fetch_user(request))
     if story:
         actions.append(fetch_story(request, int(story)))
-    logger.debug(json.dumps(actions[2], indent=2))
     return actions
 
 
@@ -116,10 +117,7 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
     cache_key = f'cached_page_{story or request.path}'
 
     if request.user.is_anonymous:
-        # try:
         response, path = cache.get(cache_key, (None, None))
-        # except Exception:
-        # cache.delete(cache_key)
         if response:
             if path != request.path:
                 return redirect(path)
@@ -127,10 +125,7 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
             return response
 
     redux_actions = get_redux_actions(request, story)
-    ssr_context = _react_render(redux_actions, request)
-
-    # if request.user.is_anonymous and ssr_context.get('state'):
-    #     ssr_context['state']['auth'] = None
+    ssr_context = express_render(redux_actions, request)
 
     try:
         pathname = ssr_context['state']['location']['pathname']

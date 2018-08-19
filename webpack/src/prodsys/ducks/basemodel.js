@@ -32,7 +32,7 @@ export const actionModelLens = R.lensPath(['meta', 'modelName'])
 
 // :: Lens -> ModelName (String) -> State (Object) -> Any -- (create redux selector)
 const getSelector = R.curryN(3, (lens, modelName, state) =>
-  R.view(R.compose(R.lensProp(modelName), lens), state)
+  R.view(R.compose(R.lensProp(modelName), lens), state),
 )
 const defaultSelector = fallback =>
   R.curryN(3, R.pipe(getSelector, R.defaultTo(fallback)))
@@ -44,17 +44,18 @@ export const modelSelectors = partialMap({
   getItemList: getSelector(currentItemsLens),
   getItems: getSelector(itemsLens),
   getCurrentItemId: getSelector(selectedItemLens),
+  getSelectedItems: getSelector(selectedItemsLens),
   getItem: modelName => id => defaultSelector({})(itemLens(id), modelName),
   getCurrentItem: modelName => state =>
     defaultSelector({})(
       itemLens(getSelector(selectedItemLens, modelName, state)),
       modelName,
-      state
+      state,
     ),
   getChoices: R.pipe(
     getSelector(itemsLens),
     R.values,
-    R.map(({ id, name }) => ({ value: id, display_name: name }))
+    R.map(({ id, name }) => ({ value: id, display_name: name })),
   ),
 })
 
@@ -65,8 +66,8 @@ const getActionCreator = R.curry((type, payloadTransform, modelName) =>
     R.curry(payloadTransform),
     R.objOf('payload'), //               payload: payloadTransform(?)
     R.assoc('type', type), //            type: ACTION_TYPE
-    R.set(actionModelLens, modelName) // meta: modelName
-  )
+    R.set(actionModelLens, modelName), // meta: modelName
+  ),
 )
 // :: modelName => {k: actionCreator} -- (redux action creators factory)
 export const modelActions = partialMap({
@@ -75,12 +76,12 @@ export const modelActions = partialMap({
   itemCloned: getActionCreator(ITEM_CLONED, id => ({ id })),
   itemDeleted: getActionCreator(ITEM_DELETED, id => ({ id })),
   itemCreated: getActionCreator(ITEM_CREATED, data => data),
-  itemSelected: getActionCreator(ITEM_SELECTED, id => ({ id })),
   itemSelectToggled: getActionCreator(ITEM_SELECT_TOGGLED, id => ({ id })),
   itemsDiscarded: getActionCreator(ITEMS_DISCARDED, (...ids) => ({ ids })),
   itemPatched: getActionCreator(ITEM_PATCHED, R.assoc('dirty', false)),
+  itemSelected: getActionCreator(ITEM_SELECTED, (...ids) => ({ ids })),
   itemRequested: getActionCreator(ITEM_REQUESTED, (id, force = false) => ({
-    id,
+    ids: [id],
     force,
   })),
   itemsRequested: getActionCreator(ITEMS_REQUESTED, params => ({ params })),
@@ -104,7 +105,7 @@ const offsetFromUrl = R.compose(
   parseInt,
   R.prop(1),
   R.match(/(?:offset=)(\d+)/),
-  R.defaultTo('')
+  R.defaultTo(''),
 )
 
 // :: () => State
@@ -114,7 +115,7 @@ export const baseInitialState = R.pipe(
   R.set(currentItemsLens, []),
   R.set(itemsLens, {}),
   R.set(queryLens, {}),
-  R.set(navigationLens, {})
+  R.set(navigationLens, {}),
 )
 
 const mergeLeft = R.flip(R.merge)
@@ -134,14 +135,14 @@ const getReducer = ({ type, payload }) => {
           count,
           next: next && parseQuery(next),
           previous: previous && parseQuery(previous),
-        })
+        }),
       )
     }
     case ITEMS_APPENDED:
       // items fetched, but no change in selection (current pagination)
       return R.over(
         itemsLens,
-        mergeLeft(R.indexBy(R.prop('id'), payload.results))
+        mergeLeft(R.indexBy(R.prop('id'), payload.results)),
       )
     case ITEMS_DISCARDED: {
       const { ids = [] } = payload
@@ -149,7 +150,7 @@ const getReducer = ({ type, payload }) => {
       return R.compose(
         R.over(selectedItemsLens, R.without(ids)),
         R.over(currentItemsLens, R.without(ids)),
-        R.over(itemsLens, R.mergeDeepLeft(deleted(ids)))
+        R.over(itemsLens, R.mergeDeepLeft(deleted(ids))),
       )
     }
     case ITEM_PATCHED:
@@ -159,7 +160,7 @@ const getReducer = ({ type, payload }) => {
       // received single new item
       return R.compose(
         R.over(currentItemsLens, R.union([payload.id])),
-        R.set(itemLens(payload.id), payload)
+        R.set(itemLens(payload.id), payload),
       )
     case FIELD_CHANGED: {
       // single item field changed client side
@@ -169,8 +170,8 @@ const getReducer = ({ type, payload }) => {
       return R.over(lens, R.mergeDeepLeft(mergeData))
     }
     case ITEM_SELECTED:
-      // select single item
-      return R.set(selectedItemsLens, [payload.id])
+      // select item(s)
+      return R.set(selectedItemsLens, payload.ids)
     case ITEM_SELECT_TOGGLED:
       return R.over(selectedItemsLens, arrayToggle(payload.id))
     case FILTER_SET:

@@ -20,6 +20,9 @@
       background-color: #eee;
       border-color: #999;
     }
+    &.selected {
+      background-color: #bbb;
+    }
   }
 }
 

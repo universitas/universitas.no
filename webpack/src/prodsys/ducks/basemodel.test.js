@@ -44,9 +44,9 @@ describe('action creators', () => {
     [itemCloned, actions.ITEM_CLONED, 5, { id: 5 }],
     [itemDeleted, actions.ITEM_DELETED, 4, { id: 4 }],
     [itemCreated, actions.ITEM_CREATED, { foo: 'bar' }, { foo: 'bar' }],
-    [itemSelected, actions.ITEM_SELECTED, 5, { id: 5 }],
+    [itemSelected, actions.ITEM_SELECTED, 5, { ids: [5] }],
     [itemSelectToggled, actions.ITEM_SELECT_TOGGLED, 4, { id: 4 }],
-    [itemRequested, actions.ITEM_REQUESTED, 2, { id: 2, force: false }],
+    [itemRequested, actions.ITEM_REQUESTED, 2, { ids: [2], force: false }],
     [itemsRequested, actions.ITEMS_REQUESTED, { q: '' }, { params: { q: '' } }],
     [itemsFetched, actions.ITEMS_FETCHED, itemData, itemData],
     [itemsDiscarded, actions.ITEMS_DISCARDED, [2, 3], { ids: [2, 3] }],
@@ -83,7 +83,7 @@ describe('action creators', () => {
           meta: { modelName },
         })
       })
-    })
+    }),
   )(cases)
 })
 
@@ -100,13 +100,13 @@ describe('reducer', () => {
         R.objOf(modelName, {
           listItems: [itemData.id],
           items: { [itemData.id]: itemData },
-        })
-      )
+        }),
+      ),
     )
   })
   test('dispatch action on other model', () => {
     expect(
-      reducer(initialState, modelActions('spam').itemAdded(itemData))
+      reducer(initialState, modelActions('spam').itemAdded(itemData)),
     ).toEqual(initialState)
   })
 })
@@ -142,6 +142,6 @@ describe('selectors', () => {
       test(`selector: ${funcname} modelState`, () => {
         expect(selector(modelState)).toEqual(data1)
       })
-    })
+    }),
   )(cases)
 })

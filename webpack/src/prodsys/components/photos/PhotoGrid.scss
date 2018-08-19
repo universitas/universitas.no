@@ -12,3 +12,15 @@
   stroke: white;
   stroke-width: 1px;
 }
+.GridItem {
+  position: relative;
+}
+
+.assign {
+  position: absolute;
+  font-size: 1.5rem;
+  background: green;
+  &.selected {
+    background: grey;
+  }
+}

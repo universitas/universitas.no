@@ -1,12 +1,20 @@
 import { put, takeEvery, select, call } from 'redux-saga/effects'
 // import { delay } from 'redux-saga'
 import { pushImageFile, apiPost, apiDelete } from 'services/api'
-import { ASSIGN_PHOTO, PUSH_PHOTO, DELETE_STORY_IMAGE } from 'ducks/storyimage'
+import {
+  ASSIGN_PHOTO,
+  PUSH_PHOTO,
+  deleteStoryImage,
+  DELETE_STORY_IMAGE,
+} from 'ducks/storyimage'
 import { modelSelectors, modelActions } from 'ducks/basemodel'
 
 const { getItem: getStoryImage } = modelSelectors('storyimages')
 const { getItem: getPhoto } = modelSelectors('photos')
-const { getCurrentItemId: getCurrentStoryId } = modelSelectors('stories')
+const {
+  getItem: getStory,
+  getCurrentItemId: getCurrentStoryId,
+} = modelSelectors('stories')
 const { itemRequested: storyRequested } = modelActions('stories')
 const { itemsDiscarded: storyImagesDiscarded } = modelActions('storyimages')
 
@@ -37,6 +45,13 @@ const getCreditLine = ({ category, artist }) => {
 function* assignPhotoSaga(action) {
   let { id, story } = action.payload
   const parent_story = story || (yield select(getCurrentStoryId))
+  const storyData = yield select(getStory(parent_story))
+  const exists = R.find(R.propEq('imagefile', id), storyData.images)
+  if (exists) {
+    console.log(exists)
+    yield put(deleteStoryImage(exists.id))
+    return
+  }
   const { description, ...props } = yield select(getPhoto(id))
   const data = {
     imagefile: id,

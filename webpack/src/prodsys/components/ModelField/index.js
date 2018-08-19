@@ -14,6 +14,7 @@ import * as count from './CountField'
 import * as concat from './ConcatField'
 import * as stints from './StintsField'
 import * as filesize from './FileSizeField'
+import * as cropbox from './CropBoxField.js'
 import { connect } from 'react-redux'
 import { modelActions, modelSelectors } from 'ducks/basemodel'
 import cx from 'classnames'
@@ -39,6 +40,7 @@ const fieldTypes = {
   shorttext: text,
   count,
   concat,
+  cropbox,
 }
 export const fieldNames = R.keys(fieldTypes)
 
@@ -73,11 +75,13 @@ export const Field = ({
 const mapStateToProps = (state, { pk, model, name }) => {
   const item = modelSelectors(model).getItem(pk)(state)
   const value = item[name]
-  return { value }
+  return { value, item }
 }
 const mapDispatchToProps = (dispatch, { pk, model, name }) => ({
-  onChange: e =>
-    dispatch(modelActions(model).fieldChanged(pk, name, e.target.value)),
+  onChange: e => {
+    const value = R.pathOr(e, ['target', 'value'], e)
+    dispatch(modelActions(model).fieldChanged(pk, name, value))
+  },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Field)

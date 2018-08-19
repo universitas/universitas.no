@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import Thumb from 'components/Thumb'
 import { PhotoStats } from '.'
 import { MODEL as model, actions, selectors } from './model.js'
+import { Add, Remove } from 'components/Icons'
+import { Tool } from 'components/tool'
 import './PhotoGrid.scss'
 
 const Frame = () => <rect className="Frame" width="100%" height="100%" />
@@ -33,8 +35,23 @@ const FullThumb = ({ src, title, width, height }) => (
   </svg>
 )
 
-const GridItem = ({ pk, detail, onClick, small, className, ...data }) => (
+const AssignPhoto = ({ pk, selected }) => (
+  <div className={cx('assign', { selected })}>
+    <Tool icon={selected ? 'Remove' : 'Add'} />
+  </div>
+)
+
+const GridItem = ({
+  pk,
+  detail,
+  onClick,
+  small,
+  className,
+  selected,
+  ...data
+}) => (
   <div key={pk} onClick={onClick} className={className}>
+    {detail == 'images' && <AssignPhoto pk={pk} selected={selected} />}
     {detail == 'crop' ? (
       <FullThumbWithCropBox src={small} title={data.filename} {...data} />
     ) : (
@@ -47,11 +64,11 @@ const GridItem = ({ pk, detail, onClick, small, className, ...data }) => (
 const ConnectedGridItem = connect(
   (state, { pk }) => {
     const data = selectors.getItem(pk)(state) || {}
-    const selected = selectors.getCurrentItemId(state) === pk
+    const selected = R.contains(pk, selectors.getSelectedItems(state))
     const { dirty } = data
     const className = cx('GridItem', { dirty, selected })
     const detail = R.pathOr(null, ['router', 'params', 'detail'], state)
-    return { ...data, className, model, detail }
+    return { ...data, className, model, detail, selected }
   },
   (dispatch, { clickAction }) => ({ onClick: e => dispatch(clickAction) }),
 )(GridItem)

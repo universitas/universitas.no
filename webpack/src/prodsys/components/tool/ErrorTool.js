@@ -15,7 +15,7 @@ const errorToString = R.cond([
 ])
 
 const ErrorItem = ({ error, onClick }) => (
-  <div className="ErrorItem">
+  <div className="ErrorItem" title={JSON.stringify(error, null, 2)}>
     <span className="text">
       <div className="timestamp">{formatTimestamp(error.timestamp)}</div>
       <div className="detail">{errorToString(error)}</div>

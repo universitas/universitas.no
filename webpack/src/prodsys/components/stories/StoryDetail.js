@@ -18,8 +18,10 @@ const StoryDetail = ({
     className={cx('DetailPanel', 'StoryDetail', `status-${publication_status}`)}
   >
     <StoryTools title={title} detail={detail} pk={pk} />
-    {detail == 'text' && <StoryDetailText {...{ pk, storytypechoices }} />}
-    {detail == 'images' && <StoryDetailImages {...{ pk, images }} />}
+    {detail == 'text' && (
+      <StoryDetailText key={pk} {...{ pk, storytypechoices }} />
+    )}
+    {detail == 'images' && <StoryDetailImages key={pk} {...{ pk, images }} />}
   </section>
 )
 

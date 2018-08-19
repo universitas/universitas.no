@@ -38,6 +38,7 @@ const PhotoDetail = ({ pk, detail }) => (
           <ModelField {...{ pk, model, ...fields.large }} />
           <ModelField {...{ pk, model, ...fields.filename }} />
           <ModelField {...{ pk, model, ...fields.description }} />
+          <ModelField {...{ pk, model, ...fields.category }} />
           <ModelField {...{ pk, model, ...fields.artist }} />
           <ModelField {...{ pk, model, ...fields.original }} />
           <ModelField {...{ pk, model, ...fields.usage }} />

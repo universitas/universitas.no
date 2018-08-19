@@ -54,7 +54,7 @@ export default function* rootSaga() {
   yield takeLatest([FILTER_TOGGLED, FILTER_SET], queryChanged)
   yield takeEvery(ITEMS_REQUESTED, requestItems)
   yield takeLatest(REVERSE_URL, routePush)
-  yield takeEvery([ITEM_SELECTED, ITEM_REQUESTED], fetchItem)
+  yield takeEvery([ITEM_SELECTED, ITEM_REQUESTED], fetchItems)
   yield takeLatest(FIELD_CHANGED, patchSaga)
   yield takeEvery(ITEM_CLONED, cloneSaga)
   yield takeEvery(ITEM_CREATED, createSaga)
@@ -103,21 +103,24 @@ function* watchRouteChange() {
 }
 function* routePush(action) {
   const currentParams = yield select(getRouteParams)
-  const url = reverseRoute({ ...currentParams, ...action.payload })
+  const model = action.meta.modelName
+  const url = reverseRoute({ ...currentParams, model, ...action.payload })
   yield put(push(url))
 }
 
-function* fetchItem(action) {
+function* fetchItems(action) {
   const { getItem, itemAdded, itemPatched, apiGet } = modelFuncs(action)
-  const { id, force } = action.payload
-  if (!id) return // id is 0 or null
-  const data = yield select(getItem(id))
-  const exists = R.not(R.isEmpty(data))
-  if (!force && exists) return // already fetched
-  const updateAction = exists ? itemPatched : itemAdded
-  const { error, response } = yield call(apiGet, id)
-  if (response) yield put(updateAction(response))
-  else yield put(errorAction(error))
+  const { ids = [], force = false } = action.payload
+  for (const id of ids) {
+    if (id == 0) continue
+    const data = yield select(getItem(id))
+    const exists = R.not(R.isEmpty(data))
+    if (!force && exists) continue // already fetched
+    const updateAction = exists ? itemPatched : itemAdded
+    const { error, response } = yield call(apiGet, id)
+    if (response) yield put(updateAction(response))
+    else yield put(errorAction(error))
+  }
 }
 
 function* queryChanged(action) {

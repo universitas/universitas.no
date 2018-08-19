@@ -28,8 +28,13 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  .PhotoStats {
+  }
   .Thumb {
-    height: 5rem;
-    flex-grow: 1;
+    height: 10rem;
+    flex: 1;
+    .CropBoxContainer {
+      justify-content: center;
+    }
   }
 }
