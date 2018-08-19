@@ -1,4 +1,4 @@
-import { parseText, rules } from 'markup'
+import { parseText } from 'markup'
 import { cleanText } from 'utils/text'
 import { parseByline } from './byline.js'
 

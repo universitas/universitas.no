@@ -10,8 +10,11 @@ from api.issues import IssueViewSet
 from api.publicstories import PublicStoryViewSet
 from api.site import SiteDataAPIView
 from api.user import AvatarUserDetailsSerializer
+from apps.stories.models import Story
 from django.conf import settings
 from django.core.cache import cache
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.shortcuts import redirect, render
 from django.views.generic.base import TemplateView
 from utils.decorators import cache_memoize
@@ -102,14 +105,9 @@ def get_redux_actions(request, story):
     return actions
 
 
-def clear_cached_story(story):
-    cache_key = f'cached_page_{story.pk}'
-    cache.delete(cache_key)
-
-
-def clear_cached_path(path):
-    cache_key = f'cached_page_{path}'
-    cache.delete(cache_key)
+@receiver(post_save, sender=Story)
+def clear_cached_story_response(sender, instance, **kwargs):
+    cache.delete(f'cached_page_{instance.pk}')
 
 
 def react_frontpage_view(request, section=None, story=None, slug=None):

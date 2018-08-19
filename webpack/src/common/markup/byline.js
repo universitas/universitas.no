@@ -23,12 +23,13 @@ const fuzzyCredit = R.pipe(
 
 // :: "byline" -> {byline}
 export const parseByline = name => {
-  const regex = /^((?<credit>\S.+?): *)?(?<name>[^,]*)(, *(?<title>\S.+))?$/
+  const regex = /^(?:(\S.+?): *)?([^,]*)(?:, *(\S.+))?$/
   const match = regex.exec(name)
   if (!match) return { credit: 'by', name }
-  return R.pipe(R.prop('groups'), R.over(R.lensProp('credit'), fuzzyCredit))(
-    match,
-  )
+  return R.pipe(
+    g => ({ credit: g[1], name: g[2], title: g[3] }),
+    R.over(R.lensProp('credit'), fuzzyCredit),
+  )(match)
 }
 
 // :: {byline} -> "byline"

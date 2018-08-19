@@ -8,19 +8,22 @@ export const makeParser = ({
   groups = ['content'],
   inline,
   process = R.identity,
-}) => text => {
+}) => {
   const regex = new RegExp(pattern, inline ? 'uy' : 'muy')
-  const result = regex.exec(text)
-  if (!result) return null
-  const [content, ...rest] = result
-  const groupmatches = R.zipObj(groups, rest)
-  return process({
-    match: result,
-    content,
-    index: regex.lastIndex,
-    type,
-    ...groupmatches,
-  })
+  return text => {
+    regex.lastIndex = 0
+    const result = regex.exec(text)
+    if (!result) return null
+    const [content, ...rest] = result
+    const groupmatches = R.zipObj(groups, rest)
+    return process({
+      match: result,
+      content,
+      index: regex.lastIndex,
+      type,
+      ...groupmatches,
+    })
+  }
 }
 
 const [inlineRules, blockRules] = R.pipe(

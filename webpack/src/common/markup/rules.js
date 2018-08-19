@@ -54,7 +54,7 @@ const baseRules = {
   },
   link: {
     inline,
-    pattern: /\[(.*?)\](?:\((.*?)\))?/,
+    pattern: /\[([^\]]*)\](?:\(([^)]*)\))?/,
     groups: ['content', 'name'],
     reverse: ({ name, content }) =>
       name != content ? `[${content}](${name})` : `[${content}]`,

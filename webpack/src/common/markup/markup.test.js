@@ -29,8 +29,8 @@ const cases = {
   place: ['[[ faktaboks 1 ]]', [{ type: 'place', name: 'faktaboks 1' }]],
   link: ['[hi]', [{ children: [{ children: ['hi'], name: 'hi' }] }]],
   'full link': [
-    '[hello](//world.com)',
-    [{ children: [{ children: ['hello'], name: '//world.com' }] }],
+    '[hello–](//world.com)',
+    [{ children: [{ children: ['hello–'], name: '//world.com' }] }],
   ],
   'partial link': [
     '[hello](//world',
