@@ -32,7 +32,7 @@ def express_render(redux_actions, request):
             json=data,
             timeout=5,
         )
-    except (requests.ConnectionError, request.Timeout) as e:
+    except (requests.ConnectionError, requests.Timeout) as e:
         logger.exception('Could not connect to express server')
         return {'state': {}, 'error': f'{e}'}
     try:
