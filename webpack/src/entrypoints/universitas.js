@@ -8,6 +8,9 @@ const JSON_ID = 'redux-state'
 
 const rehydrate = (state, node) => {
   // rehydrate with error fallback
+
+  // don't support internet explorer
+  if (!window.URLSearchParams) return
   const html = node.innerHtml
   const user = state && state.auth && state.auth.id
   delete window.__RENDER_ERROR__
