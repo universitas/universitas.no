@@ -65,7 +65,9 @@ module.exports = {
             loader: 'postcss-loader',
             options: {
               sourceMap: true,
-              plugins: () => [require('autoprefixer')],
+              plugins: () => [
+                require('autoprefixer')({ grid: false, browsers: ['>5%'] }),
+              ],
             },
           },
           { loader: 'sass-loader', options: { sourceMap: true } },

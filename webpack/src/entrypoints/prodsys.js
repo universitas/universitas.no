@@ -25,6 +25,7 @@ const render = () => {
       <ProdSys />
     </AppContainer>
   )
+  window.showMessage = showMessage
   Raven.config(SENTRY_URL).install()
   Raven.context(() => ReactDOM.render(app, DOMNode))
 }

@@ -115,6 +115,8 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
     cache_key = f'cached_page_{story or request.path}'
 
     if request.user.is_anonymous:
+        if story:
+            Story.register_visit_in_cache(story)
         response, path = cache.get(cache_key, (None, None))
         if response:
             if path != request.path:

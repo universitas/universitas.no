@@ -271,6 +271,17 @@ class Story(  # type: ignore
             return self.comment_field
         return 'off'
 
+    @classmethod
+    def register_visit_in_cache(cls, pk, n=1):
+        """Register valid visit in cache. Use scheduled task to persist in
+        database."""
+        hit_key = f'{cls.VISIT_KEY_PREFIX}{pk}'
+        try:
+            cache.incr(hit_key, n)
+        except ValueError:
+            NEVER = None
+            cache.add(hit_key, n, timeout=NEVER)
+
     def is_published(self, check_date=True):
         """Is this Story public"""
         public = [Story.STATUS_NOINDEX, Story.STATUS_PUBLISHED]
@@ -323,16 +334,6 @@ class Story(  # type: ignore
             FIVE_MINUTES = 60 * 5
             cache.set(cache_key, 1, timeout=FIVE_MINUTES)
             return True
-
-    def register_visit_in_cache(self, n=1):
-        """Register valid visit in cache. Use scheduled task to persist in
-        database."""
-        hit_key = f'{self.VISIT_KEY_PREFIX}{self.pk}'
-        try:
-            cache.incr(hit_key, n)
-        except ValueError:
-            NEVER = None
-            cache.add(hit_key, n, timeout=NEVER)
 
     def get_bylines(self):
         # with translation.override()

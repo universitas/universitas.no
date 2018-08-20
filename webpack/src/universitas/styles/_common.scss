@@ -1,5 +1,8 @@
-@import "_googlefonts.scss";
 @import "_colors.scss";
+
+$univ-sans: "Roboto", sans-serif;
+$univ-serif: "Roboto Slab", serif;
+$univ-condensed: "Roboto Condensed", sans-serif;
 
 $content-width: 1200px;
 $row-height: 6rem;

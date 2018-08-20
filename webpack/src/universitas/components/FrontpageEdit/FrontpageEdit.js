@@ -71,7 +71,6 @@ const EditLinks = ({ location, close }) => {
       <a title="Django-admin" href={urls[0]}>
         <Tune />
       </a>
-      <DebugToggle />
     </React.Fragment>
   )
 }

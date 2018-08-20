@@ -1,6 +1,7 @@
 import { reverse, toStory } from 'ducks/router'
 import RelatedStory from 'components/RelatedStory'
 import { shuffle } from 'utils/misc'
+import Advert from 'components/Advert'
 
 class FacebookComments extends React.Component {
   constructor(props) {
@@ -45,6 +46,7 @@ const StoryFoot = ({ comment_field, id, title, section, related_stories }) => {
     <footer className="StoryFoot">
       {comment_field == 'facebook' && <FacebookComments url={url} />}
       <RelatedStories related_stories={related_stories} />
+      <Advert.Google />
     </footer>
   )
 }
