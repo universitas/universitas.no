@@ -7,7 +7,7 @@ import LoadingIndicator from 'components/LoadingIndicator'
 import { requestData } from 'utils/hoc'
 import { getSite, siteRequested } from 'ducks/site'
 import Debug from 'components/Debug'
-import ContactCard from 'components/ContactCard'
+import { ContactGrid } from 'components/ContactCard'
 import cx from 'classnames'
 
 const style = {
@@ -100,10 +100,7 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
       64 496, eller <Link to={toAdInfo()}>les mer om annonsering.</Link>
     </p>
     <h3>Redaksjonen</h3>
-    {R.map(
-      props => <ContactCard key={props.id} {...props} />,
-      orderStaff(staff),
-    )}
+    <ContactGrid contacts={orderStaff(staff)} />
   </article>
 )
 

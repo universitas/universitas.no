@@ -38,6 +38,7 @@ h6 {
   justify-content: center;
   grid-template-columns: minmax(auto, $content-width);
   .Page {
+    overflow: hidden;
     margin: $pad;
     grid-area: 1/1/2/2;
   }
