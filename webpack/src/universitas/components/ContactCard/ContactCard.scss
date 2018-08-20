@@ -3,7 +3,7 @@
 .ContactGrid {
   padding: 1rem 0;
   display: grid;
-  gap: 2rem;
+  gap: 3rem;
   @include size(xs) {
     grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
     grid-auto-rows: 9rem;

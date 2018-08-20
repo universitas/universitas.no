@@ -20,12 +20,15 @@ const PublicationSchedule = ({
   <article className={cx('PublicationSchedule', className)}>
     <YearNavigation year={year} issues={issues} toUrl={toPubSchedule} />
     <h1>{pageTitle}</h1>
-    <p>Magasin er Universitas' månedlige featurebilag</p>
-    <p>
-      Velkomstbilaget Universitas' årlige velkomstmagasin for nye og gamle
-      studenter. Det samme bilaget legges ved i avisenes to første utgaver
-    </p>
     <PublicationTable year={year} issues={issues} />
+    <p>
+      <strong>Magasin</strong> er Universitas' månedlige featurebilag
+    </p>
+    <p>
+      <strong>Velkomstbilaget</strong> er Universitas' årlige velkomstmagasin
+      for nye og gamle studenter. Bilaget legges ved i avisenes to første
+      utgaver.
+    </p>
   </article>
 )
 

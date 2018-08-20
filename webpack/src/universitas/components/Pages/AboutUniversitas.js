@@ -10,20 +10,18 @@ import Debug from 'components/Debug'
 import { ContactGrid } from 'components/ContactCard'
 import cx from 'classnames'
 
-const style = {
-  lineHeight: 0,
-  margin: '0 0 0 1rem',
-  fontSize: '10rem',
-  float: 'right',
-}
-
 const SiO = ({}) => (
   <a
-    className="Velferdstinget"
-    style={style}
     href="http://www.studentvelferd.no/"
+    className="Velferdstinget"
+    style={{
+      lineHeight: 0,
+      margin: '0 0 1rem 1rem',
+      fontSize: '10rem',
+      float: 'right',
+    }}
   >
-    <Velferdstinget />
+    <Velferdstinget style={{ maxWidth: '35vw', height: 'auto' }} />
   </a>
 )
 
@@ -58,9 +56,9 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
     <h1>{pageTitle}</h1>
     <p>Universitas er Norges største studentavis.</p>
     <p>Avisen har et opplag på 14 000, og kommer ut 35 ganger i året.</p>
-    <SiO />
     <p>
-      Universitas mottar støtte fra Studentsamskipnaden i Oslo og Akershus
+      <SiO />
+      Universitas mottar støtte fra Student&shy;samskipnaden i Oslo og Akershus
       (SiO), og alle studenter som betaler semesteravgift er dermed med på å
       støtte Universitas økonomisk. Papirutgaven av Universitas distribueres
       rundt på læresteder tilknyttet SiO.
@@ -99,7 +97,8 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
       <a href="mailto:geirdo@universitas.no">geirdo@universitas.no</a> tlf: 916
       64 496, eller <Link to={toAdInfo()}>les mer om annonsering.</Link>
     </p>
-    <h3>Redaksjonen</h3>
+    <hr />
+    <h2>Redaksjonsledelsen i Universitas:</h2>
     <ContactGrid contacts={orderStaff(staff)} />
   </article>
 )
