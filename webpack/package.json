@@ -45,7 +45,7 @@
     ]
   },
   "dependencies": {
-    "@haakenlid/photocrop": "^0.3.5",
+    "@haakenlid/photocrop": "^0.3.6",
     "ajv": "^6.5.2",
     "babel-core": "^6",
     "babel-jest": "^22",
