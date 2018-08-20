@@ -8,13 +8,13 @@
   <meta property="fb:pages" content="{{ facebook.page_id }}" />
   {% include "_google.analytics.tracker.html" %}
   {% include "_google.adsense.html" %}
-  <style>{% include "critical.css" %}</style>
+  {# <style>{% include "critical.css" %}</style> #}
+  {% render_bundle "universitas" "css" %}
 {% endblock %}
 {% block content %}
 <main id="ReactApp">{{ ssr.html | safe }}</main>
 {% endblock content %}
 {% block final %}
-  {% render_bundle "universitas" "css" %}
   {{ ssr.state | json_script:"redux-state" }}
   {% include "_facebook.sdk.html" %}
   {% render_bundle "universitas" "js" %}
