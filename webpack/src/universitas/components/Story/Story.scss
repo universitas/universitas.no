@@ -70,8 +70,11 @@ $externallink: "data:image/svg+xml," +
   .Kicker {
     font-family: $univ-condensed;
     margin: 0.6rem 0 0 0;
+    font-size: 1.4rem;
     font-weight: 400;
-    font-size: 1.6rem;
+    @include size(s) {
+      font-size: 1.6rem;
+    }
     & + .Headline {
       margin-top: 0.4rem;
     }

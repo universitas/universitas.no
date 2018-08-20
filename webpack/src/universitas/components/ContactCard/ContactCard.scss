@@ -3,9 +3,11 @@
 .ContactGrid {
   padding: 1rem 0;
   display: grid;
-  gap: 3rem;
+  grid-auto-rows: 7rem;
+  gap: 4rem;
   @include size(xs) {
     grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+    gap: 3rem;
     grid-auto-rows: 9rem;
   }
 }
@@ -27,7 +29,8 @@
   }
   .label {
     @extend %smaller;
-    // font-size: 0.7rem;
+    font-size: 0.75rem;
+    color: #999;
   }
   .value {
     a {
@@ -40,20 +43,20 @@
     color: $dark-grey;
   }
 
-  grid: "thumb" 8rem "name" "position" "email" "phone" / 1fr;
-
-  @include size(xs) {
-    line-height: 1rem;
-    /* prettier-ignore */
-    grid: "thumb name "  
+  line-height: 1rem;
+  /* prettier-ignore */
+  grid: "thumb name "  
     "thumb position "  
     "thumb email"  
-    "thumb phone"  
-    /  9rem 1fr ;
+    "thumb phone" ;
+  grid-template-columns: 7rem 1fr;
+  @include size(xs) {
+    grid-template-columns: 9rem 1fr;
   }
 
   .thumb {
     justify-self: center;
+    align-self: center;
     height: 100%;
     width: auto;
     border-radius: 50%;

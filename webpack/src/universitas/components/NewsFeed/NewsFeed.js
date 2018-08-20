@@ -15,6 +15,17 @@ const mapItemStateToProps = (state, { story, addRef }) => {
 }
 const ConnectedFeedItem = connect(mapItemStateToProps)(FeedItem)
 
+const standardizeSize = ({ rows, columns, ...props }) => ({
+  rows: [0, 2, 2, 4, 4, 4, 6][rows],
+  columns: [0, 2, 2, 2, 2, 4, 4][columns],
+  ...props,
+})
+
+const mapFrom = R.curry((index, fn, list) => {
+  const [head, tail] = R.splitAt(index, list)
+  return R.concat(head, R.map(fn, tail))
+})
+
 class NewsFeed extends React.Component {
   constructor(props) {
     super(props)
@@ -68,6 +79,7 @@ class NewsFeed extends React.Component {
       R.when(R.pipe(R.length, R.lte(index)), R.insert(index, item)),
     )
     const feed = R.pipe(
+      section ? R.map(standardizeSize) : mapFrom(15, standardizeSize),
       R.map(props => (
         <ConnectedFeedItem
           addRef={this.addRef(props.story.id)}
