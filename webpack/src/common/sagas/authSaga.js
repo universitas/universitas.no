@@ -18,11 +18,9 @@ export default function* rootSaga() {
 }
 
 const setUserContext = ({ pk, email, contributor_name }) => {
-  Raven.setUserContext({
-    id: pk,
-    name: contributor_name,
-    email,
-  })
+  const user = { id: pk, name: contributor_name, email }
+  console.log(user)
+  Raven.setUserContext(user)
 }
 
 function* logInSaga(action) {

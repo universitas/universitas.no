@@ -4,6 +4,24 @@ export const actions = modelActions(MODEL)
 export const selectors = modelSelectors(MODEL)
 
 export const fields = {
+  title: {
+    name: 'title',
+    label: 'tittel',
+    type: 'string',
+    editable: true,
+  },
+  lede: {
+    name: 'lede',
+    label: 'ingress',
+    type: 'string',
+    editable: true,
+  },
+  kicker: {
+    name: 'kicker',
+    label: 'stikktittel',
+    type: 'string',
+    editable: true,
+  },
   working_title: {
     name: 'working_title',
     label: 'arbeidstittel',

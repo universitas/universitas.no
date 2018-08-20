@@ -67,14 +67,23 @@ $externallink: "data:image/svg+xml," +
     }
   }
   line-height: 1.4em;
+  .Kicker {
+    font-family: $univ-condensed;
+    margin: 0.6rem 0 0 0;
+    font-weight: 400;
+    font-size: 1.6rem;
+    & + .Headline {
+      margin-top: 0.4rem;
+    }
+  }
   .Headline {
     @extend %headline;
-    font-size: 2.4rem;
+    font-size: 2.2rem;
     @include size(s) {
       font-size: 3rem;
     }
     @include size(m) {
-      font-size: 3.5rem;
+      font-size: 4rem;
     }
     margin: 1rem 0 0 0;
   }
@@ -109,6 +118,12 @@ $externallink: "data:image/svg+xml," +
     border-bottom: 1px solid #ddd;
     padding-bottom: 0.8rem;
     max-height: calc(100vh - 3rem);
+    @media (max-height: 450px) and (min-width: 600px) {
+      max-height: calc(450px - 3rem);
+    }
+    @media (max-height: 700px) and (min-width: 900px) {
+      max-height: calc(700px - 3rem);
+    }
   }
   .mainContent {
   }
@@ -154,12 +169,12 @@ $externallink: "data:image/svg+xml," +
   display: flex;
   flex-flow: row wrap;
   @include size(s) {
-    align-self: flex-start;
     position: sticky;
+    top: $menuheight + $gridgap;
+    align-self: flex-start;
     flex-shrink: 0;
     width: $logowidth;
     margin-right: $gridgap;
-    top: $menuheight + $gridgap;
     flex-flow: column;
     .StoryInfo {
       flex-flow: column;

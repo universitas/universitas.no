@@ -27,27 +27,22 @@ const PhotoDetail = ({ pk, detail }) => (
     <PhotoTools pk={pk} detail={detail} />
     <div className="panelContent">
       {detail == 'crop' ? (
-        <React.Fragment>
-          <CropField pk={pk} />
-          <ModelField {...{ pk, model, ...fields.filename }} />
-          <ModelField {...{ pk, model, ...fields.description }} />
-          <ModelField {...{ pk, model, ...fields.category }} />
-        </React.Fragment>
+        <CropField pk={pk} />
       ) : (
-        <React.Fragment>
-          <ModelField {...{ pk, model, ...fields.large }} />
-          <ModelField {...{ pk, model, ...fields.filename }} />
-          <ModelField {...{ pk, model, ...fields.description }} />
-          <ModelField {...{ pk, model, ...fields.category }} />
-          <ModelField {...{ pk, model, ...fields.artist }} />
-          <ModelField {...{ pk, model, ...fields.original }} />
-          <ModelField {...{ pk, model, ...fields.usage }} />
-          <ModelField {...{ pk, model, ...fields.created }} />
-          <ModelField {...{ pk, model, ...fields.filesize }} />
-          <ModelField {...{ pk, model, ...fields.height }} />
-          <ModelField {...{ pk, model, ...fields.width }} />
-        </React.Fragment>
+        <ModelField {...{ pk, model, ...fields.large }} />
       )}
+      <ModelField {...{ pk, model, ...fields.description }} />
+      <div className="wrapForm">
+        <ModelField {...{ pk, model, ...fields.artist }} />
+        <ModelField {...{ pk, model, ...fields.filename }} />
+        <ModelField {...{ pk, model, ...fields.category }} />
+        <ModelField {...{ pk, model, ...fields.original }} />
+        <ModelField {...{ pk, model, ...fields.usage }} />
+        <ModelField {...{ pk, model, ...fields.created }} />
+        <ModelField {...{ pk, model, ...fields.filesize }} />
+        <ModelField {...{ pk, model, ...fields.height }} />
+        <ModelField {...{ pk, model, ...fields.width }} />
+      </div>
     </div>
   </section>
 )

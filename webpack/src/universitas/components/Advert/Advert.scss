@@ -1,6 +1,7 @@
 .Advert {
+  margin: 1rem 0;
+  padding: 1rem 0;
   $color: #999;
-  padding: 0.2rem 0;
   border: 1px solid lighten($color, 20);
   border-width: 1px 0;
   position: relative;
@@ -18,8 +19,8 @@
   }
 }
 .Qmedia {
-  margin: 0 -1em;
-  padding: 1em 0;
+  margin-left: -1em;
+  margin-right: -1em;
   display: flex;
   .QmediaSub {
     &:hover {

@@ -60,7 +60,7 @@ export const Field = ({
   const fieldProps = R.omit(['model', 'pk', 'name'], props)
   const ModelField = editable ? EditableField : DetailField
   return (
-    <div className={cx('ModelField', type)}>
+    <div className={cx('ModelField', type, { editable })}>
       {R.is(String, label) && <label className={cx('label')}>{label}</label>}
       <ModelField
         className={cx('value')}
@@ -73,9 +73,10 @@ export const Field = ({
 }
 
 const mapStateToProps = (state, { pk, model, name }) => {
-  const item = modelSelectors(model).getItem(pk)(state)
+  const item = modelSelectors(model).getItem(pk)(state) || {}
   const value = item[name]
-  return { value, item }
+  // return { value, item }
+  return R.contains(name, ['crop_box']) ? { value, item } : { value }
 }
 const mapDispatchToProps = (dispatch, { pk, model, name }) => ({
   onChange: e => {

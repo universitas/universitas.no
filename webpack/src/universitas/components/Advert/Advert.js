@@ -17,15 +17,15 @@ class Google extends React.Component {
   }
 
   render() {
-    const { className } = this.props
+    const { className, style = {} } = this.props
     return (
-      <Advert className={cx('Google', className)}>
+      <Advert className={cx('Google', className)} style={style}>
         <ins
           className="adsbygoogle"
-          style={{ display: 'block' }}
+          style={{ display: 'block', ...style }}
           data-ad-client="ca-pub-5135593726012785"
           data-ad-slot="2776054351"
-          data-ad-format="auto"
+          data-ad-format="rectangle, horizontal"
           data-full-width-responsive="true"
           data-adtest="on"
         />
@@ -36,6 +36,7 @@ class Google extends React.Component {
 
 const QmediaSub = ({ id, text, link, image }) => (
   <a className="QmediaSub" href={link} target="_blank" rel="nofollow">
+    {' '}
     <img src={image} />
     <p>{text}</p>
   </a>

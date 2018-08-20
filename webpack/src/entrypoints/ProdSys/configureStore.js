@@ -25,6 +25,11 @@ export default initialState => {
   )
   const rootReducer = combineReducers({ ...reducers, router: router.reducer })
   const store = createStore(rootReducer, initialState, middlewares)
+  let sagaTask = sagaMiddleware.run(rootSaga)
+  const initialLocation = store.getState().router
+  if (initialLocation) {
+    store.dispatch(initializeCurrentLocation(initialLocation))
+  }
   if (module.hot) {
     module.hot.accept('./reducer', () => {
       const reducers = require('./reducer').default
@@ -34,11 +39,13 @@ export default initialState => {
       })
       store.replaceReducer(nextRootReducer)
     })
-  }
-  sagaMiddleware.run(rootSaga)
-  const initialLocation = store.getState().router
-  if (initialLocation) {
-    store.dispatch(initializeCurrentLocation(initialLocation))
+    // Hot module replacement for saga
+    module.hot.accept('./saga', () => {
+      sagaTask.cancel() // stop old saga
+      sagaTask.done.then(() => {
+        sagaTask = sagaMiddleware.run(require('./saga').default)
+      })
+    })
   }
   return store
 }

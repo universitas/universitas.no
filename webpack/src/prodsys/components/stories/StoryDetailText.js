@@ -3,22 +3,24 @@ import ModelField from 'components/ModelField'
 import { fields, MODEL } from './model.js'
 
 const TextDetail = ({ pk, storytypechoices }) => {
-  const props = { pk, model: MODEL }
+  const Field = ({ name, ...props }) => (
+    <ModelField
+      pk={pk}
+      key={name}
+      model={MODEL}
+      {...{ ...fields[name], ...props }}
+    />
+  )
   return (
     <div className="panelContent">
-      <ModelField {...{ ...props, ...fields.working_title }} />
-      <ModelField {...{ ...props, ...fields.publication_status }} />
-      <ModelField
-        {...{
-          ...props,
-          ...fields.story_type,
-          choices: storytypechoices,
-          type: 'choice',
-        }}
-      />
-      <ModelField {...{ ...props, ...fields.created }} />
-      <ModelField {...{ ...props, ...fields.modified }} />
-      <ModelField {...{ ...props, ...fields.bodytext_markup }} />
+      <div className="wrapForm">
+        <Field name="working_title" />
+        <Field name="story_type" type="choice" choices={storytypechoices} />
+        <Field name="publication_status" />
+        <Field name="created" />
+        <Field name="modified" />
+      </div>
+      <Field name="bodytext_markup" />
     </div>
   )
 }

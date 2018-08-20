@@ -7,12 +7,19 @@ $down-arrow: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox=
   flex-flow: row wrap;
   align-items: flex-end;
   margin-bottom: $margin;
+  min-height: 1.5rem;
+  &.full {
+  }
+  &.half {
+  }
   .label {
     @extend %label;
     min-width: 5em;
   }
   .value {
     flex: 1;
+    min-width: 50%;
+    max-width: 100%;
   }
   select {
     appearance: none;
@@ -24,8 +31,6 @@ $down-arrow: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox=
   textarea,
   input {
     padding: $margin/2 $margin;
-    min-width: 75%;
-    max-width: 100%;
     background-color: white;
     line-height: 1.2;
     height: 1.6rem;
@@ -47,7 +52,7 @@ $down-arrow: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox=
   }
   textarea {
     width: 100%;
-    height: auto;
+    min-height: 3rem;
     resize: vertical;
   }
   &.shorttext,

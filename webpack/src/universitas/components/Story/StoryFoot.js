@@ -46,7 +46,6 @@ const StoryFoot = ({ comment_field, id, title, section, related_stories }) => {
     <footer className="StoryFoot">
       {comment_field == 'facebook' && <FacebookComments url={url} />}
       <RelatedStories related_stories={related_stories} />
-      <Advert.Google />
     </footer>
   )
 }

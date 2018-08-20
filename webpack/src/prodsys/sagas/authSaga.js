@@ -18,11 +18,8 @@ export default function* rootSaga() {
 }
 
 const setUserContext = ({ pk, email, contributor_name }) => {
-  Raven.setUserContext({
-    id: pk,
-    name: contributor_name,
-    email,
-  })
+  const user = { id: pk, name: contributor_name, email }
+  Raven.setUserContext(user)
 }
 
 function* logInSaga(action) {
@@ -34,7 +31,7 @@ function* logInSaga(action) {
     // login successful reload page to get new csrf token
     // window.location = window.location
     // csrf token checked for each request
-    yield fetchUserSaga()
+    yield fetchUserSaga(action)
   }
 }
 function* logOutSaga(action) {
