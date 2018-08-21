@@ -19,9 +19,11 @@ const StoryDetail = ({
   >
     <StoryTools title={title} detail={detail} pk={pk} />
     {detail == 'text' && (
-      <StoryDetailText key={pk} {...{ pk, storytypechoices }} />
+      <StoryDetailText key={pk} pk={pk} storytypechoices={storytypechoices} />
     )}
-    {detail == 'images' && <StoryDetailImages key={pk} {...{ pk, images }} />}
+    {detail == 'images' && (
+      <StoryDetailImages key={pk} pk={pk} images={images} />
+    )}
   </section>
 )
 
