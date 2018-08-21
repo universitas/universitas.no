@@ -5,9 +5,19 @@ import cx from 'classnames'
 const Field = ({ name, label, value }) => (
   <div className={cx('Field', name)}>
     {label && <label className="label">{label}:</label>}
-    <div className="value">{value || '–'}</div>
+    <div className="value">{value}</div>
   </div>
 )
+
+const phoneLink = R.pipe(
+  R.replace(/\s/g, ''),
+  R.when(R.pipe(R.length, R.equals(8)), R.concat('+47')),
+  R.concat('sms://'),
+)
+
+const phoneTo = R.ifElse(R.not, R.always('–'), phone => (
+  <a href={phoneLink(phone)}>{phoneFormat(phone)}</a>
+))
 
 const mailTo = R.ifElse(R.not, R.always('–'), mail => (
   <a href={`mailto:${mail}`}>{R.replace(/@/, '\u200B@', mail)}</a>
@@ -26,7 +36,7 @@ export const ContactCard = ({
     <Field name="position" label="stilling" value={capitalize(position)} />
     <Field name="name" label="" value={name} />
     <Field name="email" label="epost" value={mailTo(email)} />
-    <Field name="phone" label="telefon" value={phoneFormat(phone)} />
+    <Field name="phone" label="telefon" value={phoneTo(phone)} />
   </div>
 )
 
