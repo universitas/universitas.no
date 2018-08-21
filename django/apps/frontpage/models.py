@@ -11,19 +11,21 @@ logger = logging.getLogger(__name__)
 
 
 def frontpagestry_size(story):
+    """initialise size of frontpage story"""
     priority = story.priority
     if priority < 6:
         return (2, 2, 0)
     if priority < 8:
         return (2, 4, 0)
     if priority < 10:
-        return (4, 4, 0.5)
-    return (6, 4, 1)
+        return (4, 4, 1)
+    return (6, 4, 2)
 
 
 class FrontpageStoryManager(models.Manager):
-    def published(self):
+    """Manager for FrontpageStory"""
 
+    def published(self):
         from apps.stories.models import Story
         return self.get_queryset().filter(
             published=True,
@@ -33,32 +35,37 @@ class FrontpageStoryManager(models.Manager):
         )
 
     def create_for_story(self, story):
-        if story.frontpagestory_set.count():
-            return None
+        """factory function"""
+
+        exists = story.frontpagestory_set.first()
+        if exists:
+            return exists
+
+        columns, rows, priority = frontpagestry_size(story)
+
         try:
             main_image = story.main_image().imagefile
         except AttributeError:
             main_image = None
-
-        columns, rows, priority = frontpagestry_size(story)
+            rows -= 1
 
         frontpage_story = FrontpageStory.objects.create(
+            columns=columns,
+            rows=rows,
+            priority=priority,
             story=story,
             headline=story.title[:190],
             vignette=str(story.story_type)[:40],
             html_class=story.section.slug,
             imagefile=main_image,
             published=True,
-            columns=columns,
-            rows=rows,
-            priority=priority,
         )
         return frontpage_story
 
 
 class FrontpageStory(TimeStampedModel, EditURLMixin):
     COL_CHOICES = [(n, f'{n}') for n in (2, 3, 4, 6)]
-    ROW_CHOICES = [(n, f'{n}') for n in (1, 2, 3, 4, 6, 8)]
+    ROW_CHOICES = [(n, f'{n}') for n in (1, 2, 3, 4, 5, 6)]
 
     class Meta:
         verbose_name = _('Frontpage Story')
@@ -131,14 +138,25 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
     )
 
     def save(self, *args, **kwargs):
+        self.order = self.calculate_order()
+        super().save(*args, **kwargs)
+
+    def calculate_order(self):
+        """Recalculate ordering on frontpage"""
         try:
             timestamp = self.story.publication_date.timestamp()
         except AttributeError:
-            timestamp = timezone.now().timestamp()
-        hours_pub = timestamp / 3600
-        hours_pri = self.priority * 24
-        self.order = int(hours_pub + hours_pri)
-        super().save(*args, **kwargs)
+            # parent story is not published
+            return 0
+        else:
+            return int((timestamp / 3600) + (self.priority * 24))
+
+    def __str__(self):
+        return self.headline or self.story.title
+
+    @property
+    def size(self):
+        return (self.columns, self.rows)
 
     @property
     def url(self):
@@ -147,10 +165,6 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
     @property
     def story_type_url(self):
         return self.story.story_type.get_absolute_url()
-
-    @property
-    def size(self):
-        return (self.columns, self.rows)
 
     @property
     def preview(self):
@@ -165,6 +179,3 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
             return self.imagefile.small
         else:
             return None
-
-    def __str__(self):
-        return self.headline or self.story.title

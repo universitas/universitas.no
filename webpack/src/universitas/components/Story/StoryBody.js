@@ -14,18 +14,26 @@ const Question = props => <p className="Question" {...props} />
 const ListItem = props => <li className="ListItem" {...props} />
 
 const PullQuote = props => <blockquote className="PullQuote" {...props} />
-const QuoteCit = props => <div className="QuoteCit" {...props} />
+const QuoteCit = ({ children, props }) => (
+  <div className="QuoteCit" {...props}>
+    {children}
+  </div>
+)
 const Aside = props => <aside className="Facts" {...props} />
 const Emphasis = props => <em {...props} />
 
 const Place = ({ name, flags, children, ...props }) => {
   if (R.isEmpty(children)) return null
   return (
-    <section title={name} className={cx('Place', flags)} {...props}>
+    <section className={cx('Place', flags)} id={name} {...props}>
       {children}
     </section>
   )
 }
+
+const BodySection = ({ children }) => (
+  <section className="BodySection">{children}</section>
+)
 
 const Video = ({
   caption,
@@ -60,61 +68,76 @@ const Embed = ({ bodytext_html }) => (
 )
 
 const typeMap = {
+  aside: Aside,
+  em: Emphasis,
+  image: StoryImage,
+  inline_html_block: Embed,
+  link: StoryLink,
+  listItem: ListItem,
   paragraph: Paragraph,
   place: Place,
   pullquote: PullQuote,
-  link: StoryLink,
-  aside: Aside,
-  listItem: ListItem,
-  image: StoryImage,
+  section: BodySection,
   video: Video,
-  em: Emphasis,
-  inline_html_block: Embed,
 }
 
 const tagMap = {
-  tit: SectionHeading,
+  faktatit: AsideHeading,
   mt: Subheading,
-  txt: Paragraph,
+  sitatbyline: QuoteCit,
   spm: Question,
   tingo: Tingo,
-  sitatbyline: QuoteCit,
-  faktatit: AsideHeading,
+  tit: SectionHeading,
+  txt: Paragraph,
 }
 
 const splitContent = R.partition(
   R.pathSatisfies(R.flip(R.contains)(['image', 'video']), ['type']),
 )
 
-const renderNodes = R.addIndex(R.map)(
-  R.ifElse(R.is(String), R.identity, (node, idx) => {
+const renderNodes = R.addIndex(R.map)((node, idx) => {
+  if (R.is(String, node)) return node
+  if (node.type == 'place') {
+    if (node.children && node.children.length) {
+      const { children, tag, type, ...props } = node
+      const [media, other] = splitContent(children)
+      return (
+        <Place {...props} key={idx}>
+          {renderNodes(other)}
+          <SlideShow>{renderNodes(media)}</SlideShow>
+        </Place>
+      )
+    } else return null
+  }
+  const { children = [], ...props } = node
+  const { tag, type } = props
+  const Component = tag ? tagMap[tag] : typeMap[type]
+  return Component ? (
+    <Component {...props} key={idx}>
+      {renderNodes(children)}
+    </Component>
+  ) : (
+    <Debug {...node} key={idx} />
+  )
+})
+
+const unflatten = tree => {
+  const retval = []
+  let children = []
+  for (const node of tree) {
     if (node.type == 'place') {
-      if (node.children && node.children.length) {
-        const { children, tag, type, ...props } = node
-        const [media, other] = splitContent(children)
-        return (
-          <Place key={idx} {...props}>
-            {renderNodes(other)}
-            <SlideShow>{renderNodes(media)}</SlideShow>
-          </Place>
-        )
-      } else return null
+      retval.push(node)
+      children = []
+    } else {
+      if (children.length == 0) retval.push({ type: 'section', children })
+      children.push(node)
     }
-    const { children = [], ...props } = node
-    const { tag, type } = props
-    const Component = tag ? tagMap[tag] : typeMap[type]
-    return Component ? (
-      <Component {...props} key={idx}>
-        {renderNodes(children)}
-      </Component>
-    ) : (
-      <Debug {...node} />
-    )
-  }),
-)
+  }
+  return retval
+}
 
 const StoryBody = ({ bodytext_markup, parseTree, nodeTree, ...props }) => {
-  return <main>{renderNodes(nodeTree)}</main>
+  return <main>{renderNodes(unflatten(nodeTree))}</main>
 }
 
 export default StoryBody

@@ -16,7 +16,7 @@ const mapItemStateToProps = (state, { story, addRef }) => {
 const ConnectedFeedItem = connect(mapItemStateToProps)(FeedItem)
 
 const standardizeSize = ({ rows, columns, ...props }) => ({
-  rows: [0, 2, 2, 4, 4, 4, 6][rows],
+  rows: [1, 2, 2, 2, 4, 4, 6][rows],
   columns: [0, 2, 2, 2, 2, 4, 4][columns],
   ...props,
 })
@@ -79,7 +79,8 @@ class NewsFeed extends React.Component {
       R.when(R.pipe(R.length, R.lte(index)), R.insert(index, item)),
     )
     const feed = R.pipe(
-      section ? R.map(standardizeSize) : mapFrom(15, standardizeSize),
+      mapFrom(section ? 0 : 20, standardizeSize),
+      mapFrom(-4, R.mergeDeepLeft({ columns: 2, rows: 2 })),
       R.map(props => (
         <ConnectedFeedItem
           addRef={this.addRef(props.story.id)}

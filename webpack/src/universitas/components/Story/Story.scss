@@ -1,11 +1,14 @@
 @import "styles/_common.scss";
 $linkcolor: #1779ba;
 $asidewidth: 15rem;
+
+// svg icon for bullet list (square)
 $bullet: "data:image/svg+xml," +
   "<svg xmlns='http://www.w3.org/2000/svg' height='1.3ex' viewBox='0 0 10 10'>" +
   "<rect width='10' height='10' rx='1' ry='1' fill='" +
   str-replace("#", "%23", #{$medium-yellow}) + "'/>" + "</svg>";
 
+// svg icon for external link (box with arrow pointing out)
 $externallink: "data:image/svg+xml," +
   "<svg xmlns='http://www.w3.org/2000/svg' height='0.85em' viewBox='0 0 16 14'>" +
   "<path d='M 9 2 L 9 3 L 12.292969 3 L 6.023438 9.273438 L 6.726563 " +
@@ -30,12 +33,14 @@ $externallink: "data:image/svg+xml," +
   }
 }
 
+// main bodytext area
 %left {
   @include size(m) {
     width: calc(100% - #{$asidewidth + 1rem});
   }
 }
 
+// aside area
 %right {
   @include size(m) {
     float: right;
@@ -135,7 +140,6 @@ $externallink: "data:image/svg+xml," +
     font-weight: 500;
   }
   .Subheading {
-    @extend %left;
     @extend %headline;
     font-size: 1.4rem;
     margin: 1em 0 0.2em 0;
@@ -147,12 +151,6 @@ $externallink: "data:image/svg+xml," +
     @extend %headline;
     font-size: 1.7rem;
     margin: 1.5em 0 0.2em 0;
-  }
-  main {
-    & > p {
-      @extend %left;
-      margin: 0.2em 0 0.8em 0;
-    }
   }
   .ListItem {
     @extend %bullet-list;
@@ -238,18 +236,19 @@ $externallink: "data:image/svg+xml," +
   }
 }
 
-%quotemark {
-  color: $medium-yellow;
-  font-family: "Roboto Slab";
-  position: absolute;
-  font-style: normal;
-  font-weight: bolder;
-  font-size: 6em;
-  line-height: 1rem;
+.BodySection {
+  margin-bottom: 2rem;
+  @extend %left;
+  p {
+    margin: 0.2em 0 0.8em 0;
+  }
+  *:first-child {
+    margin-top: 0;
+  }
 }
 
 .Place {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   &.left {
     @extend %left;
   }
@@ -271,44 +270,62 @@ $externallink: "data:image/svg+xml," +
   }
 }
 
-%quote-left {
+%quotemark {
+  color: $medium-yellow;
+  font-family: "Roboto Slab";
+  position: absolute;
+  font-style: normal;
+  font-weight: bolder;
+  font-size: 6em;
+  line-height: 0.6ex;
+  // background-color: red;
+}
+
+@mixin quote-left {
   position: relative;
-  padding-left: 2.5rem;
+  margin-left: 3em;
+  padding-left: 1rem;
   &:before {
     @extend %quotemark;
     content: "«";
-    top: 0.04em;
-    left: -0.2em;
+    left: -0.9ex;
   }
 }
 
-%quote-right {
+@mixin quote-right {
   position: relative;
-  padding-right: 2.5em;
+  margin-right: 3em;
+  padding-right: 1rem;
   &:after {
     @extend %quotemark;
     content: "»";
-    top: 0.04em;
-    right: -0.2em;
+    right: -0.8ex;
   }
 }
 
 .PullQuote {
-  @extend %quote-left;
-  // @extend %quote-right;
   margin: 0;
-  margin: 2rem;
+  .left &,
+  .right & {
+    font-size: 1rem;
+    font-size: 0.8rem;
+  }
+  @include quote-left;
+  // @include quote-right;
+  min-height: 3em;
   color: $medium-grey;
+  display: flex;
+  align-content: center;
+  flex-direction: column;
   p {
     font-size: 1.5rem;
     font-weight: 200;
     line-height: 1.1;
-    display: block;
     margin: 0;
   }
   .QuoteCit {
-    display: block;
+    color: $dark-grey;
     font-size: 0.8rem;
-    text-align: right;
+    // align-self: flex-end;
   }
 }
