@@ -2,6 +2,10 @@
 
 import logging
 
+from django_extensions.db.fields import AutoSlugField
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+
 from apps.contributors.models import Contributor
 from apps.frontpage.models import FrontpageStory
 from django.conf import settings
@@ -10,9 +14,6 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django_extensions.db.fields import AutoSlugField
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
 from utils.decorators import cache_memoize
 from utils.model_mixins import EditURLMixin
 
@@ -24,6 +25,8 @@ from .storychildren import Aside, Pullquote
 
 slugify = Slugify(max_length=50, to_lower=True)
 logger = logging.getLogger(__name__)
+
+FACEBOOK_THUMBSIZE = '800x420'
 
 
 class StoryQuerySet(FullTextSearchQuerySet, models.QuerySet):
@@ -358,12 +361,12 @@ class Story(  # type: ignore
         """ Get the top image if there is any. """
         return self.images.order_by('-size', '-ordering').first()
 
-    @cache_memoize()
+    @cache_memoize(60 * 5)
     def facebook_thumb(self):
         if self.main_image():
             imagefile = self.main_image().imagefile
             return imagefile.thumbnail(
-                size='800x420',
+                size=FACEBOOK_THUMBSIZE,
                 crop_box=imagefile.get_crop_box(),
             )
 

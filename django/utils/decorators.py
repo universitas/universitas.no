@@ -23,6 +23,16 @@ def timeit(fn):
     return timeit_wrapper
 
 
+def _ismethod(func):
+    """Check if first argument name is "self"."""
+    try:
+        return next(iter(inspect.signature(func).parameters.keys()),
+                    None) == 'self'
+    except ValueError:
+        # builtin function
+        return False
+
+
 def cache_memoize(
     timeout=24 * 60 * 60,
     prefix=None,
@@ -92,11 +102,6 @@ def cache_memoize(
 
     """
 
-    def _ismethod(func):
-        """Check if first argument name is "self"."""
-        return next(iter(inspect.signature(func).parameters.keys()),
-                    None) == 'self'
-
     def _funcargs_rewrite(*args):
         """noop"""
         return args
@@ -117,15 +122,16 @@ def cache_memoize(
                 rewrite = _funcargs_rewrite
 
         def _make_prefix():
-            return f'cache_memo:{prefix or func.__name__}'
+            name = f'{func.__module__}.{func.__qualname__}'
+            return f'cache_memoize:{prefix or name}:'
 
         def _make_cache_key(*args, **kwargs):
-            pfx = _make_prefix() 
+            pfx = _make_prefix()
             cache_key = ':'.join([
                 force_text(x) for x in rewrite(*args, **kwargs)
             ] + [force_text(f'{k}={v}') for k, v in kwargs.items()])
             digest = hashlib.md5(force_bytes(pfx + cache_key)).hexdigest()
-            return f'{pfx}:{digest}'
+            return f'{pfx}{digest}'
 
         @wraps(func)
         def inner(*args, **kwargs):
@@ -157,7 +163,7 @@ def cache_memoize(
 
         def invalidate_all():
             keys = cache.keys(f'{_make_prefix()}*')
-            for cache_key in keys: 
+            for cache_key in keys:
                 cache.delete(cache_key)
             return keys
 

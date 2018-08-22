@@ -10,6 +10,8 @@ from api.issues import IssueViewSet
 from api.publicstories import PublicStoryViewSet
 from api.site import SiteDataAPIView
 from api.user import AvatarUserDetailsSerializer
+from apps.frontpage.models import FrontpageStory
+from apps.issues.models import Issue
 from apps.stories.models import Story
 from django.conf import settings
 from django.core.cache import cache
@@ -62,6 +64,7 @@ def fetch_user(request):
         return {'type': 'auth/REQUEST_USER_FAILED'}
 
 
+@cache_memoize(timeout=60 * 30, args_rewrite=only_anon)
 def fetch_story(request, pk):
     response = PublicStoryViewSet.as_view({'get': 'retrieve'})(request, pk=pk)
     payload = {
@@ -73,17 +76,27 @@ def fetch_story(request, pk):
     return {'type': 'publicstory/STORY_FETCHED', 'payload': payload}
 
 
-@cache_memoize(timeout=60 * 1, args_rewrite=only_anon)
+@cache_memoize(timeout=60 * 30, args_rewrite=only_anon)
 def fetch_newsfeed(request):
     response = FrontpageStoryViewset.as_view({'get': 'list'})(request)
     return {'type': 'newsfeed/FEED_FETCHED', 'payload': response.data}
 
 
-@cache_memoize(timeout=60 * 15, args_rewrite=only_anon)
+@receiver(post_save, sender=FrontpageStory)
+def clear_feed_cache(sender, instance, **kwargs):
+    fetch_newsfeed.invalidate_all()
+
+
+@cache_memoize(timeout=60 * 30, args_rewrite=only_anon)
 def fetch_issues(request):
     response = IssueViewSet.as_view({'get': 'list'})(request)
     payload = {'issues': response.data.get('results')}
     return {'type': 'issues/ISSUES_FETCHED', 'payload': payload}
+
+
+@receiver(post_save, sender=Issue)
+def clear_issues_cache(sender, instance, **kwargs):
+    fetch_issues.invalidate_all()
 
 
 @cache_memoize(timeout=60 * 15, args_rewrite=only_anon)
