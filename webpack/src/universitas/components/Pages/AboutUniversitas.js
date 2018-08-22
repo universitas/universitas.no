@@ -32,19 +32,22 @@ const NextIssue = ({ publication_date, issue_name }) => (
   </p>
 )
 
-const byImportance = R.pipe(
-  R.path(['position', 'title']),
-  R.propOr(0, R.__, {
-    redaktør: 100,
-    'daglig leder': 90,
-    nyhetsredaktør: 80,
-    nyhetsleder: 80,
-    fotosjef: 70,
-    desksjef: 70,
-    annonseselger: -10,
-    webutvikler: -20,
-  }),
-)
+const byImportance = R.converge(R.add, [
+  R.path(['position', 'management']),
+  R.pipe(
+    R.path(['position', 'title']),
+    R.propOr(0, R.__, {
+      redaktør: 100,
+      'daglig leder': 90,
+      nyhetsredaktør: 80,
+      nyhetsleder: 80,
+      fotosjef: 70,
+      desksjef: 70,
+      annonseselger: -10,
+      webutvikler: -20,
+    }),
+  ),
+])
 
 const byLastName = R.pipe(R.prop('display_name'), R.split(/ /g), R.last)
 

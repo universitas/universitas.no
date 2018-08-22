@@ -1,13 +1,13 @@
 @keyframes flimmer {
   0%,
   100% {
-    opacity: 0.2;
+    opacity: 0.1;
   }
   60% {
-    opacity: 0.5;
+    opacity: 0.4;
   }
 }
 
 .PlaceHolder {
-  animation: 3s ease-in-out 0s infinite flimmer;
+  animation: 2s ease-in-out 0s infinite flimmer;
 }

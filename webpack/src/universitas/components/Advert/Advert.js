@@ -1,6 +1,7 @@
 import { getAdverts, advertsRequested } from 'ducks/adverts'
 import { connect } from 'react-redux'
 import cx from 'classnames'
+import { hyphenate } from 'utils/text'
 
 const Advert = ({ children, className = '', ...props }) => (
   <div className={cx('Advert', className)} {...props}>
@@ -36,9 +37,8 @@ class Google extends React.Component {
 
 const QmediaSub = ({ id, text, link, image }) => (
   <a className="QmediaSub" href={link} target="_blank" rel="nofollow">
-    {' '}
     <img src={image} />
-    <p>{text}</p>
+    <p>{hyphenate(text)}</p>
   </a>
 )
 

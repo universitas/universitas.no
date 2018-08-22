@@ -3,7 +3,7 @@
 .FeedTerminator {
   border-top: 2px dashed #eee;
   color: #bbb;
-  grid-column: 1/7;
+  grid-column: 1/-1;
   font-size: 1.4rem;
   font-weight: 200;
   text-align: center;
@@ -15,6 +15,7 @@
 .NewsFeed {
   font-family: $univ-sans;
   display: grid;
+  overflow: hidden;
   grid-gap: $gridgap;
   grid-template-columns: 1fr 1fr;
   grid-auto-flow: dense;

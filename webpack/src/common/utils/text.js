@@ -10,6 +10,7 @@ export const capitalize = R.replace(/./, R.toUpper)
 
 // hyphenate text
 const hyphenator_no = new Hypher({ ...norwegian, rightmin: 4, leftmin: 4 })
+
 export const hyphenate = text => hyphenator_no.hyphenateText(text, 10)
 
 // pretty JSON
