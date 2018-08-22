@@ -64,10 +64,8 @@ class ImageHashModelMixin(models.Model):
     def imagehash(self):
         """Calculate or retrieve imagehash value."""
         if not self._imagehash:
-            try:
-                self.imagehash = get_imagehash(self.small)
-            except (IOError, FileNotFoundError):
-                self.imagehash = get_imagehash(self.original)
+            self.imagehash = get_imagehash(self.small
+                                           ) or get_imagehash(self.original)
         try:
             return imagehash.hex_to_hash(self._imagehash)
         except ValueError:

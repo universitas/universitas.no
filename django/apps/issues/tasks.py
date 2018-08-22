@@ -7,11 +7,12 @@ import tempfile
 from datetime import timedelta
 from pathlib import Path
 
-from apps.core.staging import new_staging_pdf_files
-from apps.issues.models import PrintIssue, current_issue
 from celery import shared_task
 from celery.schedules import crontab
 from celery.task import periodic_task
+
+from apps.core.staging import new_staging_pdf_files
+from apps.issues.models import PrintIssue, current_issue
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.utils import timezone
@@ -19,8 +20,8 @@ from django.utils import timezone
 logger = logging.getLogger(__name__)
 
 # Paths and glob pattersn
-PAGES_GLOB = 'UNI11VER*.pdf'
-MAG_PAGES_GLOB = 'UNI12VER*.pdf'
+PAGES_GLOB = 'UNI11VER????????000.pdf'
+MAG_PAGES_GLOB = 'UNI12VER????????000.pdf'
 
 OUTPUT_PDF_NAME = 'universitas_{issue.year}-{issue.number}{suffix}.pdf'
 

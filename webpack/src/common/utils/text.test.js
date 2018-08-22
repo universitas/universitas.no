@@ -28,6 +28,8 @@ test('cleanText', () => {
   expect(cleanText('')).toEqual('')
   expect(cleanText('@txt: -- text')).toEqual(`@txt: –${SPACER}text`)
   expect(cleanText('-Hello "hello"')).toEqual(`–${SPACER}Hello «hello»`)
+  expect(cleanText('don\u0027t')).toEqual('don\u02BCt')
+  expect(cleanText('don\u0092t')).toEqual('don\u02BCt')
 })
 
 test('stringify', () => {

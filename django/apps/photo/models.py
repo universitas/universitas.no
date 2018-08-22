@@ -7,7 +7,6 @@ from io import BytesIO
 from pathlib import Path
 from typing import Union
 
-import piexif
 import PIL
 from model_utils.models import TimeStampedModel
 from slugify import Slugify
@@ -30,7 +29,7 @@ from utils.model_mixins import EditURLMixin
 
 from . import file_operations
 from .cropping.models import AutoCropImage
-from .exif import ExifData, exif_to_json, extract_exif_data
+from .exif import ExifData, exif_to_json, extract_exif_data, prune_exif
 from .imagehash import ImageHashModelMixin
 
 logger = logging.getLogger(__name__)
@@ -415,14 +414,7 @@ class ImageFile(  # type: ignore
         if img is None:
             img = file_operations.pil_image(self.original)
 
-        exif_bytes = img.info.get('exif', b'')
-        if exif_bytes:
-            data_dict = piexif.load(exif_bytes)
-            thumb = data_dict.pop('thumbnail', None)
-            data_dict.pop('1st', None)
-            exif_bytes = piexif.dump(data_dict)
-        else:
-            thumb = False
+        exif_bytes = prune_exif(img)
 
         if any([
             img.width > SIZE_LIMIT,
@@ -437,7 +429,7 @@ class ImageFile(  # type: ignore
         else:
             resized = False
 
-        if thumb or resized:
+        if exif_bytes or resized:
             blob = BytesIO()
             img.save(blob, img.format, exif=exif_bytes, quality=80)
             if self.pk is None:

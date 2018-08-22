@@ -95,7 +95,6 @@ def get_imagehash(fp, size=11) -> imagehash.ImageHash:
         thumb = img.resize((size, size), PIL.Image.BILINEAR).convert('L')
         return imagehash.dhash(thumb)
     except OSError:  # corrupt image file probably
-        logger.exception('Cannot calculate image hash')
         return None
 
 

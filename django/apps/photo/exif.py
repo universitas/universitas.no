@@ -1,5 +1,6 @@
 """ Make image file data serializable """
 import base64
+import copy
 import logging
 import string
 from collections import namedtuple
@@ -7,7 +8,9 @@ from datetime import datetime
 from typing import Any, Optional
 
 import ftfy
+import piexif
 import PIL.ExifTags
+from PIL.Image import Image
 
 from django.utils import timezone
 
@@ -16,6 +19,31 @@ from .file_operations import get_exif
 logger = logging.getLogger(__name__)
 
 ExifData = namedtuple('ExifData', 'description, datetime, artist, copyright')
+
+
+def valid_exif_bytes(exif_bytes: bytes) -> bytes:
+    """Remove non-standard exif data."""
+    exif_dict = piexif.load(exif_bytes)
+    del exif_dict['thumbnail']
+    del exif_dict['1st']
+    for key in sorted(exif_dict, reverse=True):
+        subsection = exif_dict[key]
+        for subkey in sorted(subsection, reverse=True):
+            try:
+                return piexif.dump(exif_dict)
+            except ValueError:
+                del subsection[subkey]
+        del exif_dict[key]
+    return piexif.dump({})
+
+
+def prune_exif(img: Image) -> bytes:
+    """Prune thumbnail and other excessive exif data from image file."""
+    exif_bytes = img.info.get('exif')
+    if not exif_bytes:
+        return b''
+    pruned_exif_bytes = valid_exif_bytes(exif_bytes)
+    return pruned_exif_bytes
 
 
 def clean_data(value: Any) -> Any:

@@ -36,11 +36,14 @@ export const makeFuzzer = (candidates, cutoff = 0.5) => {
 
 const NBRS = '\xA0'
 const WORDJOINER = '\u2060'
+const APOSTROPHE = 'ʼ'
 
 // cleanup some markup
 export const cleanText = R.pipe(
   R.replace(/“/g, '«'), // left curly quote
   R.replace(/”/g, '»'), // right curly quote
+  R.replace(/\b'\b/g, APOSTROPHE), // ascii apostrophe
+  R.replace(/\u0092/g, APOSTROPHE), // win 1251 encoding
   R.replace(/\B"(.*?)"\B/gu, '«$1»'), // straight quotes
   R.replace(/--/g, '–'), // en-dash
   R.replace(/(^|[.:?!] +)[-–] ?\b/gmu, `$1–${WORDJOINER}${NBRS}`),
