@@ -116,15 +116,16 @@ def cache_memoize(
             else:
                 rewrite = _funcargs_rewrite
 
+        def _make_prefix():
+            return f'cache_memo:{prefix or func.__name__}'
+
         def _make_cache_key(*args, **kwargs):
+            pfx = _make_prefix() 
             cache_key = ':'.join([
                 force_text(x) for x in rewrite(*args, **kwargs)
             ] + [force_text(f'{k}={v}') for k, v in kwargs.items()])
-            return hashlib.md5(
-                force_bytes(
-                    'cache_memoize' + (prefix or func.__name__) + cache_key
-                )
-            ).hexdigest()
+            digest = hashlib.md5(force_bytes(pfx + cache_key)).hexdigest()
+            return f'{pfx}:{digest}'
 
         @wraps(func)
         def inner(*args, **kwargs):
@@ -154,7 +155,14 @@ def cache_memoize(
             cache_key = _make_cache_key(*args, **kwargs)
             cache.delete(cache_key)
 
+        def invalidate_all():
+            keys = cache.keys(f'{_make_prefix()}*')
+            for cache_key in keys: 
+                cache.delete(cache_key)
+            return keys
+
         inner.invalidate = invalidate
+        inner.invalidate_all = invalidate_all
         return inner
 
     return decorator

@@ -73,20 +73,20 @@ def fetch_story(request, pk):
     return {'type': 'publicstory/STORY_FETCHED', 'payload': payload}
 
 
-@cache_memoize(timeout=60, args_rewrite=only_anon)
+@cache_memoize(timeout=60 * 1, args_rewrite=only_anon)
 def fetch_newsfeed(request):
     response = FrontpageStoryViewset.as_view({'get': 'list'})(request)
     return {'type': 'newsfeed/FEED_FETCHED', 'payload': response.data}
 
 
-@cache_memoize(timeout=60 * 60, args_rewrite=only_anon)
+@cache_memoize(timeout=60 * 15, args_rewrite=only_anon)
 def fetch_issues(request):
     response = IssueViewSet.as_view({'get': 'list'})(request)
     payload = {'issues': response.data.get('results')}
     return {'type': 'issues/ISSUES_FETCHED', 'payload': payload}
 
 
-@cache_memoize(timeout=60 * 60, args_rewrite=only_anon)
+@cache_memoize(timeout=60 * 15, args_rewrite=only_anon)
 def fetch_site(request):
     response = SiteDataAPIView.as_view()(request)
     return {'type': 'site/SITE_FETCHED', 'payload': response.data}
@@ -146,8 +146,10 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
     )
 
     if request.user.is_anonymous and status_code == 200:
-        TEN_MINUTES = 60 * 10
-        cache.set(cache_key, (response, request.path), TEN_MINUTES)
+        timeout = 60
+        if request.path != '/':
+            timeout *= 10
+        cache.set(cache_key, (response, request.path), timeout)
 
     return response
 
