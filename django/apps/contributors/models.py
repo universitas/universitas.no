@@ -4,6 +4,8 @@ import json
 import logging
 from collections import namedtuple
 
+from model_utils.models import TimeStampedModel
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
@@ -12,7 +14,6 @@ from django.db import models
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
 from utils.decorators import cache_memoize
 
 from .fuzzy_name_search import FuzzyNameSearchMixin
@@ -52,6 +53,10 @@ class ContributorQuerySet(models.QuerySet):
         if not result:
             result = queryset.filter(display_name__unaccent__icontains=query)
         return result
+
+    def active(self):
+        active = Stint.objects.active().values_list('contributor', flat=True)
+        return self.filter(pk__in=active)
 
     def management(self):
         managers = Stint.objects.active().management().values_list(
@@ -214,9 +219,14 @@ class Contributor(TimeStampedModel, FuzzyNameSearchMixin, models.Model):
             'start_date',
             'position__is_management',
         )
+
         if stints:
             stint = stints.active().last() or stints.last()
-            return stint.position.title
+            return {
+                'title': stint.position.title,
+                'management': stint.position.is_management,
+                'active': stint.is_active,
+            }
         return None
 
 
@@ -303,8 +313,8 @@ class Stint(models.Model):
         )
 
     @property
-    def is_management(self):
-        return self.position.is_management
+    def is_active(self):
+        return self.start_date <= today() <= (self.end_date or today())
 
 
 @receiver(models.signals.post_save, sender=Stint)

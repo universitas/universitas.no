@@ -1,11 +1,15 @@
 @import "styles/_common.scss";
 
-.FetchMore {
-  cursor: pointer;
-  color: white;
-  padding: 2em;
-  background-color: black;
-  grid-column: 1/6;
+.FeedTerminator {
+  border-top: 2px dashed #eee;
+  color: #bbb;
+  grid-column: 1/7;
+  font-size: 1.4rem;
+  font-weight: 200;
+  text-align: center;
+  padding-top: 10vh;
+  height: 50vh;
+  margin-top: 2rem;
 }
 
 .NewsFeed {

@@ -10,6 +10,7 @@ const Field = ({ name, label, value }) => (
 )
 
 const phoneLink = R.pipe(
+  R.defaultTo(''),
   R.replace(/\s/g, ''),
   R.when(R.pipe(R.length, R.equals(8)), R.concat('+47')),
   R.concat('sms://'),
@@ -33,7 +34,11 @@ export const ContactCard = ({
 }) => (
   <div className="ContactCard">
     <img className="thumb" src={thumb} alt={name} />
-    <Field name="position" label="stilling" value={capitalize(position)} />
+    <Field
+      name="position"
+      label="stilling"
+      value={capitalize(position.title)}
+    />
     <Field name="name" label="" value={name} />
     <Field name="email" label="epost" value={mailTo(email)} />
     <Field name="phone" label="telefon" value={phoneTo(phone)} />

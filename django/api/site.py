@@ -1,11 +1,12 @@
 """Site data misc"""
 
+from rest_framework import permissions, response, serializers, views
+
 from apps.contributors.models import Contributor
 from apps.issues.models import Issue
 from apps.stories.models import Section, StoryType
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from rest_framework import permissions, response, serializers, views
 
 from .issues import IssueSerializer
 
@@ -43,7 +44,7 @@ class StaffSerializer(serializers.ModelSerializer):
 
 class SiteData:
     def __init__(self):
-        self.staff = Contributor.objects.management().prefetch_related(
+        self.staff = Contributor.objects.active().prefetch_related(
             'byline_photo',
         )
         self.sections = Section.objects.all().prefetch_related(

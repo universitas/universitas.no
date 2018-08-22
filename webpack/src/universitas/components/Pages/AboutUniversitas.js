@@ -32,8 +32,8 @@ const NextIssue = ({ publication_date, issue_name }) => (
   </p>
 )
 
-const importance = R.pipe(
-  R.prop('position'),
+const byImportance = R.pipe(
+  R.path(['position', 'title']),
   R.propOr(0, R.__, {
     redaktør: 100,
     'daglig leder': 90,
@@ -46,10 +46,18 @@ const importance = R.pipe(
   }),
 )
 
-const orderStaff = R.sortWith([
-  R.descend(importance),
-  R.ascend(R.prop('position')),
-])
+const byLastName = R.pipe(R.prop('display_name'), R.split(/ /g), R.last)
+
+const sortStaff = R.sortWith([R.descend(byImportance), R.ascend(byLastName)])
+
+const StaffGrid = ({ staff }) => {
+  return (
+    <React.Fragment>
+      <h2>Redaksjonen i Universitas:</h2>
+      <ContactGrid contacts={sortStaff(staff)} />
+    </React.Fragment>
+  )
+}
 
 const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
   <article className={cx('AboutUniversitas', className)}>
@@ -98,8 +106,7 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
       64 496, eller <Link to={toAdInfo()}>les mer om annonsering.</Link>
     </p>
     <hr />
-    <h2>Redaksjonsledelsen i Universitas:</h2>
-    <ContactGrid contacts={orderStaff(staff)} />
+    <StaffGrid staff={staff} />
   </article>
 )
 

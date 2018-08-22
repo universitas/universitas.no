@@ -58,7 +58,7 @@ function* fetchAdverts(action) {
 
 function* fetchStories(action) {
   const fetched = yield select(getStoryIds)
-  const ids = R.difference(action.payload.ids, fetched)
+  const ids = R.difference(R.map(parseFloat, action.payload.ids), fetched)
   if (R.isEmpty(ids)) return
   yield put(storiesFetching(ids))
   const { response, error } = yield call(apiList, 'publicstories', {
