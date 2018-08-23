@@ -22,14 +22,13 @@ const StoryHelmet = ({
   const pageurl = reverseFull(toStory({ id, title, story_type }))
   const shorturl = reverseFull(toShortUrl({ id }))
 
-  const meta = {
+  const openGraphMeta = {
     'og:url': pageurl,
     'og:type': 'article',
-    'og:title': 'article',
-    'og:description': 'article',
-    'og:locale': 'article',
-    'og:updated_time': 'article',
-    robots: publication_status != STATUS_PUBLISHED ? 'noindex' : 'all',
+    'og:title': title,
+    'og:description': lede,
+    'og:locale': language,
+    'og:updated_time': modified,
     ...(fb_image
       ? {
           'og:image:url': fb_image,
@@ -44,12 +43,16 @@ const StoryHelmet = ({
       <title>{pagetitle}</title>
       <link rel="canonical" href={pageurl} />
       <link rel="shortlink" href={shorturl} />
-      {renderMeta(meta)}
+      {renderOpenGraphMetaTags(openGraphMeta)}
+      <meta
+        name="robots"
+        content={publication_status != STATUS_PUBLISHED ? 'noindex' : 'all'}
+      />
     </Helmet>
   )
 }
 
-const renderMeta = R.pipe(
+const renderOpenGraphMetaTags = R.pipe(
   R.mapObjIndexed((value, property, _) => (
     <meta key={property} property={property} content={value} />
   )),
