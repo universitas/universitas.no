@@ -7,6 +7,13 @@ const authors = R.tryCatch(
   R.always(console.error),
 )
 
+const locale = language =>
+  ({
+    nb: 'nb_no',
+    nn: 'nn_no',
+    en: 'en_gb',
+  }[language] || '')
+
 const StoryHelmet = ({
   id,
   title,
@@ -27,7 +34,7 @@ const StoryHelmet = ({
     'og:type': 'article',
     'og:title': title,
     'og:description': lede,
-    'og:locale': language,
+    'og:locale:locale': locale(language),
     'og:updated_time': modified,
     ...(fb_image
       ? {
@@ -35,6 +42,7 @@ const StoryHelmet = ({
           'og:image:type': 'image/jpeg',
           'og:image:width': '800',
           'og:image:height': '420',
+          'og:image:alt': title,
         }
       : {}),
   }
