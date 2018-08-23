@@ -21,25 +21,38 @@ const StoryHelmet = ({
   const pagetitle = `${title} | ${story_type.name} | universitas.no`
   const pageurl = reverseFull(toStory({ id, title, story_type }))
   const shorturl = reverseFull(toShortUrl({ id }))
+
+  const meta = {
+    'og:url': pageurl,
+    'og:type': 'article',
+    'og:title': 'article',
+    'og:description': 'article',
+    'og:locale': 'article',
+    'og:updated_time': 'article',
+    robots: publication_status != STATUS_PUBLISHED ? 'noindex' : 'all',
+    ...(fb_image
+      ? {
+          'og:image:url': fb_image,
+          'og:image:type': 'image/jpeg',
+          'og:image:width': '800',
+          'og:image:height': '420',
+        }
+      : {}),
+  }
   return (
     <Helmet>
       <title>{pagetitle}</title>
       <link rel="canonical" href={pageurl} />
       <link rel="shortlink" href={shorturl} />
-      <meta name="description" content={lede} />
-      <meta name="author" content={authors(bylines)} />
-      <meta property="og:url" content={pageurl} />
-      <meta property="og:type" content="article" />
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={lede} />
-      <meta property="og:locale" content={language} />
-      <meta property="og:updated_time" content={modified} />
-      {fb_image && <meta property="og:image" content={fb_image} />}
-      {publication_status != STATUS_PUBLISHED && (
-        <meta name="robots" content="noindex" />
-      )}
+      {renderMeta(meta)}
     </Helmet>
   )
 }
 
+const renderMeta = R.pipe(
+  R.mapObjIndexed((value, property, _) => (
+    <meta key={property} property={property} content={value} />
+  )),
+  R.values,
+)
 export default StoryHelmet

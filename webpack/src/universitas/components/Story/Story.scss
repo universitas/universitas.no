@@ -283,23 +283,23 @@ $externallink: "data:image/svg+xml," +
 
 @mixin quote-left {
   position: relative;
-  margin-left: 3em;
-  padding-left: 1rem;
+  padding-left: 4em;
   &:before {
     @extend %quotemark;
     content: "«";
-    left: -0.9ex;
+    top: 0;
+    left: 0;
   }
 }
 
 @mixin quote-right {
   position: relative;
-  margin-right: 3em;
-  padding-right: 1rem;
+  padding-right: 4em;
   &:after {
     @extend %quotemark;
     content: "»";
-    right: -0.8ex;
+    top: 0;
+    right: 0;
   }
 }
 
@@ -315,9 +315,10 @@ $externallink: "data:image/svg+xml," +
   min-height: 3em;
   color: $medium-grey;
   display: flex;
-  align-content: center;
   flex-direction: column;
+  justify-content: center;
   p {
+    // align-self: center;
     font-size: 1.5rem;
     font-weight: 200;
     line-height: 1.1;

@@ -7,21 +7,15 @@ import Advert from 'components/Advert'
 import FeedItem from './FeedItem.js'
 import PlaceHolder from './PlaceHolder.js'
 
-const mapItemStateToProps = (state, { story }) => {
-  const fullStory = getStory(story.id)(state)
-  const fetchStatus = fullStory
-    ? fullStory.fetching ? 'fetching' : 'fetched'
-    : 'unfetched'
-  return { fetchStatus }
-}
-const ConnectedFeedItem = connect(mapItemStateToProps)(FeedItem)
-
-const standardizeSize = ({ rows, columns, ...props }) => ({
+// Standard grid sizes for below the fold feed items.
+// This makes dense css grid much less likely to have voids
+const standardizeGridItemSize = ({ rows, columns, ...props }) => ({
   rows: [1, 2, 2, 2, 4, 4, 6][rows],
   columns: [0, 2, 2, 2, 2, 4, 4][columns],
   ...props,
 })
 
+// Map only over items from `index` to the end of the sequence
 const mapFrom = R.curry((index, fn, list) => {
   const [head, tail] = R.splitAt(index, list)
   return R.concat(head, R.map(fn, tail))
@@ -29,58 +23,55 @@ const mapFrom = R.curry((index, fn, list) => {
 
 class NewsFeed extends React.Component {
   static defaultProps = {
-    debounce: 500,
-    storiesRequested: (...args) => console.warn('storiesRequested', args),
+    prefetchDebounce: 500, // milliseconds before prefetching stories
+    storiesPrefetch: (...args) => console.warn('storiesPrefetch', args),
   }
   constructor(props) {
     super(props)
+    this.timeout = null
     this.redLine = 0 // where to fetch more stuff
     this.itemRefs = {}
     this.addRef = id => el => el && (this.itemRefs[id] = el)
+
     this.scrollHandler = this.scrollHandler.bind(this)
-    this.getRedLine = this.getRedLine.bind(this)
-    this.fetchVisibleStories = this.fetchVisibleStories.bind(this)
-    this.timeout = null
-    this.fetchMore = () => {
+
+    this.getRedLine = () =>
+      R.pipe(
+        R.prop('itemRefs'),
+        R.pluck('offsetTop'),
+        R.values,
+        R.filter(R.identity),
+        R.sort(R.subtract),
+        R.slice(-4, Infinity),
+        R.head,
+        R.defaultTo(0),
+      )(this)
+
+    this.prefetchStories = () =>
+      R.pipe(
+        R.prop('itemRefs'),
+        R.filter(inViewPort),
+        R.keys, // story id
+        R.map(parseInt), // id should be integer
+        R.unless(R.isEmpty, this.props.storiesPrefetch),
+      )(this)
+
+    this.fetchNewsFeed = () => {
       const { items, feedRequested } = this.props
       const offset = items.length ? R.last(items).order : null
       feedRequested({ offset })
     }
   }
 
-  fetchVisibleStories() {
-    R.pipe(
-      R.prop('itemRefs'),
-      R.filter(inViewPort),
-      R.keys,
-      R.unless(R.isEmpty, this.props.storiesRequested),
-    )(this)
-  }
-
-  getRedLine() {
-    return R.pipe(
-      R.prop('itemRefs'),
-      R.pluck('offsetTop'),
-      R.values,
-      R.filter(R.identity),
-      R.sort(R.subtract),
-      R.slice(-4, Infinity),
-      R.head,
-      R.defaultTo(0),
-    )(this)
-  }
-
   scrollHandler() {
-    const { debounce = 500, fetching, next } = this.props
+    const { prefetchDebounce = 500, fetching, next } = this.props
+    // prefetch full stories?
     clearTimeout(this.timeout)
-    this.timeout = setTimeout(() => {
-      this.fetchVisibleStories()
-    }, debounce)
-    const scroll = window.scrollY + window.innerHeight
+    this.timeout = setTimeout(this.prefetchStories, prefetchDebounce)
+
+    // fetch more of the news feed?
     if (!next || fetching) return
-    if (scroll > this.redLine) {
-      this.fetchMore()
-    }
+    if (window.scrollY + window.innerHeight > this.redLine) this.fetchNewsFeed()
   }
 
   componentDidMount() {
@@ -88,42 +79,39 @@ class NewsFeed extends React.Component {
     this.redLine = this.getRedLine()
     this.scrollHandler()
   }
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.scrollHandler)
-  }
+
   componentDidUpdate() {
     this.redLine = this.getRedLine()
     this.scrollHandler()
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.scrollHandler)
+  }
+
   render() {
     const { items, next, className, section } = this.props
 
-    const insertIfLongEnough = R.curry((index, item) =>
-      R.when(R.pipe(R.length, R.lte(index)), R.insert(index, item)),
-    )
-    const scrollSpies = (values = [4, 4, 2, 2, 2, 2, 2, 2]) =>
-      values.map((n, idx) => (
-        <PlaceHolder key={`ph-${idx}`} className={`col-${n} row-${n}`} />
-      ))
     const feed = R.pipe(
-      mapFrom(section ? 0 : 20, standardizeSize),
+      // Use complete item size customization for "above the fold" items only
+      mapFrom(section ? 0 : 20, standardizeGridItemSize),
+      // last four stories should be small, and serve as scroll spies
       R.when(
         R.pipe(R.length, R.lt(8)),
         mapFrom(-4, R.mergeDeepLeft({ columns: 2, rows: 2 })),
       ),
+      // render feed items
       R.map(props => (
-        <FeedItem
-          _ref={this.addRef(props.story.id)}
-          key={props.id}
-          {...props}
-        />
+        <FeedItem key={props.id} addRef={this.addRef} {...props} />
       )),
-      insertIfLongEnough(5, <Qmedia key="qm" />),
-      insertIfLongEnough(20, <Adwords key={`${section}-1`} />),
-      insertIfLongEnough(35, <Adwords key={`${section}-2`} />),
-      insertIfLongEnough(50, <Adwords key={`${section}-3`} />),
-      R.when(R.always(this.props.fetching), R.concat(R.__, scrollSpies())),
+      // add adverts
+      addAdverts(section),
+      // append placeholders if fetching
+      R.when(
+        R.always(this.props.fetching),
+        R.flip(R.concat)(renderPlaceholders([4, 4, 2, 2, 2, 2, 2])),
+      ),
+      // append feed terminator if the api is exhausted
       R.unless(
         R.always(this.props.next),
         R.append(<FeedTerminator key="terminator" />),
@@ -133,34 +121,43 @@ class NewsFeed extends React.Component {
     return <section className={cx('NewsFeed', className)}>{feed}</section>
   }
 }
-const RedLine = ({ offset }) =>
-  offset ? (
-    <hr
-      style={{
-        position: 'absolute',
-        top: `${offset}px`,
-        borderTop: '10em solid red',
-        opacity: '0.5',
-        width: '100%',
-        transition: 'top 2s ease',
-      }}
-    />
-  ) : null
+
+const renderPlaceholders = sizes =>
+  sizes.map((n, idx) => (
+    <PlaceHolder key={`ph-${idx}`} className={`col-${n} row-${n}`} />
+  ))
+
+const insertIfLongEnough = R.curry((index, item) =>
+  R.when(R.pipe(R.length, R.lte(index)), R.insert(index, item)),
+)
+
+const addAdverts = (key = 'feed') =>
+  R.pipe(
+    insertIfLongEnough(
+      5,
+      <Advert.Qmedia key={`5 qmedia ${key}`} className="col-6 row-2" />,
+    ),
+    insertIfLongEnough(
+      20,
+      <Advert.Google key={`20 adwords ${key}`} className="col-6 row-1" />,
+    ),
+    insertIfLongEnough(
+      35,
+      <Advert.Google key={`35 adwords ${key}`} className="col-6 row-1" />,
+    ),
+    insertIfLongEnough(
+      50,
+      <Advert.Google key={`50 adwords ${key}`} className="col-6 row-1" />,
+    ),
+  )
 
 const FeedTerminator = () => (
   <div className="FeedTerminator">Ingen flere saker</div>
-)
-
-const Qmedia = key => (
-  <Advert.Qmedia key={`qmedia ${key}`} className="col-6 row-2" />
-)
-const Adwords = key => (
-  <Advert.Google key={`adwords ${key}`} className="col-6 row-1" />
 )
 
 export { NewsFeed }
 
 export default connect(s => ({ items: getItems(s), ...getFeed(s) }), {
   feedRequested,
-  storiesRequested,
+  storiesPrefetch: storiesRequested,
 })(NewsFeed)

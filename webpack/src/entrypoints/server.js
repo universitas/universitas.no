@@ -13,7 +13,10 @@ const handleRender = (req, res) => {
     const result = render(url, actions)
     res.json({ url, ...result })
   } catch (err) {
-    res.json({ url, error: err.message })
+    const error = JSON.parse(
+      JSON.stringify(err, Object.getOwnPropertyNames(err)),
+    )
+    res.json({ url, error })
   }
 }
 

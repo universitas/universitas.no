@@ -28,7 +28,6 @@ class Google extends React.Component {
           data-ad-slot="2776054351"
           data-ad-format="rectangle, horizontal"
           data-full-width-responsive="true"
-          data-adtest="on"
         />
       </Advert>
     )

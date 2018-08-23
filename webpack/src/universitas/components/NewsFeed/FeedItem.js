@@ -61,7 +61,7 @@ const FeedItem = ({
   language,
   order,
   story,
-  _ref = null,
+  addRef,
 }) => {
   const className = cx('FeedItem', `col-${columns}`, `row-${rows}`, html_class)
   const title = `${order} ${className}`
@@ -73,7 +73,7 @@ const FeedItem = ({
         <Kicker>{hyphenate(kicker)}</Kicker>
         <Headline>{hyphenate(headline)}</Headline>
         <Lede>{lede}</Lede>
-        {_ref && <div style={{ gridArea: '1/1' }} ref={_ref} />}
+        {addRef && <div style={{ gridArea: '1/1' }} ref={addRef(story.id)} />}
       </ErrorBoundary>
     </Link>
   )

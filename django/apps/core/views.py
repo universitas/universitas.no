@@ -64,7 +64,6 @@ def fetch_user(request):
         return {'type': 'auth/REQUEST_USER_FAILED'}
 
 
-@cache_memoize(timeout=60 * 30, args_rewrite=only_anon)
 def fetch_story(request, pk):
     response = PublicStoryViewSet.as_view({'get': 'retrieve'})(request, pk=pk)
     payload = {
@@ -139,6 +138,8 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
 
     redux_actions = get_redux_actions(request, story)
     ssr_context = express_render(redux_actions, request)
+    if ssr_context.get('error'):
+        logger.debug(json.dumps(ssr_context, indent=2))
 
     try:
         pathname = ssr_context['state']['location']['pathname']

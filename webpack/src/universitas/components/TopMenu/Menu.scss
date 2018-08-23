@@ -27,6 +27,9 @@
     .inner {
       width: 100%;
       max-width: $content-width;
+      @media (max-height: 750px) and (min-width: $content-width) and (max-width: 1400px) {
+        max-width: ($content-width / 750px) * 100vh;
+      }
       padding: 0 0.5rem;
       display: flex;
       flex-direction: row;

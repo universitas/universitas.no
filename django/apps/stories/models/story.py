@@ -2,10 +2,6 @@
 
 import logging
 
-from django_extensions.db.fields import AutoSlugField
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-
 from apps.contributors.models import Contributor
 from apps.frontpage.models import FrontpageStory
 from django.conf import settings
@@ -14,6 +10,9 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django_extensions.db.fields import AutoSlugField
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
 from utils.decorators import cache_memoize
 from utils.model_mixins import EditURLMixin
 
@@ -267,6 +266,10 @@ class Story(  # type: ignore
 
         if (self.publication_status >= self.STATUS_FROM_DESK):
             FrontpageStory.objects.create_for_story(story=self)
+
+        if self.is_published():
+            # build up image cache
+            self.facebook_thumb()
 
     @property
     def comments_plugin(self):

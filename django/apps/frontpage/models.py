@@ -2,7 +2,6 @@ import logging
 
 from apps.photo.models import ImageFile
 from django.db import models
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from model_utils.models import TimeStampedModel
 from utils.model_mixins import EditURLMixin
@@ -60,6 +59,7 @@ class FrontpageStoryManager(models.Manager):
             imagefile=main_image,
             published=True,
         )
+        frontpage_story.save()
         return frontpage_story
 
 
