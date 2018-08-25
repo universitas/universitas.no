@@ -74,7 +74,7 @@ class FormFields extends React.Component {
               {...props}
             />
           )),
-          R.values
+          R.values,
         )(this.state)}
       </section>
     )

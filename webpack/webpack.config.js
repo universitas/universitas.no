@@ -5,16 +5,6 @@ const build_dir = process.env.BUILD_DIR || path.resolve('../build')
 const publicPath = process.env.PUBLIC_PATH
 
 module.exports = {
-  entry: {
-    prodsys: './src/entrypoints/prodsys.js',
-    universitas: './src/entrypoints/universitas.js',
-  },
-  output: {
-    // for example ../build/head.[hash].js
-    publicPath,
-    path: path.join(build_dir, ''),
-    filename: '[name].js',
-  },
   optimization: {
     minimizer: [],
     splitChunks: {
@@ -27,6 +17,16 @@ module.exports = {
         },
       },
     },
+  },
+  entry: {
+    prodsys: './src/entrypoints/prodsys.js',
+    universitas: './src/entrypoints/universitas.js',
+  },
+  output: {
+    // for example ../build/head.[hash].js
+    publicPath,
+    path: path.join(build_dir, ''),
+    filename: '[name].js',
   },
   plugins: [
     new webpack.ProvidePlugin({
@@ -88,7 +88,13 @@ module.exports = {
     ],
   },
   resolve: {
-    modules: ['src/universitas', 'src/prodsys', 'src/common', 'node_modules'],
+    modules: [
+      path.resolve(__dirname, './src/common/'),
+      path.resolve(__dirname, './src/universitas/'),
+      path.resolve(__dirname, './src/prodsys/'),
+      'node_modules',
+    ],
+    extensions: ['.wasm', '.mjs', '.js', '.jsx', '.json'],
     unsafeCache: true,
     alias: {},
   },

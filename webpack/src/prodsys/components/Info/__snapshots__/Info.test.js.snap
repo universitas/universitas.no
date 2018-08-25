@@ -8,23 +8,26 @@ exports[`Info renders correctly 1`] = `
     className="icon"
   >
     <svg
+      attr={
+        Object {
+          "viewBox": "0 0 24 24",
+        }
+      }
       fill="currentColor"
       height="1em"
-      preserveAspectRatio="xMidYMid meet"
+      stroke="currentColor"
+      strokeWidth="0"
       style={
         Object {
           "color": undefined,
-          "verticalAlign": "middle",
         }
       }
-      viewBox="0 0 40 40"
+      viewBox="0 0 24 24"
       width="1em"
     >
-      <g>
-        <path
-          d="m21.6 15v-3.4h-3.2v3.4h3.2z m0 13.4v-10h-3.2v10h3.2z m-1.6-25c9.2 0 16.6 7.4 16.6 16.6s-7.4 16.6-16.6 16.6-16.6-7.4-16.6-16.6 7.4-16.6 16.6-16.6z"
-        />
-      </g>
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+      />
     </svg>
   </div>
   <div

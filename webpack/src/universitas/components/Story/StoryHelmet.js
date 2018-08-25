@@ -38,7 +38,7 @@ const StoryHelmet = ({
     'og:updated_time': modified,
     ...(fb_image
       ? {
-          'og:image:url': fb_image,
+          'og:image': fb_image,
           'og:image:type': 'image/jpeg',
           'og:image:width': '800',
           'og:image:height': '420',

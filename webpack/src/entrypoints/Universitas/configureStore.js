@@ -4,7 +4,7 @@ import { compose } from 'utils/misc' // use devtools if available
 import createSagaMiddleware from 'redux-saga'
 import * as reducers from './reducers'
 import rootSaga from './saga'
-import { routesMap, routerOptions } from 'ducks/router'
+import { routesMap, routerOptions } from 'ducks/router.js'
 
 // creates a redux store with hot reloaded reducer and redux-saga
 const configureStore = (initialState = {}, initialEntries = []) => {

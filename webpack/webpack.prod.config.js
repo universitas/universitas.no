@@ -1,6 +1,5 @@
 const webpack = require('webpack')
 const config = require('./webpack.config.js')
-// const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -22,16 +21,16 @@ const extractCss = new MiniCssExtractPlugin({ filename: outputhash + '.css' })
 const progressBar = new ProgressBarPlugin({ width: 50 })
 config.plugins.push(productionEnv, extractCss, progressBar)
 
-// optimization
-const optimizeCss = new OptimizeCssAssetsPlugin({
-  cssProcessorOptions: { map: { inline: false } },
-})
-const uglifyJs = new UglifyJsPlugin({
-  cache: true,
-  parallel: 4,
-  sourceMap: true,
-})
-config.optimization.minimizer.push(uglifyJs, optimizeCss)
+config.optimization.minimizer = [
+  new OptimizeCssAssetsPlugin({
+    cssProcessorOptions: { map: { inline: false } },
+  }),
+  new UglifyJsPlugin({
+    cache: true,
+    parallel: 4,
+    sourceMap: true,
+  }),
+]
 
 // Replace style loader with minicssextractplugin loader
 const scssLoader = config.module.rules.find(l => l.test.test('.scss'))

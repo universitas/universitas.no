@@ -35,9 +35,13 @@ const FullThumb = ({ src, title, width, height }) => (
   </svg>
 )
 
-const AssignPhoto = ({ pk, selected }) => (
-  <div className={cx('assign', { selected })}>
-    <Tool icon={selected ? 'Remove' : 'Add'} />
+const AssignPhoto = ({ pk, selected, ...props }) => (
+  <div
+    className={cx('assign', { selected })}
+    {...props}
+    title={selected ? 'fjern bilde fra saken' : 'legg til bilde'}
+  >
+    <Tool icon={selected ? 'Delete' : 'Add'} />
   </div>
 )
 
@@ -50,8 +54,14 @@ const GridItem = ({
   selected,
   ...data
 }) => (
-  <div key={pk} onClick={onClick} className={className}>
-    {detail == 'images' && <AssignPhoto pk={pk} selected={selected} />}
+  <div
+    key={pk}
+    onClick={detail == 'images' ? null : onClick}
+    className={className}
+  >
+    {detail == 'images' && (
+      <AssignPhoto pk={pk} selected={selected} onClick={onClick} />
+    )}
     {detail == 'crop' ? (
       <FullThumbWithCropBox src={small} title={data.filename} {...data} />
     ) : (

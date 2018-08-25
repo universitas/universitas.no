@@ -11,11 +11,16 @@ const tableStyle = {
   padding: '0.2em',
 }
 
-const Icon = ({ name }) =>
-  Icons[name]({
-    style: iconStyle,
-    onClick: logMessage(`clicked ${name}`),
-  })
+const Icon = ({ name }) => {
+  try {
+    return Icons[name]({
+      style: iconStyle,
+      onClick: logMessage(`clicked ${name}`),
+    })
+  } catch (e) {
+    return <div>{name} is not an icon</div>
+  }
+}
 
 export default () => {
   return (
