@@ -7,7 +7,6 @@ class Select extends React.Component {
   constructor(props) {
     super(props)
     const model = models[props.model] || {}
-    console.log(model.components)
     this.components = {
       DropdownIndicator,
       ClearIndicator,
@@ -20,14 +19,21 @@ class Select extends React.Component {
     this.itemsToOptions = model.itemsToOptions || R.values
   }
 
+  componentDidMount() {
+    const { value, items, fetch } = this.props
+    const item = items[value]
+    if (value && !item) fetch(value)
+  }
+
   render() {
-    const { value, items, ...props } = this.props
+    const { value, items, onChange, ...props } = this.props
+    const options = this.itemsToOptions(items)
     return (
       <ReactSelect
         getOptionLabel={this.getOptionLabel}
         getOptionValue={this.getOptionValue}
         components={this.components}
-        options={this.itemsToOptions(items)}
+        options={options}
         styles={this.styles}
         menuIsOpen={undefined}
         {...props}
@@ -36,6 +42,8 @@ class Select extends React.Component {
         placeholder="Velg ..."
         noOptionsMessage={() => 'Ingen treff'}
         loadingMessage={() => 'Laster inn...'}
+        onChange={value => onChange(value && value.id)}
+        value={items[value]}
       />
     )
   }

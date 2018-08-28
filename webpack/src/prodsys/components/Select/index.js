@@ -10,5 +10,7 @@ const mapStateToProps = (state, { model }) => ({
 })
 const mapDispatchToProps = (dispatch, { model }) => ({
   search: params => dispatch(modelActions(model).itemsRequested(params)),
+  fetch: id => dispatch(modelActions(model).itemRequested(id)),
 })
+
 export default connect(mapStateToProps, mapDispatchToProps)(Select)

@@ -48,6 +48,7 @@ export const EditableField = ({
   item,
   className,
   onChange,
+  previews = [],
   ...args
 }) => {
   const { width, height, small, large } = item
@@ -59,6 +60,7 @@ export const EditableField = ({
         value={value}
         size={[width, height]}
         onChange={onChange}
+        previews={previews}
       />
     </div>
   )

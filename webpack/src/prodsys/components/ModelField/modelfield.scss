@@ -60,6 +60,7 @@
     align-items: stretch;
     flex-direction: column;
   }
+  &.cropbox,
   &.pdfs,
   &.image,
   &.thumb {

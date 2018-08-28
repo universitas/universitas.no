@@ -50,10 +50,11 @@ const optionsFields = {
     max_length: 254,
   },
   byline_photo: {
-    type: 'image',
+    type: 'select',
     required: false,
-    read_only: true,
+    read_only: false,
     label: 'Byline photo',
+    to: 'photos',
   },
   thumb: {
     type: 'thumb',

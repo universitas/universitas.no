@@ -6,7 +6,7 @@ const formatDate = d => text.formatDate(d, 'DD. MMM YY')
 
 const isPast = d => new Date(d) < new Date()
 
-const Stint = ({ position, start_date, end_date }) => (
+const Stint = ({ position, start_date, end_date, ...props }) => (
   <div className={cx({ past: isPast(end_date) }, 'Stint')}>
     <span className={cx('position')}>{position}</span>
     <span className={cx('fromdate')}>{formatDate(start_date)}</span>

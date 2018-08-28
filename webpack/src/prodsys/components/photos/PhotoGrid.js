@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import Thumb from 'components/Thumb'
 import { PhotoStats } from '.'
 import { MODEL as model, actions, selectors } from './model.js'
-import { Add, Remove } from 'components/Icons'
+import { Add, Delete } from 'components/Icons'
 import { Tool } from 'components/tool'
 import './PhotoGrid.scss'
 

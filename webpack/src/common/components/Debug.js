@@ -14,7 +14,9 @@ const Debug = props => (
       lineHeight: 1.1,
       whiteSpace: 'pre-wrap',
       flex: 1,
-      overflowY: 'auto',
+      overflow: 'auto',
+      maxHeight: '100%',
+      minHeight: '0',
     }}
   >
     {toJson(props)}
