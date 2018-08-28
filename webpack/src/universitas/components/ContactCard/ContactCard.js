@@ -1,5 +1,5 @@
 import { capitalize, phoneFormat } from 'utils/text'
-import avatar from './avatar.jpg'
+import fallbackavatar from 'images/anonymous.jpg'
 import cx from 'classnames'
 
 const Field = ({ name, label, value }) => (

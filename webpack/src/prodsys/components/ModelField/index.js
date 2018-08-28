@@ -1,4 +1,5 @@
 import * as choice from './ChoiceField'
+import * as select from './SelectField.js'
 import * as string from './StringField'
 import * as integer from './IntegerField'
 import * as date from './DateField'
@@ -24,6 +25,7 @@ import './modelfield.scss'
 
 const fieldTypes = {
   choice,
+  select,
   date,
   datetime,
   email,

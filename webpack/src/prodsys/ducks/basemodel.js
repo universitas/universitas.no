@@ -37,7 +37,7 @@ const getSelector = R.curryN(3, (lens, modelName, state) =>
 const defaultSelector = fallback =>
   R.curryN(3, R.pipe(getSelector, R.defaultTo(fallback)))
 
-// :: modelName => {k: selector} -- (redux selector factory)
+// :: modelName -> {k: selector} -- (redux selector factory)
 export const modelSelectors = partialMap({
   getQuery: getSelector(queryLens),
   getNavigation: getSelector(navigationLens),

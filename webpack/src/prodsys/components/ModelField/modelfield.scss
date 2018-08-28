@@ -1,6 +1,4 @@
-@import "../../styles/globals.scss";
-
-$down-arrow: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox="0 0 250 205" xmlns="http://www.w3.org/2000/svg"> <path fill="none" stroke="currentColor" stroke-width="15" d="M 50 80 L 125 155 200 80" /></svg>');
+@import "styles/globals.scss";
 
 .ModelField {
   display: flex;
@@ -23,8 +21,9 @@ $down-arrow: url('data:image/svg+xml;utf8,<svg width="1em" height="1em" viewBox=
   }
   select {
     appearance: none;
-    background-image: $down-arrow;
+    background-image: $chevron-down-icon;
     background-position: top 50% right 0.3rem;
+    background-size: 0.9rem;
     background-repeat: no-repeat;
   }
   select,
