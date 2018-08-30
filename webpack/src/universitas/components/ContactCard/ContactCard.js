@@ -1,5 +1,5 @@
 import { capitalize, phoneFormat } from 'utils/text'
-import fallbackavatar from 'images/anonymous.jpg'
+import anonymous from 'images/anonymous.jpg'
 import cx from 'classnames'
 
 const Field = ({ name, label, value }) => (
@@ -30,7 +30,7 @@ export const ContactCard = ({
   display_name: name,
   phone,
   email,
-  thumb = avatar,
+  thumb = anonymous,
 }) => (
   <div className="ContactCard">
     <img className="thumb" src={thumb} alt={name} />
