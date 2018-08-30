@@ -2,6 +2,7 @@ import { modelActions, modelSelectors } from 'ducks/basemodel'
 export const MODEL = 'contributors'
 export const actions = modelActions(MODEL)
 export const selectors = modelSelectors(MODEL)
+import anonymous from 'images/anonymous.png'
 
 const optionsFields = {
   id: {
@@ -35,6 +36,11 @@ const optionsFields = {
     label: 'Navn',
     max_length: 50,
   },
+  title: {
+    type: 'string',
+    read_only: true,
+    label: 'Tittel',
+  },
   phone: {
     type: 'phone',
     required: false,
@@ -50,16 +56,19 @@ const optionsFields = {
     max_length: 254,
   },
   byline_photo: {
-    type: 'image',
+    type: 'select',
+    filter: { category: 4 },
     required: false,
-    read_only: true,
+    read_only: false,
     label: 'Byline photo',
+    to: 'photos',
   },
   thumb: {
     type: 'thumb',
     required: false,
     read_only: true,
     label: 'Bylinebilde',
+    fallback: anonymous,
   },
   verified: {
     type: 'boolean',

@@ -480,7 +480,7 @@ class ImageFile(  # type: ignore
         super().save(*args, **kwargs)
 
 
-@receiver(models.signals.pre_save, sender=ImageFile)
+@receiver(models.signals.post_save, sender=ImageFile)
 def imagefile_changed(sender, instance, raw, **kwargs):
     """cache buster"""
     nochange = sender.objects.filter(
@@ -491,6 +491,7 @@ def imagefile_changed(sender, instance, raw, **kwargs):
     if raw or nochange:
         return
 
+    assert instance.pk, 'image should have primary key post save'
     from apps.stories.models import Story
     Story.objects.filter(images__imagefile=instance
                          ).update(modified=instance.modified)

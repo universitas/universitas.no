@@ -12,6 +12,7 @@ storiesOf('Elements', module)
   .add('icons', () => <IconTable />)
 
 require('./forms')
+require('./select')
 import Editor from 'markup/components/Editor'
 storiesOf('Editor', module).add('new editor', () => (
   <Editor value={'hello [world]!'} />

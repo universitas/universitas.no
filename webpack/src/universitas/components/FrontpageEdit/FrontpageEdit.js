@@ -19,7 +19,6 @@ const frontpageDjango = () =>
 const frontpageProdsys = () => `${global.location.origin}/prodsys/`
 
 const djangoUrl = location => {
-  console.log(location.type)
   switch (location.type) {
     case STORY:
       return [

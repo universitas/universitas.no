@@ -1,0 +1,25 @@
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    opacity: 0.2;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+.Throbber {
+  circle {
+    animation: 0.9s ease infinite bounce;
+  }
+  #one {
+    animation-delay: 0s;
+  }
+  #two {
+    animation-delay: 0.3s;
+  }
+  #three {
+    animation-delay: 0.6s;
+  }
+}

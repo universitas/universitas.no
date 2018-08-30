@@ -1,4 +1,5 @@
 import * as choice from './ChoiceField'
+import * as select from './SelectField.js'
 import * as string from './StringField'
 import * as integer from './IntegerField'
 import * as date from './DateField'
@@ -24,6 +25,7 @@ import './modelfield.scss'
 
 const fieldTypes = {
   choice,
+  select,
   date,
   datetime,
   email,
@@ -64,7 +66,7 @@ export const Field = ({
       {R.is(String, label) && <label className={cx('label')}>{label}</label>}
       <ModelField
         className={cx('value')}
-        onChange={onChange}
+        onChange={ev => onChange(ev && ev.target ? ev.target.value : ev)}
         value={value}
         {...fieldProps}
       />
@@ -79,8 +81,7 @@ const mapStateToProps = (state, { pk, model, name }) => {
   return R.contains(name, ['crop_box']) ? { value, item } : { value }
 }
 const mapDispatchToProps = (dispatch, { pk, model, name }) => ({
-  onChange: e => {
-    const value = R.pathOr(e, ['target', 'value'], e)
+  onChange: value => {
     dispatch(modelActions(model).fieldChanged(pk, name, value))
   },
 })

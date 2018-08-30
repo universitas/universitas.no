@@ -1,0 +1,539 @@
+{
+  "48250": {
+    "id": 48250,
+    "url": "http://localhost:8000/api/photos/48250/",
+    "filename": "29-nyh-professorgraf-HL-2.48250.png",
+    "filesize": 92224,
+    "artist": "Håken Lid",
+    "description": "kakediagram professor",
+    "category": 3,
+    "contributor": "http://localhost:8000/api/contributors/15039/",
+    "small":
+      "http://localhost:8000/media/imgcache/a0/ae/a0ae00dfe0e9ca40664a9e5d738000ea/29-nyh-professorgraf-HL-2.48250.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/e6/77/e67760e8cc410bd91ad42b59dad2a7d2/29-nyh-professorgraf-HL-2.48250.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/21/05/2105bfd09abf9911f8db36130f01aa4c/29-nyh-professorgraf-HL-2.48250.jpg",
+    "original":
+      "http://localhost:8000/media/2018/05/28/29-nyh-professorgraf-HL-2.48250.png",
+    "width": 803,
+    "height": 1573,
+    "mimetype": "image/png",
+    "cropping_method": 100,
+    "method": "manuell beskjæring",
+    "created": "2018-05-28T16:36:45.893627+02:00",
+    "modified": "2018-08-17T16:59:04.415721+02:00",
+    "crop_box": {
+      "left": 0,
+      "top": 0,
+      "bottom": 1,
+      "right": 1,
+      "x": 0.7552,
+      "y": 0.8464
+    },
+    "usage": 0
+  },
+  "48259": {
+    "id": 48259,
+    "url": "http://localhost:8000/api/photos/48259/",
+    "filename": "Duerer-apocalypse.48259.png",
+    "filesize": 1883051,
+    "artist": "Albrecht Durer",
+    "description": "Apokalypse",
+    "category": 5,
+    "contributor": null,
+    "small":
+      "http://localhost:8000/media/imgcache/fa/cc/facc664e3a372592bdc22155959e3670/Duerer-apocalypse.48259.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/9c/b8/9cb8f0da1a9f0d1880a86059886e3719/Duerer-apocalypse.48259.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/21/96/2196cb88640f62a28787b590bcd606d4/Duerer-apocalypse.48259.jpg",
+    "original":
+      "http://localhost:8000/media/2018/05/29/Duerer-apocalypse.48259.png",
+    "width": 1402,
+    "height": 2000,
+    "mimetype": "image/png",
+    "cropping_method": 100,
+    "method": "manuell beskjæring",
+    "created": "2018-05-29T13:48:03.390176+02:00",
+    "modified": "2018-08-20T19:46:52.087546+02:00",
+    "crop_box": {
+      "left": 0,
+      "top": 0,
+      "bottom": 1,
+      "right": 1,
+      "x": 0.5518,
+      "y": 0.3483
+    },
+    "usage": 0
+  },
+  "48261": {
+    "id": 48261,
+    "url": "http://localhost:8000/api/photos/48261/",
+    "filename": "apokalypse-kattepus.48261.png",
+    "filesize": 8988228,
+    "artist": "Håken Lid",
+    "description": "Apokalypse katt vil sprekke jordkloden som er en ballong.",
+    "category": 2,
+    "contributor": "http://localhost:8000/api/contributors/15039/",
+    "small":
+      "http://localhost:8000/media/imgcache/4f/6b/4f6bba50602566e940b22a99cd256bac/apokalypse-kattepus.48261.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/c3/ff/c3ff5b4c3a8a1b3a926add615e65d5ab/apokalypse-kattepus.48261.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/e0/c1/e0c142917295d506a7ef6e30c831d64d/apokalypse-kattepus.48261.jpg",
+    "original":
+      "http://localhost:8000/media/2018/05/29/apokalypse-kattepus.48261.png",
+    "width": 4000,
+    "height": 4000,
+    "mimetype": "image/png",
+    "cropping_method": 100,
+    "method": "manuell beskjæring",
+    "created": "2018-05-29T13:59:51.471471+02:00",
+    "modified": "2018-08-19T00:50:38.613542+02:00",
+    "crop_box": {
+      "left": 0.1266,
+      "top": 0.0155,
+      "bottom": 0.9613,
+      "right": 0.8273,
+      "x": 0.4756,
+      "y": 0.6344
+    },
+    "usage": 0
+  },
+  "48263": {
+    "id": 48263,
+    "url": "http://localhost:8000/api/photos/48263/",
+    "filename": "Fnugg.48263.png",
+    "filesize": 313920,
+    "artist": "Håken Lid",
+    "description": "Kort med skummel hund",
+    "category": 2,
+    "contributor": "http://localhost:8000/api/contributors/15039/",
+    "small":
+      "http://localhost:8000/media/imgcache/e8/33/e83385302e3df9549ffc4cbf511a9fc5/Fnugg.48263.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/15/ab/15abd7d04ac6eeeb95e87ffadda5d3a8/Fnugg.48263.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/7a/50/7a509c04832d2947658df8c5a174c5f6/Fnugg.48263.jpg",
+    "original": "http://localhost:8000/media/2018/07/08/Fnugg.48263.png",
+    "width": 300,
+    "height": 419,
+    "mimetype": "image/png",
+    "cropping_method": 100,
+    "method": "manuell beskjæring",
+    "created": "2018-07-08T23:56:55.528114+02:00",
+    "modified": "2018-08-20T19:46:04.829383+02:00",
+    "crop_box": {
+      "left": 0.1297,
+      "top": 0.1712,
+      "bottom": 0.8913,
+      "right": 0.9212,
+      "x": 0.578,
+      "y": 0.3917
+    },
+    "usage": 0
+  },
+  "48264": {
+    "id": 48264,
+    "url": "http://localhost:8000/api/photos/48264/",
+    "filename": "vampire-power-1.48264.jpg",
+    "filesize": 13081,
+    "artist": "wikimedia",
+    "description": "En vampyr",
+    "category": 5,
+    "contributor": null,
+    "small":
+      "http://localhost:8000/media/imgcache/b8/7c/b87c10ef735c7b778f9b553b5924dc09/vampire-power-1.48264.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/61/17/61176962dbd430ab0034bc47725fc27a/vampire-power-1.48264.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/29/e1/29e1a2bc4bdf475332096c73fc9db2b6/vampire-power-1.48264.jpg",
+    "original":
+      "http://localhost:8000/media/2018/07/08/vampire-power-1.48264.jpg",
+    "width": 400,
+    "height": 397,
+    "mimetype": "image/jpeg",
+    "cropping_method": 100,
+    "method": "manuell beskjæring",
+    "created": "2018-07-08T23:56:58.527506+02:00",
+    "modified": "2018-08-21T02:08:08.479113+02:00",
+    "crop_box": {
+      "left": 0.1967,
+      "top": 0.0646,
+      "bottom": 0.8035,
+      "right": 0.7549,
+      "x": 0.4612,
+      "y": 0.3348
+    },
+    "usage": 0
+  },
+  "48269": {
+    "id": 48269,
+    "url": "http://localhost:8000/api/photos/48269/",
+    "filename": "photo-1457410129867-5999af49daf7.48269.jpg",
+    "filesize": 22722,
+    "artist": "Håken Lid",
+    "description": "Bilde av en søt katt",
+    "category": 5,
+    "contributor": null,
+    "small":
+      "http://localhost:8000/media/imgcache/56/16/561685d537ed8dac4432195c949a4ae3/photo-1457410129867-5999af49daf7.48269.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/94/10/94108a720dea18782d47b46d74183cc3/photo-1457410129867-5999af49daf7.48269.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/ac/ea/acea2131bbf01181b400dc56ae999998/photo-1457410129867-5999af49daf7.48269.jpg",
+    "original":
+      "http://localhost:8000/media/2018/07/08/photo-1457410129867-5999af49daf7.48269.jpg",
+    "width": 400,
+    "height": 265,
+    "mimetype": "image/jpeg",
+    "cropping_method": 100,
+    "method": "manuell beskjæring",
+    "created": "2018-07-09T01:29:11.074770+02:00",
+    "modified": "2018-08-19T15:04:19.649125+02:00",
+    "crop_box": {
+      "left": 0.4261,
+      "top": 0.0318,
+      "bottom": 0.9532,
+      "right": 0.9519,
+      "x": 0.7596,
+      "y": 0.4978
+    },
+    "usage": 1
+  },
+  "48273": {
+    "id": 48273,
+    "url": "http://localhost:8000/api/photos/48273/",
+    "filename": "blake-newton.48273.jpg",
+    "filesize": 323888,
+    "artist": "Håken Lid",
+    "description": "Heisann hoppsann!!!",
+    "category": 1,
+    "contributor": "http://localhost:8000/api/contributors/15039/",
+    "small":
+      "http://localhost:8000/media/imgcache/b5/9f/b59f08aa808affd65423ca7a2b87a96d/blake-newton.48273.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/23/a2/23a2adfde3f3afa073fc7a439b9cffef/blake-newton.48273.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/01/cd/01cdb2187fccbe1ddc4b5e69a8ac4b7d/blake-newton.48273.jpg",
+    "original": "http://localhost:8000/media/2018/08/15/blake-newton.48273.jpg",
+    "width": 1536,
+    "height": 1180,
+    "mimetype": "image/jpeg",
+    "cropping_method": 100,
+    "method": "manuell beskjæring",
+    "created": "2018-08-15T18:26:57.946996+02:00",
+    "modified": "2018-08-19T13:38:56.433050+02:00",
+    "crop_box": {
+      "left": 0.2159,
+      "top": 0.1105,
+      "bottom": 0.9246,
+      "right": 0.9014,
+      "x": 0.6849,
+      "y": 0.4454
+    },
+    "usage": 0
+  },
+  "48281": {
+    "id": 48281,
+    "url": "http://localhost:8000/api/photos/48281/",
+    "filename": "1-MAG-BAKSIDEBILDE-MC.48281.jpg",
+    "filesize": 1055146,
+    "artist": "Håken Lid",
+    "description": "Bilde av fyr",
+    "category": 1,
+    "contributor": "http://localhost:8000/api/contributors/15039/",
+    "small":
+      "http://localhost:8000/media/imgcache/49/71/4971cd9b0fa018487a4c8f517a80c905/1-MAG-BAKSIDEBILDE-MC.48281.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/2f/b1/2fb1359baac10472eabcb4b1c323e158/1-MAG-BAKSIDEBILDE-MC.48281.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/47/dc/47dc23451f5d39ed8ac8265f291b94bf/1-MAG-BAKSIDEBILDE-MC.48281.jpg",
+    "original":
+      "http://localhost:8000/media/2018/08/15/1-MAG-BAKSIDEBILDE-MC.48281.jpg",
+    "width": 3626,
+    "height": 2432,
+    "mimetype": "image/jpeg",
+    "cropping_method": 100,
+    "method": "manuell beskjæring",
+    "created": "2018-08-15T20:10:52.985018+02:00",
+    "modified": "2018-08-24T16:28:15.394486+02:00",
+    "crop_box": {
+      "left": 0.2565,
+      "top": 0.1129,
+      "bottom": 1,
+      "right": 1,
+      "x": 0.7517,
+      "y": 0.6015
+    },
+    "usage": 2
+  },
+  "48284": {
+    "id": 48284,
+    "url": "http://localhost:8000/api/photos/48284/",
+    "filename": "johannes3-48078.48284.jpg",
+    "filesize": 75019,
+    "artist": "Håken Lid",
+    "description": "En fyr på toget!",
+    "category": 1,
+    "contributor": "http://localhost:8000/api/contributors/15039/",
+    "small":
+      "http://localhost:8000/media/imgcache/f7/ea/f7eab11f5d30159da023a6a5ac81bf92/johannes3-48078.48284.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/1a/bc/1abc7a745e617fe5cc8e0e104940540c/johannes3-48078.48284.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/49/d3/49d37482f293c1dffa5625f27e7d21de/johannes3-48078.48284.jpg",
+    "original":
+      "http://localhost:8000/media/2018/08/17/johannes3-48078.48284.jpg",
+    "width": 1500,
+    "height": 844,
+    "mimetype": "image/jpeg",
+    "cropping_method": 100,
+    "method": "manuell beskjæring",
+    "created": "2018-08-17T21:45:29.063861+02:00",
+    "modified": "2018-08-24T16:26:41.306852+02:00",
+    "crop_box": {
+      "left": 0.3206,
+      "top": 0.0398,
+      "bottom": 0.8738,
+      "right": 0.9166,
+      "x": 0.6751,
+      "y": 0.3239
+    },
+    "usage": 2
+  },
+  "48286": {
+    "id": 48286,
+    "url": "http://localhost:8000/api/photos/48286/",
+    "filename": "kaffelogo3.48286.jpg",
+    "filesize": 178998,
+    "artist": "Håken Lid",
+    "description": "Heisann hoppsann",
+    "category": 1,
+    "contributor": "http://localhost:8000/api/contributors/15039/",
+    "small":
+      "http://localhost:8000/media/imgcache/a9/bc/a9bc93989af514a8336896b0648dd503/kaffelogo3.48286.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/6c/7d/6c7df7fc89356bd23dc6d92cba98a091/kaffelogo3.48286.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/41/c2/41c226b83ef3051ab3fed0ea3c55009a/kaffelogo3.48286.jpg",
+    "original": "http://localhost:8000/media/2018/08/22/kaffelogo3.48286.jpg",
+    "width": 1464,
+    "height": 1468,
+    "mimetype": "image/jpeg",
+    "cropping_method": 100,
+    "method": "manuell beskjæring",
+    "created": "2018-08-22T23:30:39.034027+02:00",
+    "modified": "2018-08-24T16:27:47.381531+02:00",
+    "crop_box": {
+      "left": 0.0242,
+      "top": 0.0138,
+      "bottom": 0.9968,
+      "right": 1,
+      "x": 0.4959,
+      "y": 0.5521
+    },
+    "usage": 0
+  },
+  "48287": {
+    "id": 48287,
+    "url": "http://localhost:8000/api/photos/48287/",
+    "filename": "kaffelogo.48287.jpg",
+    "filesize": 185400,
+    "artist": "Håken Lid",
+    "description": "Heisann hoppsann",
+    "category": 1,
+    "contributor": "http://localhost:8000/api/contributors/15039/",
+    "small":
+      "http://localhost:8000/media/imgcache/00/05/0005e9b27fe468dc8cc3eca191cc1f60/kaffelogo.48287.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/ba/6e/ba6ec882faf1a0ca06456d2ce2b913da/kaffelogo.48287.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/5e/59/5e5937f61414b4ad543e182b6dfebf7c/kaffelogo.48287.jpg",
+    "original": "http://localhost:8000/media/2018/08/22/kaffelogo.48287.jpg",
+    "width": 1464,
+    "height": 1468,
+    "mimetype": "image/jpeg",
+    "cropping_method": 5,
+    "method": "detaljer",
+    "created": "2018-08-22T23:30:40.463604+02:00",
+    "modified": "2018-08-22T23:30:49.667667+02:00",
+    "crop_box": {
+      "left": 0.11,
+      "top": 0.1688,
+      "bottom": 0.5925,
+      "right": 0.6581,
+      "x": 0.4894,
+      "y": 0.3375
+    },
+    "usage": 1
+  },
+  "48289": {
+    "id": 48289,
+    "url": "http://localhost:8000/api/photos/48289/",
+    "filename": "kaffekopp-segl.48289.png",
+    "filesize": 70514,
+    "artist": "Håken Lid",
+    "description": "Heisann hoppsann",
+    "category": 1,
+    "contributor": "http://localhost:8000/api/contributors/15039/",
+    "small":
+      "http://localhost:8000/media/imgcache/63/0d/630d38723ecb9ce19b3c9ea317a4ab76/kaffekopp-segl.48289.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/8d/a4/8da431bef177f26fe45e0cc0a2a949ac/kaffekopp-segl.48289.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/45/17/45173c83737640514cb0572bf2858ee9/kaffekopp-segl.48289.jpg",
+    "original":
+      "http://localhost:8000/media/2018/08/22/kaffekopp-segl.48289.png",
+    "width": 1500,
+    "height": 1500,
+    "mimetype": "image/png",
+    "cropping_method": 100,
+    "method": "manuell beskjæring",
+    "created": "2018-08-22T23:30:45.413485+02:00",
+    "modified": "2018-08-24T16:27:25.090974+02:00",
+    "crop_box": {
+      "left": 0.0051,
+      "top": 0.0273,
+      "bottom": 1,
+      "right": 0.985,
+      "x": 0.5254,
+      "y": 0.4591
+    },
+    "usage": 1
+  },
+  "48290": {
+    "id": 48290,
+    "url": "http://localhost:8000/api/photos/48290/",
+    "filename": "segl3.48290.png",
+    "filesize": 11850,
+    "artist": "Håken Lid",
+    "description": "Heisann hoppsann",
+    "category": 1,
+    "contributor": "http://localhost:8000/api/contributors/15039/",
+    "small":
+      "http://localhost:8000/media/imgcache/3d/40/3d4056562906b5601b42ee21b91ad174/segl3.48290.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/da/f9/daf9b7655f51f1725ba12cbe05289e7a/segl3.48290.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/7b/04/7b043e995c5647b4b45807810fbc0522/segl3.48290.jpg",
+    "original": "http://localhost:8000/media/2018/08/22/segl3.48290.png",
+    "width": 700,
+    "height": 700,
+    "mimetype": "image/png",
+    "cropping_method": 100,
+    "method": "manuell beskjæring",
+    "created": "2018-08-22T23:30:46.363491+02:00",
+    "modified": "2018-08-24T16:26:26.209158+02:00",
+    "crop_box": {
+      "left": 0.11,
+      "top": 0.0823,
+      "bottom": 0.9261,
+      "right": 0.9412,
+      "x": 0.5662,
+      "y": 0.4886
+    },
+    "usage": 1
+  },
+  "48291": {
+    "id": 48291,
+    "url": "http://localhost:8000/api/photos/48291/",
+    "filename": "oppdrag-utfort.48291.jpg",
+    "filesize": 46247,
+    "artist": "Håken Lid",
+    "description": "Heisann hoppsann",
+    "category": 1,
+    "contributor": "http://localhost:8000/api/contributors/15039/",
+    "small":
+      "http://localhost:8000/media/imgcache/36/7b/367b41795e51889e2b2ab2417ce53ed8/oppdrag-utfort.48291.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/03/3b/033b91f15ef8e2b23a60567fd0efc882/oppdrag-utfort.48291.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/37/dc/37dc14360909497ed332e67241bb5170/oppdrag-utfort.48291.jpg",
+    "original":
+      "http://localhost:8000/media/2018/08/22/oppdrag-utfort.48291.jpg",
+    "width": 800,
+    "height": 800,
+    "mimetype": "image/jpeg",
+    "cropping_method": 5,
+    "method": "detaljer",
+    "created": "2018-08-22T23:30:48.054026+02:00",
+    "modified": "2018-08-22T23:32:47.096024+02:00",
+    "crop_box": {
+      "left": 0.1339,
+      "top": 0.2025,
+      "bottom": 0.7875,
+      "right": 0.8213,
+      "x": 0.1708,
+      "y": 0.6825
+    },
+    "usage": 0
+  },
+  "48292": {
+    "id": 48292,
+    "url": "http://localhost:8000/api/photos/48292/",
+    "filename": "segl2.48292.png",
+    "filesize": 11908,
+    "artist": "Håken Lid",
+    "description": "Heisann hoppsann",
+    "category": 1,
+    "contributor": "http://localhost:8000/api/contributors/15039/",
+    "small":
+      "http://localhost:8000/media/imgcache/5c/be/5cbe833fe6b98fb606cc5916d49c01eb/segl2.48292.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/35/be/35bea3f49f7fde1aa7bccbe6bd7d6f9b/segl2.48292.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/9a/66/9a66b16716a908d589f374448a9a27d6/segl2.48292.jpg",
+    "original": "http://localhost:8000/media/2018/08/22/segl2.48292.png",
+    "width": 700,
+    "height": 700,
+    "mimetype": "image/png",
+    "cropping_method": 100,
+    "method": "manuell beskjæring",
+    "created": "2018-08-22T23:30:49.274111+02:00",
+    "modified": "2018-08-24T16:27:56.817838+02:00",
+    "crop_box": {
+      "left": 0.0805,
+      "top": 0.0842,
+      "bottom": 0.929,
+      "right": 0.9535,
+      "x": 0.4537,
+      "y": 0.4926
+    },
+    "usage": 0
+  },
+  "48293": {
+    "id": 48293,
+    "url": "http://localhost:8000/api/photos/48293/",
+    "filename": "DSC-0644.48293.jpg",
+    "filesize": 328340,
+    "artist": "Håken Lid",
+    "description": "34,35,312,320.320953",
+    "category": 1,
+    "contributor": "http://localhost:8000/api/contributors/15039/",
+    "small":
+      "http://localhost:8000/media/imgcache/c2/a0/c2a0e02f69ffab3edb49c87be4e0b0bd/DSC-0644.48293.jpg",
+    "large":
+      "http://localhost:8000/media/imgcache/a1/f0/a1f020d5bf34cf90422bfb9816d43ff7/DSC-0644.48293.jpg",
+    "thumb":
+      "http://localhost:8000/media/imgcache/1f/9c/1f9c318b97e2760bbeaedc8d4ef0cd18/DSC-0644.48293.jpg",
+    "original": "http://localhost:8000/media/2018/08/20/DSC-0644.48293.jpg",
+    "width": 4000,
+    "height": 2256,
+    "mimetype": "image/jpeg",
+    "cropping_method": 100,
+    "method": "manuell beskjæring",
+    "created": "2018-08-20T11:02:35+02:00",
+    "modified": "2018-08-24T16:27:30.034314+02:00",
+    "crop_box": {
+      "left": 0.3438,
+      "top": 0.2,
+      "bottom": 0.9081,
+      "right": 0.7237,
+      "x": 0.5265,
+      "y": 0.4029
+    },
+    "usage": 0
+  }
+}

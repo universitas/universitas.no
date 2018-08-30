@@ -48,7 +48,6 @@ function* assignPhotoSaga(action) {
   const storyData = yield select(getStory(parent_story))
   const exists = R.find(R.propEq('imagefile', id), storyData.images)
   if (exists) {
-    console.log(exists)
     yield put(deleteStoryImage(exists.id))
     return
   }

@@ -4,8 +4,6 @@ import json
 import logging
 from collections import namedtuple
 
-from model_utils.models import TimeStampedModel
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
@@ -14,6 +12,7 @@ from django.db import models
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
 from utils.decorators import cache_memoize
 
 from .fuzzy_name_search import FuzzyNameSearchMixin
@@ -124,20 +123,20 @@ class Contributor(TimeStampedModel, FuzzyNameSearchMixin, models.Model):
         return self.byline_set.count()
 
     def get_byline_image(self, force_new=False):
-        if self.byline_photo and not force_new:
-            return self.byline_photo
-        from apps.photo.models import ImageFile
-        img = ImageFile.objects.search(
-            filename=f'{self}.jpg',
-            cutoff=0.8,
-        ).profile_images().filter(contributor=None).first()
+        # if self.byline_photo and not force_new:
+        return self.byline_photo
+        # from apps.photo.models import ImageFile
+        # img = ImageFile.objects.search(
+        #     filename=f'{self}.jpg',
+        #     cutoff=0.8,
+        # ).profile_images().filter(contributor=None, ).first()
 
-        if img:
-            self.byline_photo = img
-            self.save()
-            return img
+        # if img:
+        #     self.byline_photo = img
+        #     self.save()
+        #     return img
 
-        return False
+        # return False
 
     @cache_memoize(60 * 5)  # five minutes
     def thumb(self):
@@ -227,7 +226,17 @@ class Contributor(TimeStampedModel, FuzzyNameSearchMixin, models.Model):
                 'management': stint.position.is_management,
                 'active': stint.is_active,
             }
-        return None
+        last_byline = self.byline_set.exclude(title=None).last()
+        title = last_byline.title if last_byline else 'person'
+        return {
+            'title': title,
+            'management': False,
+            'active': False,
+        }
+
+    @property
+    def title(self):
+        return self.position()['title']
 
 
 class Position(models.Model):

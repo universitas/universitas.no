@@ -11,12 +11,7 @@ const StoryDetailText = ({ pk, storytypechoices }) => {
     <div className="panelContent">
       <div className="wrapForm">
         <Field pk={pk} name="working_title" />
-        <Field
-          pk={pk}
-          name="story_type"
-          type="choice"
-          choices={storytypechoices}
-        />
+        <Field pk={pk} name="story_type" />
         <Field pk={pk} name="publication_status" />
         <Field pk={pk} name="created" />
         <Field pk={pk} name="modified" />

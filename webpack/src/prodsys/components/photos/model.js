@@ -28,11 +28,19 @@ const optionsFields = {
     read_only: true,
     label: 'Filstørrelse',
   },
+  contributor: {
+    type: 'select',
+    creatable: true,
+    required: false,
+    read_only: false,
+    label: 'Byline',
+    to: 'contributors',
+  },
   artist: {
     type: 'string',
     required: false,
     read_only: false,
-    label: 'Byline',
+    label: 'Fotokred',
   },
   created: {
     type: 'datetime',
@@ -47,18 +55,17 @@ const optionsFields = {
     label: 'Mime-type',
   },
   category: {
-    type: 'choice',
+    type: 'select',
     required: true,
     read_only: false,
     label: 'Kategori',
     help_text: 'kategori',
-    choices: [
-      { value: 1, display_name: 'foto' },
-      { value: 2, display_name: 'illustrasjon' },
-      { value: 3, display_name: 'diagram' },
-      { value: 4, display_name: 'bylinebilde' },
-      { value: 5, display_name: 'ekstern' },
-      { value: 0, display_name: '–' },
+    options: [
+      { value: 1, label: 'foto' },
+      { value: 2, label: 'illustrasjon' },
+      { value: 3, label: 'diagram' },
+      { value: 4, label: 'bylinebilde' },
+      { value: 5, label: 'ekstern' },
     ],
   },
   cropping_method: {

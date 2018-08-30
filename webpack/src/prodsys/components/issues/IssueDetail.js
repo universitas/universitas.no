@@ -4,13 +4,23 @@ import cx from 'classnames'
 import { IssueTools } from '.'
 import { fields, MODEL, selectors } from './model.js'
 
+const Field = ({ name, ...props }) => (
+  <ModelField
+    key={name}
+    name={name}
+    model={MODEL}
+    {...fields[name]}
+    {...props}
+  />
+)
+
 const IssueDetail = ({ pk }) => (
   <section className="DetailPanel">
     <IssueTools pk={pk} />
     <div className="panelContent">
-      <ModelField {...{ pk, model: MODEL, ...fields.issue_type }} />
-      <ModelField {...{ pk, model: MODEL, ...fields.publication_date }} />
-      <ModelField {...{ pk, model: MODEL, ...fields.pdfs }} />
+      <Field pk={pk} name="issue_type" />
+      <Field pk={pk} name="publication_date" />
+      <Field pk={pk} name="pdfs" />
     </div>
   </section>
 )

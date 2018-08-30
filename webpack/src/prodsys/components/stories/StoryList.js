@@ -4,29 +4,40 @@ import ListPanel from 'components/ListPanel'
 import { StoryTable } from '.'
 import { MODEL, fields } from './model.js'
 
-const filters = fields.publication_status.choices
-  .map(({ value, display_name }) => ({
+const flattenOptions = options => {
+  const retval = []
+  for (const option of options) {
+    if (option.options) retval.push(...flattenOptions(option.options))
+    else retval.push(option)
+  }
+  return retval
+}
+
+const filters = R.pipe(
+  R.path(['publication_status', 'options']),
+  flattenOptions,
+  R.map(({ value, label }) => ({
     value: parseInt(value),
-    label: display_name,
+    label,
     toggle: true,
     attr: 'publication_status__in',
     model: MODEL,
-  }))
-  .filter(choice => choice.value < 10 || choice.value === 100)
-
-filters.push({
-  attr: 'publication_status__in',
-  model: MODEL,
-  value: [],
-  label: <Clear />,
-})
-filters.push({
-  toggle: true,
-  attr: 'ordering',
-  model: MODEL,
-  value: '-modified',
-  label: 'sist endret',
-})
+  })),
+  R.filter(({ value }) => value < 10 || value === 100),
+  R.append({
+    attr: 'publication_status__in',
+    model: MODEL,
+    value: [],
+    label: <Clear />,
+  }),
+  R.append({
+    toggle: true,
+    attr: 'ordering',
+    model: MODEL,
+    value: '-modified',
+    label: 'sist endret',
+  }),
+)(fields)
 
 const StoryList = ({}) => {
   return (

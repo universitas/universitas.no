@@ -6,7 +6,6 @@
   box-shadow: inset -1px -1px 1px rgba(black, 0.4),
     inset 1px 1px 1px rgba(white, 0.3);
 }
-
 .ListPanel {
   display: flex;
   flex-direction: column;
@@ -96,7 +95,7 @@
   .SearchField {
     flex: 1;
     display: flex;
-    // align-items: stretch;
+    align-items: center;
     position: relative;
     input {
       flex: 1;
@@ -105,14 +104,18 @@
       border-radius: 0.2em;
       margin: 0.1em 0.2em;
     }
-    .ClearSearch {
+    .Throbber {
+      font-size: 1.3em;
       color: #888;
-      //padding: 0.2rem;
-      padding: 0.25rem 0.4rem;
-      right: 0;
       position: absolute;
+      right: 1.6rem;
+    }
+    .ClearSearch {
+      position: absolute;
+      right: 0.5rem;
+      color: #888;
       cursor: pointer;
-      //top: 0.1rem;
+      line-height: 0;
       &.disabled {
         opacity: 0.1;
       }

@@ -2,6 +2,7 @@ from rest_framework import serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from apps.contributors.models import Contributor, Stint
+from apps.photo.models import ImageFile
 from django.db.models import Prefetch
 from utils.serializers import AbsoluteURLField
 
@@ -12,6 +13,7 @@ class StintSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stint
         fields = [
+            'id',
             'position',
             'start_date',
             'end_date',
@@ -40,12 +42,14 @@ class ContributorSerializer(serializers.HyperlinkedModelSerializer):
             'verified',
             'stint_set',
             'position',
+            'title',
         ]
 
-    byline_photo = serializers.HyperlinkedRelatedField(
+    byline_photo = serializers.PrimaryKeyRelatedField(
         many=False,
-        read_only=True,
-        view_name='imagefile-detail',
+        queryset=ImageFile.objects.profile_images(),
+        allow_null=True,
+        required=False,
     )
     stint_set = StintSerializer(many=True, read_only=True)
     thumb = AbsoluteURLField()

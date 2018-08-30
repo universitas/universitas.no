@@ -1,5 +1,4 @@
 """ Admin for contributors app.  """
-from apps.stories.admin import BylineInline
 from django.contrib import admin, messages
 from django.utils import timezone
 from django.utils.safestring import mark_safe

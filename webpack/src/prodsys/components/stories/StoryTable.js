@@ -7,7 +7,7 @@ const listFields = R.pipe(
   R.pick([
     'working_title',
     'publication_status',
-    'story_type_name',
+    'story_type',
     'modified',
     'images',
   ]),

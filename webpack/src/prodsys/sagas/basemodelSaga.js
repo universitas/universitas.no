@@ -129,11 +129,20 @@ function* queryChanged(action) {
 }
 
 function* requestItems(action) {
-  const { itemsFetched, getQuery, apiList } = modelFuncs(action)
+  const {
+    itemsFetching,
+    itemsFetched,
+    itemsAppended,
+    getQuery,
+    apiList,
+  } = modelFuncs(action)
+  const append = R.path(['payload', 'append'], action)
   const params =
     R.path(['payload', 'params'])(action) || (yield select(getQuery))
+  yield put(itemsFetching())
   const { response, error } = yield call(apiList, params)
-  if (response) yield put(itemsFetched(response))
+  if (response)
+    yield put(append ? itemsAppended(response) : itemsFetched(response))
   else yield put(errorAction(error))
 }
 

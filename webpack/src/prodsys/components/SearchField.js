@@ -1,10 +1,13 @@
+import cx from 'classnames'
 import { connect } from 'react-redux'
 import { modelSelectors, modelActions } from 'ducks/basemodel'
 import { Clear } from 'components/Icons'
+import Throbber from 'components/Throbber'
 
 const SearchField = ({
   value = '',
   label = 'search',
+  fetching = false,
   searchChanged,
   clearSearch,
 }) => (
@@ -15,10 +18,10 @@ const SearchField = ({
       placeholder={label}
       value={value}
     />
+    {fetching && <Throbber />}
     <ClearSearch disabled={!value} onClick={clearSearch} />
   </div>
 )
-import cx from 'classnames'
 const ClearSearch = ({ onClick, disabled }) => (
   <div onClick={onClick} className={cx('ClearSearch', { disabled })}>
     <Clear />
@@ -27,6 +30,7 @@ const ClearSearch = ({ onClick, disabled }) => (
 
 const mapStateToProps = (state, { model, attr = 'search' }) => ({
   value: R.prop(attr, modelSelectors(model).getQuery(state)),
+  fetching: modelSelectors(model).getFetching(state),
 })
 
 const mapDispatchToProps = (dispatch, { model, attr = 'search' }) => ({

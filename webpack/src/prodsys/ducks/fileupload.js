@@ -56,9 +56,7 @@ const baseItemState = {
   mimetype: '',
   size: 0,
   small: null,
-  artist: '',
   description: '',
-
   fingerprint: null,
   duplicates: null,
   status: 'new',
@@ -81,7 +79,7 @@ export const getUploadPKs = R.pipe(
   R.values,
   R.sortBy(R.prop('timestamp')),
   R.pluck('md5'),
-  R.reverse
+  R.reverse,
 )
 
 const getStories = modelSelectors('stories').getItems
@@ -98,7 +96,7 @@ export const getStoryChoices = R.pipe(
   R.values,
   R.filter(isActive),
   R.sortBy(R.prop('working_title')),
-  R.map(asChoice)
+  R.map(asChoice),
 )
 
 // reducer helper functions
@@ -109,21 +107,21 @@ const cleanFilename = props => {
   const { mimetype, filename } = props
   const extension = mimetype == 'image/png' ? 'png' : 'jpg'
   const base = R.pipe(R.replace(/[-_ ]+/g, '-'), R.replace(/\..*$/g, ''))(
-    filename
+    filename,
   )
   return R.assoc('filename', `${base}.${extension}`, props)
 }
 
 const checkStatus = R.ifElse(
   R.allPass([
-    R.propSatisfies(longerThan(5), 'artist'),
+    R.prop('contributor'),
     R.propSatisfies(longerThan(5), 'description'),
     R.propSatisfies(val => val !== '0', 'category'),
     R.propSatisfies(R.is(Array), 'duplicates'),
     R.propSatisfies(noNulls, 'duplicates'),
   ]),
   R.assoc('status', 'ready'),
-  R.assoc('status', 'invalid')
+  R.assoc('status', 'invalid'),
 )
 const updateDuplicates = ({ id, choice }) =>
   R.map(R.ifElse(R.propEq('id', id), R.assoc('choice', choice), R.identity))
@@ -139,7 +137,7 @@ const getReducer = ({ type, payload = {}, error }) => {
       const { single, verify, ...change } = data
       const updateItem = R.pipe(
         R.mergeDeepLeft(change),
-        verify ? checkStatus : R.identity
+        verify ? checkStatus : R.identity,
       )
       return single
         ? overItem(updateItem)
@@ -157,8 +155,8 @@ const getReducer = ({ type, payload = {}, error }) => {
       return overItem(
         R.pipe(
           R.over(R.lensProp('duplicates'), updateDuplicates(data)),
-          checkStatus
-        )
+          checkStatus,
+        ),
       )
     case CLOSE:
       return R.over(itemsLens, R.dissoc(pk))

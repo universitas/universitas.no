@@ -1,0 +1,197 @@
+@import "styles/globals.scss";
+$blue: #2684ff;
+$selected-color: $blue;
+$active-color: lighten($blue, 15%);
+$focused-color: lighten($blue, 25%);
+
+.PhotoOption {
+  font-size: 0.9rem;
+  $size: 6rem;
+  $row: $size / 4;
+  align-items: center;
+  gap: 0 0.5rem;
+  min-height: $size;
+  display: grid;
+  /* prettier-ignore */
+  grid: 
+    "thumb filename filename" #{$row} 
+    "thumb artist category" #{$row}
+    "thumb created size" #{$row}
+    "description description description" minmax(#{$row}, auto)
+  / minmax(25%, #{$size/2}) 2fr 1fr;
+
+  @each $field in thumb, filename, category, artist, created, size {
+    .#{$field} {
+      grid-area: #{$field};
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      border-bottom: 1px solid #eee;
+      min-width: 1em;
+    }
+  }
+  .description {
+    grid-area: description;
+  }
+  .filename {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  .popup {
+    position: absolute;
+    height: auto;
+    // transform: translate(-50%, -50%);
+    display: none;
+    pointer-events: none;
+  }
+  .thumb {
+    height: 100%;
+    border: none;
+    &:hover .popup {
+      display: block;
+    }
+  }
+}
+
+.ContributorOption {
+  $size: 1.5rem;
+  gap: 0 0.5em;
+  display: grid;
+  grid: "thumb name" auto "thumb title" auto / auto 1fr;
+  align-items: center;
+  .thumb {
+    grid-area: thumb;
+    height: 2 * $size;
+    width: auto;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 100%;
+  }
+  .name {
+    font-weight: bold;
+    border-bottom: 1px solid #eee;
+  }
+}
+
+%input {
+  padding: $margin/2 $margin;
+  background-color: white;
+  line-height: 1.2;
+  height: 1.6rem;
+  border: 1px solid $bordercolor;
+  border-radius: $inputradius;
+  &:focus,
+  &:hover {
+    box-shadow: inset 1px 1px 3px rgba(black, 0.1);
+    border: 1px solid darken($bordercolor, 10);
+  }
+  &:invalid {
+    background-color: lighten(yellow, 30);
+    border: 1px solid red;
+  }
+  &:focus {
+    border: 1px solid #555;
+    outline: none;
+  }
+}
+.ReactSelect {
+  position: relative;
+}
+.react-select {
+  &__indicators {
+    line-height: 0;
+    display: flex;
+    height: 1rem;
+    align-items: center;
+  }
+  &__indicator {
+    width: 0.9rem;
+    margin: 0 0.2rem;
+    cursor: pointer;
+  }
+  &__indicator-separator {
+    height: 0.8em;
+    border-left: 1px solid #ddd;
+    margin-left: 0.2em;
+    padding-left: 0.2em;
+  }
+  &__loading-indicator {
+    font-size: 1.4em;
+    opacity: 0.3;
+  }
+
+  &__control {
+    align-items: center;
+    display: flex;
+    // flex-wrap: wrap;
+    justify-content: space-between;
+    outline: 0 !important;
+    position: relative;
+    @extend %input;
+    &--is-focused {
+      outline: none;
+      border: 1px solid #555 !important;
+    }
+  }
+
+  &__value-container {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    position: relative;
+  }
+  &__single-value {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  &__menu {
+    position: absolute;
+    background-color: hsl(0, 0%, 100%);
+    box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
+    z-index: 1;
+    width: 100%;
+  }
+  &__menu-list {
+    max-height: 24rem;
+    overflow-y: auto;
+    position: relative;
+  }
+  &__option {
+    &:not(:first-child) {
+      border-top: 1px solid #ddd;
+    }
+    padding: 0.2rem 0.3rem;
+    background: transparent;
+    cursor: pointer;
+    background: #fff;
+    &--is-active {
+      background-color: $active-color;
+    }
+    &--is-focused {
+      background-color: $focused-color;
+    }
+    &--is-selected {
+      color: white;
+      background-color: $selected-color;
+    }
+  }
+  &__group {
+    border-top: 1px solid #888;
+    padding: 0.5em 0;
+  }
+  &__group-heading {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #888;
+    padding: 0.2rem 0.3rem;
+    &:after {
+      content: " :";
+      font-weight: bold;
+    }
+  }
+  &__placeholder {
+    opacity: 0.4;
+  }
+}

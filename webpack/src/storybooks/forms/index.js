@@ -54,7 +54,6 @@ class FormFields extends React.Component {
     super(props)
     this.state = initialState
     this.changeState = key => e => {
-      console.log(key, e.target.value)
       this.setState(R.assocPath([key, 'value'], e.target.value))
     }
   }
