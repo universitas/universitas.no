@@ -12,12 +12,12 @@ def test_upload_list(staff_client):
     assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
 
 
-def test_upload_image(staff_client):
+def test_upload_image(staff_client, writer):
     """It is possible to upload an image file"""
     data = {
         'original': dummy_image('starwars.png'),
         'description': 'Star Wars!',
-        'artist': 'George Lucas',
+        'contributor': writer.pk,
         'category': ImageFile.EXTERNAL,
     }
     response = staff_client.post(api_path, data=data)  # multipart content
@@ -33,4 +33,5 @@ def test_upload_image(staff_client):
         'artist',
         'category',
         'created',
+        'contributor',
     }

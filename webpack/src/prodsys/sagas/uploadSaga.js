@@ -1,6 +1,7 @@
 import { put, takeEvery, select, call } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { pushImageFile, apiPost, apiList } from 'services/api'
+import { apiUrlToId } from 'utils/urls'
 import { assignPhoto } from 'ducks/storyimage'
 import {
   ADD,
@@ -44,17 +45,21 @@ const errorAction = error => ({
 
 function* newUploadSaga(action) {
   const { md5, fingerprint } = action.payload
-  const { artist } = yield select(getUpload(md5))
-  const { contributor_name } = yield select(getUser)
-  if (contributor_name && !artist) {
-    yield put(uploadUpdate(md5, { artist: contributor_name, check: false }))
+
+  const user = yield select(getUser)
+  const contributor = user.contributor
+
+  if (contributor) {
+    yield put(
+      uploadUpdate(md5, { contributor: apiUrlToId(contributor), check: false }),
+    )
   }
   const { response, error } = yield call(fetchDupes, { md5, fingerprint })
   if (response) {
     const duplicates = R.pipe(
       R.prop('results'),
       R.map(R.pick(['id'])),
-      R.map(R.assoc('choice', null))
+      R.map(R.assoc('choice', null)),
     )(response)
     yield put(uploadUpdate(md5, { duplicates, check: true }))
     yield put(photosAppended(response))
@@ -66,16 +71,16 @@ function* newUploadSaga(action) {
 function* postUploadSaga(action) {
   const { pk } = action.payload
   const upload = yield select(getUpload(pk))
-  const { objectURL, description, artist, category, story } = upload
+  const { objectURL, description, contributor, category, story } = upload
   const duplicates = R.pipe(
     R.filter(R.propEq('choice', 'replace')),
-    R.pluck('id')
+    R.pluck('id'),
   )(upload.duplicates)
   const filename = slugifyFilename(upload)
   const original = yield call(objectURLtoFile, objectURL, filename)
   const data = {
     description,
-    artist,
+    contributor,
     category,
     duplicates,
   }

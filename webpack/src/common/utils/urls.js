@@ -13,6 +13,16 @@ export const cleanValues = R.pipe(
   encodeURIComponent,
 )
 
+// Convert api url to primary key
+// String -> Number
+export const apiUrlToId = R.pipe(
+  R.toString,
+  R.match(/\d+/g),
+  R.map(parseInt),
+  R.last,
+  R.defaultTo(null),
+)
+
 // Emptiness test where the falsy values 0 and false are not empty
 // but trythy values {} and [] are empty.
 // isEmpty :: Any -> Boolean

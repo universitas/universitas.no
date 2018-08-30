@@ -5,7 +5,16 @@ import {
   parseParam,
   cleanValues,
   isEmpty,
+  apiUrlToId,
 } from 'utils/urls'
+
+test('apiUrlToId', () => {
+  expect(apiUrlToId('1')).toBe(1)
+  expect(apiUrlToId(100)).toBe(100)
+  expect(apiUrlToId('http://example.com/api/things/112/')).toBe(112)
+  expect(apiUrlToId('foo')).toBe(null)
+  expect(apiUrlToId(null)).toBe(null)
+})
 
 test('object to url query parameters', () => {
   expect(
@@ -13,7 +22,7 @@ test('object to url query parameters', () => {
       names_in: [],
       search: 'hello world!',
       limit: 20,
-    })
+    }),
   ).toBe('search=hello%20world!&limit=20')
 
   expect(
@@ -22,7 +31,7 @@ test('object to url query parameters', () => {
       foo: null,
       search: '',
       name: 'Håken',
-    })
+    }),
   ).toBe('data_in=1,7,3,4&name=H%C3%A5ken')
 })
 
@@ -60,7 +69,7 @@ test('parseQuery', () => {
   expect(parseQuery('http://foobar.com')).toEqual({})
   expect(parseQuery('foo=1')).toEqual({ foo: 1 })
   expect(
-    parseQuery('http://localhost:8000/api/?snafoo=1,2,7&foobar=baz')
+    parseQuery('http://localhost:8000/api/?snafoo=1,2,7&foobar=baz'),
   ).toEqual({
     snafoo: [1, 2, 7],
     foobar: 'baz',

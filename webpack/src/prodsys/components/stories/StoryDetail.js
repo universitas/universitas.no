@@ -4,23 +4,12 @@ import { modelSelectors } from 'ducks/basemodel'
 import { StoryTools, StoryDetailImages, StoryDetailText } from '.'
 import { selectors } from './model.js'
 
-const { getChoices } = modelSelectors('storytypes')
-
-const StoryDetail = ({
-  pk,
-  title,
-  detail,
-  publication_status,
-  storytypechoices,
-  images,
-}) => (
+const StoryDetail = ({ pk, title, detail, publication_status, images }) => (
   <section
     className={cx('DetailPanel', 'StoryDetail', `status-${publication_status}`)}
   >
     <StoryTools title={title} detail={detail} pk={pk} />
-    {detail == 'text' && (
-      <StoryDetailText key={pk} pk={pk} storytypechoices={storytypechoices} />
-    )}
+    {detail == 'text' && <StoryDetailText key={pk} pk={pk} />}
     {detail == 'images' && (
       <StoryDetailImages key={pk} pk={pk} images={images} />
     )}
@@ -38,12 +27,10 @@ const mapStateToProps = state => {
     images,
   } = selectors.getCurrentItem(state)
   const { detail = 'text' } = getRouter(state)
-  const storytypechoices = getChoices(state)
   return {
     title: title || working_title,
     images,
     detail,
-    storytypechoices,
     pk: id,
     publication_status,
   }

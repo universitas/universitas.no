@@ -20,12 +20,12 @@ const ContributorDetail = ({ pk }) => {
     <section className="DetailPanel" key={pk}>
       <ContributorTools pk={pk} />
       <div className="panelContent">
+        <Field pk={pk} name="thumb" label />
+        <Field pk={pk} name="byline_photo" />
         <Field pk={pk} name="display_name" />
-        <Field pk={pk} name="status" />
         <Field pk={pk} name="email" />
         <Field pk={pk} name="phone" />
-        <Field pk={pk} name="thumb" />
-        <Field pk={pk} name="byline_photo" />
+        <Field pk={pk} name="status" />
         <Field pk={pk} name="stint_set" />
       </div>
     </section>

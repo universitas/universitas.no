@@ -1,16 +1,14 @@
 import { storiesOf } from '@storybook/react'
-import ConnectedSelect, { Select } from 'components/Select'
+import Select, { Select as DumbSelect } from 'components/Select'
 import initialState from './fixtures/state.js'
-import { boolean, select, radios } from '@storybook/addon-knobs'
+import { object, boolean, select, radios } from '@storybook/addon-knobs'
 import { action } from '@storybook/addon-actions'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 
 const models = R.pipe(
   R.pick(['contributors', 'photos', 'storytypes', 'issues', 'stories']),
-  R.map(
-    R.pipe(R.prop('items'), R.toPairs, R.reverse, R.slice(0, 5), R.fromPairs),
-  ),
+  R.map(R.pipe(R.prop('items'), R.values, R.slice(0, 5))),
 )(initialState)
 
 const menuIsOpen = () => boolean('always open', false) || undefined
@@ -20,29 +18,32 @@ const store = createStore(reducers, initialState)
 const onChange = action('onChange')
 
 storiesOf('Select', module)
-  .addWithJSX('unconnected', () => {
+  .addWithJSX('dumb ModelSelect', () => {
     const modelName = radios('model', R.keys(models), 'contributors')
-    const items = models[modelName]
+    const options = models[modelName]
     const model = boolean('plain?', false) ? undefined : modelName
     const menuIsOpen = boolean('open', true) ? true : undefined
     return (
-      <Select
-        {...{ items, model, menuIsOpen }}
+      <DumbSelect
+        {...{ options, model, menuIsOpen }}
         key={model}
         onChange={onChange}
       />
     )
   })
-  .addWithJSX('connected', () => {
+  .addWithJSX('connected ModelSelect', () => {
     const model = radios('model', R.keys(models), 'contributors')
     const menuIsOpen = boolean('open', true) ? true : undefined
     return (
       <Provider store={store}>
-        <ConnectedSelect
-          {...{ model, menuIsOpen }}
-          key={model}
-          onChange={onChange}
-        />
+        <Select {...{ model, menuIsOpen }} key={model} onChange={onChange} />
       </Provider>
     )
+  })
+  .addWithJSX('plain Select', () => {
+    const options = object('options', [
+      { value: 1, label: 'one' },
+      { value: 2, label: 'two' },
+    ])
+    return <Select options={options} onChange={onChange} />
   })

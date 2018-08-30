@@ -31,27 +31,48 @@ export const fields = {
   publication_status: {
     name: 'publication_status',
     label: 'status',
-    type: 'choice',
+    type: 'select',
     editable: true,
-    choices: [
-      { value: 0, display_name: 'Skisse' },
-      { value: 3, display_name: 'Journalist' },
-      { value: 4, display_name: 'Mellomleder' },
-      { value: 5, display_name: 'Redaktør' },
-      { value: 6, display_name: 'Til Desken' },
-      { value: 7, display_name: 'På Desken' },
-      { value: 9, display_name: 'Nettredaktør' },
-      { value: 10, display_name: 'På nett' },
-      { value: 11, display_name: 'På nett *' },
-      { value: 15, display_name: 'Slettet' },
-      { value: 100, display_name: 'Mal' },
+    options: [
+      {
+        label: 'Prod',
+        options: [
+          { value: 3, label: 'Journalist' },
+          { value: 4, label: 'Mellomleder' },
+          { value: 5, label: 'Redaktør' },
+        ],
+      },
+      {
+        label: 'Desk',
+        options: [
+          { value: 6, label: 'Til Desken' },
+          { value: 7, label: 'På Desken' },
+        ],
+      },
+      {
+        label: 'Nett',
+        options: [
+          { value: 9, label: 'Nettredaktør' },
+          { value: 10, label: 'På nett' },
+          { value: 11, label: 'På nett *' },
+        ],
+      },
+      {
+        label: 'Etc',
+        options: [
+          { value: 0, label: 'Skisse' },
+          { value: 100, label: 'Mal' },
+          { value: 15, label: 'Slettet' },
+        ],
+      },
     ],
   },
   story_type: {
     name: 'story_type',
+    type: 'select',
     label: 'artikkeltype',
-    type: 'storytype',
     editable: true,
+    to: 'storytypes',
   },
   created: {
     name: 'created',

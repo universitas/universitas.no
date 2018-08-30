@@ -1,27 +1,25 @@
-import { connect } from 'react-redux'
-import { modelSelectors, modelActions } from 'ducks/basemodel.js'
 import Select from './Select.js'
+import ModelSelect from './ModelSelect.js'
 import './Select.scss'
+export { Select, ModelSelect }
+export default props =>
+  props.model ? (
+    <ModelSelect {...props} />
+  ) : (
+    <Select {...props} item={getItem(props)} />
+  )
 
-export { Select } // unconnected
-
-const specFilter = R.ifElse(
-  R.either(R.not, R.isEmpty),
-  R.always(R.identity),
-  R.pipe(R.toPairs, R.map(R.apply(R.propEq)), R.allPass, R.filter),
-)
-
-const mapStateToProps = (state, { model, filter }) => {
-  const { getItems, getFetching } = modelSelectors(model)
-  const items = getItems(state)
-  return {
-    items: specFilter(filter)(items),
-    fetching: getFetching(state),
+const flattenOptions = options => {
+  const retval = []
+  for (const option of options) {
+    if (option.options) retval.push(...flattenOptions(option.options))
+    else retval.push(option)
   }
+  return retval
 }
-const mapDispatchToProps = (dispatch, { model }) => ({
-  search: params => dispatch(modelActions(model).itemsRequested(params, true)),
-  fetch: id => dispatch(modelActions(model).itemRequested(id)),
-})
 
-export default connect(mapStateToProps, mapDispatchToProps)(Select)
+const getItem = ({ value = null, options = [] }) => {
+  return R.pipe(flattenOptions, R.indexBy(R.prop('value')), R.prop(value))(
+    options,
+  )
+}

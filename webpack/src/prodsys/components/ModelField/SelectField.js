@@ -23,18 +23,30 @@ const SelectDetail = props => (
 
 const pkFromUrl = R.when(R.is(String), R.pipe(R.match(/\d+/g), R.last))
 
-export const DetailField = ({ value, to, ...props }) => (
+export const DetailField = ({ value, to, options, ...props }) => (
   <span {...props}>
-    <Select value={pkFromUrl(value)} model={to} />
+    <Select value={value} model={to} options={options} noneditable />
   </span>
 )
-export const EditableField = ({ value, to, onChange, filter, ...props }) => (
+export const EditableField = ({
+  value,
+  to,
+  onChange,
+  filter,
+  options,
+  required = true,
+  creatable = false,
+  ...props
+}) => (
   <span {...props}>
     <Select
       filter={filter}
-      value={pkFromUrl(value)}
+      value={value}
+      options={options}
       model={to}
+      isClearable={!required}
       onChange={onChange}
+      creatable={creatable}
     />
   </span>
 )

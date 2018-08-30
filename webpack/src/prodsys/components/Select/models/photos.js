@@ -52,7 +52,7 @@ const Option = R.pipe(reformat, ({ small, ...props }) => (
   </div>
 ))
 
-export const itemsToOptions = R.values
+export const reshape = props => ({ label: props.filename, ...props })
 
 export const components = {
   Option: optionWrapper(Option),

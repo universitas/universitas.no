@@ -9,10 +9,10 @@ const IssueField = ({ editable, ...props }) => (
 
 const GridItem = ({ pk, onClick, className = '' }) => (
   <div key={pk} onClick={onClick} className={cx('GridItem', className)}>
+    <IssueField pk={pk} {...fields.pdfs} label />
     <IssueField pk={pk} {...fields.publication_date} />
     <IssueField pk={pk} {...fields.issue_name} />
     <IssueField pk={pk} {...fields.issue_type} />
-    <IssueField pk={pk} {...fields.pdfs} label />
   </div>
 )
 
