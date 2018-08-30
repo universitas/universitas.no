@@ -15,6 +15,7 @@ export const ITEMS_FETCHED = 'model/ITEMS_FETCHED'
 export const ITEMS_APPENDED = 'model/ITEMS_APPENDED'
 export const ITEM_REQUESTED = 'model/ITEM_REQUESTED'
 export const ITEMS_REQUESTED = 'model/ITEMS_REQUESTED'
+export const ITEMS_FETCHING = 'model/ITEMS_FETCHING'
 export const FILTER_TOGGLED = 'model/FILTER_TOGGLED'
 export const FILTER_SET = 'model/FILTER_SET'
 
@@ -25,6 +26,7 @@ const currentItemsLens = R.lensProp('listItems')
 const queryLens = R.lensProp('query')
 const itemsLens = R.lensProp('items')
 const navigationLens = R.lensProp('navigation')
+const fetchingLens = R.lensProp('fetching')
 const itemLens = id => R.lensPath(['items', String(id)])
 
 // Lens for accessing model name from action
@@ -43,6 +45,7 @@ export const modelSelectors = partialMap({
   getNavigation: getSelector(navigationLens),
   getItemList: getSelector(currentItemsLens),
   getItems: getSelector(itemsLens),
+  getFetching: getSelector(fetchingLens),
   getCurrentItemId: getSelector(selectedItemLens),
   getSelectedItems: getSelector(selectedItemsLens),
   getItem: modelName => id => defaultSelector({})(itemLens(id), modelName),
@@ -84,8 +87,12 @@ export const modelActions = partialMap({
     ids: [id],
     force,
   })),
-  itemsRequested: getActionCreator(ITEMS_REQUESTED, params => ({ params })),
+  itemsRequested: getActionCreator(
+    ITEMS_REQUESTED,
+    (params, append = false) => ({ params, append }),
+  ),
   itemsFetched: getActionCreator(ITEMS_FETCHED, data => data),
+  itemsFetching: getActionCreator(ITEMS_FETCHING, data => data),
   itemsAppended: getActionCreator(ITEMS_APPENDED, data => data),
   filterSet: getActionCreator(FILTER_SET, (key, value) => ({ key, value })),
   filterToggled: getActionCreator(FILTER_TOGGLED, (key, value) => ({
@@ -127,6 +134,7 @@ const getReducer = ({ type, payload }) => {
       // items fetched and pagination updated
       const { results, next, previous, count, url } = payload
       return R.compose(
+        R.set(fetchingLens, false),
         R.over(itemsLens, mergeLeft(R.indexBy(R.prop('id'), results))),
         R.set(currentItemsLens, R.pluck('id', results)),
         R.set(navigationLens, {
@@ -140,9 +148,9 @@ const getReducer = ({ type, payload }) => {
     }
     case ITEMS_APPENDED:
       // items fetched, but no change in selection (current pagination)
-      return R.over(
-        itemsLens,
-        mergeLeft(R.indexBy(R.prop('id'), payload.results)),
+      return R.compose(
+        R.set(fetchingLens, false),
+        R.over(itemsLens, mergeLeft(R.indexBy(R.prop('id'), payload.results))),
       )
     case ITEMS_DISCARDED: {
       const { ids = [] } = payload
@@ -169,6 +177,8 @@ const getReducer = ({ type, payload }) => {
       const lens = itemLens(id)
       return R.over(lens, R.mergeDeepLeft(mergeData))
     }
+    case ITEMS_FETCHING:
+      return R.set(fetchingLens, true)
     case ITEM_SELECTED:
       // select item(s)
       return R.set(selectedItemsLens, payload.ids)

@@ -28,11 +28,18 @@ const optionsFields = {
     read_only: true,
     label: 'Filstørrelse',
   },
+  contributor: {
+    type: 'select',
+    required: false,
+    read_only: false,
+    label: 'Byline',
+    to: 'contributors',
+  },
   artist: {
     type: 'string',
     required: false,
     read_only: false,
-    label: 'Byline',
+    label: 'Fotokred',
   },
   created: {
     type: 'datetime',

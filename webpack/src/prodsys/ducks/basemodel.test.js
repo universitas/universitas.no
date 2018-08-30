@@ -47,7 +47,12 @@ describe('action creators', () => {
     [itemSelected, actions.ITEM_SELECTED, 5, { ids: [5] }],
     [itemSelectToggled, actions.ITEM_SELECT_TOGGLED, 4, { id: 4 }],
     [itemRequested, actions.ITEM_REQUESTED, 2, { ids: [2], force: false }],
-    [itemsRequested, actions.ITEMS_REQUESTED, { q: '' }, { params: { q: '' } }],
+    [
+      itemsRequested,
+      actions.ITEMS_REQUESTED,
+      { q: '' },
+      { params: { q: '' }, append: false },
+    ],
     [itemsFetched, actions.ITEMS_FETCHED, itemData, itemData],
     [itemsDiscarded, actions.ITEMS_DISCARDED, [2, 3], { ids: [2, 3] }],
     [

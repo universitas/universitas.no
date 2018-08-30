@@ -1,21 +1,12 @@
 import optionWrapper from './optionWrapper.js'
-import anonymous from 'images/anonymous.jpg'
+import anonymous from 'images/anonymous.png'
 
-const Option = ({ id, name, thumb = anonymous, title = '' }) => (
+const Option = ({ id, name, display_name, thumb, title = '' }) => (
   <div className="ContributorOption">
-    <img className="thumb" src={thumb} />
-    <span className="name">{name}</span>
-    <span className="title">{title}</span>
+    <img className="thumb" src={thumb || anonymous} />
+    <span className="name">{name || display_name || 'N. N.'}</span>
+    <span className="title">{title || 'person'}</span>
   </div>
 )
 
 export const components = { Option: optionWrapper(Option) }
-
-export const itemsToOptions = R.pipe(
-  R.values,
-  R.map(({ display_name, position = {}, ...props }) => ({
-    name: display_name,
-    title: position.title,
-    ...props,
-  })),
-)

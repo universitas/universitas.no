@@ -1,9 +1,8 @@
-from rest_framework import serializers, viewsets
-from url_filter.integrations.drf import DjangoFilterBackend
-
 from apps.contributors.models import Contributor, Stint
 from apps.photo.models import ImageFile
 from django.db.models import Prefetch
+from rest_framework import serializers, viewsets
+from url_filter.integrations.drf import DjangoFilterBackend
 from utils.serializers import AbsoluteURLField
 
 
@@ -42,6 +41,7 @@ class ContributorSerializer(serializers.HyperlinkedModelSerializer):
             'verified',
             'stint_set',
             'position',
+            'title',
         ]
 
     byline_photo = serializers.PrimaryKeyRelatedField(

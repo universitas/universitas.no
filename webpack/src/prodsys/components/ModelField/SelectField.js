@@ -28,8 +28,13 @@ export const DetailField = ({ value, to, ...props }) => (
     <Select value={pkFromUrl(value)} model={to} />
   </span>
 )
-export const EditableField = ({ value, to, onChange, ...props }) => (
+export const EditableField = ({ value, to, onChange, filter, ...props }) => (
   <span {...props}>
-    <Select value={pkFromUrl(value)} model={to} onChange={onChange} />
+    <Select
+      filter={filter}
+      value={pkFromUrl(value)}
+      model={to}
+      onChange={onChange}
+    />
   </span>
 )

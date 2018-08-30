@@ -3,16 +3,24 @@ import { connect } from 'react-redux'
 import ModelField from 'components/ModelField'
 import { fields, actions, selectors, MODEL } from './model.js'
 
-const ContributorField = ({ editable, ...props }) => (
-  <ModelField editable={false} model={MODEL} {...props} />
+const Field = ({ name, ...props }) => (
+  <ModelField
+    key={name}
+    name={name}
+    model={MODEL}
+    {...fields[name]}
+    {...props}
+    editable={false}
+  />
 )
 
 const GridItem = ({ pk, onClick, className = '' }) => (
   <div key={pk} onClick={onClick} className={cx('GridItem', className)}>
-    <ContributorField pk={pk} {...fields.thumb} label />
-    <ContributorField pk={pk} {...fields.display_name} label />
-    <ContributorField pk={pk} {...fields.email} label />
-    <ContributorField pk={pk} {...fields.phone} label />
+    <Field pk={pk} name="thumb" label />
+    <Field pk={pk} name="display_name" label />
+    <Field pk={pk} name="title" />
+    <Field pk={pk} name="email" />
+    <Field pk={pk} name="phone" />
   </div>
 )
 

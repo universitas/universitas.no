@@ -33,7 +33,7 @@ const PhotoDetail = ({ pk, detail }) => (
           <Field pk={pk} name="large" />
           <Field pk={pk} name="description" />
           <div className="wrapForm">
-            <Field pk={pk} name="artist" />
+            <Field pk={pk} name="contributor" />
             <Field pk={pk} name="filename" />
             <Field pk={pk} name="category" />
             <Field pk={pk} name="original" />

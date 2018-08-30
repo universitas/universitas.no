@@ -1,5 +1,5 @@
 import optionWrapper from './optionWrapper.js'
-import anonymous from 'images/anonymous.jpg'
+import anonymous from 'images/anonymous.png'
 import Debug from 'components/Debug'
 import Thumb from 'components/Thumb'
 import { formatDate, formatFileSize } from 'utils/text'
