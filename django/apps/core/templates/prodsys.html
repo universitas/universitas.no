@@ -1,7 +1,10 @@
 {% extends "react-base.html" %}
 {% load render_bundle from webpack_loader %}
 {% block title %}ProdSys V2{% endblock title %}
-{% block topmenu %}{% endblock topmenu %}
+{% block head %} 
+<!-- Pointer Events Polyfill for Safari -->
+<script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+{% endblock head %}
 {% block content %}
 <div id="ReactApp">
   <div class=loaderWrapper>
