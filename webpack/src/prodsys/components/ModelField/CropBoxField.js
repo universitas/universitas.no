@@ -28,7 +28,7 @@ const FullThumbWithCropBox = ({ src, title, width, height, value }) => {
 //   </svg>
 // )
 
-export const DetailField = ({ value, item, className, ...args }) => {
+const StaticCropBox = ({ value, item, className, ...args }) => {
   const { width, height, small, large } = item
 
   return (
@@ -43,25 +43,33 @@ export const DetailField = ({ value, item, className, ...args }) => {
   )
 }
 
-export const EditableField = ({
-  value,
-  item,
-  className,
-  onChange,
-  previews = [],
-  ...args
-}) => {
-  const { width, height, small, large } = item
+class CropBoxField extends React.Component {
+  constructor(props) {
+    super(props)
+    this.container = React.createRef()
+    this.state = { height: 0 }
+  }
+  componentDidMount() {
+    const height = this.container.current.scrollHeight
+    this.setState({ height })
+  }
 
-  return (
-    <div className={cx('Thumb', className)}>
-      <CropBox
-        src={small}
-        value={value}
-        size={[width, height]}
-        onChange={onChange}
-        previews={previews}
-      />
-    </div>
-  )
+  render() {
+    const { value, item, className, onChange, previews = [] } = this.props
+    const { width, height, small, large } = item
+
+    return (
+      <div className={cx('Thumb', className)} ref={this.container}>
+        <CropBox
+          src={this.state.height < 300 ? small : large}
+          value={value}
+          size={[width, height]}
+          onChange={onChange}
+          previews={previews}
+        />
+      </div>
+    )
+  }
 }
+
+export { CropBoxField as EditableField, StaticCropBox as DetailField }
