@@ -1,3 +1,5 @@
+$colors: (ready: #7cb342, warn: #dd2c00, error: #dd2c00, disabled: #aaa);
+
 .FileInputArea {
   &.dragOver {
     background-color: rgba(red, 0.8);
@@ -25,11 +27,11 @@
   .Tool {
     background-color: #888;
     &.disabled {
-      background-color: #aaa;
+      background-color: map-get($colors, disabled);
       color: #eee;
     }
     &.ready {
-      background-color: #7cb342;
+      background-color: map-get($colors, ready);
     }
     &.ok {
     }
@@ -103,11 +105,12 @@
     .flipFlopChoice {
       padding: 0.2rem;
       flex: 1;
-      color: white;
-      background-color: grey;
+      background-color: #666;
+      color: #aaa;
     }
     .active {
-      background-color: green;
+      color: white;
+      background-color: map-get($colors, ready);
     }
   }
 }

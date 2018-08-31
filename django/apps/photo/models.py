@@ -9,6 +9,10 @@ from statistics import median
 from typing import Union
 
 import PIL
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
 
 from apps.contributors.models import Contributor
 from django.conf import settings
@@ -21,10 +25,6 @@ from django.db import models
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
@@ -101,7 +101,7 @@ def _sort_dupes(dupes, master_hashes, n=3):
             val - master_hashes[key] for key, val in dupe.imagehashes.items()
         ]
         diff = median(sorted(diffs)[:3])
-        if diff < 10:
+        if diff < 8:
             diff_pk.append((diff, dupe.pk))
     if not diff_pk:
         return dupes.none()
@@ -136,7 +136,7 @@ class ImageFileManager(models.Manager):
                 hash_similar=TrigramSimilarity(
                     '_imagehash', str(master_hashes['ahash'])
                 ),
-            ).filter(hash_similar__gt=0.1).order_by('-hash_similar')
+            ).filter(hash_similar__gt=0.05).order_by('-hash_similar')
             dupes = _sort_dupes(dupes, master_hashes)
             return dupes
 

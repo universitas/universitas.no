@@ -22,7 +22,7 @@ const Duplicates = ({ duplicates, pk, status }) => {
   if (R.isEmpty(duplicates)) return <NoDupes />
   return (
     <div className="Duplicates">
-      <small>Bildet er lastet opp fra før</small>
+      <small>Mulige duplikater finnes fra før</small>
       {R.map(({ id, choice }) => (
         <Duplicate key={id} id={id} choice={choice} pk={pk} />
       ))(duplicates)}

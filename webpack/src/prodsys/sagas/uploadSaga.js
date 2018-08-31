@@ -27,6 +27,7 @@ const {
   itemRequested: photoRequested,
   itemsAppended: photosAppended,
 } = modelActions('photos')
+const { itemAdded: contributorAdded } = modelActions('contributors')
 
 const { itemRequested: storyRequested } = modelActions('stories')
 
@@ -43,12 +44,28 @@ const errorAction = error => ({
   error,
 })
 
+function* getArtist(name) {
+  const params = { search: name }
+  const { response, error } = yield call(apiList('contributors'), params)
+  if (response) {
+    const artist = R.path(['results', 0], response)
+    if (!artist) return null
+    yield put(contributorAdded(artist))
+    return artist.id
+  } else yield put(errorAction(error))
+}
+
 function* newUploadSaga(action) {
-  const { md5, fingerprint } = action.payload
-
-  const user = yield select(getUser)
-  const contributor = user.contributor
-
+  const { md5, fingerprint, artist } = action.payload
+  let contributor = undefined
+  if (artist) {
+    try {
+      contributor = yield call(getArtist, artist)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  if (!contributor) contributor = yield select(getUser).contributor
   if (contributor) {
     yield put(
       uploadUpdate(md5, { contributor: apiUrlToId(contributor), check: false }),
@@ -59,7 +76,7 @@ function* newUploadSaga(action) {
     const duplicates = R.pipe(
       R.prop('results'),
       R.map(R.pick(['id'])),
-      R.map(R.assoc('choice', null)),
+      R.map(R.assoc('choice', 'keep')),
     )(response)
     yield put(uploadUpdate(md5, { duplicates, check: true }))
     yield put(photosAppended(response))
@@ -96,7 +113,6 @@ function* postUploadSaga(action) {
       yield put(assignPhoto(id, parseInt(story)))
     }
   } else {
-    console.error(error)
     yield put(uploadPostError(pk, error))
   }
 }

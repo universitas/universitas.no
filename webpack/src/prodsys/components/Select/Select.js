@@ -42,6 +42,7 @@ class Select extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { fetching, value, item, model, items } = this.props
+    if (model == 'contributor') console.log({ value, item })
     if (prevProps.fetching != fetching) this.setState({ isLoading: fetching })
     if (value && !item) {
       const createdItem = R.last(
