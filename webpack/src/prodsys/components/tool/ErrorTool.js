@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { Error, Clear } from 'components/Icons'
-import { getErrors, clearError } from 'ducks/error'
+import { getErrors, clearError, clearErrors } from 'ducks/error'
 import { timestamp as formatTimestamp } from 'utils/modelUtils'
 
 const errorToString = R.cond([
@@ -26,9 +26,9 @@ const ErrorItem = ({ error, onClick }) => (
   </div>
 )
 
-const ErrorTool = ({ errors, clearError }, index) =>
+const ErrorTool = ({ errors, clearError, clearErrors }, index) =>
   errors.length ? (
-    <div className="AppButton ErrorTool">
+    <div onClick={clearErrors} className="AppButton ErrorTool">
       <small>{errors.length} feil</small>
       <Error />
       <div className="errorItems">
@@ -43,10 +43,7 @@ const ErrorTool = ({ errors, clearError }, index) =>
     </div>
   ) : null
 
-ErrorTool.propTypes = {
-  errors: PropTypes.array.isRequired,
-  clearError: PropTypes.func.isRequired,
-}
-export default connect(state => ({ errors: getErrors(state) }), { clearError })(
-  ErrorTool,
-)
+export default connect(state => ({ errors: getErrors(state) }), {
+  clearErrors,
+  clearError,
+})(ErrorTool)

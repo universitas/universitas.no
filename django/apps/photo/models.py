@@ -20,7 +20,7 @@ from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.files.base import ContentFile
 from django.core.validators import FileExtensionValidator
-from django.db import models
+from django.db import connection, models
 # from apps.issues.models import current_issue
 from django.dispatch import receiver
 from django.utils import timezone
@@ -93,10 +93,10 @@ class ImageFileQuerySet(models.QuerySet):
         return self.filter(category=ImageCategoryMixin.UNKNOWN)
 
 
-def _sort_dupes(dupes, master_hashes, n=3):
+def _filter_dupes(dupes, master_hashes, limit=3):
     """Second imagehash comparison pass."""
     diff_pk = []
-    for dupe in dupes[:10]:
+    for dupe in dupes:
         diffs = [
             val - master_hashes[key] for key, val in dupe.imagehashes.items()
         ]
@@ -104,12 +104,34 @@ def _sort_dupes(dupes, master_hashes, n=3):
         if diff < 8:
             diff_pk.append((diff, dupe.pk))
     if not diff_pk:
-        return dupes.none()
+        return []
     diff_pk.sort()
     best = diff_pk[0][0] + 0.1
-    return dupes.filter(
-        pk__in=[pk for diff, pk in diff_pk if diff / best < 1.5][:n]
-    )
+    return [pk for diff, pk in diff_pk if diff / best < 1.5][:limit]
+
+
+def _get_dupes_raw(qs, ahash, limit=30):
+    """Use raw sql to query. This is the only way to use the GIN index."""
+    table = ImageFile._meta.db_table
+    field = '_imagehash'
+    sql = f"""
+    SELECT * FROM {table} WHERE {field} %% %(query)s
+    ORDER BY similarity({field}, %(query)s ) DESC LIMIT {limit}
+    """
+    params = {'query': str(ahash)}
+    return qs.raw(sql, params)
+
+
+def _create_gin_index(field='_imagehash', delete=False):
+    """Create search index for imagehash."""
+    table = ImageFile._meta.db_table
+    if delete:
+        sql = f'DROP INDEX IF EXISTS {field}_trigram_index;'
+    else:
+        sql = f'''CREATE INDEX IF NOT EXISTS {field}_trigram_index
+                  ON {table} USING GIN ({field} gin_trgm_ops);'''
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
 
 
 class ImageFileManager(models.Manager):
@@ -132,13 +154,9 @@ class ImageFileManager(models.Manager):
             except ValueError as err:
                 raise ValueError('incorrect fingerprint: %s' % err) from err
             master_hashes = file_operations.get_imagehashes(master)
-            dupes = qs.annotate(
-                hash_similar=TrigramSimilarity(
-                    '_imagehash', str(master_hashes['ahash'])
-                ),
-            ).filter(hash_similar__gt=0.05).order_by('-hash_similar')
-            dupes = _sort_dupes(dupes, master_hashes)
-            return dupes
+            dupes = _get_dupes_raw(qs, master_hashes['ahash'], 30)
+            pks = _filter_dupes(dupes, master_hashes)
+            return qs.filter(pk__in=pks)
 
         if filename:
             trigram = TrigramSimilarity('stem', Path(filename).stem)
