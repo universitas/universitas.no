@@ -5,13 +5,10 @@ import mimetypes
 import re
 from io import BytesIO
 from pathlib import Path
+from statistics import median
 from typing import Union
 
 import PIL
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 
 from apps.contributors.models import Contributor
 from django.conf import settings
@@ -24,6 +21,10 @@ from django.db import models
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
@@ -92,43 +93,53 @@ class ImageFileQuerySet(models.QuerySet):
         return self.filter(category=ImageCategoryMixin.UNKNOWN)
 
 
+def _sort_dupes(dupes, master_hashes, n=3):
+    """Second imagehash comparison pass."""
+    diff_pk = []
+    for dupe in dupes[:10]:
+        diffs = [
+            val - master_hashes[key] for key, val in dupe.imagehashes.items()
+        ]
+        diff = median(sorted(diffs)[:3])
+        if diff < 10:
+            diff_pk.append((diff, dupe.pk))
+    if not diff_pk:
+        return dupes.none()
+    diff_pk.sort()
+    best = diff_pk[0][0] + 0.1
+    return dupes.filter(
+        pk__in=[pk for diff, pk in diff_pk if diff / best < 1.5][:n]
+    )
+
+
 class ImageFileManager(models.Manager):
     def search(
         self,
         md5=None,
         fingerprint=None,
-        imagehash=None,
         filename=None,
         cutoff=0.5,
     ):
         """Search for images matching query."""
         qs = self.get_queryset()
-        if fingerprint:
-            try:
-                image = file_operations.image_from_fingerprint(fingerprint)
-            except ValueError as err:
-                raise ValueError('incorrect fingerprint: %s' % err) from err
-            imagehash = file_operations.get_imagehash(image)
         if md5:
             results = qs.filter(stat__md5=md5)
             if results.count():
                 return results
-        if imagehash:
-            # filter(_imagehash__trigram_similar=imagehash)
-            limit = 0.2
-            annotated = qs.annotate(
-                hash_similar=TrigramSimilarity('_imagehash', str(imagehash))
-            )
-            results = annotated.filter(hash_similar__gt=limit)
-            while results.count() > 3:
-                limit += 0.1
-                r2 = results.filter(hash_similar__gt=limit)
-                if not r2:
-                    break
-                results = r2
+        if fingerprint:
+            try:
+                master = file_operations.image_from_fingerprint(fingerprint)
+            except ValueError as err:
+                raise ValueError('incorrect fingerprint: %s' % err) from err
+            master_hashes = file_operations.get_imagehashes(master)
+            dupes = qs.annotate(
+                hash_similar=TrigramSimilarity(
+                    '_imagehash', str(master_hashes['ahash'])
+                ),
+            ).filter(hash_similar__gt=0.1).order_by('-hash_similar')
+            dupes = _sort_dupes(dupes, master_hashes)
+            return dupes
 
-            if results:
-                return results.order_by('-hash_similar')
         if filename:
             trigram = TrigramSimilarity('stem', Path(filename).stem)
             return qs.annotate(

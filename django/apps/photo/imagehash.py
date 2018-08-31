@@ -3,13 +3,12 @@ from pathlib import Path
 
 import boto
 import imagehash
-
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from utils.model_fields import AttrJSONField
 
-from .file_operations import get_imagehash, get_md5
+from .file_operations import get_imagehashes, get_md5
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +39,7 @@ class ImageHashModelMixin(models.Model):
 
     _imagehash = models.CharField(
         verbose_name=_('image hash'),
-        help_text=_('perceptual hash of image using dhash algorithm'),
+        help_text=_('perceptual hash of image using ahash algorithm'),
         max_length=16,
         editable=False,
         default='',
@@ -51,6 +50,7 @@ class ImageHashModelMixin(models.Model):
         editable=False,
         default=dict,
     )
+    HASH_TYPES = 'ahash', 'dhash', 'phash', 'whash'
 
     def save(self, *args, **kwargs):
         self.calculate_hashes(save=False)
@@ -61,20 +61,29 @@ class ImageHashModelMixin(models.Model):
         return self.stat.size
 
     @property
-    def imagehash(self):
-        """Calculate or retrieve imagehash value."""
-        if not self._imagehash:
-            self.imagehash = get_imagehash(self.small
-                                           ) or get_imagehash(self.original)
+    def imagehashes(self):
+        """Calculate or retrieve imagehash values."""
         try:
-            return imagehash.hex_to_hash(self._imagehash)
+            return {
+                key: imagehash.hex_to_hash(self.stat[key])
+                for key in self.HASH_TYPES
+            }
+        except KeyError as err:
+            logger.debug(f'keyerror: {err}')
+            hashes = (
+                get_imagehashes(self.small) or get_imagehashes(self.original)
+            )
+            self.imagehashes = hashes
+            return hashes
         except ValueError:
             # could not calculate imagehash
             return imagehash.hex_to_hash('F' * 16)
 
-    @imagehash.setter
-    def imagehash(self, value):
-        self._imagehash = str(value) if value else ''
+    @imagehashes.setter
+    def imagehashes(self, hashes):
+        for key in self.HASH_TYPES:
+            self.stat[key] = str(hashes[key])
+        self._imagehash = self.stat.ahash
 
     def calculate_hashes(self, save=True):
         """Make sure the image has size, mtime, md5 and imagehash"""
@@ -90,7 +99,7 @@ class ImageHashModelMixin(models.Model):
                 self.stat.size = self.original.size
                 values.append(self.stat.size)
             if not self._imagehash:
-                values.append(self.imagehash)  # use property getter method
+                values.append(self.imagehashes)  # use property getter method
 
         if not values:
             return False  # ok

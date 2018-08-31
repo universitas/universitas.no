@@ -3,11 +3,11 @@ import hashlib
 import logging
 from io import BytesIO
 from pathlib import Path
-from typing import Union
+from typing import Dict, Union
 
-import imagehash
 import PIL
 
+import imagehash
 from django.core.files import File as DjangoFile
 
 try:
@@ -17,6 +17,7 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 Fileish = Union[str, bytes, Path, DjangoFile]
+FINGERPRINT_SIZE = 16
 
 
 def image_from_fingerprint(fingerprint):
@@ -27,7 +28,7 @@ def image_from_fingerprint(fingerprint):
     return PIL.Image.frombytes('L', (size, size), data)
 
 
-def image_to_fingerprint(image, size=11):
+def image_to_fingerprint(image, size=FINGERPRINT_SIZE):
     """Create b64encoded image signature for image hash comparisons"""
     data = image.copy().convert('L').resize((size, size)).getdata()
     return base64.b64encode(bytes(data)).decode()
@@ -88,14 +89,20 @@ def get_filesize(fp: Fileish) -> int:
         return len(read_data(fp))
 
 
-def get_imagehash(fp, size=11) -> imagehash.ImageHash:
-    """Calculate perceptual hash for comparison of identical images"""
+def get_imagehashes(fp: Fileish,
+                    size=FINGERPRINT_SIZE) -> Dict[str, imagehash.ImageHash]:
+    """Calculate perceptual hashes for comparison of identical images"""
     try:
         img = pil_image(fp)
         thumb = img.resize((size, size), PIL.Image.BILINEAR).convert('L')
-        return imagehash.dhash(thumb)
+        return dict(
+            ahash=imagehash.average_hash(thumb),
+            phash=imagehash.phash(thumb),
+            whash=imagehash.whash(thumb),
+            dhash=imagehash.dhash(thumb),
+        )
     except OSError:  # corrupt image file probably
-        return None
+        return {}
 
 
 def get_exif(fp: Fileish) -> dict:

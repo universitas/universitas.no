@@ -41,8 +41,8 @@ def test_image_hashes(img):
     assert img.stat.get('md5')[:5] == '4eccf'
     assert img.stat.get('size') == 2966
     assert img.stat.get('mtime') > 1000000000
-    assert img._imagehash[:5] == '0a2f1'  # is string
-    assert img.imagehash.hash.shape == (8, 8)  # is ndarray
+    assert img._imagehash[:5] == 'ffcfc'  # is string
+    assert img.imagehashes['ahash'].hash.shape == (8, 8)  # is ndarray
     assert img.pk is None  # did not save
     assert img.large
 

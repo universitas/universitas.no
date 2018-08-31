@@ -1,8 +1,9 @@
 """ Tests for exif library """
 import pytest
-from apps.photo.file_operations import (get_exif, get_filesize, get_imagehash,
-                                        get_md5, get_mimetype, get_mtime,
-                                        valid_image)
+from apps.photo.file_operations import (
+    get_exif, get_filesize, get_imagehashes, get_md5, get_mimetype, get_mtime,
+    valid_image
+)
 from django.core.files import File as DjangoFile
 
 
@@ -28,8 +29,8 @@ def test_get_filesize(file):
 
 
 def test_get_imagehash(file):
-    val = get_imagehash(file)
-    assert len(str(val)) == 16
+    for key, val in get_imagehashes(file).items():
+        assert len(str(val)) == 16, f'imagehash: {key}'
 
 
 def test_get_exif(file):

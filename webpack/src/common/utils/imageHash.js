@@ -3,10 +3,11 @@
 // ITU-R 601-2 luma transform:
 // L = R * 299/1000 + G * 587/1000 + B * 114/1000
 const LUMA_TRANSFORM = [299 / 1000, 587 / 1000, 114 / 1000]
+const FINGERPRINT_SIZE = 16
 
 // create an image fingerprint to compare with api
 // :: (Image, Number) -> String
-export const imageFingerPrint = (src, size = 11) => {
+export const imageFingerPrint = (src, size = FINGERPRINT_SIZE) => {
   const canvas = createCanvas(size, size, src) // tiny thumbnail
   const imageData = canvasImageData(canvas) // get pixel values
   const lumen = imageDataToLumen(imageData) // grayscale
