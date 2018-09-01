@@ -8,6 +8,7 @@ import * as text from './TextField'
 import * as link from './LinkField'
 import * as thumb from './ThumbField'
 import * as image from './ImageField'
+import * as boolean from './CheckBoxField'
 import * as pdfs from './PdfField'
 import * as email from './EmailField'
 import * as phone from './PhoneField'
@@ -16,6 +17,7 @@ import * as concat from './ConcatField'
 import * as stints from './StintsField'
 import * as filesize from './FileSizeField'
 import * as cropbox from './CropBoxField.js'
+import * as range from './RangeField.js'
 import { connect } from 'react-redux'
 import { modelActions, modelSelectors } from 'ducks/basemodel'
 import cx from 'classnames'
@@ -25,24 +27,26 @@ import './modelfield.scss'
 
 const fieldTypes = {
   choice,
-  select,
+  concat,
+  count,
+  cropbox,
+  boolean,
   date,
   datetime,
   email,
+  filesize,
   image,
   integer,
   link,
   pdfs,
   phone,
+  range,
+  select,
+  shorttext: text,
   stints,
-  filesize,
   string,
   text,
   thumb,
-  shorttext: text,
-  count,
-  concat,
-  cropbox,
 }
 export const fieldNames = R.keys(fieldTypes)
 

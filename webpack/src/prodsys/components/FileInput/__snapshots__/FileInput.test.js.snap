@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FileInputButton renders correctly 1`] = `
+<label
+  className="FileInputButton"
+>
+  upload
+  <input
+    accept=""
+    multiple={true}
+    onChange={[Function]}
+    type="file"
+  />
+</label>
+`;

@@ -20,19 +20,9 @@ const issuesInitialState = {
     publication_date__year: new Date().getFullYear(),
   },
 }
-const contributorsInitialState = {
-  query: {
-    search: '',
-    limit: 25,
-    status: 1,
-  },
-}
-const photosInitialState = {
-  query: {
-    search: '',
-    limit: 16,
-  },
-}
+const contributorsInitialState = { query: { search: '', limit: 25, status: 1 } }
+const photosInitialState = { query: { search: '', limit: 16 } }
+const frontpageInitialState = { query: { language: 'nor' } }
 
 export default {
   auth,
@@ -44,4 +34,5 @@ export default {
   contributors: modelReducer('contributors', contributorsInitialState),
   photos: modelReducer('photos', photosInitialState),
   storyimages: modelReducer('storyimages', {}),
+  frontpage: modelReducer('frontpage', frontpageInitialState),
 }

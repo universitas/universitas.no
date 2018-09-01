@@ -6,7 +6,11 @@
 @import "detailpanel";
 @import "gridview";
 @import "errors";
+@import "storylist";
 
+body {
+  overflow-y: auto !important;
+}
 .clickable {
   cursor: pointer;
 }

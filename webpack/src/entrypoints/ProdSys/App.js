@@ -4,6 +4,8 @@ import { hot } from 'react-hot-loader'
 import LoginForm from 'components/LoginForm'
 import ProdSys from './ProdSys.js'
 
+import 'components/NewsFeed/NewsFeed.scss'
+import 'styles/universitas.scss'
 import 'styles/prodsys.scss'
 
 const App = ({ username, pending }) =>

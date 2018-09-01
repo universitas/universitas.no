@@ -26,6 +26,7 @@ function* loadInitialData() {
   yield put(modelActions('storytypes').itemsRequested())
   yield put(modelActions('contributors').itemsRequested())
   yield put(modelActions('issues').itemsRequested())
+  yield put(modelActions('frontpage').itemsRequested())
   yield put(requestUser())
   const action = yield take(LOCATION_CHANGED)
   if (R.pathEq(['payload', 'route'], '/')(action)) yield put(push('/stories'))

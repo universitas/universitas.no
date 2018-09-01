@@ -102,7 +102,12 @@ class NewsFeed extends React.Component {
       ),
       // render feed items
       R.map(props => (
-        <FeedItem key={props.id} addRef={this.addRef} {...props} />
+        <FeedItem
+          key={props.id}
+          addRef={this.addRef}
+          sectionName={props.story.section}
+          {...props}
+        />
       )),
       // add adverts
       addAdverts(section),

@@ -1,6 +1,5 @@
-import React from 'react'
 import cx from 'classnames'
-import 'styles/thumb.scss'
+import './Thumb.scss'
 
 const Thumb = ({ className, ...props }) => (
   <div className={cx('Thumb', className)}>

@@ -1,0 +1,137 @@
+import { modelActions, modelSelectors } from 'ducks/basemodel'
+export const MODEL = 'frontpage'
+export const actions = modelActions(MODEL)
+export const selectors = modelSelectors(MODEL)
+
+export const fields = {
+  id: {
+    type: 'integer',
+    required: false,
+    editable: false,
+    label: 'ID',
+  },
+  headline: {
+    type: 'shorttext',
+    required: false,
+    editable: true,
+    label: 'Headline',
+    helpText: 'tittel / overskrift',
+    maxLength: 200,
+  },
+  kicker: {
+    type: 'string',
+    required: false,
+    editable: true,
+    label: 'Kicker',
+    helpText: 'stikktittel',
+    maxLength: 200,
+  },
+  vignette: {
+    type: 'string',
+    required: false,
+    editable: true,
+    label: 'Vignette',
+    helpText: 'vignett',
+    maxLength: 50,
+  },
+  lede: {
+    type: 'shorttext',
+    required: false,
+    editable: true,
+    label: 'Lede',
+    helpText: 'ingress',
+    maxLength: 200,
+  },
+  html_class: {
+    type: 'string',
+    required: false,
+    editable: true,
+    label: 'Html class',
+    helpText: 'html class',
+    maxLength: 200,
+  },
+  priority: {
+    type: 'range',
+    step: 0.1,
+    min: -10,
+    max: 10,
+    editable: true,
+    label: 'prioritet',
+  },
+  columns: {
+    type: 'select',
+    required: true,
+    editable: true,
+    label: 'Columns',
+    helpText: 'base width',
+    options: [
+      { value: 2, label: '2' },
+      { value: 3, label: '3' },
+      { value: 4, label: '4' },
+      { value: 6, label: '6' },
+    ],
+  },
+  rows: {
+    type: 'select',
+    required: true,
+    editable: true,
+    label: 'Rows',
+    helpText: 'base height',
+    options: [
+      { value: 1, label: '1' },
+      { value: 2, label: '2' },
+      { value: 3, label: '3' },
+      { value: 4, label: '4' },
+      { value: 5, label: '5' },
+      { value: 6, label: '6' },
+    ],
+  },
+  order: {
+    type: 'integer',
+    required: false,
+    editable: false,
+    label: 'Order',
+  },
+  published: {
+    type: 'boolean',
+    required: false,
+    editable: true,
+    label: 'Published',
+    helpText: 'published',
+  },
+  imagefile: {
+    type: 'select',
+    to: 'photos',
+    required: false,
+    editable: true,
+    label: 'Foto',
+  },
+  image: {
+    type: 'thumb',
+    required: false,
+    editable: false,
+  },
+  crop_box: {
+    type: 'field',
+    required: false,
+    editable: false,
+    label: 'Crop box',
+  },
+  section: {
+    type: 'integer',
+    required: false,
+    editable: false,
+    label: 'Seksjon',
+  },
+  language: {
+    type: 'field',
+    required: false,
+    editable: false,
+    label: 'Språk',
+  },
+  story: {
+    type: 'select',
+    to: 'stories',
+    editable: false,
+  },
+}

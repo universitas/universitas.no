@@ -4,6 +4,7 @@ import { ContributorList, ContributorDetail } from 'components/contributors'
 import { PhotoList, PhotoDetail } from 'components/photos'
 import { UploadList } from 'components/upload'
 import { StoryList, StoryDetail } from 'components/stories'
+import { FrontpageList, FrontpageDetail } from 'components/frontpage'
 import RavenBoundary from 'components/RavenBoundary'
 import { assignPhoto } from 'ducks/storyimage'
 import MainToolBar from './ToolBar.js'
@@ -38,6 +39,9 @@ const Prodsys = () => (
       <Fragment forRoute="/upload">
         <UploadList />
       </Fragment>
+      <Fragment forRoute="/frontpage">
+        <FrontpageList />
+      </Fragment>
     </Panel>
     <Fragment forRoute="/photos/:id">
       <PhotoDetail />
@@ -53,6 +57,9 @@ const Prodsys = () => (
     </Fragment>
     <Fragment forRoute="/issues/:id">
       <IssueDetail />
+    </Fragment>
+    <Fragment forRoute="/frontpage">
+      <FrontpageDetail />
     </Fragment>
   </main>
 )

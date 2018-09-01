@@ -13,6 +13,7 @@ const MainToolBar = () => (
     <AppTool href="/issues" icon="Newspaper" label="ut&shy;gaver" />
     <AppTool href="/contributors" icon="Person" label="personer" />
     <AppTool href="/upload" icon="CameraRoll" label="last opp" />
+    <AppTool href="/frontpage" icon="GridView" label="forside" />
     <div className="spacer" style={{ flex: 1 }} />
     <ErrorTool />
     <UserTool />

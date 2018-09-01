@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Thumb renders correctly 1`] = `
+<div
+  className="Thumb"
+>
+  <img />
+</div>
+`;

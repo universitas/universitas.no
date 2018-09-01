@@ -2,8 +2,6 @@ import Navigation from 'components/Navigation'
 import SearchField from 'components/SearchField'
 import Filter from 'components/Filter'
 
-import 'styles/listpanel.scss'
-
 const ListPanel = ({ model, filters = [], children = [] }) => {
   return (
     <section className="ListPanel">

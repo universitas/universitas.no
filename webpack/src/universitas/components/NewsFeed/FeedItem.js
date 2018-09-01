@@ -10,9 +10,9 @@ const position = ({ x = 0.5, y = 0.5 }) => `${x * 100}% ${y * 100}%`
 const ifChildren = Component => props =>
   props.children ? <Component {...props} /> : null
 
-const Vignette = ifChildren(({ children, section }) => (
+const Vignette = ifChildren(({ children, sectionName }) => (
   <div className="Vignette">
-    <div className={cx(slugify(section))}>{children}</div>
+    <div className={cx(slugify(sectionName))}>{children}</div>
   </div>
 ))
 const Headline = ifChildren(({ children }) => (
@@ -37,46 +37,50 @@ const FeedImage = ({ image, crop_box }) =>
     />
   ) : null
 
-const FetchIndicator = ({ fetchStatus }) => {
-  const Icon = { unfetched: Clear, fetching: Sync, fetched: Done }[fetchStatus]
-  return (
-    <div title={fetchStatus} className="FetchIndicator">
-      <Icon />
-    </div>
-  )
-}
+const Wrapper = props => <div {...props} />
 
-const FeedItem = ({
+export const FeedItem = ({
+  html_class,
+  columns,
+  rows,
+  image,
   headline,
   vignette,
   kicker,
   lede,
-  rows,
-  columns,
-  section,
-  image,
   crop_box,
-  html_class,
-  fetchStatus,
-  language,
-  order,
-  story,
-  addRef,
-}) => {
-  const className = cx('FeedItem', `col-${columns}`, `row-${rows}`, html_class)
-  const title = `${order} ${className}`
+  sectionName = '',
+  className,
+  Wrapper = Wrapper,
+  ...props
+}) => (
+  <Wrapper
+    className={cx(
+      className,
+      'FeedItem',
+      `col-${columns}`,
+      `row-${rows}`,
+      html_class,
+    )}
+    {...props}
+  >
+    <FeedImage image={image} crop_box={crop_box} />
+    <Vignette sectionName={sectionName}>{vignette}</Vignette>
+    <Kicker>{hyphenate(kicker)}</Kicker>
+    <Headline>{hyphenate(headline)}</Headline>
+    <Lede>{lede}</Lede>
+  </Wrapper>
+)
+
+const LinkWrapper = ({ fetchStatus, story, addRef, children, className }) => {
   return (
     <Link to={toStory(story)} className={className}>
       <ErrorBoundary>
-        <FeedImage image={image} crop_box={crop_box} />
-        <Vignette section={story.section}>{vignette}</Vignette>
-        <Kicker>{hyphenate(kicker)}</Kicker>
-        <Headline>{hyphenate(headline)}</Headline>
-        <Lede>{lede}</Lede>
+        {children}
         {addRef && <div style={{ gridArea: '1/1' }} ref={addRef(story.id)} />}
       </ErrorBoundary>
     </Link>
   )
 }
 
-export default FeedItem
+export default props => <FeedItem {...props} Wrapper={LinkWrapper} />

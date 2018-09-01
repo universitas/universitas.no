@@ -1,5 +1,4 @@
 import * as Icons from 'components/Icons'
-import 'styles/tool.scss'
 import cx from 'classnames'
 
 const Tool = ({

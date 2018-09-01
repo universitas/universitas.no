@@ -1,5 +1,5 @@
 // Thumbnail image centered and contained in flexbox
-@import "globals";
+@import "styles/globals.scss";
 .Thumb {
   display: flex;
   min-height: 0; // firefox

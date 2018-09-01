@@ -1,11 +1,13 @@
 from collections import OrderedDict
 
-from apps.frontpage.models import FrontpageStory
-from apps.stories.models import Story
-from django.db.models import Case, Q, When
 from rest_framework import pagination, serializers, viewsets
 from rest_framework.response import Response
 from rest_framework.utils.urls import replace_query_param
+
+from apps.frontpage.models import FrontpageStory
+from apps.photo.models import ImageFile
+from apps.stories.models import Story
+from django.db.models import Case, Q, When
 from utils.serializers import AbsoluteURLField, CropBoxField
 
 
@@ -26,6 +28,11 @@ class FrontpageStorySerializer(serializers.ModelSerializer):
     """ModelSerializer for FrontpageStory"""
 
     image = AbsoluteURLField(source='imagefile.large.url')
+    imagefile = serializers.PrimaryKeyRelatedField(
+        read_only=False,
+        queryset=ImageFile.objects.all(),
+        allow_null=True,
+    )
     crop_box = CropBoxField(read_only=True, source='imagefile.crop_box')
     section = serializers.IntegerField(
         read_only=True, source='story.story_type.section.pk'
@@ -52,7 +59,9 @@ class FrontpageStorySerializer(serializers.ModelSerializer):
             'rows',
             'order',
             'published',
+            'priority',
             'image',
+            'imagefile',
             'crop_box',
             'section',
             'language',

@@ -1,8 +1,5 @@
-import * as R from 'ramda'
-import React from 'react'
 import cx from 'classnames'
 import processImageFile from 'utils/processImageData'
-import 'styles/uploadinput.scss'
 
 class BaseFileInput extends React.Component {
   constructor(props) {
@@ -26,7 +23,7 @@ class BaseFileInput extends React.Component {
     R.map(file =>
       processImageFile(file)
         .then(fileAdded)
-        .catch(fileError)
+        .catch(fileError),
     )(validFiles)
   }
 }

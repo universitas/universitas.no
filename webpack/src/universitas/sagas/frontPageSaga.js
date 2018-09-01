@@ -22,7 +22,6 @@ import { SITE_REQUESTED, siteFetched } from 'ducks/site'
 import { ISSUES_REQUESTED, issuesFetched } from 'ducks/issues'
 import {
   FEED_REQUESTED,
-  TOGGLE_LANGUAGE,
   SEARCH,
   feedFetched,
   searchFetched,

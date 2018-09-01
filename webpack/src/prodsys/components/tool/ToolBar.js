@@ -1,6 +1,5 @@
 import { Tool } from 'components/tool'
 import cx from 'classnames'
-import 'styles/tool.scss'
 
 const renderTool = (key, { onClick, active, icon, toolTip }) => (
   <Tool
