@@ -6,7 +6,11 @@ const extractId = R.pipe(R.defaultTo(''), R.match(/\d+/g), R.last)
 export default R.pipe(
   R.over(
     R.lensPath(['contributors', 'items']),
-    R.map(item => ({ ...item, thumb: thumbs[extractId(item.byline_photo)] })),
+    R.map(item => ({
+      ...item,
+      title: item.position.title,
+      thumb: thumbs[extractId(item.byline_photo)],
+    })),
   ),
   R.over(
     R.lensPath(['photos', 'items']),
