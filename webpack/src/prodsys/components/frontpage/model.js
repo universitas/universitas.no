@@ -86,12 +86,6 @@ export const fields = {
       { value: 6, label: '6' },
     ],
   },
-  order: {
-    label: 'rekkefølge',
-    type: 'integer',
-    required: false,
-    editable: false,
-  },
   published: {
     label: 'publisert',
     type: 'boolean',

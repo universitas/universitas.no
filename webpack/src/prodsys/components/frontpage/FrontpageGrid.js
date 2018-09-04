@@ -6,13 +6,8 @@ import { FeedItem } from 'components/NewsFeed/FeedItem.js'
 import Debug from 'components/Debug'
 import './FrontpageGrid.scss'
 
-const FeedItemWrapper = ({ onClick, className, order, children }) => (
-  <div
-    style={{ order: -order }}
-    className={className}
-    onClick={onClick}
-    children={children}
-  />
+const FeedItemWrapper = ({ onClick, className, children }) => (
+  <div className={className} onClick={onClick} children={children} />
 )
 
 const ConnectedFeedItem = connect(
@@ -45,6 +40,21 @@ const FrontpageGrid = ({ items = [] }) => (
   </section>
 )
 
-export default connect(state => ({ items: selectors.getItemList(state) }))(
-  FrontpageGrid,
-)
+const mapStateToProps = (state, ownProps) => {
+  const ids = selectors.getItemList(state)
+  const items = selectors.getItems(state)
+  const sorted = R.pipe(
+    R.pick(ids),
+    R.map(props => ({
+      ...props,
+      sortKey: props.baserank + parseFloat(props.priority),
+    })),
+    R.values,
+    R.sortWith([R.descend(R.prop('sortKey'))]),
+    R.pluck('id'),
+  )
+
+  return { items: sorted(items) }
+}
+
+export default connect(mapStateToProps)(FrontpageGrid)

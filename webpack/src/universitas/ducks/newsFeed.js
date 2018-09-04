@@ -43,7 +43,7 @@ export const getLanguage = selectorFromLens(languageLens)
 export const getFeedQuery = R.pipe(
   getFeed,
   R.pick(['search', 'language', 'section']),
-  R.evolve({ section: getSections })
+  R.evolve({ section: getSections }),
 )
 
 // Actions
@@ -88,8 +88,8 @@ const mergeFeed = fetched => (state = []) =>
     state => R.concat(state, fetched),
     R.indexBy(R.prop('id')),
     R.values,
-    R.sortBy(R.prop('order')),
-    R.reverse
+    R.sortBy(R.prop('ranking')),
+    R.reverse,
   )(state)
 
 const mergeLeft = R.flip(R.merge)
@@ -113,7 +113,7 @@ const getReducer = ({ type, payload, error }) => {
       const { results, next } = payload
       return R.compose(
         mergeLeft({ fetching: false, next }),
-        R.over(feedLens, mergeFeed(results))
+        R.over(feedLens, mergeFeed(results)),
       )
     }
     case SEARCH:
@@ -122,16 +122,16 @@ const getReducer = ({ type, payload, error }) => {
       const { results, next } = payload
       return R.compose(
         mergeLeft({ fetching: false, next }),
-        R.set(searchResultsLens, results)
+        R.set(searchResultsLens, results),
       )
     }
     case TOGGLE_LANGUAGE:
       return R.compose(
         R.over(
           languageLens,
-          l => (l == payload.language ? null : payload.language)
+          l => (l == payload.language ? null : payload.language),
         ),
-        R.assoc('next', true)
+        R.assoc('next', true),
       )
     default:
       return R.identity

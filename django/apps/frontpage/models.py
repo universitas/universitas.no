@@ -1,15 +1,47 @@
 import logging
 
+from model_utils.models import TimeStampedModel
+
 from apps.photo.models import ImageFile
 from django.db import models
+from django.db.models import F
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
 from utils.model_mixins import EditURLMixin
 
 logger = logging.getLogger(__name__)
 
 
-def frontpagestry_size(story):
+class Days(models.Func):
+    """Cast float field to Interval in days"""
+    output_field = models.DurationField()
+    template = "to_char(%(expressions)s, 'S9990.0999 \"days\"')::interval"
+
+
+class Epoch(models.Func):
+    """Get epoch timestamp from date time field """
+    output_field = models.FloatField()
+    template = "extract(epoch from %(expressions)s) / (60 * 60 * 24)"
+
+
+class FrontpageQuerySet(models.QuerySet):
+    def published(self):
+        from apps.stories.models import Story
+        return self.filter(
+            published=True,
+            story__publication_status__in=[
+                Story.STATUS_PUBLISHED, Story.STATUS_NOINDEX
+            ]
+        )
+
+    def with_ranking(self):
+        return self.annotate(
+            baserank=Epoch('story__publication_date'),
+            ranking=F('baserank') + F('priority'),
+        ).order_by(F('ranking').desc(nulls_last=True))
+
+
+def frontpagestory_size(story):
     """initialise size of frontpage story"""
     priority = story.priority
     if priority < 6:
@@ -24,15 +56,6 @@ def frontpagestry_size(story):
 class FrontpageStoryManager(models.Manager):
     """Manager for FrontpageStory"""
 
-    def published(self):
-        from apps.stories.models import Story
-        return self.get_queryset().filter(
-            published=True,
-            story__publication_status__in=[
-                Story.STATUS_PUBLISHED, Story.STATUS_NOINDEX
-            ]
-        )
-
     def create_for_story(self, story):
         """factory function"""
 
@@ -40,7 +63,7 @@ class FrontpageStoryManager(models.Manager):
         if exists:
             return exists
 
-        columns, rows, priority = frontpagestry_size(story)
+        columns, rows, priority = frontpagestory_size(story)
 
         try:
             main_image = story.main_image().imagefile
@@ -71,7 +94,7 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
         verbose_name = _('Frontpage Story')
         verbose_name_plural = _('Frontpage Stories')
 
-    objects = FrontpageStoryManager()
+    objects = FrontpageStoryManager.from_queryset(FrontpageQuerySet)()
 
     story = models.ForeignKey(
         'stories.Story',
@@ -126,40 +149,30 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
         verbose_name=_('priority'),
         help_text=_('Modify ordering.'),
     )
-    order = models.PositiveIntegerField(
-        default=0,
-        editable=False,
-        verbose_name=_('order'),
-    )
     published = models.BooleanField(
         default=True,
         verbose_name=_('published'),
         help_text=_('published'),
     )
 
-    def save(self, *args, **kwargs):
-        self.order = self.calculate_order()
-        super().save(*args, **kwargs)
-
-    def calculate_order(self):
-        """Recalculate ordering on frontpage"""
-        try:
-            timestamp = self.story.publication_date.timestamp()
-        except AttributeError:
-            # parent story is not published
-            return 0
-        else:
-            return int((timestamp / 3600) + (self.priority * 24))
-
     def __str__(self):
         return self.headline or self.story.title
+
+    @property
+    def publication_date(self):
+        dawn_of_time = timezone.make_aware(timezone.datetime(2000, 1, 1))
+        return self.story.publication_date or dawn_of_time
 
     @property
     def size(self):
         return (self.columns, self.rows)
 
+    @size.setter
+    def size(self, value):
+        self.columns, self.rows = value
+
     @property
-    def url(self):
+    def story_url(self):
         return self.story.get_absolute_url()
 
     @property

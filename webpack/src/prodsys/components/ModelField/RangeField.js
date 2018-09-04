@@ -5,7 +5,13 @@ export const DetailField = ({ value, ...args }) => (
 )
 export const EditableField = ({ value, onChange, ...args }) => (
   <React.Fragment>
-    <input type="range" value={value} {...args} onChange={onChange} />
+    <input
+      style={{ direction: 'rtl' }}
+      type="range"
+      value={value}
+      {...args}
+      onChange={onChange}
+    />
     <span
       onClick={e => onChange(0)}
       style={{ width: '2rem', textAlign: 'center' }}
