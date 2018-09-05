@@ -44,7 +44,7 @@ class StaffSerializer(serializers.ModelSerializer):
 
 class SiteData:
     def __init__(self):
-        self.staff = Contributor.objects.active().prefetch_related(
+        self.staff = Contributor.objects.management().prefetch_related(
             'byline_photo',
         )
         self.sections = Section.objects.all().prefetch_related(
