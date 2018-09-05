@@ -27,6 +27,10 @@ logger = logging.getLogger(__name__)
 def today():
     return timezone.now().date()
 
+def yesterday():
+    return timezone.now().date() - timezone.timedelta(days=1)
+
+
 
 def default_groups():
     """Get or create editorial staff groups"""
@@ -194,6 +198,7 @@ class Contributor(TimeStampedModel, FuzzyNameSearchMixin, models.Model):
         if not active and self.status != self.EXTERNAL:
             self.status = self.RETIRED
             if save:
+                self.stint_set.active().update(end_date=yesterday())
                 self.save()
         # if self.user and self.user.is_active != active:
         #     self.user.is_active = active
