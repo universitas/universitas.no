@@ -111,8 +111,8 @@ def get_redux_actions(request, story):
     actions = [
         fetch_newsfeed(request),
         fetch_site(request),
-        fetch_issues(request),
         fetch_user(request),
+        #fetch_issues(request),
     ]
     if story:
         actions.append(fetch_story(request, int(story)))
@@ -162,9 +162,9 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
     )
 
     if request.user.is_anonymous and status_code == 200:
-        timeout = 60
+        timeout = 120
         if request.path != '/':
-            timeout *= 10
+            timeout *= 60
         cache.set(cache_key, (response, request.path), timeout)
 
     return response
