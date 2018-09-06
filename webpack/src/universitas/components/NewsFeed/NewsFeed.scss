@@ -181,7 +181,7 @@ $row-height: 12vh;
     .col-#{$n} {
       grid-column-end: span $n;
       .Headline {
-        font-size: (0.6em + $n * 0.4em);
+        font-size: (1em + $n * 0.4em);
       }
     }
     .row-#{$n} {

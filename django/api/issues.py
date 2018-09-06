@@ -60,7 +60,7 @@ class IssueViewSet(viewsets.ModelViewSet):
 class PrintIssueSerializer(serializers.HyperlinkedModelSerializer):
     """ModelSerializer for PrintIssue"""
 
-    cover = AbsoluteURLField(source='get_cover_page')
+    cover = AbsoluteURLField(source='get_cover_page.url')
 
     class Meta:
         model = PrintIssue
@@ -68,7 +68,6 @@ class PrintIssueSerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'issue',
             'pages',
-            'cover_page',
             'cover',
             'pdf',
         ]
