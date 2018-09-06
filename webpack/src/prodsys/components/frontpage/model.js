@@ -58,33 +58,11 @@ export const fields = {
     max: 20,
     editable: true,
   },
-  columns: {
-    label: 'kolonner',
-    type: 'select',
+  size: {
+    label: 'størrelse',
+    type: 'size',
     required: true,
     editable: true,
-    helpText: 'base width',
-    options: [
-      { value: 2, label: '2' },
-      { value: 3, label: '3' },
-      { value: 4, label: '4' },
-      { value: 6, label: '6' },
-    ],
-  },
-  rows: {
-    label: 'rader',
-    type: 'select',
-    required: true,
-    editable: true,
-    helpText: 'base height',
-    options: [
-      { value: 1, label: '1' },
-      { value: 2, label: '2' },
-      { value: 3, label: '3' },
-      { value: 4, label: '4' },
-      { value: 5, label: '5' },
-      { value: 6, label: '6' },
-    ],
   },
   published: {
     label: 'publisert',

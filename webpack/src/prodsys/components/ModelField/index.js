@@ -1,23 +1,24 @@
+import * as boolean from './CheckBoxField'
 import * as choice from './ChoiceField'
-import * as select from './SelectField.js'
-import * as string from './StringField'
-import * as integer from './IntegerField'
+import * as concat from './ConcatField'
+import * as count from './CountField'
+import * as cropbox from './CropBoxField.js'
 import * as date from './DateField'
 import * as datetime from './DateTimeField'
-import * as text from './TextField'
-import * as link from './LinkField'
-import * as thumb from './ThumbField'
-import * as image from './ImageField'
-import * as boolean from './CheckBoxField'
-import * as pdfs from './PdfField'
 import * as email from './EmailField'
-import * as phone from './PhoneField'
-import * as count from './CountField'
-import * as concat from './ConcatField'
-import * as stints from './StintsField'
 import * as filesize from './FileSizeField'
-import * as cropbox from './CropBoxField.js'
+import * as image from './ImageField'
+import * as integer from './IntegerField'
+import * as link from './LinkField'
+import * as pdfs from './PdfField'
+import * as phone from './PhoneField'
 import * as range from './RangeField.js'
+import * as select from './SelectField.js'
+import * as size from './SizeField.js'
+import * as stints from './StintsField'
+import * as string from './StringField'
+import * as text from './TextField'
+import * as thumb from './ThumbField'
 import { connect } from 'react-redux'
 import { modelActions, modelSelectors } from 'ducks/basemodel'
 import cx from 'classnames'
@@ -26,11 +27,11 @@ import * as R from 'ramda'
 import './modelfield.scss'
 
 const fieldTypes = {
+  boolean,
   choice,
   concat,
   count,
   cropbox,
-  boolean,
   date,
   datetime,
   email,
@@ -43,6 +44,7 @@ const fieldTypes = {
   range,
   select,
   shorttext: text,
+  size,
   stints,
   string,
   text,
@@ -56,6 +58,7 @@ export const Field = ({
   label,
   onChange,
   value,
+  helpText,
   ...props
 }) => {
   const { EditableField, DetailField } = R.propOr(
@@ -66,7 +69,7 @@ export const Field = ({
   const fieldProps = R.omit(['model', 'pk', 'name'], props)
   const ModelField = editable ? EditableField : DetailField
   return (
-    <div className={cx('ModelField', type, { editable })}>
+    <div title={helpText} className={cx('ModelField', type, { editable })}>
       {R.is(String, label) && <label className={cx('label')}>{label}</label>}
       <ModelField
         className={cx('value')}

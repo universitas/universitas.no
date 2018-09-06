@@ -1,10 +1,14 @@
 .FeedItemWrapper {
+  cursor: pointer;
   &.unpublished {
     background: black;
   }
   &.dirty {
   }
+  &.unselected {
+    opacity: 0.4;
+  }
   &.selected {
-    box-shadow: 0.1em 0.2em 1em 0 rgba(black, 0.5);
+    opacity: 1;
   }
 }

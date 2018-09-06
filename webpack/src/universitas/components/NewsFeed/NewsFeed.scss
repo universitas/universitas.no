@@ -1,4 +1,5 @@
 @import "styles/_common.scss";
+$row-height: 12vh;
 
 .FeedTerminator {
   border-top: 2px dashed #eee;
@@ -12,6 +13,161 @@
   margin-top: 2rem;
 }
 
+.FeedItem {
+  text-decoration: none;
+  .Kicker,
+  .Headline,
+  .Lede,
+  .Vignette {
+    margin: 0.3rem;
+  }
+  .Vignette {
+    font-size: 1rem;
+    line-height: 1;
+    font-family: $univ-serif;
+    font-weight: 800;
+    min-height: 2rem;
+    position: relative;
+    div {
+      box-shadow: 0.05em 0.1em 0.2em 0 rgba(black, 0.2);
+      position: absolute; // trick to fix android chrome render bug
+      padding: 0.2em 0.3em;
+    }
+    color: white;
+    justify-self: start;
+    align-self: start;
+  }
+  .Kicker {
+    font-family: $univ-condensed;
+    font-weight: 300;
+    font-size: 1.2em;
+    margin-bottom: 0;
+  }
+  .Lede,
+  .Headline,
+  .Kicker {
+    color: inherit;
+  }
+  .Headline {
+    @extend %headline;
+  }
+  &:hover .Headline {
+    // text-decoration: underline;
+  }
+  .Lede {
+    font-size: 1.2rem;
+    font-weight: 200;
+    margin-top: 0;
+  }
+  display: grid;
+}
+
+.bg-white {
+  color: inherit;
+  background: white;
+}
+.bg-black {
+  color: white;
+  background: $dark-grey;
+  .Headline {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+.bg-section {
+  color: white;
+  background: #666;
+  .Headline {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+.layout-top {
+  grid-template-rows: 1fr;
+  .Vignette,
+  .FeedImage {
+    grid-area: 1/1/2/2;
+  }
+}
+.layout-left {
+  grid-template-columns: 2fr 3fr;
+  grid-template-rows: auto auto 1fr;
+  .Vignette,
+  .FeedImage {
+    grid-column: 1/2;
+    grid-row: 1/4;
+    margin-right: 0.5rem;
+  }
+  .Lede,
+  .Headline,
+  .Kicker {
+    grid-column: 2/3;
+  }
+}
+.layout-behind {
+  grid-template-rows: 1fr auto auto auto;
+  text-shadow: rgba(black, 0.6) 0 0.1em 0.4em;
+  &.bg-white {
+    text-shadow: rgba(white, 0.4) 0 0 0.6em;
+  }
+  .Kicker,
+  .Headline,
+  .Lede {
+    justify-self: center;
+    text-align: center;
+    grid-column: 1/2;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+  .Kicker {
+    grid-row: 2/3;
+  }
+  .Headline {
+    grid-row: 3/4;
+  }
+  .Lede {
+    grid-row: 4/5;
+  }
+  .FeedImage,
+  .Vignette {
+    grid-area: 1/1/5/2;
+    text-shadow: none;
+  }
+}
+
+@each $section, $color in $section-colors {
+  .section-#{$section} {
+    &.bg-section {
+      @include section-color($section, darker);
+    }
+    .bg-section {
+      @include section-color($section, lighter);
+    }
+  }
+}
+
+.size-small {
+  font-size: 1rem;
+}
+.size-medium {
+  font-size: 1.3rem;
+}
+.size-large {
+  font-size: 1.6rem;
+}
+.weight-bold {
+  // bold is default
+}
+.weight-thin {
+  .Headline {
+    font-weight: 100;
+  }
+  .Kicker {
+    // font-size: 1.2rem;
+    font-weight: 100;
+  }
+}
+
 .NewsFeed {
   font-family: $univ-sans;
   display: grid;
@@ -19,38 +175,42 @@
   grid-gap: $gridgap;
   grid-template-columns: 1fr 1fr;
   grid-auto-flow: dense;
-  grid-auto-rows: minmax($row-height, auto);
-  @for $n from 1 through 8 {
+  grid-auto-rows: minmax($row-height * 1.5, auto);
+  // large screen
+  @for $n from 1 through 6 {
     .col-#{$n} {
-      grid-column-end: span if($n < 4, 1, 2);
+      grid-column-end: span $n;
       .Headline {
-        font-size: if($n < 4, 1.4rem, 2.2rem);
+        font-size: (0.6em + $n * 0.4em);
       }
     }
     .row-#{$n} {
-      grid-row-end: span ceil($n/ 2);
+      grid-row-end: span $n;
     }
   }
-  @include size(s) {
-    grid-template-columns: repeat(6, 1fr);
-    @for $n from 1 through 6 {
+  // mobile screen
+  @include max-size(s) {
+    @for $n from 1 through 8 {
       .col-#{$n} {
-        grid-column-end: span $n;
+        grid-column-end: span if($n < 4, 1, 2);
         .Headline {
-          font-size: (1rem + $n * 0.5rem);
+          font-size: if($n < 4, 1.3em, 1.8em);
+        }
+        &.layout-behind,
+        &.layout-left {
+          grid-column-end: span 2;
+          .Headline {
+            font-size: 1.8em;
+          }
         }
       }
       .row-#{$n} {
-        grid-row-end: span $n;
+        grid-row-end: span ceil($n / 2);
       }
     }
   }
-  .Kicker,
-  .Headline,
-  .Lede,
-  .Vignette {
-    margin: 0.3rem;
-  }
+  grid-auto-rows: minmax($row-height, auto);
+  grid-template-columns: repeat(6, 1fr);
   .FetchIndicator {
     line-height: 0;
     border-radius: 50%;
@@ -61,65 +221,6 @@
     background-color: rgba(black, 0.3);
     justify-self: end;
     align-self: start;
-  }
-  .Vignette {
-    line-height: 1;
-    font-family: $univ-serif;
-    font-weight: 800;
-    min-height: 2rem;
-    position: relative;
-    div {
-      box-shadow: 0.05em 0.1em 0.2em 0 rgba(black, 0.2);
-      position: absolute; // trick to fix android chrome render bug
-      background-color: #777;
-      @include section-background-color;
-      padding: 0.2em 0.3em;
-    }
-    color: white;
-    justify-self: start;
-    align-self: start;
-  }
-  .Kicker {
-    font-family: $univ-condensed;
-    font-weight: 300;
-    font-size: 1.2rem;
-    margin-bottom: 0;
-  }
-  .Headline {
-    @extend %headline;
-  }
-  .Lede {
-    margin-top: 0;
-  }
-  .FeedItem {
-    // overflow-x: hidden;
-    &:hover .Headline {
-      text-decoration: underline;
-    }
-    text-decoration: none;
-    color: inherit;
-    background: white;
-    display: grid;
-    grid-template-rows: [image-start] 1fr [image-end title-start] auto
-      [title-end] auto auto;
-    grid-template-columns: [image-start title-start] auto [image-end title-end];
-    &.negative {
-      background: $dark-grey;
-      color: white;
-      .Lede,
-      .Headline,
-      .Kicker {
-        grid-area: "title";
-        color: inherit;
-      }
-    }
-    .FetchIndicator,
-    .Vignette {
-      grid-area: image;
-    }
-    .FeedImage {
-      grid-area: image;
-    }
   }
   .FeedEnd {
     grid-column: 1 /-1;

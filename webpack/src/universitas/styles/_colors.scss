@@ -32,7 +32,7 @@ $section-colors: (
   $base-color: map-get($section-colors, $section);
   $color: none;
   @if $change == darker {
-    $color: scale-color($base-color, $lightness: -25%, $saturation: -15%);
+    $color: scale-color($base-color, $lightness: -25%, $saturation: 0%);
   } @else if $change == lighter {
     $color: scale-color($base-color, $lightness: 20%, $saturation: 25%);
   } @else {
@@ -82,14 +82,6 @@ $section-colors: (
   @each $section, $color in $section-colors {
     .#{$section} & {
       @include section-color($section, $text: true);
-    }
-  }
-}
-
-@mixin section-background-color {
-  @each $section, $color in $section-colors {
-    &.#{$section} {
-      @include section-color($section, lighter);
     }
   }
 }

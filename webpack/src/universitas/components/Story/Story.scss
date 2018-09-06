@@ -35,14 +35,14 @@ $externallink: "data:image/svg+xml," +
 
 // main bodytext area
 %left {
-  @include size(m) {
+  @include min-size(m) {
     width: calc(100% - #{$asidewidth + 1rem});
   }
 }
 
 // aside area
 %right {
-  @include size(m) {
+  @include min-size(m) {
     float: right;
     clear: right;
     width: $asidewidth;
@@ -75,10 +75,10 @@ $externallink: "data:image/svg+xml," +
   .Kicker {
     font-family: $univ-condensed;
     margin: 0.6rem 0 0 0;
-    font-size: 1.4rem;
     font-weight: 400;
-    @include size(s) {
-      font-size: 1.6rem;
+    font-size: 1.6rem;
+    @include max-size(s) {
+      font-size: 1.4rem;
     }
     & + .Headline {
       margin-top: 0.4rem;
@@ -86,21 +86,21 @@ $externallink: "data:image/svg+xml," +
   }
   .Headline {
     @extend %headline;
-    font-size: 2.2rem;
-    @include size(s) {
+    font-size: 4rem;
+    @include max-size(m) {
       font-size: 3rem;
     }
-    @include size(m) {
-      font-size: 4rem;
+    @include max-size(s) {
+      font-size: 2.2rem;
     }
     margin: 1rem 0 0 0;
   }
   .Lede {
     font-weight: lighter;
     color: $dark-grey;
-    font-size: 1.2rem;
-    @include size(m) {
-      font-size: 1.5rem;
+    font-size: 1.5rem;
+    @include max-size(m) {
+      font-size: 1.2rem;
     }
     margin: 0.6rem 0 0 0;
     line-height: 1.3em;
@@ -157,9 +157,9 @@ $externallink: "data:image/svg+xml," +
   }
   .mainContent {
     display: flex;
-    flex-direction: column;
-    @include size(s) {
-      flex-direction: row;
+    flex-direction: row;
+    @include max-size(s) {
+      flex-direction: column;
     }
   }
 }
@@ -169,7 +169,7 @@ $externallink: "data:image/svg+xml," +
   text-align: center;
   display: flex;
   flex-flow: row wrap;
-  @include size(s) {
+  @include min-size(s) {
     position: sticky;
     top: $menuheight + $gridgap;
     align-self: flex-start;

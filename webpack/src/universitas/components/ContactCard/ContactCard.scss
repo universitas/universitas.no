@@ -3,12 +3,12 @@
 .ContactGrid {
   padding: 1rem 0;
   display: grid;
-  grid-auto-rows: 7rem;
-  gap: 4rem;
-  @include size(xs) {
-    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
-    gap: 3rem;
-    grid-auto-rows: 9rem;
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  gap: 3rem;
+  grid-auto-rows: 9rem;
+  @include max-size(xs) {
+    grid-auto-rows: 7rem;
+    gap: 4rem;
   }
 }
 
@@ -49,9 +49,9 @@
     "thumb position "  
     "thumb email"  
     "thumb phone" ;
-  grid-template-columns: 7rem 1fr;
-  @include size(xs) {
-    grid-template-columns: 9rem 1fr;
+  grid-template-columns: 9rem 1fr;
+  @include max-size(xs) {
+    grid-template-columns: 7rem 1fr;
   }
 
   .thumb {

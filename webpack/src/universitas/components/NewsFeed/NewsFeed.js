@@ -9,9 +9,8 @@ import PlaceHolder from './PlaceHolder.js'
 
 // Standard grid sizes for below the fold feed items.
 // This makes dense css grid much less likely to have voids
-const standardizeGridItemSize = ({ rows, columns, ...props }) => ({
-  rows: [1, 2, 2, 2, 4, 4, 6][rows],
-  columns: [0, 2, 2, 2, 2, 4, 4][columns],
+const standardizeGridItemSize = ({ size: [columns, rows], ...props }) => ({
+  size: [[1, 2, 2, 2, 4, 4, 6][rows], [0, 2, 2, 2, 2, 4, 4][columns]],
   ...props,
 })
 
@@ -58,7 +57,7 @@ class NewsFeed extends React.Component {
 
     this.fetchNewsFeed = () => {
       const { items, feedRequested } = this.props
-      const offset = items.length ? R.last(items).order : null
+      const offset = items.length ? Math.floor(R.last(items).ranking) : null
       feedRequested({ offset })
     }
   }
@@ -91,14 +90,20 @@ class NewsFeed extends React.Component {
 
   render() {
     const { items, next, className, section } = this.props
+    const ads = [
+      <Advert.Qmedia key={`5 qmedia ${section}`} className="col-6 row-2" />,
+      <Advert.Google key={`20 adwords ${section}`} className="col-6 row-1" />,
+      <Advert.Google key={`35 adwords ${section}`} className="col-6 row-1" />,
+      <Advert.Google key={`50 adwords ${section}`} className="col-6 row-1" />,
+    ]
 
-    const feed = R.pipe(
+    const renderFeed = R.pipe(
       // Use complete item size customization for "above the fold" items only
-      mapFrom(section ? 0 : 20, standardizeGridItemSize),
+      mapFrom(section ? 0 : 21, standardizeGridItemSize),
       // last four stories should be small, and serve as scroll spies
       R.when(
         R.pipe(R.length, R.lt(8)),
-        mapFrom(-4, R.mergeDeepLeft({ columns: 2, rows: 2 })),
+        mapFrom(-4, R.mergeDeepLeft({ size: [2, 2] })),
       ),
       // render feed items
       R.map(props => (
@@ -110,7 +115,7 @@ class NewsFeed extends React.Component {
         />
       )),
       // add adverts
-      addAdverts(section),
+      addAdverts(ads),
       // append placeholders if fetching
       R.when(
         R.always(this.props.fetching),
@@ -121,9 +126,13 @@ class NewsFeed extends React.Component {
         R.always(this.props.next),
         R.append(<FeedTerminator key="terminator" />),
       ),
-    )(items)
+    )
 
-    return <section className={cx('NewsFeed', className)}>{feed}</section>
+    return (
+      <section className={cx('NewsFeed', className)}>
+        {renderFeed(items)}
+      </section>
+    )
   }
 }
 
@@ -136,24 +145,12 @@ const insertIfLongEnough = R.curry((index, item) =>
   R.when(R.pipe(R.length, R.lte(index)), R.insert(index, item)),
 )
 
-const addAdverts = (key = 'feed') =>
+export const addAdverts = (ads = ads) =>
   R.pipe(
-    insertIfLongEnough(
-      5,
-      <Advert.Qmedia key={`5 qmedia ${key}`} className="col-6 row-2" />,
-    ),
-    insertIfLongEnough(
-      20,
-      <Advert.Google key={`20 adwords ${key}`} className="col-6 row-1" />,
-    ),
-    insertIfLongEnough(
-      35,
-      <Advert.Google key={`35 adwords ${key}`} className="col-6 row-1" />,
-    ),
-    insertIfLongEnough(
-      50,
-      <Advert.Google key={`50 adwords ${key}`} className="col-6 row-1" />,
-    ),
+    insertIfLongEnough(5, ads[0]),
+    insertIfLongEnough(20, ads[1]),
+    insertIfLongEnough(35, ads[2]),
+    insertIfLongEnough(50, ads[3]),
   )
 
 const FeedTerminator = () => (

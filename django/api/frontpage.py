@@ -11,6 +11,14 @@ from django.db.models import Case, Q, When
 from utils.serializers import AbsoluteURLField, CropBoxField
 
 
+def size_validator(value):
+    columns, rows = value
+    if columns not in [2, 3, 4, 6]:
+        raise serializers.ValidationError('Incorrect column size')
+    if rows not in [1, 2, 3, 4, 5, 6]:
+        raise serializers.ValidationError('Incorrect row size')
+
+
 class NestedStorySerializer(serializers.ModelSerializer):
     section = serializers.CharField(source='story_type.section')
 
@@ -41,6 +49,13 @@ class FrontpageStorySerializer(serializers.ModelSerializer):
     language = serializers.SerializerMethodField()
     ranking = serializers.SerializerMethodField()
     baserank = serializers.SerializerMethodField()
+    size = serializers.ListField(
+        read_only=False,
+        min_length=2,
+        max_length=2,
+        child=serializers.IntegerField(min_value=1, max_value=10),
+        validators=[size_validator],
+    )
 
     def get_ranking(self, instance):
         return instance.ranking
@@ -64,8 +79,7 @@ class FrontpageStorySerializer(serializers.ModelSerializer):
             'vignette',
             'lede',
             'html_class',
-            'columns',
-            'rows',
+            'size',
             'published',
             'image',
             'imagefile',
@@ -109,7 +123,7 @@ class FrontpagePaginator(pagination.LimitOffsetPagination):
         self.request = request
 
         if self.offset:
-            queryset = queryset.filter(order__gt=self.offset)
+            queryset = queryset.filter(ranking__lt=self.offset)
         return list(queryset[:self.limit])
 
 

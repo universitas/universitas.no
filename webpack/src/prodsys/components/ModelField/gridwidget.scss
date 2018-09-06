@@ -1,0 +1,17 @@
+.GridWidget {
+  width: 10em;
+  height: 10em;
+  background-color: white;
+  display: grid;
+  margin: 0.1em;
+  border: 1px solid #ddd;
+  .Module {
+    border: 2px solid #ddd;
+    cursor: crosshair;
+    background: transparent;
+    &:hover,
+    &.current {
+      background: rgba(black, 0.5);
+    }
+  }
+}

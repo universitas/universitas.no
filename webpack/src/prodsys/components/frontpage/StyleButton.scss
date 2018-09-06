@@ -1,0 +1,30 @@
+.StyleButtons {
+  display: flex;
+  .optionGroup {
+    flex-direction: column;
+    display: flex;
+    .option {
+      cursor: pointer;
+      margin: 0.2em;
+      color: #222;
+      padding: 0.1em;
+      width: 3em;
+      height: 3em;
+      opacity: 0.6;
+      &.active {
+        opacity: 1;
+      }
+      &.bg--white {
+        border: 1px solid #bbb;
+      }
+      &.bg--section {
+        color: white;
+        background-color: red;
+      }
+      &.bg--black {
+        color: white;
+        background-color: #444;
+      }
+    }
+  }
+}

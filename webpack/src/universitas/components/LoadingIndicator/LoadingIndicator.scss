@@ -14,9 +14,9 @@ $red: lighten(red, 20%);
 }
 
 .cubeGrid {
-  font-size: 20vmin;
-  @include size(m) {
-    font-size: 10vmin;
+  font-size: 10vmin;
+  @include max-size(m) {
+    font-size: 20vmin;
   }
   margin: 0.5em;
   width: 3.1em;
