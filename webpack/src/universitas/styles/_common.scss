@@ -39,7 +39,7 @@ $pad: 0.5rem;
 $breakpoints: (xs: 450px, s: 700px, m: 900px, l: 1400px);
 
 @mixin min-size($size) {
-  @media only screen and (min-width: map_get($breakpoints, $size) + 1px) {
+  @media only screen and (min-width: map_get($breakpoints, $size)) {
     @content;
   }
 }
