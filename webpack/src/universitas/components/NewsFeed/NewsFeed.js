@@ -10,7 +10,7 @@ import PlaceHolder from './PlaceHolder.js'
 // Standard grid sizes for below the fold feed items.
 // This makes dense css grid much less likely to have voids
 const standardizeGridItemSize = ({ size: [columns, rows], ...props }) => ({
-  size: [[1, 2, 2, 2, 4, 4, 6][rows], [0, 2, 2, 2, 2, 4, 4][columns]],
+  size: [[0, 2, 2, 2, 2, 4, 4][columns], [0, 1, 2, 2, 4, 4, 4][rows]],
   ...props,
 })
 

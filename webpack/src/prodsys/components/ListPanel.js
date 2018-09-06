@@ -2,7 +2,7 @@ import Navigation from 'components/Navigation'
 import SearchField from 'components/SearchField'
 import Filter from 'components/Filter'
 
-const ListPanel = ({ model, filters = [], children = [] }) => {
+const ListPanel = ({ model, filters = [], children, ...props }) => {
   return (
     <section className="ListPanel">
       <div className="TopBar">
@@ -11,7 +11,9 @@ const ListPanel = ({ model, filters = [], children = [] }) => {
           <SearchField label="søk..." attr="search" model={model} />
         </div>
       </div>
-      <section className="itemList">{children}</section>
+      <section className="itemList" {...props}>
+        {children}
+      </section>
       <div className="BottomBar">
         <Navigation model={model} />
       </div>

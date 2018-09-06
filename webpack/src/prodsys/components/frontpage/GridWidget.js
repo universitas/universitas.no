@@ -1,6 +1,6 @@
-// Date Field
-import { formatDate } from 'utils/text'
-import './gridwidget.scss'
+import { actions, selectors } from './model.js'
+import { connect } from 'react-redux'
+import './GridWidget.scss'
 
 const max = R.reduce(R.max, -Infinity)
 
@@ -13,10 +13,15 @@ const Module = ({ size: [columns, rows], current, onClick }) => (
   />
 )
 
-class GridWidget extends React.Component {
+export class GridWidget extends React.Component {
   static state = { hover: false }
   render() {
-    const { onChange, columns, rows, value } = this.props
+    const {
+      onChange,
+      columns = [2, 3, 4, 6],
+      rows = [1, 2, 3, 4, 5, 6],
+      value = [2, 2],
+    } = this.props
     const grid = `repeat(${max(rows)}, 1fr) / repeat(${max(columns)}, 1fr)`
     const modules = R.map(
       size => <Module key={size} size={size} onClick={() => onChange(size)} />,
@@ -31,17 +36,10 @@ class GridWidget extends React.Component {
   }
 }
 
-export const EditableField = ({ value = '', onChange }) => (
-  <span>
-    <GridWidget
-      onChange={onChange}
-      value={value}
-      columns={[2, 3, 4, 6]}
-      rows={[1, 2, 3, 4, 5, 6]}
-    />
-  </span>
-)
-
-export const DetailField = ({ value: [columns, rows], ...args }) => (
-  <span {...args}>{`${columns}×${rows}`}</span>
-)
+const mapStateToProps = (state, { pk, name = 'size' }) => ({
+  value: selectors.getItem(pk)(state)[name],
+})
+const mapDispatchToProps = (dispatch, { pk, name = 'size' }) => ({
+  onChange: value => dispatch(actions.fieldChanged(pk, name, value)),
+})
+export default connect(mapStateToProps, mapDispatchToProps)(GridWidget)

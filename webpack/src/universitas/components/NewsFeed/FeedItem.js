@@ -66,6 +66,7 @@ export const FeedItem = ({
     {...props}
   >
     <FeedImage image={image} crop_box={crop_box} />
+    <div className="gradient" />
     <Vignette>{vignette}</Vignette>
     <Kicker>{hyphenate(kicker)}</Kicker>
     <Headline>{hyphenate(headline)}</Headline>

@@ -9,10 +9,6 @@ from statistics import median
 from typing import Union
 
 import PIL
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 
 from apps.contributors.models import Contributor
 from django.conf import settings
@@ -25,6 +21,10 @@ from django.db import connection, models
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
@@ -360,7 +360,9 @@ class ImageFile(  # type: ignore
     def preview(self) -> Thumbnail:
         """Return thumb of cropped image"""
         options = dict(crop_box=self.get_crop_box())
-        if self.is_profile_image():
+        if self.category == ImageFile.DIAGRAM:
+            options.update(expand=2)
+        if self.category == ImageFile.PROFILE:
             options.update(expand=0.2, colorspace='GRAY')
         return self.thumbnail('150x150', **options)
 

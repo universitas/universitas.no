@@ -4,6 +4,7 @@ import cx from 'classnames'
 import { FrontpageTools } from '.'
 import { fields, MODEL, selectors, actions } from './model.js'
 import StyleButtons from './StyleButtons.js'
+import GridWidget from './GridWidget.js'
 
 const Field = ({ name, ...props }) => (
   <ModelField
@@ -27,8 +28,10 @@ const FrontpageDetail = ({ pk, fieldChanged }) => (
           <Field pk={pk} name="lede" />
           <Field pk={pk} name="priority" />
           <Field pk={pk} name="imagefile" />
-          <Field pk={pk} name="size" />
-          <StyleButtons pk={pk} />
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <StyleButtons pk={pk} />
+            <GridWidget pk={pk} />
+          </div>
         </React.Fragment>
       ) : (
         <div>velg en sak</div>

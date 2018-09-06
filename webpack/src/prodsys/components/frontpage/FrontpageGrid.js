@@ -17,6 +17,7 @@ class FeedItemWrapper extends React.Component {
       })
   }
   clickHandler = ev => {
+    ev.stopPropagation()
     const { onClick, selected, pk } = this.props
     onClick(selected ? null : pk)
   }
@@ -88,21 +89,4 @@ const FrontpageGrid = ({ items = [] }) => {
   )
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const ids = selectors.getItemList(state)
-  const items = selectors.getItems(state)
-  const sorted = R.pipe(
-    R.pick(ids),
-    R.map(props => ({
-      ...props,
-      sortKey: props.baserank + parseFloat(props.priority),
-    })),
-    R.values,
-    R.sortWith([R.descend(R.prop('sortKey'))]),
-    R.pluck('id'),
-  )
-
-  return { items: sorted(items) }
-}
-
-export default connect(mapStateToProps)(FrontpageGrid)
+export default FrontpageGrid

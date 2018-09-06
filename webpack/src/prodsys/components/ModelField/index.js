@@ -14,7 +14,6 @@ import * as pdfs from './PdfField'
 import * as phone from './PhoneField'
 import * as range from './RangeField.js'
 import * as select from './SelectField.js'
-import * as size from './SizeField.js'
 import * as stints from './StintsField'
 import * as string from './StringField'
 import * as text from './TextField'
@@ -44,7 +43,6 @@ const fieldTypes = {
   range,
   select,
   shorttext: text,
-  size,
   stints,
   string,
   text,

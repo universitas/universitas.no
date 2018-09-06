@@ -3,11 +3,7 @@ import { connect } from 'react-redux'
 import ListPanel from 'components/ListPanel'
 import { Clear } from 'components/Icons'
 import { FrontpageGrid } from '.'
-import { MODEL, fields } from './model.js'
-
-const month = parseInt(new Date().toISOString().slice(5, 7))
-let year = parseInt(new Date().toISOString().slice(0, 4))
-if (month > 10) year += 1
+import { MODEL, fields, actions, selectors } from './model.js'
 
 const filters = [
   {
@@ -26,11 +22,37 @@ const filters = [
   },
 ]
 
-const FrontpageList = ({ model = MODEL }) => {
+const FrontpageList = ({ dismiss, items }) => {
   return (
-    <ListPanel model={model} filters={filters}>
-      <FrontpageGrid />
+    <ListPanel
+      onClick={e => {
+        dismiss()
+      }}
+      model={MODEL}
+      filters={filters}
+    >
+      <FrontpageGrid items={items} />
     </ListPanel>
   )
 }
-export default FrontpageList
+
+const mapStateToProps = (state, ownProps) => {
+  const ids = selectors.getItemList(state)
+  const items = selectors.getItems(state)
+  const sorted = R.pipe(
+    R.pick(ids),
+    R.map(props => ({
+      ...props,
+      sortKey: props.baserank + parseFloat(props.priority),
+    })),
+    R.values,
+    R.sortWith([R.descend(R.prop('sortKey'))]),
+    R.pluck('id'),
+  )
+
+  return { items: sorted(items) }
+}
+
+export default connect(mapStateToProps, {
+  dismiss: e => actions.reverseUrl({ id: null }),
+})(FrontpageList)

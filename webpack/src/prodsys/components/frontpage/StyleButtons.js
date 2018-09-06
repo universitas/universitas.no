@@ -1,5 +1,7 @@
 import cx from 'classnames'
 import './StyleButton.scss'
+import { actions, selectors } from './model.js'
+import { connect } from 'react-redux'
 import {
   SideBySide,
   ImageAboveText,
@@ -22,19 +24,19 @@ const buttons = {
     medium: MediumText,
     large: LargeText,
   },
-  layout: {
-    top: ImageAboveText,
-    left: SideBySide,
-    behind: TextOnImage,
+  bg: {
+    white: SmallText,
+    section: SmallText,
+    black: SmallText,
   },
   weight: {
     bold: BoldWeight,
     thin: ThinWeight,
   },
-  bg: {
-    white: SmallText,
-    black: SmallText,
-    section: SmallText,
+  layout: {
+    top: ImageAboveText,
+    left: SideBySide,
+    behind: TextOnImage,
   },
 }
 
@@ -68,12 +70,11 @@ export const StyleButtons = ({ value = '', onChange }) => {
     </div>
   )
 }
-import { actions, selectors } from './model.js'
-import { connect } from 'react-redux'
-const mapStateToProps = (state, { pk }) => ({
-  value: selectors.getItem(pk)(state).html_class,
+
+const mapStateToProps = (state, { pk, name = 'html_class' }) => ({
+  value: selectors.getItem(pk)(state)[name],
 })
-const mapDispatchToProps = (dispatch, { pk }) => ({
-  onChange: value => dispatch(actions.fieldChanged(pk, 'html_class', value)),
+const mapDispatchToProps = (dispatch, { pk, name = 'html_class' }) => ({
+  onChange: value => dispatch(actions.fieldChanged(pk, name, value)),
 })
 export default connect(mapStateToProps, mapDispatchToProps)(StyleButtons)
