@@ -5,13 +5,22 @@ import FuzzySet from 'fuzzyset'
 import Hypher from 'hypher'
 import norwegian from 'hyphenation.nb-no'
 
+const NBRS = '\xA0'
+const WORDJOINER = '\u2060'
+const SOFTHYPHEN = '\u00AD'
+const APOSTROPHE = 'ʼ'
+
 // captialize
 export const capitalize = R.replace(/./, R.toUpper)
 
 // hyphenate text
 const hyphenator_no = new Hypher({ ...norwegian, rightmin: 4, leftmin: 4 })
 
-export const hyphenate = text => hyphenator_no.hyphenateText(text, 10)
+export const hyphenate = R.ifElse(
+  R.contains('~'),
+  R.replace(/~/g, SOFTHYPHEN),
+  text => hyphenator_no.hyphenateText(text, 10),
+)
 
 // pretty JSON
 export const toJson = R.tryCatch(prettyJson, (e, data) =>
@@ -33,10 +42,6 @@ export const makeFuzzer = (candidates, cutoff = 0.5) => {
 }
 
 // :: string -> string
-
-const NBRS = '\xA0'
-const WORDJOINER = '\u2060'
-const APOSTROPHE = 'ʼ'
 
 // cleanup some markup
 export const cleanText = R.pipe(

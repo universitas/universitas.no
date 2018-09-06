@@ -3,12 +3,12 @@
 .PdfList {
   display: grid;
   /* prettier-ignore */
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  grid-gap: 2rem;
 
-  @include size(xs) {
-    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
-    grid-gap: 2rem;
+  @include max-size(xs) {
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
   }
 
   .Issue {
@@ -44,9 +44,8 @@
       @extend %smaller;
       // font-size: 0.8em;
       display: flex;
-      flex-direction: column;
-      @include size(xs) {
-        flex-direction: row;
+      @include max-size(xs) {
+        flex-direction: column;
       }
       align-items: center;
       justify-content: space-around;

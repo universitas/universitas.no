@@ -16,9 +16,9 @@ const PdfLink = ({ url }) => (
   </span>
 )
 
-const PdfThumb = ({ cover_page, pages, pdf }) => (
+const PdfThumb = ({ cover, pages, pdf }) => (
   <div className="PdfThumb">
-    <Thumb className="dropshadow" src={cover_page} />
+    <Thumb className="dropshadow" src={cover} />
     <span className="data">
       {pages} sider <PdfLink url={pdf} />{' '}
     </span>

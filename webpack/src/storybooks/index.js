@@ -11,6 +11,7 @@ storiesOf('Elements', module)
   .add('basic typography', () => <Typography />)
   .add('icons', () => <IconTable />)
 
+require('./frontPageEdit')
 require('./forms')
 require('./select')
 import Editor from 'markup/components/Editor'

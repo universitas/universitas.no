@@ -11,6 +11,14 @@ from django.db.models import Case, Q, When
 from utils.serializers import AbsoluteURLField, CropBoxField
 
 
+def size_validator(value):
+    columns, rows = value
+    if columns not in [2, 3, 4, 6]:
+        raise serializers.ValidationError('Incorrect column size')
+    if rows not in [1, 2, 3, 4, 5, 6]:
+        raise serializers.ValidationError('Incorrect row size')
+
+
 class NestedStorySerializer(serializers.ModelSerializer):
     section = serializers.CharField(source='story_type.section')
 
@@ -39,6 +47,21 @@ class FrontpageStorySerializer(serializers.ModelSerializer):
     )
     story = NestedStorySerializer(read_only=True)
     language = serializers.SerializerMethodField()
+    ranking = serializers.SerializerMethodField()
+    baserank = serializers.SerializerMethodField()
+    size = serializers.ListField(
+        read_only=False,
+        min_length=2,
+        max_length=2,
+        child=serializers.IntegerField(min_value=1, max_value=10),
+        validators=[size_validator],
+    )
+
+    def get_ranking(self, instance):
+        return instance.ranking
+
+    def get_baserank(self, instance):
+        return instance.baserank
 
     def get_language(self, instance):
         if instance.story.language == 'en':
@@ -50,22 +73,23 @@ class FrontpageStorySerializer(serializers.ModelSerializer):
         model = FrontpageStory
         fields = [
             'id',
+            'url',
             'headline',
             'kicker',
             'vignette',
             'lede',
             'html_class',
-            'columns',
-            'rows',
-            'order',
+            'size',
             'published',
-            'priority',
             'image',
             'imagefile',
             'crop_box',
             'section',
             'language',
             'story',
+            'priority',
+            'ranking',
+            'baserank',
         ]
 
 
@@ -86,7 +110,7 @@ class FrontpagePaginator(pagination.LimitOffsetPagination):
         url = self.request.build_absolute_uri()
         url = replace_query_param(url, self.limit_query_param, self.limit)
 
-        offset = data[-1]['order']
+        offset = data[-1]['ranking']
         return replace_query_param(url, self.offset_query_param, offset)
 
     def paginate_queryset(self, queryset, request, view=None):
@@ -99,17 +123,15 @@ class FrontpagePaginator(pagination.LimitOffsetPagination):
         self.request = request
 
         if self.offset:
-            queryset = queryset.filter(order__lt=self.offset)
+            queryset = queryset.filter(ranking__lt=self.offset)
         return list(queryset[:self.limit])
 
 
 class FrontpageStoryViewset(viewsets.ModelViewSet):
     """ Frontpage news feed. """
 
-    queryset = FrontpageStory.objects.published(
-    ).order_by('-order').prefetch_related(
-        'imagefile', 'story', 'story__story_type__section'
-    )
+    queryset = FrontpageStory.objects.published().with_ranking(
+    ).prefetch_related('imagefile', 'story', 'story__story_type__section')
     serializer_class = FrontpageStorySerializer
     pagination_class = FrontpagePaginator
 

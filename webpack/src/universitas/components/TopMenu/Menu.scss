@@ -38,27 +38,27 @@
     }
     &.one {
       .Sections {
-        display: none;
-        @include size(s) {
-          display: flex;
+        display: flex;
+        @include max-size(s) {
+          display: none;
         }
       }
       .pageLinks,
       .SearchWidget,
       .LanguageWidget {
-        display: none;
-        @include size(l) {
-          display: flex;
+        display: flex;
+        @include max-size(l) {
+          display: none;
         }
       }
       .MenuIcon {
-        @include size(l) {
+        @include min-size(l) {
           display: none;
         }
       }
     }
     &.two {
-      @include size(l) {
+      @include min-size(l) {
         // always hide on large screens
         display: none;
       }

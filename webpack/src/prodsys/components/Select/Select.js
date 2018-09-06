@@ -42,13 +42,11 @@ class Select extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { fetching, value, item, model, items } = this.props
-    if (model == 'contributor') console.log({ value, item })
     if (prevProps.fetching != fetching) this.setState({ isLoading: fetching })
     if (value && !item) {
       const createdItem = R.last(
         R.filter(R.propEq('label', value), R.values(items)),
       )
-      console.log({ value, createdItem })
       if (createdItem) {
         this.props.onChange(this.getOptionValue(createdItem))
       }
@@ -126,7 +124,6 @@ const creatableProps = {
      created, and `onChange` will **not** be called. Use this when you need more
      control over what happens when new options are created. */
   // onCreateOption?: string => void,
-  // onCreateOption: console.log,
   /* Sets the position of the createOption element in your options list. Defaults to 'last' */
   // createOptionPosition: 'first' | 'last',
   createOptionPosition: 'first',

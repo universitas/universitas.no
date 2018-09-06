@@ -1,15 +1,20 @@
-from apps.issues.models import Issue, PrintIssue
 from rest_framework import filters, pagination, serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
 
+from apps.issues.models import Issue, PrintIssue
+from utils.serializers import AbsoluteURLField
+
 
 class NestedPDFSerializer(serializers.ModelSerializer):
+
+    cover = AbsoluteURLField(source='get_cover_page.url')
+
     class Meta:
         model = PrintIssue
         fields = [
             'url',
             'pages',
-            'cover_page',
+            'cover',
             'pdf',
         ]
 
@@ -55,6 +60,8 @@ class IssueViewSet(viewsets.ModelViewSet):
 class PrintIssueSerializer(serializers.HyperlinkedModelSerializer):
     """ModelSerializer for PrintIssue"""
 
+    cover = AbsoluteURLField(source='get_cover_page')
+
     class Meta:
         model = PrintIssue
         fields = [
@@ -62,6 +69,7 @@ class PrintIssueSerializer(serializers.HyperlinkedModelSerializer):
             'issue',
             'pages',
             'cover_page',
+            'cover',
             'pdf',
         ]
 

@@ -1,7 +1,8 @@
 import json
 
-from apps.photo.cropping.boundingbox import CropBox
 from rest_framework import exceptions, serializers
+
+from apps.photo.cropping.boundingbox import CropBox
 
 
 class jsonDict(dict):
@@ -19,8 +20,8 @@ class AbsoluteURLField(serializers.Field):
             return None
         request = self.context.get('request', None)
         if request is not None:
-            return request.build_absolute_uri(value)
-        return value
+            return str(request.build_absolute_uri(value))
+        return str(value)
 
 
 class CropBoxField(serializers.Field):

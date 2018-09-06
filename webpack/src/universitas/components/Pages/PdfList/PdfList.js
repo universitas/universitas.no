@@ -3,10 +3,10 @@ import cx from 'classnames'
 
 const filename = R.replace(/.*\//, '')
 
-const Faximile = ({ cover_page, pages, pdf }) => (
-  <div className="Faximile" key={cover_page}>
+const Faximile = ({ cover, pages, pdf }) => (
+  <div className="Faximile" key={cover}>
     <a href={pdf}>
-      <img alt={filename(pdf)} src={cover_page} />
+      <img alt={filename(pdf)} src={cover} />
     </a>
   </div>
 )

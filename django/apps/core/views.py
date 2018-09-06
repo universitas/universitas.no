@@ -78,7 +78,8 @@ def fetch_story(request, pk):
 @cache_memoize(timeout=60 * 30, args_rewrite=only_anon)
 def fetch_newsfeed(request):
     response = FrontpageStoryViewset.as_view({'get': 'list'})(request)
-    return {'type': 'newsfeed/FEED_FETCHED', 'payload': response.data}
+    payload = json.loads(json.dumps(response.data))
+    return {'type': 'newsfeed/FEED_FETCHED', 'payload': payload}
 
 
 @receiver(post_save, sender=FrontpageStory)
@@ -90,6 +91,7 @@ def clear_feed_cache(sender, instance, **kwargs):
 def fetch_issues(request):
     response = IssueViewSet.as_view({'get': 'list'})(request)
     payload = {'issues': response.data.get('results')}
+    payload = json.loads(json.dumps(payload))
     return {'type': 'issues/ISSUES_FETCHED', 'payload': payload}
 
 

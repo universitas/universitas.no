@@ -2918,7 +2918,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/560/",
             "pages": 20,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-1.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/40f714d84f1f11e886db0242ac120005/universitas_2017-1.pdf"
@@ -2936,7 +2936,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/561/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-2.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/42c093ca4f1f11e8a9cb0242ac120005/universitas_2017-2.pdf"
@@ -2954,7 +2954,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/562/",
             "pages": 20,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-3.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/45709d0e4f1f11e8adb30242ac120005/universitas_2017-3.pdf"
@@ -2972,7 +2972,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/563/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-4.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/49d844824f1f11e898580242ac120005/universitas_2017-4.pdf"
@@ -2990,7 +2990,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/564/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-5.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/4abd18fa4f1f11e882a90242ac120005/universitas_2017-5.pdf"
@@ -3008,7 +3008,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/565/",
             "pages": 20,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-6.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/4cb4d1844f1f11e886db0242ac120005/universitas_2017-6.pdf"
@@ -3026,7 +3026,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/566/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-7.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/3ea3c1e04f1f11e896a30242ac120005/universitas_2017-7.pdf"
@@ -3044,7 +3044,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/567/",
             "pages": 20,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-8.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/46ec84a44f1f11e89db90242ac120005/universitas_2017-8.pdf"
@@ -3062,7 +3062,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/568/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-9.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/49aa5fb84f1f11e8b8a20242ac120005/universitas_2017-9.pdf"
@@ -3080,7 +3080,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/569/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-10.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/4d3f64fc4f1f11e8a9cb0242ac120005/universitas_2017-10.pdf"
@@ -3098,7 +3098,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/571/",
             "pages": 20,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-11_mag.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/4d5c751a4f1f11e896a30242ac120005/universitas_2017-11_mag.pdf"
@@ -3106,7 +3106,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/570/",
             "pages": 20,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-11.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/4e64629c4f1f11e8adb30242ac120005/universitas_2017-11.pdf"
@@ -3124,7 +3124,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/573/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-12.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/57bea5d24f1f11e8a9cb0242ac120005/universitas_2017-12.pdf"
@@ -3142,7 +3142,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/574/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-13.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/5a3f95964f1f11e8adb30242ac120005/universitas_2017-13.pdf"
@@ -3160,7 +3160,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/575/",
             "pages": 32,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-14.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/5aa034dc4f1f11e8b8a20242ac120005/universitas_2017-14.pdf"
@@ -3178,7 +3178,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/577/",
             "pages": 20,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-15_mag.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/54ec76a44f1f11e896a30242ac120005/universitas_2017-15_mag.pdf"
@@ -3186,7 +3186,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/576/",
             "pages": 28,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-15.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/57da79744f1f11e882a90242ac120005/universitas_2017-15.pdf"
@@ -3204,7 +3204,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/579/",
             "pages": 12,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-16_mag.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/5255609a4f1f11e8b8a20242ac120005/universitas_2017-16_mag.pdf"
@@ -3212,7 +3212,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/578/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-16.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/552b442e4f1f11e88e9f0242ac120005/universitas_2017-16.pdf"
@@ -3230,7 +3230,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/580/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-17.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/61b5ad104f1f11e894e30242ac120005/universitas_2017-17.pdf"
@@ -3248,7 +3248,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/581/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-18.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/5255b89c4f1f11e894e30242ac120005/universitas_2017-18.pdf"
@@ -3266,7 +3266,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/582/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-19.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/615616664f1f11e898580242ac120005/universitas_2017-19.pdf"
@@ -3274,7 +3274,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/583/",
             "pages": 20,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-19_mag.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/5f6176fc4f1f11e886db0242ac120005/universitas_2017-19_mag.pdf"
@@ -3292,7 +3292,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/584/",
             "pages": 20,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-20.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/670f381c4f1f11e89db90242ac120005/universitas_2017-20.pdf"
@@ -3310,7 +3310,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/585/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-21.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/6561cfe84f1f11e8adb30242ac120005/universitas_2017-21.pdf"
@@ -3328,7 +3328,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/586/",
             "pages": 28,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-22.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/685d46464f1f11e8a9cb0242ac120005/universitas_2017-22.pdf"
@@ -3346,7 +3346,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/589/",
             "pages": 32,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-25.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/6d510aca4f1f11e88e9f0242ac120005/universitas_2017-25.pdf"
@@ -3364,7 +3364,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/590/",
             "pages": 20,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-26.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/6eb27e124f1f11e896a30242ac120005/universitas_2017-26.pdf"
@@ -3382,7 +3382,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/591/",
             "pages": 32,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-27.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/77911fde4f1f11e882a90242ac120005/universitas_2017-27.pdf"
@@ -3400,7 +3400,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/592/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-28.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/796ef6dc4f1f11e8adb30242ac120005/universitas_2017-28.pdf"
@@ -3418,7 +3418,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/595/",
             "pages": 20,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-30_mag.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/6e7323b64f1f11e898580242ac120005/universitas_2017-30_mag.pdf"
@@ -3426,7 +3426,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/594/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-30.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/7a9a42fa4f1f11e898580242ac120005/universitas_2017-30.pdf"
@@ -3444,7 +3444,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/587/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-23.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/69cc239e4f1f11e882a90242ac120005/universitas_2017-23.pdf"
@@ -3462,7 +3462,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/588/",
             "pages": 20,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-24.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/6d40202a4f1f11e886db0242ac120005/universitas_2017-24.pdf"
@@ -3480,7 +3480,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/593/",
             "pages": 28,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2017-29.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/757af1204f1f11e8b8a20242ac120005/universitas_2017-29.pdf"
@@ -3498,7 +3498,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/596/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2018-1.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/7cad8f344f1f11e896a30242ac120005/universitas_2018-1.pdf"
@@ -3516,7 +3516,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/597/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2018-2.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/7ac8cd5a4f1f11e89db90242ac120005/universitas_2018-2.pdf"
@@ -3534,7 +3534,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/598/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2018-3.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/7c367c144f1f11e894e30242ac120005/universitas_2018-3.pdf"
@@ -3552,7 +3552,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/599/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2018-4.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/7c3617ce4f1f11e886db0242ac120005/universitas_2018-4.pdf"
@@ -3570,7 +3570,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/600/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2018-5.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/7db3c61e4f1f11e8a9cb0242ac120005/universitas_2018-5.pdf"
@@ -3588,7 +3588,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/601/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2018-6.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/5457ac724f1f11e886db0242ac120005/universitas_2018-6.pdf"
@@ -3606,7 +3606,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/602/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2018-7.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/7f6dc09a4f1f11e8b8a20242ac120005/universitas_2018-7.pdf"
@@ -3614,7 +3614,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/603/",
             "pages": 20,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2018-7_mag.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/80010d144f1f11e88e9f0242ac120005/universitas_2018-7_mag.pdf"
@@ -3632,7 +3632,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/604/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2018-8.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/82e40cde4f1f11e89db90242ac120005/universitas_2018-8.pdf"
@@ -3650,7 +3650,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/605/",
             "pages": 24,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2018-9.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/8520da0e4f1f11e896a30242ac120005/universitas_2018-9.pdf"
@@ -3668,7 +3668,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/606/",
             "pages": 20,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2018-10.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/8686a5684f1f11e886db0242ac120005/universitas_2018-10.pdf"
@@ -3686,7 +3686,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/608/",
             "pages": 16,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2018-11_mag.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/8907ce164f1f11e8adb30242ac120005/universitas_2018-11_mag.pdf"
@@ -3694,7 +3694,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/607/",
             "pages": 28,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2018-11.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/8a2d25844f1f11e894e30242ac120005/universitas_2018-11.pdf"
@@ -3712,7 +3712,7 @@
           {
             "url": "http://localhost:8000/api/pdfs/609/",
             "pages": 28,
-            "cover_page":
+            "cover":
               "http://localhost:8000/media/pdf/covers/universitas_2018-12.jpg",
             "pdf":
               "http://localhost:8000/media/pdf/8ab933ee4f1f11e8a9cb0242ac120005/universitas_2018-12.pdf"

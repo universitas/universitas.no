@@ -38,8 +38,14 @@ $pad: 0.5rem;
 
 $breakpoints: (xs: 450px, s: 700px, m: 900px, l: 1400px);
 
-@mixin size($size) {
-  @media only screen and (min-width: map_get($breakpoints, $size)) {
+@mixin min-size($size) {
+  @media only screen and (min-width: map_get($breakpoints, $size) + 1px) {
+    @content;
+  }
+}
+
+@mixin max-size($size) {
+  @media only screen and (max-width: map_get($breakpoints, $size)) {
     @content;
   }
 }

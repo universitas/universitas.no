@@ -4,10 +4,30 @@ from apps.photo.admin import ThumbAdmin
 from django import forms
 from django.contrib import admin
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
 
 from .models import FrontpageStory
 
 smallTextArea = forms.Textarea(attrs={'cols': '16', 'rows': '4'})
+
+
+class FrontpagePublishedFilter(admin.SimpleListFilter):
+    title = _('published')
+    parameter_name = 'status'
+
+    def lookups(self, request, model_admin):
+        """ what will be shown in the sidebar """
+        return (
+            (None, _('published')),
+            ('no', _('unpublished')),
+        )
+
+    def queryset(self, request, queryset):
+
+        if self.value() == 'no':
+            return queryset.difference(queryset.published())
+        else:
+            return queryset.published()
 
 
 class FrontPageListForm(forms.ModelForm):
@@ -29,7 +49,6 @@ class FrontpageStoryAdmin(admin.ModelAdmin, ThumbAdmin):
     list_display = [
         'id',
         'published',
-        'order',
         'priority',
         'columns',
         'rows',
@@ -40,9 +59,10 @@ class FrontpageStoryAdmin(admin.ModelAdmin, ThumbAdmin):
         'html_class',
         'full_thumb',
         'for_story',
+        'ranking',
     ]
-    ordering = ['-order']
     autocomplete_fields = ['story', 'imagefile']
+    list_filter = [FrontpagePublishedFilter]
     list_editable = [
         'priority',
         'kicker',
@@ -55,6 +75,12 @@ class FrontpageStoryAdmin(admin.ModelAdmin, ThumbAdmin):
         'html_class',
     ]
     search_fields = ['headline']
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).with_ranking()
+
+    def ranking(self, instance):
+        return f'{instance.ranking:.3f}' if instance.ranking else '[unpublished]'
 
     def for_story(self, instance):
         url = instance.story.get_edit_url()

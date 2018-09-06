@@ -4,6 +4,7 @@ import Link from 'redux-first-router-link'
 import { Done, Sync, Clear } from 'components/Icons'
 import { toStory } from 'ducks/router'
 import { hyphenate, slugify } from 'utils/text'
+import { renderStyles, parseStyles } from './feedItemStyles.js'
 
 const position = ({ x = 0.5, y = 0.5 }) => `${x * 100}% ${y * 100}%`
 
@@ -12,7 +13,7 @@ const ifChildren = Component => props =>
 
 const Vignette = ifChildren(({ children, sectionName }) => (
   <div className="Vignette">
-    <div className={cx(slugify(sectionName))}>{children}</div>
+    <div className="bg-section">{children}</div>
   </div>
 ))
 const Headline = ifChildren(({ children }) => (
@@ -41,8 +42,7 @@ const Wrapper = props => <div {...props} />
 
 export const FeedItem = ({
   html_class,
-  columns,
-  rows,
+  size: [columns, rows] = [2, 2],
   image,
   headline,
   vignette,
@@ -60,12 +60,13 @@ export const FeedItem = ({
       'FeedItem',
       `col-${columns}`,
       `row-${rows}`,
-      html_class,
+      `section-${slugify(sectionName)}`,
+      renderStyles(parseStyles(html_class)),
     )}
     {...props}
   >
     <FeedImage image={image} crop_box={crop_box} />
-    <Vignette sectionName={sectionName}>{vignette}</Vignette>
+    <Vignette>{vignette}</Vignette>
     <Kicker>{hyphenate(kicker)}</Kicker>
     <Headline>{hyphenate(headline)}</Headline>
     <Lede>{lede}</Lede>

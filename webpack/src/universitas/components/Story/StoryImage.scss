@@ -9,9 +9,9 @@
     img {
       width: 100%;
       height: auto;
-      min-height: 40vh;
-      @include size(s) {
-        min-height: 20vh;
+      min-height: 20vh;
+      @include max-size(s) {
+        min-height: 40vh;
       }
       object-fit: cover;
       &.autoCrop {

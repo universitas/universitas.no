@@ -16,7 +16,7 @@ const storyProdsys = pk => `${global.location.origin}/prodsys/stories/${pk}`
 const photoProdsys = pk => `${global.location.origin}/prodsys/photos/${pk}`
 const frontpageDjango = () =>
   `${global.location.origin}/admin/frontpage/frontpagestory/`
-const frontpageProdsys = () => `${global.location.origin}/prodsys/`
+const frontpageProdsys = () => `${global.location.origin}/prodsys/frontpage/`
 
 const djangoUrl = location => {
   switch (location.type) {

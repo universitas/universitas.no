@@ -63,7 +63,7 @@ const optionsFields = {
           label: 'Sider',
           help_text: 'Number of pages',
         },
-        cover_page: {
+        cover: {
           type: 'image upload',
           required: false,
           read_only: false,
