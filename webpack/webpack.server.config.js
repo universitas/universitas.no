@@ -6,7 +6,6 @@ const config = require('./webpack.config.js')
 module.exports = {
   ...config,
   target: 'node',
-  mode: 'development',
   externals: [nodeExternals()],
   devtool: 'none',
   entry: { server: './src/entrypoints/server.js' },

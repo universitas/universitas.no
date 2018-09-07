@@ -105,7 +105,7 @@ class FrontpageStorySerializer(serializers.ModelSerializer):
 
 
 class FrontpagePaginator(pagination.LimitOffsetPagination):
-    default_limit = 25
+    default_limit = 20
 
     def get_paginated_response(self, data):
         return Response(

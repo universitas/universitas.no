@@ -4,7 +4,9 @@ class FeedImage extends React.Component {
   constructor(props) {
     super(props)
     const { moduleSize = [1, 1] } = props
-    this.state = { aspect: moduleSize[0] / moduleSize[1] }
+    this.state = {
+      aspect: global.serverSide && moduleSize[0] / moduleSize[1],
+    }
     this.refHandler = node => (this.node = node)
     this.updateSize = () => {
       if (!this.node) return
@@ -29,8 +31,14 @@ class FeedImage extends React.Component {
     const { imagefile, crop_box, moduleSize } = this.props
     const { large, width, height } = imagefile
     const { aspect } = this.state
-    const style = getStyles(large, crop_box, width / height, aspect)
-    return <div ref={this.refHandler} style={style} className="FeedImage" />
+    const style = aspect
+      ? getStyles(large, crop_box, width / height, aspect)
+      : null
+    return (
+      <div ref={this.refHandler} className="FeedImage">
+        {style && <div className="inner" style={style} />}
+      </div>
+    )
   }
 }
 

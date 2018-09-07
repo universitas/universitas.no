@@ -7,6 +7,7 @@ import render from './Universitas/serverRender'
 const PORT = process.env.NODE_PORT || 9000
 
 const handleRender = (req, res) => {
+  global.serverSide = true
   const actions = req.body
   const url = req.url
   try {

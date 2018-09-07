@@ -14,12 +14,9 @@ const outputhash = '[name].[chunkhash:12]'
 config.output.filename = outputhash + '.js'
 
 // Plugins
-const productionEnv = new webpack.DefinePlugin({
-  'process.env': { NODE_ENV: JSON.stringify('production') },
-})
 const extractCss = new MiniCssExtractPlugin({ filename: outputhash + '.css' })
 const progressBar = new ProgressBarPlugin({ width: 50 })
-config.plugins.push(productionEnv, extractCss, progressBar)
+config.plugins.push(extractCss, progressBar)
 
 config.optimization.minimizer = [
   new OptimizeCssAssetsPlugin({
