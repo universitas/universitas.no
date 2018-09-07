@@ -7,8 +7,8 @@ const Caption = ({ caption = '', creditline = '' }) => {
   const [, intro, body] = match
   return (
     <div className="Caption">
-      {intro && <span className="stikk">{intro}</span>}
-      {body}
+      {intro && <span className="stikk">{inlineText(intro)} </span>}
+      {inlineText(body)}
       {creditline && <span className="creditline">{creditline}</span>}
     </div>
   )

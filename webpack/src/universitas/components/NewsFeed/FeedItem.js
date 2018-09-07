@@ -5,6 +5,7 @@ import { Done, Sync, Clear } from 'components/Icons'
 import { toStory } from 'ducks/router'
 import { hyphenate, slugify } from 'utils/text'
 import { renderStyles, parseStyles } from './feedItemStyles.js'
+import { inlineText } from 'markup/render.js'
 
 const position = ({ x = 0.5, y = 0.5 }) => `${x * 100}% ${y * 100}%`
 
@@ -67,10 +68,10 @@ export const FeedItem = ({
   >
     <FeedImage image={image} crop_box={crop_box} />
     <div className="gradient" />
-    <Vignette>{vignette}</Vignette>
-    <Kicker>{hyphenate(kicker)}</Kicker>
-    <Headline>{hyphenate(headline)}</Headline>
-    <Lede>{lede}</Lede>
+    <Vignette>{inlineText(vignette)}</Vignette>
+    <Kicker>{inlineText(hyphenate(kicker))}</Kicker>
+    <Headline>{inlineText(hyphenate(headline))}</Headline>
+    <Lede>{inlineText(lede)}</Lede>
   </Wrapper>
 )
 

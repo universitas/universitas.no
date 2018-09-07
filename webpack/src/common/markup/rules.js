@@ -11,13 +11,13 @@ export const TAGS = [
   'mt',
   'bl',
   'ing',
+  'sitat',
+  'sitatbyline',
   'tit',
   'tema',
-  'sitatbyline',
   'spm',
   'fakta',
   'faktatit',
-  'sitat',
 ]
 
 const [leaf, inline] = [true, true] // helpers for object shorthand
@@ -30,7 +30,7 @@ const baseRules = {
     inline,
     order: 0,
     type: 'character',
-    pattern: /\\(\W)/,
+    pattern: /\\(.)/,
   },
   newline: {
     // newline in "inline" text (for headlines)
@@ -49,7 +49,7 @@ const baseRules = {
   text: {
     inline,
     leaf,
-    pattern: /[^\n\\_\[]+/,
+    pattern: /[^_\*\[\n\\]+/,
     order: 0,
   },
   link: {
@@ -65,7 +65,8 @@ const baseRules = {
   },
   em: {
     inline,
-    pattern: /_(.*?)_/,
+    pattern: /([_\*])(.+?)\1/,
+    groups: ['sym', 'content'],
     reverse: ({ content }) => `_${content}_`,
   },
   place: {
@@ -82,7 +83,7 @@ const baseRules = {
       const space = R.contains(tag, ['mt', 'spm', 'tingo']) ? '\n' : ''
       return `${space}@${tag}: ${content}`
     },
-    process: R.evolve({ tag: makeFuzzer(TAGS, 0.5) }), // fuzzy match
+    process: R.evolve({ tag: makeFuzzer(TAGS, 0.7) }), // fuzzy match
   },
   listItem: {
     pattern: /^(?:\* |# |@li:) *(.*)$/,

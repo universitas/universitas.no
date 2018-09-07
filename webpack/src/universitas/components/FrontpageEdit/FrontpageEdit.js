@@ -63,13 +63,13 @@ const EditLinks = ({ location, close }) => {
   const urls = djangoUrl(location)
   return (
     <React.Fragment>
-      <Close onClick={close} />
-      <a title="Prodsys" href={urls[1]}>
-        <GridView />
-      </a>
       <a title="Django-admin" href={urls[0]}>
         <Tune />
       </a>
+      <a title="Prodsys" href={urls[1]}>
+        <GridView />
+      </a>
+      <Close onClick={close} />
     </React.Fragment>
   )
 }

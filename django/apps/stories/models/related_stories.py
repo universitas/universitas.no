@@ -49,6 +49,7 @@ class RelatedStoriesMixin(models.Model):
 
     def save(self, *args, **kwargs):
         if self.pk:
+            # link with related stories if needed
             old = self.__class__.objects.get(pk=self.pk)
             if (
                 self.publication_status in [
