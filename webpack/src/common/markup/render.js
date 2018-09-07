@@ -7,11 +7,14 @@ export const inlineText = R.when(
     cleanText,
     R.trim,
     text => parseText(text, false),
-    R.map(
+    R.addIndex(R.map)(
       R.cond([
         [R.is(String), R.identity],
-        [R.propEq('type', 'em'), ({ children }) => <em>{children}</em>],
-        [R.propEq('type', 'newline'), () => <br />],
+        [
+          R.propEq('type', 'em'),
+          (node, idx) => <em key={idx}>{node.children}</em>,
+        ],
+        [R.propEq('type', 'newline'), (node, idx) => <br key={idx} />],
         [R.T, R.prop('children')],
       ]),
     ),

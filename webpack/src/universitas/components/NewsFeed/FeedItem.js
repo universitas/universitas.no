@@ -6,8 +6,7 @@ import { toStory } from 'ducks/router'
 import { hyphenate, slugify } from 'utils/text'
 import { renderStyles, parseStyles } from './feedItemStyles.js'
 import { inlineText } from 'markup/render.js'
-
-const position = ({ x = 0.5, y = 0.5 }) => `${x * 100}% ${y * 100}%`
+import FeedImage from './FeedImage.js'
 
 const ifChildren = Component => props =>
   props.children ? <Component {...props} /> : null
@@ -25,26 +24,12 @@ const Kicker = ifChildren(({ children }) => (
 ))
 const Lede = ifChildren(({ children }) => <p className="Lede">{children}</p>)
 
-const FeedImage = ({ image, crop_box }) =>
-  image ? (
-    <div
-      className="FeedImage"
-      style={{
-        backgroundRepeat: 'none',
-        backgroundImage: `url(${image})`,
-        backgroundPosition: position(crop_box),
-        backgroundSize: 'cover',
-        height: '100%',
-      }}
-    />
-  ) : null
-
 const Wrapper = props => <div {...props} />
 
 export const FeedItem = ({
   html_class,
   size: [columns, rows] = [2, 2],
-  image,
+  imagefile,
   headline,
   vignette,
   kicker,
@@ -66,7 +51,17 @@ export const FeedItem = ({
     )}
     {...props}
   >
-    <FeedImage image={image} crop_box={crop_box} />
+    {imagefile && (
+      <FeedImage
+        imagefile={imagefile}
+        crop_box={crop_box}
+        moduleSize={
+          R.contains('layout-left', html_class)
+            ? [columns / 3, rows]
+            : [columns, rows]
+        }
+      />
+    )}
     <div className="gradient" />
     <Vignette>{inlineText(vignette)}</Vignette>
     <Kicker>{inlineText(hyphenate(kicker))}</Kicker>

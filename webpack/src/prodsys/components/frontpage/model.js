@@ -71,21 +71,16 @@ export const fields = {
     editable: true,
     helpText: 'published',
   },
-  imagefile: {
+  image_id: {
     label: 'foto',
     type: 'select',
     to: 'photos',
     required: false,
     editable: true,
   },
-  image: {
-    type: 'thumb',
-    required: false,
-    editable: false,
-  },
   crop_box: {
     label: 'beskjæring',
-    type: 'field',
+    type: 'cropbox',
     required: false,
     editable: false,
   },

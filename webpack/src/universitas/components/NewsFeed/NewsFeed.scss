@@ -231,15 +231,6 @@ $row-height: 12vh;
         grid-row-end: span ceil($n / 2);
       }
     }
-    .col-1,
-    .col-2,
-    .col-3,
-    .row-1,
-    .row-2 {
-      &.layout-top {
-        grid-row-end: span 2;
-      }
-    }
   }
   .FetchIndicator {
     line-height: 0;

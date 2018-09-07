@@ -85,9 +85,11 @@ const mapStateToProps = (state, { pk, model, name }) => {
   // return { value, item }
   return R.contains(name, ['crop_box']) ? { value, item } : { value }
 }
-const mapDispatchToProps = (dispatch, { pk, model, name }) => ({
+const mapDispatchToProps = (dispatch, { pk, model, name, onChange }) => ({
   onChange: value => {
-    dispatch(modelActions(model).fieldChanged(pk, name, value))
+    onChange
+      ? onChange(value)
+      : dispatch(modelActions(model).fieldChanged(pk, name, value))
   },
 })
 

@@ -23,10 +23,12 @@ export const TAGS = [
 const [leaf, inline] = [true, true] // helpers for object shorthand
 const baseRules = {
   whitespace: {
+    // empty block
     pattern: /\s+/m,
-    order: 0,
+    order: 2,
   },
   escaped: {
+    // escape special characters with backslash \
     inline,
     order: 0,
     type: 'character',
@@ -36,23 +38,34 @@ const baseRules = {
     // newline in "inline" text (for headlines)
     inline,
     leaf,
-    pattern: /\s*\n\s*/,
-    reverse: () => '\n',
+    pattern: / *\n{2,} */,
+    reverse: () => '\n\n',
     order: 1,
   },
-  character: {
+  space: {
+    // multiple inline space are truncated
     inline,
     leaf,
-    pattern: /./,
-    order: 999,
+    pattern: /\s+/,
+    order: 2,
+    reverse: () => ' ',
   },
   text: {
+    // text
     inline,
     leaf,
     pattern: /[^_\*\[\n\\]+/,
     order: 0,
   },
+  character: {
+    // special characters ( for example incomplete tags )
+    inline,
+    leaf,
+    pattern: /./,
+    order: 999,
+  },
   link: {
+    // renders to html link
     inline,
     pattern: /\[([^\]]*)\](?:\(([^)]*)\))?/,
     groups: ['content', 'name'],
@@ -64,12 +77,14 @@ const baseRules = {
     }),
   },
   em: {
+    // emphasized inline text
     inline,
     pattern: /([_\*])(.+?)\1/,
     groups: ['sym', 'content'],
     reverse: ({ content }) => `_${content}_`,
   },
   place: {
+    // placement of images, pullquotes, asides etc.
     leaf,
     pattern: /^ *\[\[ *(.*?)(?: *\| *(.*?))? *\]\] *$/,
     groups: ['name', 'flags'],
@@ -77,6 +92,7 @@ const baseRules = {
       `\n[[ ${name}${flags && ' | '}${flags} ]]\n`,
   },
   blockTag: {
+    // markup tag for paragraphs
     pattern: /^@(\S+?): ?(.*)$/,
     groups: ['tag', 'content'],
     reverse: ({ tag, content }) => {
@@ -86,15 +102,18 @@ const baseRules = {
     process: R.evolve({ tag: makeFuzzer(TAGS, 0.7) }), // fuzzy match
   },
   listItem: {
+    // renders to html list
     pattern: /^(?:\* |# |@li:) *(.*)$/,
     order: 9,
     reverse: ({ content }) => `# ${content}`,
   },
   paragraph: {
+    // default paragraph block for body text
     pattern: /^.*$/,
     order: 100,
   },
   facts: {
+    // aside
     pattern: /^@fakta:\s?((\n?.+)+)$/,
     order: 1,
     reverse: ({ content }) => `\n@fakta: ${content}\n`,

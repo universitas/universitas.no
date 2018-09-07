@@ -16,10 +16,16 @@ export const capitalize = R.replace(/./, R.toUpper)
 // hyphenate text
 const hyphenator_no = new Hypher({ ...norwegian, rightmin: 4, leftmin: 4 })
 
-export const hyphenate = R.ifElse(
+const hyphenateWord = R.ifElse(
   R.contains('~'),
-  R.replace(/~/g, SOFTHYPHEN),
-  text => hyphenator_no.hyphenateText(text, 10),
+  R.pipe(R.replace(/^~/, ''), R.replace(/~/g, SOFTHYPHEN)),
+  word => hyphenator_no.hyphenateText(word, 10),
+)
+
+export const hyphenate = R.pipe(
+  R.split(/ /gu),
+  R.map(hyphenateWord),
+  R.join(' '),
 )
 
 // pretty JSON

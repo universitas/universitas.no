@@ -4,6 +4,7 @@ import cx from 'classnames'
 import { FrontpageTools } from '.'
 import { fields, MODEL, selectors, actions } from './model.js'
 import StyleButtons from './StyleButtons.js'
+import Debug from 'components/Debug'
 import GridWidget from './GridWidget.js'
 
 const Field = ({ name, ...props }) => (
@@ -16,7 +17,26 @@ const Field = ({ name, ...props }) => (
   />
 )
 
-const FrontpageDetail = ({ pk, fieldChanged }) => (
+const CropBox = connect(selectors.getCurrentItem, dispatch => ({
+  changeHandler: (pk, name) => value =>
+    dispatch(actions.fieldChanged(pk, name, value)),
+}))(({ id, image_id, crop_box, changeHandler }) => {
+  return (
+    image_id && (
+      <ModelField
+        editable
+        pk={image_id}
+        onChange={changeHandler(id, 'crop_box')}
+        type="cropbox"
+        name="crop_box"
+        model="photos"
+        label="beskjæring"
+      />
+    )
+  )
+})
+
+const FrontpageDetail = ({ pk }) => (
   <section className="DetailPanel" key={pk} style={{ maxWidth: '30rem' }}>
     <FrontpageTools pk={pk} />
     <div className="panelContent">
@@ -27,11 +47,12 @@ const FrontpageDetail = ({ pk, fieldChanged }) => (
           <Field pk={pk} name="headline" />
           <Field pk={pk} name="lede" />
           <Field pk={pk} name="priority" />
-          <Field pk={pk} name="imagefile" />
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <StyleButtons pk={pk} />
             <GridWidget pk={pk} />
           </div>
+          <Field pk={pk} name="image_id" />
+          <CropBox />
         </React.Fragment>
       ) : (
         <div>velg en sak</div>

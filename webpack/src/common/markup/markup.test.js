@@ -56,11 +56,19 @@ describe('parseText', () => {
 })
 
 describe('inline text newline', () => {
-  test('parseText', () => {
-    const parsed = parseText('hello\nworld', false)
-    expect(parsed).toMatchObject(['hello', { type: 'newline' }, 'world'])
-    const reversed = renderText(parsed)
-    expect(reversed).toEqual('hello\nworld')
+  test('white space', () => {
+    const text = 'hello\n  world'
+    const parsed = parseText(text, false)
+    const result = ['hello', { type: 'space' }, 'world']
+    expect(parsed).toMatchObject(result)
+    expect(renderText(parsed)).toEqual('hello world')
+  })
+  test('new line', () => {
+    const text = 'hello\n\nworld'
+    const parsed = parseText(text, false)
+    const result = ['hello', { type: 'newline' }, 'world']
+    expect(parsed).toMatchObject(result)
+    expect(renderText(parsed)).toEqual(text)
   })
 })
 

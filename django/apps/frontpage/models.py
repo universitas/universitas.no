@@ -1,12 +1,11 @@
 import logging
 
-from model_utils.models import TimeStampedModel
-
 from apps.photo.models import ImageFile
 from django.db import models
 from django.db.models import F
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
 from utils.model_mixins import EditURLMixin
 
 logger = logging.getLogger(__name__)
@@ -170,6 +169,16 @@ class FrontpageStory(TimeStampedModel, EditURLMixin):
     @size.setter
     def size(self, value):
         self.columns, self.rows = value
+
+    @property
+    def crop_box(self):
+        return self.imagefile.crop_box if self.imagefile else None
+
+    @crop_box.setter
+    def crop_box(self, value):
+        self.imagefile.crop_box = value
+        self.imagefile.clean()
+        self.imagefile.save()
 
     @property
     def story_url(self):

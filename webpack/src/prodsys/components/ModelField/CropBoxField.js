@@ -30,11 +30,11 @@ const FullThumbWithCropBox = ({ src, title, width, height, value }) => {
 
 const StaticCropBox = ({ value, item, className, ...args }) => {
   const { width, height, small, large } = item
-
+  const src = small
   return (
     <div className={cx('Thumb', className)}>
       <FullThumbWithCropBox
-        src={small}
+        src={src}
         width={width}
         value={value}
         height={height}
@@ -56,12 +56,13 @@ class CropBoxField extends React.Component {
 
   render() {
     const { value, item, className, onChange, previews = [] } = this.props
-    const { width, height, small, large } = item
+    const { width = 1000, height = 1000, small, large } = item
+    const src = this.state.height < 200 ? small : large
 
     return (
       <div className={cx('Thumb', className)} ref={this.container}>
         <CropBox
-          src={this.state.height < 300 ? small : large}
+          src={src}
           value={value}
           size={[width, height]}
           onChange={onChange}

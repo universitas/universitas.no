@@ -10,6 +10,7 @@ const ToolBar = props => <div {...props} />
 
 const FrontpageTools = ({ pk, headline, close, openAdmin }) => (
   <DetailTopBar title={`${headline}`} pk={pk}>
+    <Tool icon="Newspaper" title={'forsiden'} onClick={openUrl('/')} />
     <Tool icon="Tune" title="rediger i django-admin" onClick={openAdmin} />
   </DetailTopBar>
 )
@@ -18,7 +19,9 @@ const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
 
 const mapDispatchToProps = (dispatch, { pk }) => ({
   close: () => dispatch(push(`/${MODEL}`)),
-  openAdmin: openUrl(`/admin/frontpage/frontpagestory/${pk}/change/`),
+  openAdmin: openUrl(
+    `/admin/frontpage/frontpagestory/${pk ? pk + '/change/' : ''}`,
+  ),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FrontpageTools)
