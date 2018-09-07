@@ -79,10 +79,9 @@ export const Field = ({
   )
 }
 
-const mapStateToProps = (state, { pk, model, name }) => {
+const mapStateToProps = (state, { pk, model, name, ...props }) => {
   const item = modelSelectors(model).getItem(pk)(state) || {}
-  const value = item[name]
-  // return { value, item }
+  const value = props.value || item[name]
   return R.contains(name, ['crop_box']) ? { value, item } : { value }
 }
 const mapDispatchToProps = (dispatch, { pk, model, name, onChange }) => ({

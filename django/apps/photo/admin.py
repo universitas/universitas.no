@@ -3,9 +3,10 @@
 import logging
 
 from django.contrib import admin, messages
+from django.db.models import F
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-#from sorl.thumbnail.admin import AdminImageMixin
+# from sorl.thumbnail.admin import AdminImageMixin
 from utils.sorladmin import AdminImageMixin
 
 from .models import ImageFile
@@ -62,6 +63,22 @@ def upload_to_desken(modeladmin, request, queryset):
 upload_to_desken.short_description = _('Upload to desken')  # type: ignore
 
 
+def merge_photos(modeladmin, request, queryset):
+    queryset = queryset.annotate(pixelsize=F('full_width') * F('full_height')
+                                 ).order_by("-pixelsize")
+    first, *others = queryset
+    try:
+        msg = f'merged {", ".join(map(str, others))} images with {first}'
+        first.merge_with(others)
+        messages.add_message(request, messages.INFO, msg)
+    except Exception as err:
+        msg = f'merge failed: {err}'
+        messages.add_message(request, messages.ERROR, msg)
+
+
+merge_photos.short_description = _('Merge photos')  # type: ignore
+
+
 @admin.register(ImageFile)
 class ImageFileAdmin(
     AdminImageMixin,
@@ -69,7 +86,7 @@ class ImageFileAdmin(
     admin.ModelAdmin,
 ):
 
-    actions = [autocrop, upload_to_desken]
+    actions = [autocrop, upload_to_desken, merge_photos]
     date_hierarchy = 'created'
     actions_on_top = True
     actions_on_bottom = True

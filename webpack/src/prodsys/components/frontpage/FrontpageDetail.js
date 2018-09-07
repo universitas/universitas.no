@@ -27,6 +27,7 @@ const CropBox = connect(selectors.getCurrentItem, dispatch => ({
         editable
         pk={image_id}
         onChange={changeHandler(id, 'crop_box')}
+        value={crop_box}
         type="cropbox"
         name="crop_box"
         model="photos"
