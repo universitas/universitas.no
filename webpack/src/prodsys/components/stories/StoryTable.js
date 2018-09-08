@@ -1,34 +1,25 @@
 import cx from 'classnames'
 import { connect } from 'react-redux'
-import ModelField from 'components/ModelField'
-import { MODEL, fields, actions, selectors } from './model.js'
-
-const listFields = R.pipe(
-  R.pick([
-    'working_title',
-    'publication_status',
-    'story_type',
-    'modified',
-    'images',
-  ]),
-  R.assocPath(['modified', 'relative'], true), // relative time
-)(fields)
-
-const renderFields = R.pipe(R.values, R.map(TableCell))
+import { Field, actions, selectors } from './model.js'
 
 const TableCell = ({ label, className, onClick, ...props }) => (
   <div title={label} className={className} onClick={onClick}>
-    <ModelField {...props} editable={false} />
+    <Field {...props} label />
   </div>
 )
 
 // render all headers in table
-const TableRow = props =>
-  R.values(listFields).map((fieldprops, index) => (
-    <TableCell key={fieldprops.name} {...fieldprops} {...props} />
-  ))
+const DumbTableRow = props => (
+  <React.Fragment>
+    <TableCell {...props} name="working_title" />
+    <TableCell {...props} name="publication_status" />
+    <TableCell {...props} name="story_type" />
+    <TableCell {...props} name="modified" relative />
+    <TableCell {...props} name="images" />
+  </React.Fragment>
+)
 
-const ConnectedTableRow = connect(
+const TableRow = connect(
   (state, { pk, row }) => {
     const data = selectors.getItem(pk)(state) || {}
     const { dirty, publication_status: status } = data
@@ -38,18 +29,16 @@ const ConnectedTableRow = connect(
       selected,
       odd: row % 2,
     })
-    return { className, model: MODEL }
+    return { className }
   },
   (dispatch, { pk }) => ({
     onClick: e => dispatch(actions.reverseUrl({ id: pk })),
   }),
-)(TableRow)
+)(DumbTableRow)
 
 const StoryTable = ({ items = [] }) => (
   <section className="StoryTable">
-    {items.map((pk, index) => (
-      <ConnectedTableRow key={pk} pk={pk} row={index} />
-    ))}
+    {items.map((pk, index) => <TableRow key={pk} pk={pk} row={index} />)}
   </section>
 )
 export default connect(state => ({ items: selectors.getItemList(state) }))(

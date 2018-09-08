@@ -50,6 +50,7 @@ const fieldTypes = {
 }
 export const fieldNames = R.keys(fieldTypes)
 
+// dumb field
 export const Field = ({
   type = 'text',
   editable = false,
@@ -92,4 +93,22 @@ const mapDispatchToProps = (dispatch, { pk, model, name, onChange }) => ({
   },
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Field)
+const ModelField = connect(mapStateToProps, mapDispatchToProps)(Field)
+export default ModelField
+
+const capitalize = word => word.charAt(0).toUpperCase() + word.slice(1)
+
+// curry model name and field config
+export const fieldFactory = (model, fields) => {
+  const Field = ({ name, ...props }) => (
+    <ModelField
+      key={name}
+      name={name}
+      model={model}
+      {...fields[name]}
+      {...props}
+    />
+  )
+  Field.displayName = `${capitalize(model)}Field`
+  return Field
+}

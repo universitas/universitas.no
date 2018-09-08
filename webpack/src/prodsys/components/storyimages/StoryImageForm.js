@@ -1,18 +1,13 @@
-import React from 'react'
-import ModelField from 'components/ModelField'
-import { fields } from './model.js'
-
-const mapFields = fn =>
-  R.pipe(
-    R.mapObjIndexed((props, name, obj) => fn({ name, ...props })),
-    R.values,
-  )
+import { Field } from './model.js'
 
 const StoryImageForm = ({ pk }) => (
   <form className="StoryImageForm">
-    {mapFields(fp => (
-      <ModelField {...fp} model="storyimages" pk={pk} key={fp.name} />
-    ))(fields)}
+    <Field pk={pk} name="caption" editable />
+    <Field pk={pk} name="ordering" editable />
+    <Field pk={pk} name="placement" editable />
+    <Field pk={pk} name="size" editable />
+    <Field pk={pk} name="aspect_ratio" editable />
+    <Field pk={pk} name="creditline" editable />
   </form>
 )
 

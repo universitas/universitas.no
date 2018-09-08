@@ -1,22 +1,17 @@
 import cx from 'classnames'
-import ModelField from 'components/ModelField'
-import { fields, MODEL } from './model.js'
-
-const Field = props => (
-  <ModelField model={MODEL} {...fields[props.name]} {...props} />
-)
+import { Field, MODEL } from './model.js'
 
 const StoryDetailText = ({ pk, storytypechoices }) => {
   return (
     <div className="panelContent">
       <div className="wrapForm">
-        <Field pk={pk} name="working_title" />
-        <Field pk={pk} name="story_type" />
-        <Field pk={pk} name="publication_status" />
+        <Field pk={pk} name="working_title" editable />
+        <Field pk={pk} name="story_type" editable />
+        <Field pk={pk} name="publication_status" editable />
         <Field pk={pk} name="created" />
         <Field pk={pk} name="modified" />
       </div>
-      <Field pk={pk} name="bodytext_markup" />
+      <Field pk={pk} name="bodytext_markup" editable />
     </div>
   )
 }

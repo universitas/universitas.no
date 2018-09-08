@@ -1,18 +1,7 @@
 import { connect } from 'react-redux'
-import { MODEL, fields, selectors, actions } from './model.js'
+import { Field, selectors, actions } from './model.js'
 import { PhotoTools } from '.'
-import ModelField from 'components/ModelField'
 import Debug from 'components/Debug'
-
-const Field = ({ name, ...props }) => (
-  <ModelField
-    key={name}
-    name={name}
-    model={MODEL}
-    {...fields[name]}
-    {...props}
-  />
-)
 
 const PhotoDetail = ({ pk, detail }) => (
   <section className="DetailPanel">
@@ -25,17 +14,18 @@ const PhotoDetail = ({ pk, detail }) => (
             name="crop_box"
             type="cropbox"
             previews={[0.5, 1, 2.5]}
+            editable
           />
-          <Field pk={pk} name="description" />
+          <Field pk={pk} name="description" editable />
         </React.Fragment>
       ) : (
         <React.Fragment>
           <Field pk={pk} name="large" />
-          <Field pk={pk} name="description" />
+          <Field pk={pk} name="description" editable />
           <div className="wrapForm">
-            <Field pk={pk} name="contributor" />
+            <Field pk={pk} name="contributor" editable />
             <Field pk={pk} name="filename" />
-            <Field pk={pk} name="category" />
+            <Field pk={pk} name="category" editable />
             <Field pk={pk} name="original" />
             <Field pk={pk} name="usage" />
             <Field pk={pk} name="created" />

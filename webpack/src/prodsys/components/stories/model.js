@@ -1,38 +1,24 @@
 import { modelActions, modelSelectors } from 'ducks/basemodel'
+import { fieldFactory } from 'components/ModelField'
+
 export const MODEL = 'stories'
 export const actions = modelActions(MODEL)
 export const selectors = modelSelectors(MODEL)
 
 export const fields = {
-  title: {
-    name: 'title',
-    label: 'tittel',
-    type: 'string',
-    editable: true,
-  },
-  lede: {
-    name: 'lede',
-    label: 'ingress',
-    type: 'string',
-    editable: true,
-  },
-  kicker: {
-    name: 'kicker',
-    label: 'stikktittel',
-    type: 'string',
-    editable: true,
-  },
-  working_title: {
-    name: 'working_title',
-    label: 'arbeidstittel',
-    type: 'string',
-    editable: true,
-  },
+  title: { label: 'tittel', type: 'string' },
+  lede: { label: 'ingress', type: 'string' },
+  kicker: { label: 'stikktittel', type: 'string' },
+  working_title: { label: 'arbeidstittel', type: 'string' },
+  created: { label: 'opprettet', type: 'datetime' },
+  modified: { label: 'endret', type: 'datetime' },
+  story_type_name: { label: 'artikkeltype', type: 'string' },
+  bodytext_markup: { label: 'tekst', type: 'text' },
+  byline_set: { label: 'bylines', type: 'count' },
+  images: { label: 'foto', type: 'count' },
   publication_status: {
-    name: 'publication_status',
     label: 'status',
     type: 'select',
-    editable: true,
     options: [
       {
         label: 'Prod',
@@ -67,46 +53,7 @@ export const fields = {
       },
     ],
   },
-  story_type: {
-    name: 'story_type',
-    type: 'select',
-    label: 'artikkeltype',
-    editable: true,
-    to: 'storytypes',
-  },
-  created: {
-    name: 'created',
-    label: 'opprettet',
-    type: 'datetime',
-    editable: false,
-  },
-  modified: {
-    name: 'modified',
-    label: 'endret',
-    type: 'datetime',
-    editable: false,
-  },
-  story_type_name: {
-    name: 'story_type_name',
-    label: 'artikkeltype',
-    type: 'string',
-  },
-  bodytext_markup: {
-    name: 'bodytext_markup',
-    label: 'tekst',
-    type: 'text',
-    editable: true,
-  },
-  byline_set: {
-    name: 'byline_set',
-    label: 'bylines',
-    type: 'count',
-    editable: false,
-  },
-  images: {
-    name: 'images',
-    label: 'foto',
-    type: 'count',
-    editable: false,
-  },
+  story_type: { type: 'select', label: 'artikkeltype', to: 'storytypes' },
 }
+
+export const Field = fieldFactory(MODEL, fields)

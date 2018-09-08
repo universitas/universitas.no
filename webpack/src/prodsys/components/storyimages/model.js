@@ -1,55 +1,48 @@
-import { modelSelectors, modelActions } from 'ducks/basemodel'
+import { modelActions, modelSelectors } from 'ducks/basemodel'
+import { fieldFactory } from 'components/ModelField'
+
 export const MODEL = 'storyimages'
-export const selectors = modelSelectors(MODEL)
 export const actions = modelActions(MODEL)
+export const selectors = modelSelectors(MODEL)
+
 export const fields = {
   caption: {
     type: 'shorttext',
-    required: false,
     label: 'Bildetekst',
     help_text: 'Kort beskrivelse av bildet',
-    rows: 4,
-    editable: true,
   },
-  ordering: { type: 'integer', label: 'rekkefølge', editable: true },
-  placement: { type: 'string', label: 'plassering', editable: true },
+  ordering: { type: 'integer', label: 'rekkefølge' },
+  placement: { type: 'string', label: 'plassering' },
+  creditline: { type: 'string', label: 'fotokred' },
   size: {
-    type: 'choice',
-    required: true,
+    type: 'select',
     label: 'prioritet',
-    editable: true,
-    choices: [
-      { value: '5', display_name: '5 (høyest)' },
-      { value: '4', display_name: '4' },
-      { value: '3', display_name: '3' },
-      { value: '2', display_name: '2' },
-      { value: '1', display_name: '1 (lavest)' },
-      { value: '0', display_name: '0 (skal ikke brukes)' },
+    options: [
+      { value: '5', label: '5 (høyest)' },
+      { value: '4', label: '4' },
+      { value: '3', label: '3' },
+      { value: '2', label: '2' },
+      { value: '1', label: '1 (lavest)' },
+      { value: '0', label: '0 (skal ikke brukes)' },
     ],
   },
   aspect_ratio: {
-    type: 'choice',
-    required: true,
+    type: 'select',
     label: 'bildeformat',
     help_text: 'høyde / bredde',
-    editable: true,
-    choices: [
-      { value: '0.0', display_name: 'auto' },
-      { value: '0.4', display_name: '5:2 bredde' },
-      { value: '0.5', display_name: '2:1 bredde' },
-      { value: '0.5625', display_name: '16:9 bredde (youtube)' },
-      { value: '0.6667', display_name: '3:2 bredde' },
-      { value: '0.75', display_name: '4:3 bredde' },
-      { value: '1.0', display_name: '1:1 kvadrat' },
-      { value: '1.3333', display_name: '3:4 høyde' },
-      { value: '1.5', display_name: '2:3 høyde' },
-      { value: '2.0', display_name: '1:2 høyde' },
+    options: [
+      { value: '0.0', label: 'auto' },
+      { value: '0.4', label: '5:2 bredde' },
+      { value: '0.5', label: '2:1 bredde' },
+      { value: '0.5625', label: '16:9 bredde (youtube)' },
+      { value: '0.6667', label: '3:2 bredde' },
+      { value: '0.75', label: '4:3 bredde' },
+      { value: '1.0', label: '1:1 kvadrat' },
+      { value: '1.3333', label: '3:4 høyde' },
+      { value: '1.5', label: '2:3 høyde' },
+      { value: '2.0', label: '1:2 høyde' },
     ],
   },
-  creditline: {
-    type: 'string',
-    required: false,
-    label: 'fotokred',
-    editable: true,
-  },
 }
+
+export const Field = fieldFactory(MODEL, fields)
