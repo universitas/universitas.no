@@ -23,6 +23,7 @@ $row-height: 12vh;
   .Lede,
   .Vignette {
     margin: 0.3rem;
+    line-height: 1.1;
   }
   .Vignette {
     font-size: 1rem;
@@ -59,6 +60,9 @@ $row-height: 12vh;
   }
   .Lede {
     font-size: 1.2rem;
+    @include max-size(s) {
+      font-size: 1rem;
+    }
     font-weight: 200;
     margin-top: 0;
   }
@@ -69,21 +73,18 @@ $row-height: 12vh;
   color: inherit;
   background: white;
 }
+.bg-section,
 .bg-black {
   color: white;
   background: $dark-grey;
+  .Kicker,
+  .Lede,
   .Headline {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    padding: 0.2rem 0.5rem;
   }
 }
 .bg-section {
-  color: white;
   background: #666;
-  .Headline {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
 }
 .layout-top {
   grid-template-rows: 1fr;
@@ -95,10 +96,11 @@ $row-height: 12vh;
 .layout-left {
   grid-template-columns: 2fr 3fr;
   grid-template-rows: auto auto 1fr;
+  align-content: end;
   .Vignette,
   .FeedImage {
     grid-column: 1/2;
-    grid-row: 1/4;
+    grid-row: 1/-1;
     margin-right: 0.5rem;
   }
   .Lede,
@@ -120,10 +122,23 @@ $row-height: 12vh;
       grid-area: 1/1/5/2;
       background: linear-gradient(
         to bottom,
-        rgba(black, 0),
         rgba(black, 0) 60%,
-        rgba(black, 0.8) 100%
+        rgba(black, 0.9) 100%
       );
+    }
+
+    @include max-size(s) {
+      .Kicker {
+        font-weight: 400;
+        text-shadow: rgba(black, 1) 0 0.05em 0.3em;
+      }
+      .gradient {
+        background: linear-gradient(
+          to bottom,
+          rgba(black, 0) 40%,
+          rgba(black, 0.9) 100%
+        );
+      }
     }
   }
   .Kicker,
@@ -168,9 +183,15 @@ $row-height: 12vh;
 }
 .size-medium {
   font-size: 1.3rem;
+  @include max-size(s) {
+    font-size: 1.1rem;
+  }
 }
 .size-large {
   font-size: 1.6rem;
+  @include max-size(s) {
+    font-size: 1.2rem;
+  }
 }
 .weight-bold {
   // bold is default
@@ -216,16 +237,27 @@ $row-height: 12vh;
       .col-#{$n} {
         grid-column-end: span if($n < 4, 1, 2);
         .Kicker {
-          font-size: if($n < 4, 1.1rem, 1.4rem);
+          font-size: if($n < 4, 1rem, 1.3rem);
         }
         .Headline {
-          font-size: if($n < 4, 1.4em, 1.8em);
+          font-size: if($n < 4, 1.5em, 2.3em);
         }
-        &.layout-behind,
         &.layout-left {
           grid-column-end: span 2;
+          .Kicker {
+            font-size: 1.3rem;
+          }
           .Headline {
             font-size: 1.8em;
+          }
+        }
+        &.layout-behind {
+          grid-column-end: span 2;
+          .Kicker {
+            font-size: 1.3rem;
+          }
+          .Headline {
+            font-size: 2.2em;
           }
         }
       }
@@ -254,7 +286,7 @@ $row-height: 12vh;
     padding: 1em;
   }
   .ScrollSpy {
-    min-height: 60vh;
+    min-height: 50vh;
     display: flex;
     justify-content: center;
     grid-column: 1/-1;

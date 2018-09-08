@@ -11,10 +11,10 @@
 .FeedImage {
   display: flex;
   background: #ddf;
-  min-height: 5rem;
   .inner {
     height: 100%;
     width: 100%;
     animation: 300ms ease fadeFromBlack;
+    min-height: 4rem;
   }
 }
