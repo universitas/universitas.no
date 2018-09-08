@@ -7,6 +7,24 @@ import StyleButtons from './StyleButtons.js'
 import Debug from 'components/Debug'
 import GridWidget from './GridWidget.js'
 
+const CropBox = connect(selectors.getCurrentItem, dispatch => ({
+  changeHandler: (pk, name) => value =>
+    dispatch(actions.fieldChanged(pk, name, value)),
+}))(({ id, image_id, crop_box, changeHandler }) => {
+  return image_id ? (
+    <ModelField
+      editable
+      pk={image_id}
+      onChange={changeHandler(id, 'crop_box')}
+      value={crop_box}
+      type="cropbox"
+      name="crop_box"
+      model="photos"
+      label="beskjæring"
+    />
+  ) : null
+})
+
 const Field = ({ name, ...props }) => (
   <ModelField
     key={name}
@@ -16,26 +34,6 @@ const Field = ({ name, ...props }) => (
     {...props}
   />
 )
-
-const CropBox = connect(selectors.getCurrentItem, dispatch => ({
-  changeHandler: (pk, name) => value =>
-    dispatch(actions.fieldChanged(pk, name, value)),
-}))(({ id, image_id, crop_box, changeHandler }) => {
-  return (
-    image_id && (
-      <ModelField
-        editable
-        pk={image_id}
-        onChange={changeHandler(id, 'crop_box')}
-        value={crop_box}
-        type="cropbox"
-        name="crop_box"
-        model="photos"
-        label="beskjæring"
-      />
-    )
-  )
-})
 
 const FrontpageDetail = ({ pk }) => (
   <section className="DetailPanel" key={pk} style={{ maxWidth: '30rem' }}>

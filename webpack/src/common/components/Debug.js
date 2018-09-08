@@ -9,7 +9,7 @@ class Debug extends React.Component {
   render() {
     return (
       <div
-        className={cx('Debug', props.className)}
+        className={cx('Debug', this.props.className)}
         style={{
           background: '#010',
           borderRadius: '0.5em',

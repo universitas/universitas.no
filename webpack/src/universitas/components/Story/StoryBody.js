@@ -1,6 +1,6 @@
 import { toJson } from 'utils/text'
 import Tingo from './Tingo'
-import Debug from 'components/Debug'
+import Debug from 'components/DevDebug'
 import SlideShow from 'components/SlideShow'
 import StoryImage from './StoryImage'
 import StoryLink from './StoryLink'
