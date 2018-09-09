@@ -27,9 +27,9 @@ logger = logging.getLogger(__name__)
 def today():
     return timezone.now().date()
 
+
 def yesterday():
     return timezone.now().date() - timezone.timedelta(days=1)
-
 
 
 def default_groups():
@@ -198,7 +198,6 @@ class Contributor(TimeStampedModel, FuzzyNameSearchMixin, models.Model):
         if not active and self.status != self.EXTERNAL:
             self.status = self.RETIRED
             if save:
-                self.stint_set.active().update(end_date=yesterday())
                 self.save()
         # if self.user and self.user.is_active != active:
         #     self.user.is_active = active
@@ -242,6 +241,10 @@ class Contributor(TimeStampedModel, FuzzyNameSearchMixin, models.Model):
     @property
     def title(self):
         return self.position()['title']
+
+    @property
+    def is_management(self):
+        return self.position()['management']
 
 
 class Position(models.Model):
@@ -335,3 +338,13 @@ class Stint(models.Model):
 def stint_changed(sender, instance, **kwargs):
     """cache buster"""
     instance.contributor.save()
+
+
+@receiver(models.signals.pre_save, sender=Contributor)
+def close_stints(sender, instance, **kwargs):
+    """Make sure retired contributors have no active stints."""
+    if not instance.pk:
+        return
+    previous_status = sender.objects.get(pk=instance.pk).status
+    if previous_status == sender.ACTIVE and instance.status == sender.RETIRED:
+        instance.stint_set.active().update(end_date=yesterday())

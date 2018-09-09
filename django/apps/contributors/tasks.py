@@ -8,8 +8,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from utils.merge_model_objects import merge_instances
 
-from .calculate_stints import (create_stints_from_bylines,
-                               create_stints_from_pdfs)
+from .calculate_stints import (
+    create_stints_from_bylines, create_stints_from_pdfs
+)
 from .models import Contributor, default_groups
 
 User = get_user_model()
@@ -17,14 +18,14 @@ logger = logging.getLogger(__name__)
 
 ONE_HUNDRED_DAYS = timezone.now() - timezone.timedelta(days=100)
 TWO_WEEKS = timezone.now() - timezone.timedelta(days=14)
-MONDAY_NIGHT = crontab(day_of_week=0, hour=0, minute=0)
+FIVE_O_CLOCK = crontab(hour=5, minute=0)
 
 # Time since last published byline before setting someone as 'inactive'
 ACTIVE_CUTOFF = getattr(settings, 'ACTIVE_CUTOFF', ONE_HUNDRED_DAYS)
 
 
-@periodic_task(run_every=MONDAY_NIGHT)
-def weekly_update():
+@periodic_task(run_every=FIVE_O_CLOCK)
+def daily_update():
     create_stints_from_bylines(since=TWO_WEEKS)
     create_stints_from_pdfs(since=TWO_WEEKS)
     update_status()
@@ -69,10 +70,17 @@ def connect_contributor_to_user(cn: Contributor, create=False):
 def update_contributor_status(cn: Contributor):
     """Check if cn is active, add to groups if needed"""
     stints = cn.stint_set
-    if stints.filter(end_date=None) or stints.active():
+    if stints.active():
+        is_active = True
         cn.user = cn.get_user()
-        cn.set_active(True)
+        if cn.user and not cn.is_management and cn.user.last_login:
+            is_active = cn.user.last_login > ACTIVE_CUTOFF
+            if not is_active:
+                cn.stint_set.active().update(end_date=cn.user.last_login)
+                cn.set_active(False)
+                return
         cn.add_to_groups()
+        cn.set_active(True)
     elif not stints.filter(end_date__gt=ACTIVE_CUTOFF):
         cn.set_active(False)
 

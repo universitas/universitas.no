@@ -1,6 +1,7 @@
 import logging
 import re
 from datetime import date, datetime
+from django.utils import timezone
 from typing import Dict, Iterable, List, Optional, Union  # noqa
 
 from apps.issues.models import PrintIssue
@@ -77,6 +78,7 @@ def _add_stints_from_bylines(
             continue  # ignore people with few bylines
         first_byline = bylines.first().story.publication_date.date()
         last_byline = bylines.last().story.publication_date.date()
+
         if Stint.objects.filter(
             contributor=person,
             position=position,
@@ -92,6 +94,9 @@ def _add_stints_from_bylines(
             contributor=person,
             position=position,
         )
+        two_weeks_ago = timezone.now() - timezone.timedelta(days=14)
+        if two_weeks_ago.date() < stint.end_date:
+            stint.end_date = None  # no end date for current stint
         logger.debug(f'{stint} {bylines.count()}')
         if dry_run:
             continue
@@ -102,12 +107,13 @@ def _add_stints_from_bylines(
         )
 
 
-def _merge_stints(stints: QuerySet) -> Stint:
+def _merge_stints(stints: QuerySet,
+                  max_gap=timezone.timedelta(days=180)) -> Stint:
     """Merge one or more Stints"""
     last: Optional[Stint] = None
     for stint in stints.order_by('start_date'):
         if last and max_or_none(
-            last.end_date, stint.start_date
+            last.end_date, stint.start_date - max_gap
         ) == last.end_date:
             last.start_date = min(stint.start_date, last.start_date)
             last.end_date = max_or_none(stint.end_date, last.end_date)
