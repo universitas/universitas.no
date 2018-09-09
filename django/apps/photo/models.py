@@ -361,7 +361,7 @@ class ImageFile(  # type: ignore
         """Return thumb of cropped image"""
         options = dict(crop_box=self.get_crop_box())
         if self.category == ImageFile.DIAGRAM:
-            options.update(expand=-1)
+            options.update(expand=1)
         if self.category == ImageFile.PROFILE:
             options.update(expand=0.2, colorspace='GRAY')
         return self.thumbnail('150x150', **options)
