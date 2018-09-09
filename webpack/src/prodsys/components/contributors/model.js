@@ -32,6 +32,7 @@ export const fields = {
     filter: { category: 4 },
     label: 'Byline photo',
     to: 'photos',
+    required: false,
   },
   stint_set: {
     type: 'stints',

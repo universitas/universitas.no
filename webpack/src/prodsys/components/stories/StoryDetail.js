@@ -4,15 +4,19 @@ import { modelSelectors } from 'ducks/basemodel'
 import { StoryTools, StoryDetailImages, StoryDetailText } from '.'
 import { selectors } from './model.js'
 
+const DetailPane = ({ pk, images, detail }) => {
+  if (!pk) return null
+  if (detail == 'text') return <StoryDetailText pk={pk} />
+  if (detail == 'images') return <StoryDetailImages pk={pk} images={images} />
+  return null // fallback
+}
+
 const StoryDetail = ({ pk, title, detail, publication_status, images }) => (
   <section
     className={cx('DetailPanel', 'StoryDetail', `status-${publication_status}`)}
   >
     <StoryTools title={title} detail={detail} pk={pk} />
-    {detail == 'text' && <StoryDetailText key={pk} pk={pk} />}
-    {detail == 'images' && (
-      <StoryDetailImages key={pk} pk={pk} images={images} />
-    )}
+    <DetailPane key={pk} pk={pk} images={images} detail={detail} />
   </section>
 )
 

@@ -12,6 +12,7 @@ class StoryImageSerializer(serializers.ModelSerializer):
     )
 
     thumb = AbsoluteURLField(source='imagefile.large.url')
+    aspect_ratio = serializers.CharField(required=False)
 
     class Meta:
         model = StoryImage

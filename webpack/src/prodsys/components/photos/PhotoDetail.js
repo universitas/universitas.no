@@ -24,8 +24,8 @@ const PhotoDetail = ({ pk, detail }) => (
           <Field pk={pk} name="description" editable />
           <div className="wrapForm">
             <Field pk={pk} name="contributor" editable />
-            <Field pk={pk} name="filename" />
             <Field pk={pk} name="category" editable />
+            <Field pk={pk} name="filename" />
             <Field pk={pk} name="original" />
             <Field pk={pk} name="usage" />
             <Field pk={pk} name="created" />

@@ -32,7 +32,7 @@ const Image = ({
       <img
         className={category}
         style={imageStyle({ crop_box, category })}
-        src={cropped || large}
+        src={category == 'diagram' ? large : cropped || large}
         alt={caption}
       />
     </div>
