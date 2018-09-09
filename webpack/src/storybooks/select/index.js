@@ -7,15 +7,18 @@ import { action } from '@storybook/addon-actions'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 
-const reshape = R.map(
-  R.pipe(
-    R.propOr(props => ({ value: props.id, label: 'foo' }), 'reshape'),
-    R.map,
+const reshape = R.pipe(
+  R.map(
+    R.pipe(
+      R.propOr(props => ({ value: props.id, label: 'foo' }), 'reshape'),
+      R.map,
+    ),
   ),
-)(modelSpec)
+)
 
 const models = R.pipe(
   R.pick(['contributors', 'photos', 'storytypes', 'issues', 'stories']),
+  R.map(R.pipe(R.prop('items'), R.values)),
 )(initialState)
 
 const menuIsOpen = () => boolean('always open', false) || undefined
@@ -41,7 +44,13 @@ class StateFulSelect extends React.Component {
 storiesOf('Select', module)
   .addWithJSX('dumb ModelSelect', () => {
     const modelName = radios('model', R.keys(models), 'contributors')
-    const options = models[modelName]
+    const options = R.pipe(
+      R.prop(modelName),
+      R.map(modelSpec[modelName].reshape),
+      R.slice(0, 10),
+      // R.applySpec(reshape(modelSpec)),
+    )(models)
+    console.log(options)
     const model = boolean('plain?', false) ? undefined : modelName
     const menuIsOpen = boolean('open', true) ? true : undefined
     return (

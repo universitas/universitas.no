@@ -1,8 +1,17 @@
 const path = require('path')
 const webpack = require('webpack')
+const ResolveEntryModulesPlugin = require('resolve-entry-modules-webpack-plugin')
+const publicPath = process.env.PUBLIC_PATH
+
 const BundleTracker = require('webpack-bundle-tracker')
 const build_dir = process.env.BUILD_DIR || path.resolve('../build')
-const publicPath = process.env.PUBLIC_PATH
+
+// plugin for django integration
+const bundler = new BundleTracker({
+  indent: ' ',
+  path: build_dir,
+  filename: 'webpack-stats.json',
+})
 
 module.exports = {
   optimization: {
@@ -19,8 +28,8 @@ module.exports = {
     },
   },
   entry: {
-    prodsys: './src/entrypoints/prodsys.js',
-    universitas: './src/entrypoints/universitas.js',
+    prodsys: './src/prodsys/index.js',
+    universitas: './src/universitas/index.js',
   },
   output: {
     // for example ../build/head.[hash].js
@@ -29,17 +38,13 @@ module.exports = {
     filename: '[name].js',
   },
   plugins: [
+    bundler,
+    new ResolveEntryModulesPlugin(),
     new webpack.ProvidePlugin({
       // implicitly `import`
       React: 'react',
       R: 'ramda',
       PropTypes: 'prop-types',
-    }),
-    new BundleTracker({
-      // for django integration
-      indent: ' ',
-      path: build_dir,
-      filename: 'webpack-stats.json',
     }),
   ],
   module: {
@@ -89,9 +94,10 @@ module.exports = {
   },
   resolve: {
     modules: [
+      path.resolve(__dirname, './src/'),
       path.resolve(__dirname, './src/common/'),
-      path.resolve(__dirname, './src/universitas/'),
       path.resolve(__dirname, './src/prodsys/'),
+      path.resolve(__dirname, './src/universitas/'),
       'node_modules',
     ],
     extensions: ['.wasm', '.mjs', '.js', '.jsx', '.json'],

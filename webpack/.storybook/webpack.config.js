@@ -1,4 +1,4 @@
 const config = require('../webpack.config.js')
-delete config.optimization.splitChunks
-config.plugins.pop() // remove BundleTracker
+delete config.optimization.splitChunks // storybook has its own chunks
+config.plugins.shift() // remove BundleTracker
 module.exports = config

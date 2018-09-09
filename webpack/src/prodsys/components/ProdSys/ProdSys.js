@@ -7,7 +7,7 @@ import { StoryList, StoryDetail } from 'components/stories'
 import { FrontpageList, FrontpageDetail } from 'components/frontpage'
 import RavenBoundary from 'components/RavenBoundary'
 import { assignPhoto } from 'ducks/storyimage'
-import MainToolBar from './ToolBar.js'
+import MainToolBar from 'components/ToolBar.js'
 
 const Panel = ({ children }) => <section className="Panel">{children}</section>
 

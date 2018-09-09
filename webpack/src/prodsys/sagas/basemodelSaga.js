@@ -17,7 +17,7 @@ import {
   apiDelete,
   apiList,
   apiGet,
-} from '../services/api'
+} from 'services/api'
 import {
   ITEMS_FETCHED,
   ITEMS_REQUESTED,

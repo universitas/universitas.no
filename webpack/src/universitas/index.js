@@ -1,10 +1,18 @@
 // frontpage of universitas.no react app
 import 'babel-polyfill'
 import ReactDOM from 'react-dom'
-import Universitas from './Universitas'
+import { Provider } from 'react-redux'
+import configureStore from './configureStore'
+import App from './App'
 
 const ROOT_ID = 'ReactApp'
 const JSON_ID = 'redux-state'
+
+const Universitas = initialState => (
+  <Provider store={configureStore(initialState)}>
+    <App />
+  </Provider>
+)
 
 const rehydrate = (state, node) => {
   // rehydrate with error fallback
