@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
-import { push } from 'redux-little-router'
 import { ImageData } from 'components/photos'
 import { modelSelectors } from 'ducks/basemodel'
 import { changeDuplicate } from 'ducks/fileupload'
 import { Tool } from 'components/tool'
+import { toRoute } from 'prodsys/ducks/router'
 import cx from 'classnames'
 
 const getImage = modelSelectors('photos').getItem
@@ -46,6 +46,6 @@ const Duplicate = ({
 const mapStateToProps = (state, { id }) => getImage(id)(state)
 const mapDispatchToProps = (dispatch, { pk, id }) => ({
   changeHandler: value => e => dispatch(changeDuplicate(pk, id, value)),
-  viewImage: id => e => dispatch(push(`photos/${id}`)),
+  viewImage: pk => e => dispatch(toRoute({ model: 'photos', pk })),
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Duplicate)

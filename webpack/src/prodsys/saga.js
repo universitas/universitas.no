@@ -6,7 +6,6 @@ import uploadSaga from 'sagas/uploadSaga'
 import storyimageSaga from 'sagas/storyimageSaga'
 import { modelActions } from 'ducks/basemodel'
 import { requestUser } from 'ducks/auth'
-import { push, LOCATION_CHANGED } from 'redux-little-router'
 
 function* rootSaga() {
   yield all([
@@ -28,8 +27,6 @@ function* loadInitialData() {
   yield put(modelActions('issues').itemsRequested())
   yield put(modelActions('frontpage').itemsRequested())
   yield put(requestUser())
-  const action = yield take(LOCATION_CHANGED)
-  if (R.pathEq(['payload', 'route'], '/')(action)) yield put(push('/stories'))
 }
 
 export default rootSaga

@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet'
-import { reverseFull, toStory, toShortUrl } from 'ducks/router'
+import { reverseAbsolute, toStory, toShortUrl } from 'ducks/router'
 const STATUS_PUBLISHED = 10
 
 const authors = R.tryCatch(
@@ -26,8 +26,8 @@ const StoryHelmet = ({
   publication_status,
 }) => {
   const pagetitle = `${title} | ${story_type.name} | universitas.no`
-  const pageurl = reverseFull(toStory({ id, title, story_type }))
-  const shorturl = reverseFull(toShortUrl({ id }))
+  const pageurl = reverseAbsolute(toStory({ id, title, story_type }))
+  const shorturl = reverseAbsolute(toShortUrl({ id }))
 
   const openGraphMeta = {
     'og:url': pageurl,

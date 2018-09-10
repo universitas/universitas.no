@@ -2,10 +2,12 @@ import cx from 'classnames'
 import { connect } from 'react-redux'
 import Thumb from 'components/Thumb'
 import { PhotoStats } from '.'
-import { MODEL as model, actions, selectors } from './model.js'
+import { MODEL, actions, selectors } from './model.js'
 import { Add, Delete } from 'components/Icons'
 import { Tool } from 'components/tool'
 import './PhotoGrid.scss'
+import { getRoutePayload, toRoute } from 'prodsys/ducks/router'
+import { assignPhoto } from 'ducks/storyimage'
 
 const Frame = () => <rect className="Frame" width="100%" height="100%" />
 
@@ -47,8 +49,9 @@ const AssignPhoto = ({ pk, selected, ...props }) => (
 
 const GridItem = ({
   pk,
-  detail,
-  onClick,
+  action,
+  clickAction,
+  dispatch,
   small,
   className,
   selected,
@@ -56,13 +59,17 @@ const GridItem = ({
 }) => (
   <div
     key={pk}
-    onClick={detail == 'images' ? null : onClick}
+    onClick={action == 'images' ? null : () => dispatch(clickAction)}
     className={className}
   >
-    {detail == 'images' && (
-      <AssignPhoto pk={pk} selected={selected} onClick={onClick} />
+    {action == 'images' && (
+      <AssignPhoto
+        pk={pk}
+        selected={selected}
+        onClick={() => dispatch(clickAction)}
+      />
     )}
-    {detail == 'crop' ? (
+    {action == 'crop' ? (
       <FullThumbWithCropBox src={small} title={data.filename} {...data} />
     ) : (
       <FullThumb src={small} title={data.filename} {...data} />
@@ -71,26 +78,28 @@ const GridItem = ({
   </div>
 )
 
-const ConnectedGridItem = connect(
-  (state, { pk }) => {
-    const data = selectors.getItem(pk)(state) || {}
-    const selected = R.contains(pk, selectors.getSelectedItems(state))
-    const { dirty } = data
-    const className = cx('GridItem', { dirty, selected })
-    const detail = R.pathOr(null, ['router', 'params', 'detail'], state)
-    return { ...data, className, model, detail, selected }
-  },
-  (dispatch, { clickAction }) => ({ onClick: e => dispatch(clickAction) }),
-)(GridItem)
+const ConnectedGridItem = connect((state, { pk }) => {
+  const { model, pk: currentItem, action } = getRoutePayload(state)
+  const data = selectors.getItem(pk)(state) || {}
+  const selected =
+    model == 'photos'
+      ? pk == currentItem
+      : R.contains(pk, selectors.getSelectedItems(state))
+  const clickAction =
+    action == 'images'
+      ? assignPhoto(pk, currentItem)
+      : toRoute({
+          model: MODEL,
+          pk,
+          action: action == 'list' ? 'change' : action,
+        })
+  const className = cx('GridItem', { dirty: data.dirty, selected })
+  return { ...data, className, action, selected, clickAction }
+})(GridItem)
 
-const PhotoGrid = ({
-  items = [],
-  clickHandler = id => actions.reverseUrl({ id }),
-}) => (
+const PhotoGrid = ({ items = [] }) => (
   <div className="ItemGrid">
-    {items.map(pk => (
-      <ConnectedGridItem clickAction={clickHandler(pk)} key={pk} pk={pk} />
-    ))}
+    {items.map(pk => <ConnectedGridItem key={pk} pk={pk} />)}
   </div>
 )
 export default connect(state => ({ items: selectors.getItemList(state) }))(

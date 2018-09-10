@@ -4,6 +4,7 @@ import ListPanel from 'components/ListPanel'
 import { Clear } from 'components/Icons'
 import { FrontpageGrid } from '.'
 import { MODEL, fields, actions, selectors } from './model.js'
+import { toRoute } from 'prodsys/ducks/router'
 
 const filters = [
   {
@@ -24,13 +25,7 @@ const filters = [
 
 const FrontpageList = ({ dismiss, items }) => {
   return (
-    <ListPanel
-      onClick={e => {
-        dismiss()
-      }}
-      model={MODEL}
-      filters={filters}
-    >
+    <ListPanel onClick={dismiss} model={MODEL} filters={filters}>
       <FrontpageGrid items={items} />
     </ListPanel>
   )
@@ -54,5 +49,5 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 export default connect(mapStateToProps, {
-  dismiss: e => actions.reverseUrl({ id: null }),
+  dismiss: e => toRoute({ model: MODEL }),
 })(FrontpageList)

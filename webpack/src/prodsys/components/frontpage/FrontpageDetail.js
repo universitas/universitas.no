@@ -8,10 +8,13 @@ import { FrontpageTools } from '.'
 import { Field, selectors, actions } from './model.js'
 
 // Cropbox field connected to the related photo instance
-const CropBox = connect(selectors.getCurrentItem, dispatch => ({
-  changeHandler: (pk, name) => value =>
-    dispatch(actions.fieldChanged(pk, name, value)),
-}))(({ id, image_id, crop_box, changeHandler }) => {
+const CropBox = connect(
+  (state, { pk }) => selectors.getItem(pk)(state),
+  dispatch => ({
+    changeHandler: (pk, name) => value =>
+      dispatch(actions.fieldChanged(pk, name, value)),
+  }),
+)(({ id, image_id, crop_box, changeHandler }) => {
   return image_id ? (
     <ModelField
       editable
@@ -27,7 +30,7 @@ const CropBox = connect(selectors.getCurrentItem, dispatch => ({
 })
 
 const FrontpageDetail = ({ pk }) => (
-  <section className="DetailPanel" key={pk} style={{ maxWidth: '30rem' }}>
+  <section className="DetailPanel" key={pk}>
     <FrontpageTools pk={pk} />
     <div className="panelContent">
       {pk ? (
@@ -42,7 +45,7 @@ const FrontpageDetail = ({ pk }) => (
             <GridWidget pk={pk} />
           </div>
           <Field pk={pk} name="image_id" editable />
-          <CropBox />
+          <CropBox pk={pk} />
         </React.Fragment>
       ) : (
         <div>velg en sak</div>
@@ -51,6 +54,4 @@ const FrontpageDetail = ({ pk }) => (
   </section>
 )
 
-export default connect(R.applySpec({ pk: selectors.getCurrentItemId }))(
-  FrontpageDetail,
-)
+export default FrontpageDetail

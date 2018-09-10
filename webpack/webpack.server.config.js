@@ -3,10 +3,10 @@ const nodeExternals = require('webpack-node-externals')
 const path = require('path')
 const config = require('./webpack.config.js')
 
-config.plugins.shift() // remove bundle plugin
-
 module.exports = {
   ...config,
+  plugins: config.plugins.slice(1), // remove bundle plugin
+  mode: 'production',
   target: 'node',
   externals: [nodeExternals()],
   devtool: 'none',

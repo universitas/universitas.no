@@ -1,6 +1,5 @@
 const path = require('path')
 const webpack = require('webpack')
-const ResolveEntryModulesPlugin = require('resolve-entry-modules-webpack-plugin')
 const publicPath = process.env.PUBLIC_PATH
 
 const BundleTracker = require('webpack-bundle-tracker')
@@ -39,7 +38,6 @@ module.exports = {
   },
   plugins: [
     bundler,
-    new ResolveEntryModulesPlugin(),
     new webpack.ProvidePlugin({
       // implicitly `import`
       React: 'react',
@@ -81,6 +79,7 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
+        sideEffects: false,
         use: [
           {
             loader: 'babel-loader',
@@ -89,6 +88,11 @@ module.exports = {
             },
           },
         ],
+      },
+      {
+        test: /\.js$/,
+        include: [path.resolve(__dirname, 'node_modules/react-icons')],
+        use: 'babel-loader',
       },
     ],
   },
@@ -100,8 +104,8 @@ module.exports = {
       path.resolve(__dirname, './src/universitas/'),
       'node_modules',
     ],
-    extensions: ['.wasm', '.mjs', '.js', '.jsx', '.json'],
-    unsafeCache: true,
+    extensions: ['.mjs', '.js', '.jsx', '.json'],
+    // unsafeCache: true,
     alias: {},
   },
 }

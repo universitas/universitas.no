@@ -7,6 +7,7 @@ import { PhotoWidget, StoryImageForm } from '.'
 import * as photo from 'components/photos/model.js'
 import { actions, selectors } from './model.js'
 import { deleteStoryImage } from 'ducks/storyimage'
+import { toRoute } from 'prodsys/ducks/router'
 
 const StoryImageActions = ({ deleteHandler, viewPhoto, imagefile }) => (
   <div className="Actions">
@@ -47,8 +48,8 @@ class StoryImage extends React.Component {
 const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
 const mapDispatchToProps = (dispatch, { pk }) => ({
   deleteHandler: () => dispatch(deleteStoryImage(pk)),
-  viewPhoto: id => () =>
-    dispatch(photo.actions.reverseUrl({ id, detail: null })),
+  viewPhoto: pk => () =>
+    dispatch(toRoute({ model: 'photos', action: 'change', pk: pk })),
   fetch: () => dispatch(actions.itemRequested(pk)),
 })
 

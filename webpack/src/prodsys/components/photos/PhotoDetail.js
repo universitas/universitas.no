@@ -1,13 +1,12 @@
 import { connect } from 'react-redux'
 import { Field, selectors, actions } from './model.js'
 import { PhotoTools } from '.'
-import Debug from 'components/Debug'
 
-const PhotoDetail = ({ pk, detail }) => (
+const PhotoDetail = ({ pk, action }) => (
   <section className="DetailPanel">
-    <PhotoTools pk={pk} detail={detail} />
+    <PhotoTools pk={pk} action={action} />
     <div className="panelContent">
-      {detail == 'crop' ? (
+      {action == 'crop' ? (
         <React.Fragment>
           <Field
             pk={pk}
@@ -23,7 +22,7 @@ const PhotoDetail = ({ pk, detail }) => (
           <Field pk={pk} name="large" />
           <Field pk={pk} name="description" editable />
           <div className="wrapForm">
-            <Field pk={pk} name="contributor" editable />
+            <Field pk={pk} name="contributor" editable key={pk} />
             <Field pk={pk} name="category" editable />
             <Field pk={pk} name="filename" />
             <Field pk={pk} name="original" />
@@ -39,11 +38,4 @@ const PhotoDetail = ({ pk, detail }) => (
   </section>
 )
 
-const getRouter = R.path(['router', 'params'])
-
-export default connect(
-  R.applySpec({
-    pk: selectors.getCurrentItemId,
-    detail: R.pipe(getRouter, R.propOr('normal', 'detail')),
-  }),
-)(PhotoDetail)
+export default PhotoDetail

@@ -1,6 +1,7 @@
 import cx from 'classnames'
 import { connect } from 'react-redux'
-import { Field, actions, selectors } from './model.js'
+import { Field, actions, selectors, MODEL } from './model.js'
+import { toRoute } from 'prodsys/ducks/router'
 
 const GridItem = ({ pk, onClick, className = '' }) => (
   <div key={pk} onClick={onClick} className={cx('GridItem', className)}>
@@ -20,7 +21,7 @@ const ConnectedGridItem = connect(
     return { ...data, className }
   },
   (dispatch, { pk }) => ({
-    onClick: e => dispatch(actions.reverseUrl({ id: pk })),
+    onClick: e => dispatch(toRoute({ model: MODEL, action: 'change', pk: pk })),
   }),
 )(GridItem)
 

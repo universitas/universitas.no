@@ -1,7 +1,8 @@
 import { connect } from 'react-redux'
 import { Tool } from 'components/tool'
 import DetailTopBar from 'components/DetailTopBar'
-import { actions, selectors } from './model.js'
+import { MODEL, actions, selectors } from './model.js'
+import { toRoute } from 'prodsys/ducks/router'
 
 const openUrl = url => () => window.open(url)
 
@@ -13,17 +14,19 @@ const StoryTools = ({
   textDetail,
   edit_url,
   public_url,
-  detail,
-  ...props
+  action,
+  pk,
+  title,
+  working_title,
 }) => (
-  <DetailTopBar {...props}>
+  <DetailTopBar title={title || working_title || '(ingen tittel)'} pk={pk}>
     <Tool icon="Close" title="lukk saken" onClick={closeStory} />
     <Tool icon="Add" title="kopier saken" onClick={cloneStory} />
     <Tool
       icon="Camera"
-      active={detail == 'images'}
+      active={action == 'images'}
       title="bilder"
-      onClick={detail == 'images' ? textDetail : imagesDetail}
+      onClick={action == 'images' ? textDetail : imagesDetail}
     />
     <Tool
       icon="Newspaper"
@@ -43,9 +46,11 @@ const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
 const mapDispatchToProps = (dispatch, { pk }) => ({
   trashStory: () =>
     dispatch(actions.fieldChanged(pk, 'publication_status', 15)),
-  closeStory: () => dispatch(actions.reverseUrl({ id: null, detail: null })),
-  imagesDetail: () => dispatch(actions.reverseUrl({ detail: 'images' })),
-  textDetail: () => dispatch(actions.reverseUrl({ detail: null })),
+  closeStory: () => dispatch(toRoute({ model: MODEL, action: 'list' })),
+  imagesDetail: () =>
+    dispatch(toRoute({ model: MODEL, action: 'images', pk: pk })),
+  textDetail: () =>
+    dispatch(toRoute({ model: MODEL, action: 'change', pk: pk })),
   cloneStory: () => dispatch(actions.itemCloned(pk)),
 })
 

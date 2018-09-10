@@ -25,7 +25,6 @@ import {
   ITEM_DELETED,
   ITEM_CREATED,
   ITEM_SELECTED,
-  REVERSE_URL,
   FILTER_TOGGLED,
   FILTER_SET,
   FIELD_CHANGED,
@@ -34,32 +33,22 @@ import {
   modelActions,
   actionModelLens,
 } from 'ducks/basemodel'
-import { push } from 'redux-little-router'
+import { toRoute } from 'prodsys/ducks/router'
 
 const PATCH_DEBOUNCE = 1000
 const SEARCH_DEBOUNCE = 300
 
 // router selector
 const getRouteParams = R.path(['router', 'params'])
-const reverseRoute = ({ model, id, detail }) =>
-  R.pipe(R.reject(R.isNil), R.map(v => `${v}`), R.join('/'))([
-    '',
-    model,
-    id,
-    detail,
-  ])
 
 export default function* rootSaga() {
-  yield takeEvery(ITEMS_FETCHED, itemListScrollTopHack)
   yield takeLatest([FILTER_TOGGLED, FILTER_SET], queryChanged)
   yield takeEvery(ITEMS_REQUESTED, requestItems)
-  yield takeLatest(REVERSE_URL, routePush)
   yield takeEvery([ITEM_SELECTED, ITEM_REQUESTED], fetchItems)
   yield takeLatest(FIELD_CHANGED, patchSaga)
   yield takeEvery(ITEM_CLONED, cloneSaga)
   yield takeEvery(ITEM_CREATED, createSaga)
   yield takeEvery(ITEM_DELETED, deleteSaga)
-  yield fork(watchRouteChange)
 }
 
 const errorAction = error => ({
@@ -82,30 +71,8 @@ export const modelFuncs = action => {
     apiFuncs,
     modelSelectors(modelName),
     modelActions(modelName),
+    { toRoute: props => toRoute({ model: modelName, ...props }) },
   ])
-}
-
-function* itemListScrollTopHack() {
-  // scroll to top when loading new items. This feels hacky.
-  try {
-    document.querySelector('.itemList').scrollTop = 0
-  } catch (e) {}
-}
-
-function* watchRouteChange() {
-  while (true) {
-    const action = yield take('ROUTER_LOCATION_CHANGED')
-    const { id, model } = R.pathOr({}, ['payload', 'params'], action)
-    if (!model) continue
-    const { itemSelected } = modelActions(model)
-    yield put(itemSelected(parseInt(id || 0)))
-  }
-}
-function* routePush(action) {
-  const currentParams = yield select(getRouteParams)
-  const model = action.meta.modelName
-  const url = reverseRoute({ ...currentParams, model, ...action.payload })
-  yield put(push(url))
 }
 
 function* fetchItems(action) {
@@ -178,7 +145,7 @@ function* createSaga(action) {
 function* cloneSaga(action) {
   // post a new story
   const { id } = action.payload
-  const { getItem, reverseUrl } = modelFuncs(action)
+  const { getItem, toRoute } = modelFuncs(action)
   const { working_title, story_type, bodytext_markup } = yield select(
     getItem(id),
   )
@@ -189,5 +156,5 @@ function* cloneSaga(action) {
     publication_status: 0,
   }
   const response = yield call(createSaga, { ...action, payload: data })
-  if (response) yield put(reverseUrl({ id: response.id, detail: null }))
+  if (response) yield put(toRoute({ pk: response.id, action: 'change' }))
 }

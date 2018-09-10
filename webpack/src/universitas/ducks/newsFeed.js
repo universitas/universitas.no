@@ -1,4 +1,4 @@
-import { HOME, SECTION, STORY } from 'ducks/router'
+import { HOME, SECTION, STORY } from 'universitas/ducks/router'
 
 // Lenses
 const lens = R.pipe(R.split('.'), R.lensPath)

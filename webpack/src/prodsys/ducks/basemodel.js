@@ -3,7 +3,6 @@ import { parseQuery } from 'utils/urls'
 import { arrayToggle, combinedToggle, partialMap } from 'utils/fp'
 export const ITEM_ADDED = 'model/ITEM_ADDED'
 export const ITEM_SELECTED = 'model/ITEM_SELECTED'
-export const REVERSE_URL = 'model/REVERSE_URL'
 export const ITEM_SELECT_TOGGLED = 'model/ITEM_SELECT_TOGGLE'
 export const ITEM_CLONED = 'model/ITEM_CLONED'
 export const ITEM_DELETED = 'model/ITEM_DELETED'
@@ -74,7 +73,6 @@ const getActionCreator = R.curry((type, payloadTransform, modelName) =>
 )
 // :: modelName => {k: actionCreator} -- (redux action creators factory)
 export const modelActions = partialMap({
-  reverseUrl: getActionCreator(REVERSE_URL, R.identity),
   itemAdded: getActionCreator(ITEM_ADDED, data => data),
   itemCloned: getActionCreator(ITEM_CLONED, id => ({ id })),
   itemDeleted: getActionCreator(ITEM_DELETED, id => ({ id })),

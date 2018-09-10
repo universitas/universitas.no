@@ -2,6 +2,7 @@ import cx from 'classnames'
 import { connect } from 'react-redux'
 import ModelField from 'components/ModelField'
 import { fields, actions, selectors, MODEL } from './model.js'
+import { toRoute } from 'prodsys/ducks/router'
 
 const Field = ({ name, ...props }) => (
   <ModelField
@@ -33,7 +34,7 @@ const ConnectedGridItem = connect(
     return { ...data, className }
   },
   (dispatch, { pk }) => ({
-    onClick: e => dispatch(actions.reverseUrl({ id: pk })),
+    onClick: e => dispatch(toRoute({ model: MODEL, action: 'change', pk: pk })),
   }),
 )(GridItem)
 

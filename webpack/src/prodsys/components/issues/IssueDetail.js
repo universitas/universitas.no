@@ -1,22 +1,11 @@
 import { connect } from 'react-redux'
-import ModelField from 'components/ModelField'
 import cx from 'classnames'
 import { IssueTools } from '.'
-import { fields, MODEL, selectors } from './model.js'
+import { Field } from './model.js'
 
-const Field = ({ name, ...props }) => (
-  <ModelField
-    key={name}
-    name={name}
-    model={MODEL}
-    {...fields[name]}
-    {...props}
-  />
-)
-
-const IssueDetail = ({ pk }) => (
+const IssueDetail = ({ pk, action }) => (
   <section className="DetailPanel">
-    <IssueTools pk={pk} />
+    <IssueTools pk={pk} action={action} />
     <div className="panelContent">
       <Field pk={pk} name="issue_type" />
       <Field pk={pk} name="publication_date" />
@@ -25,6 +14,4 @@ const IssueDetail = ({ pk }) => (
   </section>
 )
 
-export default connect(R.applySpec({ pk: selectors.getCurrentItemId }))(
-  IssueDetail,
-)
+export default IssueDetail

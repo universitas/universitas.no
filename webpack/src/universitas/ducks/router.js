@@ -13,6 +13,7 @@ export const routerOptions = {
   restoreScroll: restoreScroll(),
 }
 
+// Action constants
 export const HOME = 'router/HOME'
 export const SECTION = 'router/SECTION'
 export const PDF = 'router/PDF'
@@ -22,6 +23,19 @@ export const STORY = 'router/STORY'
 export const SCHEDULE = 'router/SCHEDULE'
 export const SHORT_URL = 'router/SHORT_URL'
 export { NOT_FOUND }
+
+// url routes action mappings to configure redux-first-router
+export const routesMap = {
+  [HOME]: '/',
+  [PDF]: '/pdf/:year?/',
+  [SCHEDULE]: '/utgivelsesplan/:year?/',
+  [STORY]: '/:section/:id(\\d+)/:slug/',
+  [SHORT_URL]: '/:section([^/]*)?/:id(\\d+)/:slug([^/]*)?/',
+  [ABOUT]: '/om-universitas/',
+  [AD_INFO]: '/annonser/',
+  [SECTION]: '/:section/forside/',
+  [NOT_FOUND]: '/ikke-funnet/',
+}
 
 // Action creators
 export const toHome = () => ({ type: HOME, payload: { section: null } })
@@ -43,21 +57,11 @@ export const toShortUrl = ({ id }) => ({
   payload: { id, slug: null, section: null },
 })
 
-// url routes action mappings
-
-export const routesMap = {
-  [HOME]: '/',
-  [PDF]: '/pdf/:year?/',
-  [SCHEDULE]: '/utgivelsesplan/:year?/',
-  [STORY]: '/:section/:id(\\d+)/:slug/',
-  [SHORT_URL]: '/:section([^/]*)?/:id(\\d+)/:slug([^/]*)?/',
-  [ABOUT]: '/om-universitas/',
-  [AD_INFO]: '/annonser/',
-  [SECTION]: '/:section/forside/',
-  [NOT_FOUND]: '/ikke-funnet/',
-}
-
+// {action} -> "relative url"
 export const reverse = action => actionToPath(action, routesMap)
-export const reverseFull = R.pipe(reverse, absoluteURL)
 
+// {action} -> "absolute url"
+export const reverseAbsolute = R.pipe(reverse, absoluteURL)
+
+// selector for location object
 export const getLocation = R.prop(SLICE)

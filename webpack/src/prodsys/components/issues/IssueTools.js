@@ -1,12 +1,10 @@
 import { connect } from 'react-redux'
-import { push } from 'redux-little-router'
 import DetailTopBar from 'components/DetailTopBar'
 import { Tool } from 'components/tool'
 import { MODEL, selectors } from './model.js'
+import { toRoute } from 'prodsys/ducks/router'
 
 const openUrl = url => () => window.open(url)
-
-const ToolBar = props => <div {...props} />
 
 const IssueTools = ({ pk, issue_name, autocrop, close, openAdmin }) => (
   <DetailTopBar title={`Universitas ${issue_name}`} pk={pk}>
@@ -16,9 +14,8 @@ const IssueTools = ({ pk, issue_name, autocrop, close, openAdmin }) => (
 )
 
 const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
-
 const mapDispatchToProps = (dispatch, { pk }) => ({
-  close: () => dispatch(push(`/${MODEL}`)),
+  close: () => dispatch(toRoute({ model: MODEL })),
   openAdmin: openUrl(`/admin/issues/issue/${pk}/change/`),
 })
 

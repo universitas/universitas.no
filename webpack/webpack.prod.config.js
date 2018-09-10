@@ -1,6 +1,8 @@
 const webpack = require('webpack')
 const config = require('./webpack.config.js')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
@@ -14,19 +16,29 @@ const outputhash = '[name].[chunkhash:12]'
 config.output.filename = outputhash + '.js'
 
 // Plugins
+const uglify = new UglifyJsPlugin({
+  cache: true,
+  parallel: true,
+  sourceMap: true,
+})
+
 const extractCss = new MiniCssExtractPlugin({ filename: outputhash + '.css' })
 const progressBar = new ProgressBarPlugin({ width: 50 })
-config.plugins.push(extractCss, progressBar)
-
+config.plugins.push(
+  extractCss,
+  progressBar,
+  // new webpack.DefinePlugin({
+  //   'process.env.NODE_ENV': JSON.stringify('production'),
+  // }),
+  // new webpack.optimize.ModuleConcatenationPlugin(),
+  // new webpack.NoEmitOnErrorsPlugin(),
+  new BundleAnalyzerPlugin({ analyzerPort: 5555 }),
+)
 config.optimization.minimizer = [
   new OptimizeCssAssetsPlugin({
     cssProcessorOptions: { map: { inline: false } },
   }),
-  new UglifyJsPlugin({
-    cache: true,
-    parallel: 4,
-    sourceMap: true,
-  }),
+  uglify,
 ]
 
 // Replace style loader with minicssextractplugin loader

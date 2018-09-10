@@ -2,7 +2,7 @@ import cx from 'classnames'
 import ErrorBoundary from 'react-error-boundary'
 import Link from 'redux-first-router-link'
 import { Done, Sync, Clear } from 'components/Icons'
-import { toStory } from 'ducks/router'
+import { toStory } from 'universitas/ducks/router'
 import { hyphenate, slugify } from 'utils/text'
 import { renderStyles, parseStyles } from './feedItemStyles.js'
 import { inlineText } from 'markup/render.js'
@@ -81,4 +81,4 @@ const LinkWrapper = ({ fetchStatus, story, addRef, children, className }) => {
   )
 }
 
-export default props => <FeedItem {...props} Wrapper={LinkWrapper} />
+export default props => <FeedItem Wrapper={LinkWrapper} {...props} />
