@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
-import { push } from 'redux-little-router'
 import DetailTopBar from 'components/DetailTopBar'
 import { Tool } from 'components/tool'
 import { MODEL, selectors } from './model.js'
+import { toRoute } from 'prodsys/ducks/router'
 
 const openUrl = url => () => window.open(url)
 
@@ -18,7 +18,7 @@ const FrontpageTools = ({ pk, headline, close, openAdmin }) => (
 const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
 
 const mapDispatchToProps = (dispatch, { pk }) => ({
-  close: () => dispatch(push(`/${MODEL}`)),
+  close: () => dispatch(toRoute({ model: MODEL })),
   openAdmin: openUrl(
     `/admin/frontpage/frontpagestory/${pk ? pk + '/change/' : ''}`,
   ),

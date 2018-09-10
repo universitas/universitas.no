@@ -2,19 +2,24 @@ import cx from 'classnames'
 import { connect } from 'react-redux'
 import ModelField from 'components/ModelField'
 import { MODEL, actions, selectors, fields } from './model.js'
-import { FeedItem } from 'components/NewsFeed/FeedItem.js'
-import { addAdverts } from 'components/NewsFeed/NewsFeed.js'
+import FeedItem from 'universitas/components/NewsFeed/FeedItem.js'
+import { addAdverts } from 'universitas/components/NewsFeed/NewsFeed.js'
 import Debug from 'components/Debug'
 import './FrontpageGrid.scss'
+import { getRoutePayload, toRoute } from 'prodsys/ducks/router'
 
 class FeedItemWrapper extends React.Component {
-  componentDidUpdate() {
-    if (this.props.selected && this.node && this.node.scrollIntoView)
-      this.node.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-        inline: 'center',
-      })
+  scrollTo = () => {
+    // for some reason this doesn't always work unless we do it async
+    clearTimeout(this.timeout)
+    this.timeout = setTimeout(
+      () =>
+        this.node.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        }),
+      200,
+    )
   }
   clickHandler = ev => {
     ev.stopPropagation()
@@ -23,6 +28,9 @@ class FeedItemWrapper extends React.Component {
   }
   refHandler = node => {
     this.node = node
+  }
+  componentDidUpdate() {
+    this.props.selected && this.scrollTo()
   }
   render() {
     const { className, children } = this.props
@@ -40,7 +48,7 @@ class FeedItemWrapper extends React.Component {
 const ConnectedFeedItem = connect(
   (state, { pk }) => {
     const data = selectors.getItem(pk)(state) || {}
-    const currentItemId = selectors.getCurrentItemId(state)
+    const currentItemId = getRoutePayload(state).pk
     const selected = pk == currentItemId
     const unselected = currentItemId && !selected
     const { dirty, published } = data
@@ -60,7 +68,7 @@ const ConnectedFeedItem = connect(
     }
   },
   {
-    onClick: id => actions.reverseUrl({ id }),
+    onClick: pk => toRoute({ model: MODEL, action: 'change', pk: pk }),
   },
 )(props => <FeedItem Wrapper={FeedItemWrapper} {...props} />)
 

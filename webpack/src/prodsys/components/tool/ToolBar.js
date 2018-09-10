@@ -18,16 +18,5 @@ const ToolBar = ({ className, row = true, tools, ...props }) => (
     {Object.keys(tools).map(key => renderTool(key, tools[key]))}
   </section>
 )
-ToolBar.propTypes = {
-  className: PropTypes.string,
-  row: PropTypes.bool,
-  tools: PropTypes.objectOf(
-    PropTypes.shape({
-      icon: PropTypes.string,
-      active: PropTypes.bool,
-      onClick: PropTypes.func,
-      toolTip: PropTypes.string,
-    }),
-  ),
-}
+
 export default ToolBar

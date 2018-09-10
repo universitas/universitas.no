@@ -1,5 +1,5 @@
-import ReactSelect from 'react-select'
-import CreatableSelect from 'react-select/lib/Creatable'
+import ReactSelect, { Creatable } from 'react-select'
+// import CreatableSelect from 'react-select/lib/Creatable'
 import models from './models'
 import styles from './styles.js'
 import * as components from './components.js'
@@ -72,7 +72,7 @@ class Select extends React.Component {
       // for use with ModelField
       return item ? this.getOptionLabel(item) : '–'
     }
-    const SelectComponent = creatable ? CreatableSelect : ReactSelect
+    const SelectComponent = creatable ? Creatable : ReactSelect
     return (
       <SelectComponent
         onInputChange={this.onInputChange}

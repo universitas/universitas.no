@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import { push } from 'redux-little-router'
 import { Tool } from 'components/tool'
 import cx from 'classnames'
 import {
@@ -8,6 +7,7 @@ import {
   uploadPost,
   uploadClose,
 } from 'ducks/fileupload'
+import { toRoute } from 'prodsys/ducks/router'
 
 // new, ready, invalid, uploaded, uploading, error
 //
@@ -58,7 +58,7 @@ const mapDispatchToProps = (dispatch, { pk, id }) => ({
   uploadClose: e => dispatch(uploadClose(pk)),
   uploadUpdate: (pk, data) => dispatch(uploadUpdate(pk, data)),
   viewImage: id => e => {
-    dispatch(push(`/photos/${id}`))
+    dispatch(toRoute({ model: 'photos', pk: id }))
     dispatch(uploadClose(pk))
   },
 })

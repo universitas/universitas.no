@@ -6,7 +6,7 @@
     "production": {
       "plugins": [
         ["transform-remove-console", { "exclude": ["error", "warn"] }]
-      ]
+      ],
     },
     "test": { "presets": [["env"], "stage-1", "react"] }
   }

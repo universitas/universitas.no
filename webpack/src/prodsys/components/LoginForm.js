@@ -45,8 +45,4 @@ class LoginForm extends React.Component {
   }
 }
 
-LoginForm.propTypes = {
-  error: PropTypes.any,
-  logIn: PropTypes.func.isRequired,
-}
 export default connect(getUser, { logIn })(LoginForm)

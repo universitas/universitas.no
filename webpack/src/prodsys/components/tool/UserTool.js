@@ -21,9 +21,4 @@ const UserTool = ({ first_name, last_name, username, logOut, avatar }) => {
   )
 }
 
-UserTool.propTypes = {
-  username: PropTypes.string,
-  pending: PropTypes.bool.isRequired,
-  logOut: PropTypes.func.isRequired,
-}
 export default connect(getUser, { logOut })(UserTool)

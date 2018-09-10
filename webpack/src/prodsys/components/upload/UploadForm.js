@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import { push } from 'redux-little-router'
 import { Tool } from 'components/tool'
 import { Field } from 'components/ModelField'
 import { fields as detailFields } from 'components/photos/model.js'

@@ -16,7 +16,7 @@ import {
 import {
   parseStyles,
   renderStyles,
-} from 'components/NewsFeed/feedItemStyles.js'
+} from 'universitas/components/NewsFeed/feedItemStyles.js'
 
 const buttons = {
   size: {

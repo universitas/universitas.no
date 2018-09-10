@@ -5,16 +5,17 @@ const config = require('./webpack.config.js')
 
 module.exports = {
   ...config,
+  plugins: config.plugins.slice(1), // remove bundle plugin
+  mode: 'production',
   target: 'node',
   externals: [nodeExternals()],
   devtool: 'none',
-  entry: { server: './src/entrypoints/server.js' },
+  entry: { server: './src/universitas/server.js' },
   output: {
     path: path.resolve('./build'),
     filename: '[name].bundle.js',
     publicPath: 'http://localhost:3000/static/',
   },
-  plugins: [new webpack.ProvidePlugin({ React: 'react', R: 'ramda' })],
   module: {
     rules: [
       { test: /\.scss$/, use: [{ loader: 'null-loader' }] },

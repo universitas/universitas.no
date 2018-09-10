@@ -63,3 +63,9 @@ export const parseQuery = R.pipe(
 
 // Relative to absolute url (requires global `location`)
 export const absoluteURL = url => new URL(url, global.location.href).toString()
+
+// JSON serializer object
+export const querySerializer = {
+  parse: parseQuery,
+  stringify: queryString,
+}

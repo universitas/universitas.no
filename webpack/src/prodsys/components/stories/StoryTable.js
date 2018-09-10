@@ -1,6 +1,8 @@
 import cx from 'classnames'
 import { connect } from 'react-redux'
-import { Field, actions, selectors } from './model.js'
+import { MODEL, Field, actions, selectors } from './model.js'
+
+import { getRoutePayload, toRoute } from 'prodsys/ducks/router'
 
 const TableCell = ({ label, className, onClick, ...props }) => (
   <div title={label} className={className} onClick={onClick}>
@@ -20,10 +22,9 @@ const DumbTableRow = props => (
 )
 
 const TableRow = connect(
-  (state, { pk, row }) => {
+  (state, { pk, row, selected, action }) => {
     const data = selectors.getItem(pk)(state) || {}
     const { dirty, publication_status: status } = data
-    const selected = selectors.getCurrentItemId(state) === pk
     const className = cx(`status-${status}`, 'TableCell', {
       dirty,
       selected,
@@ -31,16 +32,30 @@ const TableRow = connect(
     })
     return { className }
   },
-  (dispatch, { pk }) => ({
-    onClick: e => dispatch(actions.reverseUrl({ id: pk })),
+  (dispatch, { pk, action }) => ({
+    onClick: e => dispatch(toRoute({ model: MODEL, action, pk: pk })),
   }),
 )(DumbTableRow)
 
-const StoryTable = ({ items = [] }) => (
+const StoryTable = ({ action, currentItem, items = [] }) => (
   <section className="StoryTable">
-    {items.map((pk, index) => <TableRow key={pk} pk={pk} row={index} />)}
+    {items.map((pk, index) => (
+      <TableRow
+        key={pk}
+        pk={pk}
+        row={index}
+        action={action}
+        selected={pk == currentItem}
+      />
+    ))}
   </section>
 )
-export default connect(state => ({ items: selectors.getItemList(state) }))(
-  StoryTable,
-)
+export default connect(state => {
+  const { pk, action } = getRoutePayload(state)
+  const items = selectors.getItemList(state)
+  return {
+    items,
+    action: action == 'list' ? 'change' : action,
+    currentItem: pk,
+  }
+})(StoryTable)

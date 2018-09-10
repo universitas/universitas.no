@@ -13,7 +13,7 @@
     "servedev": "TARGET=server pm2-dev ./build/server.bundle.js",
     "test": "jest --watchAll --verbose",
     "testonce": "jest --updateSnapshot",
-    "build": "webpack-cli --config webpack.prod.config.js ",
+    "build": "webpack-cli --config=webpack.prod.config.js",
     "tern": "tern --persistent --host 0.0.0.0 --port 33000",
     "rebuild": "npm run build",
     "stats":
@@ -32,9 +32,10 @@
     "setupFiles": ["<rootDir>/jest.setup.js"],
     "moduleDirectories": [
       "node_modules",
+      "src",
       "src/common",
-      "src/universitas",
-      "src/prodsys"
+      "src/prodsys",
+      "src/universitas"
     ],
     "moduleNameMapper": {
       "\\.(css|scss|sass|less)$": "<rootDir>/__mocks__/css.jest.mock.js",
@@ -98,7 +99,6 @@
     "redux-first-router": "0.0.9-rudy",
     "redux-first-router-link": "0.0.3-rudy",
     "redux-first-router-restore-scroll": "^1.2.1",
-    "redux-little-router": "^15",
     "redux-logger": "^3",
     "redux-persist": "^5.10.0",
     "redux-saga": "^0.16",
@@ -125,6 +125,7 @@
     "react-test-renderer": "^16.4.2",
     "storybook-addon-jsx": "^5.4.0",
     "tern": "^0.21",
+    "webpack-bundle-analyzer": "^2.13.1",
     "webpack-dev-server": "^3.1.5",
     "webpack-hot-server-middleware": "^0.5.0"
   }

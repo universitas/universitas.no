@@ -3,40 +3,32 @@ import cx from 'classnames'
 import { modelSelectors } from 'ducks/basemodel'
 import { StoryTools, StoryDetailImages, StoryDetailText } from '.'
 import { selectors } from './model.js'
+import { getRoutePayload } from 'prodsys/ducks/router'
+import Debug from 'components/Debug'
 
-const DetailPane = ({ pk, images, detail }) => {
-  if (!pk) return null
-  if (detail == 'text') return <StoryDetailText pk={pk} />
-  if (detail == 'images') return <StoryDetailImages pk={pk} images={images} />
-  return null // fallback
+const DetailPane = ({ pk, images, action }) => {
+  if (action == 'change') return <StoryDetailText pk={pk} />
+  if (action == 'images') return <StoryDetailImages pk={pk} images={images} />
+  return <div>action??: {action}</div>
 }
 
-const StoryDetail = ({ pk, title, detail, publication_status, images }) => (
+const StoryDetail = ({
+  pk,
+  action,
+  title,
+  working_title,
+  publication_status,
+  images,
+  ...props
+}) => (
   <section
     className={cx('DetailPanel', 'StoryDetail', `status-${publication_status}`)}
   >
-    <StoryTools title={title} detail={detail} pk={pk} />
-    <DetailPane key={pk} pk={pk} images={images} detail={detail} />
+    <StoryTools pk={pk} action={action} />
+    <DetailPane pk={pk} images={images} action={action} />
   </section>
 )
 
-const getRouter = R.path(['router', 'params'])
+const mapStateToProps = (state, { action, pk }) => selectors.getItem(pk)(state)
 
-const mapStateToProps = state => {
-  const {
-    id,
-    title,
-    working_title,
-    publication_status,
-    images,
-  } = selectors.getCurrentItem(state)
-  const { detail = 'text' } = getRouter(state)
-  return {
-    title: title || working_title,
-    images,
-    detail,
-    pk: id,
-    publication_status,
-  }
-}
 export default connect(mapStateToProps)(StoryDetail)
