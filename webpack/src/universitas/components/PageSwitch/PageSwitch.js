@@ -16,7 +16,7 @@ import {
   AD_INFO,
   NOT_FOUND,
   getLocation,
-} from 'ducks/router'
+} from 'universitas/ducks/router'
 import { getSearch } from 'ducks/newsFeed'
 import { NewsFeed, SearchFeed } from 'components/NewsFeed'
 import Story from 'components/Story'

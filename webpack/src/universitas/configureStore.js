@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, combineReducers } from 'redux'
 import { connectRoutes } from 'redux-first-router'
 import { compose } from 'utils/misc' // use devtools if available
 import createSagaMiddleware from 'redux-saga'
-import reducer from './reducer.js'
+import reducers from './reducer.js'
 import rootSaga from './saga.js'
 import { routesMap, routerOptions } from 'universitas/ducks/router.js'
 

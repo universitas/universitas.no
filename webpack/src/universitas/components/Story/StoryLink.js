@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { toStory, toShortUrl } from 'ducks/router'
+import { toStory, toShortUrl } from 'universitas/ducks/router'
 import { getStory, storyRequested } from 'ducks/publicstory'
 import RouterLink from 'redux-first-router-link'
 import { formatDate } from 'utils/text'

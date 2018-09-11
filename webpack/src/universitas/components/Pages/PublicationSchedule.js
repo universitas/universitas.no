@@ -3,7 +3,7 @@ import cx from 'classnames'
 import { Helmet } from 'react-helmet'
 import { requestData } from 'utils/hoc'
 
-import { toPubSchedule } from 'ducks/router'
+import { toPubSchedule } from 'universitas/ducks/router'
 import { getIssues, issuesRequested } from 'ducks/issues'
 import YearNavigation from './YearNavigation'
 import PublicationTable from './PublicationTable'

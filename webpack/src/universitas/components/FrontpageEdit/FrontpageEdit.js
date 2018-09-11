@@ -5,7 +5,7 @@ import Debug from 'components/Debug'
 import { getUser } from 'ducks/auth'
 import { getStory } from 'ducks/publicstory'
 import { buildNodeTree } from 'markup/nodeTree'
-import { getLocation, STORY, HOME, SECTION } from 'ducks/router'
+import { getLocation, STORY, HOME, SECTION } from 'universitas/ducks/router'
 import { getUx, toggleUx } from 'ducks/site'
 
 const storyDjango = pk =>

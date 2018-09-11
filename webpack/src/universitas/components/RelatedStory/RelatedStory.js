@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { getStory } from 'ducks/publicstory'
-import { toStory } from 'ducks/router'
+import { toStory } from 'universitas/ducks/router'
 import RouterLink from 'redux-first-router-link'
 import Debug from 'components/Debug'
 

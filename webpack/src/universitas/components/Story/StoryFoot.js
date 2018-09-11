@@ -1,4 +1,4 @@
-import { reverse, toStory } from 'ducks/router'
+import { reverse, toStory } from 'universitas/ducks/router'
 import RelatedStory from 'components/RelatedStory'
 import { shuffle } from 'utils/misc'
 import Advert from 'components/Advert'

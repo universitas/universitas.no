@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { getIssues, issuesRequested } from 'ducks/issues'
-import { toPdf } from 'ducks/router'
+import { toPdf } from 'universitas/ducks/router'
 import { requestData } from 'utils/hoc'
 import cx from 'classnames'
 

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { formatDate } from 'utils/text'
 import Link from 'redux-first-router-link'
-import { toAdInfo, toPubSchedule } from 'ducks/router'
+import { toAdInfo, toPubSchedule } from 'universitas/ducks/router'
 import { Velferdstinget } from 'components/Logos'
 import LoadingIndicator from 'components/LoadingIndicator'
 import { requestData } from 'utils/hoc'

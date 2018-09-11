@@ -1,6 +1,6 @@
 // express server
 
-import 'babel-polyfill'
+import '@babel/polyfill'
 import express from 'express'
 import morgan from 'morgan'
 import { Helmet } from 'react-helmet'

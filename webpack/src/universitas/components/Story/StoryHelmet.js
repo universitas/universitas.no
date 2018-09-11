@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet'
-import { reverseAbsolute, toStory, toShortUrl } from 'ducks/router'
+import { reverseAbsolute, toStory, toShortUrl } from 'universitas/ducks/router'
 const STATUS_PUBLISHED = 10
 
 const authors = R.tryCatch(

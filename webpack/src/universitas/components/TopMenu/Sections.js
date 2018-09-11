@@ -1,5 +1,5 @@
 import { NavLink } from 'redux-first-router-link'
-import { toSection } from 'ducks/router'
+import { toSection } from 'universitas/ducks/router'
 import cx from 'classnames'
 
 const capitalize = R.replace(/./, R.toUpper)

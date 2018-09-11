@@ -89,11 +89,6 @@ module.exports = {
           },
         ],
       },
-      {
-        test: /\.js$/,
-        include: [path.resolve(__dirname, 'node_modules/react-icons')],
-        use: 'babel-loader',
-      },
     ],
   },
   resolve: {
@@ -105,7 +100,7 @@ module.exports = {
       'node_modules',
     ],
     extensions: ['.mjs', '.js', '.jsx', '.json'],
-    // unsafeCache: true,
+    unsafeCache: true,
     alias: {},
   },
 }

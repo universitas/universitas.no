@@ -3,7 +3,13 @@ import Link, { NavLink } from 'redux-first-router-link'
 import { Universitas } from 'components/Logos'
 import Sections from './Sections.js'
 import ErrorBoundary from 'react-error-boundary'
-import { toHome, toPdf, toPubSchedule, toAbout, toAdInfo } from 'ducks/router'
+import {
+  toHome,
+  toPdf,
+  toPubSchedule,
+  toAbout,
+  toAdInfo,
+} from 'universitas/ducks/router'
 import LanguageWidget from './LanguageWidget.js'
 import SearchWidget from './SearchWidget.js'
 import { Menu, Close } from 'components/Icons'

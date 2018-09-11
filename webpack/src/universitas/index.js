@@ -1,5 +1,5 @@
 // frontpage of universitas.no react app
-import 'babel-polyfill'
+import '@babel/polyfill'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import configureStore from './configureStore'
