@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import { configure, setAddon, addDecorator } from '@storybook/react'
 import { setOptions } from '@storybook/addon-options'
 import { withKnobs } from '@storybook/addon-knobs'

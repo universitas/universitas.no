@@ -1,4 +1,3 @@
-import '@babel/polyfill'
 import ReactDOM from 'react-dom'
 import Raven from 'raven-js'
 import { loginFailed } from 'ducks/auth'

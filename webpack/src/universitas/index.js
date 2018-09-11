@@ -1,5 +1,4 @@
 // frontpage of universitas.no react app
-import '@babel/polyfill'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import configureStore from './configureStore'
@@ -17,8 +16,7 @@ const Universitas = initialState => (
 const rehydrate = (state, node) => {
   // rehydrate with error fallback
 
-  // don't support internet explorer
-  if (!window.URLSearchParams) return
+  if (!window.URLSearchParams) return // don't support internet explorer
   const html = node.innerHtml
   const user = state && state.auth && state.auth.id
   delete window.__RENDER_ERROR__

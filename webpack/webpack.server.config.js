@@ -18,7 +18,10 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.scss$/, use: [{ loader: 'null-loader' }] },
+      {
+        test: /\.(scss|svg|gif|jpg|png|woff|woff2|eot|ttf)$/,
+        use: [{ loader: 'null-loader' }],
+      },
       ...config.module.rules,
     ],
   },

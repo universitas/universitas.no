@@ -1,6 +1,4 @@
 // express server
-
-import '@babel/polyfill'
 import express from 'express'
 import morgan from 'morgan'
 import { Helmet } from 'react-helmet'
@@ -37,6 +35,8 @@ const serializeError = error =>
 
 // perform react server side rendering
 const renderReact = (path, { actions, url }) => {
+  global.location = { href: url } // mock window.location
+  global.SERVER_SIDE = true // add a global flag
   const store = configureStore(undefined, [path])
   R.forEach(action => store.dispatch(action), actions)
   const html = renderToString(<Universitas store={store} />)
@@ -47,8 +47,6 @@ const renderReact = (path, { actions, url }) => {
 
 // express render handler
 const renderHandler = (req, res) => {
-  global.SERVER_SIDE = true // add a global flag
-  global.location = { href: url } // mock window.location
   const actions = req.body // fake redux actions created in django view
   const url = req.url
   try {

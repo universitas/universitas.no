@@ -5,7 +5,7 @@ module.exports = function(api) {
       '@babel/preset-env',
       {
         modules: false, // webpack tree shaking requires this
-        useBuiltIns: 'entry', // import only polyfills when needed?
+        useBuiltIns: 'usage', // import only polyfills when needed?
       },
     ],
     '@babel/preset-react',

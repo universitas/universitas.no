@@ -5,6 +5,7 @@ import logging
 
 import requests
 
+from api.adverts import AdvertViewSet
 from api.frontpage import FrontpageStoryViewset
 from api.issues import IssueViewSet
 from api.publicstories import PublicStoryViewSet
@@ -90,9 +91,9 @@ def clear_feed_cache(sender, instance, **kwargs):
 @cache_memoize(timeout=60 * 30, args_rewrite=only_anon)
 def fetch_issues(request):
     response = IssueViewSet.as_view({'get': 'list'})(request)
-    payload = {'issues': response.data.get('results')}
+    payload = {'fetch_issues': response.data.get('results')}
     payload = json.loads(json.dumps(payload))
-    return {'type': 'issues/ISSUES_FETCHED', 'payload': payload}
+    return {'type': 'fetch_issues/ISSUES_FETCHED', 'payload': payload}
 
 
 @receiver(post_save, sender=Issue)
@@ -106,14 +107,22 @@ def fetch_site(request):
     return {'type': 'site/SITE_FETCHED', 'payload': response.data}
 
 
-def get_redux_actions(request, story):
+def fetch_adverts(request):
+    response = AdvertViewSet.as_view({'get': 'qmedia'})(request)
+    payload = json.loads(json.dumps(response.data))
+    return {'type': 'adverts/ADVERTS_FETCH_SUCCESS', 'payload': payload}
+
+
+def get_redux_actions(request, story=None, fetch_issues=None):
     """Redux actions to simulate data prefetching server side rendering."""
     actions = [
         fetch_newsfeed(request),
         fetch_site(request),
         fetch_user(request),
-        #fetch_issues(request),
+        fetch_adverts(request),
     ]
+    if fetch_issues:
+        actions.append(fetch_issues(request))
     if story:
         actions.append(fetch_story(request, int(story)))
     return actions
@@ -138,7 +147,9 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
             logger.debug(f'{cache_key} {request}')
             return response
 
-    redux_actions = get_redux_actions(request, story)
+    fetch_issues = section and (section in ('utgivelsesplan', 'pdf'))
+
+    redux_actions = get_redux_actions(request, story, fetch_issues)
     ssr_context = express_render(redux_actions, request)
     if ssr_context.get('error'):
         logger.debug(json.dumps(ssr_context, indent=2))
