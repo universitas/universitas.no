@@ -136,12 +136,13 @@ $focused-color: lighten($blue, 25%);
 
   &__value-container {
     display: flex;
+    flex: 1;
     align-items: center;
-    min-width: 0;
     position: relative;
   }
   &__single-value {
     flex: 1;
+    width: 0;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
