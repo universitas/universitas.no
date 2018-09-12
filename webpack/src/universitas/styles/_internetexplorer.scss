@@ -6,16 +6,27 @@
     display: flex;
     display: grid;
     flex-flow: row wrap;
-    min-height: 100vh;
     margin-right: -$gridgap;
     .col-6 {
       flex-basis: 100%;
     }
   }
   .FeedItem {
+    position: relative;
+    min-height: 20rem;
+    .Vignette {
+      top: 0;
+      position: absolute;
+    }
+    &.col-6 {
+      @for $n from 1 through 6 {
+        .row-#{$n} {
+          min-height: 8rem * $n;
+        }
+      }
+    }
     display: flex;
     flex-direction: column;
-    min-height: 25rem;
     flex: 1;
     flex-basis: 40%;
     margin-right: $gridgap;
@@ -51,10 +62,10 @@
   }
   .PdfList {
     .Issue {
-      flex-basis: 14rem;
+      flex-basis: 16.5rem;
       margin: 1rem;
       &.two {
-        flex-basis: 33rem;
+        flex-basis: 35rem;
       }
     }
   }

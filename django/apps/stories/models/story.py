@@ -390,7 +390,7 @@ class Story(  # type: ignore
 
     def get_shortlink(self):
         url = reverse(
-            viewname='article_short',
+            viewname='ssr-shortlink',
             kwargs={
                 'story_id': str(self.id),
             },
@@ -401,7 +401,7 @@ class Story(  # type: ignore
         if self.url:
             return self.url
         return reverse(
-            viewname='ssr',
+            viewname='ssr-story',
             kwargs={
                 'story': str(self.id),
                 'section': self.section.slug + '/',
