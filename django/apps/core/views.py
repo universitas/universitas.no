@@ -113,7 +113,7 @@ def fetch_adverts(request):
     return {'type': 'adverts/ADVERTS_FETCH_SUCCESS', 'payload': payload}
 
 
-def get_redux_actions(request, story=None, fetch_issues=None):
+def get_redux_actions(request, story=None, issues=None):
     """Redux actions to simulate data prefetching server side rendering."""
     actions = [
         fetch_newsfeed(request),
@@ -121,7 +121,7 @@ def get_redux_actions(request, story=None, fetch_issues=None):
         fetch_user(request),
         fetch_adverts(request),
     ]
-    if fetch_issues:
+    if issues:
         actions.append(fetch_issues(request))
     if story:
         actions.append(fetch_story(request, int(story)))
@@ -135,7 +135,7 @@ def clear_cached_story_response(sender, instance, **kwargs):
 
 def react_frontpage_view(request, section=None, story=None, slug=None):
 
-    is_IE = 'Trident' in request.META['HTTP_USER_AGENT']
+    is_IE = 'Trident' in request.META.get('HTTP_USER_AGENT', '')
     cache_key = f'cached_page_{story or request.path}{"IE" if is_IE else ""}'
 
     if request.user.is_anonymous and not settings.DEBUG:
@@ -148,9 +148,9 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
             logger.debug(f'{cache_key} {request}')
             return response
 
-    fetch_issues = section and (section in ('utgivelsesplan', 'pdf'))
+    issues = section and (section in ('utgivelsesplan', 'pdf'))
 
-    redux_actions = get_redux_actions(request, story, fetch_issues)
+    redux_actions = get_redux_actions(request, story, issues)
     ssr_context = express_render(redux_actions, request)
     if ssr_context.get('error'):
         logger.debug(json.dumps(ssr_context, indent=2))

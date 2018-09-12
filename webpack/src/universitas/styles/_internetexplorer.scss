@@ -28,4 +28,18 @@
       background-size: cover !important;
     }
   }
+  .StoryImage {
+    display: block !important;
+  }
+  .StoryHead {
+    max-height: none !important;
+  }
+  .mainContent {
+    main {
+      flex: 1;
+    }
+  }
+  .Byline {
+    flex-basis: auto;
+  }
 }
