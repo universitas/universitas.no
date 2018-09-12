@@ -49,12 +49,12 @@ urlpatterns = [
         name='facebook_verification'
     ),
     # react story
-    re_path(r'^(?P<story>\d+)/$', react_frontpage_view, name='shortlink'),
+    re_path(r'^(?P<story>\d+)/?$', react_frontpage_view, name='ssr-shortlink'),
     re_path(
         r'^(?P<section>[\w-]+)/?(?P<story>\d+)(?P<slug>/.*)/?$',
         react_frontpage_view,
-        name='ssr',
+        name='ssr-story',
     ),
-    # react frontpage
-    re_path(r'', react_frontpage_view, name='ssr_fallback'),
+    # react other pages
+    re_path(r'^(?P<slug>[\w-]*).*$', react_frontpage_view, name='ssr-other'),
 ]

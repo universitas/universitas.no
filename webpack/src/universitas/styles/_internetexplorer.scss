@@ -42,4 +42,27 @@
   .Byline {
     flex-basis: auto;
   }
+  .ContactGrid {
+    display: flex;
+    flex-flow: row wrap;
+    margin: -1rem;
+  }
+  .ContactCard {
+    display: flex;
+    flex: 1;
+    margin: 1rem;
+    flex-basis: 20rem;
+    flex-flow: column wrap;
+    .thumb {
+      order: -2;
+      height: 9rem;
+      width: auto;
+    }
+    .Field {
+      min-height: 2em;
+      &.name {
+        order: -1;
+      }
+    }
+  }
 }

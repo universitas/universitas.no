@@ -91,9 +91,8 @@ def clear_feed_cache(sender, instance, **kwargs):
 @cache_memoize(timeout=60 * 30, args_rewrite=only_anon)
 def fetch_issues(request):
     response = IssueViewSet.as_view({'get': 'list'})(request)
-    payload = {'fetch_issues': response.data.get('results')}
-    payload = json.loads(json.dumps(payload))
-    return {'type': 'fetch_issues/ISSUES_FETCHED', 'payload': payload}
+    payload = json.loads(json.dumps({'issues': response.data.get('results')}))
+    return {'type': 'issues/ISSUES_FETCHED', 'payload': payload}
 
 
 @receiver(post_save, sender=Issue)
@@ -104,7 +103,8 @@ def clear_issues_cache(sender, instance, **kwargs):
 @cache_memoize(timeout=60 * 15, args_rewrite=only_anon)
 def fetch_site(request):
     response = SiteDataAPIView.as_view()(request)
-    return {'type': 'site/SITE_FETCHED', 'payload': response.data}
+    payload = json.loads(json.dumps(response.data))
+    return {'type': 'site/SITE_FETCHED', 'payload': payload}
 
 
 def fetch_adverts(request):
@@ -122,6 +122,7 @@ def get_redux_actions(request, story=None, issues=None):
         fetch_adverts(request),
     ]
     if issues:
+        actions = []
         actions.append(fetch_issues(request))
     if story:
         actions.append(fetch_story(request, int(story)))
@@ -148,9 +149,11 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
             logger.debug(f'{cache_key} {request}')
             return response
 
-    issues = section and (section in ('utgivelsesplan', 'pdf'))
+    issues = slug and (slug in ('utgivelsesplan', 'pdf'))
+    logger.debug(f'section: {section} issues: {issues} slug: {slug}')
 
     redux_actions = get_redux_actions(request, story, issues)
+    logger.debug(str(redux_actions[-1]))
     ssr_context = express_render(redux_actions, request)
     if ssr_context.get('error'):
         logger.debug(json.dumps(ssr_context, indent=2))
