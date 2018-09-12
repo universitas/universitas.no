@@ -19,10 +19,10 @@
     align-items: center;
   }
   .Level {
-    flex-basis: $menuheight;
     background-color: color-get("nyheter");
     width: 100%;
     display: flex;
+    min-height: $menuheight;
     justify-content: center;
     .inner {
       width: 100%;

@@ -1,6 +1,9 @@
 // internet explorer stuff
 
 .IE11 {
+  .Level {
+    flex-basis: $menuheight;
+  }
   .NewsFeed {
     overflow: visible;
     display: flex;

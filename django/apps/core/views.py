@@ -148,7 +148,7 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
             logger.debug(f'{cache_key} {request}')
             return response
 
-    issues = slug and (slug in ('utgivelsesplan', 'pdf'))
+    issues = any(request.path.startswith(word) for word in ('/utg', '/pdf'))
     redux_actions = get_redux_actions(request, story, issues)
     ssr_context = express_render(redux_actions, request)
     if ssr_context.get('error'):
