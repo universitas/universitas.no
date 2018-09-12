@@ -135,7 +135,8 @@ def clear_cached_story_response(sender, instance, **kwargs):
 
 def react_frontpage_view(request, section=None, story=None, slug=None):
 
-    cache_key = f'cached_page_{story or request.path}'
+    is_IE = 'Trident' in request.META['HTTP_USER_AGENT']
+    cache_key = f'cached_page_{story or request.path}{"IE" if is_IE else ""}'
 
     if request.user.is_anonymous and not settings.DEBUG:
         if story:
@@ -165,7 +166,6 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
     if status_code == 404 and request.path[-1] != '/':
         return redirect(request.path + '/')
 
-    is_IE = 'Trident' in request.META['HTTP_USER_AGENT']
     response = render(
         request,
         template_name='universitas-server-side-render.html',
