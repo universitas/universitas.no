@@ -4,8 +4,8 @@ const webpack = require('webpack')
 config.devtool = 'cheap-module-source-map' // also fast
 config.mode = 'development'
 
-const PORT = process.env.PORT || 3000
-const HOST = '174.138.12.133' 
+const PORT = process.env.HOST_PORT || 3000
+const HOST = process.env.HOST_NAME || 'localhost'
 
 function hotify(entry) {
   return [

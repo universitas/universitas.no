@@ -5,10 +5,8 @@
   "version": "1.2.0",
   "description": "frontend universitas",
   "scripts": {
-    "buildssr":
-      "webpack-cli --mode=production --config webpack.server.config.js ",
-    "watchssr":
-      "webpack-cli --mode=development --watch --config webpack.server.config.js ",
+    "buildssr": "webpack-cli --mode=production --config webpack.server.config.js ",
+    "watchssr": "webpack-cli --mode=development --watch --config webpack.server.config.js ",
     "serve": "TARGET=server pm2-runtime ./build/server.bundle.js",
     "servedev": "TARGET=server pm2-dev ./build/server.bundle.js",
     "test": "jest --watchAll --verbose",
@@ -16,8 +14,7 @@
     "build": "webpack-cli --config=webpack.prod.config.js",
     "tern": "tern --persistent --host 0.0.0.0 --port 33000",
     "rebuild": "npm run build",
-    "stats":
-      "webpack-cli --config webpack.prod.config.js --profile --json > webpack-stats.json",
+    "stats": "webpack-cli --config webpack.prod.config.js --profile --json > webpack-stats.json",
     "dev": "webpack-dev-server --config webpack.dev.config.js",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "build-storybook": "build-storybook -c .storybook -o docs"
@@ -29,7 +26,9 @@
   "jest": {
     "verbose": true,
     "testURL": "http://localhost",
-    "setupFiles": ["<rootDir>/jest.setup.js"],
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ],
     "moduleDirectories": [
       "node_modules",
       "src",
@@ -39,10 +38,12 @@
     ],
     "moduleNameMapper": {
       "\\.(css|scss|sass|less)$": "<rootDir>/__mocks__/css.jest.mock.js",
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
-        "<rootDir>/__mocks__/file.jest.mock.js"
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/file.jest.mock.js"
     },
-    "roots": ["<rootDir>/src/", "<rootDir>/src/storybooks/"]
+    "roots": [
+      "<rootDir>/src/",
+      "<rootDir>/src/storybooks/"
+    ]
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.0.0",
@@ -79,6 +80,8 @@
     "null-loader": "^0.1.1",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "pm2": "^3.1.2",
+    "postcss-loader": "^3.0.0",
+    "postcss-object-fit-images": "^1.1.2",
     "progress-bar-webpack-plugin": "^1.11.0",
     "prop-types": "^15.6.2",
     "ramda": "^0.25",
@@ -120,7 +123,6 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "jest": "^23.6.0",
-    "postcss-loader": "^3.0.0",
     "react-test-renderer": "^16.5.0",
     "storybook-addon-jsx": "^5.4.0",
     "tern": "^0.21",
