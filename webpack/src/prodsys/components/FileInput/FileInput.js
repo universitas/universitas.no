@@ -1,3 +1,4 @@
+import './FileInput.scss'
 import cx from 'classnames'
 import processImageFile from 'utils/processImageData'
 
