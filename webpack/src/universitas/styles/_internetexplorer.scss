@@ -1,0 +1,29 @@
+// internet explorer stuff
+
+.IE11 {
+  .NewsFeed {
+    display: flex;
+    display: grid;
+    flex-flow: row wrap;
+    min-height: 100vh;
+    margin-left: -$pad;
+    $column: $content-width / 9;
+    .col-6 {
+      flex-basis: 100%;
+    }
+  }
+  .FeedItem {
+    display: flex;
+    flex-direction: column;
+    min-height: 25em;
+    flex: 1;
+    flex-basis: 40%;
+    margin-left: $pad;
+  }
+  .FeedImage {
+    flex: 1;
+    .inner {
+      height: 100%;
+    }
+  }
+}

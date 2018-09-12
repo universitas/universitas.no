@@ -208,6 +208,7 @@ $row-height: 12vh;
 
 .NewsFeed {
   font-family: $univ-sans;
+  display: flex;
   display: grid;
   overflow: hidden;
   grid-gap: $gridgap;

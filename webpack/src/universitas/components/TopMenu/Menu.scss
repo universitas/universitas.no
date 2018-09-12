@@ -19,7 +19,7 @@
     align-items: center;
   }
   .Level {
-    min-height: $menuheight;
+    flex-basis: $menuheight;
     background-color: color-get("nyheter");
     width: 100%;
     display: flex;
@@ -170,7 +170,7 @@
       background-color: rgba(black, 0.3);
       border: none;
       flex: 1;
-      max-width: 12em;
+      flex-basis: 10em;
       &:focus {
         outline: none;
         background-color: rgba(black, 0.2);

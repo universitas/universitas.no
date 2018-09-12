@@ -4,10 +4,13 @@ const webpack = require('webpack')
 config.devtool = 'cheap-module-source-map' // also fast
 config.mode = 'development'
 
+const PORT = process.env.PORT || 3000
+const HOST = '174.138.12.133' 
+
 function hotify(entry) {
   return [
     'react-hot-loader/patch',
-    'webpack-dev-server/client?http://localhost:3000',
+    `webpack-dev-server/client?http://${HOST}:${PORT}`,
     'webpack/hot/only-dev-server',
     entry,
   ]

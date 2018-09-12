@@ -9,7 +9,7 @@ export const makeParser = ({
   inline,
   process = R.identity,
 }) => {
-  const regex = new RegExp(pattern, inline ? 'uy' : 'muy')
+  const regex = new RegExp(pattern, inline ? 'y' : 'my')
   return text => {
     regex.lastIndex = 0
     const result = regex.exec(text)

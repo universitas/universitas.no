@@ -137,7 +137,7 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
 
     cache_key = f'cached_page_{story or request.path}'
 
-    if request.user.is_anonymous:
+    if request.user.is_anonymous and not settings.DEBUG:
         if story:
             Story.register_visit_in_cache(story)
         response, path = cache.get(cache_key, (None, None))
@@ -165,10 +165,11 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
     if status_code == 404 and request.path[-1] != '/':
         return redirect(request.path + '/')
 
+    is_IE = 'Trident' in request.META['HTTP_USER_AGENT']
     response = render(
         request,
         template_name='universitas-server-side-render.html',
-        context={'ssr': ssr_context},
+        context={'ssr': ssr_context, 'IE': is_IE},
         status=status_code,
     )
 

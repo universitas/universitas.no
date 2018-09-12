@@ -8,11 +8,12 @@
   <meta property="fb:pages" content="{{ facebook.page_id }}" />
   {% include "_google.analytics.tracker.html" %}
   {% include "_google.adsense.html" %}
+  {% if IE %} {% include "_internet-explorer.html" %} {% endif %}
   {# <style>{% include "critical.css" %}</style> #}
   {% render_bundle "universitas" "css" %}
 {% endblock %}
 {% block content %}
-<main id="ReactApp">{{ ssr.html | safe }}</main>
+<main id="ReactApp" {% if IE %}class="IE11"{% endif %}>{{ ssr.html | safe }}</main>
 {% endblock content %}
 {% block final %}
   {{ ssr.state | json_script:"redux-state" }}
