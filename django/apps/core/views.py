@@ -122,7 +122,6 @@ def get_redux_actions(request, story=None, issues=None):
         fetch_adverts(request),
     ]
     if issues:
-        actions = []
         actions.append(fetch_issues(request))
     if story:
         actions.append(fetch_story(request, int(story)))
@@ -150,10 +149,7 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
             return response
 
     issues = slug and (slug in ('utgivelsesplan', 'pdf'))
-    logger.debug(f'section: {section} issues: {issues} slug: {slug}')
-
     redux_actions = get_redux_actions(request, story, issues)
-    logger.debug(str(redux_actions[-1]))
     ssr_context = express_render(redux_actions, request)
     if ssr_context.get('error'):
         logger.debug(json.dumps(ssr_context, indent=2))

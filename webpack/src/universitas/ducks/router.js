@@ -27,8 +27,8 @@ export { NOT_FOUND }
 // url routes action mappings to configure redux-first-router
 export const routesMap = {
   [HOME]: '/',
-  [PDF]: '/pdf/:year?/',
-  [SCHEDULE]: '/utgivelsesplan/:year?/',
+  [PDF]: '/pdf/:year(\\d{4})?/',
+  [SCHEDULE]: '/utgivelsesplan/:year(\\d{4})?/',
   [STORY]: '/:section/:id(\\d+)/:slug/',
   [SHORT_URL]: '/:section([^/]*)?/:id(\\d+)/:slug([^/]*)?/',
   [ABOUT]: '/om-universitas/',

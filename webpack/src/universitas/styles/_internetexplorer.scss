@@ -42,24 +42,38 @@
   .Byline {
     flex-basis: auto;
   }
+
+  .PdfList,
   .ContactGrid {
     display: flex;
     flex-flow: row wrap;
     margin: -1rem;
   }
+  .PdfList {
+    .Issue {
+      flex-basis: 14rem;
+      margin: 1rem;
+      &.two {
+        flex-basis: 33rem;
+      }
+    }
+  }
+
   .ContactCard {
+    height: 9rem;
     display: flex;
     flex: 1;
     margin: 1rem;
     flex-basis: 20rem;
     flex-flow: column wrap;
     .thumb {
-      order: -2;
+      margin-right: 1rem;
       height: 9rem;
       width: auto;
+      order: -2;
     }
     .Field {
-      min-height: 2em;
+      min-height: 1.8em;
       &.name {
         order: -1;
       }
