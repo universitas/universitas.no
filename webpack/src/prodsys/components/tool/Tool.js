@@ -1,5 +1,6 @@
 import * as Icons from 'components/Icons'
 import cx from 'classnames'
+import './Tool.scss'
 
 const Tool = ({
   onClick,

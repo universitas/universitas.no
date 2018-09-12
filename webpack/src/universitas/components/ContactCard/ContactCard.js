@@ -1,6 +1,7 @@
 import { capitalize, phoneFormat } from 'utils/text'
 import anonymous from 'images/anonymous.jpg'
 import cx from 'classnames'
+import './ContactCard.scss'
 
 const Field = ({ name, label, value }) => (
   <div className={cx('Field', name)}>
