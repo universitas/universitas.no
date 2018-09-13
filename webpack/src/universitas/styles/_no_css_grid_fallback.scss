@@ -6,7 +6,7 @@
   }
   .NewsFeed {
     overflow: visible;
-    display: flex;
+    display: flex !important;
     display: grid;
     flex-flow: row wrap;
     margin-right: -$gridgap;
@@ -15,7 +15,10 @@
     }
   }
   .FeedItem {
+    display: flex !important;
+    flex-direction: column;
     position: relative;
+    flex: 1 1 40%;
     min-height: 20rem;
     .Vignette {
       top: 0;
@@ -28,17 +31,11 @@
         }
       }
     }
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    flex-basis: 40%;
     margin-right: $gridgap;
     margin-bottom: $gridgap;
   }
   .FeedImage {
-    flex: 1;
     .inner {
-      height: 100%;
       background-size: cover !important;
     }
   }
@@ -59,7 +56,7 @@
 
   .PdfList,
   .ContactGrid {
-    display: flex;
+    display: flex !important;
     flex-flow: row wrap;
     margin: -1rem;
   }
@@ -73,8 +70,8 @@
     }
   }
   .ContactCard {
+    display: flex !important;
     height: 9rem;
-    display: flex;
     flex: 1;
     margin: 1rem;
     flex-basis: 20rem;

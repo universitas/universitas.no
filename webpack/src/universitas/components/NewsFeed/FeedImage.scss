@@ -12,10 +12,9 @@
   display: flex;
   background: #ddf;
   flex: 1;
+  flex-direction: column;
   .inner {
-    height: 100%;
-    width: 100%;
+    flex: 1 1 5rem;
     animation: 300ms ease fadeFromBlack;
-    min-height: 4rem;
   }
 }
