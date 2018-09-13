@@ -72,7 +72,6 @@
       }
     }
   }
-
   .ContactCard {
     height: 9rem;
     display: flex;
@@ -94,7 +93,7 @@
     }
   }
 }
-.IE.Universitas {
+.IE11 {
   @include nogrid;
 }
 @supports not (display: grid) {
