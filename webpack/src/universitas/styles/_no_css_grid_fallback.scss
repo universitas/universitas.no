@@ -1,6 +1,6 @@
-// internet explorer stuff
+// fallback for no css grid
 
-.IE11 {
+@mixin nogrid() {
   .Level {
     flex-basis: $menuheight;
   }
@@ -92,5 +92,13 @@
         order: -1;
       }
     }
+  }
+}
+.IE.Universitas {
+  @include nogrid;
+}
+@supports not (display: grid) {
+  .Universitas {
+    @include nogrid;
   }
 }

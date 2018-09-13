@@ -1,7 +1,7 @@
 @import "./_sanitize.scss";
 @import "./_common.scss";
+@import "./_no_css_grid_fallback.scss";
 // @import "./_googlefonts.scss";  // use head tag instead
-@import "./_internetexplorer.scss";
 
 body {
   overflow-y: scroll;
