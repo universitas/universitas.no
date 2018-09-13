@@ -9,8 +9,8 @@ import { requestUser } from 'ducks/auth'
 
 function* rootSaga() {
   yield all([
-    fork(uploadSaga),
     fork(basemodelSaga),
+    fork(uploadSaga),
     fork(errorSaga),
     fork(authSaga),
     fork(storyimageSaga),
@@ -19,13 +19,13 @@ function* rootSaga() {
 }
 
 function* loadInitialData() {
-  yield put(modelActions('stories').itemsRequested())
-  yield put(modelActions('photos').itemsRequested())
-  yield put(modelActions('storyimages').itemsRequested())
+  // yield put(modelActions('stories').itemsRequested())
+  // yield put(modelActions('photos').itemsRequested())
+  // yield put(modelActions('storyimages').itemsRequested())
   yield put(modelActions('storytypes').itemsRequested())
   yield put(modelActions('contributors').itemsRequested())
-  yield put(modelActions('issues').itemsRequested())
-  yield put(modelActions('frontpage').itemsRequested())
+  // yield put(modelActions('issues').itemsRequested())
+  // yield put(modelActions('frontpage').itemsRequested())
   yield put(requestUser())
 }
 

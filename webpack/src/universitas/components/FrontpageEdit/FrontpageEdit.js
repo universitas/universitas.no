@@ -12,11 +12,14 @@ const storyDjango = pk =>
   `${global.location.origin}/admin/stories/story/${pk}/change/`
 const photoDjango = pk =>
   `${global.location.origin}/admin/photo/imagefile/${pk}/change/`
-const storyProdsys = pk => `${global.location.origin}/prodsys/stories/${pk}`
-const photoProdsys = pk => `${global.location.origin}/prodsys/photos/${pk}`
 const frontpageDjango = () =>
   `${global.location.origin}/admin/frontpage/frontpagestory/`
-const frontpageProdsys = () => `${global.location.origin}/prodsys/frontpage/`
+const storyProdsys = pk =>
+  `${global.location.origin}/prodsys/stories/change/${pk}/`
+const photoProdsys = pk =>
+  `${global.location.origin}/prodsys/photos/change/${pk}/`
+const frontpageProdsys = () =>
+  `${global.location.origin}/prodsys/frontpage/list/`
 
 const djangoUrl = location => {
   switch (location.type) {

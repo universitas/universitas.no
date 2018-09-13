@@ -18,6 +18,8 @@ import {
   apiList,
   apiGet,
 } from 'services/api'
+import { PRODSYS } from 'prodsys/ducks/router'
+
 import {
   ITEMS_FETCHED,
   ITEMS_REQUESTED,
@@ -49,6 +51,7 @@ export default function* rootSaga() {
   yield takeEvery(ITEM_CLONED, cloneSaga)
   yield takeEvery(ITEM_CREATED, createSaga)
   yield takeEvery(ITEM_DELETED, deleteSaga)
+  yield takeEvery(PRODSYS, routeSaga)
 }
 
 const errorAction = error => ({
@@ -73,6 +76,16 @@ export const modelFuncs = action => {
     modelActions(modelName),
     { toRoute: props => toRoute({ model: modelName, ...props }) },
   ])
+}
+
+function* routeSaga(action) {
+  console.log(action)
+  const { model, pk } = action.payload
+  const { getItemList } = modelSelectors(model)
+  const { itemRequested, itemsRequested } = modelActions(model)
+  const items = yield select(getItemList)
+  if (R.isEmpty(items)) yield put(itemsRequested())
+  if (pk) yield put(itemRequested(pk))
 }
 
 function* fetchItems(action) {

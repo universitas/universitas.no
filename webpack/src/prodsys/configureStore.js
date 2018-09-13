@@ -10,6 +10,7 @@ import { routesMap, routerOptions, SLICE } from 'prodsys/ducks/router.js'
 const configureStore = (initialState = {}, initialEntries = []) => {
   const router = connectRoutes(routesMap, {
     ...routerOptions,
+    initialDispatch: false,
     initialEntries,
   })
   const sagaMiddleware = createSagaMiddleware({
@@ -22,6 +23,7 @@ const configureStore = (initialState = {}, initialEntries = []) => {
   const rootReducer = combineReducers({ [SLICE]: router.reducer, ...reducers })
   const store = createStore(rootReducer, initialState, middlewares)
   let sagaTask = sagaMiddleware.run(rootSaga)
+  router.initialDispatch() // dispatch first route after saga is started.
   if (module.hot) {
     module.hot.accept('./reducer.js', () => {
       const reducers = require('./reducer.js').default
