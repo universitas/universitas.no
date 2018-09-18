@@ -74,4 +74,4 @@ def test_indesign_update_photos(scandal, scandal_photo, staff_client):
     assert sorted(captions) == ['one']
 
     updated_data = staff_client.get(url).data
-    assert updated_data['bilete'][0]['bildefil'] == 'scandal.22.jpg'
+    assert updated_data['bilete'][0]['bildefil'] == 'scandal.00022.jpg'

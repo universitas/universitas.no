@@ -9,8 +9,13 @@ from statistics import median
 from typing import Union
 
 import PIL
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
 
 from apps.contributors.models import Contributor
+from apps.photo import file_operations
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import TrigramSimilarity
@@ -21,14 +26,9 @@ from django.db import connection, models
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
-from . import file_operations
 from .cropping.models import AutoCropImage
 from .exif import ExifData, exif_to_json, extract_exif_data, prune_exif
 from .imagehash import ImageHashModelMixin
@@ -43,7 +43,7 @@ image_file_validator = FileExtensionValidator(['jpg', 'jpeg', 'png'])
 
 
 class BrokenImage:
-    """If thumbnail fails"""
+    """If thumbnail fails."""
     url = settings.STATIC_URL + 'admin/img/icon-no.svg'
 
     def read(self):
@@ -54,7 +54,7 @@ Thumbnail = Union[SorlImageFile, BrokenImage]
 
 
 def slugify_filename(filename: str) -> Path:
-    """Slugify filename"""
+    """make filename url safe and normalized"""
     slugify = Slugify(safe_chars='.-', separator='-')
     fn = Path(filename)
     stem = Path(filename).stem.split('.')[0]
@@ -63,8 +63,8 @@ def slugify_filename(filename: str) -> Path:
     return Path(f'{stem}{suffix}')
 
 
-def upload_image_to(instance: 'ImageFile', filename: str) -> str:
-    """Image folder name based on issue number and year"""
+def upload_image_to(instance: 'ImageFile', filename: str = 'image') -> str:
+    """Upload path based on created date and normalized file name"""
     if instance.pk and instance.stem:
         filename = instance.filename  # autogenerate
     return str(instance.upload_folder() / slugify_filename(filename))
@@ -225,6 +225,7 @@ class ImageCategoryMixin(models.Model):
         }
         return mapping.get(self.category)
 
+
 class ImageFile(  # type: ignore
     ImageHashModelMixin, TimeStampedModel, EditURLMixin, AutoCropImage,
     ImageCategoryMixin
@@ -249,7 +250,7 @@ class ImageFile(  # type: ignore
         height_field='full_height',
         width_field='full_width',
         max_length=1024,
-        null=True,  # get id before saving image
+        null=True,  # we need pk before we save the image
     )
     full_height = models.PositiveIntegerField(
         verbose_name=_('height'),
@@ -331,7 +332,8 @@ class ImageFile(  # type: ignore
 
     @property
     def filename(self) -> str:
-        return f'{self.stem}.{self.pk}{self.suffix}'
+        """build a normalized filename"""
+        return f'{self.stem}.{(self.pk or 0):0>5}{self.suffix}'
 
     @property
     def suffix(self) -> str:
