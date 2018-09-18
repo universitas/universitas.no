@@ -1,8 +1,8 @@
 """Custom overrides for the Amazon storage"""
-from storages.backends.s3boto import S3BotoStorage, setting
+from storages.backends.s3boto3 import S3Boto3Storage, setting
 
 
-class CustomS3BotoStorage(S3BotoStorage):
+class CustomS3BotoStorage(S3Boto3Storage):
     cache_max_age = 0
     gzip = setting('AWS_IS_GZIPPED', True)
 
