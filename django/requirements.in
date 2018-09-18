@@ -31,9 +31,9 @@ redis
 hiredis
 
 # AMAZON
-awscli
+# awscli
 django-storages
-boto
+boto3
 
 # OTHER LIBRARIES
 pillow
