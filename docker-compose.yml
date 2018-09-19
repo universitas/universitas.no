@@ -24,6 +24,9 @@ services:
     restart: always
     expose:
       - "8000"  # wsgi on tcp socket
+    volumes: 
+      # master fifo
+      - ${PWD}/fifo/:/run/fifo/
     depends_on:
       - postgres
       - redis
@@ -54,8 +57,11 @@ services:
     volumes:
       - django_static:/var/static/
       - django_media:/var/media/
+      - letsencrypt_challenge:/var/letsencrypt/
+      - certificates:/var/certificates/
     ports:
       - "${NGINX_PORT:-8080}:80"
+      - "443:443"
 
 
   # RabbitMQ message queue
@@ -75,11 +81,29 @@ services:
     volumes:
       - redisdata:/data/
 
+  # letsencrypt certbot
+  certbot:
+    command: certificates
+    image: certbot/certbot:latest
+    volumes: 
+      - letsencrypt_challenge:/srv/
+      - certificates:/etc/letsencrypt/
+
 volumes:
-  node_modules:  {}
   pgdata:        {}
   redisdata:     {}
   webpack_build: {}
+  letsencrypt_challenge: {}
+  node_modules:
+    driver_opts:
+      type: local
+      device: ${PWD}/webpack/node_modules/
+      o: bind
+  certificates:
+    driver_opts:
+      type: local
+      device: ${PWD}/volumes/certificates/
+      o: bind
   ssh:
     driver_opts:
       type: local

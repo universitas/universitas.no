@@ -6,4 +6,4 @@ services:
     volumes:
       - ./build:/var/build/
     environment:
-      - PUBLIC_PATH=http://static.universitas.no/static/
+      - PUBLIC_PATH=/static/

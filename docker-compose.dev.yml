@@ -43,11 +43,3 @@ services:
     depends_on:
       - celery
       - celerybeat
-
-volumes:
-  # mount locally for vim code completion with ternjs
-  node_modules:
-    driver_opts:
-      type: local
-      device: ${PWD}/webpack/node_modules
-      o: bind

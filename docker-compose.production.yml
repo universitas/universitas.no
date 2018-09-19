@@ -8,7 +8,7 @@ services:
     volumes:
       - ./webpack:/app/
     environment:
-      - PUBLIC_PATH=http://static.universitas.no/static/
+      - PUBLIC_PATH=/static/
          
   nginx:
     ports:
@@ -21,11 +21,3 @@ services:
     environment:
       - DEBUG=False
 
-
-volumes:
-  # mount locally for access with rsync
-  django_staging:
-    driver_opts:
-      type: local
-      device: ${PWD}/../STAGING
-      o: bind
