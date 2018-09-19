@@ -12,7 +12,7 @@ import uuid
 from io import BytesIO
 from pathlib import Path
 
-import boto
+import botocore
 import PyPDF2
 from django.conf import settings
 from django.core.files.base import ContentFile
@@ -382,7 +382,7 @@ class PrintIssue(models.Model, EditURLMixin):
                 )
             except NotImplementedError:
                 key = self.pdf.file.key
-                created = boto.utils.parse_ts(key.last_modified)
+                created = botocore.utils.parse_timestamp(key.last_modified)
             # Sets creation date as a Wednesday, if needed.
             created = created + datetime.timedelta(
                 days=3 - created.isoweekday()

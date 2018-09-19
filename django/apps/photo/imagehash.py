@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-import boto
+import botocore
 import imagehash
 from django.db import models
 from django.utils import timezone
@@ -21,7 +21,7 @@ def get_sourcefile_modification_time(img):
             mtime = timezone.datetime.fromtimestamp(timestamp)
         except NotImplementedError:  # AWS S3 storage
             timestamp = img.file.key.last_modified
-            mtime = boto.utils.parse_ts(timestamp)
+            mtime = botocore.utils.parse_timestamp(timestamp)
     except (FileNotFoundError, AttributeError):
         # return current time
         mtime = timezone.now()

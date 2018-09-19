@@ -21,8 +21,32 @@ if env.aws_enabled:
     AWS_S3_USE_SSL = False
     AWS_S3_FILE_OVERWRITE = True
 
-    MEDIA_URL = f'http://{AWS_S3_CUSTOM_DOMAIN}/media/'
+    MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}/media/'
     STATIC_URL = f'http://{AWS_S3_CUSTOM_DOMAIN}/static/'
+
+
+elif env.digitalocean_enabled:
+    # DIGITAL OCEAN SPACES
+
+    STATICFILES_STORAGE =\
+        'django.contrib.staticfiles.storage.StaticFilesStorage'
+    DEFAULT_FILE_STORAGE = 'utils.aws_custom_storage.MediaStorage'
+    THUMBNAIL_STORAGE = 'utils.aws_custom_storage.ThumbStorage'
+
+    AWS_STORAGE_BUCKET_NAME = aws.storage_bucket_name
+    AWS_ACCESS_KEY_ID = aws.access_key_id
+    AWS_SECRET_ACCESS_KEY = aws.secret_access_key
+
+    AWS_S3_FILE_OVERWRITE = True
+    AWS_S3_ENDPOINT_URL = aws.s3_endpoint_url
+    AWS_S3_REGION_NAME = 'ams3'
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_HOST = 'digitaloceanspaces.com'
+    AWS_S3_CUSTOM_DOMAIN = (f'{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_REGION_NAME}'
+                            '.digitaloceanspaces.com')
+    MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}/media/'
+    STATIC_URL = '/static/'
 
 else:
     # Use File system in local development instead of Amanon S3

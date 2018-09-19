@@ -17,10 +17,9 @@ class CustomS3BotoStorage(S3Boto3Storage):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.cache_max_age:
-            self.headers.update({
-                'Cache-Control': 'max-age={seconds}'.format(
-                    seconds=self.cache_max_age
-                )
+            self.object_parameters = super().object_parameters.copy()
+            self.object_parameters.update({
+                'CacheControl': f'max-age={self.cache_max_age}'
             })
 
 

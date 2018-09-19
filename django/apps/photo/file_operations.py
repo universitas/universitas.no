@@ -11,7 +11,7 @@ import imagehash
 from django.core.files import File as DjangoFile
 
 try:
-    from storages.backends.s3boto import S3BotoStorageFile as BotoFile
+    from storages.backends.s3boto3 import S3Boto3StorageFile as BotoFile
 except ImportError:
     BotoFile = type('BotoFileFallbackClass', (), {})
 
