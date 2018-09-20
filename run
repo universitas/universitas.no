@@ -28,8 +28,7 @@ while (( $# > 0 )); do
   djbuild ) build_django ;;   # download and build all images, migrate database
 
   webpack ) docker-compose run --rm webpack ${rest:-bash}; exit;;
-  build   ) webpack_build ;; # build webpack
-  expressb) docker-compose run --rm express expressb ;; # build express bundle
+  build   ) webpack_build ;; # build css+js client bundles and express bundle;
 
   npmi    ) docker-compose run --rm webpack install $rest; exit ;; # npm install [packages...]
   npmup   ) docker-compose run --rm webpack update ;; # npm update js packages
@@ -76,10 +75,9 @@ done
 
 webpack_build() {
   echo 'build webpack for production'
-  COMPOSE_FILE='docker-compose.yml:docker-compose.dev.yml:docker-compose.build.yml'
+  COMPOSE_FILE='docker-compose.yml:docker-compose.dev.yml'
   export COMPOSE_FILE
-  find ./build/ -type f -delete
-  docker-compose run --rm webpack
+  docker-compose run --rm webpack build
 }
 
 collect_static_files() {

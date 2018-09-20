@@ -1,13 +1,29 @@
 #!/bin/bash
 
+build() {
+  rm -rf $BUILD_DIR/*
+  npm run buildssr &
+  exec npm run build
+}
+
+express() {
+  [[ -e ./build/server.js ]] || npm run buildssr;
+  if [[ $1 == 'dev' ]]; then
+    npm run watchssr & 
+    exec npm run servedev
+  else
+    exec npm run serve 
+  fi
+}
+
+
 case $1 in
   jest      ) exec npm run test ;;
   test      ) exec npm run testonce ;;
   storybook ) exec npm run storybook ;;
-  express   ) { test -e ./build/server.bundle.js || npm run buildssr; } && exec npm run serve ;;
-  expressdev) npm run watchssr & exec npm run servedev ;;
-  expressb  ) exec npm run buildssr ;;
-  build     ) exec npm run rebuild ;;
+  expressdev) express dev ;;
+  express   ) express ;;
+  build     ) build ;;
   stats     ) exec npm run stats ;;
   dev-server) exec npm run dev ;;
   install   ) shift; exec npm install --save $@ ;;

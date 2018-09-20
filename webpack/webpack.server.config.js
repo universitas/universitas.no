@@ -11,11 +11,6 @@ module.exports = {
   externals: [nodeExternals()],
   devtool: 'none',
   entry: { server: './src/universitas/server.js' },
-  output: {
-    path: path.resolve('./build'),
-    filename: '[name].bundle.js',
-    publicPath: 'http://localhost:3000/static/',
-  },
   module: {
     rules: [
       {

@@ -1,9 +1,9 @@
 const path = require('path')
 const webpack = require('webpack')
-const publicPath = process.env.PUBLIC_PATH
+const publicPath = process.env.PUBLIC_PATH || '//localhost:3000/static/'
+const build_dir = process.env.BUILD_DIR || path.resolve('./build')
 
 const BundleTracker = require('webpack-bundle-tracker')
-const build_dir = process.env.BUILD_DIR || path.resolve('../build')
 
 // plugin for django integration
 const bundler = new BundleTracker({
@@ -33,7 +33,7 @@ module.exports = {
   output: {
     // for example ../build/head.[hash].js
     publicPath,
-    path: path.join(build_dir, ''),
+    path: build_dir,
     filename: '[name].js',
   },
   plugins: [

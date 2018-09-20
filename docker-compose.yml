@@ -1,5 +1,17 @@
 version: '2.1'
 services:
+   
+  webpack:
+    image: universitas/webpack:${IMAGE_VERSION:-edge}
+    volumes:
+      - ./webpack:/app/
+      - webpack_build:/var/build/
+      - node_modules:/app/node_modules/
+    environment:
+      - HOST_NAME
+      - BUILD_DIR=/var/build/
+      - PUBLIC_PATH=//${HOST_NAME:-localhost}:3000/static/
+
   django:
     mem_limit: 1000m  # limit memory usage to 1000 Mb
     cpu_quota: 80000  # 80% of 100000 (I think...)
@@ -51,19 +63,6 @@ services:
     depends_on:
       - rabbit
 
-  nginx:
-    build: ./nginx/
-    restart: always
-    volumes:
-      - django_static:/var/static/
-      - django_media:/var/media/
-      - letsencrypt_challenge:/var/letsencrypt/
-      - certificates:/var/certificates/
-    ports:
-      - "${NGINX_PORT:-8080}:80"
-      - "443:443"
-
-
   # RabbitMQ message queue
   # default username:password is guest:guest
   rabbit:
@@ -81,28 +80,14 @@ services:
     volumes:
       - redisdata:/data/
 
-  # letsencrypt certbot
-  certbot:
-    command: certificates
-    image: certbot/certbot:latest
-    volumes: 
-      - letsencrypt_challenge:/srv/
-      - certificates:/etc/letsencrypt/
-
 volumes:
   pgdata:        {}
   redisdata:     {}
   webpack_build: {}
-  letsencrypt_challenge: {}
   node_modules:
     driver_opts:
       type: local
       device: ${PWD}/webpack/node_modules/
-      o: bind
-  certificates:
-    driver_opts:
-      type: local
-      device: ${PWD}/volumes/certificates/
       o: bind
   ssh:
     driver_opts:
