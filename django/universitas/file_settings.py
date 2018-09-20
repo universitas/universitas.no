@@ -5,6 +5,18 @@ from .setting_helpers import Environment
 env = Environment(strict=False)
 aws = Environment('AWS')
 
+# Use File system in local development instead of Amanon S3
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+STATICFILES_STORAGE =\
+    'django.contrib.staticfiles.storage.StaticFilesStorage'
+THUMBNAIL_STORAGE = 'utils.local_file_storage.OverwriteStorage'
+
+MEDIA_ROOT = env.MEDIA_DIR or '/media/'
+MEDIA_URL = '/media/'
+
+STATIC_ROOT = env.STATIC_DIR or '/static/'
+STATIC_URL = '/static/'
+
 if env.aws_enabled:
     # AMAZON WEB SERVICES
 
@@ -48,15 +60,3 @@ elif env.digitalocean_enabled:
     MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}/media/'
     STATIC_URL = '/static/'
 
-else:
-    # Use File system in local development instead of Amanon S3
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-    STATICFILES_STORAGE =\
-        'django.contrib.staticfiles.storage.StaticFilesStorage'
-    THUMBNAIL_STORAGE = 'utils.local_file_storage.OverwriteStorage'
-
-    MEDIA_ROOT = env.MEDIA_DIR or '/media/'
-    MEDIA_URL = '/media/'
-
-    STATIC_ROOT = env.STATIC_DIR or '/static/'
-    STATIC_URL = '/static/'

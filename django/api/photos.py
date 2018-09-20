@@ -7,7 +7,7 @@ from apps.photo.tasks import upload_imagefile_to_desken
 from django.db import models
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, serializers, status, viewsets
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from utils.serializers import AbsoluteURLField, CropBoxField
 
@@ -114,7 +114,7 @@ class ImageFileViewSet(viewsets.ModelViewSet):
     )
     search_fields = ['stem', 'description', 'contributor__display_name']
     ordering_fields = ['created', 'modified']
-    filter_fields = ['category']
+    filterset_fields = ['category']
 
     # permission_classes = [permissions.AllowAny]
 
@@ -137,7 +137,7 @@ class ImageFileViewSet(viewsets.ModelViewSet):
             return queryset.filter(id__in=[int(n) for n in numbers])
         return super().filter_queryset(queryset)
 
-    @detail_route(methods=['post'])
+    @action(methods=['post'], detail=True)
     def push_file(self, request, pk):
         image_pk = self.get_object().pk
         upload_imagefile_to_desken.delay(image_pk)

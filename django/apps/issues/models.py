@@ -401,7 +401,11 @@ class PrintIssue(models.Model, EditURLMixin):
 
 @receiver(pre_delete, sender=PrintIssue)
 def delete_pdf_and_cover_page(sender, instance, **kwargs):
-    thumbnail.delete(instance.cover_page, delete_file=True)
+    try:
+        thumbnail.delete(instance.cover_page, delete_file=True)
+    except thumbnail.images.ThumbnailError:
+        pass
+
     instance.pdf.delete(False)
 
 

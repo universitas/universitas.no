@@ -31,7 +31,7 @@ class BoxField(models.Field):
     def __init__(self, *args, default=CropBox.basic, **kwargs):
         return super().__init__(*args, default=default, **kwargs)
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, expression, connection):
         if value is None:
             return value
         return parse_box_data(value)
