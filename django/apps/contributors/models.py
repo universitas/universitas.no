@@ -219,8 +219,8 @@ class Contributor(TimeStampedModel, FuzzyNameSearchMixin, models.Model):
     @cache_memoize()
     def position(self):
         stints = self.stint_set.order_by(
-            'start_date',
             'position__is_management',
+            'start_date',
         )
 
         if stints:

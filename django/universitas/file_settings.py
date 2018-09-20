@@ -5,8 +5,11 @@ from .setting_helpers import Environment
 env = Environment(strict=False)
 aws = Environment('AWS')
 
-AWS_DEFAULT_ACL = 'public-read'
-# Use File system in local development instead of Amanon S3
+
+# Use File system in local development instead of Amazon S3
+
+
+# Defaults for development and testing
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 STATICFILES_STORAGE =\
     'django.contrib.staticfiles.storage.StaticFilesStorage'
@@ -17,8 +20,7 @@ MEDIA_URL = '/media/'
 
 STATIC_ROOT = env.STATIC_DIR or '/static/'
 STATIC_URL = '/static/'
-# FILE_UPLOAD_PERMISSIONS = 0o600 # nginx readable
-# FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o700 # nginx readable
+
 
 if env.aws_enabled:
     # AMAZON WEB SERVICES
@@ -27,6 +29,7 @@ if env.aws_enabled:
     DEFAULT_FILE_STORAGE = 'utils.aws_custom_storage.MediaStorage'
     THUMBNAIL_STORAGE = 'utils.aws_custom_storage.ThumbStorage'
 
+    AWS_DEFAULT_ACL = 'public-read'
     AWS_STORAGE_BUCKET_NAME = aws.storage_bucket_name
     AWS_ACCESS_KEY_ID = aws.access_key_id
     AWS_SECRET_ACCESS_KEY = aws.secret_access_key
@@ -53,13 +56,13 @@ if env.digitalocean_enabled:
     AWS_ACCESS_KEY_ID = aws.access_key_id
     AWS_SECRET_ACCESS_KEY = aws.secret_access_key
 
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_QUERYSTRING_AUTH = False
     AWS_S3_FILE_OVERWRITE = True
     AWS_S3_ENDPOINT_URL = aws.s3_endpoint_url
     AWS_S3_REGION_NAME = 'ams3'
-    AWS_QUERYSTRING_AUTH = False
     AWS_S3_HOST = 'digitaloceanspaces.com'
     AWS_S3_CUSTOM_DOMAIN = (f'{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_REGION_NAME}'
                             '.digitaloceanspaces.com')
     MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}/media/'
     STATIC_URL = '/static/'
-

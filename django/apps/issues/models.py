@@ -45,12 +45,11 @@ def upload_pdf_to(instance, filename):
 
 
 def pdf_number_of_pages(pdf):
-    try:
+    if pdf.closed:
         pdf.open()
-        reader = PyPDF2.PdfFileReader(pdf, strict=False)
-        return reader.numPages
-    finally:
-        pdf.close()
+    pdf.seek(0)
+    reader = PyPDF2.PdfFileReader(pdf, strict=False)
+    return reader.numPages
 
 
 def pdf_to_text(pdf, first_page=1, last_page=None):
@@ -59,11 +58,10 @@ def pdf_to_text(pdf, first_page=1, last_page=None):
         last_page = first_page
     args = ['pdftotext', '-raw', '-f', first_page, '-l', last_page, '-', '-']
     args = [str(a) for a in args]
-    try:
+    if pdf.closed:
         pdf.open()
-        pdf_data = pdf.read()
-    finally:
-        pdf.close()
+    pdf.seek(0)
+    pdf_data = pdf.read()
     text = subprocess.run(
         args,
         check=True,
@@ -401,7 +399,10 @@ class PrintIssue(models.Model, EditURLMixin):
 
 @receiver(pre_delete, sender=PrintIssue)
 def delete_pdf_and_cover_page(sender, instance, **kwargs):
-    thumbnail.delete(instance.cover_page, delete_file=True)
+    try:
+        thumbnail.delete(instance.cover_page, delete_file=True)
+    except thumbnail.images.ThumbnailError:
+        pass
     instance.pdf.delete(False)
 
 

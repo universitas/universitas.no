@@ -104,7 +104,7 @@ class FeatureDetector(abc.ABC):
         if not isinstance(source, bytes):
             raise TypeError('incorrect type')
 
-        data = numpy.fromstring(source, numpy.uint8)
+        data = numpy.frombuffer(source, numpy.uint8)
         cv_image = cv2.imdecode(data, cv2.IMREAD_COLOR)
         cv_image = cv2.cvtColor(cv_image, cv2.COLOR_BGR2GRAY)
         if resize > 0:
