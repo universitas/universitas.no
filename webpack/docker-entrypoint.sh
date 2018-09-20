@@ -7,7 +7,8 @@ build() {
 }
 
 express() {
-  [[ -e ./build/server.js ]] || npm run buildssr;
+  [[ -e /var/build/server.js ]] || npm run buildssr;
+  export NODE_PATH="$PWD/node_modules/"
   if [[ $1 == 'dev' ]]; then
     npm run watchssr & 
     exec npm run servedev

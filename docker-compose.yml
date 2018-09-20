@@ -8,9 +8,8 @@ services:
       - webpack_build:/var/build/
       - node_modules:/app/node_modules/
     environment:
-      - HOST_NAME
       - BUILD_DIR=/var/build/
-      - PUBLIC_PATH=//${HOST_NAME:-localhost}:3000/static/
+      - PUBLIC_PATH=/static/
 
   django:
     mem_limit: 1000m  # limit memory usage to 1000 Mb

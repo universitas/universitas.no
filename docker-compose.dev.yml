@@ -8,6 +8,8 @@ services:
     tty: true
     ports:
       - "3000:3000"
+    environment:
+      - PUBLIC_PATH=http://${SITE_URL:-localhost}:3000/static/
 
   express:
     extends: webpack
