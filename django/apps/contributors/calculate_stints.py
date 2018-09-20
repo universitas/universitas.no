@@ -66,6 +66,8 @@ def _add_stints_from_bylines(
     """Add stints based on byline credits"""
 
     for person in Contributor.objects.all():
+        if person.is_management:
+            continue
         bylines = person.byline_set.filter(
             credit__contains=credit,
             story__publication_date__gt=since,
