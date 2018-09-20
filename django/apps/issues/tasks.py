@@ -234,7 +234,7 @@ def create_web_bundle(filename, **kwargs):
 def create_print_issue_pdf(**kwargs):
     """Create or update pdf for the current issue"""
 
-    issue = current_issue()
+    issue = kwargs.pop('issue', current_issue())
     editions = [('', PAGES_GLOB), ('_mag', MAG_PAGES_GLOB)]
     results = []
     for suffix, fileglob in editions:
