@@ -27,7 +27,7 @@ services:
       - certificates:/var/certificates/
       - letsencrypt_challenge:/var/letsencrypt/
     ports:
-      - "${NGINX_PORT:-8080}:80"
+      - "${NGINX_PORT:-80}:80"
       - "443:443"
 
 volumes: 

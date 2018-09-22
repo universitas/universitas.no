@@ -18,6 +18,13 @@ class AdvertSerializer(serializers.ModelSerializer):
         exclude = []
 
 
+def proxy_images(ad):
+    ad['image'] = ad['image'].replace(
+        'http://tankeogteknikk.no/qmedia/', '/qmedia/'
+    )
+    return ad
+
+
 class AdvertViewSet(viewsets.ModelViewSet):
     """
     API endpoint to fetch Adverts.
@@ -28,4 +35,5 @@ class AdvertViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=False)
     def qmedia(self, request):
-        return Response({'qmedia': fetch_ads()})
+        ads = [proxy_images(ad) for ad in fetch_ads()]
+        return Response({'qmedia': ads})

@@ -25,7 +25,6 @@ def _parse_sub_advert(sub):
     link = parse.urlparse(sub.find('a', first=True).attrs['href'])
     return {
         'id': int(re.search(r'\d+', link.query)[0]),
-        'text': sub.find('td')[1].text,
-        'link': parse.urlunparse(link),
+        'text': sub.find('td')[1].text, 'link': parse.urlunparse(link),
         'image': sub.find('img', first=True).attrs['src'],
     }
