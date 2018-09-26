@@ -6,14 +6,14 @@ from utils.sorladmin import AdminImageMixin
 from .models import AdChannel, AdFormat, Advert, Customer
 
 
-@admin.register(Customer)
+# @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ['name', 'contact_info']
     list_editable = []
     search_fields = ['name']
 
 
-@admin.register(Advert)
+# @admin.register(Advert)
 class AdvertAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
     save_as = True
     save_on_top = True
@@ -47,7 +47,7 @@ def create_dummy_ads(modeladmin, request, queryset):
             dummy_ad.ad_channels.add(channel)
 
 
-@admin.register(AdChannel)
+# @admin.register(AdChannel)
 class ChannelAdmin(admin.ModelAdmin):
     list_display = [
         'id',
@@ -71,7 +71,7 @@ class ChannelAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(AdFormat)
+# @admin.register(AdFormat)
 class AdFormatAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'width', 'height', 'price', 'published']
     list_editable = ['name', 'width', 'height', 'price', 'published']

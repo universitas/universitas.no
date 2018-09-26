@@ -9,6 +9,14 @@ const Advert = ({ children, className = '', ...props }) => (
   </div>
 )
 
+const AdHoc = ({ image, url }) => (
+  <Advert className="col-6 row-1" style={{ textAlign: 'center' }}>
+    <a href={url}>
+      <img src={image} />
+    </a>
+  </Advert>
+)
+
 class Google extends React.Component {
   componentDidMount() {
     setTimeout(() => {
@@ -58,4 +66,5 @@ class Qmedia extends React.Component {
 export default {
   Google,
   Qmedia: connect(getAdverts, { advertsRequested })(Qmedia),
+  AdHoc,
 }
