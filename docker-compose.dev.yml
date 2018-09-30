@@ -1,19 +1,6 @@
 # overrides for development
 version: '2.1'
 services:
-  express:
-    image: universitas/webpack:${IMAGE_VERSION:-edge}
-    command: expressdev
-    tty: true
-    ports:
-      - "9000:9000"
-    volumes:
-      - ./webpack:/app/
-      - node_modules:/app/node_modules/
-    environment:
-      - HOST_NAME
-      - PUBLIC_PATH=http://${HOST_NAME:-localhost}:3000/static/
-
 
   webpack:
     image: universitas/webpack:${IMAGE_VERSION:-edge}
@@ -21,19 +8,21 @@ services:
     tty: true
     ports:
       - "3000:3000"
-    volumes:
-      - ./webpack:/app/
-      - webpack_build:/var/build/
-      - node_modules:/app/node_modules/
     environment:
-      - BUILD_DIR=/var/build/
-      - PUBLIC_PATH=http://${HOST_NAME:-localhost}:3000/static/
+      - PUBLIC_PATH=http://${SITE_URL:-localhost}:3000/static/
 
+  express:
+    extends: webpack
+    command: expressdev
+    tty: true
+    ports:
+      - "9000:9000"
 
   web:
     command: runserver
     ports:
       - "8000:8000"
+
   flower:
     extends: django
     command: flower
@@ -43,11 +32,3 @@ services:
     depends_on:
       - celery
       - celerybeat
-
-volumes:
-  # mount locally for vim code completion with ternjs
-  node_modules:
-    driver_opts:
-      type: local
-      device: ${PWD}/webpack/node_modules
-      o: bind

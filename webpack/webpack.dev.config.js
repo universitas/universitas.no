@@ -5,7 +5,7 @@ config.devtool = 'cheap-module-source-map' // also fast
 config.mode = 'development'
 
 const PORT = process.env.HOST_PORT || 3000
-const HOST = process.env.HOST_NAME || 'localhost'
+const HOST = process.env.SITE_URL || 'localhost'
 
 function hotify(entry) {
   return [

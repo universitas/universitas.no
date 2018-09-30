@@ -28,6 +28,8 @@ case $1 in
     ;;
   uwsgi)
     echo 'starting django uwsgi'
+    mkdir -p /run/fifo/
+    chown 1000:1000 /run/fifo/
     if [[ $DEBUG = 'True' ]]; then
       run 'uwsgi uwsgi.dev.ini'
     else

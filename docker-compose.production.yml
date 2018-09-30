@@ -3,29 +3,37 @@ version: '2.1'
 services:
 
   express:
-    image: universitas/webpack:${IMAGE_VERSION:-edge}
+    extends: webpack
     command: express
-    volumes:
-      - ./webpack:/app/
-    environment:
-      - PUBLIC_PATH=http://static.universitas.no/static/
          
-  nginx:
-    ports:
-      - "${NGINX_PORT:-80}:80"
-
   web:
     command: "uwsgi"
-    volumes:
-      - ./build:/var/build/
     environment:
       - DEBUG=False
 
+  certbot:
+    image: certbot/certbot:latest
+    command: certificates
+    volumes: 
+      - certificates:/etc/letsencrypt/
+      - letsencrypt_challenge:/srv/
 
-volumes:
-  # mount locally for access with rsync
-  django_staging:
+  nginx:
+    build: ./nginx/
+    restart: always
+    volumes:
+      - django_static:/var/static/
+      - django_media:/var/media/
+      - certificates:/var/certificates/
+      - letsencrypt_challenge:/var/letsencrypt/
+    ports:
+      - "${NGINX_PORT:-80}:80"
+      - "443:443"
+
+volumes: 
+  letsencrypt_challenge: {}
+  certificates:
     driver_opts:
       type: local
-      device: ${PWD}/../STAGING
+      device: ${PWD}/volumes/certificates/
       o: bind

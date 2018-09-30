@@ -10,9 +10,14 @@ while (( $# > 0 )); do
   case $1 in
   help    ) show_help; exit 0 ;; # show help for commands
   init    ) # install docker and docker-compose on ubuntu ( must be run as sudo )
-            sudo bash -c "$(declare -f install_docker); install_docker $(whoami)" ;;
+            sudo bash -c "$(declare -f install_docker)
+            install_docker $(whoami)" 
+            install_certificates
+            ;;
   dc      ) docker-compose $rest; exit ;; # docker-compose [...args]
   da      ) docker-compose run --rm web django-admin $rest; exit ;; # django-admin [...args]
+  cbrenew ) renew_certificates ;; # renew certbot certificates
+  cbinit  ) install_certificates ;; # install certbot certificates
 
   pgdump  ) dump_postgres ;;  # dump postgresql database
   pgload  ) load_postgres $rest; exit;;  # load database from dump file [filename]
@@ -23,8 +28,7 @@ while (( $# > 0 )); do
   djbuild ) build_django ;;   # download and build all images, migrate database
 
   webpack ) docker-compose run --rm webpack ${rest:-bash}; exit;;
-  build   ) webpack_build ;; # build webpack
-  expressb) docker-compose run --rm express expressb ;; # build express bundle
+  build   ) webpack_build ;; # build css+js client bundles and express bundle;
 
   npmi    ) docker-compose run --rm webpack install $rest; exit ;; # npm install [packages...]
   npmup   ) docker-compose run --rm webpack update ;; # npm update js packages
@@ -46,7 +50,6 @@ while (( $# > 0 )); do
 
   fake    ) docker-compose run --rm web django-admin fake_content -c10 -s50 ;;  # create fake data in django database
   static  ) collect_static_files --ignore ;;  # run django collectstatic
-  migrate ) docker-compose run --rm web django-admin migrate ;;  # migrate django apps
 
   upd     ) docker-compose up -d ;;  # start all docker images in daemon mode
   logs    ) docker-compose logs --tail=50 -f $rest ; exit ;;
@@ -72,10 +75,7 @@ done
 
 webpack_build() {
   echo 'build webpack for production'
-  COMPOSE_FILE='docker-compose.yml:docker-compose.dev.yml:docker-compose.build.yml'
-  export COMPOSE_FILE
-  find ./build/ -type f -delete
-  docker-compose run --rm webpack
+  docker-compose run --rm webpack build
 }
 
 collect_static_files() {
@@ -225,8 +225,34 @@ install_docker() {
   systemctl enable docker
 }
 
+install_certificates() {
+  docker-compose run -p80:80 certbot \
+    --noninteractive \
+    --agree-tos \
+    --email=$CERTBOT_EMAIL \
+    --domains=$CERTBOT_DOMAINS \
+    --cert-name=universitas \
+    --standalone \
+    certonly
+}
+
+renew_certificates() {
+  docker-compose run certbot \
+    --noninteractive \
+    --agree-tos \
+    --email=$CERTBOT_EMAIL \
+    --domains=$CERTBOT_DOMAINS \
+    --cert-name=universitas \
+    --webroot \
+    --webroot-path=/srv/ \
+    --keep-until-expiring \
+    certonly
+}
+
+
 cd $(dirname $(readlink -f $0))
 [[ ! -f django/local.env ]] && echo "# Add environment variables here" > django/local.env
+source django/local.env
 mkdir -p \
   ./webpack/node_modules/\
   ./django/venv/\
@@ -234,7 +260,8 @@ mkdir -p \
   ./volumes/media/\
   ./volumes/staging/\
   ./volumes/ssh/\
-  ./volumes/logs/
+  ./volumes/logs/\
+  ./volumes/certificates/
 
 export COMPOSE_HTTP_TIMEOUT=6000
 export GIT_SHA=$(git rev-parse HEAD)

@@ -1,5 +1,16 @@
 version: '2.1'
 services:
+   
+  webpack:
+    image: universitas/webpack:${IMAGE_VERSION:-edge}
+    volumes:
+      - ./webpack:/app/
+      - webpack_build:/var/build/
+      - node_modules:/app/node_modules/
+    environment:
+      - BUILD_DIR=/var/build/
+      - PUBLIC_PATH=/static/
+
   django:
     mem_limit: 1000m  # limit memory usage to 1000 Mb
     cpu_quota: 80000  # 80% of 100000 (I think...)
@@ -24,6 +35,9 @@ services:
     restart: always
     expose:
       - "8000"  # wsgi on tcp socket
+    volumes: 
+      # master fifo
+      - ${PWD}/fifo/:/run/fifo/
     depends_on:
       - postgres
       - redis
@@ -48,16 +62,6 @@ services:
     depends_on:
       - rabbit
 
-  nginx:
-    build: ./nginx/
-    restart: always
-    volumes:
-      - django_static:/var/static/
-      - django_media:/var/media/
-    ports:
-      - "${NGINX_PORT:-8080}:80"
-
-
   # RabbitMQ message queue
   # default username:password is guest:guest
   rabbit:
@@ -76,10 +80,14 @@ services:
       - redisdata:/data/
 
 volumes:
-  node_modules:  {}
   pgdata:        {}
   redisdata:     {}
   webpack_build: {}
+  node_modules:
+    driver_opts:
+      type: local
+      device: ${PWD}/webpack/node_modules/
+      o: bind
   ssh:
     driver_opts:
       type: local
