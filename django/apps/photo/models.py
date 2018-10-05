@@ -9,10 +9,6 @@ from statistics import median
 from typing import Union
 
 import PIL
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 
 from apps.contributors.models import Contributor
 from apps.photo import file_operations
@@ -26,6 +22,10 @@ from django.db import connection, models
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
@@ -377,7 +377,7 @@ class ImageFile(  # type: ignore
         try:
             return thumbnail.get_thumbnail(self.original, size, **options)
         except Exception:
-            logger.exception('Cannot create thumbnail')
+            logger.exception(f'Cannot create thumbnail for {self}')
             return BrokenImage()
 
     def is_profile_image(self) -> bool:
@@ -389,6 +389,8 @@ class ImageFile(  # type: ignore
 
     def build_thumbs(self) -> None:
         """Make sure thumbs exists"""
+        if not self.original:
+            return
         self.large
         self.small
         self.preview
