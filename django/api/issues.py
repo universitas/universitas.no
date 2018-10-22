@@ -1,13 +1,12 @@
+from apps.issues.models import Issue, PrintIssue
 from rest_framework import filters, pagination, serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
-
-from apps.issues.models import Issue, PrintIssue
 from utils.serializers import AbsoluteURLField
 
 
 class NestedPDFSerializer(serializers.ModelSerializer):
 
-    cover = AbsoluteURLField(source='get_cover_page.url')
+    cover = AbsoluteURLField(source='get_cover_page')
 
     class Meta:
         model = PrintIssue

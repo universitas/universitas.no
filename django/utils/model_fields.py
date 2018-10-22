@@ -93,3 +93,12 @@ class AttrJSONField(JSONField):
 
     def from_db_value(self, value, expression, connection):
         return AttrDict(value)
+
+
+class CropBoxField(JSONField):
+    """Cropbox Field"""
+    description = 'Bounding Box field'
+    default_validators = [validate_box]
+
+    def from_db_value(self, value, expression, connection):
+        return CropBox(**value)

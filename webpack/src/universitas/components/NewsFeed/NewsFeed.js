@@ -94,22 +94,15 @@ class NewsFeed extends React.Component {
   render() {
     const { items, next, className, section } = this.props
     const ads = [
-      <Advert.AdHoc
-        key="sports outlet"
-        url={
-          'https://sportoutlet.as/kampanjer.php?kampanje_id=289&kampanje=nyaapning&utm_source=universitas-no&utm_medium=nyaapning-karl-johan&utm_campaign=nyaapning-karl-johan&utm_content=universitas-no'
-        }
-        image={sportsoutlet}
-      />,
+      <Advert.Qmedia key={`qmedia ${section}`} className="col-6 row-2" />,
       <Advert.AdHoc
         key="nynorsk avissenter"
         url={'http://nynorskavissenter.no/sok-no/'}
         image={nynorskavissenter}
       />,
-      <Advert.Qmedia key={`5 qmedia ${section}`} className="col-6 row-2" />,
-      <Advert.Google key={`20 adwords ${section}`} className="col-6 row-1" />,
-      <Advert.Google key={`35 adwords ${section}`} className="col-6 row-1" />,
-      <Advert.Google key={`50 adwords ${section}`} className="col-6 row-1" />,
+      <Advert.Google key={`adwords 1 ${section}`} className="col-6 row-1" />,
+      <Advert.Google key={`adwords 2 ${section}`} className="col-6 row-1" />,
+      <Advert.Google key={`adwords 3 ${section}`} className="col-6 row-1" />,
     ]
 
     const renderFeed = R.pipe(

@@ -72,7 +72,12 @@ def upload_image_to(instance: 'ImageFile', filename: str = 'image') -> str:
 
 class ImageFileQuerySet(models.QuerySet):
     def pending(self):
+        """Awaiting automatic crop calculation"""
         return self.filter(cropping_method=self.model.CROP_PENDING)
+
+    def unused(self):
+        """Not used for anything"""
+        return self.filter(storyimage=None, person=None, frontpagestory=None)
 
     def photos(self):
         return self.filter(category=ImageCategoryMixin.PHOTO)
@@ -90,6 +95,7 @@ class ImageFileQuerySet(models.QuerySet):
         return self.filter(category=ImageCategoryMixin.PROFILE)
 
     def uncategorised(self):
+        """Does not have a valid category"""
         return self.filter(category=ImageCategoryMixin.UNKNOWN)
 
 
@@ -308,6 +314,7 @@ class ImageFile(  # type: ignore
         return self.filename or super(ImageFile, self).__str__()
 
     def upload_folder(self) -> Path:
+        """Folder name for images based on creation year/month/date """
         created = self.created or timezone.now()
         return Path(f'{created.year:04}/{created.month:02}/{created.day:02}')
 
@@ -331,11 +338,6 @@ class ImageFile(  # type: ignore
                 self.copyright_information = value
 
     @property
-    def filename(self) -> str:
-        """build a normalized filename"""
-        return f'{self.stem}.{(self.pk or 0):0>5}{self.suffix}'
-
-    @property
     def suffix(self) -> str:
         if self.stat.mimetype:
             if self.stat.mimetype == 'image/jpeg':
@@ -345,6 +347,11 @@ class ImageFile(  # type: ignore
             return Path(self.original.name).suffix
         else:
             return '.xxx'
+
+    @property
+    def filename(self) -> str:
+        """Build a normalized filename"""
+        return f'{self.stem}.{(self.pk or 0):0>5}{self.suffix}'
 
     @property
     def small(self) -> Thumbnail:
@@ -445,12 +452,15 @@ class ImageFile(  # type: ignore
         merge_instances(self, *list(others)).save()
 
     def reduce_image_filesize(self, img=None):
-        """Remove thumbnail exif from original image"""
+        """Remove thumbnail exif, and resize large image."""
         if img is None:
             img = file_operations.pil_image(self.original)
 
+        resized = False
+        file_format = img.format or 'jpeg'
         exif_bytes = prune_exif(img)
 
+        # resize large image
         if any([
             img.width > SIZE_LIMIT,
             img.height > SIZE_LIMIT,
@@ -461,12 +471,20 @@ class ImageFile(  # type: ignore
                 resample=PIL.Image.LANCZOS,
             )
             resized = True
-        else:
-            resized = False
+
+        # rotate image
+        orientation = self.exif_data.get('Orientation', 1)
+        rotation = {1: 0, 3: 180, 6: 270, 8: 90}.get(orientation)
+        logger.debug(
+            f'orientation: {orientation}, rotation: {rotation} degrees.'
+        )
+        if rotation:
+            img = img.rotate(rotation, expand=True)
+            resized = True
 
         if exif_bytes or resized:
             blob = BytesIO()
-            img.save(blob, img.format, exif=exif_bytes, quality=80)
+            img.save(blob, file_format, exif=exif_bytes, quality=80)
             if self.pk is None:
                 self.original.file = ContentFile(blob.getvalue())
             else:
@@ -498,7 +516,6 @@ class ImageFile(  # type: ignore
         if self.pk is None:
             # make sure image has a id before saving original file
             self.new_image()
-            self.build_thumbs()
             original, width, height = (
                 self.original, self.full_width, self.full_height
             )
@@ -511,8 +528,11 @@ class ImageFile(  # type: ignore
             kwargs.pop('force_insert', '')
             self.original = original
             original.file.name = self.filename
+        elif not self.original:
+            raise RuntimeError('no valid original for image')
 
         super().save(*args, **kwargs)
+        self.build_thumbs()
 
 
 @receiver(models.signals.post_save, sender=ImageFile)

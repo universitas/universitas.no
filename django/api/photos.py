@@ -55,10 +55,10 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
     method = serializers.SerializerMethodField()
     usage = serializers.IntegerField(read_only=True)
     crop_box = CropBoxField()
-    original = AbsoluteURLField(source='original.url')
-    small = AbsoluteURLField(source='small.url')
-    large = AbsoluteURLField(source='large.url')
-    thumb = AbsoluteURLField(source='preview.url')
+    original = AbsoluteURLField()
+    small = AbsoluteURLField()
+    large = AbsoluteURLField()
+    thumb = AbsoluteURLField()
 
     def find_artist(self, validated_data):
         """Assign artist to contributor if able."""

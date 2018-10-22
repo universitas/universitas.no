@@ -7,11 +7,11 @@ from collections import namedtuple
 from datetime import datetime
 from typing import Any, Optional
 
-import ftfy
-import piexif
 import PIL.ExifTags
 from PIL.Image import Image
 
+import ftfy
+import piexif
 from django.utils import timezone
 
 from .file_operations import get_exif
@@ -22,12 +22,20 @@ ExifData = namedtuple('ExifData', 'description, datetime, artist, copyright')
 
 
 def valid_exif_bytes(exif_bytes: bytes) -> bytes:
-    """Remove non-standard exif data."""
+    """Remove non-standard and bloated exif data."""
     exif_dict = piexif.load(exif_bytes)
     del exif_dict['thumbnail']
     del exif_dict['1st']
+    exif_dict['0th'][piexif.ImageIFD.Orientation] = 1  # no rotation
     for key in sorted(exif_dict, reverse=True):
         subsection = exif_dict[key]
+        for subkey, value in list(subsection.items()):
+            try:
+                if len(value) > 1000:
+                    logger.debug(f'deleting key: {key}/{subkey}\n{value}')
+                    del subsection[subkey]
+            except TypeError:
+                pass
         for subkey in sorted(subsection, reverse=True):
             try:
                 return piexif.dump(exif_dict)

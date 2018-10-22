@@ -19,7 +19,7 @@ class StoryDetailImages extends React.Component {
   }
   componentWillUnmount() {}
   render() {
-    const { images = [], createHandler, deleteHandler } = this.props
+    const { images, createHandler, deleteHandler } = this.props
     return (
       <div className="panelContent">
         {images.length == 0 && (

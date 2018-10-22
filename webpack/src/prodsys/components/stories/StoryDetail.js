@@ -6,21 +6,13 @@ import { selectors } from './model.js'
 import { getRoutePayload } from 'prodsys/ducks/router'
 import Debug from 'components/Debug'
 
-const DetailPane = ({ pk, images, action }) => {
+const DetailPane = ({ pk, action, images }) => {
   if (action == 'change') return <StoryDetailText pk={pk} />
   if (action == 'images') return <StoryDetailImages pk={pk} images={images} />
   return <div>action??: {action}</div>
 }
 
-const StoryDetail = ({
-  pk,
-  action,
-  title,
-  working_title,
-  publication_status,
-  images,
-  ...props
-}) => (
+const StoryDetail = ({ pk, action, publication_status, images = [] }) => (
   <section
     className={cx('DetailPanel', 'StoryDetail', `status-${publication_status}`)}
   >

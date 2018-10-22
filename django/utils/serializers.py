@@ -1,8 +1,7 @@
 import json
 
-from rest_framework import exceptions, serializers
-
 from apps.photo.cropping.boundingbox import CropBox
+from rest_framework import exceptions, serializers
 
 
 class jsonDict(dict):
@@ -16,6 +15,8 @@ class AbsoluteURLField(serializers.Field):
         super().__init__(*args, **kwargs)
 
     def to_representation(self, value):
+        if hasattr(value, 'url'):
+            value = value.url
         if not value:
             return None
         request = self.context.get('request', None)

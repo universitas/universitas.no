@@ -68,8 +68,7 @@ class ImageHashModelMixin(models.Model):
                 key: imagehash.hex_to_hash(self.stat[key])
                 for key in self.HASH_TYPES
             }
-        except KeyError as err:
-            logger.debug(f'keyerror: {err}')
+        except KeyError:
             hashes = (
                 get_imagehashes(self.small) or get_imagehashes(self.original)
             )
