@@ -100,5 +100,12 @@ class CropBoxField(JSONField):
     description = 'Bounding Box field'
     default_validators = [validate_box]
 
+    def __init__(self, *args, default=CropBox.basic, **kwargs):
+        return super().__init__(*args, default=default, **kwargs)
+
     def from_db_value(self, value, expression, connection):
-        return CropBox(**value)
+        return value and CropBox(**value)
+
+    def get_prep_value(self, value):
+        data = CropBox(**value.__dict__).serialize()
+        return super().get_prep_value(data)

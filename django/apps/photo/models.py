@@ -9,6 +9,10 @@ from statistics import median
 from typing import Union
 
 import PIL
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl import thumbnail
+from sorl.thumbnail.images import ImageFile as SorlImageFile
 
 from apps.contributors.models import Contributor
 from apps.photo import file_operations
@@ -18,14 +22,11 @@ from django.contrib.postgres.search import TrigramSimilarity
 from django.core.files.base import ContentFile
 from django.core.validators import FileExtensionValidator
 from django.db import connection, models
+from django.db.models.expressions import RawSQL
 # from apps.issues.models import current_issue
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
@@ -97,6 +98,14 @@ class ImageFileQuerySet(models.QuerySet):
     def uncategorised(self):
         """Does not have a valid category"""
         return self.filter(category=ImageCategoryMixin.UNKNOWN)
+
+    def with_bigness(self):
+        """Calculate crop box bigness"""
+        sql = (
+            "((crop_box->>'bottom')::float-(crop_box->>'top')::float)"
+            "*((crop_box->>'right')::float-(crop_box->>'left')::float)"
+        )
+        return self.annotate(bigness=RawSQL(sql, []))
 
 
 def _filter_dupes(dupes, master_hashes, limit=3):

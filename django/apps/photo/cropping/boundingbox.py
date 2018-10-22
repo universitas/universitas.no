@@ -119,6 +119,11 @@ class Box:
         """Area of Box"""
         return self.width * self.height
 
+    @size.setter
+    def size(self, value: float) -> None:
+        self.width = value**0.5
+        self.height = value**0.5
+
     @property
     def center(self) -> typing.Tuple[float, float]:
         """Center point of box (x, y)"""

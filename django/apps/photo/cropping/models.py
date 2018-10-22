@@ -2,10 +2,11 @@
 
 import logging
 
+from sorl import thumbnail
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from sorl import thumbnail
-from utils.model_fields import BoxField
+from utils.model_fields import CropBoxField
 
 # from .boundingbox import CropBox
 
@@ -39,25 +40,26 @@ class AutoCropImage(models.Model):
         default=CROP_PENDING,
         help_text=_('How this image has been cropped.'),
     )
-    crop_box = BoxField(
+    crop_box = CropBoxField(
         verbose_name=_('crop box'),
         null=True,
         help_text=_('How this image has been cropped.'),
     )
 
     def save(self, *args, **kwargs):
-        cls = self.__class__
-        try:
-            saved = cls.objects.get(id=self.pk)
-        except cls.DoesNotExist:
-            pass
-        else:
-            if all((
-                self.cropping_method != self.CROP_PENDING,
-                saved.cropping_method != self.CROP_PENDING,
-                saved.crop_box != self.crop_box
-            )):
-                self.cropping_method = self.CROP_MANUAL
+        changed = not self.__class__.objects.filter(
+            pk=self.pk,
+        ).exclude(
+            crop_box=self.crop_box,
+        ).exclude(
+            cropping_method=self.CROP_PENDING,
+        ).exists()
+
+        if self.cropping_method != self.CROP_PENDING and changed:
+            self.cropping_method = self.CROP_MANUAL
+
+        if self.crop_box and self.crop_box.size > 0.7:
+            self.crop_box.size = 0.7
 
         super().save(*args, **kwargs)
 
