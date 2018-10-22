@@ -23,7 +23,7 @@ DEVALUE_HOTNESS = timedelta(hours=1)
 PERSIST_STORY_VISITS = timedelta(minutes=1)
 
 
-@periodic_task(run_every=UPDATE_SEARCH)
+@periodic_task(run_every=UPDATE_SEARCH, ignore_result=True)
 def update_search_task():
     """Update database search index for newly modified stories."""
     qs = Story.objects.filter(
@@ -44,7 +44,7 @@ def upload_storyimages(pk):
     return target
 
 
-@periodic_task(run_every=PERSIST_STORY_VISITS)
+@periodic_task(run_every=PERSIST_STORY_VISITS, ignore_result=True)
 def save_visits_task():
     """Persist visit counts to database and reset cache."""
     cache_keys = cache.keys(f'{Story.VISIT_KEY_PREFIX}*')
@@ -61,7 +61,7 @@ def save_visits_task():
     return len(cache_keys)
 
 
-@periodic_task(run_every=DEVALUE_HOTNESS)
+@periodic_task(run_every=DEVALUE_HOTNESS, ignore_result=True)
 def devalue_hotness_task(chill_percentage=1):
     """Decrease the hotness rating of all stories."""
     factor = (100 - chill_percentage) / 100.0

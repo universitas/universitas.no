@@ -29,7 +29,7 @@ def determine_cropping_method(features: List[Feature]) -> int:
     return ImageFile.CROP_FEATURES  # no faces
 
 
-@shared_task
+@shared_task(ignore_result=True)
 def autocrop_image_file(pk: int) -> bool:
     try:
         instance = ImageFile.objects.get(pk=pk)
@@ -62,7 +62,7 @@ def autocrop_image_file(pk: int) -> bool:
     return True
 
 
-@shared_task
+@shared_task(ignore_result=True)
 def post_save_task(pk: int) -> bool:
     try:
         instance = ImageFile.objects.get(pk=pk)
@@ -133,13 +133,13 @@ def clean_up_pending_autocrop() -> int:
     return len(image_pks)
 
 
-@shared_task
+@shared_task(ignore_result=True)
 def new_image_file(fp: BinaryIO, filename: str) -> ImageFile:
     """New image file"""
     return ImageFile()
 
 
-@shared_task
+@shared_task(ignore_result=True)
 def upload_imagefile_to_desken(pk, target=None):
     """Upload imagefile to desken server."""
     # rsync -azv --progress  --include='UNI*000.pdf' --exclude='*'
