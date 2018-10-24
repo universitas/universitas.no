@@ -20,6 +20,7 @@ from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from django.core.validators import FileExtensionValidator
 from django.db import connection, models
 from django.db.models.expressions import RawSQL
@@ -517,12 +518,21 @@ class ImageFile(  # type: ignore
         self.full_width = img.width
         self.full_height = img.height
 
+    def rename_file(self):
+        self.delete_thumbnails()
+        old_path = self.original.name
+        file = default_storage.open(old_path)
+        self.original.save(self.filename, file, save=False)
+
     def save(self, *args, **kwargs):
         self.stem = slugify_filename(
             self.stem or Path(self.original.name).stem
         )
-
-        if self.pk is None:
+        try:
+            saved = self.__class__.objects.get(id=self.id)
+        except self.DoesNotExist:
+            saved = None
+        if not saved:
             # make sure image has a id before saving original file
             self.new_image()
             original, width, height = (
@@ -537,8 +547,11 @@ class ImageFile(  # type: ignore
             kwargs.pop('force_insert', '')
             self.original = original
             original.file.name = self.filename
-        elif not self.original:
-            raise RuntimeError('no valid original for image')
+        else:
+            if not self.original:
+                raise RuntimeError('no valid original for image')
+            if self.original == saved.original and self.stem != saved.stem:
+                self.rename_file()
 
         super().save(*args, **kwargs)
         self.build_thumbs()

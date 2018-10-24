@@ -42,7 +42,7 @@ class AutoCropImage(models.Model):
     )
     crop_box = CropBoxField(
         verbose_name=_('crop box'),
-        null=True,
+        editable=False,
         help_text=_('How this image has been cropped.'),
     )
 
