@@ -72,5 +72,5 @@ selenium
 # DEBUGGING AND DEVELOPMENT
 werkzeug
 ipdb
-ipython
-ptpython
+ipython<7.0   # wait until prompt toolkit 2.0 is stable
+ptpython<2.0  # wait until prompt toolkit 2.0 is stable

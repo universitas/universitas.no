@@ -360,14 +360,16 @@ class Story(  # type: ignore
         """ Number of story images related to the story """
         return len(self.images.all())
 
+    @cache_memoize(60 * 60)
     def main_image(self):
         """ Get the top image if there is any. """
-        return self.images.order_by('-size', '-ordering').first()
+        image = self.images.order_by('-size', '-ordering').first()
+        return image and image.imagefile
 
-    @cache_memoize(60 * 5)
+    @property
     def facebook_thumb(self):
-        if self.main_image():
-            imagefile = self.main_image().imagefile
+        imagefile = self.main_image()
+        if imagefile:
             return imagefile.thumbnail(
                 size=FACEBOOK_THUMBSIZE,
                 crop_box=imagefile.get_crop_box(),

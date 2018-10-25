@@ -14,8 +14,8 @@ babel==2.6.0              # via flower
 backcall==0.1.0           # via ipython
 beautifulsoup4==4.6.3
 billiard==3.5.0.4         # via celery
-boto3==1.9.28
-botocore==1.12.28         # via boto3, s3transfer
+boto3==1.9.31
+botocore==1.12.31         # via boto3, s3transfer
 bs4==0.0.1                # via requests-html
 cached-property==1.5.1    # via django-url-filter
 celery==4.2.1
@@ -57,7 +57,7 @@ idna==2.7                 # via requests
 imagehash==4.0
 ipdb==0.11
 ipython-genutils==0.2.0   # via traitlets
-ipython==7.0.1
+ipython==6.5.0
 itypes==1.1.0             # via coreapi
 jedi==0.13.1              # via ipython, ptpython
 jinja2==2.10              # via coreschema
@@ -74,12 +74,12 @@ parse==1.9.0              # via requests-html
 parso==0.3.1              # via jedi
 pexpect==4.6.0            # via ipython
 pickleshare==0.7.5        # via ipython
-piexif==1.0.13
+piexif==1.1.1
 pillow==5.3.0
 pluggy==0.8.0             # via pytest
-prompt-toolkit==2.0.6     # via ipython, ptpython
+prompt-toolkit==1.0.15    # via ipython, ptpython
 psycopg2-binary==2.7.5
-ptpython==2.0.3
+ptpython==0.41
 ptyprocess==0.6.0         # via pexpect
 py==1.7.0                 # via pytest
 pyee==5.0.0               # via pyppeteer
@@ -90,11 +90,11 @@ pyquery==1.4.0            # via requests-html
 pytest-django==3.4.3
 pytest-forked==0.2        # via pytest-xdist
 pytest-xdist==1.23.2
-pytest==3.9.1
-python-dateutil==2.7.3    # via botocore, faker
+pytest==3.9.2
+python-dateutil==2.7.4    # via botocore, faker
 python-levenshtein==0.12.0
 python3-openid==3.1.0     # via django-allauth
-pytz==2018.5              # via babel, celery, django, flower
+pytz==2018.6              # via babel, celery, django, flower
 pywavelets==1.0.1         # via imagehash
 raven==6.9.0
 redis==2.10.6
@@ -105,7 +105,7 @@ requests==2.20.0
 s3transfer==0.1.13        # via boto3
 scipy==1.1.0              # via imagehash
 selenium==3.14.1
-sentry-sdk==0.4.3
+sentry-sdk==0.5.1
 simplegeneric==0.8.1      # via ipython
 simplejson==3.16.0        # via django-rest-swagger
 six==1.11.0               # via django-extensions, django-guardian, django-rest-auth, django-url-filter, faker, imagehash, more-itertools, prompt-toolkit, pytest, pytest-xdist, python-dateutil, traitlets, w3lib
@@ -117,7 +117,7 @@ tqdm==4.28.1              # via pyppeteer
 traitlets==4.3.2          # via ipython
 unidecode==0.4.21         # via awesome-slugify
 uritemplate==3.0.0        # via coreapi
-urllib3==1.23             # via botocore, pyppeteer, requests, selenium, sentry-sdk
+urllib3==1.24             # via botocore, pyppeteer, requests, selenium, sentry-sdk
 uwsgi==2.0.17.1
 vine==1.1.4               # via amqp
 w3lib==1.19.0             # via requests-html

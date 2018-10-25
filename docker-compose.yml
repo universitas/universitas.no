@@ -69,7 +69,7 @@ services:
 
   # PostgreSQL database
   postgres:
-    image: universitas/postgres:10.3
+    image: universitas/postgres:11
     volumes:
       - pgdata:/var/lib/postgresql/data/
 
