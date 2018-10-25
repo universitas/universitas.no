@@ -2,6 +2,10 @@
 
 import logging
 
+from django_extensions.db.fields import AutoSlugField
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+
 from apps.contributors.models import Contributor
 from apps.frontpage.models import FrontpageStory
 from django.conf import settings
@@ -10,9 +14,6 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django_extensions.db.fields import AutoSlugField
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
 from utils.decorators import cache_memoize
 from utils.model_mixins import EditURLMixin
 
@@ -360,20 +361,20 @@ class Story(  # type: ignore
         """ Number of story images related to the story """
         return len(self.images.all())
 
-    @cache_memoize(60 * 60)
     def main_image(self):
         """ Get the top image if there is any. """
-        image = self.images.order_by('-size', '-ordering').first()
-        return image and image.imagefile
+        return self.images.order_by('-size', '-ordering').first()
 
-    @property
+    @cache_memoize(60 * 60)
     def facebook_thumb(self):
-        imagefile = self.main_image()
-        if imagefile:
+        try:
+            imagefile = self.main_image().imagefile
             return imagefile.thumbnail(
                 size=FACEBOOK_THUMBSIZE,
                 crop_box=imagefile.get_crop_box(),
-            )
+            ).url
+        except AttributeError:
+            return None
 
     @property
     def section(self):

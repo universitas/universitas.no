@@ -12,9 +12,9 @@ services:
       - PUBLIC_PATH=/static/
 
   django:
+    image: universitas/django:${IMAGE_VERSION:-edge}
     mem_limit: 1000m  # limit memory usage to 1000 Mb
     cpu_quota: 80000  # 80% of 100000 (I think...)
-    image: universitas/django:${IMAGE_VERSION:-edge}
     volumes:
       - ./django:/app
       - webpack_build:/var/build/
@@ -69,7 +69,7 @@ services:
 
   # PostgreSQL database
   postgres:
-    image: universitas/postgres:11
+    image: universitas/postgres:10.3
     volumes:
       - pgdata:/var/lib/postgresql/data/
 

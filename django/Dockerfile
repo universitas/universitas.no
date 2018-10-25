@@ -1,5 +1,5 @@
 # parent image based on python:3-stretch
-FROM haakenlid/opencv:3.6
+FROM haakenlid/jupyter-opencv:3.6
 MAINTAINER haakenlid
 WORKDIR /app/
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
@@ -9,7 +9,7 @@ RUN groupadd --gid 1000 django &&\
   useradd --uid 1000 --gid 1000 --shell /bin/bash --create-home django
 
 # copy files
-COPY requirements.txt install-jupyter.sh docker-entrypoint.sh /app/
+COPY requirements.txt docker-entrypoint.sh /app/
 
 # install pdf utils and database clients
 RUN apt-get update && apt-get install -y \
@@ -23,9 +23,6 @@ RUN apt-get update && apt-get install -y \
 # create `var` folders that django uses
 RUN cd /var && mkdir staging media static logs &&\
   chown 1000:1000 staging media static logs
-
-# install jupyter notebook with vim key bindings
-RUN pip install --no-cache wheel && /app/install-jupyter.sh
 
 # install python dependencies for django
 RUN pip install --no-cache -r /app/requirements.txt

@@ -14,9 +14,7 @@ Image = Union[Path, bytes]
 
 
 def get_haarcascade(filename: str) -> Path:
-    cascade_dir = (
-        Path(cv2.__file__) / '../../../../share/OpenCV/haarcascades'
-    ).resolve()
+    cascade_dir = Path(cv2.data.haarcascades)
     if not cascade_dir.exists():
         raise RuntimeError('Cannot find OpenCV haarcascades')
     file = cascade_dir / filename
