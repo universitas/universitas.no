@@ -4,9 +4,9 @@ from .setting_helpers import Environment
 
 env = Environment(strict=False)
 
-MEDIA_ROOT = env.MEDIA_DIR or '/media/'
+MEDIA_ROOT = env.MEDIA_DIR or '/var/media/'
+STATIC_ROOT = env.STATIC_DIR or '/var/static/'
 MEDIA_URL = '/media/'
-STATIC_ROOT = env.STATIC_DIR or '/static/'
 STATIC_URL = '/static/'
 
 if env.digitalocean_enabled:

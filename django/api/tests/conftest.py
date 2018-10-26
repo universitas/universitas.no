@@ -3,12 +3,12 @@ import shutil
 from pathlib import Path
 
 import pytest
-from rest_framework.test import APIClient
-
 from apps.contributors.models import Contributor
 from apps.photo.models import ImageFile
 from apps.stories.models import Section, Story, StoryType
+from django.conf import settings
 from django.contrib.auth.models import Permission
+from rest_framework.test import APIClient
 
 
 @pytest.fixture()
@@ -87,7 +87,7 @@ def scandal_photo(db):
     except ImageFile.DoesNotExist:
         pass
     source = Path(__file__).parent / 'fixtures' / 'dummy.jpg'
-    shutil.copy(source, Path('/var/media/') / filename)
+    shutil.copy(source, Path(settings.MEDIA_ROOT) / filename)
     yield ImageFile.objects.create(
         id=pk,
         original=filename,
