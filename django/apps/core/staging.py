@@ -10,7 +10,6 @@ from django.conf import settings
 
 IMAGES_DIR = 'IMAGES'
 PDF_DIR = 'PDF'
-BYLINE_DIR = 'BYLINE'
 IMAGE_GLOB = '*.*'
 
 
@@ -57,17 +56,6 @@ def new_staging_images(**kwargs) -> List[Path]:
     kwargs = {
         'directory': get_staging_dir(IMAGES_DIR),
         'fileglob': IMAGE_GLOB,
-        **kwargs,
-    }
-    return new_staging_files(**kwargs)
-
-
-def new_staging_byline_images(**kwargs) -> List[Path]:
-    """Check for new or updated byline images in staging area"""
-    kwargs = {
-        'directory': get_staging_dir(BYLINE_DIR),
-        'fileglob': IMAGE_GLOB,
-        'max_age': timedelta(days=1),
         **kwargs,
     }
     return new_staging_files(**kwargs)

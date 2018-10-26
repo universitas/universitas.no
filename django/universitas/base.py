@@ -158,8 +158,15 @@ ROOT_URLCONF = 'universitas.urls'
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
 THUMBNAIL_ENGINE = 'apps.photo.cropping.crop_engine.CloseCropEngine'
 THUMBNAIL_QUALITY = 75
+# Use temporary file upload handler to do some queued local operations before
+# saving files to the remote server.
+FILE_UPLOAD_HANDLERS = [
+    "django.core.files.uploadhandler.TemporaryFileUploadHandler"
+]
+FILE_UPLOAD_TEMP_DIR = '/var/staging/IMAGES/'  # docker volume location
 FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
 FILE_UPLOAD_PERMISSIONS = 0o664
+# FILE_UPLOAD_MAX_MEMORY_SIZE = 1000000  # 1 megabyte
 # Enable original file names for resized images.
 THUMBNAIL_BACKEND = 'apps.photo.thumb_backend.KeepNameThumbnailBackend'
 THUMBNAIL_DEBUG = False
@@ -207,9 +214,6 @@ LOCALE_PATHS = [path('translation')]
 STATICFILES_DIRS = [env.BUILD_DIR]
 # Project wide fixtures to be loaded into database.
 FIXTURE_DIRS = [path('fixtures')]
-# Look for byline images here
-STAGING_ROOT = '/var/staging/'
-BYLINE_PHOTO_DIR = STAGING_ROOT + 'BYLINE/'
 
 # INTERNATIONALIZATIONh
 LANGUAGE_CODE = 'nb'

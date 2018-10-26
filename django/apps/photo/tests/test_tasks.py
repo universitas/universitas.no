@@ -1,18 +1,8 @@
 import pytest
 
 from apps.photo.models import ImageFile
-from apps.photo.tasks import (
-    autocrop_image_file, post_save_task, update_image_descriptions
-)
+from apps.photo.tasks import (autocrop_image_file, post_save_task)
 from django.core.files import File
-
-
-@pytest.mark.django_db
-def test_update_descriptions():
-    assert update_image_descriptions() == 0
-    # Should probably add some tests for byline images etc, but I can't be
-    # bothered to add imagefiles, contributors, stories and story image
-    # fixtures
 
 
 @pytest.mark.django_db

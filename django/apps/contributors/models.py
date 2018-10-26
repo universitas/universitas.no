@@ -126,25 +126,9 @@ class Contributor(TimeStampedModel, FuzzyNameSearchMixin, models.Model):
     def bylines_count(self):
         return self.byline_set.count()
 
-    def get_byline_image(self, force_new=False):
-        # if self.byline_photo and not force_new:
-        return self.byline_photo
-        # from apps.photo.models import ImageFile
-        # img = ImageFile.objects.search(
-        #     filename=f'{self}.jpg',
-        #     cutoff=0.8,
-        # ).profile_images().filter(contributor=None, ).first()
-
-        # if img:
-        #     self.byline_photo = img
-        #     self.save()
-        #     return img
-
-        # return False
-
     @cache_memoize(60 * 5)  # five minutes
     def thumb(self):
-        img = self.get_byline_image()
+        img = self.byline_photo
         if not img:
             return None
         else:
@@ -152,7 +136,7 @@ class Contributor(TimeStampedModel, FuzzyNameSearchMixin, models.Model):
 
     @cache_memoize()
     def has_byline_image(self):
-        return bool(self.get_byline_image())
+        return bool(self.byline_photo)
 
     @property
     def first_name(self):

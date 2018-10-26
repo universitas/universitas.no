@@ -3,23 +3,17 @@
 import logging
 import mimetypes
 import re
-from io import BytesIO
 from pathlib import Path
 from statistics import median
-from typing import Union
 
-import PIL
 from model_utils.models import TimeStampedModel
 from slugify import Slugify
-from sorl import thumbnail
-from sorl.thumbnail.images import ImageFile as SorlImageFile
+from sorl.thumbnail import ImageField
 
 from apps.contributors.models import Contributor
 from apps.photo import file_operations
-from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import TrigramSimilarity
-from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.validators import FileExtensionValidator
 from django.db import connection, models
@@ -32,27 +26,14 @@ from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
 from .cropping.models import AutoCropImage
-from .exif import ExifData, exif_to_json, extract_exif_data, prune_exif
+# from .exif import ExifData, extract_exif_data
 from .imagehash import ImageHashModelMixin
+from .thumbimage import ThumbImageFile
+from .preprocess import ProcessImage
 
 logger = logging.getLogger(__name__)
 
-PROFILE_IMAGE_UPLOAD_FOLDER = 'byline-photo'
-SIZE_LIMIT = 4_000  # Maximum width or height of uploads
-BYTE_LIMIT = 3_000_000  # Maximum filesize of upload or compress
-
 image_file_validator = FileExtensionValidator(['jpg', 'jpeg', 'png'])
-
-
-class BrokenImage:
-    """If thumbnail fails."""
-    url = settings.STATIC_URL + 'admin/img/icon-no.svg'
-
-    def read(self):
-        return b''
-
-
-Thumbnail = Union[SorlImageFile, BrokenImage]
 
 
 def slugify_filename(filename: str) -> Path:
@@ -243,8 +224,8 @@ class ImageCategoryMixin(models.Model):
 
 
 class ImageFile(  # type: ignore
-    ImageHashModelMixin, TimeStampedModel, EditURLMixin, AutoCropImage,
-    ImageCategoryMixin
+    ProcessImage, ThumbImageFile, ImageHashModelMixin, TimeStampedModel,
+    EditURLMixin, AutoCropImage, ImageCategoryMixin,
 ):
     """Photo or Illustration in the publication."""
 
@@ -259,7 +240,7 @@ class ImageFile(  # type: ignore
         max_length=1024,
         blank=True,
     )
-    original = thumbnail.ImageField(
+    original = ImageField(
         verbose_name=_('original'),
         validators=[image_file_validator],
         upload_to=upload_image_to,
@@ -335,28 +316,23 @@ class ImageFile(  # type: ignore
             return f'{self.contributor}'
         return self.copyright_information or '?'
 
-    @artist.setter
-    def artist(self, value) -> None:
-        if not value:
-            self.copyright_information == ''
-            self.contributor = None
-        else:
-            match = Contributor.objects.search(value).first()
-            if match:
-                self.contributor = match
-            else:
-                self.copyright_information = value
+    @property
+    def dimensions(self):
+        """Pixel dimensions of image file (width x height)"""
+        return self.full_width, self.full_height
+
+    @dimensions.setter
+    def dimensions(self, value):
+        self.full_width, self.full_height = value
 
     @property
     def suffix(self) -> str:
+        """Image file suffix"""
         if self.stat.mimetype:
-            if self.stat.mimetype == 'image/jpeg':
-                return '.jpg'
-            return mimetypes.guess_extension(self.stat.mimetype)
+            ext = mimetypes.guess_extension(self.stat.mimetype)
         elif self.original:
-            return Path(self.original.name).suffix
-        else:
-            return '.xxx'
+            ext = Path(self.original.name).suffix
+        return ext.lower().replace('jpe', 'jpg')
 
     @property
     def filename(self) -> str:
@@ -364,39 +340,6 @@ class ImageFile(  # type: ignore
         return f'{self.stem}.{(self.pk or 0):0>5}{self.suffix}'
 
     @property
-    def small(self) -> Thumbnail:
-        return self.thumbnail('200x200')
-
-    @property
-    def medium(self) -> Thumbnail:
-        return self.thumbnail('800x800', upscale=False)
-
-    @property
-    def large(self) -> Thumbnail:
-        return self.thumbnail('1500x1500', upscale=False)
-
-    @property
-    def preview(self) -> Thumbnail:
-        """Return thumb of cropped image"""
-        options = dict(crop_box=self.get_crop_box())
-        if self.category == ImageFile.DIAGRAM:
-            options.update(expand=1)
-        if self.category == ImageFile.PROFILE:
-            options.update(expand=0.2, colorspace='GRAY')
-        return self.thumbnail('150x150', **options)
-
-    @property
-    def exif(self) -> ExifData:
-        return extract_exif_data(self.exif_data)
-
-    def thumbnail(self, size='x150', **options) -> Thumbnail:
-        """Create thumb of image"""
-        try:
-            return thumbnail.get_thumbnail(self.original, size, **options)
-        except Exception:
-            logger.exception(f'Cannot create thumbnail for {self}')
-            return BrokenImage()
-
     def is_profile_image(self) -> bool:
         return self.category == ImageFile.PROFILE
 
@@ -404,42 +347,7 @@ class ImageFile(  # type: ignore
     def is_photo(self) -> bool:
         return self.category not in [ImageFile.DIAGRAM, ImageFile.ILLUSTRATION]
 
-    def build_thumbs(self) -> None:
-        """Make sure thumbs exists"""
-        if not self.original:
-            return
-        self.large
-        self.small
-        self.preview
-        logger.info(f'built thumbs {self}')
-
-    def add_exif_from_file(self, img=None) -> dict:
-        if img is None:
-            if self.pk:
-                src = self.small
-            else:
-                src = self.original
-            img = file_operations.pil_image(src)
-        try:
-            data = exif_to_json(img)
-        except Exception:
-            raise
-            data = {}
-
-        self.exif_data = data
-        if not self.description:
-            self.description = self.exif.description
-        if not self.copyright_information:
-            self.copyright_information = self.exif.copyright
-        if self.exif.datetime:
-            self.created = self.exif.datetime
-        return data
-
-    def delete_thumbnails(self, delete_file=False) -> None:
-        """Delete all thumbnails, optinally delete original too"""
-        thumbnail.delete(self.original, delete_file=delete_file)
-
-    def similar(self, field='imagehash', minutes=30) -> models.QuerySet:
+    def find_similar(self, field='imagehash', minutes=30) -> models.QuerySet:
         """Finds visually simular images using postgresql trigram search."""
         others = ImageFile.objects.exclude(pk=self.pk)
         if field == 'imagehash':
@@ -461,116 +369,49 @@ class ImageFile(  # type: ignore
         # TODO: is `save` needed here?
         merge_instances(self, *list(others)).save()
 
-    def reduce_image_filesize(self, img=None):
-        """Remove thumbnail exif, and resize large image."""
-        if img is None:
-            img = file_operations.pil_image(self.original)
-
-        resized = False
-        file_format = img.format or 'jpeg'
-        exif_bytes = prune_exif(img)
-
-        # resize large image
-        if any([
-            img.width > SIZE_LIMIT,
-            img.height > SIZE_LIMIT,
-            self.original.size > BYTE_LIMIT,
-        ]):
-            img.thumbnail(
-                size=(SIZE_LIMIT, SIZE_LIMIT),
-                resample=PIL.Image.LANCZOS,
-            )
-            resized = True
-
-        # rotate image
-        orientation = self.exif_data.get('Orientation', 1)
-        rotation = {1: 0, 3: 180, 6: 270, 8: 90}.get(orientation)
-        logger.debug(
-            f'orientation: {orientation}, rotation: {rotation} degrees.'
-        )
-        if rotation:
-            img = img.rotate(rotation, expand=True)
-            resized = True
-
-        if exif_bytes or resized:
-            blob = BytesIO()
-            img.save(blob, file_format, exif=exif_bytes, quality=80)
-            if self.pk is None:
-                self.original.file = ContentFile(blob.getvalue())
-            else:
-                self.stat.size = self.stat.md5 = None
-                self.delete_thumbnails()
-                self.original.save(self.filename, blob)
-        return img
-
-    def new_image(self):
-        """Check image file, compress if needed, and record metadata"""
-        img = file_operations.pil_image(self.original)
-        if not file_operations.valid_image(img):
-            raise ValueError('invalid image file')
-
-        img = file_operations.pil_image(self.original)
-
-        self.stat.mimetype = file_operations.get_mimetype(img)
-        self.add_exif_from_file(img)
-
-        img = self.reduce_image_filesize(img)
-        self.full_width = img.width
-        self.full_height = img.height
-
-    def rename_file(self):
+    def rename_file(self, filename=None, delete_old=False):
+        """Rename original"""
         self.delete_thumbnails()
         old_path = self.original.name
-        file = default_storage.open(old_path)
-        self.original.save(self.filename, file, save=False)
+        if filename:
+            self.stem = slugify_filename(filename).stem
+        fp = default_storage.open(old_path)
+        self.original.save(self.filename, fp, save=False)
+        if delete_old:
+            default_storage.delete(old_path)
 
     def save(self, *args, **kwargs):
-        self.stem = slugify_filename(
-            self.stem or Path(self.original.name).stem
-        )
-        try:
-            saved = self.__class__.objects.get(id=self.id)
-        except self.DoesNotExist:
-            saved = None
-        if not saved:
-            # make sure image has a id before saving original file
-            self.new_image()
-            original, width, height = (
-                self.original, self.full_width, self.full_height
-            )
-            self.original = None
-            self.full_width, self.full_height = width, height
-            super().save(*args, **kwargs)  # get id
-            # rest framework includes `force_insert=True`, but we only want to
-            # use this for the first save, since otherwise the db will complain
-            # since the image already has a pk, and this must be unique.
-            kwargs.pop('force_insert', '')
-            self.original = original
-            original.file.name = self.filename
-        else:
-            if not self.original:
-                raise RuntimeError('no valid original for image')
-            if self.original == saved.original and self.stem != saved.stem:
-                self.rename_file()
+        self.stem = slugify_filename(self.stem or self.original.name).stem
+        if not self.stat.mimetype and self.original:
+            self.stat.mimetype = mimetypes.guess_type(self.original.name)[0]
 
+        if ImageFile.objects.exclude(stem=self.stem).filter(id=self.id):
+            self.rename_file()
         super().save(*args, **kwargs)
-        self.build_thumbs()
+
+
+def async_image_upload(file):
+    pass
 
 
 @receiver(models.signals.post_save, sender=ImageFile)
-def imagefile_changed(sender, instance, raw, **kwargs):
+def update_related_models_modified(sender, instance, raw, **kwargs):
     """cache buster"""
+    # we only care if crop_box or category was changed
     nochange = sender.objects.filter(
         pk=instance.pk,
         category=instance.category,
         crop_box=instance.crop_box,
     )
-    if raw or nochange:
+    if raw or nochange or not instance.original:
+        # only update related models if cropping is modified
         return
 
-    assert instance.pk, 'image should have primary key post save'
     from apps.stories.models import Story
+    # stories
     Story.objects.filter(images__imagefile=instance
                          ).update(modified=instance.modified)
+    # story images
     instance.storyimage_set.update(modified=instance.modified)
+    # profile images
     instance.person.update(modified=instance.modified)

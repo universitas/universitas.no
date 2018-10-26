@@ -80,14 +80,17 @@ def scandal(db, news):
 def scandal_photo(db):
     """A typical news photo"""
     description = 'SCANDAL!!'
+    pk = 22
+    filename = f'scandal.{pk}.jpg'
     try:
         return ImageFile.objects.get(description=description)
     except ImageFile.DoesNotExist:
         pass
     source = Path(__file__).parent / 'fixtures' / 'dummy.jpg'
-    shutil.copy(source, Path('/var/media/scandal.jpg'))
+    shutil.copy(source, Path('/var/media/') / filename)
     yield ImageFile.objects.create(
-        id=22,
-        original='scandal.jpg',
+        id=pk,
+        original=filename,
+        stem='scandal',
         description=description,
     )

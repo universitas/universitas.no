@@ -2,8 +2,9 @@ import logging
 
 from apps.photo import tasks
 from django.conf import settings
-from django.db.models.signals import post_save, pre_delete
+from django.db import models
 from sorl.thumbnail.helpers import ThumbnailError
+from django.dispatch import receiver
 
 # from celery import chain
 # from apps.photo import tasks
@@ -11,15 +12,7 @@ from sorl.thumbnail.helpers import ThumbnailError
 logger = logging.getLogger(__name__)
 
 
-def image_pre_delete(sender, instance, **kwargs):
-    """Remove original image file and thumbnail"""
-    delete_file = settings.DEBUG  # not in production
-    try:
-        instance.delete_thumbnails(delete_file)
-    except ThumbnailError:
-        pass
-
-
+@receiver(models.signals.post_save, sender='photo.ImageFile')
 def image_post_save(sender, instance, created, update_fields, **kwargs):
     """Schedule autocropping and rebuild thumbnail"""
 
@@ -38,10 +31,16 @@ def image_post_save(sender, instance, created, update_fields, **kwargs):
     if instance.cropping_method == instance.CROP_PENDING:
         logger.debug('autocrop_signature %s' % instance)
         # chain two task signatures
-        (autocrop_signature | post_save_signature).apply_async()
+        (autocrop_signature | post_save_signature).apply_async(countdown=15)
     elif not update_fields:
-        post_save_signature.apply_async()
+        post_save_signature.apply_async(countdown=15)
 
 
-pre_delete.connect(image_pre_delete, sender='photo.ImageFile')
-post_save.connect(image_post_save, sender='photo.ImageFile')
+@receiver(models.signals.pre_delete, sender='photo.ImageFile')
+def image_pre_delete(sender, instance, **kwargs):
+    """Remove original image file and thumbnail"""
+    delete_file = settings.DEBUG  # not in production
+    try:
+        instance.delete_thumbnails(delete_file)
+    except ThumbnailError:
+        pass

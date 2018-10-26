@@ -16,17 +16,33 @@ from django.conf import settings
 from .cropping.boundingbox import CropBox
 from .cropping.crop_detector import Feature, HybridDetector
 from .models import ImageFile
+from PIL import Image
 
 logger = logging.getLogger(__name__)
 
 
-def determine_cropping_method(features: List[Feature]) -> int:
-    """Determines which cropping method label to use"""
-    if 'face' in features[-1].label:
-        if len(features) == 1:  # single face
-            return ImageFile.CROP_PORTRAIT
-        return ImageFile.CROP_FACES  # multiple faces
-    return ImageFile.CROP_FEATURES  # no faces
+@shared_task(ignore_result=True)
+def process_image_upload(pk: int, temporary_file: str) -> bool:
+    """Process uploaded files"""
+    try:
+        instance = ImageFile.objects.get(pk=pk)
+    except ImageFile.DoesNotExist:
+        logger.warning(f'ImageFile id: {pk} does not exist')
+        return False
+    if instance.original:
+        logger.warning(f'ImageFile {instance} has an original')
+        return False
+    imagefile = Path(temporary_file)
+    if not imagefile.exists():
+        msg = f'temporary image {imagefile} does not exist'
+        raise RuntimeError(msg)
+    instance.process_uploaded_file(Image.open(imagefile))
+    instance.small
+    instance.large
+    instance.calculate_hashes()
+    instance.save()
+    imagefile.unlink()  # clean up
+    return True
 
 
 @shared_task(ignore_result=True)
@@ -36,14 +52,14 @@ def autocrop_image_file(pk: int) -> bool:
     except ImageFile.DoesNotExist:
         return False
     if not instance.original:
-        logger.warn(f'Try to autocrop ImageFile with no file: {pk}')
+        logger.warning(f'Try to autocrop ImageFile with no file: {pk}')
         return False
-    imgdata = instance.large.read()  # should be at least 600 x 600 px
-    if instance.is_profile_image():
+    if instance.is_profile_image:
         detector = HybridDetector(n=1)
     else:
         detector = HybridDetector(n=10)
-    features = detector.detect_features(imgdata)
+    source_image = instance.large  # at least 600 x 600 pixels
+    features = detector.detect_features(source_image.read())
     if not features:
         crop_box = CropBox.basic()
         cropping_method = ImageFile.CROP_NONE
@@ -71,42 +87,16 @@ def post_save_task(pk: int) -> bool:
         return False
     instance.build_thumbs()
     instance.calculate_hashes()
-    # note: the last step re-saves the image.
-    # Should not trigger this task again.
     return True
 
 
-@periodic_task(run_every=timedelta(hours=24))
-def update_image_descriptions() -> int:
-    """Add descriptions to images that doesn't have it already"""
-
-    def add_description(image_file) -> str:
-        """Populates `description` with relevant content from related models"""
-        if image_file.is_profile_image():
-            if image_file.person.count():
-                return image_file.person.first().display_name
-            else:
-                return ''
-        else:
-            cap_list = image_file.storyimage_set.values_list(
-                'caption',
-                flat=True,
-            )
-            captions = [re.sub(r'/s+', ' ', c.strip()) for c in cap_list]
-            captions = list(set(captions))
-            return '\n'.join(captions)[:1000]
-
-    count = 0
-    qs = ImageFile.objects.filter(description='')
-    profile_images = qs.exclude(person=None)
-    story_images = qs.filter(storyimage__caption__regex='.')
-    for image_file in (profile_images | story_images):
-        description = add_description(image_file)
-        if image_file.description != description:
-            image_file.description = description
-            image_file.save(update_fields=['description'])
-            count += 1
-    return count
+def determine_cropping_method(features: List[Feature]) -> int:
+    """Determines which cropping method label to use"""
+    if 'face' in features[-1].label:
+        if len(features) == 1:  # single face
+            return ImageFile.CROP_PORTRAIT
+        return ImageFile.CROP_FACES  # multiple faces
+    return ImageFile.CROP_FEATURES  # no faces
 
 
 @periodic_task(run_every=timedelta(minutes=10))
@@ -125,18 +115,12 @@ def clean_up_pending_autocrop() -> int:
         try:
             autocrop_image_file(image_pk)
             post_save_task(image_pk)
-        except Exception as err:
+        except Exception:
             logger.exception(f'pending autocrop broke: {image_pk}')
             ImageFile.objects.filter(pk=image_pk).update(
                 cropping_method=ImageFile.CROP_NONE
             )
     return len(image_pks)
-
-
-@shared_task(ignore_result=True)
-def new_image_file(fp: BinaryIO, filename: str) -> ImageFile:
-    """New image file"""
-    return ImageFile()
 
 
 @shared_task(ignore_result=True)
