@@ -202,7 +202,7 @@ enable_service() {
 start_jupyter() {
   echo "starting jupyter on http://localhost:8888"
   ( sleep 12; sensible-browser http://localhost:8888 &> /dev/null)&
-  docker-compose run --rm --name jupyter -d -p 8888:8888 web jupyter
+  docker-compose run --rm --name jupyter -p 8888:8888 web jupyter
 }
 
 build_django() {

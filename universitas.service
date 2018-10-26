@@ -12,6 +12,6 @@ Restart=always
 ExecStart=/bin/bash -c "/srv/tassen/run prod dc up"
 ExecStop=/bin/bash -c "/srv/tassen/run prod dc down"
 ExecReload=/bin/bash -c \
-  "cd /srv/tassen/ &&  ./run prod build && ./run prod da collectstatic --clear --noinput && echo r > ./fifo/uwsgi" 
+  "cd /srv/tassen/ &&  ./run prod build && ./run prod da collectstatic --clear --noinput && echo r > ./fifo/uwsgi && ./run prod dc restart express" 
 [Install]
 WantedBy=multi-user.target
