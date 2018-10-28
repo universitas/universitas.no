@@ -26,7 +26,7 @@ export const getPlaces = R.pipe(getChildren, R.pluck('placement'), R.uniq)
 
 // :: linkNode -> {story} -> {inline_html_link}
 export const getLink = ({ name }) =>
-  R.pipe(R.prop('links'), R.find(R.propEq('name', name)))
+  R.pipe(R.propOr('links', []), R.find(R.propEq('name', name)))
 
 // :: {place} -> {story} -> [{storychild}]
 export const getPlaceChildren = ({ name }) =>

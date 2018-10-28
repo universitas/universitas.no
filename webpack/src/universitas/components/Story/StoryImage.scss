@@ -1,41 +1,43 @@
-@import "styles/_common.scss";
-.StoryImage {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  .imgWrapper {
-    flex: 1;
-    min-height: 0;
-    img {
-      width: 100%;
-      height: auto;
-      min-height: 20vh;
-      @include max-size(s) {
-        min-height: 40vh;
-      }
-      object-fit: cover;
-      &.autoCrop {
-        max-height: 85vh;
-      }
-      &.diagram {
-        object-fit: scale-down;
-      }
-      &.illustration {
-        // object-fit: scale-down;
+@import 'styles/_common.scss';
+.Story {
+  .StoryImage {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    .imgWrapper {
+      flex: 1;
+      min-height: 0;
+      img {
+        width: 100%;
+        height: auto;
+        min-height: 20vh;
+        @include max-size(s) {
+          min-height: 40vh;
+        }
+        object-fit: cover;
+        &.autoCrop {
+          max-height: 85vh;
+        }
+        &.diagram {
+          object-fit: scale-down;
+        }
+        &.illustration {
+          // object-fit: scale-down;
+        }
       }
     }
-  }
-  .Caption {
-    @extend %smaller;
-    margin: 0.2em 0;
-    background: white;
-    .stikk {
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-    .creditline {
-      float: right;
-      text-transform: uppercase;
+    .Caption {
+      @extend %smaller;
+      margin: 0.2em 0;
+      background: white;
+      .stikk {
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      .creditline {
+        float: right;
+        text-transform: uppercase;
+      }
     }
   }
 }

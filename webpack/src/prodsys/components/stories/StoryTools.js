@@ -12,6 +12,7 @@ const StoryTools = ({
   closeStory,
   imagesDetail,
   textDetail,
+  previewDetail,
   edit_url,
   public_url,
   action,
@@ -22,6 +23,7 @@ const StoryTools = ({
   <DetailTopBar title={title || working_title || '(ingen tittel)'} pk={pk}>
     <Tool icon="Close" title="lukk saken" onClick={closeStory} />
     <Tool icon="Add" title="kopier saken" onClick={cloneStory} />
+    <Tool icon="Eye" title="forhåndsvisning" onClick={previewDetail} />
     <Tool
       icon="Camera"
       active={action == 'images'}
@@ -51,6 +53,8 @@ const mapDispatchToProps = (dispatch, { pk }) => ({
     dispatch(toRoute({ model: MODEL, action: 'images', pk: pk })),
   textDetail: () =>
     dispatch(toRoute({ model: MODEL, action: 'change', pk: pk })),
+  previewDetail: () =>
+    dispatch(toRoute({ model: MODEL, action: 'preview', pk: pk })),
   cloneStory: () => dispatch(actions.itemCloned(pk)),
 })
 

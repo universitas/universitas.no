@@ -1,6 +1,7 @@
 export StoryDetail from './StoryDetail.js'
 export StoryDetailText from './StoryDetailText.js'
 export StoryDetailImages from './StoryDetailImages.js'
+export StoryDetailPreview from './StoryDetailPreview.js'
 export StoryList from './StoryList.js'
 export StoryTable from './StoryTable.js'
 export StoryTools from './StoryTools.js'

@@ -1,7 +1,12 @@
 import { connect } from 'react-redux'
 import cx from 'classnames'
 import { modelSelectors } from 'ducks/basemodel'
-import { StoryTools, StoryDetailImages, StoryDetailText } from '.'
+import {
+  StoryTools,
+  StoryDetailImages,
+  StoryDetailText,
+  StoryDetailPreview,
+} from '.'
 import { selectors } from './model.js'
 import { getRoutePayload } from 'prodsys/ducks/router'
 import Debug from 'components/Debug'
@@ -9,6 +14,7 @@ import Debug from 'components/Debug'
 const DetailPane = ({ pk, action, images }) => {
   if (action == 'change') return <StoryDetailText pk={pk} />
   if (action == 'images') return <StoryDetailImages pk={pk} images={images} />
+  if (action == 'preview') return <StoryDetailPreview pk={pk} />
   return <div>action??: {action}</div>
 }
 
