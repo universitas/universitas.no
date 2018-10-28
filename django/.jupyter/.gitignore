@@ -1,0 +1,6 @@
+*
+!.gitignore
+!config.py
+!kernels/
+!kernels/*
+!kernels/**/*

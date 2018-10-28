@@ -71,7 +71,7 @@ class AutoCropImage(models.Model):
             ).url
         except Exception as e:
             msg = 'Thumbnail failed: {} {}'.format(e, self.original)
-            logger.warn(msg)
+            logger.warning(msg)
             return self.original
 
     def autocrop(self):

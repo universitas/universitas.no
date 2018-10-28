@@ -42,57 +42,23 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
         ]
         read_only_fields = [
             'original',
+            'artist',
         ]
 
     contributor = serializers.PrimaryKeyRelatedField(
         queryset=Contributor.objects.all(),
         allow_null=True,
     )
-    artist = serializers.CharField(allow_blank=True)
     width = serializers.IntegerField(source='full_width')
     height = serializers.IntegerField(source='full_height')
-    mimetype = serializers.SerializerMethodField()
-    method = serializers.SerializerMethodField()
     usage = serializers.IntegerField(read_only=True)
     crop_box = CropBoxField()
     original = AbsoluteURLField()
     small = AbsoluteURLField()
     large = AbsoluteURLField()
     thumb = AbsoluteURLField()
-
-    def find_artist(self, validated_data):
-        """Assign artist to contributor if able."""
-        # this is slightly hacky ....
-        logger.info(str(validated_data))
-        artist = validated_data.pop('artist', '?')
-        if artist != '?':
-            if validated_data.get('category') != ImageFile.EXTERNAL:
-                contributor = Contributor.objects.search(artist, 0.2).first()
-            else:
-                contributor = None
-            validated_data['contributor'] = contributor
-            if contributor is None:
-                validated_data['copyright_information'] = artist
-                if artist:
-                    validated_data['category'] = ImageFile.EXTERNAL
-
-        logger.info(str(validated_data))
-
-    def create(self, validated_data):
-        self.find_artist(validated_data)
-        return super().create(validated_data)
-
-    def update(self, instance, validated_data):
-        category = validated_data.get('category')
-        artist = validated_data.get('artist')
-
-        if not category:
-            validated_data['category'] = instance.category
-        elif category != instance.category and not artist:
-            validated_data['artist'] = instance.artist
-
-        self.find_artist(validated_data)
-        return super().update(instance, validated_data)
+    mimetype = serializers.SerializerMethodField()
+    method = serializers.SerializerMethodField()
 
     def get_method(self, instance):
         return instance.get_cropping_method_display()

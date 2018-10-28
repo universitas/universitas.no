@@ -15,10 +15,10 @@ class AbsoluteURLField(serializers.Field):
         super().__init__(*args, **kwargs)
 
     def to_representation(self, value):
-        if hasattr(value, 'url'):
-            value = value.url
         if not value:
             return None
+        if hasattr(value, 'url'):
+            value = value.url
         request = self.context.get('request', None)
         if request is not None:
             return str(request.build_absolute_uri(value))

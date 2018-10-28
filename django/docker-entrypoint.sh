@@ -16,7 +16,7 @@ case $1 in
     run "django-admin makemigrations && django-admin migrate"
     ;;
   jupyter)
-    run "django-admin shell_plus --notebook"
+    run "JUPYTER_DATA_DIR=/app/.jupyter jupyter lab --config='/app/.jupyter/config.py'"
     ;;
   django-admin)
     /app/wait-for-it.sh -q postgres:5432

@@ -32,31 +32,6 @@ class FuzzyNameSearchMixin:
     """Mixin for Contributor with some long and hacky methods for fuzzy finding
     byline photo image files and for connecting possibly misspelled bylines"""
 
-    @staticmethod
-    def find_image_file(name):
-        slugify = Slugify()
-        imagefiles = glob.glob(
-            os.path.join(settings.BYLINE_PHOTO_DIR, '*.jpg')
-        )
-        name_last_first = re.sub(r'^(.*) (\S+)$', r'\2 \1', name)
-        name_slug_title = slugify(name) + '.jpg'
-        name_slug = name_slug_title.lower()
-        name_slug_reverse = slugify(name_last_first).lower() + '.jpg'
-        best_ratio = 90
-        best_match = None
-        for path in imagefiles:
-            filename = os.path.split(path)[1].lower()
-            ratio = max(
-                fuzz.ratio(filename, name_slug),
-                fuzz.ratio(filename, name_slug_reverse)
-            )
-            if ratio > best_ratio:
-                best_match = path
-                best_ratio = ratio
-                if ratio == 100:
-                    break
-        return name_slug_title, best_match
-
     @classmethod
     def get_or_create(cls, input_name, initials=''):
         """
