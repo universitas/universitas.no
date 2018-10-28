@@ -6,6 +6,7 @@ env = Environment(strict=False)
 
 MEDIA_ROOT = env.MEDIA_DIR or '/var/media/'
 STATIC_ROOT = env.STATIC_DIR or '/var/static/'
+STAGING_ROOT = env.STAGING_DIR or '/var/staging/'
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 
