@@ -5,12 +5,10 @@ import DetailTopBar from 'components/DetailTopBar'
 import { pushPhoto } from 'ducks/storyimage'
 import { selectors, actions, MODEL } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
-
-const openUrl = url => () => window.open(url)
+import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
 
 const PhotoTools = ({
   autocrop,
-  close,
   pushPhoto,
   openAdmin,
   filename,
@@ -18,8 +16,7 @@ const PhotoTools = ({
   toggleCrop,
   pk,
 }) => (
-  <DetailTopBar title={filename} pk={pk}>
-    <Tool icon="Close" title="lukk bildet" onClick={close} />
+  <React.Fragment>
     <Tool
       active={action == 'crop'}
       icon="Crop"
@@ -27,8 +24,8 @@ const PhotoTools = ({
       onClick={() => toggleCrop(action == 'crop' ? null : 'crop')}
     />
     <Tool icon="Download" title="last opp til desken" onClick={pushPhoto} />
-    <Tool icon="Tune" title="rediger i django-admin" onClick={openAdmin} />
-  </DetailTopBar>
+    <OpenInDjangoAdmin pk={pk} path="photo/imagefile" />
+  </React.Fragment>
 )
 
 const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
@@ -43,8 +40,6 @@ const mapDispatchToProps = (dispatch, { pk, action }) => ({
       }),
     ),
   pushPhoto: () => dispatch(pushPhoto(pk)),
-  close: () => dispatch(toRoute({ model: MODEL })),
-  openAdmin: openUrl(`/admin/photo/imagefile/${pk}/change/`),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PhotoTools)

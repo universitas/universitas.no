@@ -1,11 +1,17 @@
-@import "globals";
+@import 'globals';
 
 .DetailPanel {
-  border-left: 1px solid #777;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
   height: 100vh;
+  display: flex;
+  flex-flow: column nowrap;
+  .panelContent {
+    flex: 1;
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 0.2rem;
+    overflow-y: auto;
+  }
+  border-left: 1px solid #777;
   .DetailTopBar {
     @extend %horizontal-bar;
     .title,
@@ -48,16 +54,6 @@
         flex-basis: 100%;
       }
     }
-  }
-  .panelContent {
-    flex: 1;
-    display: flex;
-    flex-flow: column nowrap;
-    // flex-direction: column;
-    height: 100vh;
-    //background-color: #eee;
-    padding: 0.2rem;
-    overflow-y: auto;
   }
   .label {
     min-width: 7em;

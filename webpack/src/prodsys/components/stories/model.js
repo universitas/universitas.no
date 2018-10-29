@@ -21,6 +21,10 @@ export const fields = {
     type: 'select',
     options: [
       {
+        label: 'Skisse',
+        options: [{ value: 0, label: 'Skisse' }],
+      },
+      {
         label: 'Prod',
         options: [
           { value: 3, label: 'Journalist' },
@@ -44,12 +48,8 @@ export const fields = {
         ],
       },
       {
-        label: 'Etc',
-        options: [
-          { value: 0, label: 'Skisse' },
-          { value: 100, label: 'Mal' },
-          { value: 15, label: 'Slettet' },
-        ],
+        label: 'Mal',
+        options: [{ value: 100, label: 'Mal' }],
       },
     ],
   },

@@ -3,13 +3,13 @@ import { Tool } from 'components/tool'
 import DetailTopBar from 'components/DetailTopBar'
 import { MODEL, actions, selectors } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
+import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
 
 const openUrl = url => () => window.open(url)
 
 const StoryTools = ({
   trashStory,
   cloneStory,
-  closeStory,
   imagesDetail,
   textDetail,
   previewDetail,
@@ -20,8 +20,7 @@ const StoryTools = ({
   title,
   working_title,
 }) => (
-  <DetailTopBar title={title || working_title || '(ingen tittel)'} pk={pk}>
-    <Tool icon="Close" title="lukk saken" onClick={closeStory} />
+  <React.Fragment>
     <Tool icon="Add" title="kopier saken" onClick={cloneStory} />
     <Tool icon="Eye" title="forhåndsvisning" onClick={previewDetail} />
     <Tool
@@ -32,15 +31,12 @@ const StoryTools = ({
     />
     <Tool
       icon="Newspaper"
-      title={`se saken på universitas.no\n${public_url}`}
-      onClick={openUrl(public_url)}
+      title={public_url && `se saken på universitas.no\n${public_url}`}
+      onClick={public_url && openUrl(public_url)}
+      disabled={!public_url}
     />
-    <Tool
-      icon="Tune"
-      title="rediger i django-admin"
-      onClick={openUrl(edit_url)}
-    />
-  </DetailTopBar>
+    <OpenInDjangoAdmin pk={pk} path="stories/story" />
+  </React.Fragment>
 )
 
 const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
@@ -48,7 +44,6 @@ const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
 const mapDispatchToProps = (dispatch, { pk }) => ({
   trashStory: () =>
     dispatch(actions.fieldChanged(pk, 'publication_status', 15)),
-  closeStory: () => dispatch(toRoute({ model: MODEL, action: 'list' })),
   imagesDetail: () =>
     dispatch(toRoute({ model: MODEL, action: 'images', pk: pk })),
   textDetail: () =>

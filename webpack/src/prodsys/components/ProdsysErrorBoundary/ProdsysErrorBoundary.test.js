@@ -1,13 +1,13 @@
-import RavenBoundary from './index'
+import ProdsysErrorBoundary from './index'
 import renderer from 'react-test-renderer'
 
-describe('RavenBoundary', () => {
+describe('ProdsysErrorBoundary', () => {
   test('renders correctly', () => {
     const tree = renderer
       .create(
-        <RavenBoundary>
+        <ProdsysErrorBoundary>
           <div>hello</div>
-        </RavenBoundary>,
+        </ProdsysErrorBoundary>,
       )
       .toJSON()
     expect(tree).toEqual(expect.any(Object))

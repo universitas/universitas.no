@@ -33,7 +33,7 @@ class RavenBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     this.setState({ error })
-    // Raven.captureException(error, { extra: errorInfo })
+    Raven.captureException(error, { extra: errorInfo })
   }
 
   render() {
