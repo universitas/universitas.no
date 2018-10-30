@@ -5,6 +5,7 @@ const OpenInDjangoAdmin = ({ path, pk, ...props }) => {
     <Tool
       icon="Tune"
       title="rediger i django-admin"
+      label="admin"
       onClick={() => window.open(url)}
       {...props}
     />

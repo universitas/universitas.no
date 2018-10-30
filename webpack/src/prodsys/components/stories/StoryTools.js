@@ -21,17 +21,24 @@ const StoryTools = ({
   working_title,
 }) => (
   <React.Fragment>
-    <Tool icon="Add" title="kopier saken" onClick={cloneStory} />
-    <Tool icon="Eye" title="forhåndsvisning" onClick={previewDetail} />
+    <Tool icon="Add" label="kopier" title="kopier saken" onClick={cloneStory} />
+    <Tool
+      icon="Eye"
+      label="vis"
+      title="forhåndsvisning"
+      onClick={previewDetail}
+    />
     <Tool
       icon="Camera"
       active={action == 'images'}
       title="bilder"
+      label="bilder"
       onClick={action == 'images' ? textDetail : imagesDetail}
     />
     <Tool
       icon="Newspaper"
       title={public_url && `se saken på universitas.no\n${public_url}`}
+      label="åpne"
       onClick={public_url && openUrl(public_url)}
       disabled={!public_url}
     />

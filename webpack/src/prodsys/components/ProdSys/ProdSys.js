@@ -84,7 +84,7 @@ const ModelTools = connect(getRoutePayload)(({ pk, model, action }) => {
   const Tools = tools[model] || (() => null)
 
   return (
-    <section className="SideBar">
+    <section className="ToolBar column medium">
       <Tools pk={pk} action={action} />
     </section>
   )
