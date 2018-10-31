@@ -43,7 +43,7 @@ const FrontpageDetail = ({ pk }) => (
           <StyleButtons pk={pk} />
           <GridWidget pk={pk} />
         </div>
-        <Field pk={pk} name="image_id" editable />
+        <Field key={pk} pk={pk} name="image_id" editable />
         <CropBox pk={pk} />
       </React.Fragment>
     ) : (

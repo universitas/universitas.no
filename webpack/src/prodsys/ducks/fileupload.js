@@ -24,9 +24,9 @@ export const uploadAdd = data => ({
   payload: { pk: data.md5, ...data },
 })
 
-export const uploadUpdate = (pk, data, single = true, verify = true) => ({
+export const uploadUpdate = (pk, data, verify = true) => ({
   type: UPDATE,
-  payload: { pk, single, verify, ...data },
+  payload: { pk, verify, ...data },
 })
 
 export const changeDuplicate = (pk, id, choice) => ({
@@ -134,14 +134,16 @@ const getReducer = ({ type, payload = {}, error }) => {
     case ADD:
       return R.set(itemLens(pk), R.mergeDeepRight(baseItemState, data))
     case UPDATE: {
-      const { single, verify, ...change } = data
+      const { verify, ...change } = data
       const updateItem = R.pipe(
         R.mergeDeepLeft(change),
         verify ? checkStatus : R.identity,
       )
-      return single
-        ? overItem(updateItem)
-        : R.over(itemsLens, R.map(updateItem))
+      return R.ifElse(
+        R.view(updateAllLens),
+        R.over(itemsLens, R.map(updateItem)),
+        overItem(updateItem),
+      )
     }
     case TOGGLE_UPDATE_ALL:
       return R.over(updateAllLens, R.not)

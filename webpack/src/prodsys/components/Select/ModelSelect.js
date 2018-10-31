@@ -9,17 +9,26 @@ const specFilter = R.ifElse(
   R.pipe(R.toPairs, R.map(R.apply(R.propEq)), R.allPass, R.filter),
 )
 
-const mapStateToProps = (state, { model, filter, value }) => {
-  const { getItems, getFetching } = modelSelectors(model)
+// memoize key for selector
+const keyFn = (filter, model, items) =>
+  JSON.stringify({ filter, model, items: Object.keys(items).length })
+
+const reshapeItems = R.memoizeWith(keyFn, (filter, model, data) => {
   const { reshape = R.identity, reshapeOptions = R.identity } =
     models[model] || {}
-
-  const items = R.map(reshape, getItems(state))
+  const items = R.map(reshape, data)
   const options = R.pipe(R.values, specFilter(filter), reshapeOptions)(items)
+  return { items, options }
+})
+
+const mapStateToProps = (state, { model, filter, value }) => {
+  const { getItems, getFetching } = modelSelectors(model)
   const fetching = getFetching(state)
+  const { items, options } = reshapeItems(filter, model, getItems(state))
   const item = R.propOr(null, value, items)
   return { item, items, options, fetching }
 }
+
 const mapDispatchToProps = (dispatch, { model }) => {
   const { itemsRequested, itemRequested, itemCreated } = modelActions(model)
   return {

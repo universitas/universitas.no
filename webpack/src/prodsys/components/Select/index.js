@@ -2,6 +2,7 @@ import Select from './Select.js'
 import ModelSelect from './ModelSelect.js'
 import './Select.scss'
 export { Select, ModelSelect }
+
 export default props =>
   props.model ? (
     <ModelSelect {...props} />
