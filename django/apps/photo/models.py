@@ -6,10 +6,6 @@ import re
 from pathlib import Path
 from statistics import median
 
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl.thumbnail import ImageField
-
 from apps.contributors.models import Contributor
 from apps.photo import file_operations
 from django.contrib.postgres.fields import JSONField
@@ -22,14 +18,17 @@ from django.db.models.expressions import RawSQL
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl.thumbnail import ImageField
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
 from .cropping.models import AutoCropImage
 # from .exif import ExifData, extract_exif_data
 from .imagehash import ImageHashModelMixin
-from .thumbimage import ThumbImageFile
 from .preprocess import ProcessImage
+from .thumbimage import ThumbImageFile
 
 logger = logging.getLogger(__name__)
 
@@ -328,8 +327,12 @@ class ImageFile(  # type: ignore
     @property
     def suffix(self) -> str:
         """Image file suffix"""
+        ext = '.jpg'
         if self.stat.mimetype:
-            ext = mimetypes.guess_extension(self.stat.mimetype)
+            ext = mimetypes.guess_extension(
+                self.stat.mimetype,
+                strict=False,
+            ) or ext
         elif self.original:
             ext = Path(self.original.name).suffix
         return ext.lower().replace('jpe', 'jpg')

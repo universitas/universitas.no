@@ -57,8 +57,10 @@ class ContributorQuerySet(models.QuerySet):
             result = queryset.filter(display_name__unaccent__icontains=query)
         return result
 
-    def active(self):
-        active = Stint.objects.active().values_list('contributor', flat=True)
+    def active(self, when=None):
+        active = Stint.objects.active(when).values_list(
+            'contributor', flat=True
+        )
         return self.filter(pk__in=active)
 
     def management(self):
