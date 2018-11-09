@@ -26,7 +26,7 @@ export const getPlaces = R.pipe(getChildren, R.pluck('placement'), R.uniq)
 
 // :: linkNode -> {story} -> {inline_html_link}
 export const getLink = ({ name }) =>
-  R.pipe(R.prop('links'), R.find(R.propEq('name', name)))
+  R.pipe(R.propOr([], 'links'), R.find(R.propEq('name', name)))
 
 // :: {place} -> {story} -> [{storychild}]
 export const getPlaceChildren = ({ name }) =>
@@ -66,7 +66,7 @@ export const buildNodeTree = story => {
           break
         case 'blockTag':
           switch (props.tag) {
-            case 'fakta':
+            case 'facts':
               props.type = 'place'
               props.children = [{ type: 'aside', children }]
               break
@@ -99,7 +99,9 @@ export const buildNodeTree = story => {
     }),
   )
 
-  const parseTree = parseText(story.bodytext_markup)
+  const parseTree = R.pipe(R.replace(/^@sit:/gm, '@sitat:'), parseText)(
+    story.bodytext_markup,
+  )
   const nodeTree = walk(parseTree)
 
   return {

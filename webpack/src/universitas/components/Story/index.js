@@ -15,6 +15,21 @@ import PageNotFound from 'components/PageNotFound'
 import Debug from 'components/Debug'
 import './Story.scss'
 
+// Story preview for prodsys
+export const StoryPreview = props => {
+  if (R.isNil(props.title)) return '...'
+  const tree = buildNodeTree(props)
+  return (
+    <article className={cx('Story', 'Preview')} style={{ padding: '1rem' }}>
+      <StoryHead {...tree} />
+      <main className="mainContent">
+        <StorySidebar {...tree} />
+        <StoryBody {...tree} />
+      </main>
+    </article>
+  )
+}
+
 class Story extends React.Component {
   constructor(props) {
     super(props)

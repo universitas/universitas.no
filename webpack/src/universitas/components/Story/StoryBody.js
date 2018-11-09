@@ -19,7 +19,12 @@ const QuoteCit = ({ children, props }) => (
     {children}
   </div>
 )
-const Aside = props => <aside className="Facts" {...props} />
+const Aside = ({ children, ...props }) => (
+  <aside className="Facts" {...props}>
+    {children}
+  </aside>
+)
+
 const Emphasis = props => <em {...props} />
 
 const Place = ({ name, flags, children, ...props }) => {
@@ -109,7 +114,13 @@ const renderNodes = R.addIndex(R.map)((node, idx) => {
       )
     } else return null
   }
-  const { children = [], ...props } = node
+  let { children = [], ...props } = node
+  if (node.type == 'aside' && R.pathEq([0, 'type'], 'paragraph')(children)) {
+    children = R.pipe(
+      R.assocPath([0, 'type'], 'blockTag'),
+      R.assocPath([0, 'tag'], 'faktatit'),
+    )(children)
+  }
   const { tag, type } = props
   const Component = tag ? tagMap[tag] : typeMap[type]
   return Component ? (

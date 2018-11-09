@@ -3,7 +3,9 @@ import { hyphenate, formatDate } from 'utils/text'
 const datelineFormat = R.pipe(formatDate, R.replace(/^(...)\S+/, '$1'))
 
 const DateLine = ({ publication_date }) => (
-  <div className="DateLine">{datelineFormat(publication_date)}</div>
+  <div className="DateLine">
+    {datelineFormat(publication_date || new Date())}
+  </div>
 )
 
 const creditDisplay = credit =>
@@ -20,10 +22,14 @@ const creditDisplay = credit =>
     'photo and video': 'Foto og video',
   }[credit] || credit)
 
-const StoryInfo = ({ theme_word, story_type }) => (
+const StoryInfo = ({
+  theme_word,
+  story_type,
+  story_type_name = story_type.name,
+}) => (
   <div className="StoryInfo">
-    <div className="storytype">{story_type.name}</div>
-    <div className="themeword">{hyphenate(theme_word)}</div>
+    <div className="storytype">{story_type_name || '[sakstype]'}</div>
+    <div className="themeword">{hyphenate(theme_word) || '[tema]'}</div>
   </div>
 )
 

@@ -8,10 +8,10 @@ import { makeFuzzer } from 'utils/text'
 export const TAGS = [
   'txt',
   'tingo',
+  // 'sitat',
   'mt',
   'bl',
   'ing',
-  'sitat',
   'sitatbyline',
   'tit',
   'tema',
@@ -99,7 +99,7 @@ const baseRules = {
       const space = R.contains(tag, ['mt', 'spm', 'tingo']) ? '\n' : ''
       return `${space}@${tag}: ${content}`
     },
-    process: R.evolve({ tag: makeFuzzer(TAGS, 0.7) }), // fuzzy match
+    process: R.evolve({ tag: makeFuzzer(TAGS, 0.5) }), // fuzzy match
   },
   listItem: {
     // renders to html list
@@ -111,15 +111,16 @@ const baseRules = {
     // default paragraph block for body text
     pattern: /^.*$/,
     order: 100,
+    // reverse: ({ content }) => `    ${content}`,
   },
-  facts: {
+  aside: {
     // aside
     pattern: /^@fakta:\s?((\n?.+)+)$/,
     order: 1,
     reverse: ({ content }) => `\n@fakta: ${content}\n`,
   },
   pullquote: {
-    pattern: /^@sitat:\s?((\n?.+)+)$/,
+    pattern: /^@sitat:\s?((.+\n?)+)$/,
     order: 1,
     reverse: ({ content }) => `\n@sitat: ${content}\n`,
   },

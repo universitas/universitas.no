@@ -79,7 +79,6 @@ export const modelFuncs = action => {
 }
 
 function* routeSaga(action) {
-  console.log(action)
   const { model, pk } = action.payload
   const { getItemList } = modelSelectors(model)
   const { itemRequested, itemsRequested } = modelActions(model)

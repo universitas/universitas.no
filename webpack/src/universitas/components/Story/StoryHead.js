@@ -15,9 +15,14 @@ const Kicker = ifChildren(props => <h3 className="Kicker" {...props} />)
 const Lede = ifChildren(props => <p className="Lede" {...props} />)
 
 const StoryHead = ({ title, kicker, lede, images }) => {
-  const headImages = R.filter(R.propEq('placement', 'head'), images)
+  const headImages = R.pipe(
+    R.filter(R.propEq('placement', 'head')),
+    R.sort(R.ascend(R.prop('ordering'))),
+  )(images)
+
+  // const autoCrop = false
   const autoCrop = headImages.length
-    ? headImages[0]['aspect_ratio'] == 0
+    ? headImages[0]['aspect_ratio'] === 0
     : false
 
   return (

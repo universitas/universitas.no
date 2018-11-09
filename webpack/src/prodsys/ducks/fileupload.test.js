@@ -66,14 +66,14 @@ test('upload multiple items', () => {
 test('update items', () => {
   const state = R.reduce(reducer, undefined, R.map(uploadAdd, fixtures))
   const change = { description: 'caption A' }
-  const updateAction = uploadUpdate('aaa', change, false, false)
+  const updateAction = uploadUpdate('aaa', change, false)
   expect(updateAction.payload).toMatchObject({
     ...change,
     pk: 'aaa',
-    single: false,
     verify: false,
   })
-  let newState = reducer(state, updateAction)
+  let newState = reducer(state, toggleUpdateAll())
+  newState = reducer(newState, updateAction)
 
   // both A and B were updated
   expect(getUpload('aaa')(newState)).toMatchObject({

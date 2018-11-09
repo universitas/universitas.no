@@ -39,6 +39,8 @@ class StoryImageSerializer(serializers.ModelSerializer):
             'imagefile',
             'caption',
             'creditline',
+            'aspect_ratio',
+            'cropped',
         ]
 
 

@@ -65,7 +65,8 @@ function* newUploadSaga(action) {
       console.error(e)
     }
   }
-  if (!contributor) contributor = yield select(getUser).contributor
+  const user = yield select(getUser)
+  if (!contributor) contributor = user.contributor
   if (contributor) {
     yield put(
       uploadUpdate(md5, { contributor: apiUrlToId(contributor), check: false }),

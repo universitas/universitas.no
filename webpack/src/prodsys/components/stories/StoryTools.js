@@ -3,42 +3,58 @@ import { Tool } from 'components/tool'
 import DetailTopBar from 'components/DetailTopBar'
 import { MODEL, actions, selectors } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
+import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
+import { parseText, renderText } from 'markup'
 
 const openUrl = url => () => window.open(url)
 
 const StoryTools = ({
   trashStory,
   cloneStory,
-  closeStory,
   imagesDetail,
   textDetail,
+  previewDetail,
   edit_url,
   public_url,
   action,
   pk,
   title,
   working_title,
+  bodytext_markup,
+  fixStory,
 }) => (
-  <DetailTopBar title={title || working_title || '(ingen tittel)'} pk={pk}>
-    <Tool icon="Close" title="lukk saken" onClick={closeStory} />
-    <Tool icon="Add" title="kopier saken" onClick={cloneStory} />
+  <React.Fragment>
+    <Tool icon="Add" label="kopier" title="kopier saken" onClick={cloneStory} />
     <Tool
       icon="Camera"
       active={action == 'images'}
-      title="bilder"
+      label="bilder"
+      title="koble bilder til saken"
       onClick={action == 'images' ? textDetail : imagesDetail}
     />
     <Tool
       icon="Newspaper"
-      title={`se saken på universitas.no\n${public_url}`}
-      onClick={openUrl(public_url)}
+      label="åpne"
+      title={public_url && `se saken på universitas.no\n${public_url}`}
+      onClick={public_url && openUrl(public_url)}
+      disabled={!public_url}
     />
     <Tool
-      icon="Tune"
-      title="rediger i django-admin"
-      onClick={openUrl(edit_url)}
+      icon="Eye"
+      active={action == 'preview'}
+      label="vis"
+      title="forhåndsvisning"
+      disabled={!pk}
+      onClick={action == 'preview' ? textDetail : previewDetail}
     />
-  </DetailTopBar>
+    <Tool
+      icon="Magic"
+      label="fiks"
+      title="fiks tags"
+      onClick={() => fixStory(bodytext_markup)}
+    />
+    <OpenInDjangoAdmin pk={pk} path="stories/story" />
+  </React.Fragment>
 )
 
 const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
@@ -46,12 +62,17 @@ const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
 const mapDispatchToProps = (dispatch, { pk }) => ({
   trashStory: () =>
     dispatch(actions.fieldChanged(pk, 'publication_status', 15)),
-  closeStory: () => dispatch(toRoute({ model: MODEL, action: 'list' })),
   imagesDetail: () =>
     dispatch(toRoute({ model: MODEL, action: 'images', pk: pk })),
   textDetail: () =>
     dispatch(toRoute({ model: MODEL, action: 'change', pk: pk })),
+  previewDetail: () =>
+    dispatch(toRoute({ model: MODEL, action: 'preview', pk: pk })),
   cloneStory: () => dispatch(actions.itemCloned(pk)),
+  fixStory: text =>
+    dispatch(
+      actions.fieldChanged(pk, 'bodytext_markup', renderText(parseText(text))),
+    ),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(StoryTools)

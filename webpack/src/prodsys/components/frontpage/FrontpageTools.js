@@ -3,25 +3,24 @@ import DetailTopBar from 'components/DetailTopBar'
 import { Tool } from 'components/tool'
 import { MODEL, selectors } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
-
-const openUrl = url => () => window.open(url)
+import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
 
 const ToolBar = props => <div {...props} />
 
-const FrontpageTools = ({ pk, headline, close, openAdmin }) => (
-  <DetailTopBar title={`${headline}`} pk={pk}>
-    <Tool icon="Newspaper" title={'forsiden'} onClick={openUrl('/')} />
-    <Tool icon="Tune" title="rediger i django-admin" onClick={openAdmin} />
-  </DetailTopBar>
+const FrontpageTools = ({ pk }) => (
+  <React.Fragment>
+    <Tool
+      icon="Newspaper"
+      title={'forsiden'}
+      label="forsiden"
+      onClick={() => window.open('/')}
+    />
+    <OpenInDjangoAdmin pk={pk} path="frontpage/frontpagestory" />
+  </React.Fragment>
 )
 
 const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
 
-const mapDispatchToProps = (dispatch, { pk }) => ({
-  close: () => dispatch(toRoute({ model: MODEL })),
-  openAdmin: openUrl(
-    `/admin/frontpage/frontpagestory/${pk ? pk + '/change/' : ''}`,
-  ),
-})
+const mapDispatchToProps = (dispatch, { pk }) => ({})
 
 export default connect(mapStateToProps, mapDispatchToProps)(FrontpageTools)

@@ -1,9 +1,13 @@
+import logging
 import re
 from urllib import parse
 
+from requests.exceptions import ConnectionError
 from requests_html import HTMLSession
 
 from utils.decorators import cache_memoize
+
+logger = logging.getLogger(__name__)
 
 FIVE_MINUTES = 5 * 60
 
@@ -11,7 +15,12 @@ FIVE_MINUTES = 5 * 60
 @cache_memoize(FIVE_MINUTES)
 def fetch_ads(url='http://tankeogteknikk.no/qmedia/oslo.php'):
     """Crawl tankeogteknikk web site and fetch current ads"""
-    r = HTMLSession().get(url)
+    try:
+        r = HTMLSession().get(url)
+    except ConnectionError:
+        logger.exception('failed to fetch ads')
+        return []
+
     r.raise_for_status()  # raise exception if 404 or other non ok http status
     subs = r.html.find('table.sub')
     ads = [_parse_sub_advert(sub) for sub in subs]

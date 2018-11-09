@@ -2,19 +2,30 @@
   display: flex;
   align-self: stretch;
   font-size: 1.5em;
-  &.flexrow {
+  background-color: #666;
+  &.row {
     flex-direction: row;
     .Tool {
       border-right-width: 1px;
     }
   }
-  &.flexcolumn {
+  &.column {
     flex-direction: column;
     .Tool {
       border-bottom: 1px;
     }
   }
+  &.small {
+    font-size: 1.5em;
+  }
+  &.medium {
+    font-size: 2em;
+  }
+  &.large {
+    font-size: 2.5em;
+  }
 }
+
 $bwhite: rgba(white, 0.1);
 $bblack: rgba(black, 0.2);
 

@@ -9,7 +9,11 @@ export const without = R.useWith(R.without, [R.of])
 // Add or remove item from list
 // :: a -> [a] -> [a]
 export const arrayToggle = R.pipe(
-  R.ifElse(R.contains, without, union),
+  R.cond([
+    [R.is(Array), R.symmetricDifference],
+    [R.contains, without],
+    [R.T, union],
+  ]),
   R.sort(R.gt),
 )
 
@@ -25,7 +29,7 @@ export const objectToggle = R.ifElse(
 // :: k -> v -> {k: [v]|v} -> {k: [v]|v}
 export const combinedToggle = R.curry(
   R.ifElse(
-    (key, val, object) => R.equals('Array', R.type(R.prop(key, object))),
+    (key, val, object) => R.is(Array, R.prop(key, object)),
     (key, val, object) =>
       R.assoc(key, arrayToggle(val, R.prop(key, object)), object),
     objectToggle,
