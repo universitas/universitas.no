@@ -13,9 +13,10 @@ import { getRoutePayload } from 'prodsys/ducks/router'
 import Debug from 'components/Debug'
 
 const DetailPane = ({ pk, action, images }) => {
-  if (action == 'change') return <StoryDetailText pk={pk} />
+  if (action == 'change' || action == 'preview')
+    return <StoryDetailText pk={pk} />
   if (action == 'images') return <StoryDetailImages pk={pk} images={images} />
-  if (action == 'preview') return <StoryDetailPreview pk={pk} />
+  // if (action == 'preview') return <StoryDetailPreview pk={pk} />
   return <div>action??: {action}</div>
 }
 

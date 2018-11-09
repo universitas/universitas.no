@@ -66,7 +66,7 @@ export const buildNodeTree = story => {
           break
         case 'blockTag':
           switch (props.tag) {
-            case 'fakta':
+            case 'facts':
               props.type = 'place'
               props.children = [{ type: 'aside', children }]
               break
@@ -99,7 +99,9 @@ export const buildNodeTree = story => {
     }),
   )
 
-  const parseTree = parseText(story.bodytext_markup)
+  const parseTree = R.pipe(R.replace(/^@sit:/gm, '@sitat:'), parseText)(
+    story.bodytext_markup,
+  )
   const nodeTree = walk(parseTree)
 
   return {

@@ -6,6 +6,7 @@ import storyimageSaga from 'prodsys/sagas/storyimageSaga'
 import { modelActions } from 'prodsys/ducks/basemodel'
 import authSaga from 'common/sagas/authSaga'
 import { requestUser, REQUEST_USER_SUCCESS } from 'common/ducks/auth'
+import { apiUrlToId } from 'utils/urls'
 
 function* rootSaga() {
   yield all([
@@ -24,7 +25,8 @@ function* fetchMoreSaga() {
 }
 
 function* fetchContributor({ payload }) {
-  const action = modelActions('contributors').itemRequested(payload.contributor)
+  const contributor = apiUrlToId(payload.contributor)
+  const action = modelActions('contributors').itemRequested(contributor)
   yield put(action)
 }
 

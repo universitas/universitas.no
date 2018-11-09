@@ -33,19 +33,19 @@ const ListPane = connect(getRoutePayload)(({ pk, model, action }) => {
     contributors: ContributorList,
     frontpage: FrontpageList,
   }
-  if (model == 'stories' && action == 'images')
-    return (
-      <Pane key={model}>
-        <StoryList action={action} />
-        <PhotoList action={action} />
-      </Pane>
-    )
+  // if (model == 'stories' && action == 'images')
+  //   return (
+  //     <Pane key={model}>
+  //       <StoryList action={action} />
+  //       <PhotoList action={action} />
+  //     </Pane>
+  //   )
 
   const List = list[model] || (() => `list: ${model}`)
 
   return (
     <Pane key={model}>
-      <List action={action} />
+      <List pk={pk} action={action} />
     </Pane>
   )
 })

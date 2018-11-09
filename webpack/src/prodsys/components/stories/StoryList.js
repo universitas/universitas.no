@@ -1,7 +1,8 @@
 import cx from 'classnames'
 import { Clear } from 'components/Icons'
 import ListPanel from 'components/ListPanel'
-import { StoryTable } from '.'
+import { StoryTable, StoryDetailPreview } from '.'
+import { PhotoList } from 'components/photos'
 import { MODEL, fields } from './model.js'
 
 const filters = R.pipe(
@@ -23,7 +24,22 @@ const filters = R.pipe(
   }),
 )(fields)
 
-const StoryList = ({}) => {
+const StoryList = ({ action, pk }) => {
+  if (pk && action == 'images')
+    return (
+      <React.Fragment>
+        <ListPanel model={MODEL} filters={filters}>
+          <StoryTable />
+        </ListPanel>
+        <PhotoList action={action} />
+      </React.Fragment>
+    )
+  if (pk && action == 'preview')
+    return (
+      <section className="ListPanel">
+        <StoryDetailPreview pk={pk} />{' '}
+      </section>
+    )
   return (
     <ListPanel model={MODEL} filters={filters}>
       <StoryTable />

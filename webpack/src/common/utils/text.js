@@ -60,6 +60,7 @@ export const cleanText = R.pipe(
   R.replace(/(^|[.:?!] +)[-–] ?\b/gmu, `$1–${WORDJOINER}${NBRS}`),
   R.replace(/\r/g, ''), // no carriage returns
   R.replace(/\n{3,}/g, '\n\n'), // multi newlines
+  R.replace(/ {2,}/g, ' '), // multi spaces
 )
 
 // :: * -> string

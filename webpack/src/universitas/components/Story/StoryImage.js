@@ -1,4 +1,5 @@
 import './StoryImage.scss'
+import fallbackImage from 'common/images/placeholder.svg'
 import { inlineText } from 'markup/render'
 
 const Caption = ({ caption = '', creditline = '' }) => {
@@ -21,7 +22,7 @@ const imageStyle = ({ category, crop_box: { x = 0.5, y = 0.5 } }) => ({
 const Image = ({
   id,
   cropped,
-  large,
+  large = fallbackImage,
   aspect_ratio,
   caption,
   crop_box = {},

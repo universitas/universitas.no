@@ -36,7 +36,7 @@ class StoryImage extends React.Component {
     const { pk, id, ...props } = this.props
     if (!id) return <div className="StoryImage">Henter bilde</div>
     return (
-      <div className="StoryImage">
+      <div className="StoryImageItem">
         <StoryImageActions {...props} />
         <PhotoWidget pk={props.imagefile} />
         <StoryImageForm pk={pk} />

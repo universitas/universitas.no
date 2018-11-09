@@ -20,11 +20,17 @@ const cases = {
   ],
   'quote split': [
     '@sitat: Hello\n\n@sitatbyline: World',
-    [{ type: 'pullquote', children: ['Hello'] }, { type: 'blockTag' }],
+    [
+      {
+        type: 'pullquote',
+        children: [{ type: 'paragraph', children: ['Hello'] }],
+      },
+      { type: 'blockTag' },
+    ],
   ],
   faktaboks: [
     '@fakta: her er fakta\n# foo1\n# foo2\n\n@mt: mellomtittel',
-    [{ type: 'facts', children: [{}, {}, {}] }, { tag: 'mt' }],
+    [{ type: 'aside', children: [{}, {}, {}] }, { tag: 'mt' }],
   ],
   place: ['[[ faktaboks 1 ]]', [{ type: 'place', name: 'faktaboks 1' }]],
   link: ['[hi]', [{ children: [{ children: ['hi'], name: 'hi' }] }]],
