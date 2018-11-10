@@ -81,7 +81,7 @@ def get_dims(pdf_page):
     return (width, height)
 
 
-def pdf_to_image(pdf, page=1, size=800, file_format='jpeg'):
+def pdf_to_image(pdf, page=1, size=800, file_format='jpeg', quality=80):
     """Creates a image file from pdf file"""
     try:
         pdf.open()
@@ -109,8 +109,9 @@ def pdf_to_image(pdf, page=1, size=800, file_format='jpeg'):
         format='pdf',
         resolution=int(1.6 * 72 * scaleby),
     )
-    # fix problem with colorspace
-    # foreground.type = 'truecolormatte'
+    # make sure the color space is correct.
+    # this prevents an occational bug where rgb colours are inverted
+    foreground.type = 'truecolormatte'
     foreground.resize(*dims, 25)
     # white background
     background = WandImage(
@@ -120,6 +121,7 @@ def pdf_to_image(pdf, page=1, size=800, file_format='jpeg'):
     )
     background.format = file_format
     background.composite(foreground, 0, 0)
+    background.compression_quality = quality
     return background
 
 
