@@ -1,19 +1,29 @@
 import cx from 'classnames'
 import { Field, MODEL } from './model.js'
 
-const StoryDetailText = ({ pk, storytypechoices }) => {
-  return (
-    <div className="panelContent">
-      <div className="wrapForm">
-        <Field pk={pk} name="working_title" editable />
-        <Field pk={pk} name="story_type" editable />
-        <Field pk={pk} name="publication_status" editable />
-        <Field pk={pk} name="created" />
-        <Field pk={pk} name="modified" />
-      </div>
-      <Field pk={pk} name="bodytext_markup" editable />
-    </div>
-  )
-}
+const WebFields = ({ pk }) => (
+  <div className="wrapForm">
+    <Field pk={pk} name="kicker" editable />
+    <Field pk={pk} name="theme_word" editable />
+    <Field pk={pk} name="title" fullwidth editable />
+    <Field pk={pk} name="lede" fullwidth editable />
+  </div>
+)
+const ProdFields = ({ pk }) => (
+  <div className="wrapForm">
+    <Field pk={pk} name="working_title" fullwidth editable />
+    <Field pk={pk} name="story_type" editable />
+    <Field pk={pk} name="publication_status" editable />
+    <Field pk={pk} name="created" />
+    <Field pk={pk} name="modified" />
+  </div>
+)
+
+const StoryDetailText = ({ pk }) => (
+  <div className="panelContent">
+    <ProdFields pk={pk} />
+    <Field pk={pk} name="bodytext_markup" editable />
+  </div>
+)
 
 export default StoryDetailText

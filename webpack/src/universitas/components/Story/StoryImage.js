@@ -2,10 +2,11 @@ import './StoryImage.scss'
 import fallbackImage from 'common/images/placeholder.svg'
 import { inlineText } from 'markup/render'
 
-const Caption = ({ caption = '', creditline = '' }) => {
+export const Caption = ({ children, creditline = '' }) => {
+  const caption = children
   if (!(caption || creditline)) return null
-  const match = R.match(/^([^:.\n]*:)(.*)$/, caption) || [, '', caption]
-  const [, intro, body] = match
+  const match = R.match(/^([^:.\n]*[:!?])(.*)$/, caption)
+  const [, intro, body = caption] = match
   return (
     <div className="Caption">
       {intro && <span className="stikk">{inlineText(intro)} </span>}
@@ -39,10 +40,14 @@ const Image = ({
     </div>
   ) : null
 
-const StoryImage = props => (
+const StoryImage = ({
+  caption = 'caption: some text',
+  creditline = 'credit',
+  ...props
+}) => (
   <div className="StoryImage">
-    <Image {...props} />
-    <Caption {...props} />
+    <Image caption={caption} {...props} />
+    <Caption creditline={creditline}>{caption}</Caption>
   </div>
 )
 

@@ -1,4 +1,5 @@
 import { hyphenate, formatDate } from 'utils/text'
+import anonymous from 'images/anonymous.png'
 
 const datelineFormat = R.pipe(formatDate, R.replace(/^(...)\S+/, '$1'))
 
@@ -29,7 +30,7 @@ const StoryInfo = ({
 }) => (
   <div className="StoryInfo">
     <div className="storytype">{story_type_name || '[sakstype]'}</div>
-    <div className="themeword">{hyphenate(theme_word) || '[tema]'}</div>
+    <div className="themeword">{hyphenate(theme_word) || '[temaord]'}</div>
   </div>
 )
 
@@ -46,7 +47,8 @@ const Bylines = ({ bylines }) =>
   R.pipe(
     R.sortBy(R.prop('ordering')),
     R.uniqBy(R.pick(['contributor', 'credit'])),
-    R.map(props => <Byline key={props.id} {...props} />),
+    R.map(R.when(R.propEq('thumb', '?'), R.assoc('thumb', anonymous))),
+    R.addIndex(R.map)((props, idx) => <Byline key={idx} {...props} />),
   )(bylines)
 
 const StorySidebar = ({ bylines = [], ...props }) => (

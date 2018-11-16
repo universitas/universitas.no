@@ -109,21 +109,20 @@ $externallink: 'data:image/svg+xml,' +
     display: flex;
     flex-direction: column;
     .mainImage {
-      // min-height: 0;
+      min-height: 0;
       flex: 1 1;
+      display: flex;
       .imgWrapper {
         flex: 1;
         background-color: #dddfe9;
+        display: flex;
       }
       img {
+        flex: 1;
         min-height: 0;
       }
       &.autoCrop {
         flex: 1 1 675px;
-        display: flex;
-        img {
-          height: 100%;
-        }
       }
     }
     margin-bottom: 0.8rem;

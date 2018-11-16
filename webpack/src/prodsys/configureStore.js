@@ -14,7 +14,10 @@ const configureStore = (initialState = {}, initialEntries = []) => {
     initialEntries,
   })
   const sagaMiddleware = createSagaMiddleware({
-    onError: Raven.captureException,
+    onError:
+      process.env.NODE_ENV == 'production'
+        ? Raven.captureException
+        : console.error,
   })
   const middlewares = compose(
     router.enhancer,

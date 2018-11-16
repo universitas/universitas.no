@@ -11,6 +11,7 @@ from apps.photo import file_operations
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.files.storage import default_storage
+from django.core.serializers.json import DjangoJSONEncoder
 from django.core.validators import FileExtensionValidator
 from django.db import connection, models
 from django.db.models.expressions import RawSQL
@@ -294,6 +295,7 @@ class ImageFile(  # type: ignore
         max_length=1000,
     )
     exif_data = JSONField(
+        encoder=DjangoJSONEncoder,
         verbose_name=_('exif_data'),
         help_text=_('exif_data'),
         default=dict,

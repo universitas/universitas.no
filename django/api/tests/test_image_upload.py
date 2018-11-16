@@ -1,6 +1,5 @@
-from rest_framework import status
-
 from apps.photo.models import ImageFile
+from rest_framework import status
 from utils.testhelpers import dummy_image
 
 api_path = '/api/upload/'
@@ -30,7 +29,6 @@ def test_upload_image(staff_client, writer):
         'filename',
         'original',
         'description',
-        'artist',
         'category',
         'created',
         'contributor',

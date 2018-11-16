@@ -26,6 +26,7 @@ const {
   itemsDiscarded: photosDiscarded,
   itemRequested: photoRequested,
   itemsAppended: photosAppended,
+  itemAdded: photoAdded,
 } = modelActions('photos')
 const { itemAdded: contributorAdded } = modelActions('contributors')
 
@@ -72,7 +73,7 @@ function* newUploadSaga(action) {
       uploadUpdate(md5, { contributor: apiUrlToId(contributor), check: false }),
     )
   }
-  const { response, error } = yield call(fetchDupes, { md5, fingerprint })
+  const { response, error } = yield call(fetchDupes, { fingerprint })
   if (response) {
     const duplicates = R.pipe(
       R.prop('results'),
@@ -89,7 +90,15 @@ function* newUploadSaga(action) {
 function* postUploadSaga(action) {
   const { pk } = action.payload
   const upload = yield select(getUpload(pk))
-  const { objectURL, description, contributor, category, story } = upload
+  const {
+    objectURL,
+    description,
+    contributor,
+    category,
+    story,
+    width,
+    height,
+  } = upload
   const duplicates = R.pipe(
     R.filter(R.propEq('choice', 'replace')),
     R.pluck('id'),
@@ -106,11 +115,22 @@ function* postUploadSaga(action) {
   const { response, error } = yield call(apiPost, 'upload', formBody)
   if (response) {
     const { id } = response
+    const photo = {
+      id,
+      description,
+      contributor,
+      category,
+      small: objectURL,
+      large: objectURL,
+      width,
+      height,
+    }
     yield put(uploadPostSuccess(pk, response))
     yield put(photosDiscarded(...duplicates))
-    yield put(photoRequested(id))
+    yield put(photoAdded(photo))
+    yield call(delay, 10000) // wait for image to process
+    yield put(photoRequested(id, true))
     if (story) {
-      yield call(delay, 5000) // wait 5s for image data to return from server.
       yield put(assignPhoto(id, parseInt(story)))
     }
   } else {

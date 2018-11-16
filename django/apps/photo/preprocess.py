@@ -1,12 +1,19 @@
+import logging
+import shutil
+import tempfile
 from io import BytesIO
-from django.db import models
-from .exif import serialize_exif, get_metadata, sanitize_image_exif
 from pathlib import Path
+
 import PIL
+
+from django.conf import settings
+from django.db import models
+
+from .exif import get_metadata, sanitize_image_exif, serialize_exif
 
 SIZE_LIMIT = 4_000  # Maximum width or height of uploads
 BYTE_LIMIT = 3_000_000  # Maximum filesize of upload or compress
-TASK_DELAY = 5  # Delay further image processing for N seconds
+TASK_DELAY = 0  # Delay further image processing for N seconds
 IMAGE_QUALITY = 80  # Pillow image quality
 
 
@@ -17,23 +24,31 @@ class ProcessImage(models.Model):
     class Meta:
         abstract = True
 
-    def __save___(self, *args, **kwargs):
+    def save(self, *args, **kwargs):
         """Check image file, compress if needed, and record metadata"""
         try:
             # is image local temporary uploaded file
-            temp_file = self.original.temporary_file_path()
-        except AttributeError:
-            super().__save__(*args, **kwargs)
+            temp_file = Path(self.original.file.temporary_file_path())
+        except (AttributeError, ValueError):
+            super().save(*args, **kwargs)
         else:
             # save original as None, and create a queued task
+
+            assert temp_file.exists(), 'file should exist'
+
+            new_temp = tempfile.NamedTemporaryFile(
+                dir=settings.FILE_UPLOAD_TEMP_DIR,
+                prefix='persisted.',
+                delete=False,
+            ).name
+            shutil.copy(temp_file, new_temp)
             self.original = None
-            super().__save__(*args, **kwargs)
+            self.dimensions = 100, 100
+            super().save(*args, **kwargs)
             # queue further processing avoid web server delays
             from .tasks import process_image_upload
-            process_image_upload.apply_async(
-                args=[self.pk, temp_file],
-                countdown=TASK_DELAY,
-            )
+            task = process_image_upload.si(self.pk, new_temp)
+            task.apply_async(countdown=TASK_DELAY)
 
     def process_uploaded_file(self, pim):
         file_format = pim.format

@@ -88,7 +88,7 @@ class ImageFileViewSet(viewsets.ModelViewSet):
         search_parameters = {
             key: val
             for key, val in self.request.query_params.items()
-            if key in {'md5', 'fingerprint', 'imagehash', 'id'}
+            if key in {'fingerprint', 'imagehash', 'id'}
         }
         if search_parameters:
             qs = ImageFile.objects.search(**search_parameters)

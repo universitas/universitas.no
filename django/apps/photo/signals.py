@@ -3,8 +3,8 @@ import logging
 from apps.photo import tasks
 from django.conf import settings
 from django.db import models
-from sorl.thumbnail.helpers import ThumbnailError
 from django.dispatch import receiver
+from sorl.thumbnail.helpers import ThumbnailError
 
 # from celery import chain
 # from apps.photo import tasks
@@ -31,7 +31,7 @@ def image_post_save(sender, instance, created, update_fields, **kwargs):
     if instance.cropping_method == instance.CROP_PENDING:
         logger.debug('autocrop_signature %s' % instance)
         # chain two task signatures
-        (autocrop_signature | post_save_signature).apply_async(countdown=15)
+        (autocrop_signature | post_save_signature).apply_async(countdown=0)
     elif not update_fields:
         post_save_signature.apply_async(countdown=15)
 

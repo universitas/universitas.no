@@ -39,11 +39,13 @@ export {
   MdAccessTime as Time,
   MdTransform as Transform,
   MdTune as Tune,
+  MdBurstMode as Images,
 } from 'react-icons/md'
 
 export {
   FaHeading as Heading,
   FaExclamationTriangle as Fallback,
   FaMagic as Magic,
+  FaImage as Image,
   FaQuestionCircle as Question,
 } from 'react-icons/fa'

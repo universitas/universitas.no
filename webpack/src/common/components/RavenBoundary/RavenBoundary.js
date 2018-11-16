@@ -15,20 +15,16 @@ const ravenTranslate = {
   successMessage: 'Tilbakemeldingen er sendt. Takk skal du ha!',
 }
 
-const DebugBoundary = ({ error }) => (
-  <div className="DebugBoundary">
-    {`${error}`}
-    {`${process.env}`}
-  </div>
+const TraceBack = ({ error }) => (
+  <pre
+    style={{ whiteSpace: 'pre-wrap', fontSize: '12px' }}
+    className="TraceBack"
+  >{`${error.stack}`}</pre>
 )
 
-const reportError = () =>
-  Raven.lastEventId() && Raven.showReportDialog(ravenTranslate)
-
 class RavenBoundary extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { error: null }
+  state = {
+    production: process.env.NODE_ENV === 'production',
   }
 
   componentDidCatch(error, errorInfo) {
@@ -38,15 +34,26 @@ class RavenBoundary extends React.Component {
 
   render() {
     if (this.state.error) {
+      const ravenEvent = Raven.lastEventId()
+      const reportDialog = () => Raven.showReportDialog(ravenTranslate)
       return (
-        <div className="RavenBoundary" onClick={null}>
+        <div className="RavenBoundary">
           <h1>Søren, heller!</h1>
-          <p>Noe gikk galt</p>
-          <p>
-            Feilen har blitt logget, men du kan også klikke her for å legge inn
-            en manuell feilmelding
-            <DebugBoundary error={this.state.error} />
-          </p>
+          {this.production ? (
+            <p>Noe gikk galt</p>
+          ) : (
+            <TraceBack error={this.state.error} />
+          )}
+          {ravenEvent && (
+            <p>
+              Feilen har blitt logget, men du kan også klikke "send melding" for
+              å legge inn en manuell feilmelding
+              <button onClick={reportDialog}>send melding</button>
+            </p>
+          )}
+          <button onClick={() => this.setState({ error: null })}>
+            prøv igjen
+          </button>
         </div>
       )
     } else {

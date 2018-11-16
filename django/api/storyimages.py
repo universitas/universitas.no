@@ -12,7 +12,10 @@ class StoryImageSerializer(serializers.ModelSerializer):
     )
 
     thumb = AbsoluteURLField(source='imagefile.large.url')
-    aspect_ratio = serializers.CharField(required=False)
+    cropped = AbsoluteURLField(read_only=True)
+    aspect_ratio = serializers.DecimalField(
+        required=False, max_digits=5, decimal_places=4
+    )
 
     class Meta:
         model = StoryImage
@@ -24,6 +27,7 @@ class StoryImageSerializer(serializers.ModelSerializer):
             'imagefile',
             'creditline',
             'thumb',
+            'cropped',
             'filename',
             'ordering',
             'placement',

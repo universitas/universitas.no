@@ -22,7 +22,7 @@ const StoryHead = ({ title, kicker, lede, images }) => {
 
   // const autoCrop = false
   const autoCrop = headImages.length
-    ? headImages[0]['aspect_ratio'] === 0
+    ? parseFloat(headImages[0]['aspect_ratio']) === 0
     : false
 
   return (

@@ -5,7 +5,7 @@ class FeedImage extends React.Component {
     super(props)
     const { moduleSize = [1, 1] } = props
     this.state = {
-      aspect: global.SERVER_SIDE && moduleSize[0] / moduleSize[1],
+      aspect: moduleSize[0] / moduleSize[1],
     }
     this.refHandler = node => (this.node = node)
     this.updateSize = () => {

@@ -26,18 +26,11 @@ const StoryTools = ({
   <React.Fragment>
     <Tool icon="Add" label="kopier" title="kopier saken" onClick={cloneStory} />
     <Tool
-      icon="Camera"
+      icon="Images"
       active={action == 'images'}
       label="bilder"
       title="koble bilder til saken"
       onClick={action == 'images' ? textDetail : imagesDetail}
-    />
-    <Tool
-      icon="Newspaper"
-      label="åpne"
-      title={public_url && `se saken på universitas.no\n${public_url}`}
-      onClick={public_url && openUrl(public_url)}
-      disabled={!public_url}
     />
     <Tool
       icon="Eye"
@@ -52,6 +45,13 @@ const StoryTools = ({
       label="fiks"
       title="fiks tags"
       onClick={() => fixStory(bodytext_markup)}
+    />
+    <Tool
+      icon="Newspaper"
+      label="åpne"
+      title={public_url && `se saken på universitas.no\n${public_url}`}
+      onClick={public_url && openUrl(public_url)}
+      disabled={!public_url}
     />
     <OpenInDjangoAdmin pk={pk} path="stories/story" />
   </React.Fragment>

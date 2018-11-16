@@ -7,9 +7,9 @@ import ReactDOM from 'react-dom'
 import stylesheet from '!css-loader!sass-loader!universitas/styles/universitas.scss'
 
 const getPhoto = modelSelectors('photos').getItem
+const getStoryImage = modelSelectors('storyimages').getItem
 
 const inheritStyles = (sourceDoc, targetDoc) => {
-  console.log(sourceDoc, targetDoc)
   for (const node of sourceDoc.head.children) {
     if (node.tagName == 'LINK' || node.tagName == 'STYLE')
       targetDoc.head.appendChild(node.cloneNode(true))
@@ -57,6 +57,7 @@ const mapStateToProps = (state, { pk }) => {
     images = story.images.map(image => ({
       ...image,
       ...getPhoto(image.imagefile)(state),
+      ...getStoryImage(image.id)(state),
     }))
   }
   return { ...story, images }

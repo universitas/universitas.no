@@ -53,14 +53,20 @@ export const makeFuzzer = (candidates, cutoff = 0.5) => {
 export const cleanText = R.pipe(
   R.replace(/“/g, '«'), // left curly quote
   R.replace(/”/g, '»'), // right curly quote
-  R.replace(/\b'\b/g, APOSTROPHE), // ascii apostrophe
-  R.replace(/\u0092/g, APOSTROPHE), // win 1251 encoding
+  R.replace(/\u0092/g, "'"), // win 1251 encoding
   R.replace(/\B"(.*?)"\B/gu, '«$1»'), // straight quotes
   R.replace(/--/g, '–'), // en-dash
-  R.replace(/(^|[.:?!] +)[-–] ?\b/gmu, `$1–${WORDJOINER}${NBRS}`),
+  R.replace(/(^|[.:?!] +)[-–] *\b/gm, `$1– `),
   R.replace(/\r/g, ''), // no carriage returns
   R.replace(/\n{3,}/g, '\n\n'), // multi newlines
-  R.replace(/ {2,}/g, ' '), // multi spaces
+  R.replace(WORDJOINER, ''),
+  R.replace(/ +/g, ' '), // multi spaces
+)
+
+export const specialCharacters = R.pipe(
+  R.replace(/\b'\b/g, APOSTROPHE), // ascii apostrophe
+  R.replace(/(^|[.:?!] +)[-–] ?\b/gm, `$1–${WORDJOINER}${NBRS}`),
+  R.replace(/~/g, SOFTHYPHEN),
 )
 
 // :: * -> string

@@ -19,7 +19,7 @@ export default function* rootSaga() {
 
 const setUserContext = ({ pk, email, contributor_name }) => {
   const user = { id: pk, name: contributor_name, email }
-  Raven.setUserContext(user)
+  if (process.env.NODE_ENV == 'production') Raven.setUserContext(user)
 }
 
 function* logInSaga(action) {

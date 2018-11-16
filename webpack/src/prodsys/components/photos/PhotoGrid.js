@@ -15,7 +15,7 @@ const FullThumbWithCropBox = ({ src, title, width, height, crop_box }) => {
   const { left, x, right, top, y, bottom } = crop_box
   const boxPath = `M0, 0H1V1H0Z M${left}, ${top}V${bottom}H${right}V${top}Z`
   return (
-    <svg className="Thumb" viewBox={`0 0 ${width} ${height}`}>
+    <svg viewBox={`0 0 ${width} ${height}`}>
       <image xlinkHref={src} width="100%" height="100%" />
       <svg
         viewBox="0 0 1 1"

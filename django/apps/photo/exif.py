@@ -2,9 +2,9 @@
 import base64
 import logging
 import string
+from collections import namedtuple
 from datetime import datetime
 from typing import Any, Union
-from collections import namedtuple
 
 import PIL.ExifTags
 from PIL.Image import Image
@@ -49,13 +49,13 @@ def prune_exif(exif_dict: dict, maxbytes=1000) -> dict:
         for subkey, value in list(subsection.items()):
             try:
                 if len(value) > maxbytes:
-                    logger.debug(f'deleting key: {key}/{subkey}\n{value}')
                     del subsection[subkey]
             except TypeError:
                 pass
         for subkey in sorted(subsection, reverse=True):
             try:
-                piexif.dump({key: subsection})
+                data = {"Exif": {}, **{key: subsection}}
+                piexif.dump(data)
                 # subsection seems valid
                 break
             except ValueError:

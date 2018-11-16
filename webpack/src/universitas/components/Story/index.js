@@ -20,7 +20,10 @@ export const StoryPreview = props => {
   if (R.isNil(props.title)) return '...'
   const tree = buildNodeTree(props)
   return (
-    <article className={cx('Story', 'Preview')} style={{ padding: '1rem' }}>
+    <article
+      className={cx('Story', 'Preview')}
+      style={{ display: 'grid', padding: '1rem' }}
+    >
       <StoryHead {...tree} />
       <main className="mainContent">
         <StorySidebar {...tree} />
