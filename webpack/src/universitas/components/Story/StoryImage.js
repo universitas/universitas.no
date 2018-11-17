@@ -3,7 +3,11 @@ import fallbackImage from 'common/images/placeholder.svg'
 import { inlineText } from 'markup/render'
 
 export const Caption = ({ children, creditline = '' }) => {
-  const caption = children
+  const caption = R.cond([
+    [R.is(String), R.identity],
+    [R.is(Array), R.head],
+    [R.T, R.toString],
+  ])(children)
   if (!(caption || creditline)) return null
   const match = R.match(/^([^:.\n]*[:!?])(.*)$/, caption)
   const [, intro, body = caption] = match
@@ -40,11 +44,7 @@ const Image = ({
     </div>
   ) : null
 
-const StoryImage = ({
-  caption = 'caption: some text',
-  creditline = 'credit',
-  ...props
-}) => (
+const StoryImage = ({ caption, creditline, ...props }) => (
   <div className="StoryImage">
     <Image caption={caption} {...props} />
     <Caption creditline={creditline}>{caption}</Caption>
