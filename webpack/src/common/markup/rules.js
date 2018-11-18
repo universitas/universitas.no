@@ -108,7 +108,7 @@ const baseRules = {
   },
   comment: {
     // inline comment is only uppercase characters
-    pattern: /^[^\na-zøæå]+$/,
+    pattern: /^[^\na-zøæå]{10,}$/,
     order: 99,
     reverse: ({ content }) => `\n${content}\n`,
   },

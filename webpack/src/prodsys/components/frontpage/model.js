@@ -7,7 +7,7 @@ export const selectors = modelSelectors(MODEL)
 
 export const fields = {
   id: { label: 'ID', type: 'integer' },
-  image_id: { label: 'foto', type: 'select', to: 'photos' },
+  image_id: { label: 'foto', type: 'select', to: 'photos', required: false },
   crop_box: { label: 'beskjæring', type: 'cropbox' },
   section: { label: 'seksjon', type: 'integer' },
   language: { label: 'språk', type: 'field' },

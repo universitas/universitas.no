@@ -1,12 +1,12 @@
-@import "globals";
-@import "reset";
-@import "sidebar";
-@import "modal";
-@import "listpanel";
-@import "detailpanel";
-@import "gridview";
-@import "errors";
-@import "storylist";
+@import 'globals';
+@import 'reset';
+@import 'sidebar';
+@import 'modal';
+@import 'listpanel';
+@import 'detailpanel';
+@import 'gridview';
+@import 'errors';
+@import 'storylist';
 
 body {
   overflow-y: auto !important;
@@ -47,7 +47,7 @@ body {
   }
   .todate {
     &:before {
-      content: "\0000a0–\0000a0";
+      content: '\0000a0–\0000a0';
     }
   }
 }
@@ -67,7 +67,7 @@ body {
   background: $bordercolor;
   padding: 1px;
   display: grid;
-  grid-template-columns: 2rem 1fr 1fr auto;
+  grid-template-columns: auto 1fr 1fr auto;
   grid-gap: 1px 1px;
   /* prettier-ignore */
   grid-template-areas: 

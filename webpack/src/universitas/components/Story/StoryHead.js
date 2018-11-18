@@ -14,7 +14,7 @@ const Headline = ifChildren(props => <h1 className="Headline" {...props} />)
 const Kicker = ifChildren(props => <h3 className="Kicker" {...props} />)
 const Lede = ifChildren(props => <p className="Lede" {...props} />)
 
-const StoryHead = ({ title, kicker, lede, images }) => {
+const StoryHead = ({ title, kicker, lede, images = [] }) => {
   const headImages = R.pipe(
     R.filter(R.propEq('placement', 'head')),
     R.sort(R.ascend(R.prop('ordering'))),
@@ -26,7 +26,7 @@ const StoryHead = ({ title, kicker, lede, images }) => {
     : false
 
   return (
-    <header className={cx('StoryHead')}>
+    <header className={cx('StoryHead', { noImage: headImages.length == 0 })}>
       {headImages.length ? (
         <div className={cx('mainImage', { autoCrop })}>
           <SlideShow>
@@ -37,7 +37,7 @@ const StoryHead = ({ title, kicker, lede, images }) => {
         </div>
       ) : null}
       <Kicker>{kicker}</Kicker>
-      <Headline>{hyphenate(title)}</Headline>
+      <Headline>{hyphenate(title) || '(ingen tittel)'}</Headline>
       <Lede>{lede}</Lede>
     </header>
   )

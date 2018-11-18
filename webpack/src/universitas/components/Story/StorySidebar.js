@@ -29,8 +29,8 @@ const StoryInfo = ({
   story_type_name = story_type.name,
 }) => (
   <div className="StoryInfo">
-    <div className="storytype">{story_type_name || '[sakstype]'}</div>
-    <div className="themeword">{hyphenate(theme_word) || '[temaord]'}</div>
+    <div className="storytype">{story_type_name}</div>
+    <div className="themeword">{hyphenate(theme_word)}</div>
   </div>
 )
 

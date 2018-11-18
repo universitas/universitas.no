@@ -15,10 +15,21 @@ import PageNotFound from 'components/PageNotFound'
 import Debug from 'components/Debug'
 import './Story.scss'
 
+const defaultMerge = a => b => {
+  const update = {}
+  for (const key of Object.keys(a)) {
+    if (!b[key]) update[key] = a[key]
+  }
+  return { ...b, ...update }
+}
+
 // Story preview for prodsys
 export const StoryPreview = props => {
   if (R.isNil(props.title)) return '...'
-  const tree = buildNodeTree(props)
+  const defaults = defaultMerge({
+    theme_word: '(Temaord)',
+  })
+  const tree = buildNodeTree(defaults(props))
   return (
     <article
       className={cx('Story', 'Preview')}

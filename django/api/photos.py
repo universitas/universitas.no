@@ -28,7 +28,7 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
             'contributor',
             'small',
             'large',
-            'thumb',
+            # 'thumb',
             'original',
             'width',
             'height',
@@ -56,7 +56,7 @@ class ImageFileSerializer(serializers.HyperlinkedModelSerializer):
     original = AbsoluteURLField()
     small = AbsoluteURLField()
     large = AbsoluteURLField()
-    thumb = AbsoluteURLField()
+    # thumb = AbsoluteURLField()
     mimetype = serializers.SerializerMethodField()
     method = serializers.SerializerMethodField()
 
