@@ -1,12 +1,13 @@
 import logging
 
+from rest_framework import pagination, serializers, viewsets
+from rest_framework.filters import BaseFilterBackend
+from url_filter.integrations.drf import DjangoFilterBackend
+
 from apps.stories.models import (
     Byline, InlineLink, Story, StoryImage, StoryType, StoryVideo
 )
 from django.db.models import Prefetch
-from rest_framework import pagination, serializers, viewsets
-from rest_framework.filters import BaseFilterBackend
-from url_filter.integrations.drf import DjangoFilterBackend
 from utils.serializers import AbsoluteURLField, CropBoxField
 
 from .stories import StorySerializer
@@ -40,24 +41,6 @@ class StoryImageSerializer(serializers.ModelSerializer):
             'crop_box',
             'crop_size',
             'category',
-        ]
-
-
-class BylineSerializer(serializers.ModelSerializer):
-
-    name = serializers.StringRelatedField(source='contributor')
-    thumb = AbsoluteURLField(source='contributor.thumb')
-
-    class Meta:
-        model = Byline
-        fields = [
-            'id',
-            'ordering',
-            'credit',
-            'name',
-            'title',
-            'contributor',
-            'thumb',
         ]
 
 

@@ -1,13 +1,14 @@
 import logging
 
+from rest_framework import filters, serializers, viewsets
+from url_filter.integrations.drf import DjangoFilterBackend
+
 from apps.stories.models import (
     Aside, Byline, InlineHtml, InlineLink, Pullquote, Story, StoryImage,
     StoryType, StoryVideo
 )
 from django.core.exceptions import FieldError
 from django.db.models import Prefetch
-from rest_framework import filters, serializers, viewsets
-from url_filter.integrations.drf import DjangoFilterBackend
 from utils.serializers import AbsoluteURLField
 
 logger = logging.getLogger('apps')
@@ -83,6 +84,7 @@ class StoryImageSerializer(serializers.ModelSerializer):
 class BylineSerializer(serializers.ModelSerializer):
 
     name = serializers.StringRelatedField(source='contributor')
+    thumb = AbsoluteURLField(source='contributor.thumb')
 
     class Meta:
         model = Byline
@@ -93,6 +95,7 @@ class BylineSerializer(serializers.ModelSerializer):
             'name',
             'title',
             'contributor',
+            'thumb',
         ]
 
 
