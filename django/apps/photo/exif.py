@@ -28,7 +28,10 @@ def sanitize_image_exif(img: Image) -> bytes:
 
 def serialize_exif(img: Image) -> dict:
     """Get exif dictionary from pil image   """
-    tags = img._getexif() or {}
+    try:
+        tags = img._getexif() or {}
+    except AttributeError:
+        return {}
     return clean_exif_data({
         PIL.ExifTags.TAGS.get(k, str(k)): v
         for k, v in tags.items()

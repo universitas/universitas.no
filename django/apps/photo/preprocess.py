@@ -51,6 +51,7 @@ class ProcessImage(models.Model):
             task.apply_async(countdown=TASK_DELAY)
 
     def process_uploaded_file(self, pim):
+        """Clean up meta data and compress large images"""
         file_format = pim.format
         exif_bytes = sanitize_image_exif(pim)
         self.read_metadata_from_imagefile(pim)
@@ -71,6 +72,7 @@ class ProcessImage(models.Model):
         return pim
 
     def save_original(self, pim, exif=b'', format='jpeg', save=True):
+        """Save processed image to storage backend"""
         self.dimensions = pim.width, pim.height
         blob = BytesIO()
         pim.save(blob, format, exif=exif, quality=IMAGE_QUALITY)
@@ -79,6 +81,7 @@ class ProcessImage(models.Model):
         self.original.save(self.filename, blob, save=save)
 
     def rotate_image(self, pim):
+        """Rotate image file based on exif rotation"""
         orientation = self.exif_data.get('Orientation', 1)
         degrees = {1: 0, 3: 180, 6: 270, 8: 90}.get(orientation)
         if degrees:

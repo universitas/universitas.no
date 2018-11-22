@@ -1,6 +1,6 @@
 import { put, takeEvery, select, call } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-import { pushImageFile, apiPost, apiList } from 'services/api'
+import { pushImageFile, apiGet, apiPost, apiList } from 'services/api'
 import { apiUrlToId } from 'utils/urls'
 import { assignPhoto } from 'ducks/storyimage'
 import {
@@ -128,12 +128,29 @@ function* postUploadSaga(action) {
     yield put(uploadPostSuccess(pk, response))
     yield put(photosDiscarded(...duplicates))
     yield put(photoAdded(photo))
-    yield call(delay, 10000) // wait for image to process
-    yield put(photoRequested(id, true))
-    if (story) {
+    const ready = yield pollPhoto(id)
+    if (!ready) {
+      yield put(
+        uploadPostError(pk, { message: 'Image was not processed on server' }),
+      )
+    } else if (story) {
       yield put(assignPhoto(id, parseInt(story)))
     }
   } else {
     yield put(uploadPostError(pk, error))
   }
+}
+
+function* pollPhoto(pk, sleep = 2000, tries = 6) {
+  // polls api for photo until it's ok
+  for (let n = 0; n < tries; n++) {
+    const wait = 2 ** n * sleep
+    yield call(delay, wait) // wait for image to process
+    const { response } = yield call(apiGet, 'photos', pk)
+    if (response.original) {
+      yield put(photoAdded(response))
+      return true
+    }
+  }
+  return false
 }
