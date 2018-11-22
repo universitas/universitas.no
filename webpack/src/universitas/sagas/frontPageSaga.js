@@ -35,6 +35,7 @@ const DEBOUNCE = 300 // ms debounce
 const routeAction = R.propSatisfies(R.test(/^router/), 'type')
 
 export default function* rootSaga() {
+  yield fork(pageView) // initial page view for analytics
   yield takeLatest(FEED_REQUESTED, fetchFeed)
   yield takeLatest(SITE_REQUESTED, fetchSite)
   yield takeLatest(ISSUES_REQUESTED, fetchIssues)
@@ -126,10 +127,10 @@ const googleAnalyticsPageView = action => {
   if (ga) {
     ga('set', viewData)
     ga('send', 'pageview')
-  }
+  } // else console.log('debug: google analytics pageview', viewData)
 }
 
 function* pageView(action) {
-  yield call(delay, 200) // debounce
+  yield call(delay, 500) // debounce
   yield call(googleAnalyticsPageView, action)
 }
