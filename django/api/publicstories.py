@@ -107,6 +107,8 @@ class ListPublishedStoriesFilter(BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         if 'pk' not in view.kwargs:
             return queryset.published().order_by('-pk')
+        if request.user.is_anonymous:
+            return queryset.published()
         return queryset
 
 
@@ -121,7 +123,9 @@ class PublicStoryViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PublicStorySerializer
     filter_backends = [DjangoFilterBackend, ListPublishedStoriesFilter]
     filter_fields = ['id']
-    queryset = Story.objects.prefetch_related(
+    queryset = Story.objects.filter(
+        publication_status__lte=11
+    ).prefetch_related(
         'story_type__section',
         'asides',
         'pullquotes',

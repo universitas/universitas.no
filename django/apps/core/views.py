@@ -134,6 +134,7 @@ def clear_cached_story_response(sender, instance, **kwargs):
 
 
 def react_frontpage_view(request, section=None, story=None, slug=None):
+    """Main view for server side rendered content"""
 
     is_IE = 'Trident' in request.META.get('HTTP_USER_AGENT', '')
     cache_key = f'cached_page_{story or request.path}{"IE" if is_IE else ""}'

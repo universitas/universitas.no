@@ -65,7 +65,7 @@ class Story extends React.Component {
   render() {
     const { className, ...props } = this.props
     if (props.HTTPstatus == 404)
-      return <PageNotFound {...props}>Fant ikke saken</PageNotFound>
+      return <PageNotFound HTTPstatus="404">Fant ikke saken</PageNotFound>
     const tree = buildNodeTree(props)
     return (
       <article className={cx('Story', className)}>
@@ -88,6 +88,7 @@ const mapDispatchToProps = (dispatch, { id }) => ({
   redirect: routeAction => dispatch(redirect(routeAction)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  requestData(Story, 'HTTPstatus', LoadingIndicator),
-)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(requestData(Story, 'HTTPstatus', LoadingIndicator))

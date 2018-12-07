@@ -14,6 +14,11 @@ from pathlib import Path
 
 import botocore
 import PyPDF2
+from sorl import thumbnail
+from wand.color import Color
+from wand.drawing import Drawing
+from wand.image import Image as WandImage
+
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import models
@@ -21,11 +26,7 @@ from django.db.models.signals import pre_delete, pre_save
 from django.dispatch.dispatcher import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from sorl import thumbnail
 from utils.model_mixins import EditURLMixin
-from wand.color import Color
-from wand.drawing import Drawing
-from wand.image import Image as WandImage
 
 logger = logging.getLogger('universitas')
 IssueTuple = collections.namedtuple('IssueTuple', 'number, date')
@@ -109,8 +110,8 @@ def pdf_to_image(pdf, page=1, size=800, file_format='jpeg'):
         format='pdf',
         resolution=int(1.6 * 72 * scaleby),
     )
-    # fix problem with colorspace
-    # foreground.type = 'truecolormatte'
+    # this is necessary to avoid occasional bugs with inverted colors
+    foreground.type = 'truecolormatte'
     foreground.resize(*dims, 25)
     # white background
     background = WandImage(

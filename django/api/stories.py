@@ -237,7 +237,7 @@ class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilterBackend]
     filter_fields = ['id', 'publication_status', 'modified']
     serializer_class = StorySerializer
-    queryset = Story.objects.all().prefetch_related(
+    queryset = Story.objects.prefetch_related(
         'story_type__section',
         Prefetch(
             'byline_set',
