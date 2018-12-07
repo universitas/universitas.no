@@ -1,13 +1,12 @@
 import logging
 
-from rest_framework import filters, serializers, viewsets
-from url_filter.integrations.drf import DjangoFilterBackend
-
 from apps.stories.models import (
     Aside, Byline, Pullquote, Story, StoryImage, StoryType
 )
 from django.core.exceptions import FieldError
 from django.db.models import Prefetch
+from rest_framework import filters, serializers, viewsets
+from url_filter.integrations.drf import DjangoFilterBackend
 from utils.serializers import AbsoluteURLField
 
 logger = logging.getLogger('apps')
@@ -167,13 +166,8 @@ class SearchFilterBackend(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         search_query = request.query_params.get('search', None)
         if search_query:
-            qs = queryset.search(search_query)
-            if qs:
-                queryset = qs
-            else:
-                queryset = queryset.filter(
-                    working_title__icontains=search_query
-                )
+            filtered = queryset.search(search_query).values('id')
+            queryset = queryset.filter(id__in=filtered)
 
         order_by = request.query_params.get('ordering')
         if order_by:

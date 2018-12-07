@@ -109,9 +109,8 @@ $externallink: 'data:image/svg+xml,' +
     display: flex;
     flex-direction: column;
     .mainImage {
-      min-height: 0;
+      // min-height: 0;
       flex: 1 1;
-      display: flex;
       .imgWrapper {
         flex: 1;
         background-color: #dddfe9;
@@ -137,9 +136,12 @@ $externallink: 'data:image/svg+xml,' +
     @media (max-height: 700px) and (min-width: 900px) {
       max-height: calc(700px - 3rem);
     }
+<<<<<<< Updated upstream
+=======
     @media (min-height: 60rem) {
       max-height: 57rem;
     }
+>>>>>>> Stashed changes
   }
   .mainContent {
   }

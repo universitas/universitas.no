@@ -1,4 +1,4 @@
-@import "styles/_common.scss";
+@import 'styles/_common.scss';
 $row-height: 12vh;
 
 .FeedTerminator {
@@ -229,6 +229,9 @@ $row-height: 12vh;
         grid-row-end: span $n;
       }
     }
+  }
+  @include min-size(l) {
+    grid-auto-rows: minmax(9rem, auto);
   }
   // mobile screen
   @include max-size(s) {

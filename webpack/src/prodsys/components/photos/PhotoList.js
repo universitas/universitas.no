@@ -15,10 +15,10 @@ const filters = R.map(R.merge({ toggle: true, model: MODEL }))([
   { attr: 'ordering', value: '-modified', label: 'sist endret' },
 ])
 
-const PhotoList = props => {
+const PhotoList = ({ items }) => {
   return (
     <ListPanel model={MODEL} filters={filters}>
-      <PhotoGrid {...props} />
+      <PhotoGrid items={items} />
     </ListPanel>
   )
 }

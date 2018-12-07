@@ -22,15 +22,25 @@ export const getChildren = R.pipe(
 )
 
 // :: {story} -> ['placement']
-export const getPlaces = R.pipe(getChildren, R.pluck('placement'), R.uniq)
+export const getPlaces = R.pipe(
+  getChildren,
+  R.pluck('placement'),
+  R.uniq,
+)
 
 // :: linkNode -> {story} -> {inline_html_link}
 export const getLink = ({ name }) =>
-  R.pipe(R.propOr([], 'links'), R.find(R.propEq('name', name)))
+  R.pipe(
+    R.propOr([], 'links'),
+    R.find(R.propEq('name', name)),
+  )
 
 // :: {place} -> {story} -> [{storychild}]
 export const getPlaceChildren = ({ name }) =>
-  R.pipe(getChildren, R.filter(R.propEq('placement', name)))
+  R.pipe(
+    getChildren,
+    R.filter(R.propEq('placement', name)),
+  )
 
 // :: {story} -> {...story, nodeTree}
 export const buildNodeTree = story => {
@@ -89,7 +99,7 @@ export const buildNodeTree = story => {
             case 'ing':
               lede += match[2]
               return null
-            case 'kicker':
+            case 'stikktit':
               kicker = match[2]
               return null
           }
@@ -99,9 +109,10 @@ export const buildNodeTree = story => {
     }),
   )
 
-  const parseTree = R.pipe(R.replace(/^@sit:/gm, '@sitat:'), parseText)(
-    story.bodytext_markup,
-  )
+  const parseTree = R.pipe(
+    R.replace(/^@sit:/gm, '@sitat:'),
+    parseText,
+  )(story.bodytext_markup)
   const nodeTree = walk(parseTree)
 
   return {

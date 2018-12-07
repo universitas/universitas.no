@@ -82,14 +82,17 @@ class FullTextSearchQuerySet(QuerySet):
         ).order_by('-rank')
         if result:
             return result
-        # fallback to icontains search
-        return qs.filter(bodytext_markup__icontains=query).order_by('-age')
+        # fallback to title trigram search
+        return qs.trigram_search(query).order_by('-age')
 
     def with_search_rank(self, query):
         if not isinstance(query, str):
             msg = f'expected query to be str, got {type(query)}, {query!r}'
             raise ValueError(msg)
-        search = SearchQuery(query, config=self.config)
+        term, *terms = query.split()
+        search = SearchQuery(term, config=self.config)
+        for term in terms:
+            search &= SearchQuery(word, config=self.config)
         return self.filter(
             search_vector=search,
         ).annotate(

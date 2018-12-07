@@ -34,12 +34,7 @@ const StoryList = ({ action, pk }) => {
         <PhotoList action={action} />
       </React.Fragment>
     )
-  if (pk && action == 'preview')
-    return (
-      <section className="ListPanel">
-        <StoryDetailPreview pk={pk} />{' '}
-      </section>
-    )
+  if (pk && action == 'preview') return <StoryDetailPreview pk={pk} />
   return (
     <ListPanel model={MODEL} filters={filters}>
       <StoryTable />

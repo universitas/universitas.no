@@ -1,6 +1,7 @@
 import cx from 'classnames'
 import { connect } from 'react-redux'
 import ListPanel from 'components/ListPanel'
+import PreviewPanel from 'components/PreviewPanel'
 import { Clear } from 'components/Icons'
 import { FrontpageGrid } from '.'
 import { MODEL, fields, actions, selectors } from './model.js'
@@ -25,9 +26,9 @@ const filters = [
 
 const FrontpageList = ({ dismiss, items }) => {
   return (
-    <ListPanel onClick={dismiss} model={MODEL} filters={filters}>
+    <PreviewPanel>
       <FrontpageGrid items={items} />
-    </ListPanel>
+    </PreviewPanel>
   )
 }
 
@@ -48,6 +49,9 @@ const mapStateToProps = (state, ownProps) => {
   return { items: sorted(items) }
 }
 
-export default connect(mapStateToProps, {
-  dismiss: e => toRoute({ model: MODEL }),
-})(FrontpageList)
+export default connect(
+  mapStateToProps,
+  {
+    dismiss: e => toRoute({ model: MODEL }),
+  },
+)(FrontpageList)
