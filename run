@@ -237,6 +237,7 @@ install_docker() {
 }
 
 install_certificates() {
+  production_settings
   docker-compose run -p80:80 certbot \
     --noninteractive \
     --agree-tos \
@@ -248,6 +249,8 @@ install_certificates() {
 }
 
 renew_certificates() {
+  production_settings
+  date -uIhours
   docker-compose run certbot \
     --noninteractive \
     --agree-tos \
@@ -258,6 +261,7 @@ renew_certificates() {
     --webroot-path=/srv/ \
     --keep-until-expiring \
     certonly
+  docker-compose run certbot certificates
 }
 
 
