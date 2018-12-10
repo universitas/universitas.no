@@ -1,5 +1,4 @@
 [![tmb]][travis]
-[![lmb]][landscapeM]
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
 
 # universitas.no
@@ -40,8 +39,4 @@ https://hub.docker.com/u/universitas/
 [tmb]:https://travis-ci.org/universitas/universitas.no.svg?branch=master
 [tdb]:https://travis-ci.org/universitas/universitas.no.svg?branch=develop
 [travis]:https://travis-ci.org/universitas/universitas.no
-[lmb]:https://landscape.io/github/universitas/universitas.no/master/landscape.svg?style=flat
-[ldb]:https://landscape.io/github/universitas/universitas.no/develop/landscape.svg?style=flat
-[landscapeM]:https://landscape.io/github/universitas/universitas.no/master
-[landscapeD]:https://landscape.io/github/universitas/universitas.no/develop
 [universitas]:http://universitas.no
