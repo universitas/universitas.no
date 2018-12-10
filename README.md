@@ -1,11 +1,11 @@
-| master | development |
-| --- | --- |
-| [![tmb]][travis] [![lmb]][landscapeM] | [![tdb]][travis] [![ldb]][landscapeD] |
+[![tmb]][travis]
+[![lmb]][landscapeM]
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
 
 # universitas.no
 Source code for the newspaper [universitas.no][universitas] and custom CMS.
 Single Page App newspaper and custom CMS for text and photo with a rest api,
-integrating print layout workflow with web.
+integrating print layout workflow with web publishing.
 
 ## Backend Stack
 - [Django](https://www.djangoproject.com/) Python web framework
