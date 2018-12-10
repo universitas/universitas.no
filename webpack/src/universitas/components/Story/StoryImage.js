@@ -20,8 +20,11 @@ export const Caption = ({ children, creditline = '' }) => {
   )
 }
 
+const percent = n => `${(n * 100).toFixed(1)}%`
+
 const imageStyle = ({ category, crop_box: { x = 0.5, y = 0.5 } }) => ({
-  objectPosition: category == 'diagram' ? 'center' : `${x * 100}% ${y * 100}%`,
+  objectPosition:
+    category == 'diagram' ? 'center' : [x, y].map(percent).join(' '),
 })
 
 const Image = ({

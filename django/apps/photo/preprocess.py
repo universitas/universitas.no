@@ -11,10 +11,9 @@ from django.db import models
 
 from .exif import get_metadata, sanitize_image_exif, serialize_exif
 
-SIZE_LIMIT = 4_000  # Maximum width or height of uploads
-BYTE_LIMIT = 3_000_000  # Maximum filesize of upload or compress
+IMAGE_AREA_LIMIT = 16_000_000  # Maximum image area (16 megapixels)
 TASK_DELAY = 0  # Delay further image processing for N seconds
-IMAGE_QUALITY = 80  # Pillow image quality
+IMAGE_QUALITY = 90  # Pillow image quality
 
 
 class ProcessImage(models.Model):
@@ -61,14 +60,10 @@ class ProcessImage(models.Model):
 
     def reduce_dimensions(self, pim):
         """Shrink large images"""
-        if any([
-            pim.width > SIZE_LIMIT,
-            pim.height > SIZE_LIMIT,
-        ]):
-            pim.thumbnail(
-                size=(SIZE_LIMIT, SIZE_LIMIT),
-                resample=PIL.Image.LANCZOS,
-            )
+        resize_by = (IMAGE_AREA_LIMIT / (pim.width * pim.height))**0.5
+        if resize_by < 1:
+            size = [int(d * resize_by) for d in [pim.width, pim.height]]
+            pim.thumbnail(size, resample=PIL.Image.LANCZOS)
         return pim
 
     def save_original(self, pim, exif=b'', format='jpeg', save=True):

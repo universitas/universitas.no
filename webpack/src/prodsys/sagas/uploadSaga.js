@@ -6,6 +6,7 @@ import { assignPhoto } from 'ducks/storyimage'
 import {
   ADD,
   POST,
+  CHANGE_DUPLICATE,
   uploadUpdate,
   uploadPostSuccess,
   uploadPostError,
@@ -20,8 +21,9 @@ import {
   objectURLtoFile,
 } from 'utils/fileUtils'
 
-import { modelActions } from 'ducks/basemodel'
+import { modelSelectors, modelActions } from 'ducks/basemodel'
 
+const { getItem: getPhoto } = modelSelectors('photos')
 const {
   itemsDiscarded: photosDiscarded,
   itemRequested: photoRequested,
@@ -35,6 +37,7 @@ const { itemRequested: storyRequested } = modelActions('stories')
 export default function* uploadSaga() {
   yield takeEvery(ADD, newUploadSaga)
   yield takeEvery(POST, postUploadSaga)
+  yield takeEvery(CHANGE_DUPLICATE, toggleDuplicateSaga)
 }
 
 const fetchDupes = ({ md5, fingerprint }) =>
@@ -54,6 +57,19 @@ function* getArtist(name) {
     yield put(contributorAdded(artist))
     return artist.id
   } else yield put(errorAction(error))
+}
+
+function* toggleDuplicateSaga(action) {
+  const { pk, id, choice } = action.payload
+  if (choice == 'keep') return
+  const photo = yield select(getPhoto(id))
+  const upload = yield select(getUpload(pk))
+  const update = {
+    description: upload.description || photo.description,
+    contributor: photo.contributor || upload.contributor,
+    category: photo.category || upload.category,
+  }
+  yield put(uploadUpdate(pk, update, true))
 }
 
 function* newUploadSaga(action) {
