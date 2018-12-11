@@ -11,7 +11,7 @@ while (( $# > 0 )); do
   help    ) show_help; exit 0 ;; # show help for commands
   init    ) # install docker and docker-compose on ubuntu ( must be run as sudo )
             sudo bash -c "$(declare -f install_docker)
-            install_docker $(whoami)" 
+            install_docker $(whoami)"
             install_certificates
             ;;
   enable  ) enable_service ;; # enable systemd service file for web server - starts all docker images
@@ -189,7 +189,7 @@ enable_service() {
     echo "reload systemd service"
     sudo systemctl daemon-reload
     sudo systemctl reload universitas.service
-  else 
+  else
     echo "enable systemd service"
     sudo sh -c "
     ln -s $PWD/universitas.service /lib/systemd/system/
