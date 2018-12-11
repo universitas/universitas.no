@@ -25,7 +25,7 @@ if env.digitalocean_enabled:
     AWS_S3_HOST = 'digitaloceanspaces.com'
     AWS_S3_CUSTOM_DOMAIN = (
         f'{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_REGION_NAME}'
-        '.digitaloceanspaces.com'
+        '.cdn.digitaloceanspaces.com'
     )
     MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}/media/'
     STATICFILES_STORAGE =\

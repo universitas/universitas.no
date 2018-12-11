@@ -1,4 +1,3 @@
-
 import apps.contributors.models
 from django.db import migrations, models
 

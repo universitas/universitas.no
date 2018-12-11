@@ -40,7 +40,9 @@ const RelatedStories = ({ related_stories }) => (
 )
 
 const StoryFoot = ({ comment_field, id, title, section, related_stories }) => {
-  const url = `http://universitas.no${reverse(toStory({ id, section, title }))}`
+  const url = `https://universitas.no${reverse(
+    toStory({ id, section, title }),
+  )}`
 
   return (
     <footer className="StoryFoot">

@@ -1,6 +1,7 @@
-from apps.stories.models import StoryImage
 from rest_framework import serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
+
+from apps.stories.models import StoryImage
 from utils.serializers import AbsoluteURLField
 
 
@@ -12,7 +13,10 @@ class StoryImageSerializer(serializers.ModelSerializer):
     )
 
     thumb = AbsoluteURLField(source='imagefile.large.url')
-    aspect_ratio = serializers.CharField(required=False)
+    cropped = AbsoluteURLField(read_only=True)
+    aspect_ratio = serializers.DecimalField(
+        required=False, max_digits=5, decimal_places=4
+    )
 
     class Meta:
         model = StoryImage
@@ -24,6 +28,7 @@ class StoryImageSerializer(serializers.ModelSerializer):
             'imagefile',
             'creditline',
             'thumb',
+            'cropped',
             'filename',
             'ordering',
             'placement',

@@ -3,6 +3,7 @@ import logging
 # from allauth.account.models import EmailAccount
 from allauth.exceptions import ImmediateHttpResponse
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+
 from apps.contributors.models import Contributor
 from apps.contributors.tasks import connect_contributor_to_user
 from django.contrib import messages
@@ -65,8 +66,7 @@ class AutoConnectSocialAccountAdapter(DefaultSocialAccountAdapter):
             raise ImmediateHttpResponse(redirect('prodsys'))
 
         contributor = get_instance(
-            Contributor,
-            dict(status=Contributor.ACTIVE, email=email),
+            Contributor, dict(status=Contributor.ACTIVE, email=email),
             dict(status=Contributor.ACTIVE, display_name=name)
         )
         if contributor:

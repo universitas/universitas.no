@@ -2,7 +2,7 @@
   display: flex;
   align-self: stretch;
   font-size: 1.5em;
-  background-color: #666;
+  background-color: #444;
   &.row {
     flex-direction: row;
     .Tool {
@@ -49,15 +49,16 @@ $bblack: rgba(black, 0.2);
   &.active {
     color: yellow;
   }
-  &.disabled {
-    color: #ddd;
-  }
   &.clickable {
     cursor: pointer;
     &:hover {
       box-shadow: inset 1000px 1000px 0 rgba(white, 0.2);
       //background: rgba(white, 0.2);
     }
+  }
+  &.disabled {
+    opacity: 0.4;
+    cursor: unset;
   }
   &.spinning {
     svg {

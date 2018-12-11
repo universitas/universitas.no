@@ -1,11 +1,11 @@
+from datetime import date, datetime
 import logging
 import re
-from datetime import date, datetime
-from django.utils import timezone
 from typing import Dict, Iterable, List, Optional, Union  # noqa
 
 from apps.issues.models import PrintIssue
 from django.db.models.query import QuerySet
+from django.utils import timezone
 from utils.merge_model_objects import merge_instances
 
 from .models import Contributor, Position, Stint
@@ -158,11 +158,10 @@ def max_or_none(*vals):
 
 def _add_to_stint(title: str, name: str, date: date) -> Stint:
     """Create or update a Stint so that the date is included in the period."""
-    try:
-        contributor = Contributor.objects.get(display_name=name)
-    except Contributor.DoesNotExist:
+    contributor = Contributor.objects.active(date).filter(display_name=name
+                                                          ).first()
+    if not contributor:
         contributor, created = Contributor.get_or_create(name)
-
         action = "created" if created else "found"
         logger.warning(f'could not find "{name}" => {action} "{contributor}"')
     position, _ = Position.objects.get_or_create(title=title)

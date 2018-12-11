@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
                 editable=False,
                 help_text='perceptual hash of image using dhash algorithm',
                 max_length=16,
-                verbose_name='image hash'),
+                verbose_name='image hash'
+            ),
         ),
     ]

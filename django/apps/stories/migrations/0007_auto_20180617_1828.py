@@ -12,7 +12,10 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='storyimage',
-            options={'ordering': ['-ordering'], 'verbose_name': 'Image', 'verbose_name_plural': 'Images'},
+            options={
+                'ordering': ['-ordering'], 'verbose_name': 'Image',
+                'verbose_name_plural': 'Images'
+            },
         ),
         migrations.RemoveField(
             model_name='aside',

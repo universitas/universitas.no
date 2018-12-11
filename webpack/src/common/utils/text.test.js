@@ -3,6 +3,7 @@ import {
   utf8Decode,
   formatFileSize,
   cleanText,
+  specialCharacters,
   stringify,
   toJson,
 } from './text'
@@ -25,11 +26,12 @@ test('circular json returns error', () => {
 
 test('cleanText', () => {
   const SPACER = '\u2060\xA0'
-  expect(cleanText('')).toEqual('')
-  expect(cleanText('@txt: -- text')).toEqual(`@txt: –${SPACER}text`)
-  expect(cleanText('-Hello "hello"')).toEqual(`–${SPACER}Hello «hello»`)
-  expect(cleanText('don\u0027t')).toEqual('don\u02BCt')
-  expect(cleanText('don\u0092t')).toEqual('don\u02BCt')
+  const clean = R.pipe(cleanText, specialCharacters)
+  expect(clean('')).toEqual('')
+  expect(clean('@txt: -- text')).toEqual(`@txt: –${SPACER}text`)
+  expect(clean('-Hello "hello"')).toEqual(`–${SPACER}Hello «hello»`)
+  expect(clean('don\u0027t')).toEqual('don\u02BCt')
+  expect(clean('don\u0092t')).toEqual('don\u02BCt')
 })
 
 test('stringify', () => {

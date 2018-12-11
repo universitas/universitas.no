@@ -3,14 +3,13 @@
 <!DOCTYPE html>
 <html class="no-js" lang="{{ LANGUAGE_CODE }}">
   <head>
+    <base href="{{ request.scheme }}://{{ request.get_host }}/" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% include "_favicons.html" %}
-    {# include "_google.fonts.html" #}
     {% render_bundle 'commons' %}
     {% block head %}{% endblock head %}
   </head>
-
   <body>
     {% block content %}
       <p>Main content of page</p>

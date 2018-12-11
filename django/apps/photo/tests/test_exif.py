@@ -1,12 +1,13 @@
 """ Tests for exif library """
 
 import pytest
+
 from apps.photo.exif import (
-    sanitize_image_exif,
     clean_exif_data,
-    serialize_exif,
-    parse_exif_timestamp,
     get_metadata,
+    parse_exif_timestamp,
+    sanitize_image_exif,
+    serialize_exif,
 )
 from apps.photo.file_operations import pil_image
 

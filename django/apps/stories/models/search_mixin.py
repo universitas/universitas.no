@@ -1,11 +1,22 @@
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import (
-    SearchQuery, SearchRank, SearchVector, SearchVectorField, TrigramSimilarity
+    SearchQuery,
+    SearchRank,
+    SearchVector,
+    SearchVectorField,
+    TrigramSimilarity,
+)
+from django.db.models import (
+    Case,
+    ExpressionWrapper,
+    F,
+    Func,
+    Model,
+    QuerySet,
+    Value,
+    When,
 )
 from django.db.models import FloatField  # Manager,
-from django.db.models import (
-    Case, ExpressionWrapper, F, Func, Model, QuerySet, Value, When
-)
 from django.utils.timezone import now
 
 

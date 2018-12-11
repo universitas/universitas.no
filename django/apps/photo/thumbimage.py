@@ -1,7 +1,11 @@
 import logging
+
+from sorl import thumbnail
+from sorl.thumbnail.helpers import ThumbnailError
+
 from django.conf import settings
 from django.db import models
-from sorl import thumbnail
+
 logger = logging.getLogger(__name__)
 IMGSIZES = [200, 800, 1500]
 
@@ -42,6 +46,8 @@ class ThumbImageFile(models.Model):
 
     def thumbnail(self, size='x150', **options):
         """Create thumb of image"""
+        if not self.original:
+            return BrokenImage()
         try:
             return thumbnail.get_thumbnail(self.original, size, **options)
         except Exception:
@@ -59,4 +65,7 @@ class ThumbImageFile(models.Model):
 
     def delete_thumbnails(self, delete_file=False):
         """Delete all thumbnails, optinally delete original too"""
-        thumbnail.delete(self.original, delete_file=delete_file)
+        try:
+            thumbnail.delete(self.original, delete_file=delete_file)
+        except ThumbnailError:
+            return

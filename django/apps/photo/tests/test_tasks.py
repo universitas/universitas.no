@@ -1,7 +1,7 @@
 import pytest
 
 from apps.photo.models import ImageFile
-from apps.photo.tasks import (autocrop_image_file, post_save_task)
+from apps.photo.tasks import autocrop_image_file, post_save_task
 from django.core.files import File
 
 

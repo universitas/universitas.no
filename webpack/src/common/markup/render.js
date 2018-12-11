@@ -1,10 +1,11 @@
 import { parseText } from './index.js'
-import { cleanText } from 'utils/text'
+import { cleanText, specialCharacters } from 'utils/text'
 
 export const inlineText = R.when(
   R.identity,
   R.pipe(
     cleanText,
+    specialCharacters,
     R.trim,
     text => parseText(text, false),
     R.addIndex(R.map)(

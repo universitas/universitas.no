@@ -13,6 +13,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='story',
             name='related_stories',
-            field=models.ManyToManyField(blank=True, related_name='_story_related_stories_+', to='stories.Story', verbose_name='related stories'),
+            field=models.ManyToManyField(
+                blank=True,
+                related_name='_story_related_stories_+',
+                to='stories.Story',
+                verbose_name='related stories'
+            ),
         ),
     ]

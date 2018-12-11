@@ -1,9 +1,13 @@
 """Tests for contributor tasks"""
 
 import pytest
+
 from apps.contributors.models import Contributor, Position, Stint
-from apps.contributors.tasks import (connect_contributor_to_user,
-                                     update_contributor_status, update_status)
+from apps.contributors.tasks import (
+    connect_contributor_to_user,
+    update_contributor_status,
+    update_status,
+)
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 

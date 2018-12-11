@@ -1,4 +1,3 @@
-
 from django.db import migrations, models
 
 
@@ -11,19 +10,29 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='profileimage',
-            options={'verbose_name_plural': 'Profile Images',
-                     'verbose_name': 'Profile Image'},
+            options={
+                'verbose_name_plural': 'Profile Images',
+                'verbose_name': 'Profile Image'
+            },
         ),
         migrations.AlterField(
             model_name='imagefile',
             name='full_height',
             field=models.PositiveIntegerField(
-                editable=False, help_text='full height in pixels', null=True, verbose_name='full height'),
+                editable=False,
+                help_text='full height in pixels',
+                null=True,
+                verbose_name='full height'
+            ),
         ),
         migrations.AlterField(
             model_name='imagefile',
             name='full_width',
             field=models.PositiveIntegerField(
-                editable=False, help_text='full height in pixels', null=True, verbose_name='full height'),
+                editable=False,
+                help_text='full height in pixels',
+                null=True,
+                verbose_name='full height'
+            ),
         ),
     ]

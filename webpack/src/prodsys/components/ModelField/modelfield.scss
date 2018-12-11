@@ -1,11 +1,11 @@
-@import "styles/globals.scss";
+@import 'styles/globals.scss';
 
 .ModelField {
   display: flex;
   flex-flow: row wrap;
   align-items: flex-end;
   margin-bottom: $margin;
-  min-height: 1.5rem;
+  min-height: 1.5em;
   &.full {
   }
   &.half {

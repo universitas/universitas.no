@@ -1,9 +1,25 @@
 @import 'styles/_common.scss';
 .Story {
+  .Caption {
+    @extend %smaller;
+    background: white;
+    margin: 1em 0;
+    .stikk {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .creditline {
+      float: right;
+      text-transform: uppercase;
+    }
+  }
   .StoryImage {
     display: flex;
     width: 100%;
     flex-direction: column;
+    .Caption {
+      margin: 0.2em 0;
+    }
     .imgWrapper {
       // flex: 1;
       // height: 100%;
@@ -25,19 +41,6 @@
         &.illustration {
           // object-fit: scale-down;
         }
-      }
-    }
-    .Caption {
-      @extend %smaller;
-      margin: 0.2em 0;
-      background: white;
-      .stikk {
-        font-weight: bold;
-        text-transform: uppercase;
-      }
-      .creditline {
-        float: right;
-        text-transform: uppercase;
       }
     }
   }

@@ -1,9 +1,9 @@
 # forked from https://github.com/peterbe/django-cache-memoize
+from functools import wraps
 import hashlib
 import inspect
 import logging
 import time
-from functools import wraps
 
 from django.core.cache import cache
 from django.utils.encoding import force_bytes, force_text
@@ -127,9 +127,10 @@ def cache_memoize(
 
         def _make_cache_key(*args, **kwargs):
             pfx = _make_prefix()
-            cache_key = ':'.join([
-                force_text(x) for x in rewrite(*args, **kwargs)
-            ] + [force_text(f'{k}={v}') for k, v in kwargs.items()])
+            cache_key = ':'.join(
+                [force_text(x) for x in rewrite(*args, **kwargs)] +
+                [force_text(f'{k}={v}') for k, v in kwargs.items()]
+            )
             digest = hashlib.md5(force_bytes(pfx + cache_key)).hexdigest()
             return f'{pfx}{digest}'
 

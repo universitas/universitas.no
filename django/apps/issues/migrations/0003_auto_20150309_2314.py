@@ -1,4 +1,3 @@
-
 from django.db import migrations, models
 
 
@@ -12,21 +11,36 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Issue',
             fields=[
-                ('id', models.AutoField(auto_created=True,
-                                        serialize=False, primary_key=True, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        serialize=False,
+                        primary_key=True,
+                        verbose_name='ID'
+                    )
+                ),
                 ('publication_date', models.DateField(null=True, blank=True)),
-                ('issue_type', models.PositiveSmallIntegerField(choices=[
-                 (1, 'Regular'), (2, 'Magazine'), (3, 'Welcome special')], default=1)),
+                (
+                    'issue_type',
+                    models.PositiveSmallIntegerField(
+                        choices=[(1, 'Regular'), (2, 'Magazine'),
+                                 (3, 'Welcome special')],
+                        default=1
+                    )
+                ),
             ],
             options={
                 'ordering': ['publication_date'],
             },
-            bases=(models.Model,),
+            bases=(models.Model, ),
         ),
         migrations.AlterModelOptions(
             name='printissue',
-            options={'verbose_name_plural': 'Pdf issues',
-                     'verbose_name': 'Pdf issue'},
+            options={
+                'verbose_name_plural': 'Pdf issues',
+                'verbose_name': 'Pdf issue'
+            },
         ),
         migrations.RemoveField(
             model_name='printissue',

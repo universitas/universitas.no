@@ -1,9 +1,9 @@
 """
 Utilities for synchronising staging files between home server, S3 and database
 """
-import time
 from datetime import datetime, timedelta
 from pathlib import Path
+import time
 from typing import List
 
 from django.conf import settings

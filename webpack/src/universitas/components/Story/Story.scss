@@ -115,8 +115,10 @@ $externallink: 'data:image/svg+xml,' +
       .imgWrapper {
         flex: 1;
         background-color: #dddfe9;
+        display: flex;
       }
       img {
+        flex: 1;
         min-height: 0;
       }
       &.autoCrop {

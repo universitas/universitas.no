@@ -1,7 +1,15 @@
 import logging
 
 from apps.stories.models import (
-    Aside, Byline, Pullquote, Story, StoryImage, StoryType
+    Aside,
+    Byline,
+    InlineHtml,
+    InlineLink,
+    Pullquote,
+    Story,
+    StoryImage,
+    StoryType,
+    StoryVideo,
 )
 from django.core.exceptions import FieldError
 from django.db.models import Prefetch
@@ -12,6 +20,14 @@ from utils.serializers import AbsoluteURLField
 logger = logging.getLogger('apps')
 
 child_fields = ['id', 'placement', 'ordering']
+
+
+class InlineHtmlSerializer(serializers.ModelSerializer):
+    """ModelSerializer for InlineHtml"""
+
+    class Meta:
+        model = InlineHtml
+        fields = [*child_fields, 'bodytext_html']
 
 
 class PullquoteSerializer(serializers.ModelSerializer):
@@ -30,6 +46,34 @@ class AsideSerializer(serializers.ModelSerializer):
         fields = [*child_fields, 'bodytext_markup']
 
 
+class StoryVideoSerializer(serializers.ModelSerializer):
+    """ModelSerializer for StoryVideo"""
+
+    class Meta:
+        model = StoryVideo
+        fields = [
+            *child_fields,
+            'caption',
+            'creditline',
+            'embed',
+            'video_host',
+            'host_video_id',
+        ]
+
+
+class InlineLinkSerializer(serializers.ModelSerializer):
+    """ModelSerializer for InlineLink"""
+
+    class Meta:
+        model = InlineLink
+        fields = [
+            'id',
+            'name',
+            'linked_story',
+            'href',
+        ]
+
+
 class StoryImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = StoryImage
@@ -39,21 +83,25 @@ class StoryImageSerializer(serializers.ModelSerializer):
             'caption',
             'creditline',
             'aspect_ratio',
-            'cropped',
+            # 'cropped',
         ]
 
 
 class BylineSerializer(serializers.ModelSerializer):
 
     name = serializers.StringRelatedField(source='contributor')
+    thumb = AbsoluteURLField(source='contributor.thumb')
 
     class Meta:
         model = Byline
         fields = [
+            'id',
+            'ordering',
             'credit',
             'name',
             'title',
             'contributor',
+            'thumb',
         ]
 
 
@@ -93,26 +141,34 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
             'created',
             'working_title',
             'publication_status',
-            'bodytext_markup',
-            'story_type',
-            'story_type_name',
-            'byline_set',
-            'pullquotes',
-            'asides',
-            'images',
             'kicker',
             'title',
             'lede',
             'theme_word',
+            'bodytext_markup',
+            'story_type',
+            'story_type_name',
+            'bylines',
+            'links',
+            'pullquotes',
+            'asides',
+            'images',
+            'videos',
+            'inline_html_blocks',
             'language',
             'comment_field',
             'publication_date',
         ]
 
-    byline_set = BylineSerializer(many=True, read_only=True)
-    pullquotes = PullquoteSerializer(many=True, read_only=True)
-    asides = AsideSerializer(many=True, read_only=True)
-    images = StoryImageSerializer(many=True, read_only=True)
+    bylines = BylineSerializer(required=False, source='byline_set', many=True)
+    pullquotes = PullquoteSerializer(required=False, many=True)
+    asides = AsideSerializer(required=False, many=True)
+    images = StoryImageSerializer(required=False, many=True)
+    inline_html_blocks = InlineHtmlSerializer(required=False, many=True)
+    videos = StoryVideoSerializer(required=False, many=True)
+    links = InlineLinkSerializer(
+        required=False, source='inline_links', many=True
+    )
     story_type = serializers.PrimaryKeyRelatedField(
         queryset=StoryType.objects.all(), read_only=False
     )
@@ -182,7 +238,7 @@ class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilterBackend]
     filter_fields = ['id', 'publication_status', 'modified']
     serializer_class = StorySerializer
-    queryset = Story.objects.all().prefetch_related(
+    queryset = Story.objects.prefetch_related(
         'story_type__section',
         Prefetch(
             'byline_set',
@@ -191,6 +247,9 @@ class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
         'asides',
         'pullquotes',
         'images',
+        'inline_html_blocks',
+        'inline_links',
+        'videos',
     )
 
     def get_serializer_class(self):

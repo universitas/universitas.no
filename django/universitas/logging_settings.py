@@ -1,8 +1,8 @@
 """Configurations for logging"""
 from typing import Dict  # NOQA
 
-from .setting_helpers import joinpath as path
 from .setting_helpers import Environment
+from .setting_helpers import joinpath as path
 
 __all__ = ['LOGGING']
 

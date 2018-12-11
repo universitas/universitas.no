@@ -2,9 +2,10 @@
 from pathlib import PosixPath as Path
 
 import pytest
+from sorl.thumbnail import default
+
 from apps.photo.models import ImageFile
 from django.core.files import File
-from sorl.thumbnail import default
 
 
 def clear_thumbnail_cache():

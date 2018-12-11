@@ -12,7 +12,7 @@ import {
   FrontpageDetail,
   FrontpageTools,
 } from 'components/frontpage'
-import ProdsysErrorBoundary from 'components/ProdsysErrorBoundary'
+import RavenBoundary from 'common/components/RavenBoundary'
 import MainToolBar from 'components/MainToolBar.js'
 
 import { connect } from 'react-redux'
@@ -20,7 +20,7 @@ import { getRoutePayload } from 'prodsys/ducks/router'
 
 const Pane = ({ children, ...props }) => (
   <section className="Panel" {...props}>
-    <ProdsysErrorBoundary>{children}</ProdsysErrorBoundary>
+    <RavenBoundary>{children}</RavenBoundary>
   </section>
 )
 

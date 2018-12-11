@@ -13,6 +13,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='story',
             name='related_stories',
-            field=models.ManyToManyField(to='stories.Story', verbose_name='related stories'),
+            field=models.ManyToManyField(
+                to='stories.Story', verbose_name='related stories'
+            ),
         ),
     ]

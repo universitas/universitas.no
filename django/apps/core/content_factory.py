@@ -1,9 +1,9 @@
-import random
 from io import BytesIO
 from pathlib import Path
+import random
 
-from faker import Factory
 from PIL import Image, ImageChops, ImageFilter, ImageOps
+from faker import Factory
 
 from apps.contributors.models import Contributor
 from apps.photo.models import ImageFile

@@ -66,13 +66,26 @@ const baseItemState = {
 // lenses
 const updateAllLens = R.lensProp('updateAll')
 const itemsLens = R.lensProp('items')
-const itemLens = pk => R.compose(itemsLens, R.lensProp(pk))
+const itemLens = pk =>
+  R.compose(
+    itemsLens,
+    R.lensProp(pk),
+  )
 
 // SELECTORS
-const lensSelector = lens => R.view(R.compose(R.lensProp(SLICE), lens))
+const lensSelector = lens =>
+  R.view(
+    R.compose(
+      R.lensProp(SLICE),
+      lens,
+    ),
+  )
 
 const getUploads = lensSelector(itemsLens)
-export const getUpload = R.pipe(itemLens, lensSelector)
+export const getUpload = R.pipe(
+  itemLens,
+  lensSelector,
+)
 export const getUpdateAll = lensSelector(updateAllLens)
 export const getUploadPKs = R.pipe(
   getUploads,
@@ -100,15 +113,20 @@ export const getStoryChoices = R.pipe(
 )
 
 // reducer helper functions
-const longerThan = len => R.pipe(R.length, R.lt(len))
+const longerThan = len =>
+  R.pipe(
+    R.length,
+    R.lt(len),
+  )
 const noNulls = R.none(R.propEq('choice', null))
 
 const cleanFilename = props => {
   const { mimetype, filename } = props
   const extension = mimetype == 'image/png' ? 'png' : 'jpg'
-  const base = R.pipe(R.replace(/[-_ ]+/g, '-'), R.replace(/\..*$/g, ''))(
-    filename,
-  )
+  const base = R.pipe(
+    R.replace(/[-_ ]+/g, '-'),
+    R.replace(/\..*$/g, ''),
+  )(filename)
   return R.assoc('filename', `${base}.${extension}`, props)
 }
 

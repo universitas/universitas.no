@@ -2,7 +2,7 @@ import { toJson } from 'utils/text'
 import Tingo from './Tingo'
 import Debug from 'components/DevDebug'
 import SlideShow from 'components/SlideShow'
-import StoryImage from './StoryImage'
+import StoryImage, { Caption } from './StoryImage'
 import StoryLink from './StoryLink'
 import cx from 'classnames'
 
@@ -23,6 +23,13 @@ const Aside = ({ children, ...props }) => (
   <aside className="Facts" {...props}>
     {children}
   </aside>
+)
+
+const Comment = props => (
+  <p
+    style={{ background: 'purple', color: 'white', padding: '1rem' }}
+    {...props}
+  />
 )
 
 const Emphasis = props => <em {...props} />
@@ -84,6 +91,7 @@ const typeMap = {
   pullquote: PullQuote,
   section: BodySection,
   video: Video,
+  comment: Comment,
 }
 
 const tagMap = {
@@ -94,6 +102,7 @@ const tagMap = {
   tingo: Tingo,
   tit: SectionHeading,
   txt: Paragraph,
+  bt: Caption,
 }
 
 const splitContent = R.partition(

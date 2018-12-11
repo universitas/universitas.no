@@ -1,6 +1,5 @@
 version: '2.1'
 services:
-   
   webpack:
     image: universitas/webpack:${IMAGE_VERSION:-edge}
     volumes:
@@ -13,8 +12,8 @@ services:
 
   django:
     image: universitas/django:${IMAGE_VERSION:-edge}
-    mem_limit: 1000m  # limit memory usage to 1000 Mb
-    cpu_quota: 80000  # 80% of 100000 (I think...)
+    mem_limit: 1000m # limit memory usage to 1000 Mb
+    cpu_quota: 80000 # 80% of 100000 (I think...)
     volumes:
       - ./django:/app
       - webpack_build:/var/build/
@@ -34,8 +33,8 @@ services:
     extends: django
     restart: always
     expose:
-      - "8000"  # wsgi on tcp socket
-    volumes: 
+      - '8000' # wsgi on tcp socket
+    volumes:
       # master fifo
       - ${PWD}/fifo/:/run/fifo/
     depends_on:
@@ -80,8 +79,8 @@ services:
       - redisdata:/data/
 
 volumes:
-  pgdata:        {}
-  redisdata:     {}
+  pgdata: {}
+  redisdata: {}
   webpack_build: {}
   node_modules:
     driver_opts:

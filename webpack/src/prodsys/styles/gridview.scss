@@ -1,18 +1,27 @@
 .ItemGrid {
-  height: 0;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  min-height: 0;
+  display: grid;
+  grid-auto-flow: row;
+  // grid-auto-columns: minmax(15em, auto);
+  grid-template-columns: repeat(auto-fit, minmax(12rem, auto));
+  grid-auto-rows: 16rem;
+  grid-gap: 1px;
+  background-color: #ddd;
+
+  // flex-direction: row;
+  // flex-wrap: wrap;
   .GridItem {
+    position: relative; // needed for overlay icon
+    background-color: #fff;
     display: flex;
     flex: 1;
     flex-direction: column;
     cursor: pointer;
     padding: 0.5em;
-    border: 1px solid #ddd;
+    border: 1px solid transparent;
     font-size: 0.8em;
-    height: 20em;
-    min-width: 15em;
+    // height: 20em;
+    // min-width: 15em;
     .Thumb {
       flex: 1;
     }

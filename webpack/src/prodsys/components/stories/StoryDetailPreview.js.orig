@@ -6,10 +6,11 @@ import { connect } from 'react-redux'
 import PreviewPanel from 'components/PreviewPanel'
 
 const getPhoto = modelSelectors('photos').getItem
+const getStoryImage = modelSelectors('storyimages').getItem
 
-<<<<<<< Updated upstream
+<<<<<<< HEAD
+=======
 const inheritStyles = (sourceDoc, targetDoc) => {
-  console.log(sourceDoc, targetDoc)
   for (const node of sourceDoc.head.children) {
     if (node.tagName == 'LINK' || node.tagName == 'STYLE')
       targetDoc.head.appendChild(node.cloneNode(true))
@@ -37,8 +38,7 @@ class IFrame extends React.Component {
 }
 
 const head = <style>{stylesheet}</style>
-=======
->>>>>>> Stashed changes
+>>>>>>> develop
 const StoryDetailPreview = props => {
   return (
     <PreviewPanel>
@@ -59,6 +59,7 @@ const mapStateToProps = (state, { pk }) => {
     images = story.images.map(image => ({
       ...image,
       ...getPhoto(image.imagefile)(state),
+      ...getStoryImage(image.id)(state),
     }))
   }
   return { ...story, images }

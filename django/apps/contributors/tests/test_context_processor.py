@@ -1,6 +1,7 @@
 """Tests for creating stories and parsing stuff"""
 
 import pytest
+
 from apps.contributors import context_processors, models
 
 

@@ -1,8 +1,9 @@
-import django.core.validators
-import django.utils.timezone
 import model_utils.fields
 import sorl.thumbnail.fields
+
+import django.core.validators
 from django.db import migrations, models
+import django.utils.timezone
 
 
 class Migration(migrations.Migration):
@@ -16,7 +17,8 @@ class Migration(migrations.Migration):
             name='ImageFile',
             fields=[
                 (
-                    'id', models.AutoField(
+                    'id',
+                    models.AutoField(
                         serialize=False,
                         verbose_name='ID',
                         auto_created=True,
@@ -24,21 +26,24 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'created', model_utils.fields.AutoCreatedField(
+                    'created',
+                    model_utils.fields.AutoCreatedField(
                         verbose_name='created',
                         editable=False,
                         default=django.utils.timezone.now
                     )
                 ),
                 (
-                    'modified', model_utils.fields.AutoLastModifiedField(
+                    'modified',
+                    model_utils.fields.AutoLastModifiedField(
                         verbose_name='modified',
                         editable=False,
                         default=django.utils.timezone.now
                     )
                 ),
                 (
-                    'source_file', sorl.thumbnail.fields.ImageField(
+                    'source_file',
+                    sorl.thumbnail.fields.ImageField(
                         upload_to='',
                         max_length=1024,
                         width_field='full_width',
@@ -46,21 +51,24 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'full_height', models.PositiveIntegerField(
+                    'full_height',
+                    models.PositiveIntegerField(
                         verbose_name='full height',
                         editable=False,
                         help_text='full height in pixels'
                     )
                 ),
                 (
-                    'full_width', models.PositiveIntegerField(
+                    'full_width',
+                    models.PositiveIntegerField(
                         verbose_name='full height',
                         editable=False,
                         help_text='full height in pixels'
                     )
                 ),
                 (
-                    'from_top', models.PositiveSmallIntegerField(
+                    'from_top',
+                    models.PositiveSmallIntegerField(
                         default=50,
                         help_text='image crop vertical. Between 0% and 100%.',
                         validators=[
@@ -70,7 +78,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'from_left', models.PositiveSmallIntegerField(
+                    'from_left',
+                    models.PositiveSmallIntegerField(
                         default=50,
                         help_text='image crop horizontal. Between 0% and 100%.',
                         validators=[
@@ -80,7 +89,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'cropping_method', models.PositiveSmallIntegerField(
+                    'cropping_method',
+                    models.PositiveSmallIntegerField(
                         default=0,
                         help_text='How this image has been cropped.',
                         choices=[(0, 'center'), (5, 'feature detection'),
@@ -88,7 +98,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'old_file_path', models.CharField(
+                    'old_file_path',
+                    models.CharField(
                         blank=True,
                         max_length=1000,
                         null=True,
@@ -96,7 +107,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'copyright_information', models.CharField(
+                    'copyright_information',
+                    models.CharField(
                         blank=True,
                         max_length=1000,
                         null=True,
@@ -105,7 +117,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'contributor', models.ForeignKey(
+                    'contributor',
+                    models.ForeignKey(
                         on_delete=models.CASCADE,
                         null=True,
                         help_text='who made this',

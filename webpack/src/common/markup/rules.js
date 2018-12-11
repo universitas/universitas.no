@@ -8,11 +8,12 @@ import { makeFuzzer } from 'utils/text'
 export const TAGS = [
   'txt',
   'tingo',
-  // 'sitat',
   'mt',
   'bl',
+  'bt',
   'ing',
   'sitatbyline',
+  'sitat',
   'tit',
   'tema',
   'spm',
@@ -96,7 +97,7 @@ const baseRules = {
     pattern: /^@(\S+?): ?(.*)$/,
     groups: ['tag', 'content'],
     reverse: ({ tag, content }) => {
-      const space = R.contains(tag, ['mt', 'spm', 'tingo']) ? '\n' : ''
+      const space = R.contains(tag, ['bt', 'mt', 'spm', 'tingo']) ? '\n' : ''
       return `${space}@${tag}: ${content}`
     },
     process: R.evolve({ tag: makeFuzzer(TAGS, 0.5) }), // fuzzy match
@@ -106,6 +107,12 @@ const baseRules = {
     pattern: /^(?:\* |# |@li:) *(.*)$/,
     order: 9,
     reverse: ({ content }) => `# ${content}`,
+  },
+  comment: {
+    // inline comment is only uppercase characters
+    pattern: /^[^\na-zøæå]{10,}$/,
+    order: 99,
+    reverse: ({ content }) => `\n${content}\n`,
   },
   paragraph: {
     // default paragraph block for body text
@@ -120,7 +127,7 @@ const baseRules = {
     reverse: ({ content }) => `\n@fakta: ${content}\n`,
   },
   pullquote: {
-    pattern: /^@sitat:\s?((.+\n?)+)$/,
+    pattern: /^@sitat:\s?((.+\n?)+)$/i,
     order: 1,
     reverse: ({ content }) => `\n@sitat: ${content}\n`,
   },

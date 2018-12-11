@@ -109,39 +109,38 @@ $externallink: 'data:image/svg+xml,' +
     display: flex;
     flex-direction: column;
     .mainImage {
-      // min-height: 0;
+      min-height: 0;
       flex: 1 1;
+      display: flex;
       .imgWrapper {
         flex: 1;
         background-color: #dddfe9;
+        display: flex;
       }
       img {
+        flex: 1;
         min-height: 0;
       }
       &.autoCrop {
-        flex: 1 1 675px;
-        display: flex;
-        img {
-          height: 100%;
-        }
+        flex: 1 1 70vh;
       }
     }
     margin-bottom: 0.8rem;
     border-bottom: 1px solid #ddd;
     padding-bottom: 0.8rem;
     max-height: calc(100vh - 3rem);
+<<<<<<< HEAD
     @media (max-height: 450px) and (min-width: 600px) {
       max-height: calc(450px - 3rem);
     }
     @media (max-height: 700px) and (min-width: 900px) {
       max-height: calc(700px - 3rem);
     }
-<<<<<<< Updated upstream
-=======
     @media (min-height: 60rem) {
       max-height: 57rem;
     }
->>>>>>> Stashed changes
+=======
+>>>>>>> develop
   }
   .mainContent {
   }

@@ -1,8 +1,10 @@
 """ Contributors to the thing """
 
+from collections import namedtuple
 import json
 import logging
-from collections import namedtuple
+
+from model_utils.models import TimeStampedModel
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -12,7 +14,6 @@ from django.db import models
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
 from utils.decorators import cache_memoize
 
 from .fuzzy_name_search import FuzzyNameSearchMixin
@@ -57,8 +58,10 @@ class ContributorQuerySet(models.QuerySet):
             result = queryset.filter(display_name__unaccent__icontains=query)
         return result
 
-    def active(self):
-        active = Stint.objects.active().values_list('contributor', flat=True)
+    def active(self, when=None):
+        active = Stint.objects.active(when).values_list(
+            'contributor', flat=True
+        )
         return self.filter(pk__in=active)
 
     def management(self):

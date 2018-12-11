@@ -1,8 +1,8 @@
 """Development settings and globals."""
 import re
 
-from .base import *  # NOQA
 # flake8: noqa F403
+from .base import *  # NOQA
 from .base import DEBUG, INSTALLED_APPS, MIDDLEWARE, WEBPACK_LOADER
 
 ROOT_URLCONF = 'universitas.dev_urls'

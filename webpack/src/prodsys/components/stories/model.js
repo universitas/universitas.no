@@ -7,8 +7,9 @@ export const selectors = modelSelectors(MODEL)
 
 export const fields = {
   title: { label: 'tittel', type: 'string' },
-  lede: { label: 'ingress', type: 'string' },
+  lede: { label: 'ingress', type: 'shorttext' },
   kicker: { label: 'stikktittel', type: 'string' },
+  theme_word: { label: 'temaord', type: 'string' },
   working_title: { label: 'arbeidstittel', type: 'string' },
   created: { label: 'opprettet', type: 'datetime' },
   modified: { label: 'endret', type: 'datetime' },
@@ -50,6 +51,10 @@ export const fields = {
       {
         label: 'Mal',
         options: [{ value: 100, label: 'Mal' }],
+      },
+      {
+        label: 'Slettet',
+        options: [{ value: 15, label: 'Slettet' }],
       },
     ],
   },

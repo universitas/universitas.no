@@ -1,14 +1,15 @@
-import django.core.validators
-import django.utils.timezone
 import model_utils.fields
 import sorl.thumbnail.fields
+
+import django.core.validators
 from django.db import migrations, models
+import django.utils.timezone
 
 
 class Migration(migrations.Migration):
 
-    replaces = [('photo',
-                 '0001_initial'), ('photo', '0002_imagefile_crop_diameter'),
+    replaces = [('photo', '0001_initial'),
+                ('photo', '0002_imagefile_crop_diameter'),
                 ('photo', '0003_auto_20150228_2151')]
 
     dependencies = [
@@ -20,7 +21,8 @@ class Migration(migrations.Migration):
             name='ImageFile',
             fields=[
                 (
-                    'id', models.AutoField(
+                    'id',
+                    models.AutoField(
                         serialize=False,
                         primary_key=True,
                         verbose_name='ID',
@@ -28,21 +30,24 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'created', model_utils.fields.AutoCreatedField(
+                    'created',
+                    model_utils.fields.AutoCreatedField(
                         default=django.utils.timezone.now,
                         verbose_name='created',
                         editable=False
                     )
                 ),
                 (
-                    'modified', model_utils.fields.AutoLastModifiedField(
+                    'modified',
+                    model_utils.fields.AutoLastModifiedField(
                         default=django.utils.timezone.now,
                         verbose_name='modified',
                         editable=False
                     )
                 ),
                 (
-                    'source_file', sorl.thumbnail.fields.ImageField(
+                    'source_file',
+                    sorl.thumbnail.fields.ImageField(
                         max_length=1024,
                         upload_to='',
                         height_field='full_height',
@@ -50,21 +55,24 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'full_height', models.PositiveIntegerField(
+                    'full_height',
+                    models.PositiveIntegerField(
                         verbose_name='full height',
                         editable=False,
                         help_text='full height in pixels'
                     )
                 ),
                 (
-                    'full_width', models.PositiveIntegerField(
+                    'full_width',
+                    models.PositiveIntegerField(
                         verbose_name='full height',
                         editable=False,
                         help_text='full height in pixels'
                     )
                 ),
                 (
-                    'from_top', models.PositiveSmallIntegerField(
+                    'from_top',
+                    models.PositiveSmallIntegerField(
                         validators=[
                             django.core.validators.MaxValueValidator(100),
                             django.core.validators.MinValueValidator(0)
@@ -74,7 +82,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'from_left', models.PositiveSmallIntegerField(
+                    'from_left',
+                    models.PositiveSmallIntegerField(
                         validators=[
                             django.core.validators.MaxValueValidator(100),
                             django.core.validators.MinValueValidator(0)
@@ -84,7 +93,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'cropping_method', models.PositiveSmallIntegerField(
+                    'cropping_method',
+                    models.PositiveSmallIntegerField(
                         default=0,
                         help_text='How this image has been cropped.',
                         choices=[(0, 'center'), (5, 'corner detection'),
@@ -93,7 +103,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'old_file_path', models.CharField(
+                    'old_file_path',
+                    models.CharField(
                         help_text='previous path if the image has been moved.',
                         max_length=1000,
                         blank=True,
@@ -101,7 +112,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'copyright_information', models.CharField(
+                    'copyright_information',
+                    models.CharField(
                         help_text=
                         'extra information about license and attribution if needed.',
                         max_length=1000,
@@ -110,7 +122,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'contributor', models.ForeignKey(
+                    'contributor',
+                    models.ForeignKey(
                         on_delete=models.CASCADE,
                         to='contributors.Contributor',
                         blank=True,
@@ -119,7 +132,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'crop_diameter', models.PositiveSmallIntegerField(
+                    'crop_diameter',
+                    models.PositiveSmallIntegerField(
                         validators=[
                             django.core.validators.MaxValueValidator(100),
                             django.core.validators.MinValueValidator(0)
