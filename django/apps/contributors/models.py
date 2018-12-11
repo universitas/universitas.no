@@ -4,8 +4,6 @@ from collections import namedtuple
 import json
 import logging
 
-from model_utils.models import TimeStampedModel
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
@@ -14,6 +12,8 @@ from django.db import models
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+
 from utils.decorators import cache_memoize
 
 from .fuzzy_name_search import FuzzyNameSearchMixin

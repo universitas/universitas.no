@@ -138,7 +138,7 @@ lint_javascript() {
 lint_python() {
   py_files=$(git diff --staged --name-status | awk '/^[AM].*\.py$/ {print $2}' | grep -v 'migrations')
   if [[ -n $py_files ]]; then
-    exists isort && isort -fss -j3 -m3 -tc $py_files
+    exists isort && isort --thirdparty django -fss -j3 -m3 -tc $py_files
     exists yapf && yapf --verbose --in-place $py_files
   fi
 }

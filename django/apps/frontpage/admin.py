@@ -1,10 +1,11 @@
 """ Admin for frontpage app.  """
 
-from apps.photo.admin import ThumbAdmin
 from django import forms
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+
+from apps.photo.admin import ThumbAdmin
 
 from .models import FrontpageStory
 

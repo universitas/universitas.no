@@ -3,13 +3,13 @@ import logging
 # from allauth.account.models import EmailAccount
 from allauth.exceptions import ImmediateHttpResponse
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
-
-from apps.contributors.models import Contributor
-from apps.contributors.tasks import connect_contributor_to_user
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
+
+from apps.contributors.models import Contributor
+from apps.contributors.tasks import connect_contributor_to_user
 
 logger = logging.getLogger(__name__)
 

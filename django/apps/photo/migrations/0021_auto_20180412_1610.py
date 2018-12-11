@@ -2,6 +2,7 @@
 
 import django.core.serializers.json
 from django.db import migrations
+
 import utils.model_fields
 
 

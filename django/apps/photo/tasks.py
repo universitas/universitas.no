@@ -9,10 +9,10 @@ from typing import BinaryIO, List
 from PIL import Image
 from celery import shared_task
 from celery.task import periodic_task
+from django.conf import settings
 
 from apps.core import staging
 from apps.issues.models import current_issue
-from django.conf import settings
 
 from .cropping.boundingbox import CropBox
 from .cropping.crop_detector import Feature, HybridDetector

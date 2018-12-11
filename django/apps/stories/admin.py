@@ -2,13 +2,14 @@
 
 import logging
 
-from apps.frontpage.models import FrontpageStory
-from apps.photo.admin import ThumbAdmin
 from django.contrib import admin
 from django.db import models
 from django.forms import ModelForm, Textarea, TextInput
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+
+from apps.frontpage.models import FrontpageStory
+from apps.photo.admin import ThumbAdmin
 
 from .models import (
     Aside,

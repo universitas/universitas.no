@@ -1,4 +1,5 @@
 """ Tests for exif library """
+from django.core.files import File as DjangoFile
 import pytest
 
 from apps.photo.file_operations import (
@@ -10,7 +11,6 @@ from apps.photo.file_operations import (
     get_mtime,
     valid_image,
 )
-from django.core.files import File as DjangoFile
 
 
 @pytest.fixture(params=range(5))

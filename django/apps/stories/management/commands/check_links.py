@@ -1,9 +1,10 @@
 import logging
 import re
 
-from apps.stories.models import InlineLink
 from django.core.management.base import BaseCommand
 from django.db.models import Count
+
+from apps.stories.models import InlineLink
 
 logger = logging.getLogger(__name__)
 

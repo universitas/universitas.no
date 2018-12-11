@@ -1,11 +1,11 @@
 import logging
 
-from sorl.thumbnail.helpers import ThumbnailError
-
-from apps.photo import tasks
 from django.conf import settings
 from django.db import models
 from django.dispatch import receiver
+from sorl.thumbnail.helpers import ThumbnailError
+
+from apps.photo import tasks
 
 # from celery import chain
 # from apps.photo import tasks

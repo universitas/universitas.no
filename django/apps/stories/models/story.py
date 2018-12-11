@@ -2,18 +2,18 @@
 
 import logging
 
-from django_extensions.db.fields import AutoSlugField
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-
-from apps.contributors.models import Contributor
-from apps.frontpage.models import FrontpageStory
 from django.conf import settings
 from django.core.cache import cache
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django_extensions.db.fields import AutoSlugField
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+
+from apps.contributors.models import Contributor
+from apps.frontpage.models import FrontpageStory
 from utils.decorators import cache_memoize
 from utils.model_mixins import EditURLMixin
 

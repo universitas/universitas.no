@@ -2,11 +2,11 @@ import logging
 from pathlib import Path
 
 import botocore
-import imagehash
-
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+import imagehash
+
 from utils.model_fields import AttrJSONField
 
 from .file_operations import get_imagehashes, get_md5

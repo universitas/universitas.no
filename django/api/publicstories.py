@@ -1,5 +1,6 @@
 import logging
 
+from django.db.models import Prefetch
 from rest_framework import pagination, serializers, viewsets
 from rest_framework.filters import BaseFilterBackend
 from url_filter.integrations.drf import DjangoFilterBackend
@@ -12,7 +13,6 @@ from apps.stories.models import (
     StoryType,
     StoryVideo,
 )
-from django.db.models import Prefetch
 from utils.serializers import AbsoluteURLField, CropBoxField
 
 from .stories import StorySerializer

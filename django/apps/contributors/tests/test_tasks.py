@@ -1,5 +1,7 @@
 """Tests for contributor tasks"""
 
+from django.contrib.auth import get_user_model
+from django.utils import timezone
 import pytest
 
 from apps.contributors.models import Contributor, Position, Stint
@@ -8,8 +10,6 @@ from apps.contributors.tasks import (
     update_contributor_status,
     update_status,
 )
-from django.contrib.auth import get_user_model
-from django.utils import timezone
 
 User = get_user_model()
 

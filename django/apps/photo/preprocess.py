@@ -5,7 +5,6 @@ import shutil
 import tempfile
 
 import PIL
-
 from django.conf import settings
 from django.db import models
 

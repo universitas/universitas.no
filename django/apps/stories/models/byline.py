@@ -4,10 +4,10 @@ import logging
 import re
 
 from diff_match_patch import diff_match_patch
-
-from apps.contributors.models import Contributor
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
+from apps.contributors.models import Contributor
 
 logger = logging.getLogger(__name__)
 bylines_logger = logging.getLogger('bylines')

@@ -6,9 +6,8 @@ from pathlib import Path
 from typing import Dict, Union
 
 import PIL
-import imagehash
-
 from django.core.files import File as DjangoFile
+import imagehash
 
 try:
     from storages.backends.s3boto3 import S3Boto3StorageFile as BotoFile

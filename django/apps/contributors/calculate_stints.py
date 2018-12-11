@@ -3,9 +3,10 @@ import logging
 import re
 from typing import Dict, Iterable, List, Optional, Union  # noqa
 
-from apps.issues.models import PrintIssue
 from django.db.models.query import QuerySet
 from django.utils import timezone
+
+from apps.issues.models import PrintIssue
 from utils.merge_model_objects import merge_instances
 
 from .models import Contributor, Position, Stint

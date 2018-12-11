@@ -1,7 +1,6 @@
+from django.conf.urls import include, url
 from rest_auth import urls as rest_auth_urls
 from rest_framework import routers
-
-from django.conf.urls import include, url
 
 from .adverts import AdvertViewSet
 from .contributors import ContributorViewSet

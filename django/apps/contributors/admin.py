@@ -3,6 +3,7 @@ from django.contrib import admin, messages
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+
 from utils.merge_model_objects import merge_instances
 
 from .models import Contributor, Position, Stint

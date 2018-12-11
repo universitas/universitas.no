@@ -1,7 +1,6 @@
-from webpack_loader import utils
-
 from django import template
 from django.utils.safestring import mark_safe
+from webpack_loader import utils
 
 register = template.Library()
 

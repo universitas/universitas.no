@@ -2,14 +2,14 @@
 from pathlib import Path
 import shutil
 
+from django.conf import settings
+from django.contrib.auth.models import Permission
 import pytest
 from rest_framework.test import APIClient
 
 from apps.contributors.models import Contributor
 from apps.photo.models import ImageFile
 from apps.stories.models import Section, Story, StoryType
-from django.conf import settings
-from django.contrib.auth.models import Permission
 
 
 @pytest.fixture()

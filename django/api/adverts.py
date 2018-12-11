@@ -1,12 +1,12 @@
 import logging
 
+from django.conf import settings
 from rest_framework import serializers, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from apps.adverts.models import Advert
 from apps.adverts.tanke_og_teknikk import fetch_ads
-from django.conf import settings
 
 logger = logging.getLogger('apps')
 
