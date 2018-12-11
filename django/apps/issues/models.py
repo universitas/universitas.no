@@ -2,18 +2,18 @@
 
 import collections
 import datetime
+from io import BytesIO
 import logging
 import os
 import os.path
+from pathlib import Path
 import re
 import subprocess
 import unicodedata
 import uuid
-from io import BytesIO
-from pathlib import Path
 
-import botocore
 import PyPDF2
+import botocore
 from sorl import thumbnail
 from wand.color import Color
 from wand.drawing import Drawing
@@ -82,7 +82,7 @@ def get_dims(pdf_page):
     return (width, height)
 
 
-def pdf_to_image(pdf, page=1, size=800, file_format='jpeg'):
+def pdf_to_image(pdf, page=1, size=800, file_format='jpeg', quality=80):
     """Creates a image file from pdf file"""
     try:
         pdf.open()
@@ -110,7 +110,8 @@ def pdf_to_image(pdf, page=1, size=800, file_format='jpeg'):
         format='pdf',
         resolution=int(1.6 * 72 * scaleby),
     )
-    # this is necessary to avoid occasional bugs with inverted colors
+    # make sure the color space is correct.
+    # this prevents an occational bug where rgb colours are inverted
     foreground.type = 'truecolormatte'
     foreground.resize(*dims, 25)
     # white background
@@ -121,6 +122,7 @@ def pdf_to_image(pdf, page=1, size=800, file_format='jpeg'):
     )
     background.format = file_format
     background.composite(foreground, 0, 0)
+    background.compression_quality = quality
     return background
 
 

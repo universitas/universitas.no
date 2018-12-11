@@ -5,8 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 from .email_settings import *  # noqa
 from .file_settings import *  # noqa
 from .logging_settings import LOGGING  # noqa
-from .setting_helpers import joinpath as path
 from .setting_helpers import Environment
+from .setting_helpers import joinpath as path
 
 env = Environment(strict=False)
 redis_host = env.redis_host or 'redis'

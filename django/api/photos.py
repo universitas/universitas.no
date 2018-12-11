@@ -1,14 +1,15 @@
 import logging
 import re
 
-from apps.contributors.models import Contributor
-from apps.photo.models import ImageFile
-from apps.photo.tasks import upload_imagefile_to_desken
-from django.db import models
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from apps.contributors.models import Contributor
+from apps.photo.models import ImageFile
+from apps.photo.tasks import upload_imagefile_to_desken
+from django.db import models
 from utils.serializers import AbsoluteURLField, CropBoxField
 
 logger = logging.getLogger('apps')

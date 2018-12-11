@@ -13,6 +13,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='story',
             name='url',
-            field=models.CharField(blank=True, default='', editable=False, max_length=256),
+            field=models.CharField(
+                blank=True, default='', editable=False, max_length=256
+            ),
         ),
     ]

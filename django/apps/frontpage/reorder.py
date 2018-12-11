@@ -1,5 +1,5 @@
 from django.db import connection, models
-from django.db.models import Func, F, Window
+from django.db.models import F, Func, Window
 
 
 class Days(Func):

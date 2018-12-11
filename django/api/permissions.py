@@ -1,5 +1,6 @@
+from rest_framework import mixins, permissions, serializers, viewsets
+
 from django.contrib.auth.models import Permission
-from rest_framework import serializers, viewsets, permissions, mixins
 
 
 class PermissionSerializer(serializers.ModelSerializer):

@@ -1,17 +1,17 @@
 """Celery tasks for photos"""
+from datetime import timedelta
 import logging
+from pathlib import Path
 import re
 import subprocess
-from datetime import timedelta
-from pathlib import Path
 from typing import BinaryIO, List
 
 from PIL import Image
+from celery import shared_task
+from celery.task import periodic_task
 
 from apps.core import staging
 from apps.issues.models import current_issue
-from celery import shared_task
-from celery.task import periodic_task
 from django.conf import settings
 
 from .cropping.boundingbox import CropBox

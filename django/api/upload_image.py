@@ -1,11 +1,12 @@
 import logging
 import re
 
+from rest_framework import mixins, permissions, serializers, viewsets
+from rest_framework.parsers import FormParser, MultiPartParser
+
 from apps.contributors.models import Contributor
 from apps.photo.models import ImageFile
 from django.conf import settings
-from rest_framework import mixins, permissions, serializers, viewsets
-from rest_framework.parsers import FormParser, MultiPartParser
 
 from .photos import ImageFileSerializer
 

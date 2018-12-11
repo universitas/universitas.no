@@ -2,8 +2,8 @@
 
 from io import BytesIO
 
-import pytest
 from PIL import Image
+import pytest
 
 # from apps.markup.models import BlockTag
 from apps.photo.models import ImageFile

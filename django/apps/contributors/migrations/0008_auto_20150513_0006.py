@@ -1,4 +1,3 @@
-
 from django.db import migrations, models
 
 
@@ -24,8 +23,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='contributor',
             name='status',
-            field=models.PositiveSmallIntegerField(default=0, choices=[(
-                0, 'Unknown'), (1, 'Active'), (2, 'Retired'), (3, 'External')]),
+            field=models.PositiveSmallIntegerField(
+                default=0,
+                choices=[(0, 'Unknown'), (1, 'Active'), (2, 'Retired'),
+                         (3, 'External')]
+            ),
             preserve_default=True,
         ),
     ]

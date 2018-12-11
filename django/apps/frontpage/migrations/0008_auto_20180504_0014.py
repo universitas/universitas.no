@@ -13,6 +13,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='frontpagestory',
             name='order',
-            field=models.PositiveIntegerField(default=0, editable=False, verbose_name='order'),
+            field=models.PositiveIntegerField(
+                default=0, editable=False, verbose_name='order'
+            ),
         ),
     ]

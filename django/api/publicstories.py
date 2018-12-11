@@ -5,7 +5,12 @@ from rest_framework.filters import BaseFilterBackend
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from apps.stories.models import (
-    Byline, InlineLink, Story, StoryImage, StoryType, StoryVideo
+    Byline,
+    InlineLink,
+    Story,
+    StoryImage,
+    StoryType,
+    StoryVideo,
 )
 from django.db.models import Prefetch
 from utils.serializers import AbsoluteURLField, CropBoxField

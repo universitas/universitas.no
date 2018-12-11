@@ -1,7 +1,8 @@
 import json
 
-from apps.photo.cropping.boundingbox import CropBox
 from rest_framework import exceptions, serializers
+
+from apps.photo.cropping.boundingbox import CropBox
 
 
 class jsonDict(dict):

@@ -2,6 +2,7 @@ import logging
 
 from celery.schedules import crontab
 from celery.task import periodic_task
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
@@ -9,7 +10,8 @@ from django.utils import timezone
 from utils.merge_model_objects import merge_instances
 
 from .calculate_stints import (
-    create_stints_from_bylines, create_stints_from_pdfs
+    create_stints_from_bylines,
+    create_stints_from_pdfs,
 )
 from .models import Contributor, default_groups
 

@@ -1,8 +1,8 @@
+from io import BytesIO
 import logging
+from pathlib import Path
 import shutil
 import tempfile
-from io import BytesIO
-from pathlib import Path
 
 import PIL
 

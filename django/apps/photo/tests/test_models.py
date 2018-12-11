@@ -1,4 +1,5 @@
 import pytest
+
 # from apps.photo.exif import extract_exif_data
 
 

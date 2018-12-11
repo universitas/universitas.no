@@ -4,8 +4,15 @@ from rest_framework import filters, serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from apps.stories.models import (
-    Aside, Byline, InlineHtml, InlineLink, Pullquote, Story, StoryImage,
-    StoryType, StoryVideo
+    Aside,
+    Byline,
+    InlineHtml,
+    InlineLink,
+    Pullquote,
+    Story,
+    StoryImage,
+    StoryType,
+    StoryVideo,
 )
 from django.core.exceptions import FieldError
 from django.db.models import Prefetch

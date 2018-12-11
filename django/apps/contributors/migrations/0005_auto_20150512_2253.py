@@ -1,4 +1,3 @@
-
 from django.db import migrations, models
 
 
@@ -9,9 +8,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.DeleteModel(
-            name='ContactInfo',
-        ),
+        migrations.DeleteModel(name='ContactInfo', ),
         migrations.RenameField(
             model_name='stint',
             old_name='duration',

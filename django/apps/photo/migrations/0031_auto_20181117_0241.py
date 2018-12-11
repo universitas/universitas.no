@@ -15,6 +15,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='imagefile',
             name='exif_data',
-            field=django.contrib.postgres.fields.jsonb.JSONField(default=dict, editable=False, encoder=django.core.serializers.json.DjangoJSONEncoder, help_text='exif_data', verbose_name='exif_data'),
+            field=django.contrib.postgres.fields.jsonb.JSONField(
+                default=dict,
+                editable=False,
+                encoder=django.core.serializers.json.DjangoJSONEncoder,
+                help_text='exif_data',
+                verbose_name='exif_data'
+            ),
         ),
     ]

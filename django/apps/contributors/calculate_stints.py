@@ -1,6 +1,6 @@
+from datetime import date, datetime
 import logging
 import re
-from datetime import date, datetime
 from typing import Dict, Iterable, List, Optional, Union  # noqa
 
 from apps.issues.models import PrintIssue

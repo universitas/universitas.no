@@ -1,4 +1,3 @@
-
 from django.db import migrations, models
 
 
@@ -13,7 +12,8 @@ class Migration(migrations.Migration):
             model_name='contributor',
             name='verified',
             field=models.BooleanField(
-                default=False, help_text='Verified to be a correct name.'),
+                default=False, help_text='Verified to be a correct name.'
+            ),
             preserve_default=True,
         ),
     ]

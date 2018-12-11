@@ -1,9 +1,10 @@
 import logging
 
-from django.conf import settings
-from django.db import models
 from sorl import thumbnail
 from sorl.thumbnail.helpers import ThumbnailError
+
+from django.conf import settings
+from django.db import models
 
 logger = logging.getLogger(__name__)
 IMGSIZES = [200, 800, 1500]

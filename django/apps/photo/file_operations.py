@@ -1,13 +1,13 @@
 import base64
 import hashlib
-import logging
 from io import BytesIO
+import logging
 from pathlib import Path
 from typing import Dict, Union
 
 import PIL
-
 import imagehash
+
 from django.core.files import File as DjangoFile
 
 try:

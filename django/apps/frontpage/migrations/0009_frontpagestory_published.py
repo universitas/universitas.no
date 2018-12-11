@@ -13,6 +13,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='frontpagestory',
             name='published',
-            field=models.BooleanField(default=True, help_text='published', verbose_name='published'),
+            field=models.BooleanField(
+                default=True, help_text='published', verbose_name='published'
+            ),
         ),
     ]

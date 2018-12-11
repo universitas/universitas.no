@@ -1,16 +1,16 @@
 """ Make image file data serializable """
 import base64
-import logging
-import string
 from collections import namedtuple
 from datetime import datetime
+import logging
+import string
 from typing import Any, Union
 
 import PIL.ExifTags
 from PIL.Image import Image
-
 import ftfy
 import piexif
+
 from django.utils import timezone
 
 logger = logging.getLogger(__name__)

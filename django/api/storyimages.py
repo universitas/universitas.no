@@ -1,6 +1,7 @@
-from apps.stories.models import StoryImage
 from rest_framework import serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
+
+from apps.stories.models import StoryImage
 from utils.serializers import AbsoluteURLField
 
 

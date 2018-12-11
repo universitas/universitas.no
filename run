@@ -130,11 +130,17 @@ show_help() {
 
 lint_javascript() {
   js_files=$(git diff --staged --name-status | awk '/^[AM].*\.js$/ {print $2}' | sed -r '/^(build|docs)/d')
-  [[ -n $js_files ]] && prettier --write --semi false --single-quote --trailing-comma all $js_files
+  if [[ -n $js_files ]]; then
+    prettier --write --semi false --single-quote --trailing-comma all $js_files
+  fi
 }
+
 lint_python() {
   py_files=$(git diff --staged --name-status | awk '/^[AM].*\.py$/ {print $2}' | grep -v 'migrations')
-  [[ -n $py_files ]] && exists isort && isort --verbose $py_files && exists yapf && yapf --verbose --in-place $py_files
+  if [[ -n $py_files ]]; then
+    exists isort && isort -fss -j3 -m3 -tc $py_files
+    exists yapf && yapf --verbose --in-place $py_files
+  fi
 }
 
 dump_redis() {
