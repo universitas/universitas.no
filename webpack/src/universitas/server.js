@@ -6,6 +6,8 @@ import { Provider } from 'react-redux'
 import { renderToString } from 'react-dom/server'
 import App from './App'
 import configureStore from './configureStore.js'
+import { parseText, renderText } from 'markup'
+import { buildNodeTree } from 'markup/nodeTree'
 
 // the main application
 const Universitas = ({ store }) => (
@@ -34,9 +36,10 @@ const serializeError = error =>
   JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error)))
 
 // perform react server side rendering
-const renderReact = (path, { actions, url }) => {
+const renderReact = ({ url, actions }) => {
   global.location = { href: url } // mock window.location
   global.SERVER_SIDE = true // add a global flag
+  const path = new URL(url).pathname
   const store = configureStore(undefined, [path])
   R.forEach(action => store.dispatch(action), actions)
   const html = renderToString(<Universitas store={store} />)
@@ -46,15 +49,34 @@ const renderReact = (path, { actions, url }) => {
 }
 
 // express render handler
-const renderHandler = (req, res) => {
-  const actions = req.body // fake redux actions created in django view
-  const url = req.url
+const renderUniversitas = (req, res) => {
+  const { url, actions } = req.body // fake redux actions created in django view
   try {
-    const result = renderReact(url, actions)
+    const result = renderReact({ url, actions })
     res.json({ url, ...result })
   } catch (error) {
     res.json({ url, error: serializeError(error) })
   }
+}
+
+const nodeTree = (req, res) => {
+  const data = buildNodeTree(req.body)
+  res.json(data)
+}
+
+const cleanMarkup = (req, res) => {
+  const data = R.pipe(
+    R.prop('payload'),
+    parseText,
+    renderText,
+    R.objOf('payload'),
+  )(req.body)
+  res.json(data)
+}
+
+// 404 not found
+const notFound = (req, res) => {
+  res.status(404).json({})
 }
 
 // main express server function
@@ -64,8 +86,10 @@ const serve = () => {
   app.use(express.json({ limit: '10mb' }))
   app.set('json spaces', 2)
   app.use(morgan('dev'))
-  app.get(/\.ico$/, (req, res) => res.status(404).send())
-  app.use(renderHandler)
+  app.use('/render', renderUniversitas)
+  app.use('/markup', cleanMarkup)
+  app.use('/nodetree', nodeTree)
+  app.use('*', notFound)
   app.listen(PORT, () => console.log(`listening on port ${PORT}`))
 }
 

@@ -18,7 +18,10 @@ const hyphenator_no = new Hypher({ ...norwegian, rightmin: 4, leftmin: 4 })
 
 const hyphenateWord = R.ifElse(
   R.contains('~'),
-  R.pipe(R.replace(/^~/, ''), R.replace(/~/g, SOFTHYPHEN)),
+  R.pipe(
+    R.replace(/^~/, ''),
+    R.replace(/~/g, SOFTHYPHEN),
+  ),
   word => hyphenator_no.hyphenateText(word, 10),
 )
 
@@ -39,11 +42,12 @@ export const makeFuzzer = (candidates, cutoff = 0.5) => {
   const fuzzer = FuzzySet(candidates)
   return R.either(
     R.pipe(
+      R.toLower,
       t => fuzzer.get(t) || [],
       R.filter(R.propSatisfies(R.lt(cutoff), '0')),
       R.path([0, 1]),
     ),
-    R.identity,
+    R.toUpper,
   )
 }
 
@@ -80,7 +84,10 @@ export const stringify = R.cond([
 // :: str -> str -> str -> str
 export const tr = R.curry((a, b, text) => {
   const trans = R.zipObj(R.split('', a), R.split('', b))
-  return R.pipe(R.map(l => trans[l] || l), R.join(''))(text)
+  return R.pipe(
+    R.map(l => trans[l] || l),
+    R.join(''),
+  )(text)
 })
 
 // :: string -> string
@@ -133,7 +140,13 @@ export const utf8Decode = R.when(
   R.pipe(
     R.replace(/\xc5\x92/g, 'å'), // workaround unknown encoding
     R.replace(/\xc2\xbf/g, 'ø'), // workaround unknown encoding
-    R.tryCatch(R.pipe(escape, decodeURIComponent), R.nthArg(1)),
+    R.tryCatch(
+      R.pipe(
+        escape,
+        decodeURIComponent,
+      ),
+      R.nthArg(1),
+    ),
     R.trim,
   ),
 )

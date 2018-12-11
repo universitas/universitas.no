@@ -3,8 +3,6 @@
 import json
 import logging
 
-import requests
-
 from api.adverts import AdvertViewSet
 from api.frontpage import FrontpageStoryViewset
 from api.issues import IssueViewSet
@@ -22,30 +20,9 @@ from django.shortcuts import redirect, render
 from django.views.generic.base import TemplateView
 from utils.decorators import cache_memoize
 
+from . import express
+
 logger = logging.getLogger(__name__)
-
-
-def express_render(redux_actions, request):
-    """Server side rendering of react app"""
-    adapter = requests.adapters.HTTPAdapter(max_retries=8)
-    session = requests.Session()
-    session.mount(settings.EXPRESS_SERVER_URL, adapter)
-    data = {'actions': redux_actions, 'url': request.build_absolute_uri()}
-    path = request.path.replace('//', '/').lstrip('/')
-    try:
-        response = session.post(
-            url=f'{settings.EXPRESS_SERVER_URL}/{path}',
-            json=data,
-            timeout=5,
-        )
-    except (requests.ConnectionError, requests.Timeout) as e:
-        logger.exception('Could not connect to express server')
-        return {'state': {}, 'error': f'{e}'}
-    try:
-        return response.json()
-    except json.JSONDecodeError as e:
-        logger.exception('Invalid JSON from express')
-        return {'state': {}, 'error': f'{e}\n{response.content}'}
 
 
 def only_anon(request, *args):
@@ -151,7 +128,11 @@ def react_frontpage_view(request, section=None, story=None, slug=None):
 
     issues = any(request.path.startswith(word) for word in ('/utg', '/pdf'))
     redux_actions = get_redux_actions(request, story, issues)
-    ssr_context = express_render(redux_actions, request)
+    ssr_context = express.react_server_side_render(
+        actions=redux_actions,
+        url=request.build_absolute_uri(),
+        path=request.path,
+    )
     if ssr_context.get('error'):
         logger.debug(json.dumps(ssr_context, indent=2))
 
