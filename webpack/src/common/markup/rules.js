@@ -15,6 +15,7 @@ export const TAGS = [
   'sitatbyline',
   'sitat',
   'tit',
+  'stikktit',
   'tema',
   'spm',
   'fakta',

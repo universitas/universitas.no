@@ -8,6 +8,11 @@ exports[`Info renders correctly 1`] = `
     className="icon"
   >
     <svg
+      attr={
+        Object {
+          "viewBox": "0 0 24 24",
+        }
+      }
       fill="currentColor"
       height="1em"
       stroke="currentColor"

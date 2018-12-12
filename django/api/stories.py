@@ -16,7 +16,7 @@ from apps.stories.models import (
     StoryType,
     StoryVideo,
 )
-from utils.serializers import AbsoluteURLField
+from utils.serializers import AbsoluteURLField, CropBoxField
 
 logger = logging.getLogger('apps')
 
@@ -80,19 +80,23 @@ class StoryImageSerializer(serializers.ModelSerializer):
         model = StoryImage
         fields = [
             *child_fields,
-            'imagefile',
             'caption',
             'creditline',
             'aspect_ratio',
-            # 'cropped',
+            'large',
+            'cropped',
+            'crop_box',
+            'crop_size',
+            'category',
         ]
+
+    large = AbsoluteURLField()
+    cropped = AbsoluteURLField()
+    crop_box = CropBoxField(read_only=True, source='imagefile.crop_box')
+    category = serializers.CharField(source='imagefile.api_category')
 
 
 class BylineSerializer(serializers.ModelSerializer):
-
-    name = serializers.StringRelatedField(source='contributor')
-    thumb = AbsoluteURLField(source='contributor.thumb')
-
     class Meta:
         model = Byline
         fields = [
@@ -104,6 +108,9 @@ class BylineSerializer(serializers.ModelSerializer):
             'contributor',
             'thumb',
         ]
+
+    name = serializers.StringRelatedField(source='contributor')
+    thumb = AbsoluteURLField(source='contributor.thumb')
 
 
 class StoryTypeSerializer(serializers.ModelSerializer):
@@ -119,12 +126,6 @@ class StoryTypeSerializer(serializers.ModelSerializer):
         ]
 
     section = serializers.StringRelatedField()
-
-
-class StorySerializerAllFields(serializers.ModelSerializer):
-    class Meta:
-        model = Story
-        fields = '__all__'
 
 
 class StorySerializer(serializers.HyperlinkedModelSerializer):
@@ -147,37 +148,19 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
             'lede',
             'theme_word',
             'bodytext_markup',
+            'publication_date',
             'story_type',
             'story_type_name',
-            'bylines',
-            'links',
-            'pullquotes',
-            'asides',
-            'images',
-            'videos',
-            'inline_html_blocks',
-            'language',
-            'comment_field',
-            'publication_date',
         ]
 
-    bylines = BylineSerializer(required=False, source='byline_set', many=True)
-    pullquotes = PullquoteSerializer(required=False, many=True)
-    asides = AsideSerializer(required=False, many=True)
-    images = StoryImageSerializer(required=False, many=True)
-    inline_html_blocks = InlineHtmlSerializer(required=False, many=True)
-    videos = StoryVideoSerializer(required=False, many=True)
-    links = InlineLinkSerializer(
-        required=False, source='inline_links', many=True
-    )
-    story_type = serializers.PrimaryKeyRelatedField(
-        queryset=StoryType.objects.all(), read_only=False
-    )
     story_type_name = serializers.StringRelatedField(source='story_type')
     public_url = AbsoluteURLField(source='get_absolute_url')
     edit_url = AbsoluteURLField(source='get_edit_url')
     bodytext_markup = serializers.CharField(trim_whitespace=False)
     working_title = serializers.CharField(trim_whitespace=False)
+    story_type = serializers.PrimaryKeyRelatedField(
+        queryset=StoryType.objects.all(), read_only=False
+    )
 
     # url = serializers.HyperlinkedIdentityField()
 
@@ -192,6 +175,31 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
             story.full_clean()
             story.save()
         return story
+
+
+class StorySerializerNested(StorySerializer):
+    class Meta(StorySerializer.Meta):
+        fields = StorySerializer.Meta.fields + [
+            'bylines',
+            'links',
+            'pullquotes',
+            'asides',
+            'images',
+            'videos',
+            'inline_html_blocks',
+            'language',
+            'comment_field',
+        ]
+
+    bylines = BylineSerializer(required=False, source='byline_set', many=True)
+    pullquotes = PullquoteSerializer(required=False, many=True)
+    asides = AsideSerializer(required=False, many=True)
+    images = StoryImageSerializer(required=False, many=True)
+    inline_html_blocks = InlineHtmlSerializer(required=False, many=True)
+    videos = StoryVideoSerializer(required=False, many=True)
+    links = InlineLinkSerializer(
+        required=False, source='inline_links', many=True
+    )
 
 
 class QueryOrderableViewSetMixin(object):
@@ -238,22 +246,35 @@ class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
 
     filter_backends = [DjangoFilterBackend, SearchFilterBackend]
     filter_fields = ['id', 'publication_status', 'modified']
+
     serializer_class = StorySerializer
-    queryset = Story.objects.prefetch_related(
-        'story_type__section',
-        Prefetch(
-            'byline_set',
-            queryset=Byline.objects.select_related('contributor')
-        ),
-        'asides',
-        'pullquotes',
-        'images',
-        'inline_html_blocks',
-        'inline_links',
-        'videos',
-    )
+
+    def is_nested(self):
+        return 'nested' in self.request.query_params
+
+    def get_queryset(self):
+        queryset = Story.objects.select_related('story_type')
+        if self.request.user.is_anonymous:
+            queryset = queryset.published()
+        if self.is_nested():
+            return queryset.prefetch_related(
+                Prefetch(
+                    'byline_set',
+                    queryset=Byline.objects.select_related('contributor')
+                ),
+                Prefetch(
+                    'images',
+                    queryset=StoryImage.objects.select_related('imagefile')
+                ),
+                'asides',
+                'pullquotes',
+                'inline_html_blocks',
+                'inline_links',
+                'videos',
+            )
+        return queryset
 
     def get_serializer_class(self):
-        if self.request.query_params.get('all'):
-            return StorySerializerAllFields
+        if self.is_nested():
+            return StorySerializerNested
         return super().get_serializer_class()

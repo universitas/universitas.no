@@ -12,6 +12,7 @@
   }
   .label {
     @extend %label;
+    color: rgba(black, 0.6);
     min-width: 5em;
   }
   .value {

@@ -34,6 +34,21 @@ def update_search_task():
     return qs.count()
 
 
+@periodic_task(run_every=timedelta(hours=24))
+def archive_stale_stories(days=14):
+    """Archive prodsys content that has not been touched for a while."""
+    STALE_LIMIT = timezone.timedelta(days)
+    stale_stories = Story.objects.filter(
+        modified__lt=timezone.now() - STALE_LIMIT,
+        publication_status__lt=Story.STATUS_PUBLISHED,
+    )
+    if stale_stories:
+        count = stale_stories.update(publication_status=Story.STATUS_PRIVATE)
+        logger.info(f'archived {count} stories')
+    else:
+        logger.info('no stale stories')
+
+
 @shared_task
 def upload_storyimages(pk):
     story = Story.objects.get(pk=pk)

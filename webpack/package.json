@@ -57,6 +57,7 @@
     "babel-plugin-transform-remove-console": "^6.9.4",
     "blueimp-load-image": "^2.18.0",
     "browserslist": "^4.1.1",
+    "chromatic-sass": "^0.1.8",
     "classnames": "^2.2.6",
     "css-loader": "^1.0.0",
     "cssnano": "^4.1.0",

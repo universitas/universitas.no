@@ -23,7 +23,7 @@ export const fields = {
     options: [
       {
         label: 'Skisse',
-        options: [{ value: 0, label: 'Skisse' }],
+        options: [{ value: '0', label: 'Skisse' }],
       },
       {
         label: 'Prod',

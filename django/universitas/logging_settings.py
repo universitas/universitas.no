@@ -48,12 +48,6 @@ LOGGING['handlers'] = {
     'errorlog': logfile_handler('error-django.log'),
     'celerylog': logfile_handler('celery-django.log', debug=True),
     'debuglog': logfile_handler('debug-django.log', debug=True),
-    'bylineslog': logfile_handler(
-        'bylines.log',
-        level='INFO',
-        filters=[],
-        formatter='minimal',
-    ),
     'sentry': {
         'level': 'ERROR',
         'filters': ['debug_off'],
@@ -76,11 +70,6 @@ LOGGING['loggers'] = {
         'propagate': False,
         'handlers': ['console'],
     },
-    'bylines': {
-        'level': 'INFO',
-        'propagate': False,
-        'handlers': ['bylineslog'],
-    },
     'sorl.thumbnail': {
         'level': 'WARNING',
         'propagate': False,
@@ -97,7 +86,7 @@ LOGGING['loggers'] = {
         'handlers': ['console', 'errorlog', 'debuglog', 'sentry'],
     },
     'celery': {
-        'level': 'ERROR',
+        'level': 'DEBUG',
         'propagate': False,
         'handlers': ['console', 'celerylog', 'sentry'],
     },

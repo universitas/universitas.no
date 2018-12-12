@@ -74,7 +74,10 @@ module.exports = {
               ],
             },
           },
-          { loader: 'sass-loader', options: { sourceMap: true } },
+          {
+            loader: 'sass-loader',
+            options: { sourceMap: true, functions: require('chromatic-sass') },
+          },
         ],
       },
       {
