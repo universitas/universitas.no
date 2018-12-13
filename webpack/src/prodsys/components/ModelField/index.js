@@ -66,7 +66,7 @@ export const Field = ({
     type,
     fieldTypes,
   )
-  const fieldProps = R.omit(['model', 'pk', 'name'], props)
+  const fieldProps = R.omit(['model', 'pk'], props)
   const ModelField = editable ? EditableField : DetailField
   return (
     <div
@@ -97,7 +97,10 @@ const mapDispatchToProps = (dispatch, { pk, model, name, onChange }) => ({
   },
 })
 
-const ModelField = connect(mapStateToProps, mapDispatchToProps)(Field)
+const ModelField = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Field)
 export default ModelField
 
 const capitalize = word => word.charAt(0).toUpperCase() + word.slice(1)

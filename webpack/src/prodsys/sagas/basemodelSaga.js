@@ -23,10 +23,8 @@ import { PRODSYS } from 'prodsys/ducks/router'
 import {
   ITEMS_FETCHED,
   ITEMS_REQUESTED,
-  ITEM_REQUESTED,
   ITEM_DELETED,
   ITEM_CREATED,
-  ITEM_SELECTED,
   FILTER_TOGGLED,
   FILTER_SET,
   FIELD_CHANGED,
@@ -46,7 +44,6 @@ const getRouteParams = R.path(['router', 'params'])
 export default function* rootSaga() {
   yield takeLatest([FILTER_TOGGLED, FILTER_SET], queryChanged)
   yield takeEvery(ITEMS_REQUESTED, requestItems)
-  yield takeEvery([ITEM_SELECTED, ITEM_REQUESTED], fetchItems)
   yield takeLatest(FIELD_CHANGED, patchSaga)
   yield takeEvery(ITEM_CLONED, cloneSaga)
   yield takeEvery(ITEM_CREATED, createSaga)
@@ -80,11 +77,13 @@ export const modelFuncs = action => {
 
 function* routeSaga(action) {
   const { model, pk } = action.payload
-  const { getItemList } = modelSelectors(model)
+  if (model == 'uploads') return
+  const { getItemList, getFetching } = modelSelectors(model)
   const { itemRequested, itemsRequested } = modelActions(model)
+  const fetching = yield select(getFetching)
   const items = yield select(getItemList)
-  if (R.isEmpty(items)) yield put(itemsRequested())
   if (pk) yield put(itemRequested(pk))
+  if (!fetching && R.isEmpty(items)) yield put(itemsRequested())
 }
 
 function* fetchItems(action) {
@@ -111,18 +110,31 @@ function* requestItems(action) {
   const {
     itemsFetching,
     itemsFetched,
-    itemsAppended,
+    paginate,
     getQuery,
+    getItems,
     apiList,
   } = modelFuncs(action)
-  const append = R.path(['payload', 'append'], action)
-  const params =
-    R.path(['payload', 'params'])(action) || (yield select(getQuery))
-  yield put(itemsFetching())
+  let { params, replace = false } = action.payload
+  let changePagination = false
+  if (!params) {
+    params = yield select(getQuery)
+    changePagination = true
+  }
+  if (!replace && params.id__in) {
+    var ids = R.pipe(
+      R.keys,
+      R.map(parseInt),
+    )(yield select(getItems))
+    params = R.over(R.lensProp('id__in'), R.without(ids))(params)
+    if (params.id__in.length == 0) return
+  }
+  yield put(itemsFetching(params))
   const { response, error } = yield call(apiList, params)
-  if (response)
-    yield put(append ? itemsAppended(response) : itemsFetched(response))
-  else yield put(errorAction(error))
+  if (response) {
+    yield put(itemsFetched({ ...response, replace }))
+    if (changePagination) yield put(paginate(response))
+  } else yield put(errorAction(error))
 }
 
 function* patchSaga(action) {

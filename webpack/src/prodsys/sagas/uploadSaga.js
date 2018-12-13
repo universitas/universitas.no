@@ -27,7 +27,7 @@ const { getItem: getPhoto } = modelSelectors('photos')
 const {
   itemsDiscarded: photosDiscarded,
   itemRequested: photoRequested,
-  itemsAppended: photosAppended,
+  itemsFetched: photosAppended,
   itemAdded: photoAdded,
 } = modelActions('photos')
 const { itemAdded: contributorAdded } = modelActions('contributors')
@@ -97,7 +97,7 @@ function* newUploadSaga(action) {
       R.map(R.assoc('choice', 'keep')),
     )(response)
     yield put(uploadUpdate(md5, { duplicates, check: true }))
-    yield put(photosAppended(response))
+    yield put(photosFetched(response))
   } else {
     yield put(errorAction(error))
   }

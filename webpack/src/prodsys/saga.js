@@ -2,7 +2,7 @@ import { all, fork, call, put, takeEvery } from 'redux-saga/effects'
 import errorSaga from 'prodsys/sagas/errorSaga'
 import basemodelSaga from 'prodsys/sagas/basemodelSaga'
 import uploadSaga from 'prodsys/sagas/uploadSaga'
-import storyimageSaga from 'prodsys/sagas/storyimageSaga'
+import storySaga from 'prodsys/sagas/storySaga'
 import { modelActions } from 'prodsys/ducks/basemodel'
 import authSaga from 'common/sagas/authSaga'
 import { requestUser, REQUEST_USER_SUCCESS } from 'common/ducks/auth'
@@ -14,7 +14,7 @@ function* rootSaga() {
     fork(uploadSaga),
     fork(errorSaga),
     fork(authSaga),
-    fork(storyimageSaga),
+    fork(storySaga),
     fork(fetchMoreSaga),
     call(loadInitialData),
   ])

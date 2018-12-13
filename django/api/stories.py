@@ -1,9 +1,7 @@
 import logging
 
 from django.core.exceptions import FieldError
-from django.db.models import Prefetch
-from rest_framework import filters, serializers, viewsets
-from url_filter.integrations.drf import DjangoFilterBackend
+from django.db.models import Count, Prefetch
 
 from apps.stories.models import (
     Aside,
@@ -16,7 +14,11 @@ from apps.stories.models import (
     StoryType,
     StoryVideo,
 )
-from utils.serializers import AbsoluteURLField, CropBoxField
+from rest_framework import filters, serializers, viewsets
+from url_filter.integrations.drf import DjangoFilterBackend
+from utils.serializers import AbsoluteURLField
+
+from .storyimages import StoryImageSerializer
 
 logger = logging.getLogger('apps')
 
@@ -75,27 +77,6 @@ class InlineLinkSerializer(serializers.ModelSerializer):
         ]
 
 
-class StoryImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = StoryImage
-        fields = [
-            *child_fields,
-            'caption',
-            'creditline',
-            'aspect_ratio',
-            'large',
-            'cropped',
-            'crop_box',
-            'crop_size',
-            'category',
-        ]
-
-    large = AbsoluteURLField()
-    cropped = AbsoluteURLField()
-    crop_box = CropBoxField(read_only=True, source='imagefile.crop_box')
-    category = serializers.CharField(source='imagefile.api_category')
-
-
 class BylineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Byline
@@ -151,6 +132,7 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
             'publication_date',
             'story_type',
             'story_type_name',
+            'image_count',
         ]
 
     story_type_name = serializers.StringRelatedField(source='story_type')
@@ -161,6 +143,7 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
     story_type = serializers.PrimaryKeyRelatedField(
         queryset=StoryType.objects.all(), read_only=False
     )
+    image_count = serializers.IntegerField(read_only=True)
 
     # url = serializers.HyperlinkedIdentityField()
 
@@ -253,7 +236,9 @@ class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
         return 'nested' in self.request.query_params
 
     def get_queryset(self):
-        queryset = Story.objects.select_related('story_type')
+        queryset = Story.objects.select_related('story_type').annotate(
+            image_count=Count('images')
+        )
         if self.request.user.is_anonymous:
             queryset = queryset.published()
         if self.is_nested():

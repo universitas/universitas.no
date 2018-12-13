@@ -1,4 +1,4 @@
-import Navigation from 'components/Navigation'
+import Pagination from 'components/Pagination'
 import SearchField from 'components/SearchField'
 import ReactDOM from 'react-dom'
 import frontPageCss from '!css-loader!sass-loader!universitas/styles/universitas.scss'
@@ -36,7 +36,7 @@ class IFrame extends React.Component {
   }
   render() {
     const { children, zoom = 100, ...props } = this.props
-    const head = [<style>{frontPageCss}</style>]
+    const head = <style>{frontPageCss}</style>
     const style =
       zoom < 1
         ? {
@@ -61,8 +61,8 @@ class IFrame extends React.Component {
           }
     return (
       <iframe ref={this.ref} style={style} {...props}>
-        {this.doc && ReactDOM.createPortal(children, this.doc.body)}
         {this.doc && head && ReactDOM.createPortal(head, this.doc.head)}
+        {this.doc && ReactDOM.createPortal(children, this.doc.body)}
       </iframe>
     )
   }

@@ -1,4 +1,4 @@
-@import "globals";
+@import 'globals';
 
 %button {
   border-radius: 0.3rem;
@@ -35,7 +35,7 @@
     // align-items: space-around;
     // justify-content: space-between;
     .Filters,
-    .Navigation {
+    .Pagination {
       flex-wrap: wrap;
       display: flex;
       margin: 0.2em;

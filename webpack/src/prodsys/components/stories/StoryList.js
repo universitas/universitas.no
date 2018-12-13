@@ -3,7 +3,8 @@ import { Clear } from 'components/Icons'
 import ListPanel from 'components/ListPanel'
 import { StoryTable, StoryDetailPreview } from '.'
 import { PhotoList } from 'components/photos'
-import { MODEL, fields } from './model.js'
+import { MODEL, fields, selectors } from './model.js'
+import { connect } from 'react-redux'
 
 const filters = R.pipe(
   R.path(['publication_status', 'options']),
@@ -28,17 +29,27 @@ const StoryList = ({ action, pk }) => {
   if (pk && action == 'images')
     return (
       <React.Fragment>
-        <ListPanel model={MODEL} filters={filters}>
-          <StoryTable />
-        </ListPanel>
-        <PhotoList action={action} />
+        <Stories />
+        <Photos pk={pk} action={action} />
       </React.Fragment>
     )
   if (pk && action == 'preview') return <StoryDetailPreview pk={pk} />
-  return (
-    <ListPanel model={MODEL} filters={filters}>
-      <StoryTable />
-    </ListPanel>
-  )
+  return <Stories />
 }
+
+const Photos = connect((state, { pk }) =>
+  R.pipe(
+    selectors.getItem(pk),
+    R.propOr([], 'images'),
+    R.pluck('imagefile'),
+    R.objOf('selected'),
+  )(state),
+)(PhotoList)
+
+const Stories = () => (
+  <ListPanel model={MODEL} filters={filters}>
+    <StoryTable />
+  </ListPanel>
+)
+
 export default StoryList

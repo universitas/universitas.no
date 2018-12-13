@@ -9,7 +9,8 @@ export const makeParser = ({
   inline,
   process = R.identity,
 }) => {
-  const regex = new RegExp(pattern, inline ? 'y' : 'my')
+  const flags = R.uniq(pattern.flags + (inline ? 'y' : 'my')).join('')
+  const regex = new RegExp(pattern, flags)
   return text => {
     regex.lastIndex = 0
     const result = regex.exec(text)
@@ -38,7 +39,10 @@ const [inlineRules, blockRules] = R.pipe(
 export const parseText = (text, multiline = true, lastIndex = 0) => {
   const nodes = []
   const rules = multiline ? blockRules : inlineRules
-  const types = R.pipe(R.pluck('type'), R.join(' '))(rules)
+  const types = R.pipe(
+    R.pluck('type'),
+    R.join(' '),
+  )(rules)
   let looplimit = 99999 // hack to avoid infinite loops during development.
   let key = 0
   while (looplimit-- && text) {
@@ -50,7 +54,9 @@ export const parseText = (text, multiline = true, lastIndex = 0) => {
           if (R.contains(rule.type, ['text', 'character'])) nodes.push(content)
           else {
             const children = rule.leaf
-              ? content ? [content] : []
+              ? content
+                ? [content]
+                : []
               : parseText(content, R.contains('\n', content))
             // node.hash = hashText(match)
             nodes.push({ ...node, children, key: key++ })
@@ -81,5 +87,9 @@ export const renderText = tree => {
       if (!rule.inline) text.push('\n')
     }
   }
-  return R.pipe(R.join(''), cleanText, R.trim)(text)
+  return R.pipe(
+    R.join(''),
+    cleanText,
+    R.trim,
+  )(text)
 }

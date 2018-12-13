@@ -1,47 +1,28 @@
 import cx from 'classnames'
-import { connect } from 'react-redux'
 import { StoryImage } from 'components/storyimages'
+import { PlaceHolder } from 'components/storyimages/StoryImage'
 import Info from 'components/Info'
 
-import * as storyimages from 'components/storyimages/model.js'
-import * as photos from 'components/photos/model.js'
-
-class StoryDetailImages extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-  componentDidMount() {
-    this.props.selectPhotos(...R.pluck('imagefile', this.props.images))
-    this.props.selectStoryImages(...R.pluck('id', this.props.images))
-  }
-  componentDidUpdate() {
-    this.props.selectPhotos(...R.pluck('imagefile', this.props.images))
-  }
-  componentWillUnmount() {}
-  render() {
-    const { images, createHandler, deleteHandler } = this.props
+const StoryDetailImages = ({ image_count = 0, images }) => {
+  if (!image_count)
     return (
-      <div className="panelContent">
-        {images.length == 0 && (
-          <Info>
-            Ingen bilder valgt i saken. Klikk på bilder for å legge til.
-          </Info>
-        )}
-        {R.pipe(
-          R.sort(R.ascend(R.prop('ordering'))),
-          R.map(({ id }) => (
-            <StoryImage key={id} pk={id} deleteHandler={deleteHandler} />
-          )),
-          R.values,
-        )(images)}
-      </div>
+      <Info>Ingen bilder valgt i saken. Klikk på bilder for å legge til.</Info>
     )
-  }
+  if (!images)
+    return R.pipe(
+      R.range(0),
+      R.map(key => <PlaceHolder key={key} />),
+      R.values,
+    )(image_count)
+  return R.pipe(
+    R.sort(R.ascend(R.prop('ordering'))),
+    R.map(({ id }) => <StoryImage key={id} pk={id} />),
+    R.values,
+  )(images)
 }
 
-const mapStateToProps = (state, ownProps) => ({})
-const mapDispatchToProps = {
-  selectStoryImages: storyimages.actions.itemSelected,
-  selectPhotos: photos.actions.itemSelected,
-}
-export default connect(mapStateToProps, mapDispatchToProps)(StoryDetailImages)
+export default props => (
+  <div className="panelContents">
+    <StoryDetailImages {...props} />
+  </div>
+)

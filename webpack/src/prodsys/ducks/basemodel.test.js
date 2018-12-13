@@ -14,8 +14,6 @@ const {
   itemCloned,
   itemDeleted,
   itemCreated,
-  itemSelected,
-  itemSelectToggled,
   itemRequested,
   itemsRequested,
   itemsFetched,
@@ -29,11 +27,9 @@ const {
 describe('setup', () => {
   test('initial state', () => {
     expect(baseInitialState()).toEqual({
-      selection: [0],
-      listItems: [],
       items: {},
       query: {},
-      navigation: {},
+      pagination: { ids: [] },
     })
   })
 })
@@ -44,14 +40,17 @@ describe('action creators', () => {
     [itemCloned, actions.ITEM_CLONED, 5, { id: 5 }],
     [itemDeleted, actions.ITEM_DELETED, 4, { id: 4 }],
     [itemCreated, actions.ITEM_CREATED, { foo: 'bar' }, { foo: 'bar' }],
-    [itemSelected, actions.ITEM_SELECTED, 5, { ids: [5] }],
-    [itemSelectToggled, actions.ITEM_SELECT_TOGGLED, 4, { id: 4 }],
-    [itemRequested, actions.ITEM_REQUESTED, 2, { ids: [2], force: false }],
+    [
+      itemRequested,
+      actions.ITEMS_REQUESTED,
+      2,
+      { params: { id__in: [2] }, replace: false },
+    ],
     [
       itemsRequested,
       actions.ITEMS_REQUESTED,
       { q: '' },
-      { params: { q: '' }, append: false },
+      { params: { q: '' }, replace: false },
     ],
     [itemsFetched, actions.ITEMS_FETCHED, itemData, itemData],
     [itemsDiscarded, actions.ITEMS_DISCARDED, [2, 3], { ids: [2, 3] }],
@@ -103,7 +102,7 @@ describe('reducer', () => {
       R.mergeDeepRight(
         initialState,
         R.objOf(modelName, {
-          listItems: [itemData.id],
+          pagination: { ids: [itemData.id] },
           items: { [itemData.id]: itemData },
         }),
       ),
@@ -120,9 +119,7 @@ describe('selectors', () => {
   const selectors = modelSelectors(modelName)
   const modelData = {
     query: { foo: [1, 2, 3] },
-    navigation: { next: 'a', previous: 'b' },
-    selection: [100],
-    listItems: [100, 101],
+    pagination: { next: 'a', previous: 'b', ids: [100, 101] },
     items: { '100': { id: 100 }, '101': { id: 101 } },
   }
   const initialState = R.objOf(modelName, baseInitialState())
@@ -130,11 +127,9 @@ describe('selectors', () => {
 
   const cases = [
     ['getQuery', {}, modelData.query],
-    ['getItemList', [], modelData.listItems],
+    ['getItemList', [], modelData.pagination.ids],
     ['getItems', {}, modelData.items],
-    ['getCurrentItemId', 0, modelData.selection[0]],
-    ['getNavigation', {}, modelData.navigation],
-    ['getCurrentItem', {}, modelData.items['100']],
+    ['getPagination', { ids: [] }, modelData.pagination],
     ['getItem', {}, modelData.items['101'], 101],
   ]
   R.map(

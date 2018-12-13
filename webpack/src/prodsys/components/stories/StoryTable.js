@@ -17,7 +17,7 @@ const DumbTableRow = props => (
     <TableCell {...props} name="publication_status" />
     <TableCell {...props} name="story_type" />
     <TableCell {...props} name="modified" relative />
-    <TableCell {...props} name="images" />
+    <TableCell {...props} name="image_count" />
   </React.Fragment>
 )
 

@@ -7,23 +7,33 @@
   max-width: 100%;
   display: grid;
   grid-template-columns: 2.5rem 2fr 4fr;
+  // grid-template-rows: 15rem;
   grid-gap: 0.5rem;
   .actions {
     grid-row-start: 1;
     grid-column-start: 1;
   }
-  .ImageData {
+  .PhotoWidget {
     grid-column-start: 2;
+    .Thumb {
+      min-height: 10rem;
+      max-height: 15rem;
+    }
   }
   form {
     grid-column-start: 3;
     display: flex;
     flex-direction: column;
-    .ModelField:first-child {
+    > :first-child {
       flex: 1;
+    }
+    .wrapForm .ModelField {
+      flex: 1 1 7rem;
+      min-width: 7rem;
     }
   }
 }
+
 .ImageData {
   display: flex;
   flex-direction: column;
@@ -31,7 +41,7 @@
   .PhotoStats {
   }
   .Thumb {
-    height: 10rem;
+    height: 15rem;
     flex: 1;
     .CropBoxContainer {
       justify-content: center;

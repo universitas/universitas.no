@@ -2,29 +2,24 @@
 import { parseQuery } from 'utils/urls'
 import { arrayToggle, combinedToggle, partialMap } from 'utils/fp'
 export const ITEM_ADDED = 'model/ITEM_ADDED'
-export const ITEM_SELECTED = 'model/ITEM_SELECTED'
-export const ITEM_SELECT_TOGGLED = 'model/ITEM_SELECT_TOGGLE'
 export const ITEM_CLONED = 'model/ITEM_CLONED'
 export const ITEM_DELETED = 'model/ITEM_DELETED'
 export const ITEM_CREATED = 'model/ITEM_CREATED'
 export const ITEMS_DISCARDED = 'model/ITEMS_DISCARDED'
 export const ITEM_PATCHED = 'model/ITEM_PATCHED'
 export const FIELD_CHANGED = 'model/FIELD_CHANGED'
+export const PAGINATE = 'model/PAGINATE'
 export const ITEMS_FETCHED = 'model/ITEMS_FETCHED'
-export const ITEMS_APPENDED = 'model/ITEMS_APPENDED'
-export const ITEM_REQUESTED = 'model/ITEM_REQUESTED'
 export const ITEMS_REQUESTED = 'model/ITEMS_REQUESTED'
 export const ITEMS_FETCHING = 'model/ITEMS_FETCHING'
 export const FILTER_TOGGLED = 'model/FILTER_TOGGLED'
 export const FILTER_SET = 'model/FILTER_SET'
 
 // Lenses
-const selectedItemsLens = R.lensProp('selection')
-const selectedItemLens = R.lensPath(['selection', 0])
-const currentItemsLens = R.lensProp('listItems')
 const queryLens = R.lensProp('query')
 const itemsLens = R.lensProp('items')
-const navigationLens = R.lensProp('navigation')
+const paginationLens = R.lensProp('pagination')
+const paginationItemsLens = R.lensPath(['pagination', 'ids'])
 const fetchingLens = R.lensProp('fetching')
 const itemLens = id => R.lensPath(['items', String(id)])
 
@@ -33,27 +28,31 @@ export const actionModelLens = R.lensPath(['meta', 'modelName'])
 
 // :: Lens -> ModelName (String) -> State (Object) -> Any -- (create redux selector)
 const getSelector = R.curryN(3, (lens, modelName, state) =>
-  R.view(R.compose(R.lensProp(modelName), lens), state),
+  R.view(
+    R.compose(
+      R.lensProp(modelName),
+      lens,
+    ),
+    state,
+  ),
 )
 const defaultSelector = fallback =>
-  R.curryN(3, R.pipe(getSelector, R.defaultTo(fallback)))
+  R.curryN(
+    3,
+    R.pipe(
+      getSelector,
+      R.defaultTo(fallback),
+    ),
+  )
 
 // :: modelName -> {k: selector} -- (redux selector factory)
 export const modelSelectors = partialMap({
   getQuery: getSelector(queryLens),
-  getNavigation: getSelector(navigationLens),
-  getItemList: getSelector(currentItemsLens),
+  getPagination: getSelector(paginationLens),
+  getItemList: getSelector(paginationItemsLens),
   getItems: getSelector(itemsLens),
   getFetching: getSelector(fetchingLens),
-  getCurrentItemId: getSelector(selectedItemLens),
-  getSelectedItems: getSelector(selectedItemsLens),
   getItem: modelName => id => defaultSelector({})(itemLens(id), modelName),
-  getCurrentItem: modelName => state =>
-    defaultSelector({})(
-      itemLens(getSelector(selectedItemLens, modelName, state)),
-      modelName,
-      state,
-    ),
   getChoices: R.pipe(
     getSelector(itemsLens),
     R.values,
@@ -77,21 +76,22 @@ export const modelActions = partialMap({
   itemCloned: getActionCreator(ITEM_CLONED, id => ({ id })),
   itemDeleted: getActionCreator(ITEM_DELETED, id => ({ id })),
   itemCreated: getActionCreator(ITEM_CREATED, data => data),
-  itemSelectToggled: getActionCreator(ITEM_SELECT_TOGGLED, id => ({ id })),
   itemsDiscarded: getActionCreator(ITEMS_DISCARDED, (...ids) => ({ ids })),
   itemPatched: getActionCreator(ITEM_PATCHED, R.assoc('dirty', false)),
-  itemSelected: getActionCreator(ITEM_SELECTED, (...ids) => ({ ids })),
-  itemRequested: getActionCreator(ITEM_REQUESTED, (id, force = false) => ({
-    ids: [id],
-    force,
-  })),
+  itemRequested: getActionCreator(
+    ITEMS_REQUESTED,
+    (id, params = {}, replace = false) => ({
+      params: { id__in: [id], ...params },
+      replace,
+    }),
+  ),
   itemsRequested: getActionCreator(
     ITEMS_REQUESTED,
-    (params, append = false) => ({ params, append }),
+    (params, replace = false) => ({ params, replace }),
   ),
-  itemsFetched: getActionCreator(ITEMS_FETCHED, data => data),
   itemsFetching: getActionCreator(ITEMS_FETCHING, data => data),
-  itemsAppended: getActionCreator(ITEMS_APPENDED, data => data),
+  itemsFetched: getActionCreator(ITEMS_FETCHED, data => data),
+  paginate: getActionCreator(PAGINATE, data => data),
   filterSet: getActionCreator(FILTER_SET, (key, value) => ({ key, value })),
   filterToggled: getActionCreator(FILTER_TOGGLED, (key, value) => ({
     key,
@@ -116,27 +116,29 @@ const offsetFromUrl = R.compose(
 // :: () => State
 export const baseInitialState = R.pipe(
   R.always({}),
-  R.set(selectedItemLens, 0),
-  R.set(currentItemsLens, []),
   R.set(itemsLens, {}),
   R.set(queryLens, {}),
-  R.set(navigationLens, {}),
+  R.set(paginationLens, {}),
+  R.set(paginationItemsLens, []),
 )
 
-const mergeLeft = R.flip(R.merge)
+const updateItems = R.converge(R.call, [
+  R.ifElse(R.prop('replace'), R.always(R.mergeLeft), R.always(R.mergeDeepLeft)),
+  R.pipe(
+    R.prop('results'),
+    R.indexBy(R.prop('id')),
+  ),
+])
 
 // :: Action -> State -> State -- (pointfree redux reducer)
 const getReducer = ({ type, payload }) => {
   switch (type) {
-    case ITEMS_FETCHED: {
+    case PAGINATE: {
       // items fetched and pagination updated
       const { results, next, previous, count, url } = payload
       return R.compose(
-        R.set(fetchingLens, false),
-        R.over(itemsLens, mergeLeft(R.indexBy(R.prop('id'), results))),
-        R.set(currentItemsLens, R.pluck('id', results)),
-        R.set(navigationLens, {
-          results: results.length,
+        R.set(paginationItemsLens, R.pluck('id', results)),
+        R.set(paginationLens, {
           last: offsetFromUrl(next) || offsetFromUrl(url) + results.length,
           count,
           next: next && parseQuery(next),
@@ -144,29 +146,31 @@ const getReducer = ({ type, payload }) => {
         }),
       )
     }
-    case ITEMS_APPENDED:
-      // items fetched, but no change in selection (current pagination)
+    case ITEMS_FETCHED:
+      // items fetched, but no change in pagination
       return R.compose(
         R.set(fetchingLens, false),
-        R.over(itemsLens, mergeLeft(R.indexBy(R.prop('id'), payload.results))),
+        R.over(itemsLens, updateItems(payload)),
       )
     case ITEMS_DISCARDED: {
       const { ids = [] } = payload
-      const deleted = R.pipe(R.map(k => [k, { deleted: true }]), R.fromPairs)
+      const deleted = R.pipe(
+        R.map(k => [k, { deleted: true }]),
+        R.fromPairs,
+      )
       return R.compose(
-        R.over(selectedItemsLens, R.without(ids)),
-        R.over(currentItemsLens, R.without(ids)),
         R.over(itemsLens, R.mergeDeepLeft(deleted(ids))),
+        R.over(paginationItemsLens, R.without(ids)),
       )
     }
     case ITEM_PATCHED:
       // received single item patch from server
-      return R.set(itemLens(payload.id), payload)
+      return R.over(itemLens(payload.id), R.mergeDeepLeft(payload))
     case ITEM_ADDED:
       // received single new item
       return R.compose(
-        R.over(currentItemsLens, R.union([payload.id])),
         R.set(itemLens(payload.id), payload),
+        R.over(paginationItemsLens, R.union([payload.id])),
       )
     case FIELD_CHANGED: {
       // single item field changed client side
@@ -177,14 +181,15 @@ const getReducer = ({ type, payload }) => {
     }
     case ITEMS_FETCHING:
       return R.set(fetchingLens, true)
-    case ITEM_SELECTED:
-      // select item(s)
-      return R.set(selectedItemsLens, payload.ids)
-    case ITEM_SELECT_TOGGLED:
-      return R.over(selectedItemsLens, arrayToggle(payload.id))
     case FILTER_SET:
       // set single filter value
-      return R.set(R.compose(queryLens, R.lensProp(payload.key)), payload.value)
+      return R.set(
+        R.compose(
+          queryLens,
+          R.lensProp(payload.key),
+        ),
+        payload.value,
+      )
     case FILTER_TOGGLED:
       // flip single filter value ( also works with filter-set )
       return R.over(queryLens, combinedToggle(payload.key, payload.value))
@@ -196,7 +201,10 @@ const getReducer = ({ type, payload }) => {
 // :: (String, State) -> (Action -> State -> State) -- (redux reducer factory)
 export const modelReducer = (modelName, modelState = {}) => {
   const initialState = R.mergeDeepRight(baseInitialState(), modelState)
-  const isModelAction = R.pipe(R.view(actionModelLens), R.equals(modelName))
+  const isModelAction = R.pipe(
+    R.view(actionModelLens),
+    R.equals(modelName),
+  )
   return (state = initialState, action) =>
     R.ifElse(isModelAction, getReducer, R.always(R.identity))(action)(state)
 }

@@ -11,7 +11,14 @@ import { assignPhoto } from 'ducks/storyimage'
 
 const Frame = () => <rect className="Frame" width="100%" height="100%" />
 
-const FullThumbWithCropBox = ({ src, title, width, height, crop_box }) => {
+const FullThumbWithCropBox = ({
+  src,
+  title,
+  width = 0,
+  height = 0,
+  crop_box,
+}) => {
+  if (!width || !height) return
   const { left, x, right, top, y, bottom } = crop_box
   const boxPath = `M0, 0H1V1H0Z M${left}, ${top}V${bottom}H${right}V${top}Z`
   return (
@@ -30,7 +37,7 @@ const FullThumbWithCropBox = ({ src, title, width, height, crop_box }) => {
   )
 }
 
-const FullThumb = ({ src, title, width, height }) => (
+const FullThumb = ({ src, title, width = 0, height = 0 }) => (
   <svg className="Thumb" viewBox={`0 0 ${width} ${height}`}>
     <image xlinkHref={src} width="100%" height="100%" />
     <Frame />
@@ -78,13 +85,9 @@ const GridItem = ({
   </div>
 )
 
-const ConnectedGridItem = connect((state, { pk }) => {
+const ConnectedGridItem = connect((state, { pk, selected }) => {
   const { model, pk: currentItem, action } = getRoutePayload(state)
   const data = selectors.getItem(pk)(state) || {}
-  const selected =
-    model == 'photos'
-      ? pk == currentItem
-      : R.contains(pk, selectors.getSelectedItems(state))
   const clickAction =
     action == 'images'
       ? assignPhoto(pk, currentItem)
@@ -97,11 +100,17 @@ const ConnectedGridItem = connect((state, { pk }) => {
   return { ...data, className, action, selected, clickAction }
 })(GridItem)
 
-const PhotoGrid = ({ items = [] }) => (
+const PhotoGrid = ({ selected = [], items = [] }) => (
   <div className="ItemGrid">
-    {items.map(pk => <ConnectedGridItem key={pk} pk={pk} />)}
+    {selected.map(pk => (
+      <ConnectedGridItem key={pk} pk={pk} selected />
+    ))}
+    {items.map(pk => (
+      <ConnectedGridItem key={pk} pk={pk} />
+    ))}
   </div>
 )
-export default connect(state => ({ items: selectors.getItemList(state) }))(
-  PhotoGrid,
-)
+export default connect((state, { selected = [] }) => ({
+  selected,
+  items: R.without(selected, selectors.getItemList(state)),
+}))(PhotoGrid)

@@ -39,7 +39,9 @@ const UploadList = ({
       fileError={fileError}
       className="itemList"
     >
-      {files.map(pk => <UploadItem pk={pk} key={pk} />)}
+      {files.map(pk => (
+        <UploadItem pk={pk} key={pk} />
+      ))}
     </FileInputArea>
   </section>
 )
@@ -52,7 +54,7 @@ const TopBar = ({ children }) => (
 
 const BottomBar = ({}) => (
   <div className="BottomBar">
-    <div className="Navigation">
+    <div className="Pagination">
       <div className="info">bottom bar</div>
     </div>
   </div>
@@ -63,4 +65,7 @@ const mapStateToProps = state => ({
   updateAll: getUpdateAll(state),
 })
 const mapDispatchToProps = { fileAdded: uploadAdd, toggleUpdateAll }
-export default connect(mapStateToProps, mapDispatchToProps)(UploadList)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(UploadList)

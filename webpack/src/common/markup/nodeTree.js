@@ -11,7 +11,13 @@ const childTypes = [
   'inline_html_blocks',
 ]
 
-const clean = R.when(R.is(String), R.pipe(cleanText, specialCharacters))
+const clean = R.when(
+  R.is(String),
+  R.pipe(
+    cleanText,
+    specialCharacters,
+  ),
+)
 
 // :: {story} -> [{storychild}]
 export const getChildren = R.pipe(
@@ -64,7 +70,8 @@ const placeChildren = (walk, node, story) =>
 
 // :: {story} -> {...story, nodeTree}
 export const buildNodeTree = story => {
-  let { title, kicker, lede, theme_word, bylines = [] } = story
+  let { title, kicker, lede, theme_word, bylines } = story
+  const new_bylines = []
   const walk = R.compose(
     R.map(clean),
     R.reject(R.isNil),
@@ -90,7 +97,7 @@ export const buildNodeTree = story => {
               props.children = [{ type: 'pullquote', children }]
               break
             case 'bl':
-              bylines.push(parseByline(children[0]))
+              new_bylines.push(parseByline(children[0]))
               return null
             case 'tit':
               if (!title) {
@@ -119,6 +126,7 @@ export const buildNodeTree = story => {
     parseText,
   )(story.bodytext_markup)
   const nodeTree = walk(parseTree)
+  console.log({ new_bylines })
 
   return {
     ...story,
@@ -126,7 +134,7 @@ export const buildNodeTree = story => {
     kicker,
     lede,
     theme_word,
-    bylines,
+    bylines: R.concat(bylines, new_bylines),
     parseTree,
     nodeTree,
   }

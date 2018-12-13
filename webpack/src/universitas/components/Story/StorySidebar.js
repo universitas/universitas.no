@@ -1,7 +1,10 @@
 import { hyphenate, formatDate } from 'utils/text'
 import anonymous from 'images/anonymous.png'
 
-const datelineFormat = R.pipe(formatDate, R.replace(/^(...)\S+/, '$1'))
+const datelineFormat = R.pipe(
+  formatDate,
+  R.replace(/^(...)\S+/, '$1'),
+)
 
 const DateLine = ({ publication_date }) => (
   <div className="DateLine">
@@ -46,7 +49,7 @@ const Byline = ({ credit, name, title, contributor, thumb }) => (
 const Bylines = ({ bylines }) =>
   R.pipe(
     R.sortBy(R.prop('ordering')),
-    R.uniqBy(R.pick(['contributor', 'credit'])),
+    // R.uniqBy(R.pick(['contributor', 'credit'])),
     R.map(R.when(R.propEq('thumb', '?'), R.assoc('thumb', anonymous))),
     R.addIndex(R.map)((props, idx) => <Byline key={idx} {...props} />),
   )(bylines)

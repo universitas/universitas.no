@@ -16,7 +16,7 @@ export const fields = {
   story_type_name: { label: 'artikkeltype', type: 'string' },
   bodytext_markup: { label: 'tekst', type: 'text' },
   byline_set: { label: 'bylines', type: 'count' },
-  images: { label: 'foto', type: 'count' },
+  image_count: { label: 'foto', type: 'number' },
   publication_status: {
     label: 'status',
     type: 'select',
