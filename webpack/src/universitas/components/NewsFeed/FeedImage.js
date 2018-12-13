@@ -1,5 +1,7 @@
 import './FeedImage.scss'
 
+const defaultCropBox = { x: 0.5, y: 0.5, left: 0, top: 0, right: 1, bottom: 1 }
+
 class FeedImage extends React.Component {
   constructor(props) {
     super(props)
@@ -16,7 +18,6 @@ class FeedImage extends React.Component {
   }
 
   componentDidMount() {
-    const { image } = this.props
     this.updateSize()
     window.addEventListener('resize', this.updateSize)
   }
@@ -28,7 +29,7 @@ class FeedImage extends React.Component {
   }
 
   render() {
-    const { imagefile, crop_box, moduleSize } = this.props
+    const { imagefile, crop_box = defaultCropBox, moduleSize } = this.props
     const { large, width, height } = imagefile
     const { aspect } = this.state
     const style = aspect

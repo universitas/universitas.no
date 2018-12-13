@@ -1,4 +1,4 @@
-@import "styles/_common.scss";
+@import 'styles/_common.scss';
 $row-height: 12vh;
 
 .FeedTerminator {
@@ -206,30 +206,44 @@ $row-height: 12vh;
   }
 }
 
-.NewsFeed {
+%grid {
   font-family: $univ-sans;
-  display: flex;
   display: grid;
-  overflow: hidden;
   grid-gap: $gridgap;
-  grid-template-columns: 1fr 1fr;
-  grid-auto-flow: dense;
-  // large screen
-  @include min-size(s) {
-    grid-auto-rows: minmax($row-height * 1, auto);
-    grid-template-columns: repeat(6, 1fr);
-    @for $n from 1 through 6 {
-      .col-#{$n} {
-        grid-column-end: span $n;
-        .Headline {
-          font-size: (1em + $n * 0.4em);
-        }
-      }
-      .row-#{$n} {
-        grid-row-end: span $n;
+  grid-auto-rows: minmax($row-height * 1, auto);
+  grid-template-columns: repeat(6, 1fr);
+  @for $n from 1 through 6 {
+    .col-#{$n} {
+      grid-column-end: span $n;
+      .Headline {
+        font-size: (1em + $n * 0.4em);
       }
     }
+    .row-#{$n} {
+      grid-row-end: span $n;
+    }
   }
+}
+
+.StoryBookGrid {
+  // for story books
+  @extend %grid;
+  grid-auto-rows: calc(100vh / 6 - 1rem);
+  background: #ddd;
+  .GridField {
+    background: #eee;
+  }
+  .FeedItem {
+    z-index: 1;
+    grid-row-start: 1;
+    grid-column-start: 1;
+  }
+}
+
+.NewsFeed {
+  @extend %grid;
+  grid-auto-flow: dense;
+  overflow: hidden;
   // mobile screen
   @include max-size(s) {
     grid-auto-rows: minmax($row-height * 1.8, auto);

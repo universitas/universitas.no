@@ -7,6 +7,7 @@ import { hyphenate, slugify } from 'utils/text'
 import { renderStyles, parseStyles } from './feedItemStyles.js'
 import { inlineText } from 'markup/render.js'
 import FeedImage from './FeedImage.js'
+import './NewsFeed.scss'
 
 const ifChildren = Component => props =>
   props.children ? <Component {...props} /> : null
@@ -24,7 +25,7 @@ const Kicker = ifChildren(({ children }) => (
 ))
 const Lede = ifChildren(({ children }) => <p className="Lede">{children}</p>)
 
-const Wrapper = props => <div {...props} />
+const Div = props => <div {...props} />
 
 export const FeedItem = ({
   html_class,
@@ -37,7 +38,7 @@ export const FeedItem = ({
   crop_box,
   sectionName = '',
   className,
-  Wrapper = Wrapper,
+  Wrapper = Div,
   ...props
 }) => (
   <Wrapper
@@ -74,11 +75,30 @@ const LinkWrapper = ({ fetchStatus, story, addRef, children, className }) => {
   return (
     <Link to={toStory(story)} className={className}>
       <ErrorBoundary>
-        {children}
         {addRef && <div style={{ gridArea: '1/1' }} ref={addRef(story.id)} />}
+        {children}
       </ErrorBoundary>
     </Link>
   )
 }
+
+const GridField = ({ col, row }) => (
+  <div
+    className="GridField"
+    style={{
+      gridColumnStart: col + 1,
+      gridRowStart: row + 1,
+    }}
+  />
+)
+
+export const StoryBookGrid = ({ children, ...props }) => (
+  <section className="StoryBookGrid" {...props}>
+    {children}
+    {R.range(0, 36).map(n => (
+      <GridField key={n} col={n % 6} row={Math.floor(n / 6)} />
+    ))}
+  </section>
+)
 
 export default props => <FeedItem Wrapper={LinkWrapper} {...props} />
