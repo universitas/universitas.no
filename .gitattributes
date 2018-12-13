@@ -1,1 +1,2 @@
+# for correct language detection on GitHub
 *.ipynb linguist-language=python
