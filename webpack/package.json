@@ -84,7 +84,7 @@
     "postcss-object-fit-images": "^1.1.2",
     "progress-bar-webpack-plugin": "^1.11.0",
     "prop-types": "^15.6.2",
-    "ramda": "^0.25",
+    "ramda": "^0.26.1",
     "raven-js": "^3.27.0",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
