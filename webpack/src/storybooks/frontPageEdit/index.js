@@ -2,21 +2,27 @@ import { storiesOf } from '@storybook/react'
 import { number, text, object, select } from '@storybook/addon-knobs'
 import { action } from '@storybook/addon-actions'
 import * as icons from 'components/frontpage/Icons'
-import { FeedItem } from 'components/NewsFeed'
+import { FeedItem, StoryBookGrid } from 'components/NewsFeed/FeedItem'
 import Debug from 'components/Debug'
 import { StyleButtons } from 'components/frontpage/StyleButtons'
 import mooch from '../assets/mooch.jpg'
 
 const htmlClass = () => [
-  select('size', ['size-small', 'size-medium', 'size-large'], 'size-small'),
+  select(
+    'font size',
+    ['size-small', 'size-medium', 'size-large'],
+    'size-small',
+  ),
   select(
     'layout',
     ['layout-top', 'layout-left', 'layout-behind'],
     'layout-top',
   ),
   select('background', ['bg-white', 'bg-black', 'bg-section'], 'bg-white'),
-  select('weight', ['weight-bold', 'weight-thin'], 'weight-bold'),
+  select('font weight', ['weight-bold', 'weight-thin'], 'weight-bold'),
 ]
+
+const wrapper = props => <div {...props} />
 
 const feedItemProps = () => ({
   sectionName: select(
@@ -25,14 +31,16 @@ const feedItemProps = () => ({
     'nyheter',
   ),
   html_class: R.join(' ', htmlClass()),
-  size: [number('cols', 3), number('rows', 3)],
-  image: mooch,
+  size: [
+    number('cols', 3, { range: true, min: 1, max: 6 }),
+    number('rows', 3, { range: true, min: 1, max: 6 }),
+  ],
+  imagefile: { large: mooch, width: 1291, height: 777 },
   headline: text('headline', 'Hello World!'),
   vignette: text('vignette', 'vignette'),
   kicker: text('kicker', 'Kicker here'),
   lede: text('lede', 'The lede'),
-  crop_box: {},
-  Wrapper: props => <div {...props} />,
+  crop_box: { x: 0.5, y: 0.4, top: 0.2, bottom: 0.7, left: 0.3, right: 0.7 },
 })
 
 class ButtonWrapper extends React.Component {
@@ -49,14 +57,23 @@ class ButtonWrapper extends React.Component {
   }
 }
 
+const style = {
+  fontFamily: 'Roboto',
+  display: 'grid',
+  overflow: 'hidden',
+  gridGap: '1rem',
+  gridTemplateRows: 'repeat(6,15vh)',
+  gridTemplateColumns: 'repeat(6,15vw)',
+}
+
 storiesOf('FrontpageEdit', module)
   .addWithJSX('widget', () => <ButtonWrapper />)
   .addWithJSX('feed item', () => {
     const props = feedItemProps()
     return (
-      <div className="NewsFeed">
+      <StoryBookGrid>
         <FeedItem {...props} />
-      </div>
+      </StoryBookGrid>
     )
   })
   .addWithJSX('icons', () => {

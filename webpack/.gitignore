@@ -1,4 +1,5 @@
 node_modules/
 build/
+dist/
 package.json
 webpack-stats.json
