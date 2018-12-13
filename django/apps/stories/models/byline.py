@@ -3,8 +3,9 @@ import json
 import logging
 import re
 
-from apps.contributors.models import Contributor
 from diff_match_patch import diff_match_patch
+
+from apps.contributors.models import Contributor
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 

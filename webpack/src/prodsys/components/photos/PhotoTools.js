@@ -5,35 +5,61 @@ import DetailTopBar from 'components/DetailTopBar'
 import { pushPhoto } from 'ducks/storyimage'
 import { selectors, actions, MODEL } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
-
-const openUrl = url => () => window.open(url)
-
+import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
 const PhotoTools = ({
   autocrop,
-  close,
   pushPhoto,
   openAdmin,
   filename,
   action,
   toggleCrop,
+  upload,
   pk,
+  cropping_method,
 }) => (
-  <DetailTopBar title={filename} pk={pk}>
-    <Tool icon="Close" title="lukk bildet" onClick={close} />
+  <React.Fragment>
+    <Tool
+      icon="CameraRoll"
+      title="last opp nye bilder"
+      label="last opp"
+      onClick={upload}
+    />
+    <Tool
+      icon="Download"
+      label="desken"
+      title="last opp fila til desken"
+      onClick={pushPhoto}
+    />
     <Tool
       active={action == 'crop'}
       icon="Crop"
-      title="toggle crop"
+      title="tilpass beskjæring"
+      label="tilpass"
       onClick={() => toggleCrop(action == 'crop' ? null : 'crop')}
     />
-    <Tool icon="Download" title="last opp til desken" onClick={pushPhoto} />
-    <Tool icon="Tune" title="rediger i django-admin" onClick={openAdmin} />
-  </DetailTopBar>
+    <Tool
+      disabled={cropping_method == 1}
+      icon="Magic"
+      label="auto"
+      title="autobeskjær bilde"
+      onClick={autocrop}
+    />
+    <OpenInDjangoAdmin pk={pk} path="photo/imagefile" />
+  </React.Fragment>
 )
 
 const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
 const mapDispatchToProps = (dispatch, { pk, action }) => ({
-  autocrop: () => dispatch(actions.fieldChanged(pk, 'cropping_method', 1)),
+  autocrop: () => {
+    dispatch(actions.fieldChanged(pk, 'cropping_method', 1))
+    setTimeout(() => dispatch(actions.itemRequested(pk, true)), 3000)
+  },
+  upload: () =>
+    dispatch(
+      toRoute({
+        model: 'uploads',
+      }),
+    ),
   toggleCrop: () =>
     dispatch(
       toRoute({
@@ -43,8 +69,6 @@ const mapDispatchToProps = (dispatch, { pk, action }) => ({
       }),
     ),
   pushPhoto: () => dispatch(pushPhoto(pk)),
-  close: () => dispatch(toRoute({ model: MODEL })),
-  openAdmin: openUrl(`/admin/photo/imagefile/${pk}/change/`),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PhotoTools)

@@ -10,9 +10,10 @@ export const TAGS = [
   'tingo',
   'mt',
   'bl',
+  'bt',
   'ing',
-  'sitat',
   'sitatbyline',
+  'sitat',
   'tit',
   'tema',
   'spm',
@@ -96,10 +97,10 @@ const baseRules = {
     pattern: /^@(\S+?): ?(.*)$/,
     groups: ['tag', 'content'],
     reverse: ({ tag, content }) => {
-      const space = R.contains(tag, ['mt', 'spm', 'tingo']) ? '\n' : ''
+      const space = R.contains(tag, ['bt', 'mt', 'spm', 'tingo']) ? '\n' : ''
       return `${space}@${tag}: ${content}`
     },
-    process: R.evolve({ tag: makeFuzzer(TAGS, 0.7) }), // fuzzy match
+    process: R.evolve({ tag: makeFuzzer(TAGS, 0.5) }), // fuzzy match
   },
   listItem: {
     // renders to html list
@@ -107,19 +108,26 @@ const baseRules = {
     order: 9,
     reverse: ({ content }) => `# ${content}`,
   },
+  comment: {
+    // inline comment is only uppercase characters
+    pattern: /^[^\na-zøæå]{10,}$/,
+    order: 99,
+    reverse: ({ content }) => `\n${content}\n`,
+  },
   paragraph: {
     // default paragraph block for body text
     pattern: /^.*$/,
     order: 100,
+    // reverse: ({ content }) => `    ${content}`,
   },
-  facts: {
+  aside: {
     // aside
     pattern: /^@fakta:\s?((\n?.+)+)$/,
     order: 1,
     reverse: ({ content }) => `\n@fakta: ${content}\n`,
   },
   pullquote: {
-    pattern: /^@sitat:\s?((\n?.+)+)$/,
+    pattern: /^@sitat:\s?((.+\n?)+)$/i,
     order: 1,
     reverse: ({ content }) => `\n@sitat: ${content}\n`,
   },

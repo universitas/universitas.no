@@ -14,6 +14,10 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='imagefile',
             name='crop_box',
-            field=utils.model_fields.CropBoxField(help_text='How this image has been cropped.', null=True, verbose_name='crop box'),
+            field=utils.model_fields.CropBoxField(
+                help_text='How this image has been cropped.',
+                null=True,
+                verbose_name='crop box'
+            ),
         ),
     ]

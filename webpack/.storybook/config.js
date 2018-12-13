@@ -16,7 +16,7 @@ setOptions({
   url: 'https://github.com/universitas/universitas.no',
   showStoriesPanel: true,
   showAddonPanel: true,
-  addonPanelInRight: false,
+  addonPanelInRight: true,
   showSearchBox: false,
 })
 

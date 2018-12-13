@@ -1,11 +1,12 @@
 """Celery tasks for photos"""
+from datetime import timedelta
 import logging
+from pathlib import Path
 import re
 import subprocess
-from datetime import timedelta
-from pathlib import Path
 from typing import BinaryIO, List
 
+from PIL import Image
 from celery import shared_task
 from celery.task import periodic_task
 
@@ -16,7 +17,6 @@ from django.conf import settings
 from .cropping.boundingbox import CropBox
 from .cropping.crop_detector import Feature, HybridDetector
 from .models import ImageFile
-from PIL import Image
 
 logger = logging.getLogger(__name__)
 
@@ -24,24 +24,28 @@ logger = logging.getLogger(__name__)
 @shared_task(ignore_result=True)
 def process_image_upload(pk: int, temporary_file: str) -> bool:
     """Process uploaded files"""
+    imagefile = Path(temporary_file)
+    if not imagefile.exists():
+        msg = f'temporary image {imagefile} does not exist'
+        logger.error(msg)
+        return False
     try:
         instance = ImageFile.objects.get(pk=pk)
     except ImageFile.DoesNotExist:
         logger.warning(f'ImageFile id: {pk} does not exist')
         return False
+    logger.debug(f'process image start: {instance} {instance.dimensions}')
     if instance.original:
-        logger.warning(f'ImageFile {instance} has an original')
+        msg = f'ImageFile {instance} has an original'
+        logger.warning(msg)
         return False
-    imagefile = Path(temporary_file)
-    if not imagefile.exists():
-        msg = f'temporary image {imagefile} does not exist'
-        raise RuntimeError(msg)
-    instance.process_uploaded_file(Image.open(imagefile))
-    instance.small
-    instance.large
-    instance.calculate_hashes()
+    try:
+        instance.process_uploaded_file(Image.open(imagefile))
+    except Exception:
+        logger.exception('processing failed')
     instance.save()
     imagefile.unlink()  # clean up
+    logger.debug(f'process image finish: {instance} {instance.dimensions}')
     return True
 
 
@@ -85,6 +89,8 @@ def post_save_task(pk: int) -> bool:
     except ImageFile.DoesNotExist:
         logger.debug(f'imagefile {pk} does not exist')
         return False
+    if not instance.original:
+        return
     instance.build_thumbs()
     instance.calculate_hashes()
     return True

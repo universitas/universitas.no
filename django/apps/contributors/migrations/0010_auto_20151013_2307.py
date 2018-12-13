@@ -1,6 +1,5 @@
-
-import django.db.models.deletion
 from django.db import migrations, models
+import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
@@ -20,6 +19,7 @@ class Migration(migrations.Migration):
                 help_text='photo used for byline credit.',
                 to='photo.ProfileImage',
                 on_delete=django.db.models.deletion.SET_NULL,
-                null=True),
+                null=True
+            ),
         ),
     ]

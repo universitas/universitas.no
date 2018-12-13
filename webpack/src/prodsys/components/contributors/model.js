@@ -30,7 +30,7 @@ export const fields = {
   byline_photo: {
     type: 'select',
     filter: { category: 4 },
-    label: 'Byline photo',
+    label: 'Bylinebilde',
     to: 'photos',
     required: false,
   },

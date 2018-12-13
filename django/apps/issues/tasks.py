@@ -1,18 +1,18 @@
 """Tasks for issues and pdfs"""
 
+from datetime import timedelta
 import logging
+from pathlib import Path
 import shutil
 import subprocess
 import tempfile
-from datetime import timedelta
-from pathlib import Path
 
 from celery import shared_task
 from celery.schedules import crontab
 from celery.task import periodic_task
 
 from apps.core.staging import new_staging_pdf_files
-from apps.issues.models import PrintIssue, current_issue
+from apps.issues.models import Issue, PrintIssue, current_issue
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.utils import timezone
@@ -31,13 +31,22 @@ GHOSTSCRIPT = '/usr/bin/ghostscript'
 CONVERT = '/usr/bin/convert'
 
 # Make bundle Wednesday night
-BUNDLE_TIME = crontab(hour=4, minute=0, day_of_week=3)
+BUNDLE_TIME = crontab(hour=4, minute=0)
 
 
 @periodic_task(run_every=BUNDLE_TIME)
 def weekly_bundle(delete_expired: bool = not settings.DEBUG):
+    today = timezone.now().date()
+    try:
+        issue = Issue.objects.get(publication_date=today)
+    except Issue.DoesNotExist:
+        return
     logger.info('bundle time!')
-    create_print_issue_pdf(expiration_days=6, delete_expired=delete_expired)
+    create_print_issue_pdf(
+        issue=issue,
+        expiration_days=6,
+        delete_expired=delete_expired,
+    )
     # remove old web pages
     get_staging_pdf_files(
         fileglob='WEB/*.pdf',
@@ -173,12 +182,8 @@ def generate_pdf_preview(input_file, img_format='png', size=300):
     return output_file
 
 
-def create_web_bundle(filename, **kwargs):
+def create_web_bundle(filename, issue, **kwargs):
     """Creates a web bundle file"""
-    try:
-        issue = kwargs.pop('issue')
-    except KeyError:
-        issue = current_issue()
     pages = get_staging_pdf_files(**kwargs)
     if not pages:
         raise RuntimeWarning('No pages found')
@@ -231,10 +236,9 @@ def create_web_bundle(filename, **kwargs):
 
 
 @shared_task
-def create_print_issue_pdf(**kwargs):
+def create_print_issue_pdf(issue, **kwargs):
     """Create or update pdf for the current issue"""
 
-    issue = kwargs.pop('issue', current_issue())
     editions = [('', PAGES_GLOB), ('_mag', MAG_PAGES_GLOB)]
     results = []
     for suffix, fileglob in editions:
@@ -244,9 +248,9 @@ def create_print_issue_pdf(**kwargs):
         tmp_bundle_file = tempfile.NamedTemporaryFile(suffix='.pdf')
         try:
             create_web_bundle(
+                issue=issue,
                 filename=tmp_bundle_file.name,
                 fileglob=fileglob,
-                issue=issue,
                 **kwargs,
             )
         except RuntimeWarning as warning:

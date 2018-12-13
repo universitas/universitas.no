@@ -27,9 +27,13 @@ class StoryDetailImages extends React.Component {
             Ingen bilder valgt i saken. Klikk på bilder for å legge til.
           </Info>
         )}
-        {images.map(({ id }) => (
-          <StoryImage key={id} pk={id} deleteHandler={deleteHandler} />
-        ))}
+        {R.pipe(
+          R.sort(R.ascend(R.prop('ordering'))),
+          R.map(({ id }) => (
+            <StoryImage key={id} pk={id} deleteHandler={deleteHandler} />
+          )),
+          R.values,
+        )(images)}
       </div>
     )
   }

@@ -13,6 +13,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='imagefile',
             name='_imagehash',
-            field=models.CharField(default='', editable=False, help_text='perceptual hash of image using ahash algorithm', max_length=16, verbose_name='image hash'),
+            field=models.CharField(
+                default='',
+                editable=False,
+                help_text='perceptual hash of image using ahash algorithm',
+                max_length=16,
+                verbose_name='image hash'
+            ),
         ),
     ]

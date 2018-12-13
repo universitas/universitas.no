@@ -15,6 +15,35 @@ import PageNotFound from 'components/PageNotFound'
 import Debug from 'components/Debug'
 import './Story.scss'
 
+const defaultMerge = a => b => {
+  const update = {}
+  for (const key of Object.keys(a)) {
+    if (!b[key]) update[key] = a[key]
+  }
+  return { ...b, ...update }
+}
+
+// Story preview for prodsys
+export const StoryPreview = props => {
+  if (R.isNil(props.title)) return '...'
+  const defaults = defaultMerge({
+    theme_word: '(Temaord)',
+  })
+  const tree = buildNodeTree(defaults(props))
+  return (
+    <article
+      className={cx('Story', 'Preview')}
+      style={{ display: 'grid', padding: '1rem' }}
+    >
+      <StoryHead {...tree} />
+      <main className="mainContent">
+        <StorySidebar {...tree} />
+        <StoryBody {...tree} />
+      </main>
+    </article>
+  )
+}
+
 class Story extends React.Component {
   constructor(props) {
     super(props)
@@ -36,7 +65,7 @@ class Story extends React.Component {
   render() {
     const { className, ...props } = this.props
     if (props.HTTPstatus == 404)
-      return <PageNotFound {...props}>Fant ikke saken</PageNotFound>
+      return <PageNotFound HTTPstatus="404">Fant ikke saken</PageNotFound>
     const tree = buildNodeTree(props)
     return (
       <article className={cx('Story', className)}>
@@ -59,6 +88,7 @@ const mapDispatchToProps = (dispatch, { id }) => ({
   redirect: routeAction => dispatch(redirect(routeAction)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  requestData(Story, 'HTTPstatus', LoadingIndicator),
-)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(requestData(Story, 'HTTPstatus', LoadingIndicator))

@@ -1,4 +1,3 @@
-
 from django.db import migrations, models
 
 
@@ -13,12 +12,16 @@ class Migration(migrations.Migration):
             model_name='adchannel',
             name='ad_formats',
             field=models.ManyToManyField(
-                to='adverts.AdFormat', help_text='size and shape of ad'),
+                to='adverts.AdFormat', help_text='size and shape of ad'
+            ),
         ),
         migrations.AlterField(
             model_name='advert',
             name='ad_channels',
             field=models.ManyToManyField(
-                blank=True, to='adverts.AdChannel', help_text='Where to show the ad'),
+                blank=True,
+                to='adverts.AdChannel',
+                help_text='Where to show the ad'
+            ),
         ),
     ]

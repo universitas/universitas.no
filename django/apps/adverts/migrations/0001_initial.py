@@ -1,5 +1,6 @@
-import apps.adverts.models
 import sorl.thumbnail.fields
+
+import apps.adverts.models
 from django.db import migrations, models
 
 
@@ -12,7 +13,8 @@ class Migration(migrations.Migration):
             name='AdChannel',
             fields=[
                 (
-                    'id', models.AutoField(
+                    'id',
+                    models.AutoField(
                         primary_key=True,
                         verbose_name='ID',
                         auto_created=True,
@@ -22,7 +24,8 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=50, unique=True)),
                 ('description', models.TextField(null=True, blank=True)),
                 (
-                    'extra_classes', models.CharField(
+                    'extra_classes',
+                    models.CharField(
                         help_text=
                         'comma separated list of extra css classes to apply.',
                         max_length=50,
@@ -30,7 +33,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'max_at_once', models.PositiveSmallIntegerField(
+                    'max_at_once',
+                    models.PositiveSmallIntegerField(
                         default=1, help_text='Maximum ads to show at once.'
                     )
                 ),
@@ -45,7 +49,8 @@ class Migration(migrations.Migration):
             name='AdFormat',
             fields=[
                 (
-                    'id', models.AutoField(
+                    'id',
+                    models.AutoField(
                         primary_key=True,
                         verbose_name='ID',
                         auto_created=True,
@@ -61,7 +66,8 @@ class Migration(migrations.Migration):
                 ),
                 ('published', models.BooleanField(default=True)),
                 (
-                    'category', models.PositiveSmallIntegerField(
+                    'category',
+                    models.PositiveSmallIntegerField(
                         default=2, choices=[(1, 'print'), (2, 'web')]
                     )
                 ),
@@ -77,7 +83,8 @@ class Migration(migrations.Migration):
             name='Advert',
             fields=[
                 (
-                    'id', models.AutoField(
+                    'id',
+                    models.AutoField(
                         primary_key=True,
                         verbose_name='ID',
                         auto_created=True,
@@ -85,7 +92,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'description', models.CharField(
+                    'description',
+                    models.CharField(
                         help_text='Short description of this ad.',
                         null=True,
                         blank=True,
@@ -93,25 +101,30 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'ordering', models.PositiveIntegerField(
+                    'ordering',
+                    models.PositiveIntegerField(
                         default=1,
                         help_text='Ordering of the ad within the channel'
                     )
                 ),
                 (
-                    'status', models.PositiveIntegerField(
+                    'status',
+                    models.PositiveIntegerField(
                         default=1,
                         help_text='Publication status',
-                        choices=[(1, 'Not ready to publish.'), (
-                            2, 'Private.'
-                        ), (3, 'Served to visiting audience.'), (
-                            4,
-                            'Fallback ad served if no published ad exists in this channel.'
-                        )]
+                        choices=[
+                            (1, 'Not ready to publish.'), (2, 'Private.'),
+                            (3, 'Served to visiting audience.'),
+                            (
+                                4,
+                                'Fallback ad served if no published ad exists in this channel.'
+                            )
+                        ]
                     )
                 ),
                 (
-                    'ad_type', models.PositiveIntegerField(
+                    'ad_type',
+                    models.PositiveIntegerField(
                         default=3,
                         help_text='Advert type.',
                         editable=False,
@@ -120,19 +133,22 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'start_time', models.DateTimeField(
+                    'start_time',
+                    models.DateTimeField(
                         default=apps.adverts.models.default_start_time,
                         help_text='When to start serving this ad'
                     )
                 ),
                 (
-                    'end_time', models.DateTimeField(
+                    'end_time',
+                    models.DateTimeField(
                         default=apps.adverts.models.default_end_time,
                         help_text='When to stop serving this ad'
                     )
                 ),
                 (
-                    'imagefile', sorl.thumbnail.fields.ImageField(
+                    'imagefile',
+                    sorl.thumbnail.fields.ImageField(
                         upload_to=apps.adverts.models.upload_folder,
                         help_text='Image Ad: image file in jpg or png format',
                         null=True,
@@ -140,14 +156,16 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'link', models.URLField(
+                    'link',
+                    models.URLField(
                         help_text='Image Ad: url that ad links to',
                         null=True,
                         blank=True
                     )
                 ),
                 (
-                    'alt_text', models.CharField(
+                    'alt_text',
+                    models.CharField(
                         default='',
                         help_text='Image ad: alternative text for image',
                         max_length=50,
@@ -155,7 +173,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'html_source', models.TextField(
+                    'html_source',
+                    models.TextField(
                         help_text=
                         'HTML to use for ad instead of serving an image ad.',
                         null=True,
@@ -163,7 +182,8 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'ad_channels', models.ManyToManyField(
+                    'ad_channels',
+                    models.ManyToManyField(
                         help_text='Where to show the ad',
                         null=True,
                         blank=True,
@@ -181,7 +201,8 @@ class Migration(migrations.Migration):
             name='Customer',
             fields=[
                 (
-                    'id', models.AutoField(
+                    'id',
+                    models.AutoField(
                         primary_key=True,
                         verbose_name='ID',
                         auto_created=True,

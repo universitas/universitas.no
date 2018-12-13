@@ -7,7 +7,6 @@ import App from './App'
 
 const SENTRY_URL = 'https://39de0aa2b6b3440da82c9f41ef232d39@sentry.io/51254'
 const ROOT_ID = 'ReactApp'
-const DOMNode = document.getElementById(ROOT_ID)
 
 const rootStore = configureStore()
 
@@ -27,12 +26,16 @@ const ProdSys = () => (
   </Provider>
 )
 
-const render = () => {
+const render = DOMNode => {
   window.showMessage = showMessage
-  Raven.config(SENTRY_URL).install()
-  Raven.context(() => ReactDOM.render(<ProdSys />, DOMNode))
+  const renderApp = () => ReactDOM.render(<ProdSys />, DOMNode)
+  if (process.env.NODE_ENV == 'production') {
+    Raven.config(SENTRY_URL).install()
+    Raven.context(renderApp)
+  } else renderApp()
 }
 
-if (DOMNode) render()
+const DOMNode = document.getElementById(ROOT_ID)
+if (DOMNode) render(DOMNode)
 else
   console.error(`Could not mount React App, because  #${ROOT_ID} was not found`)

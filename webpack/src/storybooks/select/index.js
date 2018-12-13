@@ -50,7 +50,6 @@ storiesOf('Select', module)
       R.slice(0, 10),
       // R.applySpec(reshape(modelSpec)),
     )(models)
-    console.log(options)
     const model = boolean('plain?', false) ? undefined : modelName
     const menuIsOpen = boolean('open', true) ? true : undefined
     return (

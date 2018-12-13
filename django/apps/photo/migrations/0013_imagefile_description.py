@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
                 default='',
                 help_text='Description of image',
                 max_length=1000,
-                verbose_name='copyright information'),
+                verbose_name='copyright information'
+            ),
         ),
     ]

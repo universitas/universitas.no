@@ -1,4 +1,3 @@
-
 from django.db import migrations, models
 
 
@@ -11,11 +10,10 @@ class Migration(migrations.Migration):
     operations = [
         migrations.CreateModel(
             name='ProfileImage',
-            fields=[
-            ],
+            fields=[],
             options={
                 'proxy': True,
             },
-            bases=('photo.imagefile',),
+            bases=('photo.imagefile', ),
         ),
     ]

@@ -1,16 +1,16 @@
 """ Make image file data serializable """
 import base64
+from collections import namedtuple
+from datetime import datetime
 import logging
 import string
-from datetime import datetime
 from typing import Any, Union
-from collections import namedtuple
 
 import PIL.ExifTags
 from PIL.Image import Image
-
 import ftfy
 import piexif
+
 from django.utils import timezone
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,10 @@ def sanitize_image_exif(img: Image) -> bytes:
 
 def serialize_exif(img: Image) -> dict:
     """Get exif dictionary from pil image   """
-    tags = img._getexif() or {}
+    try:
+        tags = img._getexif() or {}
+    except AttributeError:
+        return {}
     return clean_exif_data({
         PIL.ExifTags.TAGS.get(k, str(k)): v
         for k, v in tags.items()
@@ -49,13 +52,13 @@ def prune_exif(exif_dict: dict, maxbytes=1000) -> dict:
         for subkey, value in list(subsection.items()):
             try:
                 if len(value) > maxbytes:
-                    logger.debug(f'deleting key: {key}/{subkey}\n{value}')
                     del subsection[subkey]
             except TypeError:
                 pass
         for subkey in sorted(subsection, reverse=True):
             try:
-                piexif.dump({key: subsection})
+                data = {"Exif": {}, **{key: subsection}}
+                piexif.dump(data)
                 # subsection seems valid
                 break
             except ValueError:

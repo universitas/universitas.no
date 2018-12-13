@@ -30,7 +30,6 @@ def test_upload_image(staff_client, writer):
         'filename',
         'original',
         'description',
-        'artist',
         'category',
         'created',
         'contributor',

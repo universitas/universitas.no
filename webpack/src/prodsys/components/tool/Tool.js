@@ -5,7 +5,7 @@ import './Tool.scss'
 const Tool = ({
   onClick,
   icon,
-  disabled,
+  disabled = !onClick,
   active,
   title,
   label,

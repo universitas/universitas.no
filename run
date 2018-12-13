@@ -11,7 +11,7 @@ while (( $# > 0 )); do
   help    ) show_help; exit 0 ;; # show help for commands
   init    ) # install docker and docker-compose on ubuntu ( must be run as sudo )
             sudo bash -c "$(declare -f install_docker)
-            install_docker $(whoami)" 
+            install_docker $(whoami)"
             install_certificates
             ;;
   enable  ) enable_service ;; # enable systemd service file for web server - starts all docker images
@@ -130,11 +130,17 @@ show_help() {
 
 lint_javascript() {
   js_files=$(git diff --staged --name-status | awk '/^[AM].*\.js$/ {print $2}' | sed -r '/^(build|docs)/d')
-  [[ -n $js_files ]] && prettier --write --semi false --single-quote --trailing-comma all $js_files
+  if [[ -n $js_files ]]; then
+    prettier --write --semi false --single-quote --trailing-comma all $js_files
+  fi
 }
+
 lint_python() {
   py_files=$(git diff --staged --name-status | awk '/^[AM].*\.py$/ {print $2}' | grep -v 'migrations')
-  [[ -n $py_files ]] && exists isort && isort --verbose $py_files && exists yapf && yapf --verbose --in-place $py_files
+  if [[ -n $py_files ]]; then
+    exists isort && isort -fss -j3 -m3 -tc $py_files
+    exists yapf && yapf --verbose --in-place $py_files
+  fi
 }
 
 dump_redis() {
@@ -189,7 +195,7 @@ enable_service() {
     echo "reload systemd service"
     sudo systemctl daemon-reload
     sudo systemctl reload universitas.service
-  else 
+  else
     echo "enable systemd service"
     sudo sh -c "
     ln -s $PWD/universitas.service /lib/systemd/system/
@@ -237,6 +243,7 @@ install_docker() {
 }
 
 install_certificates() {
+  production_settings
   docker-compose run -p80:80 certbot \
     --noninteractive \
     --agree-tos \
@@ -248,6 +255,8 @@ install_certificates() {
 }
 
 renew_certificates() {
+  production_settings
+  date -uIhours
   docker-compose run certbot \
     --noninteractive \
     --agree-tos \
@@ -258,6 +267,7 @@ renew_certificates() {
     --webroot-path=/srv/ \
     --keep-until-expiring \
     certonly
+  docker-compose run certbot certificates
 }
 
 

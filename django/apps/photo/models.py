@@ -2,30 +2,32 @@
 
 import logging
 import mimetypes
-import re
 from pathlib import Path
+import re
 from statistics import median
 
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl.thumbnail import ImageField
+
+# from apps.issues.models import current_issue
 from apps.contributors.models import Contributor
 from apps.photo import file_operations
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.files.storage import default_storage
+from django.core.serializers.json import DjangoJSONEncoder
 from django.core.validators import FileExtensionValidator
 from django.db import connection, models
 from django.db.models.expressions import RawSQL
-# from apps.issues.models import current_issue
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl.thumbnail import ImageField
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
 
-from .cropping.models import AutoCropImage
 # from .exif import ExifData, extract_exif_data
+from .cropping.models import AutoCropImage
 from .imagehash import ImageHashModelMixin
 from .preprocess import ProcessImage
 from .thumbimage import ThumbImageFile
@@ -294,6 +296,7 @@ class ImageFile(  # type: ignore
         max_length=1000,
     )
     exif_data = JSONField(
+        encoder=DjangoJSONEncoder,
         verbose_name=_('exif_data'),
         help_text=_('exif_data'),
         default=dict,

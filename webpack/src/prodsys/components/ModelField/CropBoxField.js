@@ -36,8 +36,8 @@ const StaticCropBox = ({ value, item, className, ...args }) => {
       <FullThumbWithCropBox
         src={src}
         width={width}
-        value={value}
         height={height}
+        value={value}
       />
     </div>
   )

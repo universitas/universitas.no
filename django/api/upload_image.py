@@ -17,7 +17,6 @@ class UploadFileSerializer(ImageFileSerializer):
     """ImageFile upload serializer"""
 
     original = serializers.ImageField(required=True)
-    artist = serializers.CharField(required=False)
     description = serializers.CharField(required=True)
     duplicates = serializers.CharField(required=False)
     contributor = serializers.PrimaryKeyRelatedField(
@@ -36,7 +35,6 @@ class UploadFileSerializer(ImageFileSerializer):
             'category',
             'duplicates',
             'contributor',
-            'artist',
         ]
 
     def create(self, validated_data):

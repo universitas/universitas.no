@@ -1,4 +1,5 @@
 import pytest
+
 from apps.contributors.models import Contributor
 from utils.auth import get_instance
 from utils.merge_model_objects import merge_instances
@@ -36,5 +37,5 @@ def test_get_instance(jimmy, jimmy_twin):
     # works when there's two instances
     assert get_instance(Contributor, {'email': jimmy.email}) == jimmy_twin
     # works when there's no instance
-    assert get_instance(Contributor, {'email': 'doesnexits@example.com'}
-                        ) is None
+    assert get_instance(Contributor,
+                        {'email': 'doesnexits@example.com'}) is None

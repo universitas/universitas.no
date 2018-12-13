@@ -31,6 +31,7 @@ def test_create_new_storyimage(staff_client, scandal, scandal_photo):
         'aspect_ratio',
         'ordering',
         'placement',
+        'cropped',
     }
     assert scandal.images.count() == 1
     assert response.data.get('caption') == ''

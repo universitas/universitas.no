@@ -21,14 +21,6 @@ class Command(BaseCommand):
             help='Only check new links'
         )
         parser.add_argument(
-            '--fix',
-            '-f',
-            action='store_true',
-            dest='fix broken',
-            default=False,
-            help='Fix broken legacy links'
-        )
-        parser.add_argument(
             '--status',
             '-s',
             action='append',
@@ -60,9 +52,6 @@ class Command(BaseCommand):
         else:
             links_to_check = InlineLink.objects.all()
 
-        if options['fix broken']:
-            self._repair_legacy_links(links_to_check)
-
         self._check_links(links_to_check, timeout=options['timeout'])
 
     def _check_links(self, links_to_check, timeout):
@@ -79,13 +68,3 @@ class Command(BaseCommand):
         )
         for status in link_statuses:
             self.stdout.write('{count} - {status_code}'.format(**status))
-
-    def _repair_legacy_links(self, links_to_check):
-        """ Fix some strange formatting in links from the old webpage """
-        for link in links_to_check.filter(href__endswith=r'/a'):
-            link.href = re.sub(r'/a$', '', link.href)
-            link.save()
-
-        links_to_check.filter(href__endswith='kontakt.shtml').update(
-            href='http://universitas.no/kontakt/'
-        )

@@ -1,19 +1,30 @@
 """Tests for issue and pdf tasks"""
 
+from datetime import date
+from pathlib import PosixPath as Path
 import shutil
 import tempfile
-from pathlib import PosixPath as Path
 
 from PIL import Image
-
 import pytest
+
 from apps.issues.models import Issue, PrintIssue
-from apps.issues.tasks import (MissingBinary, convert_pdf_to_web,
-                               create_print_issue_pdf, create_web_bundle,
-                               generate_pdf_preview, get_staging_pdf_files,
-                               require_binary)
+from apps.issues.tasks import (
+    MissingBinary,
+    convert_pdf_to_web,
+    create_print_issue_pdf,
+    create_web_bundle,
+    generate_pdf_preview,
+    get_staging_pdf_files,
+    require_binary,
+)
 
 PAGE_ONE = 'UNI11VER16010101000.pdf'
+
+
+@pytest.fixture
+def first_issue(db):
+    return Issue.objects.get_or_create(publication_date=date(1946, 1, 1), )[0]
 
 
 @pytest.fixture
@@ -135,11 +146,11 @@ def test_require_binary_decorator():
 
 
 @pytest.mark.django_db
-def test_create_current_issue_web_bundle(tmp_fixture_dir):
+def test_create_current_issue_web_bundle(first_issue, tmp_fixture_dir):
     assert PrintIssue.objects.count() == 0
     count = Issue.objects.count()
-    create_print_issue_pdf()
-    create_print_issue_pdf()
+    create_print_issue_pdf(first_issue)
+    create_print_issue_pdf(first_issue)
     assert PrintIssue.objects.count() == 2
     assert Issue.objects.count() == count
     staging_dir = tmp_fixture_dir / 'PDF'
@@ -149,7 +160,7 @@ def test_create_current_issue_web_bundle(tmp_fixture_dir):
 
     # Wrong number of pages
     with pytest.raises(RuntimeError):
-        create_print_issue_pdf()
+        create_print_issue_pdf(first_issue)
 
     assert PrintIssue.objects.count() == 2
     assert Issue.objects.count() == count

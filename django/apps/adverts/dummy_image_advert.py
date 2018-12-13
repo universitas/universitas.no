@@ -1,8 +1,8 @@
 """ Dummy advert jpg generation. """
+from colorsys import hls_to_rgb
 import io
 import os
 import random
-from colorsys import hls_to_rgb
 
 from PIL import Image, ImageDraw, ImageEnhance, ImageFont
 

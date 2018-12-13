@@ -1,10 +1,16 @@
 import './StoryImage.scss'
+import fallbackImage from 'common/images/placeholder.svg'
 import { inlineText } from 'markup/render'
 
-const Caption = ({ caption = '', creditline = '' }) => {
+export const Caption = ({ children, creditline = '' }) => {
+  const caption = R.cond([
+    [R.is(String), R.identity],
+    [R.is(Array), R.head],
+    [R.T, R.toString],
+  ])(children)
   if (!(caption || creditline)) return null
-  const match = R.match(/^([^:.\n]*:)(.*)$/, caption) || [, '', caption]
-  const [, intro, body] = match
+  const match = R.match(/^([^:.\n]*[:!?])(.*)$/, caption)
+  const [, intro, body = caption] = match
   return (
     <div className="Caption">
       {intro && <span className="stikk">{inlineText(intro)} </span>}
@@ -14,14 +20,17 @@ const Caption = ({ caption = '', creditline = '' }) => {
   )
 }
 
+const percent = n => `${(n * 100).toFixed(1)}%`
+
 const imageStyle = ({ category, crop_box: { x = 0.5, y = 0.5 } }) => ({
-  objectPosition: category == 'diagram' ? 'center' : `${x * 100}% ${y * 100}%`,
+  objectPosition:
+    category == 'diagram' ? 'center' : [x, y].map(percent).join(' '),
 })
 
 const Image = ({
   id,
   cropped,
-  large,
+  large = fallbackImage,
   aspect_ratio,
   caption,
   crop_box = {},
@@ -38,10 +47,10 @@ const Image = ({
     </div>
   ) : null
 
-const StoryImage = props => (
+const StoryImage = ({ caption, creditline, ...props }) => (
   <div className="StoryImage">
-    <Image {...props} />
-    <Caption {...props} />
+    <Image caption={caption} {...props} />
+    <Caption creditline={creditline}>{caption}</Caption>
   </div>
 )
 

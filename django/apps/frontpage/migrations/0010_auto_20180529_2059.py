@@ -13,6 +13,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='frontpagestory',
             name='rows',
-            field=models.PositiveIntegerField(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (6, '6'), (8, '8')], default=2, help_text='base height', verbose_name='rows'),
+            field=models.PositiveIntegerField(
+                choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (6, '6'),
+                         (8, '8')],
+                default=2,
+                help_text='base height',
+                verbose_name='rows'
+            ),
         ),
     ]

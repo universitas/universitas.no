@@ -1,4 +1,3 @@
-
 from django.db import migrations, models
 
 
@@ -14,7 +13,8 @@ class Migration(migrations.Migration):
             name='Stint',
             fields=[
                 (
-                    'id', models.AutoField(
+                    'id',
+                    models.AutoField(
                         serialize=False,
                         verbose_name='ID',
                         primary_key=True,
@@ -24,13 +24,15 @@ class Migration(migrations.Migration):
                 ('start_date', models.DateField(auto_now_add=True)),
                 ('duration', models.DateField(blank=True, null=True)),
                 (
-                    'contributor', models.ForeignKey(
+                    'contributor',
+                    models.ForeignKey(
                         on_delete=models.CASCADE,
                         to='contributors.Contributor'
                     )
                 ),
                 (
-                    'position', models.ForeignKey(
+                    'position',
+                    models.ForeignKey(
                         on_delete=models.CASCADE, to='contributors.Position'
                     )
                 ),

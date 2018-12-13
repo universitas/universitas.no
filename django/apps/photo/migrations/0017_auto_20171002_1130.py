@@ -14,16 +14,34 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='imagefile',
             name='description',
-            field=models.CharField(blank=True, default='', help_text='Description of image', max_length=1000, verbose_name='description'),
+            field=models.CharField(
+                blank=True,
+                default='',
+                help_text='Description of image',
+                max_length=1000,
+                verbose_name='description'
+            ),
         ),
         migrations.AlterField(
             model_name='imagefile',
             name='exif_data',
-            field=django.contrib.postgres.fields.jsonb.JSONField(default=dict, editable=False, help_text='exif_data', verbose_name='exif_data'),
+            field=django.contrib.postgres.fields.jsonb.JSONField(
+                default=dict,
+                editable=False,
+                help_text='exif_data',
+                verbose_name='exif_data'
+            ),
         ),
         migrations.AlterField(
             model_name='imagefile',
             name='old_file_path',
-            field=models.CharField(blank=True, editable=False, help_text='previous path if the image has been moved.', max_length=1000, null=True, verbose_name='old file path'),
+            field=models.CharField(
+                blank=True,
+                editable=False,
+                help_text='previous path if the image has been moved.',
+                max_length=1000,
+                null=True,
+                verbose_name='old file path'
+            ),
         ),
     ]

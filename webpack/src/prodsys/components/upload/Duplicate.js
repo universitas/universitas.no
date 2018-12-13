@@ -48,4 +48,7 @@ const mapDispatchToProps = (dispatch, { pk, id }) => ({
   changeHandler: value => e => dispatch(changeDuplicate(pk, id, value)),
   viewImage: pk => e => dispatch(toRoute({ model: 'photos', pk })),
 })
-export default connect(mapStateToProps, mapDispatchToProps)(Duplicate)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Duplicate)

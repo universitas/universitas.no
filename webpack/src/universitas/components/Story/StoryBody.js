@@ -2,7 +2,7 @@ import { toJson } from 'utils/text'
 import Tingo from './Tingo'
 import Debug from 'components/DevDebug'
 import SlideShow from 'components/SlideShow'
-import StoryImage from './StoryImage'
+import StoryImage, { Caption } from './StoryImage'
 import StoryLink from './StoryLink'
 import cx from 'classnames'
 
@@ -19,7 +19,19 @@ const QuoteCit = ({ children, props }) => (
     {children}
   </div>
 )
-const Aside = props => <aside className="Facts" {...props} />
+const Aside = ({ children, ...props }) => (
+  <aside className="Facts" {...props}>
+    {children}
+  </aside>
+)
+
+const Comment = props => (
+  <p
+    style={{ background: 'purple', color: 'white', padding: '1rem' }}
+    {...props}
+  />
+)
+
 const Emphasis = props => <em {...props} />
 
 const Place = ({ name, flags, children, ...props }) => {
@@ -79,6 +91,7 @@ const typeMap = {
   pullquote: PullQuote,
   section: BodySection,
   video: Video,
+  comment: Comment,
 }
 
 const tagMap = {
@@ -89,6 +102,7 @@ const tagMap = {
   tingo: Tingo,
   tit: SectionHeading,
   txt: Paragraph,
+  bt: Caption,
 }
 
 const splitContent = R.partition(
@@ -109,7 +123,13 @@ const renderNodes = R.addIndex(R.map)((node, idx) => {
       )
     } else return null
   }
-  const { children = [], ...props } = node
+  let { children = [], ...props } = node
+  if (node.type == 'aside' && R.pathEq([0, 'type'], 'paragraph')(children)) {
+    children = R.pipe(
+      R.assocPath([0, 'type'], 'blockTag'),
+      R.assocPath([0, 'tag'], 'faktatit'),
+    )(children)
+  }
   const { tag, type } = props
   const Component = tag ? tagMap[tag] : typeMap[type]
   return Component ? (

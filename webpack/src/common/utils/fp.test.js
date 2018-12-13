@@ -7,6 +7,9 @@ test('toggle list item', () => {
   expect(fp.arrayToggle('a', [])).toEqual(['a'])
   expect(fp.arrayToggle(1, [1])).toEqual([])
   expect(fp.arrayToggle(1, [2])).toEqual([1, 2])
+  expect(fp.arrayToggle([1, 2], [1, 2, 4])).toEqual([4])
+  expect(fp.arrayToggle([1, 2], [3, 4])).toEqual([1, 2, 3, 4])
+  expect(fp.arrayToggle([1, 2, 3], [3, 4])).toEqual([1, 2, 4])
 })
 
 test('toggle object item', () => {

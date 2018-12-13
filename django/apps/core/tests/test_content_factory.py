@@ -1,4 +1,5 @@
 import pytest
+
 from apps.core import content_factory
 from apps.stories.models import Story
 

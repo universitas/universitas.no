@@ -1,23 +1,23 @@
-@import "styles/_common.scss";
+@import 'styles/_common.scss';
 $linkcolor: #1779ba;
 $asidewidth: 15rem;
 
 // svg icon for bullet list (square)
-$bullet: "data:image/svg+xml," +
+$bullet: 'data:image/svg+xml,' +
   "<svg xmlns='http://www.w3.org/2000/svg' height='1.3ex' viewBox='0 0 10 10'>" +
   "<rect width='10' height='10' rx='1' ry='1' fill='" +
-  str-replace("#", "%23", #{$medium-yellow}) + "'/>" + "</svg>";
+  str-replace('#', '%23', #{$medium-yellow}) + "'/>" + '</svg>';
 
 // svg icon for external link (box with arrow pointing out)
-$externallink: "data:image/svg+xml," +
+$externallink: 'data:image/svg+xml,' +
   "<svg xmlns='http://www.w3.org/2000/svg' height='0.85em' viewBox='0 0 16 14'>" +
   "<path d='M 9 2 L 9 3 L 12.292969 3 L 6.023438 9.273438 L 6.726563 " +
-  "9.976563 L 13 3.707031 L 13 7 L 14 7 L 14 2 Z M 4 4 C 2.894531 4 2 " +
-  "4.894531 2 6 L 2 12 C 2 13.105469 2.894531 14 4 14 L 10 14 C 11.105469 " +
-  "14 12 13.105469 12 12 L 12 7 L 11 8 L 11 12 C 11 12.550781 10.550781 " +
-  "13 10 13 L 4 13 C 3.449219 13 3 12.550781 3 12 L 3 6 C 3 5.449219 " +
+  '9.976563 L 13 3.707031 L 13 7 L 14 7 L 14 2 Z M 4 4 C 2.894531 4 2 ' +
+  '4.894531 2 6 L 2 12 C 2 13.105469 2.894531 14 4 14 L 10 14 C 11.105469 ' +
+  '14 12 13.105469 12 12 L 12 7 L 11 8 L 11 12 C 11 12.550781 10.550781 ' +
+  '13 10 13 L 4 13 C 3.449219 13 3 12.550781 3 12 L 3 6 C 3 5.449219 ' +
   "3.449219 5 4 5 L 8 5 L 9 4 Z' " + "fill='" +
-  str-replace("#", "%23", #{$linkcolor}) + "'/>" + "</svg>";
+  str-replace('#', '%23', #{$linkcolor}) + "'/>" + '</svg>';
 
 %bullet-list {
   $indent: 1.3em;
@@ -29,7 +29,7 @@ $externallink: "data:image/svg+xml," +
     display: inline-block;
     margin-left: -$indent;
     color: $medium-yellow;
-    content: url(str-replace("#", "%23", $bullet));
+    content: url(str-replace('#', '%23', $bullet));
   }
 }
 
@@ -109,29 +109,26 @@ $externallink: "data:image/svg+xml," +
     display: flex;
     flex-direction: column;
     .mainImage {
-      display: flex;
       min-height: 0;
+      flex: 1 1;
+      display: flex;
       .imgWrapper {
+        flex: 1;
         background-color: #dddfe9;
+        display: flex;
       }
       img {
-        height: 100%;
+        flex: 1;
         min-height: 0;
       }
       &.autoCrop {
-        flex: 1 1 675px;
+        flex: 1 1 70vh;
       }
     }
     margin-bottom: 0.8rem;
     border-bottom: 1px solid #ddd;
     padding-bottom: 0.8rem;
     max-height: calc(100vh - 3rem);
-    @media (max-height: 450px) and (min-width: 600px) {
-      max-height: calc(450px - 3rem);
-    }
-    @media (max-height: 700px) and (min-width: 900px) {
-      max-height: calc(700px - 3rem);
-    }
   }
   .mainContent {
   }
@@ -191,7 +188,7 @@ $externallink: "data:image/svg+xml," +
     justify-content: center;
     width: 100%;
     @extend %item;
-    font-family: "Roboto Slab", serif;
+    font-family: 'Roboto Slab', serif;
     color: $medium-grey;
     font-size: 1.2rem;
     .storytype {
@@ -272,7 +269,7 @@ $externallink: "data:image/svg+xml," +
 
 %quotemark {
   color: $medium-yellow;
-  font-family: "Roboto Slab";
+  font-family: 'Roboto Slab';
   position: absolute;
   font-style: normal;
   font-weight: bolder;
@@ -286,7 +283,7 @@ $externallink: "data:image/svg+xml," +
   padding-left: 4em;
   &:before {
     @extend %quotemark;
-    content: "«";
+    content: '«';
     top: 0;
     left: 0;
   }
@@ -297,7 +294,7 @@ $externallink: "data:image/svg+xml," +
   padding-right: 4em;
   &:after {
     @extend %quotemark;
-    content: "»";
+    content: '»';
     top: 0;
     right: 0;
   }

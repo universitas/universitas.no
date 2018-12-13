@@ -2,18 +2,23 @@
 
 import collections
 import datetime
+from io import BytesIO
 import logging
 import os
 import os.path
+from pathlib import Path
 import re
 import subprocess
 import unicodedata
 import uuid
-from io import BytesIO
-from pathlib import Path
 
-import botocore
 import PyPDF2
+import botocore
+from sorl import thumbnail
+from wand.color import Color
+from wand.drawing import Drawing
+from wand.image import Image as WandImage
+
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import models
@@ -21,11 +26,7 @@ from django.db.models.signals import pre_delete, pre_save
 from django.dispatch.dispatcher import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from sorl import thumbnail
 from utils.model_mixins import EditURLMixin
-from wand.color import Color
-from wand.drawing import Drawing
-from wand.image import Image as WandImage
 
 logger = logging.getLogger('universitas')
 IssueTuple = collections.namedtuple('IssueTuple', 'number, date')

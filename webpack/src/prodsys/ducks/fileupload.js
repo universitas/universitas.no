@@ -24,9 +24,9 @@ export const uploadAdd = data => ({
   payload: { pk: data.md5, ...data },
 })
 
-export const uploadUpdate = (pk, data, single = true, verify = true) => ({
+export const uploadUpdate = (pk, data, verify = true) => ({
   type: UPDATE,
-  payload: { pk, single, verify, ...data },
+  payload: { pk, verify, ...data },
 })
 
 export const changeDuplicate = (pk, id, choice) => ({
@@ -66,13 +66,26 @@ const baseItemState = {
 // lenses
 const updateAllLens = R.lensProp('updateAll')
 const itemsLens = R.lensProp('items')
-const itemLens = pk => R.compose(itemsLens, R.lensProp(pk))
+const itemLens = pk =>
+  R.compose(
+    itemsLens,
+    R.lensProp(pk),
+  )
 
 // SELECTORS
-const lensSelector = lens => R.view(R.compose(R.lensProp(SLICE), lens))
+const lensSelector = lens =>
+  R.view(
+    R.compose(
+      R.lensProp(SLICE),
+      lens,
+    ),
+  )
 
 const getUploads = lensSelector(itemsLens)
-export const getUpload = R.pipe(itemLens, lensSelector)
+export const getUpload = R.pipe(
+  itemLens,
+  lensSelector,
+)
 export const getUpdateAll = lensSelector(updateAllLens)
 export const getUploadPKs = R.pipe(
   getUploads,
@@ -100,15 +113,20 @@ export const getStoryChoices = R.pipe(
 )
 
 // reducer helper functions
-const longerThan = len => R.pipe(R.length, R.lt(len))
+const longerThan = len =>
+  R.pipe(
+    R.length,
+    R.lt(len),
+  )
 const noNulls = R.none(R.propEq('choice', null))
 
 const cleanFilename = props => {
   const { mimetype, filename } = props
   const extension = mimetype == 'image/png' ? 'png' : 'jpg'
-  const base = R.pipe(R.replace(/[-_ ]+/g, '-'), R.replace(/\..*$/g, ''))(
-    filename,
-  )
+  const base = R.pipe(
+    R.replace(/[-_ ]+/g, '-'),
+    R.replace(/\..*$/g, ''),
+  )(filename)
   return R.assoc('filename', `${base}.${extension}`, props)
 }
 
@@ -134,14 +152,16 @@ const getReducer = ({ type, payload = {}, error }) => {
     case ADD:
       return R.set(itemLens(pk), R.mergeDeepRight(baseItemState, data))
     case UPDATE: {
-      const { single, verify, ...change } = data
+      const { verify, ...change } = data
       const updateItem = R.pipe(
         R.mergeDeepLeft(change),
         verify ? checkStatus : R.identity,
       )
-      return single
-        ? overItem(updateItem)
-        : R.over(itemsLens, R.map(updateItem))
+      return R.ifElse(
+        R.view(updateAllLens),
+        R.over(itemsLens, R.map(updateItem)),
+        overItem(updateItem),
+      )
     }
     case TOGGLE_UPDATE_ALL:
       return R.over(updateAllLens, R.not)

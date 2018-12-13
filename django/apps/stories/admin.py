@@ -11,8 +11,16 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
 from .models import (
-    Aside, Byline, InlineHtml, InlineLink, Pullquote, Section, Story,
-    StoryImage, StoryType, StoryVideo
+    Aside,
+    Byline,
+    InlineHtml,
+    InlineLink,
+    Pullquote,
+    Section,
+    Story,
+    StoryImage,
+    StoryType,
+    StoryVideo,
 )
 from .tasks import upload_storyimages
 

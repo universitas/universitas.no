@@ -5,7 +5,8 @@ import Debug from 'components/Debug'
 import GridWidget from './GridWidget.js'
 import ModelField from 'components/ModelField'
 import { FrontpageTools } from '.'
-import { Field, selectors, actions } from './model.js'
+import { MODEL, Field, selectors, actions } from './model.js'
+import DetailPanel from 'components/DetailPanel'
 
 // Cropbox field connected to the related photo instance
 const CropBox = connect(
@@ -30,28 +31,25 @@ const CropBox = connect(
 })
 
 const FrontpageDetail = ({ pk }) => (
-  <section className="DetailPanel" key={pk}>
-    <FrontpageTools pk={pk} />
-    <div className="panelContent">
-      {pk ? (
-        <React.Fragment>
-          <Field pk={pk} name="vignette" editable />
-          <Field pk={pk} name="kicker" editable />
-          <Field pk={pk} name="headline" editable />
-          <Field pk={pk} name="lede" editable />
-          <Field pk={pk} name="priority" editable />
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <StyleButtons pk={pk} />
-            <GridWidget pk={pk} />
-          </div>
-          <Field pk={pk} name="image_id" editable />
-          <CropBox pk={pk} />
-        </React.Fragment>
-      ) : (
-        <div>velg en sak</div>
-      )}
-    </div>
-  </section>
+  <DetailPanel pk={pk} model={MODEL} getTitle={R.prop('headline')}>
+    {pk ? (
+      <React.Fragment>
+        <Field pk={pk} name="vignette" editable />
+        <Field pk={pk} name="kicker" editable />
+        <Field pk={pk} name="headline" editable />
+        <Field pk={pk} name="lede" editable />
+        <Field pk={pk} name="priority" editable />
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <StyleButtons pk={pk} />
+          <GridWidget pk={pk} />
+        </div>
+        <Field key={pk} pk={pk} name="image_id" editable />
+        <CropBox pk={pk} />
+      </React.Fragment>
+    ) : (
+      <div>velg en sak</div>
+    )}
+  </DetailPanel>
 )
 
 export default FrontpageDetail

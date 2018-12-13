@@ -1,7 +1,7 @@
 """Celery tasks for stories"""
 
-import re
 from datetime import timedelta
+import re
 
 from celery import shared_task
 from celery.task import periodic_task

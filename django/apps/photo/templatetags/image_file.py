@@ -1,7 +1,8 @@
 """ Template tag for cropped ImageFile using sorl thumbnail """
 
-from django import template
 from sorl import thumbnail
+
+from django import template
 
 register = template.Library()
 

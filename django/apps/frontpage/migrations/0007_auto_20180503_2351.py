@@ -26,13 +26,7 @@ class Migration(migrations.Migration):
             model_name='frontpagestory',
             name='placements',
         ),
-        migrations.DeleteModel(
-            name='Frontpage',
-        ),
-        migrations.DeleteModel(
-            name='StaticModule',
-        ),
-        migrations.DeleteModel(
-            name='StoryModule',
-        ),
+        migrations.DeleteModel(name='Frontpage', ),
+        migrations.DeleteModel(name='StaticModule', ),
+        migrations.DeleteModel(name='StoryModule', ),
     ]

@@ -54,6 +54,7 @@ export const fieldNames = R.keys(fieldTypes)
 export const Field = ({
   type = 'text',
   editable = false,
+  fullwidth = false,
   label,
   onChange,
   value,
@@ -68,7 +69,10 @@ export const Field = ({
   const fieldProps = R.omit(['model', 'pk', 'name'], props)
   const ModelField = editable ? EditableField : DetailField
   return (
-    <div title={helpText} className={cx('ModelField', type, { editable })}>
+    <div
+      title={helpText}
+      className={cx('ModelField', type, { fullwidth, editable })}
+    >
       {R.is(String, label) && <label className={cx('label')}>{label}</label>}
       <ModelField
         className={cx('value')}

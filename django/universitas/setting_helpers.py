@@ -1,7 +1,7 @@
 """Utility functions for settings"""
 import os
-import re
 from pathlib import Path
+import re
 
 
 def joinpath(*paths, resolve=False):
