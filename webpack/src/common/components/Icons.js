@@ -14,6 +14,7 @@ export {
   MdCrop as Crop,
   MdDelete as Delete,
   MdDescription as Description,
+  MdDesktopWindows as Desktop,
   MdDone as Done,
   MdFileDownload as Download,
   MdEdit as Edit,
@@ -24,6 +25,7 @@ export {
   MdViewModule as GridView,
   MdInfo as Info,
   MdLaptopChromebook as Laptop,
+  MdPhoneAndroid as Mobile,
   MdViewList as ListView,
   MdLink as Link,
   MdLoop as Loop,
@@ -47,5 +49,6 @@ export {
   FaExclamationTriangle as Fallback,
   FaMagic as Magic,
   FaImage as Image,
+  FaBinoculars as Binoculars,
   FaQuestionCircle as Question,
 } from 'react-icons/fa'

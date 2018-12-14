@@ -1,0 +1,19 @@
+.ZoomSlider {
+  display: flex;
+  flex-flow: row wrap;
+  .iconwrapper {
+    padding: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    small {
+      margin: 0.3em 0;
+      font-size: calc(0.8rem + 0.05em);
+    }
+  }
+  .icon {
+    margin: 0 0.1em;
+    height: 1em;
+    width: 1em;
+  }
+}

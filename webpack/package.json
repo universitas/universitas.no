@@ -14,7 +14,7 @@
     "build": "webpack-cli --config=webpack.prod.config.js",
     "stats": "webpack-cli --config webpack.prod.config.js --profile --json > webpack-stats.json",
     "dev": "webpack-dev-server --config webpack.dev.config.js",
-    "storybook": "start-storybook -p 9001 -c .storybook",
+    "storybook": "start-storybook --ci -p 9001 -c .storybook",
     "deploy-storybook": "build-storybook -c .storybook -o dist && gh-pages -d dist"
   },
   "repository": {
