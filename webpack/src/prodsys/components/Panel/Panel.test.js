@@ -1,9 +1,9 @@
-import ZoomSlider from './index'
+import Panel from './index'
 import renderer from 'react-test-renderer'
 
-describe('ZoomSlider', () => {
+describe('Panel', () => {
   test('renders correctly', () => {
-    const tree = renderer.create(<ZoomSlider />).toJSON()
+    const tree = renderer.create(<Panel />).toJSON()
     expect(tree).toEqual(expect.any(Object))
     expect(tree).toMatchSnapshot()
   })

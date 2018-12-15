@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import cx from 'classnames'
 import { Clear } from 'components/Icons'
 import ListPanel from 'components/ListPanel'
-import { ContributorGrid } from '.'
+import ContributorGrid from './ContributorGrid.js'
 import { MODEL } from './model.js'
 
 const filters = R.map(R.merge({ toggle: true, model: MODEL }), [

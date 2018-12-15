@@ -1,4 +1,4 @@
-// http://react-icons.github.io/react-icons/md.html
+// https://react-icons.github.io/react-icons/md.html
 
 export {
   MdAdd as Add,
@@ -40,6 +40,7 @@ export {
   MdTextFields as TextFields,
   MdAccessTime as Time,
   MdTransform as Transform,
+  MdTabletAndroid as Tablet,
   MdTune as Tune,
   MdBurstMode as Images,
 } from 'react-icons/md'

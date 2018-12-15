@@ -18,7 +18,7 @@ const PhotoDetail = ({ pk, action }) => (
       </React.Fragment>
     ) : (
       <React.Fragment>
-        <Field pk={pk} name="large" />
+        <Field pk={pk} name="large" key={pk} />
         <Field pk={pk} name="description" editable />
         <div className="wrapForm">
           <Field pk={pk} name="contributor" editable key={pk} />

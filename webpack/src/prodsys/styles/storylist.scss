@@ -33,7 +33,7 @@ $statusColors: (0, $cyan), (3, $green), (4, $green), (5, $green),
   background-color: #ccc;
   @each $status, $color in $statusColors {
     &.status-#{$status} {
-      background-color: chromatic-color-set($color, 'lab.l', 100);
+      background-color: chromatic-mix(white, $color, 0.4);
     }
   }
 }

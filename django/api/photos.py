@@ -3,14 +3,14 @@ import re
 
 # from django_filters.rest_framework import DjangoFilterBackend
 from django.db import models
-
-from apps.contributors.models import Contributor
-from apps.photo.models import ImageFile
-from apps.photo.tasks import upload_imagefile_to_desken
 from rest_framework import filters, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from url_filter.integrations.drf import DjangoFilterBackend
+
+from apps.contributors.models import Contributor
+from apps.photo.models import ImageFile
+from apps.photo.tasks import upload_imagefile_to_desken
 from utils.serializers import AbsoluteURLField, CropBoxField
 
 logger = logging.getLogger('apps')
@@ -96,7 +96,7 @@ class ImageFileViewSet(viewsets.ModelViewSet):
             if key in {'fingerprint', 'imagehash'}
         }
         if search_parameters:
-            qs = self.queryset.search(**search_parameters)
+            qs = ImageFile.objects.search(**search_parameters)
         else:
             qs = self.queryset
         return qs

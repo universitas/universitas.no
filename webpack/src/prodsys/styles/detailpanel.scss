@@ -1,19 +1,10 @@
 @import 'globals';
 
 .DetailPanel {
-  height: 100vh;
-  display: flex;
-  flex-flow: column nowrap;
-  .panelContent {
-    flex: 1;
-    display: flex;
-    flex-flow: column nowrap;
-    padding: 0.2rem;
-    overflow-y: auto;
+  .content {
+    padding: 0.5rem;
   }
-  border-left: 1px solid #777;
   .DetailTopBar {
-    @extend %horizontal-bar;
     .title,
     .pk {
       margin: 0.5em;
@@ -28,14 +19,12 @@
       text-overflow: ellipsis;
       overflow: hidden;
     }
-    font-size: 1.6rem;
     display: flex;
     justify-content: flex-end;
     .Tool {
-      // @extend .AppButton;
+      font-size: 1.5rem;
       background-color: darken($horizontal-bar-color, 10);
       margin-left: 0.1em;
-      height: 100%;
       width: $horizontal-bar-height;
       &:hover {
         color: white;

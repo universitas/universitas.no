@@ -2,7 +2,7 @@ import cx from 'classnames'
 import { connect } from 'react-redux'
 import ListPanel from 'components/ListPanel'
 import { Clear } from 'components/Icons'
-import { IssueGrid } from '.'
+import IssueGrid from './IssueGrid.js'
 import { MODEL, fields } from './model.js'
 
 const month = parseInt(new Date().toISOString().slice(5, 7))

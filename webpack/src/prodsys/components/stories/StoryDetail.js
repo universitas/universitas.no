@@ -1,39 +1,30 @@
-import { connect } from 'react-redux'
 import DetailPanel from 'components/DetailPanel'
 import cx from 'classnames'
 import { modelSelectors } from 'ducks/basemodel'
-import {
-  StoryTools,
-  StoryDetailImages,
-  StoryDetailText,
-  StoryDetailPreview,
-} from '.'
+import StoryDetailImages from './StoryDetailImages.js'
+import StoryDetailText from './StoryDetailText.js'
+import StoryDetailPreview from './StoryDetailPreview.js'
 import { selectors, MODEL } from './model.js'
-import { getRoutePayload } from 'prodsys/ducks/router'
+import { ZoomControl } from 'components/PreviewIframe'
 import Debug from 'components/Debug'
 
-const DetailPane = ({ pk, action, images, image_count }) => {
-  if (action == 'change' || action == 'preview')
-    return <StoryDetailText pk={pk} />
-  if (action == 'images')
-    return (
-      <StoryDetailImages pk={pk} image_count={image_count} images={images} />
-    )
-  // if (action == 'preview') return <StoryDetailPreview pk={pk} />
-  return <div>action??: {action}</div>
+const StoryAction = ({ action, ...props }) => {
+  if (action == 'change') return <StoryDetailText {...props} />
+  if (action == 'images') return <StoryDetailImages {...props} />
+  if (action == 'preview') return <StoryDetailPreview {...props} />
 }
 
-const StoryDetail = ({ pk, action, ...props }) => (
+const StoryDetail = ({ panes, pk, action, ...props }) => (
   <DetailPanel
     pk={pk}
     model={MODEL}
     getTitle={({ title, working_title }) => title || working_title}
     className={cx('StoryDetail', `status-${props.publication_status}`)}
+    scroll={action == 'images'}
+    footer={action == 'preview' && <ZoomControl />}
   >
-    <DetailPane pk={pk} action={action} {...props} />
+    <StoryAction pk={pk} action={action} {...props} />
   </DetailPanel>
 )
 
-const mapStateToProps = (state, { action, pk }) => selectors.getItem(pk)(state)
-
-export default connect(mapStateToProps)(StoryDetail)
+export default StoryDetail

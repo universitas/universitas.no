@@ -1,8 +1,9 @@
 import cx from 'classnames'
 import { Clear } from 'components/Icons'
 import ListPanel from 'components/ListPanel'
-import { StoryTable, StoryDetailPreview } from '.'
-import { PhotoList } from 'components/photos'
+import StoryTable from './StoryTable.js'
+import StoryDetailPreview from './StoryDetailPreview.js'
+import PhotoList from 'components/photos/PhotoList.js'
 import { MODEL, fields, selectors } from './model.js'
 import { connect } from 'react-redux'
 
@@ -29,11 +30,10 @@ const StoryList = ({ action, pk }) => {
   if (pk && action == 'images')
     return (
       <React.Fragment>
-        <Stories />
-        <Photos pk={pk} action={action} />
+        <Stories style={{ flex: 0.5 }} />
+        <Photos pk={pk} />
       </React.Fragment>
     )
-  if (pk && action == 'preview') return <StoryDetailPreview pk={pk} />
   return <Stories />
 }
 
@@ -43,11 +43,12 @@ const Photos = connect((state, { pk }) =>
     R.propOr([], 'images'),
     R.pluck('imagefile'),
     R.objOf('selected'),
+    R.assoc('action', 'images'),
   )(state),
 )(PhotoList)
 
-const Stories = () => (
-  <ListPanel model={MODEL} filters={filters}>
+const Stories = props => (
+  <ListPanel model={MODEL} filters={filters} {...props}>
     <StoryTable />
   </ListPanel>
 )

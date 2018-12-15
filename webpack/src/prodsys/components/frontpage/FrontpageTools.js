@@ -4,11 +4,12 @@ import { Tool } from 'components/tool'
 import { MODEL, selectors } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
 import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
+import ModelTools from 'components/ModelTools'
 
 const ToolBar = props => <div {...props} />
 
 const FrontpageTools = ({ pk }) => (
-  <React.Fragment>
+  <ModelTools>
     <Tool
       icon="Newspaper"
       title={'forsiden'}
@@ -16,11 +17,14 @@ const FrontpageTools = ({ pk }) => (
       onClick={() => window.open('/')}
     />
     <OpenInDjangoAdmin pk={pk} path="frontpage/frontpagestory" />
-  </React.Fragment>
+  </ModelTools>
 )
 
 const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
 
 const mapDispatchToProps = (dispatch, { pk }) => ({})
 
-export default connect(mapStateToProps, mapDispatchToProps)(FrontpageTools)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(FrontpageTools)

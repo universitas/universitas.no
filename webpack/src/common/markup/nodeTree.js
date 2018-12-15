@@ -70,7 +70,7 @@ const placeChildren = (walk, node, story) =>
 
 // :: {story} -> {...story, nodeTree}
 export const buildNodeTree = story => {
-  let { title, kicker, lede, theme_word, bylines } = story
+  let { title, kicker, lede, theme_word, bylines = [] } = story
   const new_bylines = []
   const walk = R.compose(
     R.map(clean),
@@ -126,7 +126,6 @@ export const buildNodeTree = story => {
     parseText,
   )(story.bodytext_markup)
   const nodeTree = walk(parseTree)
-  console.log({ new_bylines })
 
   return {
     ...story,

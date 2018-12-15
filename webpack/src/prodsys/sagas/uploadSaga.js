@@ -27,7 +27,7 @@ const { getItem: getPhoto } = modelSelectors('photos')
 const {
   itemsDiscarded: photosDiscarded,
   itemRequested: photoRequested,
-  itemsFetched: photosAppended,
+  itemsFetched: photosFetched,
   itemAdded: photoAdded,
 } = modelActions('photos')
 const { itemAdded: contributorAdded } = modelActions('contributors')

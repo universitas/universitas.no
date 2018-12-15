@@ -1,9 +1,9 @@
 import cx from 'classnames'
 import { connect } from 'react-redux'
-import ListPanel from 'components/ListPanel'
-import PreviewPanel from 'components/PreviewPanel'
-import { Clear } from 'components/Icons'
-import { FrontpageGrid } from '.'
+import Panel from 'components/Panel'
+import { ZoomControl, PreviewIframe } from 'components/PreviewIframe'
+import Zoom from 'components/PreviewIframe'
+import FrontpageGrid from './FrontpageGrid.js'
 import { MODEL, fields, actions, selectors } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
 
@@ -26,9 +26,11 @@ const filters = [
 
 const FrontpageList = ({ dismiss, items }) => {
   return (
-    <PreviewPanel>
-      <FrontpageGrid items={items} />
-    </PreviewPanel>
+    <Panel footer={<ZoomControl />} filters={filters} scroll={false}>
+      <PreviewIframe>
+        <FrontpageGrid items={items} />
+      </PreviewIframe>
+    </Panel>
   )
 }
 

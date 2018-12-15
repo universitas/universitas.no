@@ -249,7 +249,10 @@ $row-height: 12vh;
     grid-auto-rows: minmax(9rem, auto);
   }
   @include max-size(s) {
-    grid-auto-rows: minmax($row-height * 1.8, auto);
+    grid-auto-rows: minmax(100vh/6, auto);
+    @media (min-height: 800px) {
+      grid-auto-rows: minmax(800px/6, auto);
+    }
     grid-template-columns: repeat(2, 1fr);
     @for $n from 1 through 8 {
       .col-#{$n} {

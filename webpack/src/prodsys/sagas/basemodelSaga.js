@@ -119,7 +119,6 @@ function* requestItems(action) {
   let changePagination = false
   if (!params) {
     params = yield select(getQuery)
-    changePagination = true
   }
   if (!replace && params.id__in) {
     var ids = R.pipe(
@@ -133,7 +132,7 @@ function* requestItems(action) {
   const { response, error } = yield call(apiList, params)
   if (response) {
     yield put(itemsFetched({ ...response, replace }))
-    if (changePagination) yield put(paginate(response))
+    if (!params.id__in) yield put(paginate(response))
   } else yield put(errorAction(error))
 }
 

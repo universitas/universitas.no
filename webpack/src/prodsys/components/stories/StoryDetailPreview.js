@@ -3,21 +3,16 @@ import { StoryPreview } from 'universitas/components/Story'
 import { selectors } from './model'
 import { modelSelectors } from 'ducks/basemodel'
 import { connect } from 'react-redux'
-import PreviewPanel from 'components/PreviewPanel'
+import { ZoomControl, PreviewIframe } from 'components/PreviewIframe'
 
 const getPhoto = modelSelectors('photos').getItem
 const getStoryImage = modelSelectors('storyimages').getItem
 
 const StoryDetailPreview = props => {
   return (
-    <PreviewPanel>
+    <PreviewIframe>
       <StoryPreview {...props} />
-    </PreviewPanel>
-  )
-  return (
-    <section className="itemList" style={{ padding: '1rem' }}>
-      <StoryPreview {...props} />
-    </section>
+    </PreviewIframe>
   )
 }
 

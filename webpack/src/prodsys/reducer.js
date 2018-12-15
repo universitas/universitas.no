@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import { reducer as ux } from 'ducks/ux'
 import { reducer as auth } from 'ducks/auth'
 import { reducer as errors } from 'ducks/error'
 import { reducer as fileupload } from 'ducks/fileupload'
@@ -29,6 +30,7 @@ const initialModelStates = {
 }
 
 export default {
+  ux,
   auth,
   errors,
   fileupload,

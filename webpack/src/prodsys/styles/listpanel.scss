@@ -1,124 +1,30 @@
-@import 'globals';
-
-%button {
-  border-radius: 0.3rem;
-  box-shadow: inset -1px -1px 1px rgba(black, 0.4),
-    inset 1px 1px 1px rgba(white, 0.3);
-}
-.ListPanel {
+.SearchField {
+  flex: 1;
+  minimum-width: 20em;
   display: flex;
-  flex-direction: column;
-  .itemList {
-    height: 0;
+  align-items: center;
+  margin: 0.2em;
+  input {
     flex: 1;
-    margin: 0;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    border: 1px solid #999;
+    padding: 0.1em 2em 0.1em 0.3em;
+    border-radius: 0.2em;
+    margin: 0.1em 0.2em;
   }
-  table {
-    thead {
-      width: calc(100% - 16px);
-    }
-    tbody {
-      flex: 1;
-    }
-    tr {
-      width: 100%;
-      display: table;
-      table-layout: fixed;
-    }
+  .Throbber {
+    font-size: 1.3em;
+    color: #888;
+    position: absolute;
+    right: 1.6rem;
   }
-  .TopBar,
-  .BottomBar {
-    @extend %horizontal-bar;
-    // align-content: flex-start;
-    // align-items: space-around;
-    // justify-content: space-between;
-    .Filters,
-    .Pagination {
-      flex-wrap: wrap;
-      display: flex;
-      margin: 0.2em;
-      align-items: center;
-    }
-    .FileInputButton,
-    .info,
-    button {
-      line-height: 1;
-      font-size: 0.8em;
-      padding: 0.5em;
-      margin: 0.1rem;
-    }
-    .info {
-      flex: 1;
-    }
-    .FileInputButton,
-    button {
-      @extend %button;
-      outline: none;
-      color: white;
-      background-color: $button-color;
-      cursor: pointer;
-      &:hover {
-        background-color: scale_color(
-          $button-color,
-          $saturation: 100,
-          $lightness: 10
-        );
-      }
-      &.inactive {
-        background-color: scale_color(
-          $button-color,
-          $lightness: -50,
-          $saturation: -30
-        );
-        &:hover {
-          background-color: scale_color(
-            $button-color,
-            $lightness: -30,
-            $saturation: -10
-          );
-        }
-      }
-      &:disabled {
-        box-shadow: none;
-        background-color: scale_color(
-          $button-color,
-          $lightness: -30,
-          $saturation: -90
-        );
-        color: #ccc;
-        cursor: inherit;
-      }
-    }
-  }
-  .SearchField {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    position: relative;
-    input {
-      flex: 1;
-      border: 1px solid #999;
-      padding: 0.1em 2em 0.1em 0.3em;
-      border-radius: 0.2em;
-      margin: 0.1em 0.2em;
-    }
-    .Throbber {
-      font-size: 1.3em;
-      color: #888;
-      position: absolute;
-      right: 1.6rem;
-    }
-    .ClearSearch {
-      position: absolute;
-      right: 0.5rem;
-      color: #888;
-      cursor: pointer;
-      line-height: 0;
-      &.disabled {
-        opacity: 0.1;
-      }
+  .ClearSearch {
+    position: absolute;
+    right: 0.5rem;
+    color: #888;
+    cursor: pointer;
+    line-height: 0;
+    &.disabled {
+      opacity: 0.1;
     }
   }
 }

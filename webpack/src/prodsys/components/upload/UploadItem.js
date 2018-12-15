@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { getUpload } from 'ducks/fileupload'
-import { ImageData } from 'components/photos'
+import ImageData from 'components/photos/ImageData.js'
 import { Duplicate, UploadForm, UploadActions } from '.'
 
 const UploadItem = ({ small, pk, ...props }) => (

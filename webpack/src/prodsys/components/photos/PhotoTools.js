@@ -6,6 +6,8 @@ import { pushPhoto } from 'ducks/storyimage'
 import { selectors, actions, MODEL } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
 import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
+import ModelTools from 'components/ModelTools'
+
 const PhotoTools = ({
   autocrop,
   pushPhoto,
@@ -17,7 +19,7 @@ const PhotoTools = ({
   pk,
   cropping_method,
 }) => (
-  <React.Fragment>
+  <ModelTools>
     <Tool
       icon="CameraRoll"
       title="last opp nye bilder"
@@ -45,7 +47,7 @@ const PhotoTools = ({
       onClick={autocrop}
     />
     <OpenInDjangoAdmin pk={pk} path="photo/imagefile" />
-  </React.Fragment>
+  </ModelTools>
 )
 
 const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
@@ -71,4 +73,7 @@ const mapDispatchToProps = (dispatch, { pk, action }) => ({
   pushPhoto: () => dispatch(pushPhoto(pk)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(PhotoTools)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(PhotoTools)

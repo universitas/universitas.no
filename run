@@ -35,8 +35,7 @@ while (( $# > 0 )); do
   npmi    ) docker-compose run --rm webpack install $rest; exit ;; # npm install [packages...]
   npmup   ) docker-compose run --rm webpack update ;; # npm update js packages
   storyb  ) docker-compose run --rm --name storybook -p 9001:9001 webpack storybook ;;  # start storybook on port 9001
-  sbdep   ) # build and deploy storybook
-    docker-compose run --rm webpack npm run deploy-storybook ;;
+  sbdep   ) cd webpack; npm run deploy-storybook ;; # build and deploy storybook
   pyup    ) cd django; pip-compile --upgrade ;; # pip update python packages
   repl    ) docker-compose run --rm web django-admin shell_plus --quiet-load ;; # django repl shell
   django  ) docker-compose run --rm -u django web ${rest:-bash}; exit ;;

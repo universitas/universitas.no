@@ -1,6 +1,12 @@
-export PhotoDetail from './PhotoDetail.js'
-export PhotoGrid from './PhotoGrid.js'
-export PhotoList from './PhotoList.js'
-export PhotoStats from './PhotoStats.js'
-export PhotoTools from './PhotoTools.js'
-export ImageData from './ImageData.js'
+import Detail from './PhotoDetail.js'
+import List from './PhotoList.js'
+import Tools from './PhotoTools.js'
+
+const PhotoRoute = props => (
+  <>
+    <List {...props} />
+    <Detail {...props} />
+    <Tools {...props} />
+  </>
+)
+export default PhotoRoute

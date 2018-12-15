@@ -20,10 +20,10 @@ const ProdFields = ({ pk }) => (
 )
 
 const StoryDetailText = ({ pk }) => (
-  <div className="panelContent">
+  <>
     <ProdFields pk={pk} />
     <Field pk={pk} name="bodytext_markup" editable />
-  </div>
+  </>
 )
 
 export default StoryDetailText

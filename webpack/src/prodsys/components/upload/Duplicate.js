@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { ImageData } from 'components/photos'
+import ImageData from 'components/photos/ImageData.js'
 import { modelSelectors } from 'ducks/basemodel'
 import { changeDuplicate } from 'ducks/fileupload'
 import { Tool } from 'components/tool'

@@ -1,4 +1,12 @@
-export FrontpageTools from './FrontpageTools.js'
-export FrontpageDetail from './FrontpageDetail.js'
-export FrontpageGrid from './FrontpageGrid.js'
-export FrontpageList from './FrontpageList.js'
+import Detail from './FrontpageDetail.js'
+import List from './FrontpageList.js'
+import Tools from './FrontpageTools.js'
+
+const FrontpageRoute = props => (
+  <>
+    <List {...props} />
+    <Detail {...props} />
+    <Tools {...props} />
+  </>
+)
+export default FrontpageRoute

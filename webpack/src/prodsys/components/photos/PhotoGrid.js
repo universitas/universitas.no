@@ -1,7 +1,7 @@
 import cx from 'classnames'
 import { connect } from 'react-redux'
 import Thumb from 'components/Thumb'
-import { PhotoStats } from '.'
+import PhotoStats from './PhotoStats.js'
 import { MODEL, actions, selectors } from './model.js'
 import { Add, Delete } from 'components/Icons'
 import { Tool } from 'components/tool'
@@ -85,8 +85,8 @@ const GridItem = ({
   </div>
 )
 
-const ConnectedGridItem = connect((state, { pk, selected }) => {
-  const { model, pk: currentItem, action } = getRoutePayload(state)
+const ConnectedGridItem = connect((state, { pk, selected, action }) => {
+  const { model, pk: currentItem } = getRoutePayload(state)
   const data = selectors.getItem(pk)(state) || {}
   const clickAction =
     action == 'images'
@@ -100,13 +100,13 @@ const ConnectedGridItem = connect((state, { pk, selected }) => {
   return { ...data, className, action, selected, clickAction }
 })(GridItem)
 
-const PhotoGrid = ({ selected = [], items = [] }) => (
+const PhotoGrid = ({ selected = [], items = [], action }) => (
   <div className="ItemGrid">
     {selected.map(pk => (
-      <ConnectedGridItem key={pk} pk={pk} selected />
+      <ConnectedGridItem key={pk} pk={pk} action={action} selected />
     ))}
     {items.map(pk => (
-      <ConnectedGridItem key={pk} pk={pk} />
+      <ConnectedGridItem key={pk} pk={pk} action={action} />
     ))}
   </div>
 )

@@ -21,8 +21,4 @@ const StoryDetailImages = ({ image_count = 0, images }) => {
   )(images)
 }
 
-export default props => (
-  <div className="panelContents">
-    <StoryDetailImages {...props} />
-  </div>
-)
+export default props => <StoryDetailImages {...props} />

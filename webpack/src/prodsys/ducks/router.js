@@ -28,13 +28,10 @@ export const routesMap = {
   [LOGIN]: '/login/',
   [PRODSYS]: '/:model/:action/:pk(\\d+)?/',
   'router/SHORT_URL': {
-    path: '/short/:id(\\d+)?/',
+    path: '/short/:id(\\d+)?/', // highjack links in preview stories
     thunk: (dispatch, getState) => {
       const { id: pk } = getRoutePayload(getState())
-      const action = redirect(
-        toRoute({ model: 'stories', action: 'preview', pk }),
-      )
-      return dispatch(action)
+      dispatch(redirect(toRoute({ model: 'stories', action: 'preview', pk })))
     },
   },
   [NOT_FOUND]: {

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import cx from 'classnames'
 import ModelField from 'components/ModelField'
-import { PhotoStats } from 'components/photos'
+import PhotoStats from 'components/photos/PhotoStats'
 import * as photo from 'components/photos/model.js'
 
 class PhotoWidget extends React.Component {
