@@ -182,7 +182,7 @@ const getReducer = ({ type, payload }) => {
     case ITEM_CREATED:
       // new item created
       return R.compose(
-        R.set(itemLens(0), null),
+        R.set(itemLens(0), {}),
         R.set(itemLens(payload.id), payload),
         R.over(paginationItemsLens, R.union([payload.id])),
       )

@@ -8,7 +8,6 @@ import { selectors } from './model.js'
 const StoryRoute = ({ pk, action, panes, story }) => {
   const { storyText, storyImages, storyPreview } = panes
   const nPanes = [storyText, storyImages, storyPreview].filter(Boolean).length
-  console.log(pk, panes, nPanes, action)
   const children = []
   if (!pk || nPanes < 2)
     children.push(
