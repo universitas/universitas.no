@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import DetailTopBar from 'components/DetailTopBar'
 import { Tool } from 'components/tool'
 import { MODEL, selectors } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'

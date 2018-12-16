@@ -138,12 +138,13 @@ function* requestItems(action) {
 
 function* patchSaga(action) {
   // debounce
-  yield call(delay, PATCH_DEBOUNCE)
-  const { itemPatched, apiPatch } = modelFuncs(action)
   const { id, field, value } = action.payload
+  if (id == 0) return // "new" item can't be patched
+  yield call(delay, PATCH_DEBOUNCE) // debounce
+  const { itemPatched, itemPatchFailed, apiPatch } = modelFuncs(action)
   const { error, response } = yield call(apiPatch, id, { [field]: value })
   if (response) yield put(itemPatched(response))
-  else yield put(errorAction(error))
+  else yield put(itemPatchFailed({ id, ...error }))
 }
 
 function* deleteSaga(action) {
@@ -157,12 +158,12 @@ function* deleteSaga(action) {
 
 function* createSaga(action) {
   const data = action.payload
-  const { apiPost, itemAdded } = modelFuncs(action)
+  const { apiPost, itemAdded, itemCreateFailed } = modelFuncs(action)
   const { response, error } = yield call(apiPost, data)
   if (response) {
     yield put(itemAdded(response))
     return response
-  } else yield put(errorAction(error))
+  } else yield put(itemCreateFailed(error))
 }
 
 function* cloneSaga(action) {

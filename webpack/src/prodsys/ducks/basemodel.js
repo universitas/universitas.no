@@ -5,8 +5,10 @@ export const ITEM_ADDED = 'model/ITEM_ADDED'
 export const ITEM_CLONED = 'model/ITEM_CLONED'
 export const ITEM_DELETED = 'model/ITEM_DELETED'
 export const ITEM_CREATED = 'model/ITEM_CREATED'
+export const ITEM_CREATE_FAILED = 'model/ITEM_CREATE_FAILED'
 export const ITEMS_DISCARDED = 'model/ITEMS_DISCARDED'
 export const ITEM_PATCHED = 'model/ITEM_PATCHED'
+export const ITEM_PATCH_FAILED = 'model/ITEM_PATCH_FAILED'
 export const FIELD_CHANGED = 'model/FIELD_CHANGED'
 export const PAGINATE = 'model/PAGINATE'
 export const ITEMS_FETCHED = 'model/ITEMS_FETCHED'
@@ -36,6 +38,7 @@ const getSelector = R.curryN(3, (lens, modelName, state) =>
     state,
   ),
 )
+
 const defaultSelector = fallback =>
   R.curryN(
     3,
@@ -76,8 +79,10 @@ export const modelActions = partialMap({
   itemCloned: getActionCreator(ITEM_CLONED, id => ({ id })),
   itemDeleted: getActionCreator(ITEM_DELETED, id => ({ id })),
   itemCreated: getActionCreator(ITEM_CREATED, data => data),
+  itemCreateFailed: getActionCreator(ITEM_CREATE_FAILED, error => error),
   itemsDiscarded: getActionCreator(ITEMS_DISCARDED, (...ids) => ({ ids })),
   itemPatched: getActionCreator(ITEM_PATCHED, R.assoc('dirty', false)),
+  itemPatchFailed: getActionCreator(ITEM_PATCH_FAILED, error => error),
   itemRequested: getActionCreator(
     ITEMS_REQUESTED,
     (id, params = {}, replace = false) => ({
@@ -139,8 +144,8 @@ const getReducer = ({ type, payload }) => {
       return R.compose(
         R.set(paginationItemsLens, R.pluck('id', results)),
         R.set(paginationLens, {
-          last: offsetFromUrl(next) || offsetFromUrl(url) + results.length,
           count,
+          last: offsetFromUrl(next) || offsetFromUrl(url) + results.length,
           next: next && parseQuery(next),
           previous: previous && parseQuery(previous),
         }),
@@ -165,7 +170,24 @@ const getReducer = ({ type, payload }) => {
     }
     case ITEM_PATCHED:
       // received single item patch from server
-      return R.over(itemLens(payload.id), R.mergeDeepLeft(payload))
+      return R.over(
+        itemLens(payload.id),
+        R.pipe(
+          R.mergeDeepLeft(payload),
+          R.dissoc('error'),
+        ),
+      )
+    case ITEM_PATCH_FAILED:
+      return R.over(itemLens(payload.id), R.assoc('error', payload))
+    case ITEM_CREATED:
+      // new item created
+      return R.compose(
+        R.set(itemLens(0), null),
+        R.set(itemLens(payload.id), payload),
+        R.over(paginationItemsLens, R.union([payload.id])),
+      )
+    case ITEM_CREATE_FAILED:
+      return R.over(itemLens(0), R.assoc('error', payload))
     case ITEM_ADDED:
       // received single new item
       return R.compose(

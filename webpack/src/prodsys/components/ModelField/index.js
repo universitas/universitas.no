@@ -59,6 +59,7 @@ export const Field = ({
   onChange,
   value,
   helpText,
+  errors,
   ...props
 }) => {
   const { EditableField, DetailField } = R.propOr(
@@ -68,12 +69,21 @@ export const Field = ({
   )
   const fieldProps = R.omit(['model', 'pk'], props)
   const ModelField = editable ? EditableField : DetailField
+  const errorMessages =
+    errors &&
+    editable &&
+    errors.map((message, idx) => <FieldError key={idx} message={message} />)
   return (
     <div
       title={helpText}
       className={cx('ModelField', type, { fullwidth, editable })}
     >
-      {R.is(String, label) && <label className={cx('label')}>{label}</label>}
+      {label && (
+        <label className={cx('label')}>
+          {label}
+          {errorMessages}
+        </label>
+      )}
       <ModelField
         className={cx('value')}
         onChange={ev => onChange(ev && ev.target ? ev.target.value : ev)}
@@ -84,10 +94,17 @@ export const Field = ({
   )
 }
 
+const FieldError = ({ message }) => (
+  <span className="FieldError">{message}</span>
+)
+
 const mapStateToProps = (state, { pk, model, name, ...props }) => {
   const item = modelSelectors(model).getItem(pk)(state) || {}
   const value = props.value || item[name]
-  return R.contains(name, ['crop_box']) ? { value, item } : { value }
+  const errors = R.path(['error', name], item)
+  return R.contains(name, ['crop_box'])
+    ? { value, item, errors }
+    : { value, errors }
 }
 const mapDispatchToProps = (dispatch, { pk, model, name, onChange }) => ({
   onChange: value => {

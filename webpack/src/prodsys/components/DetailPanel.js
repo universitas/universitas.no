@@ -5,7 +5,7 @@ import { toRoute } from 'prodsys/ducks/router'
 import Panel from 'components/Panel'
 import cx from 'classnames'
 
-const DetailTopBar = ({ pk, title = 'no title', close }) => (
+const DetailTopBar = ({ pk, title = 'no title', close, children }) => (
   <div className="DetailTopBar">
     <Tool icon="Close" title="lukk" onClick={close} />
     <div className="pk">{pk}</div>

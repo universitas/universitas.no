@@ -1,7 +1,6 @@
 import { connect } from 'react-redux'
 import { Crop, Magic, Add, Delete, Laptop, Tune, Close } from 'components/Icons'
 import { Tool } from 'components/tool'
-import DetailTopBar from 'components/DetailTopBar'
 import { pushPhoto } from 'ducks/storyimage'
 import { selectors, actions, MODEL } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'

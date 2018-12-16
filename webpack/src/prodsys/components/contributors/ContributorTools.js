@@ -1,6 +1,5 @@
 import { connect } from 'react-redux'
 import { Tool } from 'components/tool'
-import DetailTopBar from 'components/DetailTopBar'
 import { MODEL, actions, selectors } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
 import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'

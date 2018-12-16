@@ -1,6 +1,11 @@
 @import 'styles/globals.scss';
 
 .ModelField {
+  .FieldError {
+    color: white;
+    font-weight: bold;
+    background: red;
+  }
   display: flex;
   flex-flow: row wrap;
   align-items: flex-end;
