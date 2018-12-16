@@ -8,16 +8,28 @@ from django.contrib.postgres.search import (
 )
 from django.db.models import (
     Case,
+    CharField,
     ExpressionWrapper,
     F,
+    FloatField,
     Func,
     Model,
     QuerySet,
     Value,
     When,
 )
-from django.db.models import FloatField  # Manager,
+from django.db.models.functions import Concat
 from django.utils.timezone import now
+
+
+class TrigramWordSimilarity(Func):
+    output_field = FloatField()
+    function = 'WORD_SIMILARITY'
+
+    def __init__(self, expression, string, **extra):
+        if not hasattr(string, 'resolve_expression'):
+            string = Value(string)
+        super().__init__(string, expression, **extra)
 
 
 class LogAge(Func):
@@ -77,38 +89,20 @@ class FullTextSearchQuerySet(QuerySet):
         )
     )
 
-    def trigram_search(self, query, lookup_field='title', cutoff=0.2):
-        """Perform postgresql trigram similarity lookup
-        https://docs.djangoproject.com/en/2.0/ref/contrib/postgres/search/
-        """
-        return self.annotate(
-            rank=TrigramSimilarity(lookup_field, query),
-        ).exclude(rank__lt=cutoff).order_by('-rank')
-
     def search(self, query):
-        """Perform postgresql full text search using search vector."""
-        qs = self.with_age('created')
-        result = qs.with_search_rank(query).annotate(
-            rank=ExpressionWrapper(F('search_rank') / F('age'), FloatField())
-        ).order_by('-rank')
-        if result:
-            return result
-        # fallback to title trigram search
-        return qs.trigram_search(query).order_by('-age')
-
-    def with_search_rank(self, query):
         if not isinstance(query, str):
             msg = f'expected query to be str, got {type(query)}, {query!r}'
             raise ValueError(msg)
-        term, *terms = query.split()
-        search = SearchQuery(term, config=self.config)
-        for term in terms:
-            search &= SearchQuery(word, config=self.config)
-        return self.filter(
-            search_vector=search,
-        ).annotate(
-            search_rank=SearchRank(F('search_vector'), search),
-        )
+        result = None
+        if len(query) > 5:
+            result = self.search_vector_rank(query)
+        if not result:
+            result = self.trigram_search_rank(query)
+        return result.with_age('created').annotate(
+            combined_rank=ExpressionWrapper(
+                F('rank') / F('age'), FloatField()
+            )
+        ).order_by('-combined_rank')
 
     def with_age(self, field='created', when=None):
         if when is None:
@@ -118,6 +112,27 @@ class FullTextSearchQuerySet(QuerySet):
                 when=when, timefield=field, table=self.model._meta.db_table
             )
         )
+
+    def trigram_search_rank(self, query, cutoff=None):
+        """Perform postgresql trigram word similarity lookup"""
+
+        # stricter cutoff for short queries
+        if cutoff is None:
+            cutoff = 1 - min(5, len(query)) / 10
+
+        head = Concat(
+            F('working_title'), Value(' '), F('kicker'), Value(' '),
+            F('title'), Value(' '), F('lede')
+        )
+        ranker = TrigramWordSimilarity(head, query)
+        return self.annotate(rank=ranker).filter(rank__gt=cutoff)
+
+    def search_vector_rank(self, query, cutoff=0.2):
+        """Perform postgresql full text search using search vector."""
+        ranker = SearchRank(
+            F('search_vector'), SearchQuery(query, config=self.config)
+        )
+        return self.annotate(rank=ranker).filter(rank__gt=cutoff)
 
     def update_search_vector(self):
         """Calculate and store search vector in the database."""

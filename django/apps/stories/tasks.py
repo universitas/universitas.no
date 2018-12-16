@@ -35,7 +35,7 @@ def update_search_task():
     return qs.count()
 
 
-@periodic_task(run_every=crontab(hour=6, minutes=0))
+@periodic_task(run_every=crontab(hour=6, minute=0))
 def archive_stale_stories(days=14):
     """Archive prodsys content that has not been touched for a while."""
     STALE_LIMIT = timezone.timedelta(days)
