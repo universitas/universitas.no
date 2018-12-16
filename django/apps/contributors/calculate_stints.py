@@ -12,6 +12,7 @@ from utils.merge_model_objects import merge_instances
 from .models import Contributor, Position, Stint
 
 STAFF_TITLES = (r'daglig leder', r'\w*redaktør', r'\w*leder', r'\w*sjef')
+MINIMUM_DATE = timezone.datetime(2000, 1, 1)
 StaffData = Dict[str, str]
 Time = Union[str, date, datetime]
 logger = logging.getLogger(__name__)
@@ -37,7 +38,7 @@ def create_stints_from_pdfs(since: datetime = None, dry_run=False):
             _add_to_stint(title, name, date)
 
 
-def create_stints_from_bylines(dry_run=False, since=date.min):
+def create_stints_from_bylines(dry_run=False, since=MINIMUM_DATE):
     """Find dates, bylines and names and create stints"""
     for title, credit in [
         ('journalist', 'text'),
@@ -62,7 +63,7 @@ def _add_stints_from_bylines(
     exclude_sections: List[str] = [],
     byline_cutoff: int = 0,
     dry_run: bool = False,
-    since: Time = '1900-01-01',
+    since: Time = MINIMUM_DATE,
 ):
     """Add stints based on byline credits"""
 
@@ -105,26 +106,27 @@ def _add_stints_from_bylines(
             continue
         stint.save()
         # merge with any existing stints for the same person and position
-        stint = _merge_stints(
-            Stint.objects.filter(contributor=person, position=position)
-        )
 
 
-def _merge_stints(stints: QuerySet,
-                  max_gap=timezone.timedelta(days=180)) -> Stint:
+def merge_stints(stints: QuerySet,
+                 max_gap=timezone.timedelta(days=180)) -> Stint:
     """Merge one or more Stints"""
     last: Optional[Stint] = None
-    for stint in stints.order_by('start_date'):
-        if last and max_or_none(
-            last.end_date, stint.start_date - max_gap
-        ) == last.end_date:
+    for stint in stints:
+        if (
+            last and (last.contributor,
+                      last.position) == (stint.contributor, stint.position)
+            and max_or_none(
+                last.end_date,
+                stint.start_date - max_gap,
+            ) == last.end_date
+        ):
             last.start_date = min(stint.start_date, last.start_date)
             last.end_date = max_or_none(stint.end_date, last.end_date)
             last.save()
             last = merge_instances(last, stint)
         else:
             last = stint
-    return last
 
 
 def _find_staff(text: str, titles: Iterable[str] = STAFF_TITLES) -> StaffData:

@@ -1,17 +1,18 @@
 import logging
 
-from celery.schedules import crontab
-from celery.task import periodic_task
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
+from celery.schedules import crontab
+from celery.task import periodic_task
 from utils.merge_model_objects import merge_instances
 
 from .calculate_stints import (
     create_stints_from_bylines,
     create_stints_from_pdfs,
+    merge_stints,
 )
 from .models import Contributor, default_groups
 
@@ -30,7 +31,14 @@ ACTIVE_CUTOFF = getattr(settings, 'ACTIVE_CUTOFF', ONE_HUNDRED_DAYS)
 def daily_update():
     create_stints_from_bylines(since=TWO_WEEKS)
     create_stints_from_pdfs(since=TWO_WEEKS)
+    merge_overlapping_stints()
     update_status()
+
+
+def merge_overlapping_stints():
+    """Merge stints with same person and title and with small time gap."""
+    for cn in Contributor.objects.exclude(stint=None):
+        merge_stints(cn.stint_set.order_by('position', '-start_date'))
 
 
 def connect_contributor_to_user(cn: Contributor, create=False):
