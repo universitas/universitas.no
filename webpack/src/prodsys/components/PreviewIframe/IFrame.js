@@ -62,7 +62,7 @@ class IFrame extends React.Component {
     resizeSignal()
   }
   render() {
-    const { children, head, zoom = 100 } = this.props
+    const { children, head, zoom = 1 } = this.props
     return (
       <Spring to={{ zoom }} onRest={resizeSignal}>
         {props => (

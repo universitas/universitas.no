@@ -46,10 +46,11 @@ $statusColors: (0, $cyan), (3, $green), (4, $green), (5, $green),
 .StoryTable {
   height: 0;
   display: grid;
-  grid-template-columns: 5fr 2fr 2fr 2fr auto;
-  th {
-    padding: 0.4em 0.5em;
-    text-align: left;
+  line-height: 1rem;
+  grid-template-columns: 5fr 2fr 2fr 3fr auto 2rem;
+  svg.syncing {
+    transform-origin: 50% 50%;
+    animation: spin 1s linear infinite;
   }
   .ModelField {
     border: none;

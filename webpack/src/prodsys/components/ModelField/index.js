@@ -73,12 +73,13 @@ export const Field = ({
     errors &&
     editable &&
     errors.map((message, idx) => <FieldError key={idx} message={message} />)
+  const hasLabel = editable && (label || errors)
   return (
     <div
       title={helpText}
       className={cx('ModelField', type, { fullwidth, editable })}
     >
-      {label && (
+      {hasLabel && (
         <label className={cx('label')}>
           {label}
           {errorMessages}
@@ -99,7 +100,7 @@ const FieldError = ({ message }) => (
 )
 
 const mapStateToProps = (state, { pk, model, name, ...props }) => {
-  const item = modelSelectors(model).getItem(pk)(state) || {}
+  const item = modelSelectors(model).getItem(pk)(state)
   const value = props.value || item[name]
   const errors = R.path(['error', name], item)
   return R.contains(name, ['crop_box'])

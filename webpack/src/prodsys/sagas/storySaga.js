@@ -12,6 +12,7 @@ import {
 
 import { PRODSYS } from 'prodsys/ducks/router'
 import { modelSelectors, modelActions, ITEMS_FETCHED } from 'ducks/basemodel'
+import { parseText, renderText } from 'markup'
 
 const errorAction = error => ({ type: 'api/ERROR', error })
 
@@ -29,6 +30,7 @@ const {
   itemPatched: storyPatched,
   itemAdded: storyAdded,
   itemRequested: storyRequested,
+  fieldChanged,
 } = modelActions('stories')
 
 export default function* storyImageSaga() {
@@ -37,6 +39,19 @@ export default function* storyImageSaga() {
   yield takeEvery(PUSH_PHOTO, pushPhotoSaga)
   yield takeEvery(PRODSYS, storyRouteSaga)
   yield takeEvery(ITEMS_FETCHED, nestedStoryFetched)
+  yield takeEvery('FIX_STORY', fixStorySaga)
+}
+
+function* fixStorySaga(action) {
+  const { pk } = action.payload
+  const story = yield select(getStory(pk))
+  const change = R.pipe(
+    R.prop('bodytext_markup'),
+    parseText,
+    renderText,
+    v => fieldChanged(pk, 'bodytext_markup', v),
+  )(story)
+  yield put(change)
 }
 
 function* storyRouteSaga(action) {

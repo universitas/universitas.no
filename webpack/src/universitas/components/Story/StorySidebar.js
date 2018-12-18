@@ -26,11 +26,7 @@ const creditDisplay = credit =>
     'photo and video': 'Foto og video',
   }[credit] || credit)
 
-const StoryInfo = ({
-  theme_word,
-  story_type,
-  story_type_name = story_type.name,
-}) => (
+const StoryInfo = ({ theme_word, story_type_name }) => (
   <div className="StoryInfo">
     <div className="storytype">{story_type_name}</div>
     <div className="themeword">{hyphenate(theme_word)}</div>
@@ -54,12 +50,17 @@ const Bylines = ({ bylines }) =>
     R.addIndex(R.map)((props, idx) => <Byline key={idx} {...props} />),
   )(bylines)
 
-const StorySidebar = ({ bylines = [], ...props }) => (
+const StorySidebar = ({
+  bylines = [],
+  theme_word,
+  story_type_name,
+  publication_date,
+}) => (
   <section className="StorySidebar">
-    <StoryInfo {...props} />
-    <DateLine {...props} />
+    <StoryInfo theme_word={theme_word} story_type_name={story_type_name} />
+    <DateLine publication_date={publication_date} />
     <Bylines bylines={bylines} />
   </section>
 )
 
-export default StorySidebar
+export default React.memo(StorySidebar)

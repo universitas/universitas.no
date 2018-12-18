@@ -26,6 +26,7 @@ const hyphenateWord = R.ifElse(
 )
 
 export const hyphenate = R.pipe(
+  R.defaultTo(''),
   R.split(/ /gu),
   R.map(hyphenateWord),
   R.join(' '),

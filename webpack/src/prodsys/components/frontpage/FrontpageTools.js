@@ -3,6 +3,7 @@ import { Tool } from 'components/tool'
 import { MODEL, selectors } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
 import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
+import AutosaveTool from 'components/AutosaveTool'
 import ModelTools from 'components/ModelTools'
 
 const ToolBar = props => <div {...props} />
@@ -15,6 +16,7 @@ const FrontpageTools = ({ pk }) => (
       label="forsiden"
       onClick={() => window.open('/')}
     />
+    <AutosaveTool model={MODEL} />
     <OpenInDjangoAdmin pk={pk} path="frontpage/frontpagestory" />
   </ModelTools>
 )

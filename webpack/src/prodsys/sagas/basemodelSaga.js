@@ -3,9 +3,11 @@ import {
   takeEvery,
   select,
   call,
+  cancel,
   put,
   all,
   fork,
+  spawn,
   take,
 } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
@@ -29,14 +31,32 @@ import {
   FILTER_SET,
   FIELD_CHANGED,
   ITEM_CLONED,
+  ITEM_PATCH,
+  AUTOSAVE_TOGGLE,
   modelSelectors,
   modelActions,
   actionModelLens,
 } from 'ducks/basemodel'
 import { toRoute } from 'prodsys/ducks/router'
 
-const PATCH_DEBOUNCE = 1000
+const AUTOSAVE_DEBOUNCE = 2000
 const SEARCH_DEBOUNCE = 300
+
+const takeLatestForItem = (pattern, saga) =>
+  fork(function*() {
+    let taskList = {}
+    while (true) {
+      const action = yield take(pattern)
+      const taskPath = [
+        R.view(actionModelLens, action),
+        R.path(['payload', 'id'], action),
+      ]
+      const lastTask = R.path(taskPath, taskList)
+      if (lastTask) yield cancel(lastTask) // cancel is no-op if the task has already terminated
+      const task = yield fork(saga, action)
+      taskList = R.assocPath(taskPath, task)(taskList)
+    }
+  })
 
 // router selector
 const getRouteParams = R.path(['router', 'params'])
@@ -44,10 +64,12 @@ const getRouteParams = R.path(['router', 'params'])
 export default function* rootSaga() {
   yield takeLatest([FILTER_TOGGLED, FILTER_SET], queryChanged)
   yield takeEvery(ITEMS_REQUESTED, requestItems)
-  yield takeLatest(FIELD_CHANGED, patchSaga)
+  yield takeLatestForItem(FIELD_CHANGED, autoSaveSaga)
+  yield takeEvery(AUTOSAVE_TOGGLE, patchAllSaga)
   yield takeEvery(ITEM_CLONED, cloneSaga)
   yield takeEvery(ITEM_CREATED, createSaga)
   yield takeEvery(ITEM_DELETED, deleteSaga)
+  yield takeEvery(ITEM_PATCH, patchSaga)
   yield takeEvery(PRODSYS, routeSaga)
 }
 
@@ -59,8 +81,6 @@ const errorAction = error => ({
 export const modelFuncs = action => {
   const modelName = R.view(actionModelLens, action)
   const apiFuncs = {
-    // detailView: id => push(`/${modelName}/${id}`),
-    // listView: () => push(`/${modelName}/`),
     apiGet: apiGet(modelName),
     apiPost: apiPost(modelName),
     apiDelete: apiDelete(modelName),
@@ -136,15 +156,36 @@ function* requestItems(action) {
   } else yield put(errorAction(error))
 }
 
+function* autoSaveSaga(action) {
+  const { itemPatch, getAutosave } = modelFuncs(action)
+  yield call(delay, AUTOSAVE_DEBOUNCE)
+  if (yield select(getAutosave)) yield put(itemPatch(action.payload.id, null))
+}
+
+function* patchAllSaga(action) {
+  const { getAutosave, getItems, itemPatch } = modelFuncs(action)
+  if (yield select(getAutosave)) {
+    const nonEmpty = p => p && !R.isEmpty(p)
+    const items = R.reject(
+      R.propSatisfies(R.either(R.isNil, R.isEmpty), 'dirty'),
+    )(yield select(getItems))
+    for (const id in items) yield put(itemPatch(id, null))
+  }
+}
+
 function* patchSaga(action) {
-  // debounce
-  const { id, field, value } = action.payload
-  if (id == 0) return // "new" item can't be patched
-  yield call(delay, PATCH_DEBOUNCE) // debounce
-  const { itemPatched, itemPatchFailed, apiPatch } = modelFuncs(action)
-  const { error, response } = yield call(apiPatch, id, { [field]: value })
-  if (response) yield put(itemPatched(response))
-  else yield put(itemPatchFailed({ id, ...error }))
+  const { getDirty, itemPatched, itemPatchFailed, apiPatch } = modelFuncs(
+    action,
+  )
+  let { id } = action.payload
+  const patch = yield select(getDirty(id))
+  if (R.isEmpty(patch)) {
+    yield put(itemPatched({ id }))
+  } else {
+    const { error, response } = yield call(apiPatch, id, patch)
+    if (response) yield put(itemPatched(response))
+    else yield put(itemPatchFailed({ id, ...error }))
+  }
 }
 
 function* deleteSaga(action) {

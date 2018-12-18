@@ -1,36 +1,92 @@
 import cx from 'classnames'
 import { connect } from 'react-redux'
-import { MODEL, Field, actions, selectors } from './model.js'
+import { MODEL, fields, Field, actions, selectors } from './model.js'
+import { Error, Save, Ok, Sync, Circle } from 'components/Icons'
 
 import { getRoutePayload, toRoute } from 'prodsys/ducks/router'
 
-const TableCell = ({ label, className, onClick, ...props }) => (
-  <div title={label} className={className} onClick={onClick}>
-    <Field {...props} label />
+const TableCell = ({
+  className,
+  onClick,
+  saveChanges,
+  isDirty,
+  name,
+  ...props
+}) => (
+  <div
+    title={R.path([name, 'label'], fields)}
+    className={className}
+    onClick={onClick}
+  >
+    <Field name={name} {...props} label="" />
   </div>
 )
 
+const DumbDirtyIndicator = ({
+  onClick,
+  autoSave,
+  className,
+  status,
+  saveHandler,
+}) => {
+  const statusIcon = {
+    ok: <Ok style={{ opacity: 0.2 }} title="endringer lagret" />,
+    dirty: autoSave ? (
+      <Sync title="saken lagres automatisk" />
+    ) : (
+      <Save onClick={saveHandler} title="klikk for å lagre endringer" />
+    ),
+    syncing: <Sync className="syncing" title="lagrer" />,
+    error: <Error style={{ color: 'yellow' }} title="noe gikk feil" />,
+  }[status]
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        fontSize: '1.3rem',
+      }}
+      className={className}
+    >
+      {statusIcon}
+    </div>
+  )
+}
+const DirtyIndicator = connect(
+  (state, { pk }) =>
+    R.applySpec({
+      autoSave: selectors.getAutosave,
+      status: R.pipe(
+        selectors.getItem(pk),
+        R.prop('status'),
+      ),
+    })(state),
+  (dispatch, { pk }) => ({
+    saveHandler: () => dispatch(actions.itemPatch(pk, null)),
+  }),
+)(DumbDirtyIndicator)
+
 // render all headers in table
 const DumbTableRow = props => (
-  <React.Fragment>
+  <>
     <TableCell {...props} name="working_title" />
     <TableCell {...props} name="publication_status" />
     <TableCell {...props} name="story_type" />
     <TableCell {...props} name="modified" relative />
     <TableCell {...props} name="image_count" />
-  </React.Fragment>
+    <DirtyIndicator {...props} />
+  </>
 )
 
 const TableRow = connect(
   (state, { pk, row, selected, action }) => {
     const data = selectors.getItem(pk)(state) || {}
-    const { dirty, publication_status: status } = data
-    const className = cx(`status-${status}`, 'TableCell', {
-      dirty,
+    const className = cx('TableCell', `status-${data.publication_status}`, {
       selected,
       odd: row % 2,
     })
-    return { className }
+    return { className, pk }
   },
   (dispatch, { pk, action }) => ({
     onClick: e => dispatch(toRoute({ model: MODEL, action, pk: pk })),

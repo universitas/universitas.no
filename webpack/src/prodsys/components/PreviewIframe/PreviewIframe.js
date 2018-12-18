@@ -6,6 +6,14 @@ import './PreviewIframe.scss'
 
 import Filter from 'components/ListPanel/Filter'
 
+const DebugFrame = props => (
+  // It's easier to do debugging with dev tools without the iframe
+  <div
+    style={{ background: 'white', flex: 1, overflowY: 'scroll' }}
+    {...props}
+  />
+)
+
 class PreviewIframe extends React.Component {
   constructor(props) {
     super(props)
@@ -19,14 +27,14 @@ class PreviewIframe extends React.Component {
   }
 
   render() {
-    const zoom =
-      this.props.zoom && this.node ? this.node.clientWidth / this.props.zoom : 1
+    const { debug = false, zoom, children } = this.props
+    const zoomVal = zoom && this.node ? this.node.clientWidth / zoom : 1
+    const content = <main className="PageSwitch">{children}</main>
+    if (debug) return <DebugFrame children={content} />
     return (
       <div className="PreviewIframe" ref={this.ref}>
         {this.state.ready && (
-          <IFrame zoom={zoom} head={this.head}>
-            <main className="PageSwitch">{this.props.children}</main>
-          </IFrame>
+          <IFrame zoom={zoomVal} head={this.head} children={content} />
         )}
       </div>
     )

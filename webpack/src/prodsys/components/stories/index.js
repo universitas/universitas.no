@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { getPanes, togglePane } from 'prodsys/ducks/ux'
 import { selectors } from './model.js'
 
-const StoryRoute = ({ pk, action, panes, story }) => {
+const StoryRoute = ({ pk, action, panes }) => {
   const { storyText, storyImages, storyPreview } = panes
   const nPanes = [storyText, storyImages, storyPreview].filter(Boolean).length
   const children = []
@@ -14,11 +14,11 @@ const StoryRoute = ({ pk, action, panes, story }) => {
       <List pk={pk} action={storyImages ? 'images' : action} key="list" />,
     )
   if ((pk && storyText) || nPanes == 0)
-    children.push(<Detail pk={pk} {...story} action={'change'} key="1" />)
+    children.push(<Detail pk={pk} action={'change'} key="1" />)
   if (pk && storyPreview)
-    children.push(<Detail pk={pk} {...story} action={'preview'} key="3" />)
+    children.push(<Detail pk={pk} action={'preview'} key="3" />)
   if (pk && storyImages)
-    children.push(<Detail pk={pk} {...story} action={'images'} key="2" />)
+    children.push(<Detail pk={pk} action={'images'} key="2" />)
   children.push(<Tools pk={pk} action={action} key="tools" />)
   return children
 }
@@ -26,7 +26,6 @@ const StoryRoute = ({ pk, action, panes, story }) => {
 const mapStateToProps = (state, { pk }) =>
   R.applySpec({
     panes: R.pipe(getPanes),
-    story: selectors.getItem(pk),
   })(state)
 
 export default connect(mapStateToProps)(StoryRoute)

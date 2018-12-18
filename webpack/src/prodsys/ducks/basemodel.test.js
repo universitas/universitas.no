@@ -27,6 +27,7 @@ const {
 describe('setup', () => {
   test('initial state', () => {
     expect(baseInitialState()).toEqual({
+      autosave: true,
       items: {},
       query: {},
       pagination: { ids: [] },
@@ -54,12 +55,7 @@ describe('action creators', () => {
     ],
     [itemsFetched, actions.ITEMS_FETCHED, itemData, itemData],
     [itemsDiscarded, actions.ITEMS_DISCARDED, [2, 3], { ids: [2, 3] }],
-    [
-      itemPatched,
-      actions.ITEM_PATCHED,
-      itemData,
-      { ...itemData, dirty: false },
-    ],
+    [itemPatched, actions.ITEM_PATCHED, itemData, { ...itemData }],
     [
       fieldChanged,
       actions.FIELD_CHANGED,
@@ -118,6 +114,7 @@ describe('reducer', () => {
 describe('selectors', () => {
   const selectors = modelSelectors(modelName)
   const modelData = {
+    autosave: true,
     query: { foo: [1, 2, 3] },
     pagination: { next: 'a', previous: 'b', ids: [100, 101] },
     items: { '100': { id: 100 }, '101': { id: 101 } },
@@ -128,9 +125,9 @@ describe('selectors', () => {
   const cases = [
     ['getQuery', {}, modelData.query],
     ['getItemList', [], modelData.pagination.ids],
-    ['getItems', {}, modelData.items],
+    ['getItems', {}, R.map(a => a, modelData.items)],
     ['getPagination', { ids: [] }, modelData.pagination],
-    ['getItem', {}, modelData.items['101'], 101],
+    ['getItem', {}, { id: 101 }, 101],
   ]
   R.map(
     R.apply((funcname, data0, data1, args) => {

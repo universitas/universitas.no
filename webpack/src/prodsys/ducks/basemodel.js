@@ -1,12 +1,14 @@
 // base model for prodsys
 import { parseQuery } from 'utils/urls'
 import { arrayToggle, combinedToggle, partialMap } from 'utils/fp'
+export const AUTOSAVE_TOGGLE = 'model/AUTOSAVE_TOGGLE'
 export const ITEM_ADDED = 'model/ITEM_ADDED'
 export const ITEM_CLONED = 'model/ITEM_CLONED'
 export const ITEM_DELETED = 'model/ITEM_DELETED'
 export const ITEM_CREATED = 'model/ITEM_CREATED'
 export const ITEM_CREATE_FAILED = 'model/ITEM_CREATE_FAILED'
 export const ITEMS_DISCARDED = 'model/ITEMS_DISCARDED'
+export const ITEM_PATCH = 'model/ITEM_PATCH'
 export const ITEM_PATCHED = 'model/ITEM_PATCHED'
 export const ITEM_PATCH_FAILED = 'model/ITEM_PATCH_FAILED'
 export const FIELD_CHANGED = 'model/FIELD_CHANGED'
@@ -23,6 +25,7 @@ const itemsLens = R.lensProp('items')
 const paginationLens = R.lensProp('pagination')
 const paginationItemsLens = R.lensPath(['pagination', 'ids'])
 const fetchingLens = R.lensProp('fetching')
+const autosaveLens = R.lensProp('autosave')
 const itemLens = id => R.lensPath(['items', String(id)])
 
 // Lens for accessing model name from action
@@ -39,14 +42,20 @@ const getSelector = R.curryN(3, (lens, modelName, state) =>
   ),
 )
 
-const defaultSelector = fallback =>
-  R.curryN(
-    3,
-    R.pipe(
-      getSelector,
-      R.defaultTo(fallback),
-    ),
-  )
+const getItem = (modelName, id, state) => {
+  const item = R.view(R.lensPath([modelName, 'items', '' + id]), state)
+  return R.cond([
+    [R.isNil, R.always({})],
+    [
+      R.propSatisfies(R.complement(R.isEmpty), 'dirty'),
+      R.converge(R.mergeLeft, [R.prop('dirty'), R.dissoc('dirty')]),
+    ],
+    [R.T, R.identity],
+  ])(item)
+}
+
+const getDirty = (modelName, id) =>
+  R.view(R.lensPath([modelName, 'items', id, 'dirty']))
 
 // :: modelName -> {k: selector} -- (redux selector factory)
 export const modelSelectors = partialMap({
@@ -55,7 +64,9 @@ export const modelSelectors = partialMap({
   getItemList: getSelector(paginationItemsLens),
   getItems: getSelector(itemsLens),
   getFetching: getSelector(fetchingLens),
-  getItem: modelName => id => defaultSelector({})(itemLens(id), modelName),
+  getAutosave: getSelector(autosaveLens),
+  getItem: R.curryN(3, getItem),
+  getDirty: R.curryN(2, getDirty),
   getChoices: R.pipe(
     getSelector(itemsLens),
     R.values,
@@ -75,13 +86,15 @@ const getActionCreator = R.curry((type, payloadTransform, modelName) =>
 )
 // :: modelName => {k: actionCreator} -- (redux action creators factory)
 export const modelActions = partialMap({
+  autosaveToggle: getActionCreator(AUTOSAVE_TOGGLE, R.always({})),
   itemAdded: getActionCreator(ITEM_ADDED, data => data),
   itemCloned: getActionCreator(ITEM_CLONED, id => ({ id })),
   itemDeleted: getActionCreator(ITEM_DELETED, id => ({ id })),
   itemCreated: getActionCreator(ITEM_CREATED, data => data),
   itemCreateFailed: getActionCreator(ITEM_CREATE_FAILED, error => error),
   itemsDiscarded: getActionCreator(ITEMS_DISCARDED, (...ids) => ({ ids })),
-  itemPatched: getActionCreator(ITEM_PATCHED, R.assoc('dirty', false)),
+  itemPatch: getActionCreator(ITEM_PATCH, (id, patch) => ({ id, patch })),
+  itemPatched: getActionCreator(ITEM_PATCHED, data => data),
   itemPatchFailed: getActionCreator(ITEM_PATCH_FAILED, error => error),
   itemRequested: getActionCreator(
     ITEMS_REQUESTED,
@@ -125,6 +138,7 @@ export const baseInitialState = R.pipe(
   R.set(queryLens, {}),
   R.set(paginationLens, {}),
   R.set(paginationItemsLens, []),
+  R.set(autosaveLens, true),
 )
 
 const updateItems = R.converge(R.call, [
@@ -132,6 +146,7 @@ const updateItems = R.converge(R.call, [
   R.pipe(
     R.prop('results'),
     R.indexBy(R.prop('id')),
+    R.map(R.assoc('status', 'ok')),
   ),
 ])
 
@@ -168,17 +183,22 @@ const getReducer = ({ type, payload }) => {
         R.over(paginationItemsLens, R.without(ids)),
       )
     }
+    case ITEM_PATCH:
+      return R.over(itemLens(payload.id), R.assoc('status', 'syncing'))
     case ITEM_PATCHED:
       // received single item patch from server
       return R.over(
         itemLens(payload.id),
         R.pipe(
           R.mergeDeepLeft(payload),
-          R.dissoc('error'),
+          R.mergeLeft({ status: 'ok', error: null, dirty: {} }),
         ),
       )
     case ITEM_PATCH_FAILED:
-      return R.over(itemLens(payload.id), R.assoc('error', payload))
+      return R.over(
+        itemLens(payload.id),
+        R.mergeLeft({ status: 'error', error: payload }),
+      )
     case ITEM_CREATED:
       // new item created
       return R.compose(
@@ -197,9 +217,8 @@ const getReducer = ({ type, payload }) => {
     case FIELD_CHANGED: {
       // single item field changed client side
       const { id, field, value } = payload
-      const mergeData = { dirty: true, [field]: value }
-      const lens = itemLens(id)
-      return R.over(lens, R.mergeDeepLeft(mergeData))
+      const mergeData = { status: 'dirty', dirty: { [field]: value } }
+      return R.over(itemLens(id), R.mergeDeepLeft(mergeData))
     }
     case ITEMS_FETCHING:
       return R.set(fetchingLens, true)
@@ -215,6 +234,8 @@ const getReducer = ({ type, payload }) => {
     case FILTER_TOGGLED:
       // flip single filter value ( also works with filter-set )
       return R.over(queryLens, combinedToggle(payload.key, payload.value))
+    case AUTOSAVE_TOGGLE:
+      return R.over(autosaveLens, R.not)
     default:
       return R.identity
   }

@@ -3,6 +3,7 @@ import { Tool } from 'components/tool'
 import { MODEL, actions, selectors } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
 import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
+import AutosaveTool from 'components/AutosaveTool'
 import { parseText, renderText } from 'markup'
 import { getPanes, togglePane } from 'prodsys/ducks/ux'
 import ModelTools from 'components/ModelTools.js'
@@ -32,13 +33,11 @@ PaneTool = connect(
 const StoryTools = ({
   trashStory,
   cloneStory,
-  edit_url,
+  autosaveToggle,
+  autoSave,
   public_url,
   action,
   pk,
-  title,
-  working_title,
-  bodytext_markup,
   fixStory,
 }) => (
   <ModelTools>
@@ -62,12 +61,7 @@ const StoryTools = ({
       disabled={!pk}
       name="storyPreview"
     />
-    <Tool
-      icon="Magic"
-      label="fiks"
-      title="fiks tags"
-      onClick={() => fixStory(bodytext_markup)}
-    />
+    <Tool icon="Magic" label="fiks" title="fiks tags" onClick={fixStory} />
     <Tool
       icon="Newspaper"
       label="åpne"
@@ -75,20 +69,24 @@ const StoryTools = ({
       onClick={public_url && openUrl(public_url)}
       disabled={!public_url}
     />
+    <AutosaveTool model={MODEL} />
     <OpenInDjangoAdmin pk={pk} path="stories/story" />
   </ModelTools>
 )
 
-const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
+const mapStateToProps = (state, { pk }) =>
+  R.applySpec({
+    public_url: R.pipe(
+      selectors.getItem(pk),
+      R.prop('public_url'),
+    ),
+  })(state)
 
 const mapDispatchToProps = (dispatch, { pk }) => ({
   trashStory: () =>
     dispatch(actions.fieldChanged(pk, 'publication_status', 15)),
   cloneStory: () => dispatch(actions.itemCloned(pk)),
-  fixStory: text =>
-    dispatch(
-      actions.fieldChanged(pk, 'bodytext_markup', renderText(parseText(text))),
-    ),
+  fixStory: () => dispatch({ type: 'FIX_STORY', payload: { pk } }),
 })
 
 export default connect(

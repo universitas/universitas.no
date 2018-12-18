@@ -94,7 +94,7 @@ $row-height: 12vh;
   }
 }
 .layout-left {
-  grid-template-columns: 2fr 3fr;
+  grid-template-columns: 3fr 2fr;
   grid-template-rows: auto auto 1fr;
   align-content: end;
   .Vignette,
