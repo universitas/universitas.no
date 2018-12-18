@@ -214,8 +214,7 @@ class SearchFilterBackend(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         search_query = request.query_params.get('search', None)
         if search_query:
-            filtered = queryset.search(search_query).values('id')
-            queryset = queryset.filter(id__in=filtered)
+            queryset = queryset.search(search_query)
 
         order_by = request.query_params.get('ordering')
         if order_by:
@@ -229,8 +228,6 @@ class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
 
     filter_backends = [DjangoFilterBackend, SearchFilterBackend]
     filter_fields = ['id', 'publication_status', 'modified']
-
-    serializer_class = StorySerializer
 
     def is_nested(self):
         return 'nested' in self.request.query_params
@@ -260,6 +257,4 @@ class StoryViewSet(QueryOrderableViewSetMixin, viewsets.ModelViewSet):
         return queryset
 
     def get_serializer_class(self):
-        if self.is_nested():
-            return StorySerializerNested
-        return super().get_serializer_class()
+        return StorySerializerNested if self.is_nested() else StorySerializer

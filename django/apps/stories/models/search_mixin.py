@@ -34,16 +34,17 @@ class TrigramWordSimilarity(Func):
 
 class LogAge(Func):
     """Calculate log 10 of hours since datetime column"""
-    MIN_AGE = 2.0
-    # Minimum age 2 hours. Prevent log of zero error and unintended large
+    MIN_AGE = 1
+    # Minimum age 1 day. Prevent log of zero error and unintended large
     # effect of log of very small inputs.
     output_field = FloatField()
 
     template = (
-        f'log(greatest({MIN_AGE},'
+        f'log(2::numeric, greatest({MIN_AGE},'
         'abs(extract(epoch FROM (TIMESTAMP '
-        "'%(when)s' - %(table)s.%(timefield)s)))"
-        '/ (60 * 60)))::real'
+        "'%(when)s' - "
+        'COALESCE(%(table)s.%(timefield)s,%(table)s.created)'
+        '))) / (60 * 60 * 24))::numeric)'
     )
 
     # PostgreSQL query explanation:
@@ -56,12 +57,13 @@ class LogAge(Func):
     # `epoch` = 1970-01-01 = unix epoch = total seconds
     # @ is absolute number math operator
 
-    # / (60 * 60)
-    # Divide by minutes and seconds: seconds -> hours
+    # / (60 * 60 * 24)
+    # Divide by minutes and seconds and hours: seconds -> days
 
     # ::real
     #  Cast result as `real` using PostgreSQL type cast notation
     # `real` = 32 bits floating point number
+    # `numeric` = decimal type
 
 
 class FullTextSearchQuerySet(QuerySet):
@@ -98,7 +100,7 @@ class FullTextSearchQuerySet(QuerySet):
             result = self.search_vector_rank(query)
         if not result:
             result = self.trigram_search_rank(query)
-        return result.with_age('created').annotate(
+        return result.with_age('publication_date').annotate(
             combined_rank=ExpressionWrapper(
                 F('rank') / F('age'), FloatField()
             )
