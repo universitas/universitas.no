@@ -1,11 +1,10 @@
 """Tasks for issues and pdfs"""
 import logging
 
-from django.db.models import Avg, F, Func
-from django.db.models.expressions import Random
-
 from celery.schedules import crontab
 from celery.task import periodic_task
+from django.db.models import Avg, F, Func
+from django.db.models.expressions import Random
 
 from .models import FrontpageStory
 

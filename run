@@ -166,7 +166,7 @@ load_postgres() {
   cp $dumpfile django/dbdump.sql
 
   # loading data
-  docker-compose down 
+  docker-compose down
   docker-compose run --rm web load_db
 
   # cleanup
