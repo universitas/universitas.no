@@ -23,8 +23,8 @@ const ZoomButton = connect(
 const ZoomSlider = props => {
   return (
     <div className="ZoomSlider" {...props}>
-      <ZoomButton value={500} Icon={Mobile} />
-      <ZoomButton value={800} Icon={Tablet} />
+      <ZoomButton value={400} Icon={Mobile} />
+      <ZoomButton value={750} Icon={Tablet} />
       <ZoomButton value={1200} Icon={Laptop} />
       <ZoomButton value={2000} Icon={Desktop} />
       <ZoomButton value={5000} Icon={Binoculars} />

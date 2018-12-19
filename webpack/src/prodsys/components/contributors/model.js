@@ -27,6 +27,13 @@ export const fields = {
       { value: 3, label: 'Ekstern' },
     ],
   },
+  first_position: {
+    type: 'select',
+    // filter: { is_active: true },
+    label: 'Posisjon',
+    to: 'positions',
+    required: false,
+  },
   byline_photo: {
     type: 'select',
     filter: { category: 4 },

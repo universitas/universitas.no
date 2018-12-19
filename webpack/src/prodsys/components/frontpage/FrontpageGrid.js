@@ -7,19 +7,19 @@ import { addAdverts } from 'universitas/components/NewsFeed/NewsFeed.js'
 import Debug from 'components/Debug'
 import './FrontpageGrid.scss'
 import { getRoutePayload, toRoute } from 'prodsys/ducks/router'
+import { selectors as photoSelectors } from 'prodsys/components/photos/model.js'
 
 class FeedItemWrapper extends React.Component {
   scrollTo = () => {
+    if (!this.props.selected) return
+    const fn = () =>
+      this.node.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      })
     // for some reason this doesn't always work unless we do it async
     clearTimeout(this.timeout)
-    this.timeout = setTimeout(
-      () =>
-        this.node.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        }),
-      200,
-    )
+    this.timeout = setTimeout(fn, 100)
   }
   clickHandler = ev => {
     ev.stopPropagation()
@@ -30,7 +30,7 @@ class FeedItemWrapper extends React.Component {
     this.node = node
   }
   componentDidUpdate() {
-    this.props.selected && this.scrollTo()
+    this.scrollTo()
   }
   render() {
     const { className, children } = this.props
@@ -47,21 +47,23 @@ class FeedItemWrapper extends React.Component {
 
 const ConnectedFeedItem = connect(
   (state, { pk }) => {
-    const data = selectors.getItem(pk)(state) || {}
+    const data = selectors.getItem(pk)(state)
     const currentItemId = getRoutePayload(state).pk
     const selected = pk == currentItemId
     const unselected = currentItemId && !selected
-    const { dirty, published } = data
+    const imagefile = photoSelectors.getItem(data.image_id)(state)
+    if (!R.isEmpty(imagefile)) {
+      data.imagefile = R.mergeRight(data.imagefile, imagefile)
+    }
+    const { status } = data
     const className = cx('FeedItemWrapper', {
-      dirty,
       selected,
-      unpublished: !published,
       unselected,
+      status,
     })
     return {
-      sectionName: data.story.section,
       ...data,
-      dirty: false,
+      sectionName: data.story.section,
       selected,
       className,
       model: MODEL,

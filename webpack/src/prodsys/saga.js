@@ -36,7 +36,7 @@ function* loadInitialData() {
   yield put(modelActions('contributors').itemsRequested())
   yield put(modelActions('stories').itemsRequested())
   yield put(modelActions('photos').itemsRequested())
-  // yield put(modelActions('storyimages').itemsRequested())
+  yield put(modelActions('positions').itemsRequested())
   // yield put(modelActions('issues').itemsRequested())
   // yield put(modelActions('frontpage').itemsRequested())
 }

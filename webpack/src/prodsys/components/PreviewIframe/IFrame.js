@@ -33,12 +33,14 @@ const calculateStyle = R.pipe(
       transform: `scale(${zoom})`,
       height: `${100 / zoom}%`,
       width: `${100 / zoom}%`,
+      left: 0,
     }),
     zoom => ({
       transformOrigin: 'top center',
-      transform: `scale(1) translate(${50 - 50 / zoom}%)`,
+      transform: 'scale(1)',
       height: '100%',
       width: `${100 / zoom}%`,
+      left: `${50 - 50 / zoom}%`,
     }),
   ),
   R.mergeLeft({

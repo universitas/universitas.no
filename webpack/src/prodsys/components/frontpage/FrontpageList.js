@@ -39,15 +39,14 @@ const mapStateToProps = (state, ownProps) => {
   const items = selectors.getItems(state)
   const sorted = R.pipe(
     R.pick(ids),
-    R.map(props => ({
-      ...props,
-      sortKey: props.baserank + parseFloat(props.priority),
-    })),
     R.values,
+    R.map(({ id, baserank, priority }) => ({
+      id,
+      sortKey: baserank + parseFloat(priority),
+    })),
     R.sortWith([R.descend(R.prop('sortKey'))]),
     R.pluck('id'),
   )
-
   return { items: sorted(items) }
 }
 

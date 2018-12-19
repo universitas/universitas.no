@@ -31,6 +31,7 @@ import {
   FILTER_SET,
   FIELD_CHANGED,
   ITEM_CLONED,
+  ITEM_POST,
   ITEM_PATCH,
   AUTOSAVE_TOGGLE,
   modelSelectors,
@@ -67,7 +68,7 @@ export default function* rootSaga() {
   yield takeLatestForItem(FIELD_CHANGED, autoSaveSaga)
   yield takeEvery(AUTOSAVE_TOGGLE, patchAllSaga)
   yield takeEvery(ITEM_CLONED, cloneSaga)
-  yield takeEvery(ITEM_CREATED, createSaga)
+  yield takeEvery([ITEM_POST, ITEM_CREATED], createSaga)
   yield takeEvery(ITEM_DELETED, deleteSaga)
   yield takeEvery(ITEM_PATCH, patchSaga)
   yield takeEvery(PRODSYS, routeSaga)
@@ -157,9 +158,11 @@ function* requestItems(action) {
 }
 
 function* autoSaveSaga(action) {
+  const { id } = action.payload
+  if (id == 0) return
   const { itemPatch, getAutosave } = modelFuncs(action)
   yield call(delay, AUTOSAVE_DEBOUNCE)
-  if (yield select(getAutosave)) yield put(itemPatch(action.payload.id, null))
+  if (yield select(getAutosave)) yield put(itemPatch(id, null))
 }
 
 function* patchAllSaga(action) {
@@ -182,6 +185,7 @@ function* patchSaga(action) {
   if (R.isEmpty(patch)) {
     yield put(itemPatched({ id }))
   } else {
+    console.log({ id, patch })
     const { error, response } = yield call(apiPatch, id, patch)
     if (response) yield put(itemPatched(response))
     else yield put(itemPatchFailed({ id, ...error }))
@@ -198,8 +202,9 @@ function* deleteSaga(action) {
 }
 
 function* createSaga(action) {
-  const data = action.payload
-  const { apiPost, itemAdded, itemCreateFailed } = modelFuncs(action)
+  const { apiPost, getItem, itemAdded, itemCreateFailed } = modelFuncs(action)
+  let data = action.payload
+  if (data.id == 0) data = yield select(getItem(0))
   const { response, error } = yield call(apiPost, data)
   if (response) {
     yield put(itemAdded(response))

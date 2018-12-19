@@ -102,7 +102,7 @@ const FieldError = ({ message }) => (
 const mapStateToProps = (state, { pk, model, name, ...props }) => {
   const item = modelSelectors(model).getItem(pk)(state)
   const value = props.value || item[name]
-  const errors = R.path(['error', name], item)
+  const errors = R.path(['_error', name], item)
   return R.contains(name, ['crop_box'])
     ? { value, item, errors }
     : { value, errors }

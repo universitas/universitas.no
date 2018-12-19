@@ -1,7 +1,6 @@
 import DetailPanel from 'components/DetailPanel'
 import cx from 'classnames'
 import { connect } from 'react-redux'
-import { ContributorTools } from '.'
 import { MODEL, Field, selectors } from './model.js'
 
 const ContributorDetail = ({ pk, action }) => (

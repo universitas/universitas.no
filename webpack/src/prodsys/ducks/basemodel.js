@@ -5,6 +5,7 @@ export const AUTOSAVE_TOGGLE = 'model/AUTOSAVE_TOGGLE'
 export const ITEM_ADDED = 'model/ITEM_ADDED'
 export const ITEM_CLONED = 'model/ITEM_CLONED'
 export const ITEM_DELETED = 'model/ITEM_DELETED'
+export const ITEM_POST = 'model/ITEM_POST'
 export const ITEM_CREATED = 'model/ITEM_CREATED'
 export const ITEM_CREATE_FAILED = 'model/ITEM_CREATE_FAILED'
 export const ITEMS_DISCARDED = 'model/ITEMS_DISCARDED'
@@ -42,27 +43,34 @@ const getSelector = R.curryN(3, (lens, modelName, state) =>
   ),
 )
 
+const mergeDirty = R.cond([
+  [R.isNil, R.always({})],
+  [
+    R.propSatisfies(R.complement(R.isEmpty), '_dirty'),
+    R.converge(R.mergeLeft, [R.prop('_dirty'), R.dissoc('_dirty')]),
+  ],
+  [R.T, R.identity],
+])
+
 const getItem = (modelName, id, state) => {
   const item = R.view(R.lensPath([modelName, 'items', '' + id]), state)
-  return R.cond([
-    [R.isNil, R.always({})],
-    [
-      R.propSatisfies(R.complement(R.isEmpty), 'dirty'),
-      R.converge(R.mergeLeft, [R.prop('dirty'), R.dissoc('dirty')]),
-    ],
-    [R.T, R.identity],
-  ])(item)
+  return mergeDirty(item)
 }
 
 const getDirty = (modelName, id) =>
-  R.view(R.lensPath([modelName, 'items', id, 'dirty']))
+  R.view(R.lensPath([modelName, 'items', id, '_dirty']))
 
 // :: modelName -> {k: selector} -- (redux selector factory)
 export const modelSelectors = partialMap({
   getQuery: getSelector(queryLens),
   getPagination: getSelector(paginationLens),
   getItemList: getSelector(paginationItemsLens),
-  getItems: getSelector(itemsLens),
+  getItems: modelName =>
+    R.pipe(
+      getSelector(itemsLens)(modelName),
+      R.filter(R.prop('id')),
+      R.map(mergeDirty),
+    ),
   getFetching: getSelector(fetchingLens),
   getAutosave: getSelector(autosaveLens),
   getItem: R.curryN(3, getItem),
@@ -90,6 +98,7 @@ export const modelActions = partialMap({
   itemAdded: getActionCreator(ITEM_ADDED, data => data),
   itemCloned: getActionCreator(ITEM_CLONED, id => ({ id })),
   itemDeleted: getActionCreator(ITEM_DELETED, id => ({ id })),
+  itemPost: getActionCreator(ITEM_POST, id => ({ id })),
   itemCreated: getActionCreator(ITEM_CREATED, data => data),
   itemCreateFailed: getActionCreator(ITEM_CREATE_FAILED, error => error),
   itemsDiscarded: getActionCreator(ITEMS_DISCARDED, (...ids) => ({ ids })),
@@ -131,10 +140,12 @@ const offsetFromUrl = R.compose(
   R.defaultTo(''),
 )
 
+const baseItemState = { _dirty: {}, _error: null, _status: 'ok' }
+
 // :: () => State
 export const baseInitialState = R.pipe(
   R.always({}),
-  R.set(itemsLens, {}),
+  R.set(itemsLens, { 0: baseItemState }),
   R.set(queryLens, {}),
   R.set(paginationLens, {}),
   R.set(paginationItemsLens, []),
@@ -146,7 +157,7 @@ const updateItems = R.converge(R.call, [
   R.pipe(
     R.prop('results'),
     R.indexBy(R.prop('id')),
-    R.map(R.assoc('status', 'ok')),
+    R.mergeLeft(baseItemState),
   ),
 ])
 
@@ -184,41 +195,47 @@ const getReducer = ({ type, payload }) => {
       )
     }
     case ITEM_PATCH:
-      return R.over(itemLens(payload.id), R.assoc('status', 'syncing'))
+      return R.over(itemLens(payload.id), R.assoc('_status', 'syncing'))
     case ITEM_PATCHED:
       // received single item patch from server
       return R.over(
         itemLens(payload.id),
         R.pipe(
           R.mergeDeepLeft(payload),
-          R.mergeLeft({ status: 'ok', error: null, dirty: {} }),
+          R.mergeLeft(baseItemState),
         ),
       )
     case ITEM_PATCH_FAILED:
       return R.over(
         itemLens(payload.id),
-        R.mergeLeft({ status: 'error', error: payload }),
+        R.mergeLeft({ _status: 'error', _error: payload }),
       )
     case ITEM_CREATED:
       // new item created
       return R.compose(
-        R.set(itemLens(0), {}),
         R.set(itemLens(payload.id), payload),
         R.over(paginationItemsLens, R.union([payload.id])),
       )
     case ITEM_CREATE_FAILED:
-      return R.over(itemLens(0), R.assoc('error', payload))
+      return R.over(itemLens(0), R.assoc('_error', payload))
     case ITEM_ADDED:
       // received single new item
       return R.compose(
         R.set(itemLens(payload.id), payload),
+        R.over(itemLens(0), R.mergeLeft(baseItemState)),
         R.over(paginationItemsLens, R.union([payload.id])),
       )
     case FIELD_CHANGED: {
       // single item field changed client side
-      const { id, field, value } = payload
-      const mergeData = { status: 'dirty', dirty: { [field]: value } }
-      return R.over(itemLens(id), R.mergeDeepLeft(mergeData))
+      const { id, field, value = null } = payload
+      const mergeData = { _status: 'dirty', _dirty: { [field]: value } }
+      return R.over(
+        itemLens(id),
+        R.pipe(
+          R.defaultTo({}),
+          R.mergeDeepLeft(mergeData),
+        ),
+      )
     }
     case ITEMS_FETCHING:
       return R.set(fetchingLens, true)

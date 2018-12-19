@@ -1,13 +1,12 @@
 # overrides for development
 version: '2.1'
 services:
-
   webpack:
     image: universitas/webpack:${IMAGE_VERSION:-edge}
     command: dev-server
     tty: true
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - PUBLIC_PATH=http://${SITE_URL:-localhost}:3000/static/
 
@@ -16,19 +15,23 @@ services:
     command: expressdev
     tty: true
     ports:
-      - "9000:9000"
+      - '9000:9000'
 
   web:
     command: runserver
     ports:
-      - "8000:8000"
+      - '8000:8000'
+
+  postgres:
+    ports:
+      - '6000:5432'
 
   flower:
     extends: django
     command: flower
     restart: always
     ports:
-      - "5555:5555"
+      - '5555:5555'
     depends_on:
       - celery
       - celerybeat

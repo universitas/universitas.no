@@ -28,7 +28,7 @@ describe('setup', () => {
   test('initial state', () => {
     expect(baseInitialState()).toEqual({
       autosave: true,
-      items: {},
+      items: { '0': { _dirty: {}, _error: null, _status: 'ok' } },
       query: {},
       pagination: { ids: [] },
     })

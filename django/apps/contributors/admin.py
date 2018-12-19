@@ -68,18 +68,24 @@ class PositionAdmin(admin.ModelAdmin):
     list_display = [
         'title',
         'total',
-        'active_now',
         'groups_list',
+        'active_now',
         'is_management',
+        'active',
     ]
     search_fields = [
         'title',
     ]
-    list_editable = ['is_management']
+    list_editable = [
+        'is_management',
+        'active',
+    ]
 
     def active_now(self, instance):
-        active = instance.active()
-        if len(active) == 1:
+        active = instance.active_stints()
+        if len(active) == 0:
+            text = '-' * 20
+        elif len(active) == 1:
             text = str(active[0].contributor)
         else:
             text = str(len(active))

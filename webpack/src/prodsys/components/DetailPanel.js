@@ -5,10 +5,10 @@ import { toRoute } from 'prodsys/ducks/router'
 import Panel from 'components/Panel'
 import cx from 'classnames'
 
-const DetailTopBar = ({ pk, title = 'no title', close, children }) => (
+const DetailTopBar = ({ pk, title = '...', close, children }) => (
   <div className="DetailTopBar">
     <Tool icon="Close" title="lukk" onClick={close} />
-    <div className="pk">{pk}</div>
+    <div className="pk">{pk || 'opprett ny'}</div>
     <div className="title">{title}</div>
   </div>
 )
@@ -33,7 +33,7 @@ const DetailPanel = ({
   scroll = false,
   ...props
 }) =>
-  pk ? (
+  R.isNil(pk) ? null : (
     <Panel
       className={cx('DetailPanel', className)}
       scroll={scroll}
@@ -42,7 +42,7 @@ const DetailPanel = ({
     >
       {children}
     </Panel>
-  ) : null
+  )
 
 // <div className={cx('DetailPanel', className)}>
 export default DetailPanel

@@ -59,7 +59,7 @@ const DirtyIndicator = connect(
       autoSave: selectors.getAutosave,
       status: R.pipe(
         selectors.getItem(pk),
-        R.prop('status'),
+        R.prop('_status'),
       ),
     })(state),
   (dispatch, { pk }) => ({

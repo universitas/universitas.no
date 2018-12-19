@@ -10,7 +10,7 @@
     "serve": "TARGET=server pm2-runtime /var/build/server.js",
     "servedev": "TARGET=server pm2-dev /var/build/server.js",
     "test": "jest --watchAll --verbose --bail",
-    "testonce": "jest -u",
+    "testonce": "jest -u --bail",
     "build": "webpack-cli --config=webpack.prod.config.js",
     "stats": "webpack-cli --config webpack.prod.config.js --profile --json > webpack-stats.json",
     "dev": "webpack-dev-server --config webpack.dev.config.js",
