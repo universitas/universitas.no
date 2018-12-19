@@ -14,16 +14,20 @@ const StoryAction = ({ action, ...props }) => {
   if (action == 'preview') return <StoryDetailPreview {...props} />
 }
 
-const StoryDetail = ({ panes, pk, action, ...props }) => (
+const getTitle = ({ title, working_title }) => title || working_title
+const getClass = ({ publication_status }) =>
+  cx('StoryDetail', `status-${publication_status}`)
+
+const StoryDetail = ({ panes, pk, action }) => (
   <DetailPanel
     pk={pk}
     model={MODEL}
-    getTitle={({ title, working_title }) => title || working_title}
-    className={cx('StoryDetail', `status-${props.publication_status}`)}
+    getTitle={getTitle}
+    getClass={getClass}
     scroll={action == 'images'}
     footer={action == 'preview' && <ZoomControl />}
   >
-    <StoryAction pk={pk} action={action} {...props} />
+    <StoryAction pk={pk} action={action} />
   </DetailPanel>
 )
 

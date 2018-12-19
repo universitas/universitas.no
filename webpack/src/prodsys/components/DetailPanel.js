@@ -12,37 +12,41 @@ const DetailTopBar = ({ pk, title = '...', close, children }) => (
     <div className="title">{title}</div>
   </div>
 )
-const mapStateToProps = (state, { pk, model, getTitle = R.prop('pk') }) => {
-  const item = modelSelectors(model).getItem(pk)(state) || {}
-  return { title: getTitle(item) }
-}
-const mapDispatchToProps = (dispatch, { model }) => ({
-  close: () => dispatch(toRoute({ model: model, action: 'list' })),
-})
-const ConnectedTopBar = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(DetailTopBar)
 
 const DetailPanel = ({
   children,
+  title,
   className,
   pk,
   model,
-  getTitle,
+  close,
   scroll = false,
-  ...props
+  footer,
 }) =>
   R.isNil(pk) ? null : (
     <Panel
       className={cx('DetailPanel', className)}
       scroll={scroll}
-      header={<ConnectedTopBar {...{ pk, model, getTitle }} />}
-      {...props}
+      header={<DetailTopBar {...{ pk, title, close }} />}
+      footer={footer}
     >
       {children}
     </Panel>
   )
 
-// <div className={cx('DetailPanel', className)}>
-export default DetailPanel
+const mapStateToProps = (
+  state,
+  { pk, model, getClass = R.always(''), getTitle = R.prop('pk') },
+) =>
+  R.applySpec({ title: getTitle, className: getClass })(
+    modelSelectors(model).getItem(pk)(state),
+  )
+
+const mapDispatchToProps = (dispatch, { model }) => ({
+  close: () => dispatch(toRoute({ model: model, action: 'list' })),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DetailPanel)

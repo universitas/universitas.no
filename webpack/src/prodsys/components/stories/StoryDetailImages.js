@@ -1,6 +1,8 @@
 import cx from 'classnames'
+import { connect } from 'react-redux'
 import { StoryImage } from 'components/storyimages'
 import { PlaceHolder } from 'components/storyimages/StoryImage'
+import { selectors } from './model.js'
 import Info from 'components/Info'
 
 const StoryDetailImages = ({ image_count = 0, images }) => {
@@ -21,4 +23,10 @@ const StoryDetailImages = ({ image_count = 0, images }) => {
   )(images)
 }
 
-export default props => <StoryDetailImages {...props} />
+const mapStateToProps = (state, { pk }) =>
+  R.pipe(
+    selectors.getItem(pk),
+    R.pick(['image_count', 'images']),
+  )(state)
+
+export default connect(mapStateToProps)(StoryDetailImages)

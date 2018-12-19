@@ -9,7 +9,7 @@ export const Caption = ({ children, creditline = '' }) => {
     [R.T, R.toString],
   ])(children)
   if (!(caption || creditline)) return null
-  const match = R.match(/^([^:.\n]*[:!?])(.*)$/, caption)
+  const match = R.match(/^([^:.\n]*?[:!?])(.*)$/, caption)
   const [, intro, body = caption] = match
   return (
     <div className="Caption">
