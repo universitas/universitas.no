@@ -46,11 +46,11 @@ class ContributorAdmin(admin.ModelAdmin):
     list_display = [
         'display_name',
         'bylines_count',
-        'verified',
         'status',
+        'user',
     ]
     list_editable = [
-        'verified',
+        # 'verified',
     ]
     readonly_fields = [
         'user',

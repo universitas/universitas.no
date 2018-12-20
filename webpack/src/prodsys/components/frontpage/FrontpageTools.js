@@ -12,8 +12,9 @@ const FrontpageTools = ({ pk }) => (
     <Tool
       icon="Newspaper"
       title={'forsiden'}
-      label="forsiden"
+      label="forside"
       onClick={() => window.open('/')}
+      order={5}
     />
     <OpenInDjangoAdmin pk={pk} path="frontpage/frontpagestory" />
   </ModelTools>

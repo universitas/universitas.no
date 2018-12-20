@@ -7,7 +7,7 @@ import { Add, Delete } from 'components/Icons'
 import { Tool } from 'components/tool'
 import './PhotoGrid.scss'
 import { getRoutePayload, toRoute } from 'prodsys/ducks/router'
-import { assignPhoto } from 'ducks/storyimage'
+import { assignPhoto } from 'ducks/actions.js'
 
 const Frame = () => <rect className="Frame" width="100%" height="100%" />
 

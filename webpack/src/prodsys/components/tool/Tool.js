@@ -10,6 +10,8 @@ const Tool = ({
   title,
   label,
   className,
+  style,
+  order,
   ...props
 }) => {
   const Icon = Icons[icon] || Icons.Fallback
@@ -22,7 +24,8 @@ const Tool = ({
       )}
       title={title}
       onMouseDown={e => e.preventDefault()}
-      onClick={onClick}
+      onClick={disabled ? null : onClick}
+      style={{ order, ...style }}
     >
       <Icon {...props} />
       {label && <small className="toolLabel">{label}</small>}

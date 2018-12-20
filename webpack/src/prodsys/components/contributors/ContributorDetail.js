@@ -11,6 +11,7 @@ const ContributorDetail = ({ pk, action }) => (
     <Field pk={pk} name="email" editable />
     <Field pk={pk} name="phone" editable />
     <Field pk={pk} name="status" editable />
+    <Field pk={pk} name="username" />
     <Field pk={pk} name="stint_set" />
   </DetailPanel>
 )

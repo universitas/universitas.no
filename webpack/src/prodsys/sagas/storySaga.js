@@ -2,11 +2,10 @@
 import { put, takeEvery, select, call } from 'redux-saga/effects'
 import { pushImageFile, apiList, apiPost, apiDelete } from 'services/api'
 import {
-  ASSIGN_PHOTO,
-  PUSH_PHOTO,
   deleteStoryImage,
+  ASSIGN_PHOTO,
   DELETE_STORY_IMAGE,
-} from 'ducks/storyimage'
+} from 'ducks/actions.js'
 
 import { PRODSYS } from 'prodsys/ducks/router'
 import { modelSelectors, modelActions, ITEMS_FETCHED } from 'ducks/basemodel'
@@ -29,7 +28,6 @@ const { itemRequested: storyRequested, fieldChanged } = modelActions('stories')
 export default function* storyImageSaga() {
   yield takeEvery(ASSIGN_PHOTO, assignPhotoSaga)
   yield takeEvery(DELETE_STORY_IMAGE, deleteStoryImageSaga)
-  yield takeEvery(PUSH_PHOTO, pushPhotoSaga)
   yield takeEvery(PRODSYS, storyRouteSaga)
   yield takeEvery(ITEMS_FETCHED, nestedStoryFetched)
   yield takeEvery('FIX_STORY', fixStorySaga)
@@ -101,12 +99,6 @@ function* deleteStoryImageSaga(action) {
     yield put(storyImagesDiscarded([id]))
     yield put(storyRequested(parent_story, { nested: true }, true))
   } else yield put(errorAction(error))
-}
-
-function* pushPhotoSaga(action) {
-  const { id } = action.payload
-  const { response, error } = yield call(pushImageFile, id)
-  if (error) put(errorAction(error))
 }
 
 const getCreditLine = ({ category, artist }) => {

@@ -38,7 +38,14 @@ const StoryTools = ({
   fixStory,
 }) => (
   <ModelTools>
-    <Tool icon="Add" label="kopier" title="kopier saken" onClick={cloneStory} />
+    <Tool
+      icon="Add"
+      label="kopier"
+      disabled={!pk}
+      title={pk ? 'kopier saken' : 'velg en sak'}
+      onClick={cloneStory}
+      order={-1}
+    />
     <PaneTool
       icon="TextFields"
       label="tekst"
@@ -58,13 +65,21 @@ const StoryTools = ({
       disabled={!pk}
       name="storyPreview"
     />
-    <Tool icon="Magic" label="fiks" title="fiks tags" onClick={fixStory} />
+    <Tool
+      icon="Magic"
+      disabled={!pk}
+      label="fiks"
+      title={pk ? 'fiks tags' : 'velg en sak'}
+      onClick={fixStory}
+      order={-1}
+    />
     <Tool
       icon="Newspaper"
       label="åpne"
       title={public_url && `se saken på universitas.no\n${public_url}`}
       onClick={public_url && openUrl(public_url)}
       disabled={!public_url}
+      order={5}
     />
     <OpenInDjangoAdmin pk={pk} path="stories/story" />
   </ModelTools>

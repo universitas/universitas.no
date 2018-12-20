@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { Crop, Magic, Add, Delete, Laptop, Tune, Close } from 'components/Icons'
 import { Tool } from 'components/tool'
-import { pushPhoto } from 'ducks/storyimage'
+import { pushPhoto } from 'ducks/actions.js'
 import { selectors, actions, MODEL } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
 import ModelTools from 'components/ModelTools'
@@ -21,15 +21,9 @@ const PhotoTools = ({
   <ModelTools>
     <Tool
       icon="CameraRoll"
-      title="last opp nye bilder"
+      title="last opp nye bilder til prodsys"
       label="last opp"
       onClick={upload}
-    />
-    <Tool
-      icon="Download"
-      label="desken"
-      title="last opp fila til desken"
-      onClick={pushPhoto}
     />
     <Tool
       active={action == 'crop'}
@@ -39,11 +33,20 @@ const PhotoTools = ({
       onClick={() => toggleCrop(action == 'crop' ? null : 'crop')}
     />
     <Tool
-      disabled={cropping_method == 1}
+      disabled={!pk || cropping_method == 1}
       icon="Magic"
       label="auto"
-      title="autobeskjær bilde"
+      title={pk ? 'autobeskjær bilde' : 'velg bilde'}
       onClick={autocrop}
+      order={3}
+    />
+    <Tool
+      icon="Download"
+      label="desken"
+      disabled={!pk}
+      title={pk ? 'last opp fila til desken' : 'velg bilde'}
+      onClick={pushPhoto}
+      order={4}
     />
     <OpenInDjangoAdmin pk={pk} path="photo/imagefile" />
   </ModelTools>

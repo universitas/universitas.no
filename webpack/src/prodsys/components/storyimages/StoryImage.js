@@ -6,7 +6,7 @@ import { PhotoWidget, StoryImageForm } from '.'
 
 import * as photo from 'components/photos/model.js'
 import { actions, selectors } from './model.js'
-import { deleteStoryImage } from 'ducks/storyimage'
+import { deleteStoryImage } from 'ducks/actions.js'
 import { toRoute } from 'prodsys/ducks/router'
 
 const StoryImageActions = ({

@@ -9,6 +9,7 @@ export const fields = {
   id: { type: 'integer', label: 'ID' },
   url: { type: 'field', label: 'Url' },
   display_name: { type: 'string', label: 'Navn' },
+  username: { type: 'string', label: 'Brukernavn', editable: false },
   title: { type: 'string', label: 'Tittel' },
   phone: { type: 'phone', label: 'Telefon' },
   email: { type: 'email', label: 'Epost' },

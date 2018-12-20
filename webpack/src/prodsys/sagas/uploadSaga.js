@@ -2,7 +2,7 @@ import { put, takeEvery, select, call } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { pushImageFile, apiGet, apiPost, apiList } from 'services/api'
 import { apiUrlToId } from 'utils/urls'
-import { assignPhoto } from 'ducks/storyimage'
+import { assignPhoto } from 'ducks/actions'
 import {
   ADD,
   POST,

@@ -7,17 +7,30 @@ export const REQUEST_USER_SUCCESS = 'auth/REQUEST_USER_SUCCESS'
 export const REQUEST_USER_FAILED = 'auth/REQUEST_USER_FAILED'
 
 // Lenses
-const lens = R.pipe(R.split('.'), R.lensPath)
+const lens = R.pipe(
+  R.split('.'),
+  R.lensPath,
+)
 const sliceLens = lens('auth')
 const tokenLens = lens('key')
 const pendingLens = lens('pending')
 const errorLens = lens('error')
 
 // Selectors
-const selectorFromLens = l => R.view(R.compose(sliceLens, l))
+const selectorFromLens = R.pipe(
+  R.curryN(2, R.compose)(sliceLens),
+  R.view,
+)
 
 export const getUser = R.view(sliceLens)
 export const getAuthToken = selectorFromLens(tokenLens)
+export const getPermission = R.pipe(
+  R.split(/[^a-z]/g),
+  R.reverse,
+  R.prepend('permissions'),
+  R.lensPath,
+  l => s => Boolean(selectorFromLens(l)(s)),
+)
 
 // Action creators
 
@@ -41,6 +54,17 @@ export const requestUserFailed = error => ({ type: REQUEST_USER_FAILED, error })
 // reducers
 const initialState = { pending: true, error: {} }
 
+const permissionTree = R.pipe(
+  R.map(R.split('_')),
+  R.groupBy(R.prop(1)),
+  R.map(
+    R.pipe(
+      R.fromPairs,
+      R.map(Boolean),
+    ),
+  ),
+)
+
 const getReducer = ({ type, payload, error }) => {
   switch (type) {
     // case LOG_IN:
@@ -50,9 +74,15 @@ const getReducer = ({ type, payload, error }) => {
     case LOG_IN_FAILED:
       return R.set(errorLens, error)
     case REQUEST_USER_SUCCESS:
-      return R.compose(R.mergeDeepRight(payload), R.set(pendingLens, false))
+      return R.compose(
+        R.mergeDeepRight(R.evolve({ permissions: permissionTree }, payload)),
+        R.set(pendingLens, false),
+      )
     case REQUEST_USER_FAILED:
-      return R.compose(R.set(pendingLens, false), R.set(errorLens, error))
+      return R.compose(
+        R.set(pendingLens, false),
+        R.set(errorLens, error),
+      )
     case LOG_OUT:
       return R.always({ pending: false, error: {} })
     default:
@@ -60,5 +90,5 @@ const getReducer = ({ type, payload, error }) => {
   }
 }
 
-export const reducer = (state = initialState, action) =>
+export const reducer = (state = initialState, action = {}) =>
   getReducer(action)(state)

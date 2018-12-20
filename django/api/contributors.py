@@ -69,12 +69,15 @@ class ContributorSerializer(serializers.HyperlinkedModelSerializer):
             'position',
             'first_position',
             'title',
+            'username',
         ]
         extra_kwargs = {
             'display_name': {'min_length': 3, 'max_length': 50},
             'status': {'required': True},
             'email': {'required': False},
         }
+
+    username = serializers.CharField(source='user', read_only=True)
 
     byline_photo = serializers.PrimaryKeyRelatedField(
         many=False,
@@ -86,7 +89,9 @@ class ContributorSerializer(serializers.HyperlinkedModelSerializer):
     phone = PhoneNumberField(required=False)
     thumb = AbsoluteURLField()
 
-    first_position = serializers.IntegerField(write_only=True, required=False)
+    first_position = serializers.IntegerField(
+        allow_null=True, write_only=True, required=False
+    )
 
     def validate_status(self, value):
         if not value:
@@ -111,6 +116,7 @@ class ContributorViewSet(viewsets.ModelViewSet):
     """API endpoint that allows Contributor to be viewed or updated."""
 
     queryset = Contributor.objects.order_by('display_name').prefetch_related(
+        'user',
         'byline_photo',
         Prefetch(
             'stint_set', queryset=Stint.objects.select_related('position')

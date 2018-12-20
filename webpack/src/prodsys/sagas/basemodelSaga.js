@@ -43,15 +43,14 @@ import {
 } from 'ducks/basemodel'
 import { toRoute } from 'prodsys/ducks/router'
 
+const getModel = action => R.view(actionModelLens, action)
+
 const takeLatestForItem = (pattern, saga) =>
   fork(function*() {
     let taskList = {}
     while (true) {
       const action = yield take(pattern)
-      const taskPath = [
-        R.view(actionModelLens, action),
-        R.path(['payload', 'id'], action),
-      ]
+      const taskPath = [getModel(action), R.path(['payload', 'id'], action)]
       const lastTask = R.path(taskPath, taskList)
       if (lastTask) yield cancel(lastTask) // cancel is no-op if the task has already terminated
       const task = yield fork(saga, action)
@@ -80,7 +79,7 @@ const errorAction = error => ({
 })
 
 export const modelFuncs = action => {
-  const modelName = R.view(actionModelLens, action)
+  const modelName = getModel(action)
   const apiFuncs = {
     apiGet: apiGet(modelName),
     apiPost: apiPost(modelName),
@@ -92,7 +91,10 @@ export const modelFuncs = action => {
     apiFuncs,
     modelSelectors(modelName),
     modelActions(modelName),
-    { toRoute: props => toRoute({ model: modelName, ...props }) },
+    {
+      modelName: R.always(modelName),
+      toRoute: props => toRoute({ model: modelName, ...props }),
+    },
   ])
 }
 
@@ -160,8 +162,9 @@ function* requestItems(action) {
 function* autoSaveSaga(action) {
   const { id } = action.payload
   if (id == 0) return
-  const { itemSave, getAutosave } = modelFuncs(action)
-  yield call(delay, AUTOSAVE_DEBOUNCE)
+  const { itemSave, getAutosave, modelName } = modelFuncs(action)
+  const sleep = modelName() == 'stories' ? AUTOSAVE_DEBOUNCE : 500
+  yield call(delay, sleep)
   if (yield select(getAutosave)) yield put(itemSave(id, null))
 }
 

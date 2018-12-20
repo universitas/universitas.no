@@ -1,21 +1,21 @@
 import { connect } from 'react-redux'
-import { Tool } from 'components/tool'
+import { PermissionTool } from 'components/tool'
 import { MODEL, actions, selectors } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
 import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
 import ModelTools from 'components/ModelTools'
-import AutosaveTool from 'components/AutosaveTool'
 
 const openUrl = url => () => window.open(url)
 
-const ContributorTools = ({ pk, action, create, saveNew }) => (
+const ContributorTools = ({ pk, action, create }) => (
   <ModelTools>
-    <Tool
+    <PermissionTool
       disabled={action == 'create'}
       icon="Add"
       label="ny"
-      title="ny person"
+      title="legg til ny medarbeider"
       onClick={create}
+      permission="add contributor"
     />
     <OpenInDjangoAdmin pk={pk} path="contributors/contributor" />
   </ModelTools>

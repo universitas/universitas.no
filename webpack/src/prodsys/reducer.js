@@ -25,6 +25,7 @@ const initialModelStates = {
       ordering: 'publication_date',
       publication_date__year: new Date().getFullYear(),
     },
+    items: { 0: { issue_type: 1 } },
   },
   contributors: {
     query: { search: '', limit: 50, status: 1 },

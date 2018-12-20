@@ -209,12 +209,8 @@ const getReducer = ({ type, payload }) => {
       )
     case ITEMS_DISCARDED: {
       const { ids = [] } = payload
-      const deleted = R.pipe(
-        R.map(k => [k, { deleted: true }]),
-        R.fromPairs,
-      )
       return R.compose(
-        R.over(itemsLens, R.mergeDeepLeft(deleted(ids))),
+        R.over(itemsLens, R.omit(ids)),
         R.over(paginationItemsLens, R.without(ids)),
       )
     }
