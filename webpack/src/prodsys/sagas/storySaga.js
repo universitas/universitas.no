@@ -1,7 +1,5 @@
 // extra model saga for story
-//
 import { put, takeEvery, select, call } from 'redux-saga/effects'
-// import { delay } from 'redux-saga'
 import { pushImageFile, apiList, apiPost, apiDelete } from 'services/api'
 import {
   ASSIGN_PHOTO,
@@ -26,12 +24,7 @@ const { getItem: getPhoto } = modelSelectors('photos')
 const { itemsRequested: photosRequested } = modelActions('photos')
 
 const { getItem: getStory } = modelSelectors('stories')
-const {
-  itemPatched: storyPatched,
-  itemAdded: storyAdded,
-  itemRequested: storyRequested,
-  fieldChanged,
-} = modelActions('stories')
+const { itemRequested: storyRequested, fieldChanged } = modelActions('stories')
 
 export default function* storyImageSaga() {
   yield takeEvery(ASSIGN_PHOTO, assignPhotoSaga)
@@ -78,10 +71,13 @@ function* nestedStoryFetched(action) {
 
 function* assignPhotoSaga(action) {
   let { id, story } = action.payload
-  const storyData = yield select(getStory(story))
-  const exists = R.find(R.propEq('imagefile', id), storyData.images)
-  if (exists) {
-    yield put(deleteStoryImage(exists.id))
+  const { images = [] } = yield select(getStory(story))
+  const idx = R.findIndex(R.propEq('imagefile', id), images)
+  if (idx > -1) {
+    const image = images[idx]
+    console.log(image, idx)
+    yield put(fieldChanged(story, 'images', R.remove(idx, 1, images)))
+    yield put(deleteStoryImage(image.id, story))
     return
   }
   const { description, ...props } = yield select(getPhoto(id))
@@ -91,6 +87,7 @@ function* assignPhotoSaga(action) {
     caption: description,
     creditline: getCreditLine(props),
   }
+  yield put(fieldChanged(story, 'images', R.append(data, images)))
   const { error, response } = yield call(apiPost, 'storyimages', data)
   if (response) yield put(storyRequested(story, { nested: true }, true))
   else yield put(errorAction(error))

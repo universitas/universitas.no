@@ -47,7 +47,13 @@ const FrontpageDetail = ({ pk }) =>
       <CropBox pk={pk} />
     </DetailPanel>
   ) : (
-    <Panel header={<div style={{ textAlign: 'center' }}>velg en sak</div>} />
+    <Panel
+      header={
+        <div style={{ margin: '0.5rem' }} className="title">
+          klikk på en forsidesak for å redigere
+        </div>
+      }
+    />
   )
 
 export default FrontpageDetail

@@ -6,6 +6,7 @@ import Zoom from 'components/PreviewIframe'
 import FrontpageGrid from './FrontpageGrid.js'
 import { MODEL, fields, actions, selectors } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
+import Filters from 'components/ListPanel/Filter'
 
 const filters = [
   {
@@ -24,9 +25,16 @@ const filters = [
   },
 ]
 
+const header = (
+  <>
+    <Filters filters={filters} />
+    <ZoomControl />
+  </>
+)
+
 const FrontpageList = ({ dismiss, items }) => {
   return (
-    <Panel footer={<ZoomControl />} filters={filters} scroll={false}>
+    <Panel header={header} scroll={false}>
       <PreviewIframe>
         <FrontpageGrid items={items} />
       </PreviewIframe>

@@ -1,3 +1,6 @@
+const AUTOSAVE_DEBOUNCE = 3000
+const SEARCH_DEBOUNCE = 300
+
 import {
   takeLatest,
   takeEvery,
@@ -32,16 +35,13 @@ import {
   FIELD_CHANGED,
   ITEM_CLONED,
   ITEM_POST,
-  ITEM_PATCH,
+  ITEM_SAVE,
   AUTOSAVE_TOGGLE,
   modelSelectors,
   modelActions,
   actionModelLens,
 } from 'ducks/basemodel'
 import { toRoute } from 'prodsys/ducks/router'
-
-const AUTOSAVE_DEBOUNCE = 2000
-const SEARCH_DEBOUNCE = 300
 
 const takeLatestForItem = (pattern, saga) =>
   fork(function*() {
@@ -70,7 +70,7 @@ export default function* rootSaga() {
   yield takeEvery(ITEM_CLONED, cloneSaga)
   yield takeEvery([ITEM_POST, ITEM_CREATED], createSaga)
   yield takeEvery(ITEM_DELETED, deleteSaga)
-  yield takeEvery(ITEM_PATCH, patchSaga)
+  yield takeEvery(ITEM_SAVE, patchSaga)
   yield takeEvery(PRODSYS, routeSaga)
 }
 
@@ -108,14 +108,14 @@ function* routeSaga(action) {
 }
 
 function* fetchItems(action) {
-  const { getItem, itemAdded, itemPatched, apiGet } = modelFuncs(action)
+  const { getItem, itemAdded, itemPatchSuccess, apiGet } = modelFuncs(action)
   const { ids = [], force = false } = action.payload
   for (const id of ids) {
     if (id == 0) continue
     const data = yield select(getItem(id))
     const exists = R.not(R.isEmpty(data))
     if (!force && exists) continue // already fetched
-    const updateAction = exists ? itemPatched : itemAdded
+    const updateAction = exists ? itemPatchSuccess : itemAdded
     const { error, response } = yield call(apiGet, id)
     if (response) yield put(updateAction(response))
     else yield put(errorAction(error))
@@ -160,34 +160,41 @@ function* requestItems(action) {
 function* autoSaveSaga(action) {
   const { id } = action.payload
   if (id == 0) return
-  const { itemPatch, getAutosave } = modelFuncs(action)
+  const { itemSave, getAutosave } = modelFuncs(action)
   yield call(delay, AUTOSAVE_DEBOUNCE)
-  if (yield select(getAutosave)) yield put(itemPatch(id, null))
+  if (yield select(getAutosave)) yield put(itemSave(id, null))
 }
 
 function* patchAllSaga(action) {
-  const { getAutosave, getItems, itemPatch } = modelFuncs(action)
+  const { getAutosave, getItems, getItemStatus, itemSave } = modelFuncs(action)
   if (yield select(getAutosave)) {
-    const nonEmpty = p => p && !R.isEmpty(p)
-    const items = R.reject(
-      R.propSatisfies(R.either(R.isNil, R.isEmpty), 'dirty'),
-    )(yield select(getItems))
-    for (const id in items) yield put(itemPatch(id, null))
+    for (const id in yield select(getItems)) {
+      const status = yield select(getItemStatus(id))
+      if (status == 'dirty') yield put(itemSave(id, null))
+    }
   }
 }
 
 function* patchSaga(action) {
-  const { getDirty, itemPatched, itemPatchFailed, apiPatch } = modelFuncs(
-    action,
-  )
-  let { id } = action.payload
+  const {
+    getDirty,
+    getItemStatus,
+    itemPatchStart,
+    itemPatchSuccess,
+    itemPatchFailed,
+    apiPatch,
+  } = modelFuncs(action)
+  const { id } = action.payload
+  const status = yield select(getItemStatus(id))
+  if (status != 'dirty') return
   const patch = yield select(getDirty(id))
   if (R.isEmpty(patch)) {
-    yield put(itemPatched({ id }))
+    console.warn('not dirty')
+    yield put(itemPatchSuccess({ id }))
   } else {
-    console.log({ id, patch })
+    yield put(itemPatchStart(id))
     const { error, response } = yield call(apiPatch, id, patch)
-    if (response) yield put(itemPatched(response))
+    if (response) yield put(itemPatchSuccess(response))
     else yield put(itemPatchFailed({ id, ...error }))
   }
 }

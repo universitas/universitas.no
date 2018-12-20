@@ -4,8 +4,8 @@ import { Tool } from 'components/tool'
 import { pushPhoto } from 'ducks/storyimage'
 import { selectors, actions, MODEL } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
-import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
 import ModelTools from 'components/ModelTools'
+import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
 
 const PhotoTools = ({
   autocrop,
@@ -49,7 +49,8 @@ const PhotoTools = ({
   </ModelTools>
 )
 
-const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
+const mapStateToProps = (state, { pk }) =>
+  R.pick(['filename', 'cropping_method'])(selectors.getItem(pk)(state))
 const mapDispatchToProps = (dispatch, { pk, action }) => ({
   autocrop: () => {
     dispatch(actions.fieldChanged(pk, 'cropping_method', 1))

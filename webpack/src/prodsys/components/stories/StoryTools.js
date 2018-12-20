@@ -2,11 +2,10 @@ import { connect } from 'react-redux'
 import { Tool } from 'components/tool'
 import { MODEL, actions, selectors } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
-import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
-import AutosaveTool from 'components/AutosaveTool'
 import { parseText, renderText } from 'markup'
 import { getPanes, togglePane } from 'prodsys/ducks/ux'
 import ModelTools from 'components/ModelTools.js'
+import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
 
 const openUrl = url => () => window.open(url)
 
@@ -33,8 +32,6 @@ PaneTool = connect(
 const StoryTools = ({
   trashStory,
   cloneStory,
-  autosaveToggle,
-  autoSave,
   public_url,
   action,
   pk,
@@ -69,7 +66,6 @@ const StoryTools = ({
       onClick={public_url && openUrl(public_url)}
       disabled={!public_url}
     />
-    <AutosaveTool model={MODEL} />
     <OpenInDjangoAdmin pk={pk} path="stories/story" />
   </ModelTools>
 )

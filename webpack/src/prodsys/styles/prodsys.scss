@@ -6,7 +6,11 @@
 @import 'detailpanel';
 @import 'gridview';
 @import 'errors';
-@import 'storylist';
+
+.syncing svg {
+  transform-origin: 50% 50%;
+  animation: spin 500ms linear infinite forwards;
+}
 
 body {
   overflow-y: auto;
@@ -58,10 +62,10 @@ body {
   grid-template-columns: auto 1fr 1fr auto;
   grid-gap: 1px 1px;
   /* prettier-ignore */
-  grid-template-areas: 
-    "filename filename filename filename" 
+  grid-template-areas:
+    "filename filename filename filename"
     "category artist artist artist"
-    "mimetype size size filesize" 
+    "mimetype size size filesize"
     "usage created created id";
   .stat {
     @extend %label;

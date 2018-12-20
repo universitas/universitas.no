@@ -1,26 +1,23 @@
-.ZoomSlider {
-  height: 100%;
+.ZoomControl {
+  align-self: stretch;
   display: flex;
-}
-.Filters {
-  // background: blue;
+  padding: 0.2rem;
+  background-color: rgba(black, 0.1);
 }
 .ZoomButton {
   cursor: pointer;
-  opacity: 0.3;
+  .Icon {
+    font-size: 1.5rem;
+    opacity: 0.5;
+  }
+  &.active .Icon {
+    opacity: 1;
+  }
   width: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  &.active {
-    opacity: 1;
-  }
   &:hover {
-    background: rgba(black, 0.3);
-  }
-  .Icon {
-    font-size: 1.5rem;
-    height: 1em;
-    width: 1em;
+    background: rgba(black, 0.2);
   }
 }

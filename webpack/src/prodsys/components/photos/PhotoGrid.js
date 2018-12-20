@@ -57,24 +57,16 @@ const AssignPhoto = ({ pk, selected, ...props }) => (
 const GridItem = ({
   pk,
   action,
-  clickAction,
-  dispatch,
   small,
   className,
   selected,
+  viewPhoto,
+  assignPhoto,
   ...data
 }) => (
-  <div
-    key={pk}
-    onClick={action == 'images' ? null : () => dispatch(clickAction)}
-    className={className}
-  >
+  <div key={pk} onClick={viewPhoto} className={className}>
     {action == 'images' && (
-      <AssignPhoto
-        pk={pk}
-        selected={selected}
-        onClick={() => dispatch(clickAction)}
-      />
+      <AssignPhoto pk={pk} selected={selected} onClick={assignPhoto} />
     )}
     {action == 'crop' ? (
       <FullThumbWithCropBox src={small} title={data.filename} {...data} />
@@ -85,32 +77,46 @@ const GridItem = ({
   </div>
 )
 
-const ConnectedGridItem = connect((state, { pk, selected, action }) => {
-  const { model, pk: currentItem } = getRoutePayload(state)
-  const data = selectors.getItem(pk)(state) || {}
-  const clickAction =
-    action == 'images'
-      ? assignPhoto(pk, currentItem)
-      : toRoute({
-          model: MODEL,
-          pk,
-          action: action == 'list' ? 'change' : action,
-        })
+const mapStateToProps = (state, { pk, selected, action }) => {
+  const data = selectors.getItem(pk)(state)
   const className = cx('GridItem', { dirty: data.dirty, selected })
-  return { ...data, className, action, selected, clickAction }
-})(GridItem)
+  return { ...data, className, action, selected }
+}
+const mapDispatchToProps = (dispatch, { action, pk, story }) => ({
+  viewPhoto: () =>
+    action != 'images' &&
+    dispatch(
+      toRoute({
+        pk,
+        model: MODEL,
+        action: action == 'list' ? 'change' : action,
+      }),
+    ),
+  assignPhoto: () => action == 'images' && dispatch(assignPhoto(pk, story)),
+})
+const ConnectedGridItem = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(GridItem)
 
-const PhotoGrid = ({ selected = [], items = [], action }) => (
+const PhotoGrid = ({ selected = [], items = [], action, story }) => (
   <div className="ItemGrid">
     {selected.map(pk => (
-      <ConnectedGridItem key={pk} pk={pk} action={action} selected />
+      <ConnectedGridItem
+        key={pk}
+        pk={pk}
+        action={action}
+        story={story}
+        selected
+      />
     ))}
-    {items.map(pk => (
-      <ConnectedGridItem key={pk} pk={pk} action={action} />
+    {R.without(selected, items).map(pk => (
+      <ConnectedGridItem key={pk} pk={pk} action={action} story={story} />
     ))}
   </div>
 )
-export default connect((state, { selected = [] }) => ({
-  selected,
-  items: R.without(selected, selectors.getItemList(state)),
+export default connect((state, { action, selected = [] }) => ({
+  story: action == 'images' && getRoutePayload(state).pk,
+  selected: R.sort(R.sub, selected),
+  items: selectors.getItemList(state),
 }))(PhotoGrid)

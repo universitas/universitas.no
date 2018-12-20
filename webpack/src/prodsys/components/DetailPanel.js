@@ -4,13 +4,18 @@ import { Tool } from 'components/tool'
 import { toRoute } from 'prodsys/ducks/router'
 import Panel from 'components/Panel'
 import cx from 'classnames'
+import AutosaveTool from 'components/AutosaveTool'
 
-const DetailTopBar = ({ pk, title = '...', close, children }) => (
-  <div className="DetailTopBar">
-    <Tool icon="Close" title="lukk" onClick={close} />
-    <div className="pk">{pk || 'opprett ny'}</div>
-    <div className="title">{title}</div>
-  </div>
+const DetailTopBar = ({ pk, model, title = '...', close, children }) => (
+  <>
+    <div className="DetailTopBar">
+      <Tool icon="Close" title="lukk" onClick={close} />
+      <AutosaveTool pk={pk} model={model} />
+      <div className="pk">{pk || 'opprett ny'}</div>
+      <div className="title">{title}</div>
+    </div>
+    {children}
+  </>
 )
 
 const DetailPanel = ({
@@ -22,12 +27,15 @@ const DetailPanel = ({
   close,
   scroll = false,
   footer,
+  header,
 }) =>
   R.isNil(pk) ? null : (
     <Panel
       className={cx('DetailPanel', className)}
       scroll={scroll}
-      header={<DetailTopBar {...{ pk, title, close }} />}
+      header={
+        <DetailTopBar {...{ pk, model, title, close }} children={header} />
+      }
       footer={footer}
     >
       {children}

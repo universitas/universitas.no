@@ -4,6 +4,7 @@ from django.db.models import Prefetch
 from rest_framework import serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
 
+from apps.contributors import tasks
 from apps.contributors.models import Contributor, Position, Stint
 from apps.photo.models import ImageFile
 from utils.serializers import AbsoluteURLField, PhoneNumberField
@@ -100,6 +101,9 @@ class ContributorSerializer(serializers.HyperlinkedModelSerializer):
                 contributor=contributor,
                 position_id=int(position),
             )
+        if contributor.email and contributor.status == Contributor.ACTIVE:
+            tasks.connect_contributor_to_user(contributor, True)
+
         return contributor
 
 

@@ -2,8 +2,8 @@ import cx from 'classnames'
 import { connect } from 'react-redux'
 import { MODEL, fields, Field, actions, selectors } from './model.js'
 import { Error, Save, Ok, Sync, Circle } from 'components/Icons'
-
 import { getRoutePayload, toRoute } from 'prodsys/ducks/router'
+import './StoryTable.scss'
 
 const TableCell = ({
   className,
@@ -22,50 +22,39 @@ const TableCell = ({
   </div>
 )
 
-const DumbDirtyIndicator = ({
-  onClick,
-  autoSave,
-  className,
-  status,
-  saveHandler,
-}) => {
-  const statusIcon = {
-    ok: <Ok style={{ opacity: 0.2 }} title="endringer lagret" />,
-    dirty: autoSave ? (
-      <Sync title="saken lagres automatisk" />
-    ) : (
-      <Save onClick={saveHandler} title="klikk for å lagre endringer" />
-    ),
-    syncing: <Sync className="syncing" title="lagrer" />,
-    error: <Error style={{ color: 'yellow' }} title="noe gikk feil" />,
-  }[status]
+const iconAndTitle = (status, autoSave) =>
+  ({
+    ok: [Ok, 'endringer lagret'],
+    dirty: autoSave
+      ? [Sync, 'saken lagres automatisk']
+      : [Save, 'klikk for å lagre'],
+    syncing: [Sync, 'lagrer'],
+    error: [Error, 'feil'],
+  }[status])
+
+let SaveIndicator = ({ onClick, autoSave, className, status, saveHandler }) => {
+  const [Icon, title] = iconAndTitle(status, autoSave)
   return (
     <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'flex-end',
-        fontSize: '1.3rem',
-      }}
-      className={className}
+      title={title}
+      onClick={status == 'dirty' ? saveHandler : onClick}
+      className={cx('SaveIndicator', className, status)}
     >
-      {statusIcon}
+      <Icon />
     </div>
   )
 }
-const DirtyIndicator = connect(
+
+SaveIndicator = connect(
   (state, { pk }) =>
     R.applySpec({
       autoSave: selectors.getAutosave,
-      status: R.pipe(
-        selectors.getItem(pk),
-        R.prop('_status'),
-      ),
+      status: selectors.getItemStatus(pk),
     })(state),
   (dispatch, { pk }) => ({
-    saveHandler: () => dispatch(actions.itemPatch(pk, null)),
+    saveHandler: () => dispatch(actions.itemSave(pk, null)),
   }),
-)(DumbDirtyIndicator)
+)(SaveIndicator)
 
 // render all headers in table
 const DumbTableRow = props => (
@@ -75,7 +64,7 @@ const DumbTableRow = props => (
     <TableCell {...props} name="story_type" />
     <TableCell {...props} name="modified" relative />
     <TableCell {...props} name="image_count" />
-    <DirtyIndicator {...props} />
+    <SaveIndicator {...props} />
   </>
 )
 

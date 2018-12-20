@@ -10,25 +10,32 @@ import * as actions from './basemodel.js'
 const modelName = 'sausages'
 const itemData = { id: 100, bar: { foo: null } }
 const {
-  itemAdded,
-  itemCloned,
-  itemDeleted,
-  itemCreated,
-  itemRequested,
-  itemsRequested,
-  itemsFetched,
-  itemsDiscarded,
-  filterToggled,
-  filterSet,
-  itemPatched,
+  autosaveToggle,
   fieldChanged,
+  filterSet,
+  filterToggled,
+  itemAdded,
+  itemCreated,
+  itemCreateFailed,
+  itemDeleted,
+  itemPatchFailed,
+  itemPatchStart,
+  itemPatchSuccess,
+  itemPost,
+  itemRequested,
+  itemSave,
+  itemsDiscarded,
+  itemsFetched,
+  itemsFetching,
+  itemsRequested,
+  paginate,
 } = modelActions(modelName)
 
 describe('setup', () => {
   test('initial state', () => {
     expect(baseInitialState()).toEqual({
       autosave: true,
-      items: { '0': { _dirty: {}, _error: null, _status: 'ok' } },
+      items: { '0': { _dirty: null, _error: null, _syncing: false } },
       query: {},
       pagination: { ids: [] },
     })
@@ -37,31 +44,14 @@ describe('setup', () => {
 
 describe('action creators', () => {
   const cases = [
-    [itemAdded, actions.ITEM_ADDED, itemData, itemData],
-    [itemCloned, actions.ITEM_CLONED, 5, { id: 5 }],
-    [itemDeleted, actions.ITEM_DELETED, 4, { id: 4 }],
-    [itemCreated, actions.ITEM_CREATED, { foo: 'bar' }, { foo: 'bar' }],
-    [
-      itemRequested,
-      actions.ITEMS_REQUESTED,
-      2,
-      { params: { id__in: [2] }, replace: false },
-    ],
-    [
-      itemsRequested,
-      actions.ITEMS_REQUESTED,
-      { q: '' },
-      { params: { q: '' }, replace: false },
-    ],
-    [itemsFetched, actions.ITEMS_FETCHED, itemData, itemData],
-    [itemsDiscarded, actions.ITEMS_DISCARDED, [2, 3], { ids: [2, 3] }],
-    [itemPatched, actions.ITEM_PATCHED, itemData, { ...itemData }],
+    [autosaveToggle, actions.AUTOSAVE_TOGGLE, null, {}],
     [
       fieldChanged,
       actions.FIELD_CHANGED,
       [6, 'foo', 'bar'],
       { id: 6, field: 'foo', value: 'bar' },
     ],
+    [filterSet, actions.FILTER_SET, ['foo', 2], { key: 'foo', value: 2 }],
     [
       filterToggled,
       actions.FILTER_TOGGLED,
@@ -69,6 +59,29 @@ describe('action creators', () => {
       { key: 'foo', value: 2 },
     ],
     [filterSet, actions.FILTER_SET, ['foo', 2], { key: 'foo', value: 2 }],
+    [itemAdded, actions.ITEM_ADDED, { foo: 'bar' }, { foo: 'bar' }],
+    [itemCreateFailed, actions.ITEM_CREATE_FAILED, {}, {}],
+    [itemCreated, actions.ITEM_CREATED, { foo: 'bar' }, { foo: 'bar' }],
+    [itemDeleted, actions.ITEM_DELETED, 100, { id: 100 }],
+    [itemPatchFailed, actions.ITEM_PATCH_FAILED, { error: {} }, { error: {} }],
+    [itemPatchSuccess, actions.ITEM_PATCH_SUCCESS, { id: 100 }, { id: 100 }],
+    [itemPost, actions.ITEM_POST, 100, { id: 100 }],
+    [
+      itemRequested,
+      actions.ITEMS_REQUESTED,
+      2,
+      { params: { id__in: [2] }, replace: false },
+    ],
+    [itemsDiscarded, actions.ITEMS_DISCARDED, [2, 3], { ids: [2, 3] }],
+    [itemsFetched, actions.ITEMS_FETCHED, itemData, itemData],
+    [itemsFetching, actions.ITEMS_FETCHING, itemData, itemData],
+    [
+      itemsRequested,
+      actions.ITEMS_REQUESTED,
+      { q: '' },
+      { params: { q: '' }, replace: false },
+    ],
+    [paginate, actions.PAGINATE, { a: 'b' }, { a: 'b' }],
   ]
   R.map(
     R.apply((actionCreator, type, args, payload) => {
@@ -112,32 +125,58 @@ describe('reducer', () => {
 })
 
 describe('selectors', () => {
-  const selectors = modelSelectors(modelName)
   const modelData = {
-    autosave: true,
+    autosave: false,
     query: { foo: [1, 2, 3] },
     pagination: { next: 'a', previous: 'b', ids: [100, 101] },
-    items: { '100': { id: 100 }, '101': { id: 101 } },
+    items: {
+      '100': { id: 100 },
+      '101': { id: 101, xxx: 'foo', _dirty: { xxx: 'bar' } },
+      '102': { id: 102, _error: {}, _syncing: false },
+      '103': { id: 103, _error: null, _syncing: true },
+    },
   }
   const initialState = R.objOf(modelName, baseInitialState())
-  const modelState = R.objOf(modelName, modelData)
+  const fixtureState = R.objOf(
+    modelName,
+    R.mergeRight(baseInitialState(), modelData),
+  )
 
   const cases = [
-    ['getQuery', {}, modelData.query],
-    ['getItemList', [], modelData.pagination.ids],
-    ['getItems', {}, R.map(a => a, modelData.items)],
-    ['getPagination', { ids: [] }, modelData.pagination],
-    ['getItem', {}, { id: 101 }, 101],
+    ['getAutosave', null, true, false],
+    [
+      'getChoices',
+      null,
+      [],
+      R.map(n => ({ value: n, display_name: n }), [100, 101, 102, 103]),
+    ],
+    ['getDirty', 101, undefined, { xxx: 'bar' }],
+    ['getItem', 101, {}, { id: 101, xxx: 'bar' }],
+    ['getItemList', null, [], modelData.pagination.ids],
+    ['getItemStatus', 100, 'not found', 'ok'],
+    ['getItemStatus', 101, 'not found', 'dirty'],
+    ['getItemStatus', 102, 'not found', 'error'],
+    ['getItemStatus', 103, 'not found', 'syncing'],
+    [
+      'getItems',
+      null,
+      {},
+      R.mergeLeft({ 101: { id: 101, xxx: 'bar' } }, modelData.items),
+    ],
+    ['getPagination', null, { ids: [] }, modelData.pagination],
+    ['getQuery', null, {}, modelData.query],
   ]
+
+  const selectors = modelSelectors(modelName)
   R.map(
-    R.apply((funcname, data0, data1, args) => {
+    R.apply((funcname, args, data0, data1) => {
       let selector = selectors[funcname]
       if (args) selector = selector(args)
       test(`selector: ${funcname} intialState`, () => {
         expect(selector(initialState)).toEqual(data0)
       })
-      test(`selector: ${funcname} modelState`, () => {
-        expect(selector(modelState)).toEqual(data1)
+      test(`selector: ${funcname} fixtureState`, () => {
+        expect(selector(fixtureState)).toEqual(data1)
       })
     }),
   )(cases)

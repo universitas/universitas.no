@@ -3,6 +3,8 @@
 import cx from 'classnames'
 import CropBox from '@haakenlid/photocrop'
 
+const fallbackValue = { left: 0, top: 0, right: 1, bottom: 1, x: 0.5, y: 0.5 }
+
 const FullThumbWithCropBox = ({ src, title, width, height, value }) => {
   const { left, x, right, top, y, bottom } = value
   const boxPath = `M0, 0H1V1H0Z M${left}, ${top}V${bottom}H${right}V${top}Z`
@@ -29,7 +31,7 @@ const FullThumbWithCropBox = ({ src, title, width, height, value }) => {
 //   </svg>
 // )
 
-const StaticCropBox = ({ value, item, className, ...args }) => {
+const StaticCropBox = ({ value = fallbackValue, item, className, ...args }) => {
   const { width, height, small, large } = item
   const src = small
   return (

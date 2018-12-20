@@ -41,7 +41,7 @@ def merge_overlapping_stints():
         merge_stints(cn.stint_set.order_by('position', '-start_date'))
 
 
-def connect_contributor_to_user(cn: Contributor, create=False):
+def connect_contributor_to_user(cn: Contributor, create: bool = False) -> User:
     """Connect contributor to user"""
     if cn.user:
         return cn.user
@@ -73,6 +73,8 @@ def connect_contributor_to_user(cn: Contributor, create=False):
             is_active=True,
         )
         user.groups.add(groups.staff)
+        cn.user = user
+        cn.save()
         logger.info(f'created {user}')
     return user
 

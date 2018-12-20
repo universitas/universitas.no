@@ -25,7 +25,7 @@ const StoryDetail = ({ panes, pk, action }) => (
     getTitle={getTitle}
     getClass={getClass}
     scroll={action == 'images'}
-    footer={action == 'preview' && <ZoomControl />}
+    header={action == 'preview' && <ZoomControl />}
   >
     <StoryAction pk={pk} action={action} />
   </DetailPanel>

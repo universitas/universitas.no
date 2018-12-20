@@ -69,35 +69,29 @@ export const Field = ({
   )
   const fieldProps = R.omit(['model', 'pk'], props)
   const ModelField = editable ? EditableField : DetailField
-  const errorMessages =
-    errors &&
-    editable &&
-    errors.map((message, idx) => <FieldError key={idx} message={message} />)
-  const hasLabel = editable && (label || errors)
   return (
     <div
       title={helpText}
-      className={cx('ModelField', type, { fullwidth, editable })}
+      className={cx('ModelField', type, { fullwidth, editable, errors })}
     >
-      {hasLabel && (
-        <label className={cx('label')}>
-          {label}
-          {errorMessages}
-        </label>
-      )}
+      {label && <label className={cx('label')}>{label}</label>}
       <ModelField
         className={cx('value')}
         onChange={ev => onChange(ev && ev.target ? ev.target.value : ev)}
         value={value}
         {...fieldProps}
       />
+      {editable && <FieldErrors errors={errors} />}
     </div>
   )
 }
 
-const FieldError = ({ message }) => (
-  <span className="FieldError">{message}</span>
-)
+const FieldErrors = ({ errors = [] }) =>
+  errors.map((message, idx) => (
+    <div className="FieldError" key={idx}>
+      {message}
+    </div>
+  ))
 
 const mapStateToProps = (state, { pk, model, name, ...props }) => {
   const item = modelSelectors(model).getItem(pk)(state)

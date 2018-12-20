@@ -13,12 +13,12 @@ const StoryRoute = ({ pk, action, panes }) => {
     children.push(
       <List pk={pk} action={storyImages ? 'images' : action} key="list" />,
     )
-  if ((pk && storyText) || nPanes == 0)
-    children.push(<Detail pk={pk} action={'change'} key="1" />)
   if (pk && storyPreview)
     children.push(<Detail pk={pk} action={'preview'} key="3" />)
   if (pk && storyImages)
     children.push(<Detail pk={pk} action={'images'} key="2" />)
+  if ((pk && storyText) || nPanes == 0)
+    children.push(<Detail pk={pk} action={'change'} key="1" />)
   children.push(<Tools pk={pk} action={action} key="tools" />)
   return children
 }

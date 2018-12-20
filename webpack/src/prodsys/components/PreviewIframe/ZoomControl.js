@@ -20,9 +20,9 @@ const ZoomButton = connect(
   </div>
 ))
 
-const ZoomSlider = props => {
+const ZoomControl = props => {
   return (
-    <div className="ZoomSlider" {...props}>
+    <div className="ZoomControl" {...props}>
       <ZoomButton value={400} Icon={Mobile} />
       <ZoomButton value={750} Icon={Tablet} />
       <ZoomButton value={1200} Icon={Laptop} />
@@ -32,26 +32,4 @@ const ZoomSlider = props => {
   )
 }
 
-const ZoomControl = ({
-  changeHandler,
-  resetHandler,
-  value = '',
-  min = 300,
-  max = 3500,
-  step = 100,
-}) => (
-  <div>
-    <input
-      type="range"
-      min={min}
-      max={max}
-      step={step}
-      onDoubleClick={resetHandler}
-      onChange={e => changeHandler(e.target.value)}
-      value={value}
-    />
-    <output>{value}</output>
-  </div>
-)
-
-export default ZoomSlider
+export default ZoomControl

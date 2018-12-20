@@ -1,6 +1,6 @@
 import Pagination from './Pagination'
 import SearchField from './SearchField'
-import Filter from './Filter'
+import Filters from './Filter'
 import Panel from 'components/Panel'
 
 const ListPanel = ({ model, filters = [], children, ...props }) => {
@@ -10,11 +10,7 @@ const ListPanel = ({ model, filters = [], children, ...props }) => {
       className="ListPanel"
       header={
         <>
-          <div className="Filters">
-            {filters.map((props, index) => (
-              <Filter key={index} {...props} />
-            ))}
-          </div>
+          <Filters filters={filters} />
           <SearchField label="søk..." attr="search" model={model} />
         </>
       }

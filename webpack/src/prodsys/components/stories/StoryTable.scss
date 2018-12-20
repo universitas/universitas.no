@@ -1,0 +1,82 @@
+@import 'styles/globals.scss';
+
+@function baseColour($colour) {
+  // use same hue and saturation for all base colours
+  $hue: chromatic-color-get($colour, 'hcl.h');
+  @return chromatic-hcl($hue, 75, 85);
+}
+
+$blue: baseColour(#00f);
+$cyan: baseColour(#0ff);
+$green: baseColour(#0f2);
+$limegreen: baseColour(#df0);
+$yellow: baseColour(#ff0);
+$red: baseColour(#f00);
+$orange: baseColour(#fa0);
+$pink: baseColour(#f05);
+$black: #222;
+
+// colours used with
+$statusColours: (0, $cyan), (3, $green), (4, $green), (5, $green),
+  (6, $limegreen), (7, $yellow), (9, $red), (10, $orange), (11, $orange),
+  (15, $black), (100, $pink);
+
+@mixin rowBackground($bg) {
+  // alternate colours on odd and even rows
+  // invert forground colour if the background is too dark
+  background-color: $bg;
+  &.odd {
+    background-color: chromatic-color-darken($bg, 0.3);
+  }
+  @if (chromatic-color-luminance($bg) < 0.3) {
+    color: #fff;
+  }
+}
+
+.StoryDetail {
+  background-color: #ccc;
+  @each $status, $colour in $statusColours {
+    &.status-#{$status} {
+      background-color: chromatic-mix(white, $colour, 0.4);
+    }
+  }
+}
+
+.StoryTable {
+  .SaveIndicator {
+    display: flex;
+    justify-content: center;
+    // align-items: flex-end;
+    align-items: center;
+    font-size: 1.3rem;
+    &.ok svg {
+      opacity: 0.3;
+    }
+  }
+  user-select: none;
+  height: 0;
+  display: grid;
+  line-height: 1rem;
+  grid-template-columns: 5fr 2fr 2fr 3fr auto 2rem;
+  .ModelField {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+  .TableRow {
+  }
+  .TableCell {
+    cursor: pointer;
+    padding: 0.3rem;
+  }
+
+  @each $status, $colour in $statusColours {
+    .status-#{$status} {
+      @include rowBackground($colour);
+      &.selected {
+        background: chromatic-color-darken($colour, 1.2);
+        color: white;
+      }
+    }
+  }
+}

@@ -6,9 +6,9 @@ export const assignPhoto = (id, story) => ({
   type: ASSIGN_PHOTO,
   payload: { id, story },
 })
-export const deleteStoryImage = id => ({
+export const deleteStoryImage = (id, story) => ({
   type: DELETE_STORY_IMAGE,
-  payload: { id },
+  payload: { id, story },
 })
 export const pushPhoto = id => ({
   type: PUSH_PHOTO,
