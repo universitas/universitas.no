@@ -134,7 +134,7 @@ def upload_imagefile_to_desken(pk, target=None):
     """Upload imagefile to desken server."""
     # rsync -azv --progress  --include='UNI*000.pdf' --exclude='*'
     if target is None:
-        target = Path(f'{current_issue().number}') / 'Prodsys'
+        target = Path(f'{current_issue().number:0>2}') / 'Prodsys'
     outdir = staging.get_staging_dir('OUT')
     outdir.mkdir(exist_ok=True)
     image = ImageFile.objects.get(pk=pk)

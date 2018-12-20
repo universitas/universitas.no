@@ -2,7 +2,7 @@ from rest_framework import serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from apps.stories.models import StoryImage
-from utils.serializers import AbsoluteURLField
+from utils.serializers import AbsoluteURLField, CropBoxField
 
 
 class StoryImageSerializer(serializers.ModelSerializer):
@@ -17,6 +17,7 @@ class StoryImageSerializer(serializers.ModelSerializer):
     aspect_ratio = serializers.DecimalField(
         required=False, max_digits=5, decimal_places=4
     )
+    crop_box = CropBoxField(source='imagefile.crop_box')
 
     class Meta:
         model = StoryImage
@@ -34,6 +35,7 @@ class StoryImageSerializer(serializers.ModelSerializer):
             'placement',
             'size',
             'aspect_ratio',
+            'crop_box',
         ]
 
 
