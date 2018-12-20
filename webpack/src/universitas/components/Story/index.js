@@ -34,7 +34,13 @@ const headProps = R.pipe(
 )
 
 const sidebarProps = R.pipe(
-  R.pick(['bylines', 'theme_word', 'story_type_name', 'theme_word']),
+  R.pick([
+    'bylines',
+    'publication_date',
+    'theme_word',
+    'story_type_name',
+    'theme_word',
+  ]),
   jsonOnceMemo(),
 )
 

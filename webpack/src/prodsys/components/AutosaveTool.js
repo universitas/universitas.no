@@ -30,7 +30,9 @@ const AutosaveTool = ({
           syncing: active && status == 'syncing',
         })}
         icon={active ? 'Sync' : 'NoSync'}
-        title={active ? 'automatisk lagring' : 'skru på automatisk lagring'}
+        title={
+          active ? 'Skru av automatisk lagring' : 'Skru på automatisk lagring'
+        }
         onClick={autosaveToggle}
       />
       <SaveTool active={!active} status={status} saveItem={saveItem} />

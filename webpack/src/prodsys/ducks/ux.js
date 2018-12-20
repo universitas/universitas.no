@@ -27,7 +27,7 @@ export const togglePane = (pane, state) => ({
 })
 
 // reducers
-const initialState = { zoom: undefined, panes: {} }
+const initialState = { zoom: 1200, panes: {} }
 
 const getReducer = ({ type, payload }) => {
   switch (type) {

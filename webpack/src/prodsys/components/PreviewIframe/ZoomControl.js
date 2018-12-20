@@ -15,6 +15,11 @@ const ZoomButton = connect(
   <div
     className={cx('ZoomButton', { active })}
     onClick={() => setZoom(active ? undefined : value)}
+    title={
+      active
+        ? 'nullstill zoomnivå'
+        : `zoomnivå for\nforhåndsvisning\n${value}px i bredde`
+    }
   >
     <Icon className={cx('Icon')} />
   </div>
@@ -22,7 +27,11 @@ const ZoomButton = connect(
 
 const ZoomControl = props => {
   return (
-    <div className="ZoomControl" {...props}>
+    <div
+      className="ZoomControl"
+      title="Velg zoomnivå for forhåndsvisning"
+      {...props}
+    >
       <ZoomButton value={400} Icon={Mobile} />
       <ZoomButton value={750} Icon={Tablet} />
       <ZoomButton value={1200} Icon={Laptop} />
