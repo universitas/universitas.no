@@ -15,6 +15,7 @@ while (( $# > 0 )); do
             install_certificates
             ;;
   enable  ) enable_service ;; # enable systemd service file for web server - starts all docker images
+  reload  ) (reload_service &>> reload-service.log) &;; # reload service when code changed
 
   dc      ) docker-compose $rest; exit ;; # docker-compose [...args]
   da      ) docker-compose run --rm web django-admin $rest; exit ;; # django-admin [...args]
@@ -183,6 +184,17 @@ dump_postgres() {
 
 exists() {
   command -v "$1" >/dev/null 2>&1
+}
+
+reload_service() {
+  echo "--- reload start $(date -Iseconds) ---"
+  production_settings
+  webpack_build
+  docker-compose run --rm web django-admin migrate
+  docker-compose run --rm web django-admin collectstatic --clear --noinput
+  docker-compose restart express celery celerybeat
+  echo r > ./fifo/uwsgi
+  echo '--- reload OK ---'
 }
 
 enable_service() {

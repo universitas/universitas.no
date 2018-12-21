@@ -17,7 +17,7 @@ const configureStore = (initialState = {}, initialEntries = []) => {
   const sagaMiddleware = createSagaMiddleware({
     onError:
       process.env.NODE_ENV == 'production'
-        ? Raven.captureException
+        ? e => Raven.captureException(e)
         : console.error,
   })
   const warez = [sagaMiddleware, router.middleware]

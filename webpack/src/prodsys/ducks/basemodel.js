@@ -107,7 +107,7 @@ export const modelSelectors = partialMap({
 
 // :: ActionType -> ( * -> Payload ) -> ModelName -> ActionCreator (fn)
 // -- (create redux action creator)
-const getActionCreator = R.curry((type, payloadTransform, modelName) =>
+export const getActionCreator = R.curry((type, payloadTransform, modelName) =>
   R.pipe(
     R.curry(payloadTransform),
     R.objOf('payload'), //               payload: payloadTransform(?)

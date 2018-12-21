@@ -9,13 +9,14 @@ import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
 
 const PhotoTools = ({
   autocrop,
-  pushPhoto,
   openAdmin,
   filename,
   action,
   toggleCrop,
   upload,
   pk,
+  pushPhoto,
+  pushed = false,
   cropping_method,
 }) => (
   <ModelTools>
@@ -43,7 +44,7 @@ const PhotoTools = ({
     <Tool
       icon="Download"
       label="desken"
-      disabled={!pk}
+      disabled={!pk || pushed}
       title={pk ? 'last opp fila til desken' : 'velg bilde'}
       onClick={pushPhoto}
       order={4}
@@ -53,7 +54,9 @@ const PhotoTools = ({
 )
 
 const mapStateToProps = (state, { pk }) =>
-  R.pick(['filename', 'cropping_method'])(selectors.getItem(pk)(state))
+  R.pick(['filename', 'cropping_method', 'pushed'])(
+    selectors.getItem(pk)(state),
+  )
 const mapDispatchToProps = (dispatch, { pk, action }) => ({
   autocrop: () => {
     dispatch(actions.fieldChanged(pk, 'cropping_method', 1))

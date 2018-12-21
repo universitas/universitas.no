@@ -17,7 +17,7 @@ class StoryImageSerializer(serializers.ModelSerializer):
     aspect_ratio = serializers.DecimalField(
         required=False, max_digits=5, decimal_places=4
     )
-    crop_box = CropBoxField(source='imagefile.crop_box')
+    crop_box = CropBoxField(read_only=True, source='imagefile.crop_box')
 
     class Meta:
         model = StoryImage

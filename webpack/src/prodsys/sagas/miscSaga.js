@@ -1,24 +1,13 @@
 import { PUSH_PHOTO } from 'ducks/actions.js'
 import { ITEM_ADDED, ITEMS_FETCHED } from 'ducks/basemodel.js'
 import { modelFuncs } from './basemodelSaga.js'
+import { pushImageFile } from 'services/api'
 import {
   modelSelectors,
   modelActions,
   actionModelLens,
 } from 'ducks/basemodel.js'
-
-import {
-  takeLatest,
-  takeEvery,
-  select,
-  call,
-  cancel,
-  put,
-  all,
-  fork,
-  spawn,
-  take,
-} from 'redux-saga/effects'
+import { takeEvery, select, call, put } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 
 const nextWednesday = date => {
@@ -35,7 +24,7 @@ export default function* miscSaga() {
 
 function* newIssueSaga(action) {
   if (R.view(actionModelLens)(action) != 'issues') return
-  const { getItems, fieldChanged, itemPatchSuccess } = modelFuncs(action)
+  const { getItems, fieldChanged } = modelFuncs(action)
   const issues = yield select(getItems)
   const pubdate = 'publication_date'
   const nextIssue = R.pipe(
@@ -51,6 +40,8 @@ function* newIssueSaga(action) {
 
 function* pushPhotoSaga(action) {
   const { id } = action.payload
+  const { itemPatchSuccess } = modelFuncs(action)
   const { response, error } = yield call(pushImageFile, id)
-  if (error) put(errorAction(error))
+  if (response) yield put(itemPatchSuccess({ id: parseInt(id), pushed: true }))
+  if (error) yield put(errorAction(error))
 }

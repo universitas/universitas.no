@@ -29,6 +29,7 @@ def test_create_new_storyimage(staff_client, scandal, scandal_photo):
         'thumb',
         'size',
         'aspect_ratio',
+        'crop_box',
         'ordering',
         'placement',
         'cropped',

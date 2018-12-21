@@ -1,16 +1,18 @@
-export const ASSIGN_PHOTO = 'storyimage/ASSIGN_PHOTO'
-export const DELETE_STORY_IMAGE = 'storyimage/DELETE_STORY_IMAGE'
-export const PUSH_PHOTO = 'storyimage/PUSH_PHOTO'
+import { getActionCreator } from './basemodel.js'
 
-export const assignPhoto = (id, story) => ({
-  type: ASSIGN_PHOTO,
-  payload: { id, story },
-})
-export const deleteStoryImage = (id, story) => ({
-  type: DELETE_STORY_IMAGE,
-  payload: { id, story },
-})
-export const pushPhoto = id => ({
-  type: PUSH_PHOTO,
-  payload: { id },
-})
+export const ASSIGN_PHOTO = 'storyimages/ASSIGN_PHOTO'
+export const assignPhoto = getActionCreator(
+  ASSIGN_PHOTO,
+  (id, story) => ({ id, story }),
+  'photos',
+)
+
+export const DELETE_STORY_IMAGE = 'storyimages/DELETE_STORY_IMAGE'
+export const deleteStoryImage = getActionCreator(
+  DELETE_STORY_IMAGE,
+  id => ({ id }),
+  'storyimages',
+)
+
+export const PUSH_PHOTO = 'photos/PUSH_PHOTO'
+export const pushPhoto = getActionCreator(PUSH_PHOTO, id => ({ id }), 'photos')

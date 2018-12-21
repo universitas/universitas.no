@@ -1,6 +1,6 @@
 // extra model saga for story
 import { put, takeEvery, select, call } from 'redux-saga/effects'
-import { pushImageFile, apiList, apiPost, apiDelete } from 'services/api'
+import { apiList, apiPost, apiDelete } from 'services/api'
 import {
   deleteStoryImage,
   ASSIGN_PHOTO,
