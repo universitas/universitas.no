@@ -7,17 +7,6 @@
 @import 'gridview';
 @import 'errors';
 
-// firefox bugfix
-.PreviewImg {
-  flex-basis: 0;
-}
-.CropBox {
-  flex: 1 1 0;
-  > svg {
-    flex: 1 1 0;
-  }
-}
-
 .syncing svg {
   transform-origin: 50% 50%;
   animation: spin 500ms linear infinite forwards;

@@ -73,7 +73,6 @@ function* assignPhotoSaga(action) {
   const idx = R.findIndex(R.propEq('imagefile', id), images)
   if (idx > -1) {
     const image = images[idx]
-    console.log(image, idx)
     yield put(fieldChanged(story, 'images', R.remove(idx, 1, images)))
     yield put(deleteStoryImage(image.id, story))
     return

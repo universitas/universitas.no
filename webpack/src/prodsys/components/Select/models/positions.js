@@ -9,5 +9,4 @@ export const reshapeOptions = R.pipe(
   R.toPairs,
   R.reverse,
   R.map(([label, options]) => ({ label, options })),
-  R.tap(console.log),
 )
