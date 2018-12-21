@@ -50,12 +50,12 @@ def connect_contributor_to_user(cn: Contributor, create: bool = False) -> User:
     if user:
         logger.info(f'found {user}')
         try:
-            person = user.contributor
+            cn0 = user.contributor
         except ObjectDoesNotExist:
             cn.user = user
             cn.save()
         else:
-            merge_instances(cn, person)
+            merge_instances(cn, cn0)
     elif create:
         if not cn.email:
             logger.warning('Cannot create user for %s without an email' % cn)

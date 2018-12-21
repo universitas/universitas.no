@@ -22,6 +22,7 @@ function throttle(callback, limit) {
     }
   }
 }
+
 // create window resize event for children to recalculate stuff
 const resizeSignal = () => window.dispatchEvent(new Event('resize'))
 
@@ -56,21 +57,35 @@ class IFrame extends React.Component {
   // zoomable IFrame component
   constructor(props) {
     super(props)
-    this.ref = el => el && (this.doc = el.contentDocument)
-  }
-  componentDidMount() {
-    inheritStyles(document, this.doc)
-    this.forceUpdate() // create portals after initial render
-    resizeSignal()
+    this.ref = el => {
+      if (!el) return
+      el.addEventListener('load', this.onLoadHandler)
+      this.node = el
+    }
+    this.onLoadHandler = () => {
+      this.node.removeEventListener('load', this.onLoadHandler)
+      this.doc = this.node.contentDocument
+      inheritStyles(document, this.node.contentDocument)
+      setTimeout(() => {
+        // create portals after initial render
+        this.forceUpdate()
+        resizeSignal()
+      }, 100)
+    }
   }
   render() {
     const { children, head, zoom = 1 } = this.props
     return (
       <Spring to={{ zoom }} onRest={resizeSignal}>
         {props => (
-          <iframe ref={this.ref} style={calculateStyle(props.zoom)}>
-            {this.doc && head && ReactDOM.createPortal(head, this.doc.head)}
-            {this.doc && ReactDOM.createPortal(children, this.doc.body)}
+          <iframe
+            srcDoc={`<!DOCTYPE html>`}
+            ref={this.ref}
+            style={calculateStyle(props.zoom)}
+          >
+            {this.doc &&
+              ReactDOM.createPortal(head, this.doc.head) &&
+              ReactDOM.createPortal(children, this.doc.body)}
           </iframe>
         )}
       </Spring>

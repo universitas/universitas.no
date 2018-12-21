@@ -36,7 +36,7 @@ class FeedImage extends React.Component {
     const { aspect, isMounted } = this.state
     const style = aspect
       ? getStyles(large, crop_box, width / height, aspect)
-      : null
+      : {}
     if (isMounted) style.transition = 'background 300ms ease'
     return (
       <div ref={this.refHandler} className="FeedImage">

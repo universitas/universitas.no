@@ -107,7 +107,8 @@ class ContributorSerializer(serializers.HyperlinkedModelSerializer):
                 position_id=int(position),
             )
         if contributor.email and contributor.status == Contributor.ACTIVE:
-            tasks.connect_contributor_to_user(contributor, True)
+            user = tasks.connect_contributor_to_user(contributor, True)
+            assert user.is_active == True, 'should be active'
 
         return contributor
 

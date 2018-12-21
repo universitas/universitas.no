@@ -8,25 +8,19 @@ import { ZoomControl, PreviewIframe } from 'components/PreviewIframe'
 const getPhoto = modelSelectors('photos').getItem
 const getStoryImage = modelSelectors('storyimages').getItem
 
-const StoryDetailPreview = props => {
-  return (
-    <PreviewIframe>
-      <StoryPreview {...props} />
-    </PreviewIframe>
-  )
-}
+const StoryDetailPreview = props => (
+  <PreviewIframe>{props.images && <StoryPreview {...props} />}</PreviewIframe>
+)
 
 const mapStateToProps = (state, { pk }) => {
   const story = selectors.getItem(pk)(state)
-  let images = []
-  if (story.images) {
-    images = story.images.map(image => ({
+  return R.evolve({
+    images: R.map(image => ({
       ...image,
       ...getPhoto(image.imagefile)(state),
       ...getStoryImage(image.id)(state),
-    }))
-  }
-  return { ...story, images }
+    })),
+  })(story)
 }
 
 export default connect(mapStateToProps)(StoryDetailPreview)
