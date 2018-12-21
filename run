@@ -189,6 +189,7 @@ exists() {
 reload_service() {
   echo "--- reload start $(date -Iseconds) ---"
   production_settings
+  rm webpack/node_modules/* -rf
   webpack_build
   docker-compose run --rm web django-admin migrate
   docker-compose run --rm web django-admin collectstatic --clear --noinput
