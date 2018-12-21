@@ -11,6 +11,6 @@ After=docker.service
 Restart=always
 ExecStart=/bin/bash -c "/srv/tassen/run prod dc up"
 ExecStop=/bin/bash -c "/srv/tassen/run prod dc down"
-ExecReload=/bin/bash -c "/srv/tassen run reload"
+ExecReload=/bin/bash -c "/srv/tassen/run reload"
 [Install]
 WantedBy=multi-user.target
