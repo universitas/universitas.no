@@ -13,8 +13,8 @@ $focused-color: lighten($blue, 25%);
   min-height: $size;
   display: grid;
   /* prettier-ignore */
-  grid: 
-    "thumb filename filename" #{$row} 
+  grid:
+    "thumb filename filename" #{$row}
     "thumb artist category" #{$row}
     "thumb created size" #{$row}
     "description description description" minmax(#{$row}, auto)
@@ -40,7 +40,6 @@ $focused-color: lighten($blue, 25%);
   .popup {
     position: absolute;
     height: auto;
-    // transform: translate(-50%, -50%);
     display: none;
     pointer-events: none;
   }
@@ -73,27 +72,6 @@ $focused-color: lighten($blue, 25%);
   }
 }
 
-%input {
-  padding: $margin/2 $margin;
-  background-color: white;
-  line-height: 1.2;
-  height: 1.6rem;
-  border: 1px solid $bordercolor;
-  border-radius: $inputradius;
-  &:focus,
-  &:hover {
-    box-shadow: inset 1px 1px 3px rgba(black, 0.1);
-    border: 1px solid darken($bordercolor, 10);
-  }
-  &:invalid {
-    background-color: lighten(yellow, 30);
-    border: 1px solid red;
-  }
-  &:focus {
-    border: 1px solid #555;
-    outline: none;
-  }
-}
 .ReactSelect {
   position: relative;
 }
@@ -123,7 +101,6 @@ $focused-color: lighten($blue, 25%);
   &__control {
     align-items: center;
     display: flex;
-    // flex-wrap: wrap;
     justify-content: space-between;
     outline: 0 !important;
     position: relative;

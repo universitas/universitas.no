@@ -28,5 +28,27 @@ $bordercolor: #ddd;
   font-size: 0.8rem;
 }
 
+%input {
+  padding: $margin/2 $margin;
+  background-color: white;
+  line-height: 1.2;
+  height: 1.6rem;
+  border: 1px solid $bordercolor;
+  border-radius: $inputradius;
+  &:focus,
+  &:hover {
+    box-shadow: inset 1px 1px 3px rgba(black, 0.1);
+    border: 1px solid darken($bordercolor, 10);
+  }
+  &:invalid {
+    background-color: lighten(yellow, 30);
+    border: 1px solid red;
+  }
+  &:focus {
+    border: 1px solid #555;
+    outline: none;
+  }
+}
+
 $chevron-down-icon: url(~images/chevron.svg);
 $x-icon: url(~images/x.svg);

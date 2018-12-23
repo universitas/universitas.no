@@ -46,7 +46,6 @@ $statusColours: (0, $cyan), (3, $green), (4, $green), (5, $green),
   .SaveIndicator {
     display: flex;
     justify-content: center;
-    // align-items: flex-end;
     align-items: center;
     font-size: 1.3rem;
     &.ok svg {
@@ -62,8 +61,6 @@ $statusColours: (0, $cyan), (3, $green), (4, $green), (5, $green),
     border: none;
     margin: 0;
     padding: 0;
-  }
-  .TableRow {
   }
   .TableCell {
     cursor: pointer;

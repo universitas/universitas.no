@@ -4,9 +4,9 @@
   height: 100vh;
   display: grid;
   // prettier-ignore
-  grid: 
-    "source story" 3fr 
-    "reverse tree" 2fr 
+  grid:
+    "source story" 3fr
+    "reverse tree" 2fr
     / minmax(20em, 1fr) 2fr;
   flex-direction: row;
   background: #666;
