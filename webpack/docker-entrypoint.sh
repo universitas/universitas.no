@@ -1,7 +1,7 @@
 #!/bin/bash
 
 build() {
-  rm -rf $BUILD_DIR/*
+  rm -rf ${BUILD_DIR:?}/*
   npm run buildssr &
   exec npm run build
 }
