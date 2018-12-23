@@ -10,7 +10,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from model_utils.models import TimeStampedModel
 from requests import request
-from requests.exceptions import RequestException, MissingSchema, Timeout
+from requests.exceptions import MissingSchema, RequestException, Timeout
 
 from .status_codes import HTTP_STATUS_CODES
 from .story import Story
@@ -158,7 +158,7 @@ class InlineLink(TimeStampedModel):
                 if story == self.parent_story:
                     return False  # Avoid looooops
                 else:
-                    self.linked_story == story
+                    self.linked_story = story
 
         self.href = ''
         self.alt_text = self.linked_story.title

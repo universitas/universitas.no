@@ -319,7 +319,6 @@ class PrintIssue(models.Model, EditURLMixin):
             try:
                 cover_image = pdf_to_image(self.pdf.file, page=1, size=size)
             except Exception as e:
-                raise e
                 logger.exception('Failed to create cover')
                 msg = 'ERROR:\n{}\nnot found on disk'.format(self.pdf.name)
                 cover_image = error_image(msg, (size * 70 / 100), size)

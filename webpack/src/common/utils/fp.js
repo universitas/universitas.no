@@ -14,7 +14,7 @@ export const arrayToggle = R.pipe(
     [R.contains, without],
     [R.T, union],
   ]),
-  R.sort(R.gt),
+  R.sort(R.comparator(R.lt)),
 )
 
 // Toggle item from object
@@ -43,5 +43,12 @@ const listOf = R.when(R.complement(R.is(Array)), R.of)
 // Partially apply all functions in spec object
 // :: {k: (a, b, ...) -> x} -> a|[a] ->  {k: x|(b, ...) -> x }
 export const partialMap = R.curry((obj, args) =>
-  R.map(R.pipe(R.curry, R.partial(R.__, listOf(args)), R.call), obj),
+  R.map(
+    R.pipe(
+      R.curry,
+      R.partial(R.__, listOf(args)),
+      R.call,
+    ),
+    obj,
+  ),
 )
