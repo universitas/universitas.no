@@ -5,7 +5,6 @@ services:
     volumes:
       - ./webpack:/app/
       - webpack_build:/var/build/
-      - node_modules:/app/node_modules/
     environment:
       - BUILD_DIR=/var/build/
       - PUBLIC_PATH=/static/
@@ -82,11 +81,6 @@ volumes:
   pgdata: {}
   redisdata: {}
   webpack_build: {}
-  node_modules:
-    driver_opts:
-      type: local
-      device: ${PWD}/webpack/node_modules/
-      o: bind
   ssh:
     driver_opts:
       type: local

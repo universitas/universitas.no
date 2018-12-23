@@ -9,6 +9,8 @@ services:
       - '3000:3000'
     environment:
       - PUBLIC_PATH=http://${SITE_URL:-localhost}:3000/static/
+    volumes:
+      - node_modules:/app/node_modules/
 
   express:
     extends: webpack
@@ -35,3 +37,10 @@ services:
     depends_on:
       - celery
       - celerybeat
+
+volumes:
+  node_modules:
+    driver_opts:
+      type: local
+      device: ${PWD}/webpack/node_modules/
+      o: bind
