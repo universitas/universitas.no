@@ -1,6 +1,6 @@
 # parent image based on python:3-stretch
 FROM haakenlid/jupyter-opencv:3.6
-MAINTAINER haakenlid
+LABEL maintainer="haakenlid"
 WORKDIR /app/
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
 
@@ -12,7 +12,7 @@ RUN groupadd --gid 1000 django &&\
 COPY requirements.txt docker-entrypoint.sh /app/
 
 # install pdf utils and database clients
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install --yes --no-install-recommends \
   rsync \
   gettext \
   ghostscript \
