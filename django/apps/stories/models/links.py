@@ -10,7 +10,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from model_utils.models import TimeStampedModel
 from requests import request
-from requests.exceptions import ConnectionError, MissingSchema, Timeout
+from requests.exceptions import RequestException, MissingSchema, Timeout
 
 from .status_codes import HTTP_STATUS_CODES
 from .story import Story
@@ -191,7 +191,7 @@ class InlineLink(TimeStampedModel):
                 status_code = '408'  # HTTP Timout
             except MissingSchema:
                 status_code = 'URL'  # not a HTTP url
-            except ConnectionError:
+            except RequestException:
                 status_code = 'DNS'  # DNS error
 
         if save_if_changed and status_code != self.status_code:

@@ -45,10 +45,10 @@
 
   line-height: 1rem;
   /* prettier-ignore */
-  grid: "thumb name "  
-    "thumb position "  
-    "thumb email"  
-    "thumb phone" ;
+  grid: "thumb name"
+        "thumb position"
+        "thumb email"
+        "thumb phone";
   grid-template-columns: 9rem 1fr;
   @include max-size(xs) {
     grid-template-columns: 7rem 1fr;

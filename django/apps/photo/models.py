@@ -372,8 +372,7 @@ class ImageFile(  # type: ignore
 
     def merge_with(self, others):
         """Merge self with duplicate images."""
-        # TODO: is `save` needed here?
-        merge_instances(self, *list(others)).save()
+        merge_instances(self, *list(others))
 
     def rename_file(self, filename=None, delete_old=False):
         """Rename original"""
