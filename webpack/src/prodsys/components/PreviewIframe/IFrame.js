@@ -26,30 +26,21 @@ function throttle(callback, limit) {
 // create window resize event for children to recalculate stuff
 const resizeSignal = () => window.dispatchEvent(new Event('resize'))
 
-const calculateStyle = R.pipe(
-  R.ifElse(
-    R.gt(1),
-    zoom => ({
-      transformOrigin: 'top left',
-      transform: `scale(${zoom})`,
-      height: `${100 / zoom}%`,
-      width: `${100 / zoom}%`,
-      left: 0,
-    }),
-    zoom => ({
-      transformOrigin: 'top center',
-      transform: 'scale(1)',
-      height: '100%',
-      width: `${100 / zoom}%`,
-      left: `${50 - 50 / zoom}%`,
-    }),
-  ),
-  R.mergeLeft({
-    border: 'none',
-    position: 'absolute',
-    maxWidth: 'unset',
-    margin: '0 auto',
-    background: 'white',
+const percent = n => `${n.toPrecision(4)}%`
+
+const calculateStyle = R.ifElse(
+  R.gt(1),
+  zoom => ({
+    transform: `scale(${zoom.toPrecision(4)})`,
+    height: percent(100 / zoom),
+    width: percent(100 / zoom),
+    left: 0,
+  }),
+  zoom => ({
+    transform: 'scale(1)',
+    height: '100%',
+    width: percent(100 / zoom),
+    left: percent(50 - 50 / zoom),
   }),
 )
 
@@ -79,9 +70,9 @@ class IFrame extends React.Component {
       <Spring to={{ zoom }} onRest={resizeSignal}>
         {props => (
           <iframe
-            srcDoc={`<!DOCTYPE html>`}
-            ref={this.ref}
+            className="IFrame"
             style={calculateStyle(props.zoom)}
+            ref={this.ref}
           >
             {this.doc &&
               ReactDOM.createPortal(head, this.doc.head) &&

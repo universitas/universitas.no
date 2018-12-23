@@ -89,8 +89,6 @@ const FrontpageGrid = ({ items = [] }) => {
     <section
       className="NewsFeed"
       style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
         padding: '1rem',
       }}
     >

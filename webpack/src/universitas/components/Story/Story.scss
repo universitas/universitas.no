@@ -54,8 +54,6 @@ $externallink: 'data:image/svg+xml,' +
   a {
     color: $linkcolor;
     text-decoration: none;
-    &.internal {
-    }
     &.external:after {
       opacity: 0.4;
       padding-left: 0.1em;
@@ -143,8 +141,6 @@ $externallink: 'data:image/svg+xml,' +
       max-height: 57rem;
     }
   }
-  .mainContent {
-  }
   .Question {
     font-style: italic;
     font-weight: 500;
@@ -227,12 +223,8 @@ $externallink: 'data:image/svg+xml,' +
       width: 6rem;
       border-radius: 50%;
     }
-    .credit {
-    }
     .name {
       font-weight: 700;
-    }
-    .title {
     }
   }
 }
@@ -321,14 +313,12 @@ $externallink: 'data:image/svg+xml,' +
     font-size: 0.8rem;
   }
   @include quote-left;
-  // @include quote-right;
   min-height: 3em;
   color: $medium-grey;
   display: flex;
   flex-direction: column;
   justify-content: center;
   p {
-    // align-self: center;
     font-size: 1.5rem;
     font-weight: 200;
     line-height: 1.1;
@@ -337,6 +327,5 @@ $externallink: 'data:image/svg+xml,' +
   .QuoteCit {
     color: $dark-grey;
     font-size: 0.8rem;
-    // align-self: flex-end;
   }
 }

@@ -41,8 +41,8 @@ hr {
 .PageSwitch {
   flex: 1;
   display: flex;
+  align-items: flex-start;
   display: grid;
-  align-items: start;
   justify-content: center;
   grid-template-columns: minmax(auto, $content-width);
   @media (max-height: 750px) and (min-width: $content-width) and (max-width: 1400px) {

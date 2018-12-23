@@ -3,7 +3,7 @@ $chevron: 'data:image/svg+xml;utf8,<svg version="1.1" xmlns="http://www.w3.org/2
   width: 100%;
   min-height: 0;
   display: grid;
-  grid: "left center right" 100% / 1fr 2fr 1fr;
+  grid: 'left center right' 100% / 1fr 2fr 1fr;
   .next,
   .prev {
     z-index: 10;

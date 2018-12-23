@@ -1,4 +1,4 @@
-@import "styles/_common.scss";
+@import 'styles/_common.scss';
 .AdvertiserInfo {
   .ad-prices {
     display: flex;
@@ -9,7 +9,7 @@
     }
     .ModulKart {
       order: 1;
-      margin: 2*$pad;
+      margin: 2 * $pad;
     }
   }
 }

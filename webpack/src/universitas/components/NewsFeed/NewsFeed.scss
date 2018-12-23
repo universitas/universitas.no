@@ -12,8 +12,12 @@ $row-height: 12vh;
   height: 50vh;
   margin-top: 2rem;
 }
+.inner {
+  // display: none;
+}
 
 .FeedItem {
+  display: grid;
   .gradient {
     display: none;
   }
@@ -66,13 +70,13 @@ $row-height: 12vh;
     font-weight: 200;
     margin-top: 0;
   }
-  display: grid;
 }
 
 .bg-white {
   color: inherit;
   background: white;
 }
+
 .bg-section,
 .bg-black {
   color: white;
@@ -83,9 +87,11 @@ $row-height: 12vh;
     padding: 0.2rem 0.5rem;
   }
 }
+
 .bg-section {
   background: #666;
 }
+
 .layout-top {
   grid-template-rows: 1fr;
   .Vignette,
@@ -93,6 +99,7 @@ $row-height: 12vh;
     grid-area: 1/1/2/2;
   }
 }
+
 .layout-left {
   grid-template-columns: 3fr 2fr;
   grid-template-rows: auto auto 1fr;
@@ -109,6 +116,7 @@ $row-height: 12vh;
     grid-column: 2/3;
   }
 }
+
 .layout-behind {
   grid-template-rows: 1fr auto auto auto;
   text-shadow: rgba(black, 0.6) 0 0.1em 0.4em;

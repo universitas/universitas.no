@@ -25,7 +25,7 @@ $section-colors: (
   side-2: #3b7e9c,
   anmeldelser: #6fab50,
   feature: #6fab50,
-  annet: #c44530
+  annet: #c44530,
 );
 
 @function color-get($section, $change: none) {
@@ -51,25 +51,25 @@ $section-colors: (
       $light: color-get($section, $change: lighter);
       background-color: $medium;
       &:after {
-        content: "#{$medium}";
+        content: '#{$medium}';
       }
       &.dark {
         background-color: $dark;
         &:after {
-          content: "#{$dark}";
+          content: '#{$dark}';
         }
       }
       &.light {
         background-color: $light;
         &:after {
-          content: "#{$light}";
+          content: '#{$light}';
         }
       }
     }
   }
 }
 
-@mixin section-color( $section, $change: medium, $text: false) {
+@mixin section-color($section, $change: medium, $text: false) {
   $color: color-get($section, $change);
   @if $text {
     color: $color;
