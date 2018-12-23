@@ -27,9 +27,11 @@
       img {
         width: 100%;
         height: auto;
-        min-height: 20vh;
-        @include max-size(s) {
-          min-height: 40vh;
+        @media (max-height: 1500px) {
+          min-height: 20vh;
+          @include max-size(s) {
+            min-height: 40vh;
+          }
         }
         object-fit: cover;
         &.autoCrop {

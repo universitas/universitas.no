@@ -1,4 +1,4 @@
-// http://react-icons.github.io/react-icons/md.html
+// https://react-icons.github.io/react-icons/md.html
 
 export {
   MdAdd as Add,
@@ -13,7 +13,11 @@ export {
   MdComment as Comment,
   MdCrop as Crop,
   MdDelete as Delete,
+  MdCheckCircle as Ok,
+  MdPanoramaFishEye as Circle,
+  MdSave as Save,
   MdDescription as Description,
+  MdDesktopWindows as Desktop,
   MdDone as Done,
   MdFileDownload as Download,
   MdEdit as Edit,
@@ -24,6 +28,7 @@ export {
   MdViewModule as GridView,
   MdInfo as Info,
   MdLaptopChromebook as Laptop,
+  MdPhoneAndroid as Mobile,
   MdViewList as ListView,
   MdLink as Link,
   MdLoop as Loop,
@@ -34,10 +39,12 @@ export {
   MdFormatQuote as Quote,
   MdSearch as Search,
   MdSync as Sync,
+  MdSyncDisabled as NoSync,
   MdPhone as Phone,
   MdTextFields as TextFields,
   MdAccessTime as Time,
   MdTransform as Transform,
+  MdTabletAndroid as Tablet,
   MdTune as Tune,
   MdBurstMode as Images,
 } from 'react-icons/md'
@@ -47,5 +54,6 @@ export {
   FaExclamationTriangle as Fallback,
   FaMagic as Magic,
   FaImage as Image,
+  FaBinoculars as Binoculars,
   FaQuestionCircle as Question,
 } from 'react-icons/fa'

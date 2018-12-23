@@ -1,46 +1,37 @@
 @import 'globals';
 
-.DetailPanel {
-  height: 100vh;
-  display: flex;
-  flex-flow: column nowrap;
-  .panelContent {
-    flex: 1;
-    display: flex;
-    flex-flow: column nowrap;
-    padding: 0.2rem;
-    overflow-y: auto;
+.DetailTopBar {
+  flex: 1;
+  .title,
+  .pk {
+    margin: 0.5em;
+    font-size: 1rem;
+    align-self: center;
   }
-  border-left: 1px solid #777;
-  .DetailTopBar {
-    @extend %horizontal-bar;
-    .title,
-    .pk {
-      margin: 0.5em;
-      font-size: 1rem;
-      align-self: center;
+  .title {
+    flex: 1;
+    width: 5rem;
+    color: #bbb;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  display: flex;
+  // justify-content: flex-end;
+  .Tool {
+    height: unset;
+    font-size: 1.5rem;
+    background-color: rgba(black, 0.2);
+    margin-left: 0.1em;
+    width: $horizontal-bar-height;
+    &:hover {
+      color: white;
     }
-    .title {
-      flex: 1;
-      width: 5rem;
-      color: #bbb;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-    font-size: 1.6rem;
-    display: flex;
-    justify-content: flex-end;
-    .Tool {
-      // @extend .AppButton;
-      background-color: darken($horizontal-bar-color, 10);
-      margin-left: 0.1em;
-      height: 100%;
-      width: $horizontal-bar-height;
-      &:hover {
-        color: white;
-      }
-    }
+  }
+}
+.DetailPanel {
+  .content {
+    padding: 0.5rem;
   }
   .wrapForm {
     margin-left: -1rem;

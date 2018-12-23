@@ -1,0 +1,341 @@
+@import 'styles/_common.scss';
+$linkcolor: #1779ba;
+$asidewidth: 15rem;
+
+// svg icon for bullet list (square)
+$bullet: 'data:image/svg+xml,' +
+  "<svg xmlns='http://www.w3.org/2000/svg' height='1.3ex' viewBox='0 0 10 10'>" +
+  "<rect width='10' height='10' rx='1' ry='1' fill='" +
+  str-replace('#', '%23', #{$medium-yellow}) + "'/>" + '</svg>';
+
+// svg icon for external link (box with arrow pointing out)
+$externallink: 'data:image/svg+xml,' +
+  "<svg xmlns='http://www.w3.org/2000/svg' height='0.85em' viewBox='0 0 16 14'>" +
+  "<path d='M 9 2 L 9 3 L 12.292969 3 L 6.023438 9.273438 L 6.726563 " +
+  '9.976563 L 13 3.707031 L 13 7 L 14 7 L 14 2 Z M 4 4 C 2.894531 4 2 ' +
+  '4.894531 2 6 L 2 12 C 2 13.105469 2.894531 14 4 14 L 10 14 C 11.105469 ' +
+  '14 12 13.105469 12 12 L 12 7 L 11 8 L 11 12 C 11 12.550781 10.550781 ' +
+  '13 10 13 L 4 13 C 3.449219 13 3 12.550781 3 12 L 3 6 C 3 5.449219 ' +
+  "3.449219 5 4 5 L 8 5 L 9 4 Z' " + "fill='" +
+  str-replace('#', '%23', #{$linkcolor}) + "'/>" + '</svg>';
+
+%bullet-list {
+  $indent: 1.3em;
+  list-style: none;
+  margin-left: $indent;
+  &:before {
+    width: $indent;
+    vertical-align: baseline;
+    display: inline-block;
+    margin-left: -$indent;
+    color: $medium-yellow;
+    content: url(str-replace('#', '%23', $bullet));
+  }
+}
+
+// main bodytext area
+%left {
+  @include min-size(m) {
+    width: calc(100% - #{$asidewidth + 1rem});
+  }
+}
+
+// aside area
+%right {
+  @include min-size(m) {
+    float: right;
+    clear: right;
+    width: $asidewidth;
+    margin: 0 0 1rem 1rem;
+  }
+}
+
+.Story {
+  a {
+    color: $linkcolor;
+    text-decoration: none;
+    &.internal {
+    }
+    &.external:after {
+      opacity: 0.4;
+      padding-left: 0.1em;
+      content: url($externallink);
+      display: inline;
+    }
+    &:hover,
+    &:focus {
+      color: #1468a0;
+      text-decoration: underline;
+      &:after {
+        opacity: 1;
+      }
+    }
+  }
+  line-height: 1.4em;
+  .Kicker {
+    font-family: $univ-condensed;
+    margin: 0.6rem 0 0 0;
+    font-weight: 400;
+    font-size: 1.6rem;
+    @include max-size(s) {
+      font-size: 1.4rem;
+    }
+    & + .Headline {
+      margin-top: 0.4rem;
+    }
+  }
+  .Headline {
+    @extend %headline;
+    font-size: 4rem;
+    @include max-size(m) {
+      font-size: 3rem;
+    }
+    @include max-size(s) {
+      font-size: 2.2rem;
+    }
+    margin: 1rem 0 0 0;
+  }
+  .Lede {
+    font-weight: lighter;
+    color: $dark-grey;
+    font-size: 1.5rem;
+    @include max-size(m) {
+      font-size: 1.2rem;
+    }
+    margin: 0.6rem 0 0 0;
+    line-height: 1.3em;
+  }
+  .StoryHead {
+    display: flex;
+    flex-direction: column;
+    .mainImage {
+      min-height: 0;
+      flex: 1 1;
+      display: flex;
+      .imgWrapper {
+        flex: 1;
+        background-color: #dddfe9;
+        display: flex;
+      }
+      img {
+        flex: 1;
+        min-height: 0;
+      }
+      &.autoCrop {
+        flex: 1 1 70vh;
+      }
+    }
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.8rem;
+    max-height: calc(100vh - 3rem);
+<<<<<<< HEAD
+    @media (max-height: 450px) and (min-width: 600px) {
+      max-height: calc(450px - 3rem);
+    }
+    @media (max-height: 700px) and (min-width: 900px) {
+      max-height: calc(700px - 3rem);
+    }
+    @media (min-height: 60rem) {
+      max-height: 57rem;
+    }
+=======
+>>>>>>> develop
+  }
+  .mainContent {
+  }
+  .Question {
+    font-style: italic;
+    font-weight: 500;
+  }
+  .Subheading {
+    @extend %headline;
+    font-size: 1.4rem;
+    margin: 1em 0 0.2em 0;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  .SectionHeading {
+    @extend %headline;
+    font-size: 1.7rem;
+    margin: 1.5em 0 0.2em 0;
+  }
+  .ListItem {
+    @extend %bullet-list;
+  }
+  .mainContent {
+    display: flex;
+    flex-direction: row;
+    @include max-size(s) {
+      flex-direction: column;
+    }
+  }
+}
+
+.StorySidebar {
+  margin-bottom: 1rem;
+  text-align: center;
+  display: flex;
+  flex-flow: row wrap;
+  @include min-size(s) {
+    position: sticky;
+    top: $menuheight + $gridgap;
+    align-self: flex-start;
+    flex-shrink: 0;
+    width: $logowidth;
+    margin-right: $gridgap;
+    flex-flow: column;
+    .StoryInfo {
+      flex-flow: column;
+    }
+  }
+  %item {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+  }
+  .StoryInfo {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    @extend %item;
+    font-family: 'Roboto Slab', serif;
+    color: $medium-grey;
+    font-size: 1.2rem;
+    .storytype {
+      margin: 0 0.2rem;
+      font-weight: 700;
+    }
+    .themeword {
+      margin: 0 0.2rem;
+      font-weight: 300;
+    }
+  }
+  .DateLine {
+    width: 100%;
+    @extend %smaller;
+    @extend %item;
+  }
+  .Byline {
+    flex: 1 1 6rem;
+    margin: $pad;
+    @extend %smaller;
+    @extend %item;
+    .face {
+      width: 6rem;
+      border-radius: 50%;
+    }
+    .credit {
+    }
+    .name {
+      font-weight: 700;
+    }
+    .title {
+    }
+  }
+}
+
+.StoryFoot {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  .fb-comments {
+    min-height: 190px;
+  }
+}
+
+.BodySection {
+  margin-bottom: 2rem;
+  @extend %left;
+  p {
+    margin: 0.2em 0 0.8em 0;
+  }
+  *:first-child {
+    margin-top: 0;
+  }
+}
+
+.Place {
+  margin-bottom: 2rem;
+  &.left {
+    @extend %left;
+  }
+  &.right {
+    @extend %right;
+  }
+}
+
+.Facts {
+  @extend %smaller;
+  .AsideHeading {
+    @extend %headline;
+    font-size: 1.1rem;
+    color: $medium-grey;
+    margin: 1em 0 0.3em 0;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+%quotemark {
+  color: $medium-yellow;
+  font-family: 'Roboto Slab';
+  position: absolute;
+  font-style: normal;
+  font-weight: bolder;
+  font-size: 6em;
+  line-height: 0.6ex;
+  // background-color: red;
+}
+
+@mixin quote-left {
+  position: relative;
+  padding-left: 4em;
+  &:before {
+    @extend %quotemark;
+    content: '«';
+    top: 0;
+    left: 0;
+  }
+}
+
+@mixin quote-right {
+  position: relative;
+  padding-right: 4em;
+  &:after {
+    @extend %quotemark;
+    content: '»';
+    top: 0;
+    right: 0;
+  }
+}
+
+.PullQuote {
+  margin: 0;
+  .left &,
+  .right & {
+    font-size: 1rem;
+    font-size: 0.8rem;
+  }
+  @include quote-left;
+  // @include quote-right;
+  min-height: 3em;
+  color: $medium-grey;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  p {
+    // align-self: center;
+    font-size: 1.5rem;
+    font-weight: 200;
+    line-height: 1.1;
+    margin: 0;
+  }
+  .QuoteCit {
+    color: $dark-grey;
+    font-size: 0.8rem;
+    // align-self: flex-end;
+  }
+}

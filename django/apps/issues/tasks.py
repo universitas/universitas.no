@@ -10,12 +10,12 @@ import tempfile
 from celery import shared_task
 from celery.schedules import crontab
 from celery.task import periodic_task
-
-from apps.core.staging import new_staging_pdf_files
-from apps.issues.models import Issue, PrintIssue, current_issue
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.utils import timezone
+
+from apps.core.staging import new_staging_pdf_files
+from apps.issues.models import Issue, PrintIssue, current_issue
 
 logger = logging.getLogger(__name__)
 

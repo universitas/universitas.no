@@ -1,36 +1,34 @@
-import { connect } from 'react-redux'
 import DetailPanel from 'components/DetailPanel'
 import cx from 'classnames'
 import { modelSelectors } from 'ducks/basemodel'
-import {
-  StoryTools,
-  StoryDetailImages,
-  StoryDetailText,
-  StoryDetailPreview,
-} from '.'
+import StoryDetailImages from './StoryDetailImages.js'
+import StoryDetailText from './StoryDetailText.js'
+import StoryDetailPreview from './StoryDetailPreview.js'
 import { selectors, MODEL } from './model.js'
-import { getRoutePayload } from 'prodsys/ducks/router'
+import { ZoomControl } from 'components/PreviewIframe'
 import Debug from 'components/Debug'
 
-const DetailPane = ({ pk, action, images }) => {
-  if (action == 'change' || action == 'preview')
-    return <StoryDetailText pk={pk} />
-  if (action == 'images') return <StoryDetailImages pk={pk} images={images} />
-  // if (action == 'preview') return <StoryDetailPreview pk={pk} />
-  return <div>action??: {action}</div>
+const StoryAction = ({ action, ...props }) => {
+  if (action == 'change') return <StoryDetailText {...props} />
+  if (action == 'images') return <StoryDetailImages {...props} />
+  if (action == 'preview') return <StoryDetailPreview {...props} />
 }
 
-const StoryDetail = ({ pk, action, publication_status, images = [] }) => (
+const getTitle = ({ title, working_title }) => title || working_title
+const getClass = ({ publication_status }) =>
+  cx('StoryDetail', `status-${publication_status}`)
+
+const StoryDetail = ({ panes, pk, action }) => (
   <DetailPanel
     pk={pk}
     model={MODEL}
-    getTitle={({ title, working_title }) => title || working_title}
-    className={cx('StoryDetail', `status-${publication_status}`)}
+    getTitle={getTitle}
+    getClass={getClass}
+    scroll={action == 'images'}
+    header={action == 'preview' && <ZoomControl />}
   >
-    <DetailPane pk={pk} images={images} action={action} />
+    <StoryAction pk={pk} action={action} />
   </DetailPanel>
 )
 
-const mapStateToProps = (state, { action, pk }) => selectors.getItem(pk)(state)
-
-export default connect(mapStateToProps)(StoryDetail)
+export default StoryDetail

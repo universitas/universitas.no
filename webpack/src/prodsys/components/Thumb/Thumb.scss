@@ -1,5 +1,5 @@
 // Thumbnail image centered and contained in flexbox
-@import "styles/globals.scss";
+@import 'styles/globals.scss';
 .Thumb {
   display: flex;
   min-height: 0; // firefox
@@ -7,18 +7,20 @@
   align-items: center;
   justify-content: center;
   background-color: rgba(black, 0.15);
+  .CropBoxContainer,
+  img {
+    flex: 1 1 0;
+    object-fit: contain;
+    max-height: 100%;
+  }
   &.dropshadow {
+    // faximile
     background: none;
     img {
+      flex: 0 0 auto;
       max-width: calc(100% - #{2 * $margin});
       max-height: calc(100% - #{2 * $margin});
       box-shadow: 0.2em 0.4em 0.5em rgba(black, 0.3);
     }
-  }
-  img {
-    min-height: 0;
-    min-width: 0;
-    max-width: 100%;
-    max-height: 100%;
   }
 }

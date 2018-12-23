@@ -4,11 +4,10 @@ import logging
 import os
 import re
 
-from fuzzywuzzy import fuzz
-from slugify import Slugify
-
 from django.conf import settings
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+from fuzzywuzzy import fuzz
+from slugify import Slugify
 
 logger = logging.getLogger(__name__)
 

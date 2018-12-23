@@ -1,0 +1,94 @@
+@import 'styles/globals.scss';
+%button {
+  border-radius: 0.3rem;
+  box-shadow: inset -1px -1px 1px rgba(black, 0.4),
+    inset 1px 1px 1px rgba(white, 0.3);
+}
+
+.Panel {
+  border-left: 1px solid #777;
+  flex: 1;
+  align-self: flex-start;
+  min-height: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 0;
+    margin: 0;
+    &.scroll {
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+  }
+}
+
+.TopBar,
+.BottomBar {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  min-height: 2.2rem;
+  background-color: $horizontal-bar-color;
+  .Filters,
+  .Pagination {
+    flex-wrap: wrap;
+    display: flex;
+    margin: 0.2em;
+  }
+  .FileInputButton,
+  .info,
+  button {
+    line-height: 1;
+    font-size: 0.8em;
+    padding: 0.5em;
+    margin: 0.1rem;
+  }
+  .info {
+    flex: 1;
+  }
+  .FileInputButton,
+  button {
+    @extend %button;
+    outline: none;
+    color: white;
+    background-color: $button-color;
+    cursor: pointer;
+    &:hover {
+      background-color: scale_color(
+        $button-color,
+        $saturation: 100,
+        $lightness: 10
+      );
+    }
+    &.inactive {
+      background-color: scale_color(
+        $button-color,
+        $lightness: -50,
+        $saturation: -30
+      );
+      &:hover {
+        background-color: scale_color(
+          $button-color,
+          $lightness: -30,
+          $saturation: -10
+        );
+      }
+    }
+    &:disabled {
+      box-shadow: none;
+      background-color: scale_color(
+        $button-color,
+        $lightness: -30,
+        $saturation: -90
+      );
+      color: #ccc;
+      cursor: inherit;
+    }
+  }
+}

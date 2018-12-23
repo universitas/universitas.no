@@ -45,4 +45,17 @@ const mapDispatchToProps = (dispatch, { model, attr, value, toggle }) => {
   return { onClick, onDoubleClick }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Filter)
+const ConnectedFilter = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Filter)
+
+const Filters = ({ filters }) => (
+  <div className="Filters">
+    {filters.map((props, index) => (
+      <ConnectedFilter key={index} {...props} />
+    ))}
+  </div>
+)
+
+export default Filters

@@ -14,7 +14,12 @@ const Headline = ifChildren(props => <h1 className="Headline" {...props} />)
 const Kicker = ifChildren(props => <h3 className="Kicker" {...props} />)
 const Lede = ifChildren(props => <p className="Lede" {...props} />)
 
-const StoryHead = ({ title, kicker, lede, images = [] }) => {
+const StoryHead = ({
+  title = '( ingen tittel )',
+  kicker,
+  lede,
+  images = [],
+}) => {
   const headImages = R.pipe(
     R.filter(R.propEq('placement', 'head')),
     R.sort(R.ascend(R.prop('ordering'))),
@@ -37,10 +42,10 @@ const StoryHead = ({ title, kicker, lede, images = [] }) => {
         </div>
       ) : null}
       <Kicker>{kicker}</Kicker>
-      <Headline>{hyphenate(title) || '(ingen tittel)'}</Headline>
+      <Headline>{hyphenate(title)}</Headline>
       <Lede>{lede}</Lede>
     </header>
   )
 }
 
-export default StoryHead
+export default React.memo(StoryHead)

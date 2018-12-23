@@ -1,6 +1,11 @@
 // ducks for redux-first-router of prodsys
 
-import { NOT_FOUND, actionToPath, pathToAction } from 'redux-first-router'
+import {
+  NOT_FOUND,
+  redirect,
+  actionToPath,
+  pathToAction,
+} from 'redux-first-router'
 import { querySerializer } from 'utils/urls'
 import restoreScroll from 'redux-first-router-restore-scroll'
 
@@ -22,6 +27,13 @@ export { NOT_FOUND }
 export const routesMap = {
   [LOGIN]: '/login/',
   [PRODSYS]: '/:model/:action/:pk(\\d+)?/',
+  'router/SHORT_URL': {
+    path: '/short/:id(\\d+)?/', // highjack links in preview stories
+    thunk: (dispatch, getState) => {
+      const { id: pk } = getRoutePayload(getState())
+      dispatch(redirect(toRoute({ model: 'stories', action: 'preview', pk })))
+    },
+  },
   [NOT_FOUND]: {
     thunk: (dispatch, getState) => dispatch(toRoute({})),
   },
@@ -47,8 +59,9 @@ export const getRouteQuery = R.path([SLICE, 'meta', 'query'])
 
 // low level utils for testing
 // {action} -> "relative url"
-export const reverse = action =>
-  actionToPath(action, routesMap, querySerializer)
+export const reverse = action => {
+  return actionToPath(action, routesMap, querySerializer)
+}
 
 // "relative url" -> {action}
 export const forward = path => pathToAction(path, routesMap, querySerializer)

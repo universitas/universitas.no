@@ -4,8 +4,6 @@ from collections import namedtuple
 import json
 import logging
 
-from model_utils.models import TimeStampedModel
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
@@ -14,6 +12,8 @@ from django.db import models
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+
 from utils.decorators import cache_memoize
 
 from .fuzzy_name_search import FuzzyNameSearchMixin
@@ -86,7 +86,6 @@ class Contributor(TimeStampedModel, FuzzyNameSearchMixin, models.Model):
         (RETIRED, _('Retired')),
         (EXTERNAL, _('External')),
     ]
-
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -97,7 +96,7 @@ class Contributor(TimeStampedModel, FuzzyNameSearchMixin, models.Model):
         choices=STATUS_CHOICES,
         default=UNKNOWN,
     )
-    display_name = models.CharField(blank=True, max_length=50)
+    display_name = models.CharField(blank=False, max_length=50)
     aliases = models.TextField(blank=True)
     initials = models.CharField(blank=True, null=True, max_length=5)
     phone = models.CharField(blank=True, null=True, max_length=20)
@@ -218,7 +217,10 @@ class Contributor(TimeStampedModel, FuzzyNameSearchMixin, models.Model):
                 'active': stint.is_active,
             }
         last_byline = self.byline_set.exclude(title=None).last()
-        title = last_byline.title if last_byline else 'person'
+        if last_byline:
+            title = last_byline.title
+        else:
+            title = f'{self.get_status_display()} person'
         return {
             'title': title,
             'management': False,
@@ -253,6 +255,11 @@ class Position(models.Model):
         verbose_name=_('groups'),
         help_text=_('Implicit auth Group membership'),
     )
+    active = models.BooleanField(
+        default=True,
+        verbose_name=_('active'),
+        help_text=_('active'),
+    )
 
     class Meta:
         verbose_name = _('Position')
@@ -261,7 +268,7 @@ class Position(models.Model):
     def __str__(self):
         return '{}'.format(self.title)
 
-    def active(self, when=None):
+    def active_stints(self, when=None):
         return Stint.objects.filter(position=self).active(when)
 
     def save(self, *args, **kwargs):

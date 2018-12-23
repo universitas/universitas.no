@@ -2,7 +2,8 @@ import { all, fork, call, put, takeEvery } from 'redux-saga/effects'
 import errorSaga from 'prodsys/sagas/errorSaga'
 import basemodelSaga from 'prodsys/sagas/basemodelSaga'
 import uploadSaga from 'prodsys/sagas/uploadSaga'
-import storyimageSaga from 'prodsys/sagas/storyimageSaga'
+import storySaga from 'prodsys/sagas/storySaga'
+import miscSaga from 'prodsys/sagas/miscSaga'
 import { modelActions } from 'prodsys/ducks/basemodel'
 import authSaga from 'common/sagas/authSaga'
 import { requestUser, REQUEST_USER_SUCCESS } from 'common/ducks/auth'
@@ -14,7 +15,8 @@ function* rootSaga() {
     fork(uploadSaga),
     fork(errorSaga),
     fork(authSaga),
-    fork(storyimageSaga),
+    fork(storySaga),
+    fork(miscSaga),
     fork(fetchMoreSaga),
     call(loadInitialData),
   ])
@@ -36,7 +38,7 @@ function* loadInitialData() {
   yield put(modelActions('contributors').itemsRequested())
   yield put(modelActions('stories').itemsRequested())
   yield put(modelActions('photos').itemsRequested())
-  // yield put(modelActions('storyimages').itemsRequested())
+  yield put(modelActions('positions').itemsRequested())
   // yield put(modelActions('issues').itemsRequested())
   // yield put(modelActions('frontpage').itemsRequested())
 }

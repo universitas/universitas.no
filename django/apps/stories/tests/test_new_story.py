@@ -3,13 +3,13 @@
 from io import BytesIO
 
 from PIL import Image
+from django.core.files.uploadedfile import SimpleUploadedFile
 import pytest
 
 # from apps.markup.models import BlockTag
 from apps.photo.models import ImageFile
 from apps.stories.models import Byline, Section, Story, StoryImage, StoryType
 from apps.stories.models.sections import default_story_type
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 def image_data(size=(100, 100), mode='RGB', format='png', color='white'):

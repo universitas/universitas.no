@@ -1,7 +1,8 @@
 import logging
 
-from apps.core import content_factory
 from django.core.management.base import BaseCommand
+
+from apps.core import content_factory
 
 logger = logging.getLogger(__name__)
 

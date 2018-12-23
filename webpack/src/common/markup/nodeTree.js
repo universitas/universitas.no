@@ -11,7 +11,13 @@ const childTypes = [
   'inline_html_blocks',
 ]
 
-const clean = R.when(R.is(String), R.pipe(cleanText, specialCharacters))
+const clean = R.when(
+  R.is(String),
+  R.pipe(
+    cleanText,
+    specialCharacters,
+  ),
+)
 
 // :: {story} -> [{storychild}]
 export const getChildren = R.pipe(
@@ -24,15 +30,25 @@ export const getChildren = R.pipe(
 )
 
 // :: {story} -> ['placement']
-export const getPlaces = R.pipe(getChildren, R.pluck('placement'), R.uniq)
+export const getPlaces = R.pipe(
+  getChildren,
+  R.pluck('placement'),
+  R.uniq,
+)
 
 // :: linkNode -> {story} -> {inline_html_link}
 export const getLink = ({ name }) =>
-  R.pipe(R.propOr([], 'links'), R.find(R.propEq('name', name)))
+  R.pipe(
+    R.propOr([], 'links'),
+    R.find(R.propEq('name', name)),
+  )
 
 // :: {place} -> {story} -> [{storychild}]
 export const getPlaceChildren = ({ name }) =>
-  R.pipe(getChildren, R.filter(R.propEq('placement', name)))
+  R.pipe(
+    getChildren,
+    R.filter(R.propEq('placement', name)),
+  )
 
 const placeChildren = (walk, node, story) =>
   R.pipe(
@@ -55,6 +71,7 @@ const placeChildren = (walk, node, story) =>
 // :: {story} -> {...story, nodeTree}
 export const buildNodeTree = story => {
   let { title, kicker, lede, theme_word, bylines = [] } = story
+  const new_bylines = []
   const walk = R.compose(
     R.map(clean),
     R.reject(R.isNil),
@@ -80,7 +97,7 @@ export const buildNodeTree = story => {
               props.children = [{ type: 'pullquote', children }]
               break
             case 'bl':
-              bylines.push(parseByline(children[0]))
+              new_bylines.push(parseByline(children[0]))
               return null
             case 'tit':
               if (!title) {
@@ -94,7 +111,7 @@ export const buildNodeTree = story => {
             case 'ing':
               lede += match[2]
               return null
-            case 'kicker':
+            case 'stikktit':
               kicker = match[2]
               return null
           }
@@ -104,9 +121,10 @@ export const buildNodeTree = story => {
     }),
   )
 
-  const parseTree = R.pipe(R.replace(/^@sit:/gm, '@sitat:'), parseText)(
-    story.bodytext_markup,
-  )
+  const parseTree = R.pipe(
+    R.replace(/^@sit:/gm, '@sitat:'),
+    parseText,
+  )(story.bodytext_markup)
   const nodeTree = walk(parseTree)
 
   return {
@@ -115,7 +133,7 @@ export const buildNodeTree = story => {
     kicker,
     lede,
     theme_word,
-    bylines,
+    bylines: R.concat(bylines, new_bylines),
     parseTree,
     nodeTree,
   }

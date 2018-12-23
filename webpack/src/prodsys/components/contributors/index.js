@@ -1,4 +1,14 @@
-export ContributorDetail from './ContributorDetail.js'
-export ContributorGrid from './ContributorGrid.js'
-export ContributorList from './ContributorList.js'
-export ContributorTools from './ContributorTools.js'
+import Detail from './ContributorDetail.js'
+import Create from './ContributorCreate.js'
+import List from './ContributorList.js'
+import Tools from './ContributorTools.js'
+
+const ContributorRoute = props => (
+  <>
+    <List {...props} />
+    <Detail {...props} />
+    <Create {...props} />
+    <Tools {...props} />
+  </>
+)
+export default ContributorRoute

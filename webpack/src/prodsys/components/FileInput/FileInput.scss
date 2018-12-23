@@ -1,6 +1,12 @@
-$colors: (ready: #7cb342, warn: #dd2c00, error: #dd2c00, disabled: #aaa);
+$colors: (
+  ready: #7cb342,
+  warn: #dd2c00,
+  error: #dd2c00,
+  disabled: #aaa,
+);
 
 .FileInputArea {
+  height: 100%;
   &.dragOver {
     background-color: rgba(red, 0.8);
     &.acceptFiles {
@@ -17,7 +23,7 @@ $colors: (ready: #7cb342, warn: #dd2c00, error: #dd2c00, disabled: #aaa);
   // button in top bar
   display: flex;
   cursor: pointer;
-  input[type="file"] {
+  input[type='file'] {
     display: none;
   }
 }

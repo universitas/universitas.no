@@ -2,7 +2,7 @@ import cx from 'classnames'
 import { connect } from 'react-redux'
 import ModelField from 'components/ModelField'
 import { fields, actions, selectors, MODEL } from './model.js'
-import { toRoute } from 'prodsys/ducks/router'
+import { toRoute, getRoutePayload } from 'prodsys/ducks/router'
 
 const Field = ({ name, ...props }) => (
   <ModelField
@@ -28,7 +28,10 @@ const GridItem = ({ pk, onClick, className = '' }) => (
 const ConnectedGridItem = connect(
   (state, { pk }) => {
     const data = selectors.getItem(pk)(state) || {}
-    const selected = selectors.getCurrentItemId(state) === pk
+    const selected = R.pipe(
+      getRoutePayload,
+      R.propEq('pk', pk),
+    )(state)
     const { dirty } = data
     const className = cx('GridItem', { dirty, selected })
     return { ...data, className }
@@ -40,7 +43,9 @@ const ConnectedGridItem = connect(
 
 const ContributorGrid = ({ items = [] }) => (
   <div className="ItemGrid">
-    {items.map(pk => <ConnectedGridItem key={pk} fields={fields} pk={pk} />)}
+    {items.map(pk => (
+      <ConnectedGridItem key={pk} fields={fields} pk={pk} />
+    ))}
   </div>
 )
 export default connect(state => ({ items: selectors.getItemList(state) }))(

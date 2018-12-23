@@ -1,5 +1,5 @@
 import { Field } from 'components/ModelField'
-import { PhotoStats } from '.'
+import PhotoStats from './PhotoStats.js'
 import Thumb from 'components/Thumb'
 import cx from 'classnames'
 

@@ -1,14 +1,13 @@
 import logging
 import re
 
-from slugify import Slugify
-from sorl.thumbnail import ImageField, get_thumbnail
-
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from slugify import Slugify
+from sorl.thumbnail import ImageField, get_thumbnail
 
 from .dummy_image_advert import dummy_image_advert
 

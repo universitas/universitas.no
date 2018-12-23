@@ -1,4 +1,10 @@
 @import 'styles/globals.scss';
+$errorcolor: #e00;
+
+%invalid-input {
+  border-color: $errorcolor;
+  background: lighten(yellow, 30);
+}
 
 .ModelField {
   display: flex;
@@ -6,12 +12,32 @@
   align-items: flex-end;
   margin-bottom: $margin;
   min-height: 1.5em;
+  &.errors {
+    .react-select__control,
+    input,
+    select,
+    textarea {
+      @extend %invalid-input;
+    }
+  }
   &.full {
   }
   &.half {
   }
+  .FieldError {
+    @extend %label;
+    margin: 0.2em 0;
+    min-width: 100%;
+    font-weight: bold;
+    color: $errorcolor;
+    &:before {
+      padding-right: 0.5em;
+      content: '✘';
+    }
+  }
   .label {
     @extend %label;
+    color: rgba(black, 0.6);
     min-width: 5em;
   }
   .value {
@@ -41,8 +67,7 @@
       border: 1px solid darken($bordercolor, 10);
     }
     &:invalid {
-      background-color: lighten(yellow, 30);
-      border: 1px solid red;
+      @extend %invalid-input;
     }
     &:focus {
       border: 1px solid #555;

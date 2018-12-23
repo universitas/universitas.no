@@ -1,25 +1,40 @@
 .LoginForm {
+  text-align: center;
+  padding: 1rem;
+  width: 100vw;
   height: 100vh;
-  justify-content: center;
+  overflow: hidden;
   align-items: center;
+  justify-content: center;
+  @media (max-width: 30rem) {
+    > * {
+      max-width: calc(100vw - 2rem);
+    }
+  }
   display: flex;
   flex-direction: column;
-  font-size: 1.5em;
-  input, button {
+  font-size: 1.3rem;
+  h1 {
+    font-size: 2.5rem;
+    margin: 0 0 1rem 0;
+  }
+  input,
+  button {
+    margin-bottom: 0.5rem;
+    width: 25rem;
+    min-width: 5rem;
     font-size: 1em;
-    width: 20em;
-    padding: .5em;
-    margin: .2em;
-    border-radius: .2em;
+    padding: 0.5rem;
+    border-radius: 0.2em;
     border: 1px solid #999;
   }
-  .text, a {
-    font-size: 0.7em;
+  .text,
+  a {
+    font-size: 1rem;
   }
   .ErrorMessage {
     display: flex;
-    max-width: 20em;
-    margin: .5em 0;
+    margin: 0.5em 0;
     color: red;
     font-weight: bold;
   }

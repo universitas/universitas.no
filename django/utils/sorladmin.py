@@ -1,10 +1,9 @@
 import logging
 
-from sorl.thumbnail.fields import ImageField
-from sorl.thumbnail.shortcuts import get_thumbnail
-
 from django import forms
 from django.utils.safestring import mark_safe
+from sorl.thumbnail.fields import ImageField
+from sorl.thumbnail.shortcuts import get_thumbnail
 
 logger = logging.getLogger(__name__)
 

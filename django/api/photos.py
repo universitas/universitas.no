@@ -1,15 +1,16 @@
 import logging
 import re
 
-from django_filters.rest_framework import DjangoFilterBackend
+# from django_filters.rest_framework import DjangoFilterBackend
+from django.db import models
 from rest_framework import filters, serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from url_filter.integrations.drf import DjangoFilterBackend
 
 from apps.contributors.models import Contributor
 from apps.photo.models import ImageFile
 from apps.photo.tasks import upload_imagefile_to_desken
-from django.db import models
 from utils.serializers import AbsoluteURLField, CropBoxField
 
 logger = logging.getLogger('apps')
@@ -76,12 +77,15 @@ class ImageFileViewSet(viewsets.ModelViewSet):
     )
 
     serializer_class = ImageFileSerializer
-    filter_backends = (
-        filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend
-    )
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+
     search_fields = ['stem', 'description', 'contributor__display_name']
     ordering_fields = ['created', 'modified']
-    filterset_fields = ['category']
+    filter_fields = ['category', 'id']
 
     # permission_classes = [permissions.AllowAny]
 
@@ -89,7 +93,7 @@ class ImageFileViewSet(viewsets.ModelViewSet):
         search_parameters = {
             key: val
             for key, val in self.request.query_params.items()
-            if key in {'fingerprint', 'imagehash', 'id'}
+            if key in {'fingerprint', 'imagehash'}
         }
         if search_parameters:
             qs = ImageFile.objects.search(**search_parameters)

@@ -4,14 +4,15 @@ from datetime import timedelta
 import re
 
 from celery import shared_task
+from celery.schedules import crontab
 from celery.task import periodic_task
 from celery.utils.log import get_task_logger
-
-from apps.issues.models import current_issue
-from apps.photo.tasks import upload_imagefile_to_desken
 from django.core.cache import cache
 from django.db.models import F, Q
 from django.utils import timezone
+
+from apps.issues.models import current_issue
+from apps.photo.tasks import upload_imagefile_to_desken
 
 from .models import Story
 
@@ -20,7 +21,7 @@ logger = get_task_logger(__name__)
 # cron timing
 UPDATE_SEARCH = timedelta(hours=1)
 DEVALUE_HOTNESS = timedelta(hours=1)
-PERSIST_STORY_VISITS = timedelta(minutes=1)
+PERSIST_STORY_VISITS = timedelta(minutes=10)
 
 
 @periodic_task(run_every=UPDATE_SEARCH, ignore_result=True)
@@ -32,6 +33,21 @@ def update_search_task():
     )
     qs.update_search_vector()
     return qs.count()
+
+
+@periodic_task(run_every=crontab(hour=6, minute=0))
+def archive_stale_stories(days=14):
+    """Archive prodsys content that has not been touched for a while."""
+    STALE_LIMIT = timezone.timedelta(days)
+    stale_stories = Story.objects.filter(
+        modified__lt=timezone.now() - STALE_LIMIT,
+        publication_status__lt=Story.STATUS_PUBLISHED,
+    )
+    if stale_stories:
+        count = stale_stories.update(publication_status=Story.STATUS_PRIVATE)
+        logger.info(f'archived {count} stories')
+    else:
+        logger.info('no stale stories')
 
 
 @shared_task

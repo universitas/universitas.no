@@ -14,11 +14,6 @@ import uuid
 
 import PyPDF2
 import botocore
-from sorl import thumbnail
-from wand.color import Color
-from wand.drawing import Drawing
-from wand.image import Image as WandImage
-
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import models
@@ -26,6 +21,11 @@ from django.db.models.signals import pre_delete, pre_save
 from django.dispatch.dispatcher import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from sorl import thumbnail
+from wand.color import Color
+from wand.drawing import Drawing
+from wand.image import Image as WandImage
+
 from utils.model_mixins import EditURLMixin
 
 logger = logging.getLogger('universitas')

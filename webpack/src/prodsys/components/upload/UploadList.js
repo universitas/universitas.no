@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import { Link } from 'components/Icons'
+import Panel from 'components/Panel'
 import {
   getUploadPKs,
   uploadAdd,
@@ -8,7 +9,7 @@ import {
 } from 'ducks/fileupload'
 import UploadItem from './UploadItem'
 import { FileInputArea, FileInputButton } from 'components/FileInput'
-import { Filter } from 'components/Filter'
+import { Filter } from 'components/ListPanel/Filter'
 
 const UploadList = ({
   updateAll,
@@ -17,31 +18,36 @@ const UploadList = ({
   fileError = console.error,
   files,
 }) => (
-  <section className="ListPanel">
-    <TopBar>
-      <FileInputButton
-        accept={['image/jpeg', 'image/png']}
-        fileAdded={fileAdded}
-        fileError={fileError}
-        label="last opp filer"
-      />
-      <Filter
-        title={'Rediger alle filer samtidig'}
-        label={<Link />}
-        isActive={updateAll}
-        disabled={files.length < 2}
-        onClick={toggleUpdateAll}
-      />
-    </TopBar>
+  <Panel
+    header={
+      <div className="Filters">
+        <FileInputButton
+          accept={['image/jpeg', 'image/png']}
+          fileAdded={fileAdded}
+          fileError={fileError}
+          label="last opp filer"
+        />
+        <Filter
+          title={'Rediger alle filer samtidig'}
+          label={<Link />}
+          isActive={updateAll}
+          disabled={files.length < 2}
+          onClick={toggleUpdateAll}
+        />
+      </div>
+    }
+  >
     <FileInputArea
       accept={['image/jpeg', 'image/png']}
       fileAdded={fileAdded}
       fileError={fileError}
       className="itemList"
     >
-      {files.map(pk => <UploadItem pk={pk} key={pk} />)}
+      {files.map(pk => (
+        <UploadItem pk={pk} key={pk} />
+      ))}
     </FileInputArea>
-  </section>
+  </Panel>
 )
 
 const TopBar = ({ children }) => (
@@ -52,7 +58,7 @@ const TopBar = ({ children }) => (
 
 const BottomBar = ({}) => (
   <div className="BottomBar">
-    <div className="Navigation">
+    <div className="Pagination">
       <div className="info">bottom bar</div>
     </div>
   </div>
@@ -63,4 +69,7 @@ const mapStateToProps = state => ({
   updateAll: getUpdateAll(state),
 })
 const mapDispatchToProps = { fileAdded: uploadAdd, toggleUpdateAll }
-export default connect(mapStateToProps, mapDispatchToProps)(UploadList)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(UploadList)

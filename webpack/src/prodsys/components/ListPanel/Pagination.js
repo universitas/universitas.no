@@ -1,17 +1,17 @@
 import { connect } from 'react-redux'
 import { modelSelectors, modelActions } from 'ducks/basemodel'
 
-const NavInfo = ({ results, last, count, offset }) => (
-  <div className="NavInfo info">
+const PagInfo = ({ ids = [], last, count, offset }) => (
+  <div className="PagInfo info">
     {R.cond([
       [R.isNil, () => 'Laster inn ...'],
-      [R.lt(0), () => `resultat ${1 + last - results}–${last} av ${count}`],
+      [R.lt(0), n => `resultat ${1 + last - n}–${last} av ${count}`],
       [R.T, () => 'ingen resultater'],
-    ])(results)}
+    ])(ids.length)}
   </div>
 )
 
-const Pagination = ({ changePage, next, previous }) =>
+const PagButtons = ({ changePage, next, previous }) =>
   next || previous ? (
     <span>
       <button onClick={changePage(previous)} disabled={!previous}>
@@ -23,19 +23,22 @@ const Pagination = ({ changePage, next, previous }) =>
     </span>
   ) : null
 
-const Navigation = props => (
-  <div className="Navigation">
-    <NavInfo {...props} />
-    <Pagination {...props} />
+const Pagination = props => (
+  <div className="Pagination">
+    <PagInfo {...props} />
+    <PagButtons {...props} />
   </div>
 )
 
 const mapStateToProps = (state, { model }) =>
-  modelSelectors(model).getNavigation
+  modelSelectors(model).getPagination
 
 const mapDispatchToProps = (dispatch, { model }) => ({
   changePage: params => () =>
-    dispatch(modelActions(model).itemsRequested(params)),
+    dispatch(modelActions(model).itemsRequested(params, true)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Navigation)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Pagination)

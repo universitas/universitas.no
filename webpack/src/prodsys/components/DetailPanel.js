@@ -2,30 +2,59 @@ import { modelSelectors } from 'ducks/basemodel'
 import { connect } from 'react-redux'
 import { Tool } from 'components/tool'
 import { toRoute } from 'prodsys/ducks/router'
+import Panel from 'components/Panel'
 import cx from 'classnames'
-const DetailTopBar = ({ pk, title = 'no title', close }) => (
-  <div className="DetailTopBar">
-    <Tool icon="Close" title="lukk" onClick={close} />
-    <div className="pk">{pk}</div>
-    <div className="title">{title}</div>
-  </div>
+import AutosaveTool from 'components/AutosaveTool'
+
+const DetailTopBar = ({ pk, model, title = '...', close, children }) => (
+  <>
+    <div className="DetailTopBar">
+      <Tool icon="Close" title="lukk" onClick={close} />
+      <AutosaveTool pk={pk} model={model} />
+      <div className="pk">{pk || 'opprett ny'}</div>
+      <div className="title">{title}</div>
+    </div>
+    {children}
+  </>
 )
-const mapStateToProps = (state, { pk, model, getTitle = R.prop('pk') }) => {
-  const item = modelSelectors(model).getItem(pk)(state) || {}
-  return { title: getTitle(item) }
-}
+
+const DetailPanel = ({
+  children,
+  title,
+  className,
+  pk,
+  model,
+  close,
+  scroll = false,
+  footer,
+  header,
+}) =>
+  R.isNil(pk) ? null : (
+    <Panel
+      className={cx('DetailPanel', className)}
+      scroll={scroll}
+      header={
+        <DetailTopBar {...{ pk, model, title, close }} children={header} />
+      }
+      footer={footer}
+    >
+      {children}
+    </Panel>
+  )
+
+const mapStateToProps = (
+  state,
+  { pk, model, getClass = R.always(''), getTitle = R.prop('pk') },
+) =>
+  R.applySpec({ title: getTitle, className: getClass })(
+    modelSelectors(model).getItem(pk)(state),
+  )
+
 const mapDispatchToProps = (dispatch, { model }) => ({
   close: () => dispatch(toRoute({ model: model, action: 'list' })),
 })
-const ConnectedTopBar = connect(mapStateToProps, mapDispatchToProps)(
-  DetailTopBar,
-)
 
-const DetailPanel = ({ children, className, ...props }) => (
-  <div className={cx('DetailPanel', className)}>
-    <ConnectedTopBar {...props} />
-    <div className="panelContent">{children}</div>
-  </div>
-)
-
-export default DetailPanel
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DetailPanel)

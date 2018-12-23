@@ -1,13 +1,13 @@
 """ Admin for printissues app """
 import logging
 
-from sorl.thumbnail import get_thumbnail
-
 # from sorl.thumbnail.admin import AdminImageMixin
 from django.contrib import admin, messages
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+from sorl.thumbnail import get_thumbnail
+
 from utils.sorladmin import AdminImageMixin
 
 from .models import Issue, PrintIssue

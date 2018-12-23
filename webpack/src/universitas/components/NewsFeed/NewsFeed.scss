@@ -12,8 +12,12 @@ $row-height: 12vh;
   height: 50vh;
   margin-top: 2rem;
 }
+.inner {
+  // display: none;
+}
 
 .FeedItem {
+  display: grid;
   .gradient {
     display: none;
   }
@@ -38,7 +42,7 @@ $row-height: 12vh;
       padding: 0.2em 0.3em;
     }
     color: white;
-    justify-self: start;
+    // justify-self: start;
     align-self: start;
   }
   .Kicker {
@@ -66,13 +70,13 @@ $row-height: 12vh;
     font-weight: 200;
     margin-top: 0;
   }
-  display: grid;
 }
 
 .bg-white {
   color: inherit;
   background: white;
 }
+
 .bg-section,
 .bg-black {
   color: white;
@@ -83,9 +87,11 @@ $row-height: 12vh;
     padding: 0.2rem 0.5rem;
   }
 }
+
 .bg-section {
   background: #666;
 }
+
 .layout-top {
   grid-template-rows: 1fr;
   .Vignette,
@@ -93,8 +99,9 @@ $row-height: 12vh;
     grid-area: 1/1/2/2;
   }
 }
+
 .layout-left {
-  grid-template-columns: 2fr 3fr;
+  grid-template-columns: 3fr 2fr;
   grid-template-rows: auto auto 1fr;
   align-content: end;
   .Vignette,
@@ -109,6 +116,7 @@ $row-height: 12vh;
     grid-column: 2/3;
   }
 }
+
 .layout-behind {
   grid-template-rows: 1fr auto auto auto;
   text-shadow: rgba(black, 0.6) 0 0.1em 0.4em;
@@ -210,7 +218,6 @@ $row-height: 12vh;
   font-family: $univ-sans;
   display: grid;
   grid-gap: $gridgap;
-  grid-auto-rows: minmax($row-height * 1, auto);
   grid-template-columns: repeat(6, 1fr);
   @for $n from 1 through 6 {
     .col-#{$n} {
@@ -245,8 +252,15 @@ $row-height: 12vh;
   grid-auto-flow: dense;
   overflow: hidden;
   // mobile screen
+  grid-auto-rows: minmax($row-height * 1, auto);
+  @include min-size(l) {
+    grid-auto-rows: minmax(9rem, auto);
+  }
   @include max-size(s) {
-    grid-auto-rows: minmax($row-height * 1.8, auto);
+    grid-auto-rows: minmax(100vh/6, auto);
+    @media (min-height: 800px) {
+      grid-auto-rows: minmax(800px/6, auto);
+    }
     grid-template-columns: repeat(2, 1fr);
     @for $n from 1 through 8 {
       .col-#{$n} {

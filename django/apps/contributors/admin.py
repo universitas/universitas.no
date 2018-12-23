@@ -3,6 +3,7 @@ from django.contrib import admin, messages
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+
 from utils.merge_model_objects import merge_instances
 
 from .models import Contributor, Position, Stint
@@ -45,11 +46,11 @@ class ContributorAdmin(admin.ModelAdmin):
     list_display = [
         'display_name',
         'bylines_count',
-        'verified',
         'status',
+        'user',
     ]
     list_editable = [
-        'verified',
+        # 'verified',
     ]
     readonly_fields = [
         'user',
@@ -67,18 +68,24 @@ class PositionAdmin(admin.ModelAdmin):
     list_display = [
         'title',
         'total',
-        'active_now',
         'groups_list',
+        'active_now',
         'is_management',
+        'active',
     ]
     search_fields = [
         'title',
     ]
-    list_editable = ['is_management']
+    list_editable = [
+        'is_management',
+        'active',
+    ]
 
     def active_now(self, instance):
-        active = instance.active()
-        if len(active) == 1:
+        active = instance.active_stints()
+        if len(active) == 0:
+            text = '-' * 20
+        elif len(active) == 1:
             text = str(active[0].contributor)
         else:
             text = str(len(active))

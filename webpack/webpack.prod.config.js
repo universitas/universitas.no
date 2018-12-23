@@ -4,8 +4,6 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin
 
 config.mode = 'production'
 config.devtool = 'source-map'
@@ -18,11 +16,7 @@ config.output.filename = outputhash + '.js'
 const extractCss = new MiniCssExtractPlugin({ filename: outputhash + '.css' })
 const progressBar = new ProgressBarPlugin({ width: 50 })
 
-config.plugins.push(
-  extractCss,
-  progressBar,
-  // new BundleAnalyzerPlugin({ analyzerPort: 5555 }),
-)
+config.plugins.push(extractCss, progressBar)
 
 const uglifyJs = new UglifyJsPlugin({
   cache: true,

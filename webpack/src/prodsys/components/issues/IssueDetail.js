@@ -10,7 +10,7 @@ const IssueDetail = ({ pk, action }) => (
     model={MODEL}
     getTitle={issue => `Utgave ${issue.issue_name}`}
   >
-    <Field pk={pk} name="issue_type" />
+    <Field pk={pk} editable name="issue_type" />
     <Field pk={pk} name="publication_date" />
     <Field pk={pk} name="pdfs" />
   </DetailPanel>

@@ -1,50 +1,77 @@
 import { connect } from 'react-redux'
 import { Tool } from 'components/tool'
-import DetailTopBar from 'components/DetailTopBar'
 import { MODEL, actions, selectors } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
-import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
 import { parseText, renderText } from 'markup'
+import { getPanes, togglePane } from 'prodsys/ducks/ux'
+import ModelTools from 'components/ModelTools.js'
+import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
 
 const openUrl = url => () => window.open(url)
+
+let PaneTool = ({ name, active, toggle, icon, label, title }) => (
+  <Tool
+    {...{ icon, label, title }}
+    active={active}
+    onClick={() => toggle(!active)}
+  />
+)
+
+PaneTool = connect(
+  (state, { name }) =>
+    R.pipe(
+      getPanes,
+      R.prop(name),
+      R.objOf('active'),
+    )(state),
+  (dispatch, { name }) => ({
+    toggle: status => dispatch(togglePane(name, status)),
+  }),
+)(PaneTool)
 
 const StoryTools = ({
   trashStory,
   cloneStory,
-  imagesDetail,
-  textDetail,
-  previewDetail,
-  edit_url,
   public_url,
   action,
   pk,
-  title,
-  working_title,
-  bodytext_markup,
   fixStory,
 }) => (
-  <React.Fragment>
-    <Tool icon="Add" label="kopier" title="kopier saken" onClick={cloneStory} />
+  <ModelTools>
     <Tool
+      icon="Add"
+      label="kopier"
+      disabled={!pk}
+      title={pk ? 'kopier saken' : 'velg en sak'}
+      onClick={cloneStory}
+      order={-1}
+    />
+    <PaneTool
+      icon="TextFields"
+      label="tekst"
+      title="rediger tekst"
+      name="storyText"
+    />
+    <PaneTool
       icon="Images"
-      active={action == 'images'}
       label="bilder"
       title="koble bilder til saken"
-      onClick={action == 'images' ? textDetail : imagesDetail}
+      name="storyImages"
     />
-    <Tool
+    <PaneTool
       icon="Eye"
-      active={action == 'preview'}
       label="vis"
       title="forhåndsvisning"
       disabled={!pk}
-      onClick={action == 'preview' ? textDetail : previewDetail}
+      name="storyPreview"
     />
     <Tool
       icon="Magic"
+      disabled={!pk}
       label="fiks"
-      title="fiks tags"
-      onClick={() => fixStory(bodytext_markup)}
+      title={pk ? 'fiks tags' : 'velg en sak'}
+      onClick={fixStory}
+      order={-1}
     />
     <Tool
       icon="Newspaper"
@@ -52,27 +79,28 @@ const StoryTools = ({
       title={public_url && `se saken på universitas.no\n${public_url}`}
       onClick={public_url && openUrl(public_url)}
       disabled={!public_url}
+      order={5}
     />
     <OpenInDjangoAdmin pk={pk} path="stories/story" />
-  </React.Fragment>
+  </ModelTools>
 )
 
-const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
+const mapStateToProps = (state, { pk }) =>
+  R.applySpec({
+    public_url: R.pipe(
+      selectors.getItem(pk),
+      R.prop('public_url'),
+    ),
+  })(state)
 
 const mapDispatchToProps = (dispatch, { pk }) => ({
   trashStory: () =>
     dispatch(actions.fieldChanged(pk, 'publication_status', 15)),
-  imagesDetail: () =>
-    dispatch(toRoute({ model: MODEL, action: 'images', pk: pk })),
-  textDetail: () =>
-    dispatch(toRoute({ model: MODEL, action: 'change', pk: pk })),
-  previewDetail: () =>
-    dispatch(toRoute({ model: MODEL, action: 'preview', pk: pk })),
   cloneStory: () => dispatch(actions.itemCloned(pk)),
-  fixStory: text =>
-    dispatch(
-      actions.fieldChanged(pk, 'bodytext_markup', renderText(parseText(text))),
-    ),
+  fixStory: () => dispatch({ type: 'FIX_STORY', payload: { pk } }),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(StoryTools)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(StoryTools)

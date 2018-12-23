@@ -1,7 +1,4 @@
 """Base url router for universitas.no"""
-from api.urls import urlpatterns as api_urls
-from apps.core.views import HumansTxtView, RobotsTxtView, react_frontpage_view
-from apps.stories.feeds import LatestStories
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -10,6 +7,10 @@ from django.shortcuts import redirect
 from django.urls import include, re_path
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
+
+from api.urls import urlpatterns as api_urls
+from apps.core.views import HumansTxtView, RobotsTxtView, react_frontpage_view
+from apps.stories.feeds import LatestStories
 
 admin.autodiscover()
 

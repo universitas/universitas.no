@@ -1,0 +1,23 @@
+.ZoomControl {
+  align-self: stretch;
+  display: flex;
+  padding: 0.2rem;
+  background-color: rgba(black, 0.1);
+}
+.ZoomButton {
+  cursor: pointer;
+  .Icon {
+    font-size: 1.5rem;
+    opacity: 0.5;
+  }
+  &.active .Icon {
+    opacity: 1;
+  }
+  width: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    background: rgba(black, 0.2);
+  }
+}

@@ -3,13 +3,13 @@ from pathlib import Path
 import random
 
 from PIL import Image, ImageChops, ImageFilter, ImageOps
+from django.core.files import File
+from django.utils import timezone
 from faker import Factory
 
 from apps.contributors.models import Contributor
 from apps.photo.models import ImageFile
 from apps.stories.models import Story, StoryImage, StoryType
-from django.core.files import File
-from django.utils import timezone
 
 SOURCE_IMG = Path(__file__).parent / 'judgement2.jpg'
 FAKE = Factory.create('no')

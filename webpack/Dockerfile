@@ -1,5 +1,5 @@
-FROM node:10
-MAINTAINER haakenlid
+FROM node:11
+LABEL maintainer="haakenlid"
 ENTRYPOINT ["./docker-entrypoint.sh"]
 WORKDIR /app/
 

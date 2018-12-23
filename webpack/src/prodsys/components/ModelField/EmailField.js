@@ -2,7 +2,12 @@
 import { stringify } from 'utils/text'
 
 export const EditableField = ({ value, ...args }) => (
-  <input type="email" value={stringify(value)} {...args} />
+  <input
+    type="email"
+    value={stringify(value)}
+    {...args}
+    title={JSON.stringify(args, null, 2)}
+  />
 )
 export const DetailField = ({ value, ...args }) => (
   <span {...args}>{mailTo(value)}</span>
@@ -11,7 +16,13 @@ export const DetailField = ({ value, ...args }) => (
 const phoneLink = R.pipe(
   R.defaultTo(''),
   R.replace(/\s/g, ''),
-  R.when(R.pipe(R.length, R.equals(8)), R.concat('+47')),
+  R.when(
+    R.pipe(
+      R.length,
+      R.equals(8),
+    ),
+    R.concat('+47'),
+  ),
   R.concat('sms://'),
 )
 

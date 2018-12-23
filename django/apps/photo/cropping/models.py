@@ -2,10 +2,10 @@
 
 import logging
 
-from sorl import thumbnail
-
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from sorl import thumbnail
+
 from utils.model_fields import CropBoxField
 
 # from .boundingbox import CropBox

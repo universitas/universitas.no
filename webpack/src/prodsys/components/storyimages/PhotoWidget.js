@@ -1,19 +1,14 @@
 import { connect } from 'react-redux'
 import cx from 'classnames'
 import ModelField from 'components/ModelField'
-import { PhotoStats } from 'components/photos'
+import PhotoStats from 'components/photos/PhotoStats'
 import * as photo from 'components/photos/model.js'
 
-class ImageData extends React.Component {
-  componentDidMount() {
-    const { fetch, id } = this.props
-    if (!id) fetch()
-  }
+class PhotoWidget extends React.Component {
   render() {
     const { id, pk, ...props } = this.props
-    if (!id) return null
     return (
-      <div className={cx('ImageData')}>
+      <div className={cx('PhotoWidget')}>
         <ModelField
           editable={true}
           type="cropbox"
@@ -27,9 +22,6 @@ class ImageData extends React.Component {
   }
 }
 
-export default connect(
-  (state, { pk }) => photo.selectors.getItem(pk)(state),
-  (dispatch, { pk }) => ({
-    fetch: () => dispatch(photo.actions.itemRequested(pk)),
-  }),
-)(ImageData)
+export default connect((state, { pk }) => photo.selectors.getItem(pk)(state))(
+  PhotoWidget,
+)

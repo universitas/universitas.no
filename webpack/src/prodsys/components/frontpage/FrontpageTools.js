@@ -1,26 +1,30 @@
 import { connect } from 'react-redux'
-import DetailTopBar from 'components/DetailTopBar'
 import { Tool } from 'components/tool'
 import { MODEL, selectors } from './model.js'
 import { toRoute } from 'prodsys/ducks/router'
 import OpenInDjangoAdmin from 'components/OpenInDjangoAdmin'
+import ModelTools from 'components/ModelTools'
 
 const ToolBar = props => <div {...props} />
 
 const FrontpageTools = ({ pk }) => (
-  <React.Fragment>
+  <ModelTools>
     <Tool
       icon="Newspaper"
       title={'forsiden'}
-      label="forsiden"
+      label="forside"
       onClick={() => window.open('/')}
+      order={5}
     />
     <OpenInDjangoAdmin pk={pk} path="frontpage/frontpagestory" />
-  </React.Fragment>
+  </ModelTools>
 )
 
 const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
 
 const mapDispatchToProps = (dispatch, { pk }) => ({})
 
-export default connect(mapStateToProps, mapDispatchToProps)(FrontpageTools)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(FrontpageTools)

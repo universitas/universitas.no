@@ -1,7 +1,10 @@
 import { hyphenate, formatDate } from 'utils/text'
 import anonymous from 'images/anonymous.png'
 
-const datelineFormat = R.pipe(formatDate, R.replace(/^(...)\S+/, '$1'))
+const datelineFormat = R.pipe(
+  formatDate,
+  R.replace(/^(...)\S+/, '$1'),
+)
 
 const DateLine = ({ publication_date }) => (
   <div className="DateLine">
@@ -23,11 +26,7 @@ const creditDisplay = credit =>
     'photo and video': 'Foto og video',
   }[credit] || credit)
 
-const StoryInfo = ({
-  theme_word,
-  story_type,
-  story_type_name = story_type.name,
-}) => (
+const StoryInfo = ({ theme_word, story_type_name }) => (
   <div className="StoryInfo">
     <div className="storytype">{story_type_name}</div>
     <div className="themeword">{hyphenate(theme_word)}</div>
@@ -46,17 +45,22 @@ const Byline = ({ credit, name, title, contributor, thumb }) => (
 const Bylines = ({ bylines }) =>
   R.pipe(
     R.sortBy(R.prop('ordering')),
-    R.uniqBy(R.pick(['contributor', 'credit'])),
+    // R.uniqBy(R.pick(['contributor', 'credit'])),
     R.map(R.when(R.propEq('thumb', '?'), R.assoc('thumb', anonymous))),
     R.addIndex(R.map)((props, idx) => <Byline key={idx} {...props} />),
   )(bylines)
 
-const StorySidebar = ({ bylines = [], ...props }) => (
+const StorySidebar = ({
+  bylines = [],
+  theme_word,
+  story_type_name,
+  publication_date,
+}) => (
   <section className="StorySidebar">
-    <StoryInfo {...props} />
-    <DateLine {...props} />
+    <StoryInfo theme_word={theme_word} story_type_name={story_type_name} />
+    <DateLine publication_date={publication_date} />
     <Bylines bylines={bylines} />
   </section>
 )
 
-export default StorySidebar
+export default React.memo(StorySidebar)

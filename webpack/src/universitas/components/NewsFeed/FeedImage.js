@@ -8,6 +8,7 @@ class FeedImage extends React.Component {
     const { moduleSize = [1, 1] } = props
     this.state = {
       aspect: moduleSize[0] / moduleSize[1],
+      isMounted: false,
     }
     this.refHandler = node => (this.node = node)
     this.updateSize = () => {
@@ -20,6 +21,7 @@ class FeedImage extends React.Component {
   componentDidMount() {
     this.updateSize()
     window.addEventListener('resize', this.updateSize)
+    setTimeout(() => this.setState(R.assoc('isMounted', true)), 500)
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateSize)
@@ -31,10 +33,11 @@ class FeedImage extends React.Component {
   render() {
     const { imagefile, crop_box = defaultCropBox, moduleSize } = this.props
     const { large, width, height } = imagefile
-    const { aspect } = this.state
+    const { aspect, isMounted } = this.state
     const style = aspect
       ? getStyles(large, crop_box, width / height, aspect)
-      : null
+      : {}
+    if (isMounted) style.transition = 'background 300ms ease'
     return (
       <div ref={this.refHandler} className="FeedImage">
         {style && <div className="inner" style={style} />}

@@ -1,8 +1,8 @@
-@import "_colors.scss";
+@import '_colors.scss';
 
-$univ-sans: "Roboto", sans-serif;
-$univ-serif: "Roboto Slab", serif;
-$univ-condensed: "Roboto Condensed", sans-serif;
+$univ-sans: 'Roboto', sans-serif;
+$univ-serif: 'Roboto Slab', serif;
+$univ-condensed: 'Roboto Condensed', sans-serif;
 
 $content-width: 1200px;
 $row-height: 6rem;
@@ -36,7 +36,12 @@ $pad: 0.5rem;
   font-weight: 700;
 }
 
-$breakpoints: (xs: 450px, s: 700px, m: 900px, l: 1400px);
+$breakpoints: (
+  xs: 450px,
+  s: 700px,
+  m: 900px,
+  l: 1400px,
+);
 
 @mixin min-size($size) {
   @media only screen and (min-width: map_get($breakpoints, $size)) {
@@ -45,7 +50,7 @@ $breakpoints: (xs: 450px, s: 700px, m: 900px, l: 1400px);
 }
 
 @mixin max-size($size) {
-  @media only screen and (max-width: map_get($breakpoints, $size)) {
+  @media only screen and (max-width: map_get($breakpoints, $size) - 1px) {
     @content;
   }
 }
@@ -53,8 +58,12 @@ $breakpoints: (xs: 450px, s: 700px, m: 900px, l: 1400px);
 @function str-replace($search, $replace, $string) {
   $index: str-index($string, $search);
   @if $index {
-    @return str-slice($string, 1, $index - 1) + $replace + str-replace($search,
-    $replace, str-slice($string, $index + str-length($search)));
+    @return str-slice($string, 1, $index - 1) + $replace +
+      str-replace(
+        $search,
+        $replace,
+        str-slice($string, $index + str-length($search))
+      );
   }
   @return $string;
 }

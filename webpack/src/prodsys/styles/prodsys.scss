@@ -6,10 +6,14 @@
 @import 'detailpanel';
 @import 'gridview';
 @import 'errors';
-@import 'storylist';
+
+.syncing svg {
+  transform-origin: 50% 50%;
+  animation: spin 500ms linear infinite forwards;
+}
 
 body {
-  overflow-y: auto !important;
+  overflow-y: auto;
 }
 .clickable {
   cursor: pointer;
@@ -19,18 +23,6 @@ body {
   display: flex;
   align-items: stretch;
   height: 100vh;
-}
-.Panel {
-  flex: 1;
-  align-self: flex-start;
-  min-height: 0;
-  height: 100vh;
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-auto-rows: 2fr;
-  > section:not(:last-child) {
-    border-bottom: 1px solid #333;
-  }
 }
 
 .Stint {
@@ -70,10 +62,10 @@ body {
   grid-template-columns: auto 1fr 1fr auto;
   grid-gap: 1px 1px;
   /* prettier-ignore */
-  grid-template-areas: 
-    "filename filename filename filename" 
+  grid-template-areas:
+    "filename filename filename filename"
     "category artist artist artist"
-    "mimetype size size filesize" 
+    "mimetype size size filesize"
     "usage created created id";
   .stat {
     @extend %label;

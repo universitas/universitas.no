@@ -1,4 +1,4 @@
-@import "styles/globals.scss";
+@import 'styles/globals.scss';
 $blue: #2684ff;
 $selected-color: $blue;
 $active-color: lighten($blue, 15%);
@@ -57,7 +57,7 @@ $focused-color: lighten($blue, 25%);
   $size: 1.5rem;
   gap: 0 0.5em;
   display: grid;
-  grid: "thumb name" auto "thumb title" auto / auto 1fr;
+  grid: 'thumb name' auto 'thumb title' auto / auto 1fr;
   align-items: center;
   .thumb {
     grid-area: thumb;
@@ -188,7 +188,7 @@ $focused-color: lighten($blue, 25%);
     color: #888;
     padding: 0.2rem 0.3rem;
     &:after {
-      content: " :";
+      content: ' :';
       font-weight: bold;
     }
   }

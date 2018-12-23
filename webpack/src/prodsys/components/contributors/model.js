@@ -9,6 +9,7 @@ export const fields = {
   id: { type: 'integer', label: 'ID' },
   url: { type: 'field', label: 'Url' },
   display_name: { type: 'string', label: 'Navn' },
+  username: { type: 'string', label: 'Brukernavn', editable: false },
   title: { type: 'string', label: 'Tittel' },
   phone: { type: 'phone', label: 'Telefon' },
   email: { type: 'email', label: 'Epost' },
@@ -26,6 +27,13 @@ export const fields = {
       { value: 2, label: 'Slutta' },
       { value: 3, label: 'Ekstern' },
     ],
+  },
+  first_position: {
+    type: 'select',
+    // filter: { is_active: true },
+    label: 'Posisjon',
+    to: 'positions',
+    required: false,
   },
   byline_photo: {
     type: 'select',

@@ -1,11 +1,11 @@
 """Module scoped pytest fixtures"""
 from pathlib import PosixPath as Path
 
+from django.core.files import File
 import pytest
 from sorl.thumbnail import default
 
 from apps.photo.models import ImageFile
-from django.core.files import File
 
 
 def clear_thumbnail_cache():

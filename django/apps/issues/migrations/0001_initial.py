@@ -1,6 +1,5 @@
-import sorl.thumbnail.fields
-
 from django.db import migrations, models
+import sorl.thumbnail.fields
 
 
 class Migration(migrations.Migration):

@@ -9,10 +9,10 @@ from typing import BinaryIO, List
 from PIL import Image
 from celery import shared_task
 from celery.task import periodic_task
+from django.conf import settings
 
 from apps.core import staging
 from apps.issues.models import current_issue
-from django.conf import settings
 
 from .cropping.boundingbox import CropBox
 from .cropping.crop_detector import Feature, HybridDetector
@@ -134,7 +134,7 @@ def upload_imagefile_to_desken(pk, target=None):
     """Upload imagefile to desken server."""
     # rsync -azv --progress  --include='UNI*000.pdf' --exclude='*'
     if target is None:
-        target = Path(f'{current_issue().number}') / 'Prodsys'
+        target = Path(f'{current_issue().number:0>2}') / 'Prodsys'
     outdir = staging.get_staging_dir('OUT')
     outdir.mkdir(exist_ok=True)
     image = ImageFile.objects.get(pk=pk)
@@ -142,7 +142,9 @@ def upload_imagefile_to_desken(pk, target=None):
     remote_path = Path(settings.TASSEN_DESKEN_PATH) / target
     remote_login = settings.TASSEN_DESKEN_LOGIN
     desken = f'{remote_login}:{remote_path}/'
-    subprocess.check_call(['ssh', remote_login, 'mkdir', '-p', remote_path])
+    subprocess.check_call([
+        '/usr/bin/ssh', remote_login, 'mkdir', '-p', remote_path
+    ])
     args = [
         'rsync',
         '-az',

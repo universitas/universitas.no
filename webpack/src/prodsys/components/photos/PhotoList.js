@@ -1,5 +1,5 @@
 import ListPanel from 'components/ListPanel'
-import { PhotoGrid } from '.'
+import PhotoGrid from './PhotoGrid.js'
 import { MODEL } from './model.js'
 
 const filters = R.map(R.merge({ toggle: true, model: MODEL }))([
@@ -15,10 +15,10 @@ const filters = R.map(R.merge({ toggle: true, model: MODEL }))([
   { attr: 'ordering', value: '-modified', label: 'sist endret' },
 ])
 
-const PhotoList = props => {
+const PhotoList = ({ selected = [], action }) => {
   return (
     <ListPanel model={MODEL} filters={filters}>
-      <PhotoGrid {...props} />
+      <PhotoGrid selected={selected} action={action} />
     </ListPanel>
   )
 }

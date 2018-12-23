@@ -8,10 +8,9 @@ from typing import Any, Union
 
 import PIL.ExifTags
 from PIL.Image import Image
+from django.utils import timezone
 import ftfy
 import piexif
-
-from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 

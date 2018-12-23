@@ -1,0 +1,16 @@
+.PreviewIframe {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+}
+
+.IFrame {
+  // This improves performance in FireFox
+  will-change: width, height, transform;
+  transform-origin: top left;
+  max-width: unset;
+  border: none;
+  position: absolute;
+  background: white;
+  // margin: 0 auto;
+}

@@ -15,6 +15,7 @@ export const TAGS = [
   'sitatbyline',
   'sitat',
   'tit',
+  'stikktit',
   'tema',
   'spm',
   'fakta',
@@ -104,7 +105,7 @@ const baseRules = {
   },
   listItem: {
     // renders to html list
-    pattern: /^(?:\* |# |@li:) *(.*)$/,
+    pattern: /^(?:\* |# |@li:) *(.*)$/i,
     order: 9,
     reverse: ({ content }) => `# ${content}`,
   },
@@ -122,7 +123,7 @@ const baseRules = {
   },
   aside: {
     // aside
-    pattern: /^@fakta:\s?((\n?.+)+)$/,
+    pattern: /^@fakta:\s?((\n?.+)+)$/i,
     order: 1,
     reverse: ({ content }) => `\n@fakta: ${content}\n`,
   },

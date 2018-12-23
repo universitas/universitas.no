@@ -1,9 +1,8 @@
-import model_utils.fields
-import sorl.thumbnail.fields
-
 import django.core.validators
 from django.db import migrations, models
 import django.utils.timezone
+import model_utils.fields
+import sorl.thumbnail.fields
 
 
 class Migration(migrations.Migration):

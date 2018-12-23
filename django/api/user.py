@@ -1,7 +1,6 @@
+from django.contrib.auth.models import Permission
 from rest_auth.serializers import UserDetailsSerializer
 from rest_framework import serializers
-
-from django.contrib.auth.models import Permission
 
 from .permissions import PermissionSerializer
 
@@ -26,7 +25,12 @@ class AvatarUserDetailsSerializer(UserDetailsSerializer):
         qs = Permission.objects.filter(group__user=user).union(
             user.user_permissions.all()
         )
-        return PermissionSerializer(qs, many=True).data
+        permissions = PermissionSerializer(qs, many=True).data
+        if user.is_superuser:
+            permissions.append('super_user')
+        if user.is_staff:
+            permissions.append('staff_user')
+        return permissions
 
     class Meta(UserDetailsSerializer.Meta):
         fields = list(UserDetailsSerializer.Meta.fields) + [

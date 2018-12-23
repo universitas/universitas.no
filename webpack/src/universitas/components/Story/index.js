@@ -15,29 +15,47 @@ import PageNotFound from 'components/PageNotFound'
 import Debug from 'components/Debug'
 import './Story.scss'
 
-const defaultMerge = a => b => {
-  const update = {}
-  for (const key of Object.keys(a)) {
-    if (!b[key]) update[key] = a[key]
+const jsonOnceMemo = function(fn = R.identity) {
+  // reuse previous output if input value is equal as JSON
+  let lastKey = null
+  let rv = null
+  return function(val) {
+    const key = JSON.stringify(val)
+    if (key == lastKey) return rv
+    rv = fn(val)
+    lastKey = key
+    return rv
   }
-  return { ...b, ...update }
 }
+
+const headProps = R.pipe(
+  R.pick(['title', 'kicker', 'lede', 'images']),
+  jsonOnceMemo(),
+)
+
+const sidebarProps = R.pipe(
+  R.pick([
+    'bylines',
+    'publication_date',
+    'theme_word',
+    'story_type_name',
+    'theme_word',
+  ]),
+  jsonOnceMemo(),
+)
 
 // Story preview for prodsys
 export const StoryPreview = props => {
   if (R.isNil(props.title)) return '...'
-  const defaults = defaultMerge({
-    theme_word: '(Temaord)',
-  })
-  const tree = buildNodeTree(defaults(props))
+  const tree = R.mergeRight({ theme_word: '(Temaord)' }, buildNodeTree(props))
   return (
     <article
       className={cx('Story', 'Preview')}
       style={{ display: 'grid', padding: '1rem' }}
     >
-      <StoryHead {...tree} />
+      <StoryHead {...headProps(tree)} />
       <main className="mainContent">
-        <StorySidebar {...tree} />
+        <StorySidebar {...sidebarProps(tree)} />
         <StoryBody {...tree} />
       </main>
     </article>

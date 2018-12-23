@@ -59,6 +59,7 @@ export const Field = ({
   onChange,
   value,
   helpText,
+  errors,
   ...props
 }) => {
   const { EditableField, DetailField } = R.propOr(
@@ -66,28 +67,39 @@ export const Field = ({
     type,
     fieldTypes,
   )
-  const fieldProps = R.omit(['model', 'pk', 'name'], props)
+  const fieldProps = R.omit(['model', 'pk'], props)
   const ModelField = editable ? EditableField : DetailField
   return (
     <div
       title={helpText}
-      className={cx('ModelField', type, { fullwidth, editable })}
+      className={cx('ModelField', type, { fullwidth, editable, errors })}
     >
-      {R.is(String, label) && <label className={cx('label')}>{label}</label>}
+      {label && <label className={cx('label')}>{label}</label>}
       <ModelField
         className={cx('value')}
         onChange={ev => onChange(ev && ev.target ? ev.target.value : ev)}
         value={value}
         {...fieldProps}
       />
+      {editable && <FieldErrors errors={errors} />}
     </div>
   )
 }
 
+const FieldErrors = ({ errors = [] }) =>
+  errors.map((message, idx) => (
+    <div className="FieldError" key={idx}>
+      {message}
+    </div>
+  ))
+
 const mapStateToProps = (state, { pk, model, name, ...props }) => {
-  const item = modelSelectors(model).getItem(pk)(state) || {}
+  const item = modelSelectors(model).getItem(pk)(state)
   const value = props.value || item[name]
-  return R.contains(name, ['crop_box']) ? { value, item } : { value }
+  const errors = R.path(['_error', name], item)
+  return R.contains(name, ['crop_box'])
+    ? { value, item, errors }
+    : { value, errors }
 }
 const mapDispatchToProps = (dispatch, { pk, model, name, onChange }) => ({
   onChange: value => {
@@ -97,7 +109,10 @@ const mapDispatchToProps = (dispatch, { pk, model, name, onChange }) => ({
   },
 })
 
-const ModelField = connect(mapStateToProps, mapDispatchToProps)(Field)
+const ModelField = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Field)
 export default ModelField
 
 const capitalize = word => word.charAt(0).toUpperCase() + word.slice(1)

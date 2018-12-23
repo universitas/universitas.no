@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-
 from django.db import models
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _

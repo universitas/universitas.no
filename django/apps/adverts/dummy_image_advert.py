@@ -5,7 +5,6 @@ import os
 import random
 
 from PIL import Image, ImageDraw, ImageEnhance, ImageFont
-
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 FONT_FILE = os.path.join(os.path.dirname(__file__), 'arial.ttf')

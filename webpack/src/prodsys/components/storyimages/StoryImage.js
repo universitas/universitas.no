@@ -6,10 +6,14 @@ import { PhotoWidget, StoryImageForm } from '.'
 
 import * as photo from 'components/photos/model.js'
 import { actions, selectors } from './model.js'
-import { deleteStoryImage } from 'ducks/storyimage'
+import { deleteStoryImage } from 'ducks/actions.js'
 import { toRoute } from 'prodsys/ducks/router'
 
-const StoryImageActions = ({ deleteHandler, viewPhoto, imagefile }) => (
+const StoryImageActions = ({
+  deleteHandler = null,
+  viewPhoto = R.always(null),
+  imagefile,
+}) => (
   <div className="Actions">
     <Tool
       label="fjern"
@@ -27,22 +31,28 @@ const StoryImageActions = ({ deleteHandler, viewPhoto, imagefile }) => (
   </div>
 )
 
-class StoryImage extends React.Component {
-  componentDidMount() {
-    const { fetch, id } = this.props
-    if (!id) fetch()
-  }
-  render() {
-    const { pk, id, ...props } = this.props
-    if (!id) return <div className="StoryImage">Henter bilde</div>
-    return (
+export const PlaceHolder = () => (
+  <div className="StoryImageItem" style={{ opacity: 0.5 }}>
+    <StoryImageActions />
+    <PhotoWidget />
+    <StoryImageForm />
+  </div>
+)
+
+const StoryImage = ({ pk, imagefile = null, deleteHandler, viewPhoto }) => {
+  return (
+    imagefile && (
       <div className="StoryImageItem">
-        <StoryImageActions {...props} />
-        <PhotoWidget pk={props.imagefile} />
+        <StoryImageActions
+          deleteHandler={deleteHandler}
+          viewPhoto={viewPhoto}
+          imagefile={imagefile}
+        />
+        <PhotoWidget id={pk} pk={imagefile} />
         <StoryImageForm pk={pk} />
       </div>
     )
-  }
+  )
 }
 
 const mapStateToProps = (state, { pk }) => selectors.getItem(pk)(state)
@@ -50,7 +60,9 @@ const mapDispatchToProps = (dispatch, { pk }) => ({
   deleteHandler: () => dispatch(deleteStoryImage(pk)),
   viewPhoto: pk => () =>
     dispatch(toRoute({ model: 'photos', action: 'change', pk: pk })),
-  fetch: () => dispatch(actions.itemRequested(pk)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(StoryImage)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(StoryImage)

@@ -1,12 +1,12 @@
 """Site data misc"""
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import permissions, response, serializers, views
 
 from apps.contributors.models import Contributor
 from apps.issues.models import Issue
 from apps.stories.models import Section, StoryType
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 
 from .issues import IssueSerializer
 

@@ -1,5 +1,6 @@
-import apps.contributors.models
 from django.db import migrations, models
+
+import apps.contributors.models
 
 
 class Migration(migrations.Migration):

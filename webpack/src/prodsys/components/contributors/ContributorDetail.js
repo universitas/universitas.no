@@ -1,7 +1,6 @@
 import DetailPanel from 'components/DetailPanel'
 import cx from 'classnames'
 import { connect } from 'react-redux'
-import { ContributorTools } from '.'
 import { MODEL, Field, selectors } from './model.js'
 
 const ContributorDetail = ({ pk, action }) => (
@@ -12,6 +11,7 @@ const ContributorDetail = ({ pk, action }) => (
     <Field pk={pk} name="email" editable />
     <Field pk={pk} name="phone" editable />
     <Field pk={pk} name="status" editable />
+    <Field pk={pk} name="username" />
     <Field pk={pk} name="stint_set" />
   </DetailPanel>
 )

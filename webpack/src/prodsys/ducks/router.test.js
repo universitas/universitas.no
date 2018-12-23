@@ -14,7 +14,7 @@ describe('reverse prodsys routes', () => {
   const cases = {
     '/stories/list/': { model: 'stories', action: 'list' },
     '/photos/add/': { model: 'photos', action: 'add' },
-    '/photos/change/101/': { model: 'photos', action: 'change', pk: 101 },
+    '/photos/change/101/': { model: 'photos', action: 'change', pk: '101' },
     '/issues/list/?search=hello%20world': {
       model: 'issues',
       search: 'hello world',

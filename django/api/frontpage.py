@@ -1,12 +1,12 @@
 from collections import OrderedDict
 
+from django.db.models import Case, Q, When
 from rest_framework import pagination, serializers, viewsets
 from rest_framework.response import Response
 from rest_framework.utils.urls import replace_query_param
 
 from apps.frontpage.models import FrontpageStory
 from apps.stories.models import Story
-from django.db.models import Case, Q, When
 from utils.serializers import CropBoxField
 
 from .photos import ImageFile, ImageFileSerializer
@@ -142,46 +142,31 @@ class FrontpagePaginator(pagination.LimitOffsetPagination):
 class FrontpageStoryViewset(viewsets.ModelViewSet):
     """ Frontpage news feed. """
 
-    queryset = FrontpageStory.objects.published().with_ranking(
-    ).prefetch_related('imagefile', 'story', 'story__story_type__section')
+    queryset = FrontpageStory.objects.prefetch_related(
+        'imagefile', 'story', 'story__story_type__section'
+    ).with_ranking()
     serializer_class = FrontpageStorySerializer
     pagination_class = FrontpagePaginator
 
-    def _sections(self, qs):
-        section = self.request.query_params.get('section')
-        if section:
-            try:
-                sections = map(int, section.split(','))
-                qs = qs.filter(story__story_type__section__in=sections)
-            except ValueError:
-                pass
-        return qs
-
-    def _language(self, qs):
-        language = self.request.query_params.get('language')
-        english = Q(story__language='en')
-        if language == 'eng':
-            qs = qs.filter(english)
-        if language == 'nor':
-            qs = qs.exclude(english)
-        return qs
-
-    def _search(self, qs):
-        search = self.request.query_params.get('search')
-        if search:
-            stories = Story.objects.published().search(search)
-            pks = stories.values_list('frontpagestory', flat=True)
-            if pks:
-                order = Case(
-                    *[When(pk=pk, then=pos) for pos, pk in enumerate(pks)]
-                )
-                qs = qs.filter(pk__in=pks).order_by(order)
-            else:
-                qs = qs.none()
-        return qs
-
     def get_queryset(self):
-        """Sort by section"""
-        return self._search(
-            self._language(self._sections(super().get_queryset()))
-        )
+        params = self.request.query_params
+        stories = Story.objects.published().exclude(frontpagestory=None)
+        language = params.get('language')
+        sections = [int(s) for s in params.get('section', '').split(',') if s]
+        search = params.get('search')
+
+        if language == 'eng':
+            stories = stories.filter(language='en')
+        if language == 'nor':
+            stories = stories.exclude(language='en')
+        if sections:
+            stories = stories.filter(story_type__section__in=sections)
+        if search:
+            stories = stories.search(search)
+            pks = list(stories.values_list('frontpagestory', flat=True)[:100])
+            order = Case(
+                *[When(pk=pk, then=pos) for pos, pk in enumerate(pks)]
+            )
+            return self.queryset.filter(pk__in=pks).order_by(order)
+        else:
+            return self.queryset.filter(story__in=stories)

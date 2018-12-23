@@ -54,8 +54,6 @@ $externallink: 'data:image/svg+xml,' +
   a {
     color: $linkcolor;
     text-decoration: none;
-    &.internal {
-    }
     &.external:after {
       opacity: 0.4;
       padding-left: 0.1em;
@@ -122,15 +120,26 @@ $externallink: 'data:image/svg+xml,' +
         min-height: 0;
       }
       &.autoCrop {
-        flex: 1 1 70vh;
+        flex: 1 1 675px;
+        display: flex;
+        img {
+          // height: 100%;
+        }
       }
     }
     margin-bottom: 0.8rem;
     border-bottom: 1px solid #ddd;
     padding-bottom: 0.8rem;
     max-height: calc(100vh - 3rem);
-  }
-  .mainContent {
+    @media (max-height: 450px) and (min-width: 600px) {
+      max-height: calc(450px - 3rem);
+    }
+    @media (max-height: 700px) and (min-width: 900px) {
+      max-height: calc(700px - 3rem);
+    }
+    @media (min-height: 60rem) {
+      max-height: 57rem;
+    }
   }
   .Question {
     font-style: italic;
@@ -214,12 +223,8 @@ $externallink: 'data:image/svg+xml,' +
       width: 6rem;
       border-radius: 50%;
     }
-    .credit {
-    }
     .name {
       font-weight: 700;
-    }
-    .title {
     }
   }
 }
@@ -308,14 +313,12 @@ $externallink: 'data:image/svg+xml,' +
     font-size: 0.8rem;
   }
   @include quote-left;
-  // @include quote-right;
   min-height: 3em;
   color: $medium-grey;
   display: flex;
   flex-direction: column;
   justify-content: center;
   p {
-    // align-self: center;
     font-size: 1.5rem;
     font-weight: 200;
     line-height: 1.1;
@@ -324,6 +327,5 @@ $externallink: 'data:image/svg+xml,' +
   .QuoteCit {
     color: $dark-grey;
     font-size: 0.8rem;
-    // align-self: flex-end;
   }
 }

@@ -2,7 +2,7 @@ import { put, takeEvery, select, call } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import { pushImageFile, apiGet, apiPost, apiList } from 'services/api'
 import { apiUrlToId } from 'utils/urls'
-import { assignPhoto } from 'ducks/storyimage'
+import { assignPhoto } from 'ducks/actions'
 import {
   ADD,
   POST,
@@ -27,7 +27,7 @@ const { getItem: getPhoto } = modelSelectors('photos')
 const {
   itemsDiscarded: photosDiscarded,
   itemRequested: photoRequested,
-  itemsAppended: photosAppended,
+  itemsFetched: photosFetched,
   itemAdded: photoAdded,
 } = modelActions('photos')
 const { itemAdded: contributorAdded } = modelActions('contributors')
@@ -97,7 +97,7 @@ function* newUploadSaga(action) {
       R.map(R.assoc('choice', 'keep')),
     )(response)
     yield put(uploadUpdate(md5, { duplicates, check: true }))
-    yield put(photosAppended(response))
+    yield put(photosFetched(response))
   } else {
     yield put(errorAction(error))
   }

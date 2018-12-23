@@ -1,4 +1,3 @@
-# FROM nginx:1.13
 FROM pagespeed/nginx-pagespeed:1.13
 
 # make sure nginx can read files created by uid 1000 (whoami)

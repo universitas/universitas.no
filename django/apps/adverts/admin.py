@@ -1,6 +1,7 @@
-from apps.photo.admin import ThumbAdmin
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
+
+from apps.photo.admin import ThumbAdmin
 from utils.sorladmin import AdminImageMixin
 
 from .models import AdChannel, AdFormat, Advert, Customer

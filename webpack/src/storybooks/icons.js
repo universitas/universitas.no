@@ -30,9 +30,7 @@ export default () => {
         Icon components in <code>components/Icons</code>
       </p>
       <p>
-        <a href="http://gorangajic.github.io/react-icons/md.html">
-          react-icons
-        </a>
+        <a href="https://react-icons.github.io/react-icons/">react-icons</a>
       </p>
       <table>
         <tbody>

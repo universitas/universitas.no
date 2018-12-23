@@ -1,10 +1,11 @@
 import json
 
-from apps.photo.cropping.boundingbox import CropBox
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
+
+from apps.photo.cropping.boundingbox import CropBox
 
 
 def parse_box_data(value):

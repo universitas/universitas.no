@@ -9,12 +9,12 @@
     "watchssr": "webpack-cli --mode=development --watch --config webpack.server.config.js ",
     "serve": "TARGET=server pm2-runtime /var/build/server.js",
     "servedev": "TARGET=server pm2-dev /var/build/server.js",
-    "test": "jest --watchAll --verbose",
-    "testonce": "jest -u",
+    "test": "jest --watchAll --verbose --bail",
+    "testonce": "jest -u --bail",
     "build": "webpack-cli --config=webpack.prod.config.js",
     "stats": "webpack-cli --config webpack.prod.config.js --profile --json > webpack-stats.json",
     "dev": "webpack-dev-server --config webpack.dev.config.js",
-    "storybook": "start-storybook -p 9001 -c .storybook",
+    "storybook": "start-storybook --ci -p 9001 -c .storybook",
     "deploy-storybook": "build-storybook -c .storybook -o dist && gh-pages -d dist"
   },
   "repository": {
@@ -24,7 +24,9 @@
   "jest": {
     "verbose": true,
     "testURL": "http://localhost",
-    "setupFiles": ["<rootDir>/jest.setup.js"],
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ],
     "moduleDirectories": [
       "node_modules",
       "src",
@@ -36,7 +38,10 @@
       "\\.(css|scss|sass|less)$": "<rootDir>/__mocks__/css.jest.mock.js",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/file.jest.mock.js"
     },
-    "roots": ["<rootDir>/src/", "<rootDir>/src/storybooks/"]
+    "roots": [
+      "<rootDir>/src/",
+      "<rootDir>/src/storybooks/"
+    ]
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.2.1",
@@ -44,7 +49,7 @@
     "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
-    "@haakenlid/photocrop": "^0.4.1",
+    "@haakenlid/photocrop": "^0.5.0",
     "ajv": "^6.6.1",
     "autoprefixer": "^9.4.2",
     "babel-loader": "^8.0.4",
@@ -53,7 +58,7 @@
     "browserslist": "^4.3.5",
     "chromatic-sass": "^0.1.8",
     "classnames": "^2.2.6",
-    "css-loader": "^1.0.1",
+    "css-loader": "^2",
     "cssnano": "^4.1.7",
     "cuid": "^2.1.4",
     "date-fns": "^1.30.1",
@@ -68,7 +73,7 @@
     "js-cookie": "^2.2.0",
     "json-stringify-pretty-compact": "^1.2.0",
     "localforage": "^1.7.3",
-    "mini-css-extract-plugin": "^0.4.5",
+    "mini-css-extract-plugin": "^0.5",
     "morgan": "^1.9.1",
     "node-sass": "^4.11.0",
     "null-loader": "^0.1.1",
@@ -88,10 +93,11 @@
     "react-icons": "^3.2.2",
     "react-redux": "^5.1.1",
     "react-select": "^2.1.2",
+    "react-spring": "^7.1.2",
     "react-transition-group": "^2.5.1",
     "redux": "^4.0.1",
-    "redux-first-router": "0.0.9-rudy",
-    "redux-first-router-link": "0.0.3-rudy",
+    "redux-first-router": "^2",
+    "redux-first-router-link": "^2",
     "redux-first-router-restore-scroll": "^1.2.2",
     "redux-logger": "^3",
     "redux-persist": "^5.10.0",
@@ -99,7 +105,7 @@
     "sass-loader": "^7.1.0",
     "slugify": "^1.3.4",
     "spark-md5": "^3.0.0",
-    "style-loader": "^0.22",
+    "style-loader": "^0.23",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "url-loader": "^1.1.2",
     "webpack": "^4.27.1",
@@ -120,9 +126,7 @@
     "gh-pages": "^2.0.1",
     "jest": "^23.6.0",
     "react-test-renderer": "^16.6.3",
-    "storybook-addon-jsx": "^5.4.0",
-    "tern": "^0.21",
-    "webpack-bundle-analyzer": "^2.13.1",
+    "storybook-addon-jsx": "^6.0",
     "webpack-dev-server": "^3.1.10",
     "webpack-hot-server-middleware": "^0.5.0"
   }

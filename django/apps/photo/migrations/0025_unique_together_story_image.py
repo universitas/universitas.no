@@ -1,9 +1,9 @@
 from collections import Counter
 
+from django.db import migrations
 import sorl.thumbnail.fields
 
 import apps.photo.models
-from django.db import migrations
 from utils.merge_model_objects import merge_instances
 
 
