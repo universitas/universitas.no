@@ -1,4 +1,5 @@
 [![tmb]][travis]
+[![CodeFactor](https://www.codefactor.io/repository/github/universitas/universitas.no/badge)](https://www.codefactor.io/repository/github/universitas/universitas.no)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
 
 # universitas.no
