@@ -41,9 +41,10 @@ class Select extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { fetching, value, item, model, items } = this.props
+    const { fetch, fetching, value, item, model, items } = this.props
     if (prevProps.fetching != fetching) this.setState({ isLoading: fetching })
     if (value && !item) {
+      fetch && fetch(value)
       const createdItem = R.last(
         R.filter(R.propEq('label', value), R.values(items)),
       )
@@ -55,8 +56,7 @@ class Select extends React.Component {
 
   componentDidMount() {
     const { value, item, fetch } = this.props
-    if (!fetch) return
-    if (value && !item) fetch(value)
+    if (fetch && value && !item) fetch(value)
   }
 
   render() {

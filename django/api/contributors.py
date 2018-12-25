@@ -108,7 +108,7 @@ class ContributorSerializer(serializers.HyperlinkedModelSerializer):
             )
         if contributor.email and contributor.status == Contributor.ACTIVE:
             user = tasks.connect_contributor_to_user(contributor, True)
-            assert user.is_active == True, 'should be active'
+            assert user.is_active, 'should be active'
 
         return contributor
 
@@ -125,7 +125,7 @@ class ContributorViewSet(viewsets.ModelViewSet):
     )
     serializer_class = ContributorSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ['status', 'display_name', 'byline_photo']
+    filter_fields = ['id', 'status', 'display_name', 'byline_photo']
 
     def get_queryset(self):
         """

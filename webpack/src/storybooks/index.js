@@ -13,7 +13,7 @@ storiesOf('Elements', module)
 
 require('./frontPageEdit')
 require('./forms')
-require('./zoomslider')
+// require('./zoomslider')
 require('./select')
 import Editor from 'markup/components/Editor'
 storiesOf('Editor', module).add('new editor', () => (

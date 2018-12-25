@@ -1,7 +1,9 @@
 import UploadList from './UploadList.js'
-export Duplicate from './Duplicate.js'
-export UploadActions from './UploadActions.js'
-export UploadForm from './UploadForm.js'
-export UploadItem from './UploadItem.js'
+import Duplicate from './Duplicate.js'
+import UploadActions from './UploadActions.js'
+import UploadForm from './UploadForm.js'
+import UploadItem from './UploadItem.js'
 
+// `export Foo from './Foo.js` causes unexpected language server lint error
+export { Duplicate, UploadActions, UploadForm, UploadItem }
 export default UploadList

@@ -149,7 +149,10 @@ function* requestItems(action) {
       R.map(parseInt),
     )(yield select(getItems))
     params = R.over(R.lensProp('id__in'), R.without(ids))(params)
-    if (params.id__in.length == 0) return
+    if (params.id__in.length == 0) {
+      // all requested items are already loaded
+      return
+    }
   }
   yield put(itemsFetching(params))
   const { response, error } = yield call(apiList, params)
