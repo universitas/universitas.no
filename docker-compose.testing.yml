@@ -2,11 +2,7 @@
 version: '2.1'
 services:
   webpack:
-    image: universitas/webpack:${IMAGE_VERSION:-edge}
     tty: true
-    volumes:
-      - ./webpack:/app/
-      - node_modules:/app/node_modules/
 
   web:
     environment:
