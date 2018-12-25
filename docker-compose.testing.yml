@@ -8,5 +8,3 @@ services:
     environment:
       - DEBUG=False
       - AWS_ENABLED=${AWS_ENABLED}
-    volumes:
-      - ./build:/var/build/

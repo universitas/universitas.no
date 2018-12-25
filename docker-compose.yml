@@ -3,8 +3,9 @@ services:
   webpack:
     image: universitas/webpack:${IMAGE_VERSION:-edge}
     volumes:
-      - ./webpack:/app/
       - webpack_build:/var/build/
+      - ./webpack:/app/
+      - node_modules:/app/node_modules/
     environment:
       - BUILD_DIR=/var/build/
       - PUBLIC_PATH=/static/
@@ -81,6 +82,12 @@ volumes:
   pgdata: {}
   redisdata: {}
   webpack_build: {}
+  node_modules: {}
+  ssh:
+    driver_opts:
+      type: local
+      device: ${PWD}/volumes/ssh/
+      o: bind
   ssh:
     driver_opts:
       type: local
