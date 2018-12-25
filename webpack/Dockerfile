@@ -1,8 +1,10 @@
+# parent image is debian with nodejs
 FROM node:11
 LABEL maintainer="haakenlid"
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 WORKDIR /app/
-RUN mkdir /app/node_modules /var/build && chown node:node /var/build /app /app/node_modules
+
+RUN install -o node -g node -d /app/ /var/build/
 USER node
 COPY ./package.json ./package-lock.json /app/
-RUN npm ci
-ENTRYPOINT ["./docker-entrypoint.sh"]
+RUN npm ci && rm package.json package-lock.json
