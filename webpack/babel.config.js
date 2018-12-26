@@ -17,7 +17,7 @@ module.exports = function(api) {
   const env = {
     development: { plugins: ['react-hot-loader/babel'] },
     production: {
-      plugins: [['transform-remove-console', { exclude: ['error', 'warn'] }]],
+      // plugins: [['transform-remove-console', { exclude: ['error', 'warn'] }]],
     },
     test: {
       presets: [
