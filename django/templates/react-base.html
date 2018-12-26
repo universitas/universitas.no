@@ -7,13 +7,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% include "_favicons.html" %}
-    {% render_bundle 'commons' %}
+    {% render_bundle 'commons' 'css' %}
     {% block head %}{% endblock head %}
   </head>
   <body>
     {% block content %}
       <p>Main content of page</p>
     {% endblock content %}
+    {% render_bundle 'commons' 'js' %}
     {% block final %}{% endblock final %}
   </body>
 </html>
