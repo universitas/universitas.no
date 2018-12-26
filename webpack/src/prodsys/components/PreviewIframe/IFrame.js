@@ -50,21 +50,15 @@ class IFrame extends React.Component {
     super(props)
     this.doc = null
     this.refHandler = el => {
-      console.log('refHandler', el)
       if (!el) return
       this.node = el
       el.addEventListener('load', this.onLoadHandler)
-      // fallback (maybe for some browser?)
+      // fallback (maybe for some browser if onload doesn't fire?)
       setTimeout(this.onLoadHandler, 1000)
     }
     this.onLoadHandler = e => {
-      console.log('onload event:', e)
-      if (this.doc) {
-        console.log('already loaded')
-        return
-      }
+      if (this.doc) return
       this.doc = this.node.contentDocument
-      console.log('onLoadHandler', { node: this.node, doc: this.doc })
       setTimeout(() => {
         // create portals after initial render
         inheritStyles(document, this.doc)
