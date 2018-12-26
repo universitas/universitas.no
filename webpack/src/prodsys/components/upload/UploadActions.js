@@ -13,30 +13,37 @@ import { toRoute } from 'prodsys/ducks/router'
 //
 
 const ButtonA = ({ uploadPost, viewImage, status, id }) => {
-  return {
-    new: <Tool icon="Loop" label="sjekker" className="spinning" />,
-    uploading: <Tool icon="Loop" label="vent" className="spinning" />,
-    ready: (
-      <Tool
-        label="fortsett"
-        className="ready"
-        icon="Forward"
-        onClick={uploadPost}
-      />
-    ),
-    invalid: (
-      <Tool
-        label="fortsett"
-        icon="Forward"
-        title="fyll ut alle feltene"
-        disabled
-      />
-    ),
-    error: <Tool label="feil" icon="Block" className="error" />,
-    uploaded: (
-      <Tool label="vis" className="ready" icon="Eye" onClick={viewImage(id)} />
-    ),
-  }[status]
+  return (
+    {
+      new: <Tool icon="Loop" label="sjekker" className="spinning" />,
+      uploading: <Tool icon="Loop" label="vent" className="spinning" />,
+      ready: (
+        <Tool
+          label="fortsett"
+          className="ready"
+          icon="Forward"
+          onClick={uploadPost}
+        />
+      ),
+      invalid: (
+        <Tool
+          label="fortsett"
+          icon="Forward"
+          title="fyll ut alle feltene"
+          disabled
+        />
+      ),
+      error: <Tool label="feil" icon="Block" className="error" />,
+      uploaded: (
+        <Tool
+          label="vis"
+          className="ready"
+          icon="Eye"
+          onClick={viewImage(id)}
+        />
+      ),
+    }[status] || <div>??{status}??</div>
+  )
 }
 
 const ButtonB = ({ uploadClose, status }) =>
@@ -62,4 +69,7 @@ const mapDispatchToProps = (dispatch, { pk, id }) => ({
     dispatch(uploadClose(pk))
   },
 })
-export default connect(mapStateToProps, mapDispatchToProps)(UploadActions)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(UploadActions)

@@ -26,20 +26,23 @@ const fieldNames = [
 ]
 const formFields = R.pick(fieldNames, { ...photoFields, story })
 
-const FormField = ({ name, value, onChange, editable }) => {
+const FormField = ({ name, value, errors, onChange, editable }) => {
   return (
     <Field
       value={value}
       onChange={onChange}
       editable={true}
+      errors={errors}
       {...formFields[name]}
     />
   )
 }
-const mapStateToProps = (state, { pk, name }) => ({
-  value: getUpload(pk)(state)[name],
-  // single: R.not(getUpdateAll(state)),
-})
+const mapStateToProps = (state, { pk, name }) => {
+  const item = getUpload(pk)(state)
+  const value = item[name]
+  const errors = R.path(['_error', name], item)
+  return { value, errors }
+}
 const mapDispatchToProps = (dispatch, { pk, name }) => ({
   onChange: value => dispatch(uploadUpdate(pk, { [name]: value })),
 })

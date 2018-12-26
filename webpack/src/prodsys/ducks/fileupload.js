@@ -112,14 +112,6 @@ export const getStoryChoices = R.pipe(
   R.map(asChoice),
 )
 
-// reducer helper functions
-const longerThan = len =>
-  R.pipe(
-    R.length,
-    R.lt(len),
-  )
-const noNulls = R.none(R.propEq('choice', null))
-
 const cleanFilename = props => {
   const { mimetype, filename } = props
   const extension = mimetype == 'image/png' ? 'png' : 'jpg'
@@ -130,17 +122,30 @@ const cleanFilename = props => {
   return R.assoc('filename', `${base}.${extension}`, props)
 }
 
-const checkStatus = R.ifElse(
-  R.allPass([
-    R.prop('contributor'),
-    R.propSatisfies(longerThan(5), 'description'),
-    R.propSatisfies(val => val !== '0', 'category'),
-    R.propSatisfies(R.is(Array), 'duplicates'),
-    R.propSatisfies(noNulls, 'duplicates'),
-  ]),
-  R.assoc('status', 'ready'),
-  R.assoc('status', 'invalid'),
-)
+const validate = (validator, message) =>
+  R.pipe(R.ifElse(validator, R.always(null), R.always([message])))
+
+const validators = {
+  filename: validate(R.test(/.{5,}/), 'filnavnet er for kort'),
+  description: validate(R.test(/.{20,}/), 'beskrivelsen er for kort'),
+  contributor: validate(Boolean, 'fyll ut dette feltet'),
+  category: validate(Boolean, 'fyll ut dette feltet'),
+}
+
+const validateUpload = R.converge(R.call, [
+  R.pipe(
+    R.pick(R.keys(validators)),
+    R.evolve(validators),
+    R.filter(Boolean),
+    R.ifElse(
+      R.isEmpty,
+      () => R.mergeLeft({ status: 'ready', _error: null }),
+      err => R.mergeLeft({ status: 'invalid', _error: err }),
+    ),
+  ),
+  R.identity,
+])
+
 const updateDuplicates = ({ id, choice }) =>
   R.map(R.ifElse(R.propEq('id', id), R.assoc('choice', choice), R.identity))
 
@@ -155,7 +160,7 @@ const getReducer = ({ type, payload = {}, error }) => {
       const { verify, ...change } = data
       const updateItem = R.pipe(
         R.mergeDeepLeft(change),
-        verify ? checkStatus : R.identity,
+        verify ? validateUpload : R.identity,
       )
       return R.ifElse(
         R.view(updateAllLens),
@@ -175,7 +180,7 @@ const getReducer = ({ type, payload = {}, error }) => {
       return overItem(
         R.pipe(
           R.over(R.lensProp('duplicates'), updateDuplicates(data)),
-          checkStatus,
+          validateUpload,
         ),
       )
     case CLOSE:
