@@ -5,9 +5,9 @@ import { MODEL, actions, selectors, fields } from './model.js'
 import FeedItem from 'universitas/components/NewsFeed/FeedItem.js'
 import { addAdverts } from 'universitas/components/NewsFeed/NewsFeed.js'
 import Debug from 'components/Debug'
-import './FrontpageGrid.scss'
 import { getRoutePayload, toRoute } from 'prodsys/ducks/router'
 import { selectors as photoSelectors } from 'prodsys/components/photos/model.js'
+import './FrontpageGrid.scss'
 
 class FeedItemWrapper extends React.Component {
   scrollTo = () => {

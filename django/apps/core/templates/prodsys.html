@@ -4,6 +4,7 @@
 {% block head %} 
 <!-- Pointer Events Polyfill for Safari -->
 <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+{% render_bundle "prodsys" %}
 {% endblock head %}
 {% block content %}
 <div id="ReactApp">
@@ -13,7 +14,6 @@
 </div>
 {% endblock content %}
 {% block final %}
-  {% render_bundle "prodsys" %}
 {% if messages %}
 <script>
   setTimeout((function() {

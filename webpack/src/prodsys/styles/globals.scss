@@ -28,6 +28,11 @@ $bordercolor: #ddd;
   font-size: 0.8rem;
 }
 
+%invalidinput {
+  background-color: chromatic-mix(yellow, white, 0.7);
+  border: 1px solid red;
+}
+
 %input {
   padding: $margin/2 $margin;
   background-color: white;
@@ -41,8 +46,7 @@ $bordercolor: #ddd;
     border: 1px solid darken($bordercolor, 10);
   }
   &:invalid {
-    background-color: lighten(yellow, 30);
-    border: 1px solid red;
+    @extend %invalidinput;
   }
   &:focus {
     border: 1px solid #555;

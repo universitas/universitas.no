@@ -96,6 +96,7 @@ function* newUploadSaga(action) {
       R.map(R.pick(['id'])),
       R.map(R.assoc('choice', 'keep')),
     )(response)
+    console.log(duplicates)
     yield put(uploadUpdate(md5, { duplicates, check: true }))
     yield put(photosFetched(response))
   } else {

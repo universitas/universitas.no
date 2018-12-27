@@ -25,6 +25,9 @@
     .Thumb {
       flex: 1;
     }
+    .label {
+      min-width: 4em;
+    }
     &:hover {
       background-color: #eee;
       border-color: #999;

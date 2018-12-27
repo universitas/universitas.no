@@ -48,20 +48,24 @@ class IFrame extends React.Component {
   // zoomable IFrame component
   constructor(props) {
     super(props)
-    this.ref = el => {
+    this.doc = null
+    this.refHandler = el => {
       if (!el) return
-      el.addEventListener('load', this.onLoadHandler)
       this.node = el
+      el.addEventListener('load', this.onLoadHandler)
+      // fallback (maybe for some browser if onload doesn't fire?)
+      setTimeout(this.onLoadHandler, 1000)
     }
-    this.onLoadHandler = () => {
-      this.node.removeEventListener('load', this.onLoadHandler)
+    this.onLoadHandler = e => {
+      if (this.doc) return
       this.doc = this.node.contentDocument
-      inheritStyles(document, this.node.contentDocument)
       setTimeout(() => {
         // create portals after initial render
+        inheritStyles(document, this.doc)
         this.forceUpdate()
         resizeSignal()
       }, 100)
+      this.node.removeEventListener('load', this.onLoadHandler)
     }
   }
   render() {
@@ -70,9 +74,10 @@ class IFrame extends React.Component {
       <Spring to={{ zoom }} onRest={resizeSignal}>
         {props => (
           <iframe
+            srcDoc={'<!DOCTYPE html><html></html>'}
             className="IFrame"
             style={calculateStyle(props.zoom)}
-            ref={this.ref}
+            ref={this.refHandler}
           >
             {this.doc &&
               ReactDOM.createPortal(head, this.doc.head) &&
