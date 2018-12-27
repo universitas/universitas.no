@@ -1,11 +1,6 @@
 @import 'styles/globals.scss';
 $errorcolor: #e00;
 
-%invalid-input {
-  border-color: $errorcolor;
-  background: lighten(yellow, 30);
-}
-
 .ModelField {
   display: flex;
   flex-flow: row wrap;
@@ -17,7 +12,7 @@ $errorcolor: #e00;
     input,
     select,
     textarea {
-      @extend %invalid-input;
+      @extend %invalidinput;
     }
   }
   .FieldError {
@@ -34,7 +29,8 @@ $errorcolor: #e00;
   .label {
     @extend %label;
     color: rgba(black, 0.6);
-    min-width: 5em;
+    min-width: 7em;
+    padding-right: 1em;
   }
   .value {
     flex: 1;

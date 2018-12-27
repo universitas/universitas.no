@@ -127,7 +127,7 @@ const validate = (validator, message) =>
 
 const validators = {
   filename: validate(R.test(/.{5,}/), 'filnavnet er for kort'),
-  description: validate(R.test(/.{20,}/), 'beskrivelsen er for kort'),
+  description: validate(R.test(/.{10,}/), 'beskrivelsen er for kort'),
   contributor: validate(Boolean, 'fyll ut dette feltet'),
   category: validate(Boolean, 'fyll ut dette feltet'),
 }
