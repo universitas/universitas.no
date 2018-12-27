@@ -44,13 +44,21 @@ class Select extends React.Component {
     const { fetch, fetching, value, item, model, items } = this.props
     if (prevProps.fetching != fetching) this.setState({ isLoading: fetching })
     if (value && !item) {
-      fetch && fetch(value)
-      const createdItem = R.last(
-        R.filter(R.propEq('label', value), R.values(items)),
-      )
-      if (createdItem) {
-        this.props.onChange(this.getOptionValue(createdItem))
-      }
+      // try to fetch item from api
+      fetch && !fetching && fetch(value)
+      // select newly created item after user chooses "create new"
+      R.pipe(
+        R.filter(R.propEq('label', value)),
+        R.values,
+        R.last,
+        R.when(
+          R.identity,
+          R.pipe(
+            this.getOptionValue,
+            this.props.onChange,
+          ),
+        ),
+      )(items)
     }
   }
 

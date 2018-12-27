@@ -28,9 +28,10 @@ $errorcolor: #e00;
   }
   .label {
     @extend %label;
+    text-transform: lowercase;
     color: rgba(black, 0.6);
     min-width: 7em;
-    padding-right: 1em;
+    padding-right: 0.5em;
   }
   .value {
     flex: 1;
