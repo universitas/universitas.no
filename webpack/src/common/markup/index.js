@@ -43,7 +43,9 @@ export const parseText = (text, multiline = true, lastIndex = 0) => {
     R.pluck('type'),
     R.join(' '),
   )(rules)
-  let looplimit = 99999 // hack to avoid infinite loops during development.
+  // Hack to break potential infinite loops. If theres some bug in the rules,
+  // this should cause to test to fail fast, instead of running forever.
+  let looplimit = 99999
   let key = 0
   while (looplimit-- && text) {
     for (const rule of rules) {
@@ -69,6 +71,8 @@ export const parseText = (text, multiline = true, lastIndex = 0) => {
     }
   }
   if (looplimit < 1) {
+    // this should never happen. :)
+    // but if it does, throw an error, which will be captured by sentry
     throw new Error(`loop limit reached for "${text}"`)
   }
   return nodes
