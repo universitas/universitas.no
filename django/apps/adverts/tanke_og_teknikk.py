@@ -2,7 +2,7 @@ import logging
 import re
 from urllib import parse
 
-from requests.exceptions import ConnectionError
+from requests.exceptions import ConnectionError as RequestError
 from requests_html import HTMLSession
 
 from utils.decorators import cache_memoize
@@ -17,7 +17,7 @@ def fetch_ads(url='http://tankeogteknikk.no/qmedia/oslo.php'):
     """Crawl tankeogteknikk web site and fetch current ads"""
     try:
         r = HTMLSession().get(url)
-    except ConnectionError:
+    except RequestError:
         logger.exception('failed to fetch ads')
         return []
 

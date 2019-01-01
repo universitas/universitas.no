@@ -39,8 +39,6 @@ $colors: (
     &.ready {
       background-color: map-get($colors, ready);
     }
-    &.ok {
-    }
     &.warn {
       background-color: #dd2c00;
     }

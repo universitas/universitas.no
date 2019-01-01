@@ -88,11 +88,6 @@ volumes:
       type: local
       device: ${PWD}/volumes/ssh/
       o: bind
-  ssh:
-    driver_opts:
-      type: local
-      device: ${PWD}/volumes/ssh/
-      o: bind
   django_media:
     driver_opts:
       type: local
