@@ -2,7 +2,7 @@
   "name": "universitas.no",
   "author": "Håken Lid",
   "license": "ISC",
-  "version": "2.3.5",
+  "version": "2.3.6",
   "description": "frontend universitas",
   "scripts": {
     "buildssr": "webpack-cli --mode=production --config webpack.server.config.js ",
@@ -24,7 +24,9 @@
   "jest": {
     "verbose": true,
     "testURL": "http://localhost",
-    "setupFiles": ["<rootDir>/jest.setup.js"],
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ],
     "moduleDirectories": [
       "node_modules",
       "src",
@@ -36,7 +38,10 @@
       "\\.(css|scss|sass|less)$": "<rootDir>/__mocks__/css.jest.mock.js",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/file.jest.mock.js"
     },
-    "roots": ["<rootDir>/src/", "<rootDir>/src/storybooks/"]
+    "roots": [
+      "<rootDir>/src/",
+      "<rootDir>/src/storybooks/"
+    ]
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.2.3",
