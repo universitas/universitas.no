@@ -35,7 +35,7 @@ django-storages
 boto3
 
 # OTHER LIBRARIES
-pillow
+pillow!=5.4.0
 wand
 cython
 imagehash

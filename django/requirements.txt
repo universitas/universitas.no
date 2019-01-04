@@ -14,8 +14,8 @@ babel==2.6.0              # via flower
 backcall==0.1.0           # via ipython
 beautifulsoup4==4.7.0
 billiard==3.5.0.5         # via celery
-boto3==1.9.71
-botocore==1.12.71         # via boto3, s3transfer
+boto3==1.9.73
+botocore==1.12.73         # via boto3, s3transfer
 bs4==0.0.1                # via requests-html
 cached-property==1.5.1    # via django-url-filter
 celery==4.2.1
@@ -41,7 +41,7 @@ django-rest-swagger==2.2.0
 django-storages==1.7.1
 django-url-filter==0.3.11
 django-webpack-loader==0.6.0
-django==2.1.4
+django==2.1.5
 djangorestframework==3.9.0
 docopt==0.6.2             # via ptpython
 docutils==0.14            # via botocore
@@ -63,7 +63,7 @@ jedi==0.13.2              # via ipython, ptpython
 jinja2==2.10              # via coreschema
 jmespath==0.9.3           # via boto3, botocore
 kombu==4.2.2.post1        # via celery
-lxml==4.2.5               # via pyquery
+lxml==4.3.0               # via pyquery
 markdown==3.0.1
 markupsafe==1.1.0         # via jinja2
 more-itertools==5.0.0     # via pytest
@@ -75,7 +75,7 @@ parso==0.3.1              # via jedi
 pexpect==4.6.0            # via ipython
 pickleshare==0.7.5        # via ipython
 piexif==1.1.2
-pillow==5.4.0
+pillow==5.3.0
 pluggy==0.8.0             # via pytest
 prompt-toolkit==1.0.15    # via ipython, ptpython
 psycopg2-binary==2.7.6.1
@@ -105,12 +105,12 @@ requests==2.21.0
 s3transfer==0.1.13        # via boto3
 scipy==1.2.0              # via imagehash
 selenium==3.141.0
-sentry-sdk==0.6.5
+sentry-sdk==0.6.6
 simplegeneric==0.8.1      # via ipython
 simplejson==3.16.0        # via django-rest-swagger
 six==1.12.0               # via django-extensions, django-guardian, django-rest-auth, django-url-filter, faker, imagehash, more-itertools, prompt-toolkit, pytest, pytest-xdist, python-dateutil, traitlets, w3lib
 sorl-thumbnail==12.5.0
-soupsieve==1.6            # via beautifulsoup4
+soupsieve==1.6.2          # via beautifulsoup4
 sqlparse==0.2.4           # via django-debug-toolbar
 text-unidecode==1.2       # via faker
 tornado==5.1.1            # via flower
@@ -122,7 +122,7 @@ urllib3==1.24.1           # via botocore, pyppeteer, requests, selenium, sentry-
 uwsgi==2.0.17.1
 vine==1.1.4               # via amqp
 w3lib==1.19.0             # via requests-html
-wand==0.4.5
+wand==0.5.0
 wcwidth==0.1.7            # via ftfy, prompt-toolkit
 websockets==7.0           # via pyppeteer
 werkzeug==0.14.1
