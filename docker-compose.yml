@@ -65,6 +65,8 @@ services:
   # default username:password is guest:guest
   rabbit:
     image: rabbitmq:3
+    volumes:
+      - rabbitdata:/var/lib/rabbitmq/
 
   # PostgreSQL database
   postgres:
@@ -79,6 +81,7 @@ services:
       - redisdata:/data/
 
 volumes:
+  rabbitdata: {}
   pgdata: {}
   redisdata: {}
   webpack_build: {}
