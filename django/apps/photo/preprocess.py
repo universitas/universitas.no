@@ -65,11 +65,11 @@ class ProcessImage(models.Model):
             pim.thumbnail(size, resample=PIL.Image.LANCZOS)
         return pim
 
-    def save_original(self, pim, exif=b'', format='jpeg', save=True):
+    def save_original(self, pim, exif=b'', file_format='jpeg', save=True):
         """Save processed image to storage backend"""
         self.dimensions = pim.width, pim.height
         blob = BytesIO()
-        pim.save(blob, format, exif=exif, quality=IMAGE_QUALITY)
+        pim.save(blob, file_format, exif=exif, quality=IMAGE_QUALITY)
         self.stat.size = self.stat.md5 = None
         self.delete_thumbnails()
         self.original.save(self.filename, blob, save=save)

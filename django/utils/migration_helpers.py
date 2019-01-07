@@ -1,16 +1,21 @@
 from django.core import serializers
 from django.db import connection
+from psycopg2 import sql
 
 
-def reset_primary_key_index(table, pk="id"):
+def reset_primary_key_index(table, col='id'):
     """Sets the postgres primary key index to one larger than max"""
+
+    query = sql.SQL(
+        '''SELECT setval(
+          pg_get_serial_sequence(%(table)s, %(col)s),
+          coalesce(max({col}), 1)
+        ) FROM {table}'''
+    ).format(
+        col=sql.Identifier(col), table=sql.Identifier(table)
+    )
     with connection.cursor() as cursor:
-        cursor.execute((
-            'SELECT'
-            ' setval(pg_get_serial_sequence(\'"{table}"\', \'{pk}\'),'
-            ' coalesce(max("{pk}"), 1), max("{pk}") IS NOT null)'
-            ' FROM "{table}";'
-        ).format(table=table, pk=pk))
+        cursor.execute(query, dict(table=table, col=col))
 
 
 def load_fixture(fixture_file):

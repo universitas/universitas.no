@@ -13,11 +13,6 @@ logger = logging.getLogger(__name__)
 FOUR_O_CLOCK = crontab(hour=4, minute=0)
 
 
-def randomize_priority(qs, min=-10, max=10):
-    """Sets random priority"""
-    qs.update(priority=Random() * (max - min) + min)
-
-
 def round_priority(qs, precision=1):
     """Rounds priority to precision"""
     factor = 10**precision

@@ -113,7 +113,7 @@ do
         ;;
         --)
         shift
-        CLI="$@"
+        CLI="$*"
         break
         ;;
         --help)

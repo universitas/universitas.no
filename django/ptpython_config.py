@@ -87,10 +87,8 @@ def configure(repl):
     repl.use_code_colorscheme('monokai')
 
     # Install custom colorscheme named 'my-colorscheme' and use it.
-    """
-    repl.install_ui_colorscheme('my-colorscheme', _custom_ui_colorscheme)
-    repl.use_ui_colorscheme('my-colorscheme')
-    """
+    # repl.install_ui_colorscheme('my-colorscheme', _custom_ui_colorscheme)
+    # repl.use_ui_colorscheme('my-colorscheme')
 
     # Add custom key binding for PDB.
     @repl.add_key_binding(Keys.ControlB)
@@ -116,26 +114,24 @@ def configure(repl):
         " Map 'jj' to Escape. "
         event.cli.input_processor.feed(KeyPress(Keys.Escape))
 
-    """
-    # Custom key binding for some simple autocorrection while typing.
-    corrections = {
-        'impotr': 'import',
-        'pritn': 'print',
-    }
+    # # Custom key binding for some simple autocorrection while typing.
+    # corrections = {
+    #     'impotr': 'import',
+    #     'pritn': 'print',
+    # }
 
-    @repl.add_key_binding(' ')
-    def _(event):
-        ' When a space is pressed. Check & correct word before cursor. '
-        b = event.cli.current_buffer
-        w = b.document.get_word_before_cursor()
+    # @repl.add_key_binding(' ')
+    # def _(event):
+    #     ' When a space is pressed. Check & correct word before cursor. '
+    #     b = event.cli.current_buffer
+    #     w = b.document.get_word_before_cursor()
 
-        if w is not None:
-            if w in corrections:
-                b.delete_before_cursor(count=len(w))
-                b.insert_text(corrections[w])
+    #     if w is not None:
+    #         if w in corrections:
+    #             b.delete_before_cursor(count=len(w))
+    #             b.insert_text(corrections[w])
 
-        b.insert_text(' ')
-    """
+    #     b.insert_text(' ')
 
 
 # Custom colorscheme for the UI. See `ptpython/layout.py` and

@@ -1,8 +1,5 @@
 #!/bin/bash
-esc=$(printf '\033')
-yellow="$esc[33;1m"
-red="$esc[31;1m"
-purple="$esc[35;1m" bold="$esc[37;1m" reset="$esc[0m"
+# utility script / entry point for the repo
 
 main__(){
 while (( $# > 0 )); do
@@ -12,61 +9,47 @@ while (( $# > 0 )); do
   init    ) # install docker and docker-compose on ubuntu ( must be run as sudo )
             sudo bash -c "$(declare -f install_docker)
             install_docker $(whoami)"
-            install_certificates
-            ;;
+            install_certificates ;;
   enable  ) enable_service ;; # enable systemd service file for web server - starts all docker images
   reload  ) (reload_service &>> reload-service.log) &;; # reload service when code changed
-
   dc      ) docker-compose $rest; exit ;; # docker-compose [...args]
   da      ) docker-compose run --rm web django-admin $rest; exit ;; # django-admin [...args]
-
   cbrenew ) renew_certificates ;; # renew certbot certificates
   cbinit  ) install_certificates ;; # install certbot certificates
-
   pgdump  ) dump_postgres ;;  # dump postgresql database
   pgload  ) load_postgres $rest; exit;;  # load database from dump file [filename]
   rddump  ) dump_redis ;; # dump redis database
   rdload  ) load_redis $rest; exit;; # load redis database
-
   djbuild ) build_django ;;   # download and build all images, migrate database
-
-  webpack ) docker-compose run --rm webpack ${rest:-bash}; exit;;
+  webpack ) docker-compose run --rm webpack ${rest:-bash}; exit;;  # login to webpack container as default user
   build   ) webpack_build ;; # build css+js client bundles and express bundle;
-
   npmi    ) docker-compose run --rm webpack install $rest; exit ;; # npm install [packages...]
   npmup   ) docker-compose run --rm webpack update ;; # npm update js packages
   storyb  ) docker-compose run --rm --name storybook -p 9001:9001 webpack storybook ;;  # start storybook on port 9001
   sbdep   ) cd webpack; npm run deploy-storybook ;; # build and deploy storybook
   pyup    ) cd django; pip-compile --upgrade ;; # pip update python packages
   repl    ) docker-compose run --rm web django-admin shell_plus --quiet-load ;; # django repl shell
-  django  ) docker-compose run --rm -u django web ${rest:-bash}; exit ;;
-  root    ) docker-compose run --rm           web ${rest:-bash}; exit ;;
-
-  pytest  ) testing; docker-compose run --rm --name testf -u django web pytest -f -x --ff $rest; exit ;;
-
+  django  ) docker-compose run --rm -u django web ${rest:-bash}; exit ;; # login to django container as default user
+  root    ) docker-compose run --rm           web ${rest:-bash}; exit ;;  # login to django container as root
+  pytest  )  # run python tests
+    testing; docker-compose run --rm --name testf -u django web pytest -f -x --ff $rest; exit ;;
   flower  ) docker-compose run --rm --name flower -d -p 5555:5555 celery flower ;;  # start celery flower on port 5555
   jupyter ) start_jupyter ;;  # start jupyter server for django on port 8888
-
   fake    ) docker-compose run --rm web django-admin fake_content -c10 -s50 ;;  # create fake data in django database
   static  ) collect_static_files --ignore ;;  # run django collectstatic
-
   upd     ) docker-compose up -d ;;  # start all docker images in daemon mode
-  logs    ) docker-compose logs --tail=50 -f $rest ; exit ;;
-
+  logs    ) docker-compose logs --tail=50 -f $rest ; exit ;;  # show docker logs
   testing ) # testing settings
-            testing
-            echo 'testing settings' $IMAGE_VERSION $BRANCH;;
+            testing; echo 'testing settings' $IMAGE_VERSION $BRANCH;;
   prod    ) # production settings
-            production_settings
-            echo 'production settings' $IMAGE_VERSION $BRANCH;;
+            production_settings; echo 'production settings' $IMAGE_VERSION $BRANCH;;
   dev     ) # development settings
             echo "development settings" ;;
-
-  lint    ) lint_javascript ; lint_python ;; # lint all files commited
+  lint    ) lint_javascript; lint_python ;; # lint all files commited
   test    ) run_tests ;;  # run pytest and jest
   tags    ) ctags -R ./django ./webpack/src && echo "collected ctags" ;; # collect ctags for python and js
-  precom  ) main__ lint tags test build; exit ;; # run before git commit
-  *       ) show_help ; printf >&2 "\n  %sunknown command:  %s%s%s\n" "$red" "$bold" "$*" "$reset" ; exit 1 ;;
+  precom  ) main__ lint tags test; exit 0 ;; # run before git commit
+  *       ) show_help ${@:1}; exit 1 ;;
   esac;
   shift 1;
 done
@@ -115,7 +98,15 @@ run_tests() {
 }
 
 show_help() {
-  printf "\n%s  usage:   %s [...commmands]%s\n\n" "$bold" "run" "$reset"
+  # ansi codes
+  esc=$(printf '\033')
+  yellow="$esc[33;1m"
+  red="$esc[31;1m"
+  bold="$esc[1m"
+  reset="$esc[0m"
+
+  # help output
+  printf "\n  usage:   %s [...commmands]\n\n" "$0"
   cat run \
     | sed -n '/^main__()/,$p;/^}/q'\
     | awk '/\w  *) /{print}/case/{p=1}'\
@@ -123,6 +114,9 @@ show_help() {
     | sed "s/).*#\(.*\)$/)$yellow\1$reset/"\
     | sed "s/^ *\(\w* *\))/  $bold\1$reset/"\
     | sort
+  if [[ $# > 0 ]]; then
+    printf "\n  %sunknown command:  %s%s\n" "$red" "$*" "$reset" >&2
+  fi
 }
 
 lint_javascript() {

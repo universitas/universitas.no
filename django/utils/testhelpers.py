@@ -9,8 +9,8 @@ def dummy_image(
     """Creates single color dummy image"""
     im = Image.new(mode, size, color)
     blob = BytesIO()
-    format = 'png' if filename.endswith('png') else 'jpeg'
-    im.save(blob, format)
+    file_format = 'png' if filename.endswith('png') else 'jpeg'
+    im.save(blob, file_format)
     blob.seek(0)
     blob.name = filename
     return blob

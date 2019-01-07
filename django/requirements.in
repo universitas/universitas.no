@@ -1,7 +1,7 @@
 # vim: ft=config:
 
 # Django must be upgraded manually
-django==2.1.2
+django~=2.1
 
 # DJANGO PLUGINS
 django-debug-toolbar
@@ -16,7 +16,6 @@ djangorestframework
 markdown
 django-filter
 django-url-filter
-#-e git+git://github.com/haakenlid/django-url-filter@master#egg=django-url-filter
 django-guardian
 django-crispy-forms
 django-rest-swagger
@@ -36,7 +35,7 @@ django-storages
 boto3
 
 # OTHER LIBRARIES
-pillow
+pillow!=5.4.0
 wand
 cython
 imagehash

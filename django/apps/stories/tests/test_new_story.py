@@ -12,11 +12,11 @@ from apps.stories.models import Byline, Section, Story, StoryImage, StoryType
 from apps.stories.models.sections import default_story_type
 
 
-def image_data(size=(100, 100), mode='RGB', format='png', color='white'):
+def image_data(size=(100, 100), mode='RGB', image_format='png', color='white'):
     """Creates binary file content of single color dummy image"""
     im = Image.new(mode, size, color)
     blob = BytesIO()
-    im.save(blob, format)
+    im.save(blob, image_format)
     return blob.getvalue()
 
 
@@ -30,7 +30,7 @@ def no_story_types():
 def dummy_image():
     return ImageFile.objects.create(
         original=SimpleUploadedFile(
-            'dummy.jpg', image_data(format='jpeg', color='black')
+            'dummy.jpg', image_data(image_format='jpeg', color='black')
         ),
         description='blackness',
     )

@@ -1,4 +1,3 @@
-const webpack = require('webpack')
 const config = require('./webpack.config.js')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')

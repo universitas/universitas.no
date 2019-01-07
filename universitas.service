@@ -1,5 +1,5 @@
 # vim: ft=systemd
-# This file, when installed, configures the ubuntu web server to start all
+# This file, when installed, configures the ubuntu web server to start
 # all required docker containers on startup.
 
 [Unit]

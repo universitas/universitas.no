@@ -31,11 +31,13 @@ integrating print layout workflow with web publishing.
 - [Ramda.js](https://ramdajs.com/) A practical functional library for JavaScript
 - [Sass](https://sass-lang.com/) CSS extension language and preprocessor
 - [Webpack](https://webpack.js.org/) Js and css module bundler
+- [Express](https://expressjs.com/) Minimalist web framework for Node.js
 - [Jest](https://jestjs.io/) Delightful JavaScript testing
 
 ## Storybooks
 
-React.js [storybooks](https://universitas.github.io/universitas.no/) for the master branch.
+[storybooks](https://universitas.github.io/universitas.no/) demos of some of the
+react components.
 
 ## Docker Hub
 
