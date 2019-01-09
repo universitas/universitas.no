@@ -7,8 +7,7 @@ import Advert from 'components/Advert'
 import FeedItem from './FeedItem.js'
 import PlaceHolder from './PlaceHolder.js'
 import './NewsFeed.scss'
-import sportsoutlet from 'images/ad_so.png'
-import nynorskavissenter from 'images/ad_nna.gif'
+import ibok from 'images/ad_ibok.jpg'
 
 // Standard grid sizes for below the fold feed items.
 // This makes dense css grid much less likely to have voids
@@ -94,12 +93,8 @@ class NewsFeed extends React.Component {
   render() {
     const { items, next, className, section } = this.props
     const ads = [
+      <Advert.AdHoc key="ibok" url={'https://ibok.no/'} image={ibok} />,
       <Advert.Qmedia key={`qmedia ${section}`} className="col-6 row-2" />,
-      <Advert.AdHoc
-        key="nynorsk avissenter"
-        url={'http://nynorskavissenter.no/sok-no/'}
-        image={nynorskavissenter}
-      />,
       <Advert.Google key={`adwords 1 ${section}`} className="col-6 row-1" />,
       <Advert.Google key={`adwords 2 ${section}`} className="col-6 row-1" />,
       <Advert.Google key={`adwords 3 ${section}`} className="col-6 row-1" />,
@@ -110,7 +105,10 @@ class NewsFeed extends React.Component {
       mapFrom(section ? 0 : 21, standardizeGridItemSize),
       // last four stories should be small, and serve as scroll spies
       R.when(
-        R.pipe(R.length, R.lt(8)),
+        R.pipe(
+          R.length,
+          R.lt(8),
+        ),
         mapFrom(-4, R.mergeDeepLeft({ size: [2, 2] })),
       ),
       // render feed items
@@ -150,7 +148,13 @@ const renderPlaceholders = sizes =>
   ))
 
 const insertIfLongEnough = R.curry((index, item) =>
-  R.when(R.pipe(R.length, R.lte(index)), R.insert(index, item)),
+  R.when(
+    R.pipe(
+      R.length,
+      R.lte(index),
+    ),
+    R.insert(index, item),
+  ),
 )
 
 export const addAdverts = (ads = ads) =>
@@ -167,7 +171,10 @@ const FeedTerminator = () => (
 
 export { NewsFeed }
 
-export default connect(s => ({ items: getItems(s), ...getFeed(s) }), {
-  feedRequested,
-  storiesPrefetch: storiesRequested,
-})(NewsFeed)
+export default connect(
+  s => ({ items: getItems(s), ...getFeed(s) }),
+  {
+    feedRequested,
+    storiesPrefetch: storiesRequested,
+  },
+)(NewsFeed)
