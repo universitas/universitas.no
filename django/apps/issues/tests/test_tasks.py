@@ -1,12 +1,13 @@
 """Tests for issue and pdf tasks"""
 
+import datetime
 from datetime import date
 from pathlib import PosixPath as Path
 import shutil
 import tempfile
 
 from PIL import Image
-import pytest
+from django.utils import timezone
 
 from apps.issues.models import Issue, PrintIssue
 from apps.issues.tasks import (
@@ -17,7 +18,9 @@ from apps.issues.tasks import (
     generate_pdf_preview,
     get_staging_pdf_files,
     require_binary,
+    weekly_bundle,
 )
+import pytest
 
 PAGE_ONE = 'UNI11VER16010101000.pdf'
 
@@ -146,12 +149,33 @@ def test_require_binary_decorator():
 
 
 @pytest.mark.django_db
-def test_create_current_issue_web_bundle(first_issue, tmp_fixture_dir):
+def test_create_current_issue_web_bundle(
+    first_issue, tmp_fixture_dir, monkeypatch
+):
     assert PrintIssue.objects.count() == 0
+
+    def mock_now():
+        dt = first_issue.publication_date
+        now = datetime.datetime(
+            year=dt.year,
+            month=dt.month,
+            day=dt.day,
+            hour=3,
+            minute=0,
+            tzinfo=datetime.timezone.utc,
+        )
+        return now
+
+    with monkeypatch.context() as m:
+        weekly_bundle(False)
+        assert PrintIssue.objects.count() == 0
+        m.setattr(timezone, 'now', mock_now)
+        weekly_bundle(False)
+        assert PrintIssue.objects.count() == 2
     count = Issue.objects.count()
-    create_print_issue_pdf(first_issue)
-    create_print_issue_pdf(first_issue)
-    assert PrintIssue.objects.count() == 2
+    # create_print_issue_pdf(first_issue)
+    # create_print_issue_pdf(first_issue)
+    # assert PrintIssue.objects.count() == 2
     assert Issue.objects.count() == count
     staging_dir = tmp_fixture_dir / 'PDF'
     mag_pages = list(staging_dir.glob('UNI12*.pdf'))

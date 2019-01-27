@@ -6,8 +6,8 @@ from django.contrib import admin, messages
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from sorl.thumbnail import get_thumbnail
 
+from sorl.thumbnail import get_thumbnail
 from utils.sorladmin import AdminImageMixin
 
 from .models import Issue, PrintIssue
@@ -18,7 +18,8 @@ logger = logging.getLogger(__name__)
 
 def create_pdf(modeladmin, request, queryset):
     messages.add_message(request, messages.INFO, 'started creating pdf')
-    create_print_issue_pdf.delay(expiration_days=6)
+    issue = queryset.first()
+    create_print_issue_pdf.delay(issue.id, expiration_days=0)
 
 
 class ThumbAdmin:
@@ -29,7 +30,7 @@ class ThumbAdmin:
         try:
             thumb = instance.thumbnail()
             url = thumb.url
-        except (AttributeError, FileNotFoundError) as e:  # noqa
+        except (AttributeError, FileNotFoundError):
             logger.exception('thumb error')
             url = staticfiles_storage.url('/admin/img/icon-no.svg')
         if instance.pdf:
@@ -49,7 +50,9 @@ class ThumbAdmin:
 
 @admin.register(Issue)
 class IssueAdmin(admin.ModelAdmin):
-
+    actions = [create_pdf]
+    actions_on_top = True
+    actions_on_bottom = True
     list_per_page = 40
     date_hierarchy = 'publication_date'
     list_display = [
@@ -96,9 +99,6 @@ class IssueAdmin(admin.ModelAdmin):
 
 @admin.register(PrintIssue)
 class PrintIssueAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
-    actions = [create_pdf]
-    actions_on_top = True
-    actions_on_bottom = True
     save_on_top = True
     list_per_page = 40
     list_display = [
@@ -122,8 +122,7 @@ class PrintIssueAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
         'issue',
     ]
     fieldsets = [[
-        '',
-        {
+        '', {
             'fields': (
                 ('issue', ),
                 ('pdf', 'cover_page', 'pages'),

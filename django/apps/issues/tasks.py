@@ -7,15 +7,15 @@ import shutil
 import subprocess
 import tempfile
 
-from celery import shared_task
-from celery.schedules import crontab
-from celery.task import periodic_task
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.utils import timezone
 
 from apps.core.staging import new_staging_pdf_files
 from apps.issues.models import Issue, PrintIssue, current_issue
+from celery import shared_task
+from celery.schedules import crontab
+from celery.task import periodic_task
 
 logger = logging.getLogger(__name__)
 
@@ -40,11 +40,12 @@ def weekly_bundle(delete_expired: bool = not settings.DEBUG):
     try:
         issue = Issue.objects.get(publication_date=today)
     except Issue.DoesNotExist:
+        print('wrong date')
         return
     logger.info('bundle time!')
     create_print_issue_pdf(
         issue=issue,
-        expiration_days=6,
+        expiration_days=0,
         delete_expired=delete_expired,
     )
     # remove old web pages
@@ -238,6 +239,8 @@ def create_web_bundle(filename, issue, **kwargs):
 @shared_task
 def create_print_issue_pdf(issue, **kwargs):
     """Create or update pdf for the current issue"""
+    if isinstance(issue, int):
+        issue = Issue.objects.get(id=issue)
 
     editions = [('', PAGES_GLOB), ('_mag', MAG_PAGES_GLOB)]
     results = []
