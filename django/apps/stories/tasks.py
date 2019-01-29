@@ -1,6 +1,7 @@
 """Celery tasks for stories"""
 
 from datetime import timedelta
+from pathlib import Path
 import re
 
 from celery import shared_task
@@ -53,10 +54,10 @@ def archive_stale_stories(days=14):
 @shared_task
 def upload_storyimages(pk):
     story = Story.objects.get(pk=pk)
-    folder = re.sub(r'[_\W]+', '-', str(story.section))
-    target = f'{current_issue().number}/{folder}/'
+    section_dir = re.sub(r'[_\W]+', '-', str(story.section))
+    target = Path(f'{current_issue().number:0>2}') / section_dir
     for im in story.images.all():
-        upload_imagefile_to_desken.delay(im.imagefile.pk, target)
+        upload_imagefile_to_desken.delay(im.imagefile.pk, str(target))
     return target
 
 
