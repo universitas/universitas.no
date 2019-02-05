@@ -58,7 +58,7 @@ def upload_storyimages(pk):
     target = Path(f'{current_issue().number:0>2}') / section_dir
     for im in story.images.all():
         upload_imagefile_to_desken.delay(im.imagefile.pk, str(target))
-    return target
+    return str(target)
 
 
 @periodic_task(run_every=PERSIST_STORY_VISITS, ignore_result=True)

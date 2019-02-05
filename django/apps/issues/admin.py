@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 def create_pdf(modeladmin, request, queryset):
     messages.add_message(request, messages.INFO, 'started creating pdf')
     issue = queryset.first()
-    create_print_issue_pdf.delay(issue.id, expiration_days=0)
+    create_print_issue_pdf.delay(issue.id, expiration_days=6)
 
 
 class ThumbAdmin:
