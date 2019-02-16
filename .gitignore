@@ -4,4 +4,5 @@ tags
 *.rdb
 *.sql
 /build/
+.Rhistory
 __pycache__
