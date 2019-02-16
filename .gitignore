@@ -4,3 +4,4 @@ tags
 *.rdb
 *.sql
 /build/
+.Rhistory
