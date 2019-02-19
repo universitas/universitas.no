@@ -3,6 +3,26 @@ import RelatedStory from 'components/RelatedStory'
 import { shuffle } from 'utils/misc'
 import Advert from 'components/Advert'
 
+const STROSSLE_ID = 'dff15dfe-e8ca-4e6d-b547-8038ab88562b'
+
+class StrossleWidget extends React.Component {
+  constructor(props) {
+    super(props)
+    const strossleMount = () => {
+      global.strossle && global.strossle(STROSSLE_ID, '.strossle-widget')
+    }
+    this.componentDidMount = strossleMount
+    this.componentDidUpdate = strossleMount
+  }
+  shouldComponentUpdate(nextProps) {
+    return nextProps.url != this.props.url
+  }
+
+  render() {
+    return <div className="strossle-widget" />
+  }
+}
+
 class FacebookComments extends React.Component {
   constructor(props) {
     super(props)
@@ -28,7 +48,10 @@ class FacebookComments extends React.Component {
   }
 }
 
-const pickRelated = R.pipe(shuffle, R.take(3))
+const pickRelated = R.pipe(
+  shuffle,
+  R.take(3),
+)
 
 const RelatedStories = ({ related_stories }) => (
   <section className="RelatedStories">
@@ -39,7 +62,14 @@ const RelatedStories = ({ related_stories }) => (
   </section>
 )
 
-const StoryFoot = ({ comment_field, id, title, section, related_stories }) => {
+const StoryFoot = ({
+  comment_field,
+  strossle_enabled = true,
+  id,
+  title,
+  section,
+  related_stories,
+}) => {
   const url = `https://universitas.no${reverse(
     toStory({ id, section, title }),
   )}`
@@ -47,7 +77,11 @@ const StoryFoot = ({ comment_field, id, title, section, related_stories }) => {
   return (
     <footer className="StoryFoot">
       {comment_field == 'facebook' && <FacebookComments url={url} />}
-      <RelatedStories related_stories={related_stories} />
+      {strossle_enabled ? (
+        <StrossleWidget />
+      ) : (
+        <RelatedStories related_stories={related_stories} />
+      )}
     </footer>
   )
 }

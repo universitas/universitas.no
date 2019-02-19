@@ -315,6 +315,7 @@ class StoryAdmin(admin.ModelAdmin):
                         'publication_date',
                         'publication_status',
                         'comment_field',
+                        'strossle_enabled',
                         'related_stories',
                     ),
                 ),
