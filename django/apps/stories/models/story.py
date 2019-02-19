@@ -241,6 +241,10 @@ class Story(  # type: ignore
         help_text=_('Enable comment field'),
         verbose_name=_('Comment Field'),
     )
+    strossle_enabled = models.BooleanField(
+        default=True,
+        help_text=_('Enable Strossle'),
+    )
 
     def __str__(self):
         title = self.title or f'({self.working_title})' or '[no title]'

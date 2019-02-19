@@ -18,5 +18,6 @@
 {% block final %}
   {{ ssr.state | json_script:"redux-state" }}
   {% include "_facebook.sdk.html" %}
+  {% include "_strossle.sdk.html" %}
   {% render_bundle "universitas" "js" %}
 {% endblock final %}
