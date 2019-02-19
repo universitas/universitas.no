@@ -5,3 +5,4 @@ tags
 *.sql
 /build/
 .Rhistory
+__pycache__
