@@ -11,7 +11,7 @@ while (( $# > 0 )); do
             install_docker $(whoami)"
             install_certificates ;;
   enable  ) enable_service ;; # enable systemd service file for web server - starts all docker images
-  reload  ) (reload_service &>> reload-service.log) &;; # reload service when code changed
+  reload  ) (2>&1 reload_service > reload-service.log) &;; # reload service when code changed
   dc      ) docker-compose $rest; exit ;; # docker-compose [...args]
   da      ) docker-compose run --rm web django-admin $rest; exit ;; # django-admin [...args]
   cbrenew ) renew_certificates ;; # renew certbot certificates
@@ -109,7 +109,7 @@ show_help() {
   printf "\n  usage:   %s [...commmands]\n\n" "$0"
   cat run \
     | sed -n '/^main__()/,$p;/^}/q'\
-    | awk '/\w  *) /{print}/case/{p=1}'\
+    | awk '/[a-zA-Z]  *\) /{print}/case/{p=1}'\
     | sed 's/; exit//' | sed 's/;;//'\
     | sed "s/).*#\(.*\)$/)$yellow\1$reset/"\
     | sed "s/^ *\(\w* *\))/  $bold\1$reset/"\
@@ -273,7 +273,8 @@ renew_certificates() {
 }
 
 
-cd $(dirname $(readlink -f $0))
+cd $(dirname $0)
+
 [[ ! -f django/local.env ]] && echo "# Add environment variables here" > django/local.env
 source django/local.env
 mkdir -p \
