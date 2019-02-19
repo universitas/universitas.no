@@ -237,7 +237,7 @@ class Story(  # type: ignore
     comment_field = models.CharField(
         max_length=16,
         choices=COMMENT_FIELD_CHOICES,
-        default=COMMENT_FIELD_CHOICES[0][0],
+        default=COMMENT_FIELD_CHOICES[2][0],
         help_text=_('Enable comment field'),
         verbose_name=_('Comment Field'),
     )
