@@ -172,6 +172,7 @@ class StorySerializerNested(StorySerializer):
             'inline_html_blocks',
             'language',
             'comment_field',
+            'strossle_enabled',
         ]
 
     bylines = BylineSerializer(required=False, source='byline_set', many=True)
