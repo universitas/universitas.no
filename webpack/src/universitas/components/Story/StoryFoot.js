@@ -5,23 +5,32 @@ import Advert from 'components/Advert'
 
 const STROSSLE_ID = 'dff15dfe-e8ca-4e6d-b547-8038ab88562b'
 
+const ACCELERATOR_ID = 'cf6209fc-8eae-4041-bbf9-6d9129336326'
+
 class StrossleWidget extends React.Component {
   constructor(props) {
     super(props)
     const strossleMount = () => {
       global.strossle && global.strossle(STROSSLE_ID, '.strossle-widget')
     }
-    this.componentDidMount = strossleMount
-    this.componentDidUpdate = strossleMount
+
+   const acceleratorMount = () => {
+     global.strossle && global.strossle(ACCELERATOR_ID, '.strossle-widget')
+   }
+
+    this.componentDidMount = strossleMount && acceleratorMount
+    this.componentDidUpdate = strossleMount && acceleratorMount
   }
   shouldComponentUpdate(nextProps) {
     return nextProps.url != this.props.url
   }
 
   render() {
-    return <div className="strossle-widget" />
+    return ( 
+          <div className="strossle-widget"/>
+        )
+      }
   }
-}
 
 class FacebookComments extends React.Component {
   constructor(props) {
