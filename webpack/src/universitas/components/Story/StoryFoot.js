@@ -25,7 +25,9 @@ class StrossleWidget extends React.Component {
   }
 
   render() { 
+
     return (
+    (
       <>
       <div className="strossle-widget-related" />
       <div className="strossle-widget-accelerator" data-spklw-widget="cf6209fc-8eae-4041-bbf9-6d9129336326"/>
