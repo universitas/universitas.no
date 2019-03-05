@@ -22,7 +22,7 @@ const PublicationSchedule = ({
     <h1>{pageTitle}</h1>
     <PublicationTable year={year} issues={issues} />
     <p>
-      <strong>Magasin</strong> er Universitas' månedlige featurebilag
+      <strong>Magasin</strong> er Universitas' featurebilag
     </p>
     <p>
       <strong>Velkomstbilaget</strong> er Universitas' årlige velkomstmagasin
