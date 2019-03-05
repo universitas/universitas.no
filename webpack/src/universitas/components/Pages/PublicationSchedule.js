@@ -26,7 +26,7 @@ const PublicationSchedule = ({
     </p>
     <p>
       <strong>Velkomstbilaget</strong> er Universitas' årlige velkomstmagasin
-      for nye og gamle studenter. Bilaget legges ved i avisenes første
+      for nye og gamle studenter. Bilaget legges ved i avisens første
       utgave i august.
     </p>
   </article>
