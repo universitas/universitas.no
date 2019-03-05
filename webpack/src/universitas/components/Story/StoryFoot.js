@@ -10,27 +10,29 @@ const ACCELERATOR_ID = 'cf6209fc-8eae-4041-bbf9-6d9129336326'
 class StrossleWidget extends React.Component {
   constructor(props) {
     super(props)
-    const strossleMount = () => {
-      global.strossle && global.strossle(STROSSLE_ID, '.strossle-widget')
+    const strossleMount = () => { 
+      if (global.strossle) {
+      global.strossle(STROSSLE_ID, '.strossle-widget-related')
+      global.strossle(ACCELERATOR_ID, '.strossle-widget-accelerator')
     }
-
-   const acceleratorMount = () => {
-     global.strossle && global.strossle(ACCELERATOR_ID, '.strossle-widget')
-   }
-
-    this.componentDidMount = strossleMount && acceleratorMount
-    this.componentDidUpdate = strossleMount && acceleratorMount
-  }
+    
+    }
+    this.componentDidMount = strossleMount 
+    this.componentDidUpdate = strossleMount 
+  } 
   shouldComponentUpdate(nextProps) {
     return nextProps.url != this.props.url
   }
 
-  render() {
-    return ( 
-          <div className="strossle-widget"/>
-        )
-      }
+  render() { 
+    (
+      <>
+      <div className="strossle-widget-related" />
+      <div className="strossle-widget-accelerator" data-spklw-widget="cf6209fc-8eae-4041-bbf9-6d9129336326"/>
+      </>
+    )
   }
+}
 
 class FacebookComments extends React.Component {
   constructor(props) {
@@ -87,7 +89,7 @@ const StoryFoot = ({
     <footer className="StoryFoot">
       {comment_field == 'facebook' && <FacebookComments url={url} />}
       {strossle_enabled ? (
-        <StrossleWidget />
+        <StrossleWidget url={url}/>
       ) : (
         <RelatedStories related_stories={related_stories} />
       )}
