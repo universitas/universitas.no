@@ -7,3 +7,4 @@ tags
 .Rhistory
 __pycache__
 *.log
+.vscode
