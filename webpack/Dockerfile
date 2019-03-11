@@ -1,5 +1,5 @@
 # parent image is debian with nodejs
-FROM node:11
+FROM node:11.10
 LABEL maintainer="haakenlid"
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
 WORKDIR /app/
