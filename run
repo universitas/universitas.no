@@ -269,7 +269,7 @@ renew_certificates() {
     --webroot-path=/srv/ \
     --keep-until-expiring \
     certonly
-  docker-compose run certbot certificates
+  docker-compose exec nginx nginx -s reload
 }
 
 

@@ -1,0 +1,10 @@
+# install these crontabs on production server
+
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# renew ssl certificates at 05:00 every Monday
+0 5 * * 1 /srv/tassen/run cbrenew >> /srv/tassen/certbot.log 2>&1
+
+# delete stale staging files at 05:00 daily
+0 5 * * * find /srv/tassen/volumes/staging/ -type f -ctime +14 -delete
