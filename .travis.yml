@@ -11,3 +11,6 @@ install:
 script:
   - ./run testing dc pull
   - ./run testing test
+
+notifications:
+  slack: universitas:oWt9OJBaOsXCbka97cDUt4wL
