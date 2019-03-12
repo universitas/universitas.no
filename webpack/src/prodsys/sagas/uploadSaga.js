@@ -1,5 +1,4 @@
-import { put, takeEvery, select, call } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
+import { delay, put, takeEvery, select, call } from 'redux-saga/effects'
 import { pushImageFile, apiGet, apiPost, apiList } from 'services/api'
 import { apiUrlToId } from 'utils/urls'
 import { assignPhoto } from 'ducks/actions'
@@ -162,7 +161,7 @@ function* pollPhoto(pk, sleep = 2000, tries = 6) {
   // polls api for photo until it's ok
   for (let n = 0; n < tries; n++) {
     const wait = 2 ** n * sleep
-    yield call(delay, wait) // wait for image to process
+    yield delay(wait) // wait for image to process
     const { response } = yield call(apiGet, 'photos', pk)
     if (response.original) {
       yield put(photoAdded(response))

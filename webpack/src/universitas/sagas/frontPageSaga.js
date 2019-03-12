@@ -5,8 +5,8 @@ import {
   put,
   select,
   fork,
+  delay,
 } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
 import { apiList, apiGet } from 'services/api'
 import {
   STORY_REQUESTED,
@@ -86,7 +86,7 @@ function* fetchSearch(action) {
   const { search } = params
   if (!search) yield put(searchFetched({ results: [], next: false }))
   else {
-    yield call(delay, search.length > 3 ? DEBOUNCE : DEBOUNCE * 3)
+    yield delay(search.length > 3 ? DEBOUNCE : DEBOUNCE * 3)
     const { response, error } = yield call(apiList, 'frontpage', params)
     if (response) yield put(searchFetched(response))
     else yield call(handleError, error)
@@ -97,7 +97,7 @@ function* fetchFeed(action) {
   let params = yield select(getFeedQuery)
   params = R.merge(params, action.payload)
 
-  if (!R.isEmpty(params)) yield call(delay, DEBOUNCE)
+  if (!R.isEmpty(params)) yield delay(DEBOUNCE)
   const { response, error } = yield call(apiList, 'frontpage', params)
   if (response) yield put(feedFetched(response))
   else yield call(handleError, error)
@@ -131,6 +131,6 @@ const googleAnalyticsPageView = action => {
 }
 
 function* pageView(action) {
-  yield call(delay, 500) // debounce
+  yield delay(500) // debounce
   yield call(googleAnalyticsPageView, action)
 }
