@@ -12,8 +12,8 @@ import {
   fork,
   spawn,
   take,
+  delay,
 } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
 import { scrollTo } from 'utils/scroll'
 import {
   apiFetch,
@@ -125,7 +125,7 @@ function* fetchItems(action) {
 }
 
 function* queryChanged(action) {
-  yield call(delay, SEARCH_DEBOUNCE) // debounce
+  yield delay(SEARCH_DEBOUNCE) // debounce
   yield call(requestItems, action)
 }
 
@@ -167,7 +167,7 @@ function* autoSaveSaga(action) {
   if (id == 0) return
   const { itemSave, getAutosave, modelName } = modelFuncs(action)
   const sleep = modelName() == 'stories' ? AUTOSAVE_DEBOUNCE : 500
-  yield call(delay, sleep)
+  yield delay(sleep)
   if (yield select(getAutosave)) yield put(itemSave(id, null))
 }
 
