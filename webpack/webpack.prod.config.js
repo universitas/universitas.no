@@ -1,5 +1,5 @@
 const config = require('./webpack.config.js')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
@@ -17,15 +17,16 @@ const progressBar = new ProgressBarPlugin({ width: 50 })
 
 config.plugins.push(extractCss, progressBar)
 
-const uglifyJs = new UglifyJsPlugin({
+const terserJs = new TerserPlugin({
   cache: true,
   parallel: true,
   sourceMap: true,
 })
+
 const optimiseCss = new OptimizeCssAssetsPlugin({
   cssProcessorOptions: { map: { inline: false } },
 })
-config.optimization.minimizer.push(uglifyJs, optimiseCss)
+config.optimization.minimizer.push(terserJs, optimiseCss)
 
 // Replace style loader with minicssextractplugin loader
 const scssLoader = config.module.rules.find(l => l.test.test('.scss'))
