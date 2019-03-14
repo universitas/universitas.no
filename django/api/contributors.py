@@ -1,12 +1,12 @@
 import logging
 
 from django.db.models import Prefetch
-from rest_framework import serializers, viewsets
-from url_filter.integrations.drf import DjangoFilterBackend
 
 from apps.contributors import tasks
 from apps.contributors.models import Contributor, Position, Stint
 from apps.photo.models import ImageFile
+from rest_framework import serializers, viewsets
+from url_filter.integrations.drf import DjangoFilterBackend
 from utils.serializers import AbsoluteURLField, PhoneNumberField
 
 logger = logging.getLogger(__name__)
@@ -127,12 +127,10 @@ class ContributorViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['id', 'status', 'display_name', 'byline_photo']
 
-    def get_queryset(self):
-        """
-        use fancy postgresql trigram unaccent search
-        """
+    def filter_queryset(self, queryset):
+        """Use fancy postgresql trigram unaccent search """
         query = self.request.query_params.get('search')
+        queryset = super().filter_queryset(queryset)
         if query is not None:
-            return self.queryset.search(query)
-
-        return self.queryset
+            return queryset.search(query)
+        return queryset
