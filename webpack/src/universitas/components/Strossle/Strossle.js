@@ -1,5 +1,5 @@
 const StrossleV1 = ({ id, url }) => (
-  <div data-spklw-widget={id} data-spklw-url={url} />
+  <div className="StrossleV1" data-spklw-widget={id} data-spklw-url={url} />
 )
 
 const StrossleV2 = ({ id, url }) => {
