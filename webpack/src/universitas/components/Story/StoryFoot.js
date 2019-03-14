@@ -1,6 +1,6 @@
 import { reverse, toStory } from 'universitas/ducks/router'
 import RelatedStories from 'universitas/components/RelatedStory'
-import StrossleWidget from 'universitas/components/StrossleWidget'
+import Strossle from 'universitas/components/Strossle'
 import FacebookComments from 'universitas/components/FacebookComments'
 
 const STROSSLE_ID = 'dff15dfe-e8ca-4e6d-b547-8038ab88562b'
@@ -23,8 +23,8 @@ const StoryFoot = ({
       {comment_field == 'facebook' && <FacebookComments url={url} />}
       {strossle_enabled ? (
         <>
-          <StrossleWidget v2 url={url} id={STROSSLE_ID} />
-          <StrossleWidget v1 url={url} id={ACCELERATOR_ID} />
+          <Strossle v2 url={url} id={STROSSLE_ID} />
+          <Strossle v1 url={url} id={ACCELERATOR_ID} />
         </>
       ) : (
         <RelatedStories related_stories={related_stories} />
