@@ -2,7 +2,7 @@ import logging
 
 from django.core.exceptions import FieldError
 from django.db.models import Count, Prefetch
-from rest_framework import filters, serializers, viewsets
+from rest_framework import filters, serializers, viewsets, exceptions
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from apps.stories.models import (
@@ -139,13 +139,20 @@ class StorySerializer(serializers.HyperlinkedModelSerializer):
     public_url = AbsoluteURLField(source='get_absolute_url')
     edit_url = AbsoluteURLField(source='get_edit_url')
     bodytext_markup = serializers.CharField(trim_whitespace=False)
-    working_title = serializers.CharField(trim_whitespace=False)
+    working_title = serializers.CharField(
+        trim_whitespace=False, max_length=1000
+    )
     story_type = serializers.PrimaryKeyRelatedField(
         queryset=StoryType.objects.all(), read_only=False
     )
     image_count = serializers.IntegerField(read_only=True)
 
     # url = serializers.HyperlinkedIdentityField()
+
+    def validate_working_title(self, value):
+        if 'Trump' in value:
+            raise exceptions.ValidationError('🙍')
+        return value
 
     def update(self, instance, validated_data):
         clean_model = (
