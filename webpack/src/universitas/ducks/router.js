@@ -22,6 +22,7 @@ export const AD_INFO = 'router/AD_INFO'
 export const STORY = 'router/STORY'
 export const SCHEDULE = 'router/SCHEDULE'
 export const SHORT_URL = 'router/SHORT_URL'
+export const STYRE_INFO = 'router/STYRE_INFO'
 export { NOT_FOUND }
 
 // url routes action mappings to configure redux-first-router
@@ -35,6 +36,7 @@ export const routesMap = {
   [AD_INFO]: '/annonser/',
   [SECTION]: '/:section/forside/',
   [NOT_FOUND]: '/ikke-funnet/',
+  [STYRE_INFO]: '/om-styret'
 }
 
 // Action creators
@@ -43,6 +45,7 @@ export const toSection = section => ({ type: SECTION, payload: { section } })
 export const toPdf = year => ({ type: PDF, payload: { year } })
 export const toPubSchedule = year => ({ type: SCHEDULE, payload: { year } })
 export const toAbout = () => ({ type: ABOUT, payload: {} })
+export const toStyret = () => ({ type: STYRE_INFO, payload: {} })
 export const toAdInfo = () => ({ type: AD_INFO, payload: {} })
 export const toStory = ({ id, title, section, story_type = {} }) => ({
   type: STORY,

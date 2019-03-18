@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import { formatDate } from 'utils/text'
 import Link from 'redux-first-router-link'
 import LoadingIndicator from 'components/LoadingIndicator'
 import { requestData } from 'utils/hoc'
@@ -55,6 +54,6 @@ const StyreInfo = ({ pageTitle, state, className = '' }) => (
  const mapStateToProps = getSite
  const mapDispatchToProps = { fetchData: siteRequested }
  export default connect(mapStateToProps, mapDispatchToProps)
- )
+ 
 
 

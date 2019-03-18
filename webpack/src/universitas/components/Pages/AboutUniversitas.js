@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { formatDate } from 'utils/text'
 import Link from 'redux-first-router-link'
-import { toAdInfo, toPubSchedule } from 'universitas/ducks/router'
+import { toAdInfo, toPubSchedule, toStyret } from 'universitas/ducks/router'
 import { Velferdstinget } from 'components/Logos'
 import LoadingIndicator from 'components/LoadingIndicator'
 import { requestData } from 'utils/hoc'
@@ -72,7 +72,7 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
       Universitas mottar støtte fra Student&shy;samskipnaden i Oslo og Akershus
       (SiO), og alle studenter som betaler semesteravgift er dermed med på å
       støtte Universitas økonomisk. Papirutgaven av Universitas distribueres
-      rundt på læresteder tilknyttet SiO.
+      rundt på læresteder tilknyttet SiO. 
     </p>
     <p>
       Velferdstinget i Oslo og Akershus fordeler semesteravgiften, men står uten
@@ -107,6 +107,10 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
       Kontakt Geir Dorp på mail{' '}
       <a href="mailto:geirdo@universitas.no">geirdo@universitas.no</a> tlf: 916
       64 496, eller <Link to={toAdInfo()}>les mer om annonsering.</Link>
+    </p>
+    <h3>Styret</h3>
+    <p>
+      <Link to={toStyret()}>Se hvem som sitter i styret i Universitas</Link>
     </p>
     <hr />
     <StaffGrid staff={staff} />
