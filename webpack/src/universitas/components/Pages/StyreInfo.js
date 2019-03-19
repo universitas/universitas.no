@@ -1,7 +1,6 @@
 import { connect } from 'react-redux'
 import Link from 'redux-first-router-link'
 import LoadingIndicator from 'components/LoadingIndicator'
-import { requestData } from 'utils/hoc'
 import { getSite, siteRequested } from 'ducks/site'
 import Debug from 'components/Debug'
 import cx from 'classnames'
@@ -51,9 +50,13 @@ const StyreInfo = ({ pageTitle, state, className = '' }) => (
    </article>
  )
 
- const mapStateToProps = getSite
- const mapDispatchToProps = { fetchData: siteRequested }
- export default connect(mapStateToProps, mapDispatchToProps)
+  // const mapStateToProps = getSite
+  // const mapDispatchToProps = { fetchData: siteRequested }
+  // export default connect(mapStateToProps, mapDispatchToProps)
+
+const mapStateToProps = (state, ownProps) => ({})
+const mapDispatchToProps = (dispatch, ownProps) => ({})
+export default connect(mapStateToProps, mapDispatchToProps)(StyreInfo)
  
 
 
