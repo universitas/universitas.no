@@ -76,17 +76,17 @@ collect_static_files() {
 production_settings() {
   BRANCH=$(git status | awk '/On branch/{print $3}')
   export BRANCH=${TRAVIS_BRANCH:-$BRANCH}
-  if [[ $BRANCH == 'master' ]]; then
-    export IMAGE_VERSION=$(git tag --merged | tail -n1)
-  fi
+  # if [[ $BRANCH == 'master' ]]; then
+  #   export IMAGE_VERSION=$(git tag --merged | tail -n1)
+  # fi
   export COMPOSE_FILE=docker-compose.yml:docker-compose.production.yml
 }
 
 testing() {
   production_settings
-  if [[ $BRANCH == 'master' ]]; then
-    export IMAGE_VERSION=latest
-  fi
+  # if [[ $BRANCH == 'master' ]]; then
+  #   export IMAGE_VERSION=latest
+  # fi
   export COMPOSE_FILE=docker-compose.yml:docker-compose.testing.yml
 }
 
@@ -269,7 +269,7 @@ renew_certificates() {
     --webroot-path=/srv/ \
     --keep-until-expiring \
     certonly
-  docker-compose run certbot certificates
+  docker-compose exec nginx nginx -s reload
 }
 
 
@@ -291,5 +291,5 @@ export COMPOSE_HTTP_TIMEOUT=6000
 export GIT_SHA=$(git rev-parse HEAD)
 export COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml
 export AWS_ENABLED=$AWS_ENABLED
-export IMAGE_VERSION=edge
+export IMAGE_VERSION=latest
 main__ $@

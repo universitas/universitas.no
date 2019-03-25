@@ -1,0 +1,8 @@
+@import 'universitas/styles/_common.scss';
+
+// Strossle widget V1 breaks layout on small screens
+.StrossleV1 {
+  @media (max-width: $content-width) {
+    display: none;
+  }
+}

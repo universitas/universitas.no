@@ -36,16 +36,14 @@ BUNDLE_TIME = crontab(hour=4, minute=0)
 
 @periodic_task(run_every=BUNDLE_TIME)
 def weekly_bundle(delete_expired: bool = not settings.DEBUG):
-    today = timezone.now().date()
     try:
-        issue = Issue.objects.get(publication_date=today)
+        issue = Issue.objects.get(publication_date=timezone.now(), pdfs=None)
     except Issue.DoesNotExist:
-        print('wrong date')
         return
     logger.info('bundle time!')
     create_print_issue_pdf(
         issue=issue,
-        expiration_days=0,
+        expiration_days=7,
         delete_expired=delete_expired,
     )
     # remove old web pages
@@ -75,7 +73,7 @@ def require_binary(binary: str):
     return binary_decorator
 
 
-def get_staging_pdf_files(delete_expired=False, expiration_days=0, **kwargs):
+def get_staging_pdf_files(delete_expired=False, expiration_days=7, **kwargs):
     """Find pages for latest issue in pdf staging directory."""
 
     if expiration_days:

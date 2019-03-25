@@ -12,8 +12,9 @@ from django.db import models
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from model_utils.models import TimeStampedModel
 
+from model_utils.models import TimeStampedModel
+from utils.dbfuncs import TrigramWordSimilarity
 from utils.decorators import cache_memoize
 
 from .fuzzy_name_search import FuzzyNameSearchMixin
@@ -49,7 +50,7 @@ class ContributorQuerySet(models.QuerySet):
 
     def search(self, query, cutoff=0.5):
         """fuzzy name search"""
-        trigram = TrigramSimilarity('display_name', query)
+        trigram = TrigramWordSimilarity('display_name', query)
         queryset = self.annotate(similarity=trigram).order_by('-similarity')
         result = queryset.filter(similarity__gt=cutoff)
         if not result:
