@@ -13,7 +13,7 @@ import {
   PDF,
   SCHEDULE,
   ABOUT,
-  OM_STYRET,
+  STYRE_INFO,
   AD_INFO,
   NOT_FOUND,
   getLocation,
@@ -76,7 +76,7 @@ const pages = {
     ({ year = '' }) => `Utgivelsesplan ${year}`,
   ),
   [ABOUT]: pageWrapper(AboutUniversitas, R.always('Om Universitas')),
-  [OM_STYRET]: pageWrapper(StyreInfo, R.always('Om Styret')),
+  [STYRE_INFO]: pageWrapper(StyreInfo, R.always('Om Styret')),
   [AD_INFO]: pageWrapper(AdvertiserInfo, R.always('Annonsér i Universitas')),
   [NOT_FOUND]: pageWrapper(PageNotFound, R.always('ikke funnet (404)')),
 }

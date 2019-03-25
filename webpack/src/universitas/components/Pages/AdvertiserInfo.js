@@ -117,6 +117,7 @@ const AdvertiserInfo = ({ pageTitle, state, className = '' }) => (
     </section>
   </article>
 )
+
 const mapStateToProps = (state, ownProps) => ({})
 const mapDispatchToProps = (dispatch, ownProps) => ({})
 export default connect(mapStateToProps, mapDispatchToProps)(AdvertiserInfo)

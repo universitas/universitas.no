@@ -6,3 +6,5 @@ tags
 /build/
 .Rhistory
 __pycache__
+reload-service.log
+fifo/uwsgi
