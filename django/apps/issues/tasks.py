@@ -73,7 +73,9 @@ def require_binary(binary: str):
     return binary_decorator
 
 
-def get_staging_pdf_files(delete_expired=False, expiration_days=7, **kwargs):
+def get_staging_pdf_files(
+    delete_expired=False, expiration_days=None, **kwargs
+):
     """Find pages for latest issue in pdf staging directory."""
 
     if expiration_days:

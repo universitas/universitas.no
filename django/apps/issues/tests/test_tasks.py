@@ -38,7 +38,7 @@ def tmp_fixture_dir(settings):
 
     src = Path(__file__).parent / 'STAGING'
     dst = Path(tmpdir.name) / 'STAGING'
-    shutil.copytree(str(src), str(dst))
+    shutil.copytree(str(src), str(dst), copy_function=shutil.copy)
 
     # Yield will keep the TemporaryDirectory from being garbage collected.
     settings.STAGING_ROOT = str(dst)
