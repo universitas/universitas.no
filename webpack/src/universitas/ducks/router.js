@@ -33,10 +33,10 @@ export const routesMap = {
   [STORY]: '/:section/:id(\\d+)/:slug/',
   [SHORT_URL]: '/:section([^/]*)?/:id(\\d+)/:slug([^/]*)?/',
   [ABOUT]: '/om-universitas/',
+  [STYRE_INFO]: '/om-styret/',
   [AD_INFO]: '/annonser/',
   [SECTION]: '/:section/forside/',
   [NOT_FOUND]: '/ikke-funnet/',
-  [STYRE_INFO]: '/om-styret'
 }
 
 // Action creators
@@ -64,7 +64,10 @@ export const toShortUrl = ({ id }) => ({
 export const reverse = action => actionToPath(action, routesMap)
 
 // {action} -> "absolute url"
-export const reverseAbsolute = R.pipe(reverse, absoluteURL)
+export const reverseAbsolute = R.pipe(
+  reverse,
+  absoluteURL,
+)
 
 // selector for location object
 export const getLocation = R.prop(SLICE)

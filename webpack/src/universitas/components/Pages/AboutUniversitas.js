@@ -49,7 +49,11 @@ const byImportance = R.converge(R.add, [
   ),
 ])
 
-const byLastName = R.pipe(R.prop('display_name'), R.split(/ /g), R.last)
+const byLastName = R.pipe(
+  R.prop('display_name'),
+  R.split(/ /g),
+  R.last,
+)
 
 const sortStaff = R.sortWith([R.descend(byImportance), R.ascend(byLastName)])
 
@@ -72,7 +76,7 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
       Universitas mottar støtte fra Student&shy;samskipnaden i Oslo og Akershus
       (SiO), og alle studenter som betaler semesteravgift er dermed med på å
       støtte Universitas økonomisk. Papirutgaven av Universitas distribueres
-      rundt på læresteder tilknyttet SiO. 
+      rundt på læresteder tilknyttet SiO.
     </p>
     <p>
       Velferdstinget i Oslo og Akershus fordeler semesteravgiften, men står uten
@@ -119,6 +123,7 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
 
 const mapStateToProps = getSite
 const mapDispatchToProps = { fetchData: siteRequested }
-export default connect(mapStateToProps, mapDispatchToProps)(
-  requestData(AboutUniversitas, 'staff'),
-)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(requestData(AboutUniversitas, 'staff'))

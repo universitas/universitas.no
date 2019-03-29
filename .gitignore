@@ -1,15 +1,11 @@
 deployment.env
-Session.vim
+/build/
+/fifo/uwsgi
+__pycache__
 tags
 *.rdb
 *.sql
-/build/
-.Rhistory
-__pycache__
-<<<<<<< HEAD
-reload-service.log
-fifo/uwsgi
-=======
 *.log
 .vscode
->>>>>>> master
+Session.vim
+.Rhistory
