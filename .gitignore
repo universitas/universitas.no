@@ -1,10 +1,11 @@
 deployment.env
-Session.vim
+/build/
+/fifo/uwsgi
+__pycache__
 tags
 *.rdb
 *.sql
-/build/
-.Rhistory
-__pycache__
 *.log
 .vscode
+Session.vim
+.Rhistory

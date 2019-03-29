@@ -13,6 +13,7 @@ import {
   PDF,
   SCHEDULE,
   ABOUT,
+  STYRE_INFO,
   AD_INFO,
   NOT_FOUND,
   getLocation,
@@ -25,6 +26,7 @@ import PublicationSchedule from 'components/Pages/PublicationSchedule'
 import AboutUniversitas from 'components/Pages/AboutUniversitas'
 import AdvertiserInfo from 'components/Pages/AdvertiserInfo'
 import PageNotFound from 'components/PageNotFound'
+import StyreInfo from 'components/Pages/StyreInfo'
 
 const PageHelmet = ({
   pageTitle = '',
@@ -74,6 +76,7 @@ const pages = {
     ({ year = '' }) => `Utgivelsesplan ${year}`,
   ),
   [ABOUT]: pageWrapper(AboutUniversitas, R.always('Om Universitas')),
+  [STYRE_INFO]: pageWrapper(StyreInfo, R.always('Om Styret')),
   [AD_INFO]: pageWrapper(AdvertiserInfo, R.always('Annonsér i Universitas')),
   [NOT_FOUND]: pageWrapper(PageNotFound, R.always('ikke funnet (404)')),
 }

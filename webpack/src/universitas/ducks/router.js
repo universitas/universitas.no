@@ -22,6 +22,7 @@ export const AD_INFO = 'router/AD_INFO'
 export const STORY = 'router/STORY'
 export const SCHEDULE = 'router/SCHEDULE'
 export const SHORT_URL = 'router/SHORT_URL'
+export const STYRE_INFO = 'router/STYRE_INFO'
 export { NOT_FOUND }
 
 // url routes action mappings to configure redux-first-router
@@ -32,6 +33,7 @@ export const routesMap = {
   [STORY]: '/:section/:id(\\d+)/:slug/',
   [SHORT_URL]: '/:section([^/]*)?/:id(\\d+)/:slug([^/]*)?/',
   [ABOUT]: '/om-universitas/',
+  [STYRE_INFO]: '/om-styret/',
   [AD_INFO]: '/annonser/',
   [SECTION]: '/:section/forside/',
   [NOT_FOUND]: '/ikke-funnet/',
@@ -43,6 +45,7 @@ export const toSection = section => ({ type: SECTION, payload: { section } })
 export const toPdf = year => ({ type: PDF, payload: { year } })
 export const toPubSchedule = year => ({ type: SCHEDULE, payload: { year } })
 export const toAbout = () => ({ type: ABOUT, payload: {} })
+export const toStyret = () => ({ type: STYRE_INFO, payload: {} })
 export const toAdInfo = () => ({ type: AD_INFO, payload: {} })
 export const toStory = ({ id, title, section, story_type = {} }) => ({
   type: STORY,
@@ -61,7 +64,10 @@ export const toShortUrl = ({ id }) => ({
 export const reverse = action => actionToPath(action, routesMap)
 
 // {action} -> "absolute url"
-export const reverseAbsolute = R.pipe(reverse, absoluteURL)
+export const reverseAbsolute = R.pipe(
+  reverse,
+  absoluteURL,
+)
 
 // selector for location object
 export const getLocation = R.prop(SLICE)
