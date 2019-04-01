@@ -1,6 +1,6 @@
 deployment.env
 /build/
-/fifo/uwsgi
+/fifo/
 __pycache__
 tags
 *.rdb
