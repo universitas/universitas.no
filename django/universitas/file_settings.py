@@ -7,6 +7,17 @@ env = Environment(strict=False)
 MEDIA_ROOT = env.MEDIA_DIR or '/var/media/'
 STATIC_ROOT = env.STATIC_DIR or '/var/static/'
 STAGING_ROOT = env.STAGING_DIR or '/var/staging/'
+FILE_UPLOAD_TEMP_DIR = STAGING_ROOT
+
+# Use temporary file upload handler to do some queued local operations before
+# saving files to the remote server.
+FILE_UPLOAD_HANDLERS = [
+    "django.core.files.uploadhandler.TemporaryFileUploadHandler"
+]
+FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o6770
+FILE_UPLOAD_PERMISSIONS = 0o664
+# FILE_UPLOAD_MAX_MEMORY_SIZE = 1000000  # 1 megabyte
+
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 
