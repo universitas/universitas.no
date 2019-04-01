@@ -8,7 +8,7 @@ const pickRelated = R.pipe(
 
 const RelatedStories = ({ related_stories }) => (
   <section className="RelatedStories">
-    <h2 className="sectionTitle">Les også disse sakene:</h2>
+    <h2 className="sectionTitle">Les også:</h2>
     {pickRelated(related_stories).map((id, idx) => (
       <RelatedStory key={idx} id={id} />
     ))}
