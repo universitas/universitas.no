@@ -1,6 +1,8 @@
 import cx from 'classnames'
 import { formatDate } from 'utils/text'
 
+let teller = 1
+
 const PublicationTable = ({ year, issues = [] }) => (
   <table className={cx('PublicationTable', 'univTable')}>
     <thead>
@@ -47,7 +49,7 @@ const dataTransform = R.pipe(
       R.identity,
       ({ publication_date, issue_name, issue_type }) => ({
         adDeadLine: new Date(new Date(publication_date) - 2 * DAY),
-        number: issue_name.split('/')[0],
+        number: teller++,
         issueType: ISSUE_TYPES[issue_type],
         future: new Date(publication_date) > new Date(),
       }),
