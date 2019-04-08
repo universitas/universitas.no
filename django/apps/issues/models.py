@@ -12,20 +12,21 @@ import subprocess
 import unicodedata
 import uuid
 
+import PyPDF2
+import botocore
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import connection, models
 from django.dispatch.dispatcher import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-
-import PyPDF2
-import botocore
+from psycopg2 import sql
 from sorl import thumbnail
-from utils.model_mixins import EditURLMixin
 from wand.color import Color
 from wand.drawing import Drawing
 from wand.image import Image as WandImage
+
+from utils.model_mixins import EditURLMixin
 
 logger = logging.getLogger('universitas')
 IssueTuple = collections.namedtuple('IssueTuple', 'number, date')
@@ -185,8 +186,8 @@ class IssueQueryset(models.QuerySet):
 class IssueManager(models.Manager):
     def renumber(self):
         """Use postgres window function to calculate issue name "NN/YYYY" """
-        table = self.model._meta.db_table
-        sql = f"""
+        query = sql.SQL(
+            """
         UPDATE {table}
         SET issue_name = subquery.number
           || '/'
@@ -201,8 +202,9 @@ class IssueManager(models.Manager):
         ) AS subquery
         WHERE subquery.id = {table}.id
         """
+        ).format(table=sql.Identifier(self.model._meta.db_table))
         with connection.cursor() as cursor:
-            cursor.execute(sql)
+            cursor.execute(query)
 
 
 class Issue(models.Model, EditURLMixin):
