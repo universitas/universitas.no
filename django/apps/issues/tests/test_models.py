@@ -6,6 +6,7 @@ import tempfile
 
 from django.core.files.base import ContentFile
 from django.utils.timezone import datetime
+import pytest
 
 from apps.issues.models import (
     Issue,
@@ -14,7 +15,6 @@ from apps.issues.models import (
     pdf_to_image,
     pdf_to_text,
 )
-import pytest
 
 
 def get_contentfile(filepath):
