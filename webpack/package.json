@@ -82,6 +82,7 @@
     "pm2": "^3.4.0",
     "postcss-loader": "^3.0.0",
     "postcss-object-fit-images": "^1.1.2",
+    "prettier": "^1.16.4",
     "progress-bar-webpack-plugin": "^1.12.1",
     "prop-types": "^15.7.2",
     "ramda": "^0.26.1",
