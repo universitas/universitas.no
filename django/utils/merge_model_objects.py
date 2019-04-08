@@ -3,9 +3,9 @@ from itertools import filterfalse, tee
 from django.apps import apps
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import transaction
-from django.db.models.fields.related import ManyToManyRel, ManyToOneRel
+from django.db.models.fields.related import ManyToOneRel
 
-from utils.disconnect_signals import disconnect_signals
+from utils.disconnect_signals import disconnect_django_signals
 
 
 def partition(pred, iterable):
@@ -30,8 +30,9 @@ def is_class(cls):
     return lambda item: isinstance(item, cls)
 
 
+@disconnect_django_signals()
 @transaction.atomic()
-def merge_instances(primary_object, *alias_objects, disable_signals=True):
+def merge_instances(primary_object, *alias_objects):
     """Merge several model instances into one, the `primary_object`.
     Use this function to merge model objects and migrate all of the related
     fields from the alias objects the primary object.
@@ -43,10 +44,6 @@ def merge_instances(primary_object, *alias_objects, disable_signals=True):
     Based on: https://djangosnippets.org/snippets/382/
     Based on https://djangosnippets.org/snippets/2283/
     """
-    if disable_signals:
-        # Because backing image files can be identical, do not run delete
-        # signals that could remove file for both instances.
-        disconnect_signals()
 
     generic_fields = _get_generic_fields()
 
@@ -58,7 +55,6 @@ def merge_instances(primary_object, *alias_objects, disable_signals=True):
     fk_relations, m2m_relations = partition(
         is_class(ManyToOneRel), reverse_relations
     )
-
     for alias_object in alias_objects:
 
         # Migrate all foreign key refs from alias object to primary object.
@@ -71,7 +67,7 @@ def merge_instances(primary_object, *alias_objects, disable_signals=True):
                 setattr(obj, fk_rel.field.name, primary_object)
                 obj.save()
 
-        # Migrate all many to many refs from alias object to primary object.
+        # Migrate all m2m refs from alias object to primary object.
         for m2m_rel in m2m_relations:
             if m2m_rel.through:
                 # If a relation is `through`, it was processed as fk_rel
@@ -84,7 +80,7 @@ def merge_instances(primary_object, *alias_objects, disable_signals=True):
                 related_set.remove(alias_object)
                 related_set.add(primary_object)
 
-        # Migrate all generic relations from alias object to primary object.
+        # Migrate all generic relations from alias to primary object.
         for field in generic_fields:
             filter_kwargs = {
                 field.fk_field: alias_object._get_pk_val(),
