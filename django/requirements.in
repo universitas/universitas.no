@@ -1,7 +1,7 @@
 # vim: ft=config:
 
 # Django must be upgraded manually
-django~=2.1
+django~=2.2
 
 # DJANGO PLUGINS
 django-debug-toolbar
@@ -35,7 +35,7 @@ django-storages
 boto3
 
 # OTHER LIBRARIES
-pillow!=5.4.0
+pillow
 wand
 cython
 imagehash
@@ -69,7 +69,9 @@ pytest-django
 selenium
 
 # DEBUGGING AND DEVELOPMENT
+isort
+yapf
 werkzeug
 ipdb
-ipython<7.0   # wait until prompt toolkit 2.0 is stable
-ptpython<2.0  # wait until prompt toolkit 2.0 is stable
+ipython
+ptpython
