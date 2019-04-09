@@ -31,4 +31,7 @@ const mapStateToProps = (state, props) => {
   return { href }
 }
 const mapDispatchToProps = { storyRequested }
-export default connect(mapStateToProps, mapDispatchToProps)(StoryLink)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(StoryLink)

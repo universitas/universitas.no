@@ -120,4 +120,7 @@ const AdvertiserInfo = ({ pageTitle, state, className = '' }) => (
 
 const mapStateToProps = (state, ownProps) => ({})
 const mapDispatchToProps = (dispatch, ownProps) => ({})
-export default connect(mapStateToProps, mapDispatchToProps)(AdvertiserInfo)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AdvertiserInfo)

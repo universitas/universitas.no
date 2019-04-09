@@ -1,10 +1,9 @@
 from .byline import Byline
-from .sections import StoryType, Section
-from .story import Story
 from .links import InlineLink
-from .storychildren import Aside, Pullquote, StoryImage, StoryVideo, InlineHtml
-from .mixins import MarkupTextField, MarkupCharField, MarkupModelMixin
-
+from .mixins import MarkupCharField, MarkupModelMixin, MarkupTextField
+from .sections import Section, StoryType
+from .story import Story
+from .storychildren import Aside, InlineHtml, Pullquote, StoryImage, StoryVideo
 
 __all__ = [  # type: ignore
     'Story',

@@ -42,4 +42,7 @@ const mapStateToProps = (state, { pk, name = 'size' }) => ({
 const mapDispatchToProps = (dispatch, { pk, name = 'size' }) => ({
   onChange: value => dispatch(actions.fieldChanged(pk, name, value)),
 })
-export default connect(mapStateToProps, mapDispatchToProps)(GridWidget)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(GridWidget)

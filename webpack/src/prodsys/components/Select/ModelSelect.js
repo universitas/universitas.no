@@ -6,7 +6,12 @@ import models from './models'
 const specFilter = R.ifElse(
   R.either(R.not, R.isEmpty),
   R.always(R.identity),
-  R.pipe(R.toPairs, R.map(R.apply(R.propEq)), R.allPass, R.filter),
+  R.pipe(
+    R.toPairs,
+    R.map(R.apply(R.propEq)),
+    R.allPass,
+    R.filter,
+  ),
 )
 
 // memoize key for selector
@@ -17,7 +22,11 @@ const reshapeItems = R.memoizeWith(keyFn, (filter, model, data) => {
   const { reshape = R.identity, reshapeOptions = R.identity } =
     models[model] || {}
   const items = R.map(reshape, data)
-  const options = R.pipe(R.values, specFilter(filter), reshapeOptions)(items)
+  const options = R.pipe(
+    R.values,
+    specFilter(filter),
+    reshapeOptions,
+  )(items)
   return { items, options }
 })
 
@@ -38,6 +47,9 @@ const mapDispatchToProps = (dispatch, { model }) => {
   }
 }
 
-const ModelSelect = connect(mapStateToProps, mapDispatchToProps)(Select)
+const ModelSelect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Select)
 
 export default ModelSelect

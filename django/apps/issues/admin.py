@@ -124,7 +124,7 @@ class PrintIssueAdmin(AdminImageMixin, admin.ModelAdmin, ThumbAdmin):
     fieldsets = [[
         '', {
             'fields': (
-                ('issue',),
+                ('issue', ),
                 ('pdf', 'cover_page', 'pages'),
                 ('large_thumbnail', 'extract'),
             )

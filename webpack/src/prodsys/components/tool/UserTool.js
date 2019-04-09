@@ -21,4 +21,7 @@ const UserTool = ({ first_name, last_name, username, logOut, avatar }) => {
   )
 }
 
-export default connect(getUser, { logOut })(UserTool)
+export default connect(
+  getUser,
+  { logOut },
+)(UserTool)

@@ -38,7 +38,8 @@ class ProdsysErrorBoundary extends React.Component {
           <div
             className="ProdsysErrorBoundary"
             onClick={() =>
-              Raven.lastEventId() && Raven.showReportDialog(ravenTranslate)}
+              Raven.lastEventId() && Raven.showReportDialog(ravenTranslate)
+            }
           >
             <h1>Søren, heller!</h1>
             <p>Noe gikk galt</p>

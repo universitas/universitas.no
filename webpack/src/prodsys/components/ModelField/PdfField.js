@@ -27,7 +27,9 @@ const PdfThumb = ({ cover, pages, pdf }) => (
 
 export const DetailField = ({ value = [], ...args }) => (
   <div {...args}>
-    {value.map((props, index) => <PdfThumb key={index} {...props} />)}
+    {value.map((props, index) => (
+      <PdfThumb key={index} {...props} />
+    ))}
   </div>
 )
 

@@ -1,6 +1,9 @@
 const splitter = n => {
   const re = RegExp(`^([^\\n:?!.]{0,${n}}\\S*)(.*)$`)
-  return R.pipe(t => re.exec(t), R.tail)
+  return R.pipe(
+    t => re.exec(t),
+    R.tail,
+  )
 }
 
 const splitTingo = R.curry(split =>

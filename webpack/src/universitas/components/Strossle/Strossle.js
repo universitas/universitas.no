@@ -4,12 +4,9 @@ const StrossleV1 = ({ id, url }) => (
 
 const StrossleV2 = ({ id, url }) => {
   const className = `strossle-widget-${id}`
-  React.useEffect(
-    () => {
-      window.strossle && window.strossle(id, `.${className}`)
-    },
-    [url],
-  )
+  React.useEffect(() => {
+    window.strossle && window.strossle(id, `.${className}`)
+  }, [url])
   return <div className={className} />
 }
 

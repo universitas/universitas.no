@@ -26,7 +26,10 @@ test('circular json returns error', () => {
 
 test('cleanText', () => {
   const SPACER = '\u2060\xA0'
-  const clean = R.pipe(cleanText, specialCharacters)
+  const clean = R.pipe(
+    cleanText,
+    specialCharacters,
+  )
   expect(clean('')).toEqual('')
   expect(clean('@txt: -- text')).toEqual(`@txt: –${SPACER}text`)
   expect(clean('-Hello "hello"')).toEqual(`–${SPACER}Hello «hello»`)

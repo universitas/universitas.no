@@ -64,9 +64,8 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
-    'DEFAULT_PAGINATION_CLASS': (
-        'rest_framework.pagination.LimitOffsetPagination'
-    ),
+    'DEFAULT_PAGINATION_CLASS':
+        ('rest_framework.pagination.LimitOffsetPagination'),
     'PAGE_SIZE': 50,
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
@@ -229,9 +228,7 @@ FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            path('templates'),
-        ],
+        'DIRS': [path('templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'debug': DEBUG,

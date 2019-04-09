@@ -39,4 +39,7 @@ const mapDispatchToProps = (dispatch, { model, attr = 'search' }) => ({
   clearSearch: e => dispatch(modelActions(model).filterSet(attr, '')),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchField)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SearchField)

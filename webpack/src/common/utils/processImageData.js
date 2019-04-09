@@ -37,24 +37,34 @@ export const loadImageBlueImp = props =>
           ...extractExifTags(meta.exif && meta.exif.getAll()),
         })
       },
-      { maxHeight: THUMB_SIZE, maxWidth: THUMB_SIZE, canvas: true, meta: true }
-    )
+      { maxHeight: THUMB_SIZE, maxWidth: THUMB_SIZE, canvas: true, meta: true },
+    ),
   )
 
 // :: {file, ...props} -> Promise[{file, md5, ...props}]
 export const withMd5 = props =>
   new Promise(resolve =>
-    md5(props.file).then(hash => resolve({ ...props, md5: hash }))
+    md5(props.file).then(hash => resolve({ ...props, md5: hash })),
   )
 
 // :: string -> Date | string
 export const exifDateTime = R.when(
   R.test(/^\d{4}:\d{1,2}:\d{1,2}/),
-  R.pipe(R.replace(/:/, '-'), R.replace(/:/, '-'), R.constructN(1, Date))
+  R.pipe(
+    R.replace(/:/, '-'),
+    R.replace(/:/, '-'),
+    R.constructN(1, Date),
+  ),
 )
 
 // :: Strip null characters and trim if string
-const stripNull = R.when(R.is(String), R.pipe(R.replace(/\0/g, ''), R.trim))
+const stripNull = R.when(
+  R.is(String),
+  R.pipe(
+    R.replace(/\0/g, ''),
+    R.trim,
+  ),
+)
 
 // :: {...tags} -> {artist, created, description}
 const _extractExifTags = R.pipe(
@@ -64,7 +74,13 @@ const _extractExifTags = R.pipe(
     description: tags.ImageDescription,
     imageId: tags.ImageUniqueId,
   }),
-  R.map(R.pipe(stripNull, utf8Decode, exifDateTime))
+  R.map(
+    R.pipe(
+      stripNull,
+      utf8Decode,
+      exifDateTime,
+    ),
+  ),
 )
 export const extractExifTags = R.tryCatch(_extractExifTags, R.always({}))
 
@@ -98,14 +114,17 @@ export const artistFromDescription = ({
   const regex = /(?:(?:f|ph)oto(?:cred|graf|manipulasjon|):? )(([^\s.]\.?[^\s.]* ?)+.?)/i
   return {
     ...props,
-    description: R.pipe(R.replace(regex, ''), R.trim)(description),
+    description: R.pipe(
+      R.replace(regex, ''),
+      R.trim,
+    )(description),
     artist:
       artist ||
       R.pipe(
         R.match(regex),
         R.propOr('', 1),
         R.replace(/[\s.]+$/g, ''), // strip trailing `.` characters
-        R.trim
+        R.trim,
       )(description),
   }
 }

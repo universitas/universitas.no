@@ -57,7 +57,9 @@ class Qmedia extends React.Component {
     const { className = '', qmedia = [] } = this.props
     return (
       <Advert className={cx('Qmedia', className)}>
-        {qmedia.map(props => <QmediaSub key={props.id} {...props} />)}
+        {qmedia.map(props => (
+          <QmediaSub key={props.id} {...props} />
+        ))}
       </Advert>
     )
   }
@@ -65,6 +67,9 @@ class Qmedia extends React.Component {
 
 export default {
   Google,
-  Qmedia: connect(getAdverts, { advertsRequested })(Qmedia),
+  Qmedia: connect(
+    getAdverts,
+    { advertsRequested },
+  )(Qmedia),
   AdHoc,
 }

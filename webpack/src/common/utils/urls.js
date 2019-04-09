@@ -31,7 +31,10 @@ export const isEmpty = R.contains(R.__, [{}, undefined, null, [], ''])
 // flipify mapObjectIndexed
 // ((k, v) -> A) -> Object[k, v] -> Array[A]
 const mapObject = fn =>
-  R.pipe(R.mapObjIndexed((val, key, _) => fn(key, val)), R.values)
+  R.pipe(
+    R.mapObjIndexed((val, key, _) => fn(key, val)),
+    R.values,
+  )
 
 // Build url safe querystring from object mapping.
 // queryString :: Obj -> String
@@ -45,7 +48,13 @@ export const queryString = R.pipe(
 // value -> String | Number | Array
 export const parseParam = R.cond([
   [R.test(/^[0-9.]+$/), parseFloat],
-  [R.test(/,/), R.pipe(R.split(','), R.map(v => parseParam(v)))],
+  [
+    R.test(/,/),
+    R.pipe(
+      R.split(','),
+      R.map(v => parseParam(v)),
+    ),
+  ],
   [R.T, R.identity],
 ])
 
@@ -53,8 +62,14 @@ export const parseParam = R.cond([
 // String -> {String: String|Number|Array}
 export const parseQuery = R.pipe(
   R.tryCatch(
-    R.pipe(R.constructN(1, global.URL), url => url.searchParams),
-    R.pipe(R.nthArg(1), R.constructN(1, URLSearchParams)),
+    R.pipe(
+      R.constructN(1, global.URL),
+      url => url.searchParams,
+    ),
+    R.pipe(
+      R.nthArg(1),
+      R.constructN(1, URLSearchParams),
+    ),
   ),
   Array.from,
   R.fromPairs,

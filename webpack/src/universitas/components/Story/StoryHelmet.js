@@ -3,7 +3,10 @@ import { reverseAbsolute, toStory, toShortUrl } from 'universitas/ducks/router'
 const STATUS_PUBLISHED = 10
 
 const authors = R.tryCatch(
-  R.pipe(R.pluck('name'), R.join(', ')),
+  R.pipe(
+    R.pluck('name'),
+    R.join(', '),
+  ),
   R.always(console.error),
 )
 

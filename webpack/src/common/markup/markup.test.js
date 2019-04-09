@@ -79,7 +79,10 @@ describe('inline text newline', () => {
 })
 
 describe('renderText', () => {
-  const reverse = R.pipe(parseText, renderText)
+  const reverse = R.pipe(
+    parseText,
+    renderText,
+  )
 
   for (const c in cases)
     test(c, () => expect(reverse(cases[c][0])).toEqual(cases[c][0]))

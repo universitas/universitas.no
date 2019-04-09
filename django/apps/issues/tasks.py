@@ -74,7 +74,7 @@ def require_binary(binary: str):
 
 
 def get_staging_pdf_files(
-        delete_expired=False, expiration_days=None, **kwargs
+    delete_expired=False, expiration_days=None, **kwargs
 ):
     """Find pages for latest issue in pdf staging directory."""
 

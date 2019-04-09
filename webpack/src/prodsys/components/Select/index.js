@@ -20,7 +20,9 @@ const flattenOptions = options => {
 }
 
 const getItem = ({ value = null, options = [] }) => {
-  return R.pipe(flattenOptions, R.indexBy(R.prop('value')), R.prop(value))(
-    options,
-  )
+  return R.pipe(
+    flattenOptions,
+    R.indexBy(R.prop('value')),
+    R.prop(value),
+  )(options)
 }

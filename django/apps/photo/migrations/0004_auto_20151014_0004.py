@@ -11,8 +11,8 @@ class Migration(migrations.Migration):
         migrations.AlterModelOptions(
             name='profileimage',
             options={
-                'verbose_name_plural': 'Profile Images',
-                'verbose_name': 'Profile Image'
+                'verbose_name_plural': 'Profile Images', 'verbose_name':
+                    'Profile Image'
             },
         ),
         migrations.AlterField(

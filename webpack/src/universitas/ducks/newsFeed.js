@@ -1,9 +1,18 @@
 import { HOME, SECTION, STORY } from 'universitas/ducks/router'
 
 // Lenses
-const lens = R.pipe(R.split('.'), R.lensPath)
+const lens = R.pipe(
+  R.split('.'),
+  R.lensPath,
+)
 const sliceLens = lens('newsFeed')
-const selectorFromLens = l => R.view(R.compose(sliceLens, l))
+const selectorFromLens = l =>
+  R.view(
+    R.compose(
+      sliceLens,
+      l,
+    ),
+  )
 
 const feedLens = lens('results')
 const searchLens = lens('search')
@@ -32,10 +41,20 @@ const filterFeed = ({ results = [], language, section }) => {
     ? R.filter(R.propEq('language', language))
     : R.identity
 
-  return R.into([], R.compose(isSection, isLanguage), results)
+  return R.into(
+    [],
+    R.compose(
+      isSection,
+      isLanguage,
+    ),
+    results,
+  )
 }
 
-export const getItems = R.pipe(getFeed, filterFeed)
+export const getItems = R.pipe(
+  getFeed,
+  filterFeed,
+)
 export const getSearch = selectorFromLens(searchLens)
 export const getSearchResults = selectorFromLens(searchResultsLens)
 export const getFetching = selectorFromLens(fetchingLens)
@@ -127,9 +146,8 @@ const getReducer = ({ type, payload, error }) => {
     }
     case TOGGLE_LANGUAGE:
       return R.compose(
-        R.over(
-          languageLens,
-          l => (l == payload.language ? null : payload.language),
+        R.over(languageLens, l =>
+          l == payload.language ? null : payload.language,
         ),
         R.assoc('next', true),
       )

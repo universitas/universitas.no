@@ -33,8 +33,8 @@ LOGGING['formatters'] = {
     'minimal': {'format': '%(message)s'},
     'simple': {
         'format': '%(levelname)-8s'
-        '%(filename)12s:%(lineno)-4d'
-        '%(message)s'
+                  '%(filename)12s:%(lineno)-4d'
+                  '%(message)s'
     },
     'verbose': {
         'format': (

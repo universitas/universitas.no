@@ -23,6 +23,7 @@ const PDFArchive = ({
   </article>
 )
 
-export default connect(getIssues, { fetchData: issuesRequested })(
-  requestData(PDFArchive, 'issues', LoadingIndicator),
-)
+export default connect(
+  getIssues,
+  { fetchData: issuesRequested },
+)(requestData(PDFArchive, 'issues', LoadingIndicator))

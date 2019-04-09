@@ -4,4 +4,7 @@ import { NewsFeed } from './NewsFeed'
 
 const mapStateToProps = s => ({ items: getSearchResults(s), ...getFeed(s) })
 const mapDispatchToProps = (dispatch, ownProps) => ({ feedRequested })
-export default connect(mapStateToProps, mapDispatchToProps)(NewsFeed)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(NewsFeed)

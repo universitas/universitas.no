@@ -28,18 +28,18 @@ test('extractExifTags', () => {
   expect(extractExifTags(inputExif)).toEqual(expectExif)
   // fallback to `DateTime`
   expect(
-    extractExifTags(R.dissoc('DateTimeOriginal', inputExif)).created.valueOf()
+    extractExifTags(R.dissoc('DateTimeOriginal', inputExif)).created.valueOf(),
   ).toBeGreaterThan(expectExif.created.valueOf())
 })
 
 test('extractExifTags artist from description', () => {
   expect(
-    artistFromDescription({ description: 'foo bar\nFotograf: Foo Bar.' })
+    artistFromDescription({ description: 'foo bar\nFotograf: Foo Bar.' }),
   ).toMatchObject({ artist: 'Foo Bar', description: 'foo bar' })
   expect(
     artistFromDescription({
       description:
         'Oslo, Norge, 17.06.2015. Helge Blakkisrud. Pressebilder for Norsk Utenrikspolitisk Institutt (NUPI) Photo: Christopher Olssøn 2014©littleimagebank',
-    })
+    }),
   ).toMatchObject({ artist: 'Christopher Olssøn 2014©littleimagebank' })
 })

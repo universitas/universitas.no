@@ -36,7 +36,7 @@ export const getStyles = (src, crop_box, imgRatio, frameRatio) => {
     crop_box.right,
     crop_box.top,
     crop_box.bottom,
-    frameRatio / imgRatio
+    frameRatio / imgRatio,
   )
   const width = right - left
   const height = bottom - top

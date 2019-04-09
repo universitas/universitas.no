@@ -26,7 +26,7 @@ class AdFormat(models.Model):
     name = models.CharField(unique=True, max_length=50)
     width = models.PositiveSmallIntegerField()
     height = models.PositiveSmallIntegerField()
-    price = models.PositiveIntegerField(help_text=_('display price'),)
+    price = models.PositiveIntegerField(help_text=_('display price'), )
     published = models.BooleanField(default=True)
     category = models.PositiveSmallIntegerField(
         default=WEB,

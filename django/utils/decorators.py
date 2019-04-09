@@ -35,12 +35,12 @@ def _ismethod(func):
 
 
 def cache_memoize(
-        timeout=24 * 60 * 60,
-        prefix=None,
-        args_rewrite=None,
-        hit_callable=None,
-        miss_callable=None,
-        store_result=True,
+    timeout=24 * 60 * 60,
+    prefix=None,
+    args_rewrite=None,
+    hit_callable=None,
+    miss_callable=None,
+    store_result=True,
 ):
     """Decorator for memoizing function calls where we use the
     "local cache" to store the result.

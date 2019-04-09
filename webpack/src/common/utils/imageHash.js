@@ -44,7 +44,7 @@ export const dhash = (img, bits = 8) => {
   const pixelData = imageDataToLumen(imageData)
   const hash = []
   for (let i = 0; i < pixelData.length; i++)
-    if (i % w - bits) hash.push(pixelData[i] < pixelData[i + 1])
+    if ((i % w) - bits) hash.push(pixelData[i] < pixelData[i + 1])
   return hash
 }
 

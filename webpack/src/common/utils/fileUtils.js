@@ -18,7 +18,11 @@ export const objectURLtoFile = (url, filename) =>
     .then(b => new File([b], filename))
 
 export const slugifyFilename = ({ filename, mimetype }) => {
-  const ext = R.pipe(R.split('/'), R.last, R.replace('jpeg', 'jpg'))
+  const ext = R.pipe(
+    R.split('/'),
+    R.last,
+    R.replace('jpeg', 'jpg'),
+  )
   const stem = R.pipe(
     R.trim,
     R.replace(/\.[^.]{0,4}$/, ''),
