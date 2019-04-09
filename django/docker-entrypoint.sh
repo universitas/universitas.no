@@ -48,6 +48,11 @@ case $1 in
     echo 'starting flower'
     run "celery -A universitas flower --loglevel=INFO"
     ;;
+  lint)
+    shift
+    isort --thirdparty django -fss -j3 -m3 -tc $@
+    yapf --verbose --in-place $@
+    ;;
   *)
     echo 'just executing'
     exec "$@"

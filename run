@@ -120,17 +120,25 @@ show_help() {
 }
 
 lint_javascript() {
-  js_files=$(git diff --staged --name-status | awk '/^[AM].*\.js$/ {print $2}' | sed -r '/^(build|docs)/d')
-  if [[ -n $js_files ]]; then
-    prettier --write --semi false --single-quote --trailing-comma all $js_files
+  cd webpack
+  files=$(git status -s . \
+    | awk '/^ *[AM].*\.(json|js|jsx|scss)/ {print $2}')
+  cd ..
+  if [[ -n $files ]]; then
+    docker-compose run --rm webpack lint $files
+  else
+    echo 'no changed frontend files'
   fi
 }
 
 lint_python() {
-  py_files=$(git diff --staged --name-status | awk '/^[AM].*\.py$/ {print $2}' | grep -v 'migrations')
-  if [[ -n $py_files ]]; then
-    exists isort && isort --thirdparty django -fss -j3 -m3 -tc $py_files
-    exists yapf && yapf --verbose --in-place $py_files
+  cd django
+  files=$(git status -s . | awk '/^ *[AM].*\.py/ {print $2}')
+  cd ..
+  if [[ -n $files ]]; then
+    docker-compose run --rm django lint $files
+  else
+    echo 'no changed python files'
   fi
 }
 
@@ -287,6 +295,7 @@ mkdir -p \
   ./volumes/logs/\
   ./volumes/certificates/
 
+unset CDPATH
 export COMPOSE_HTTP_TIMEOUT=6000
 export GIT_SHA=$(git rev-parse HEAD)
 export COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml

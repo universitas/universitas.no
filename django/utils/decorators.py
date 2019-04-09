@@ -26,20 +26,21 @@ def timeit(fn):
 def _ismethod(func):
     """Check if first argument name is "self"."""
     try:
-        return next(iter(inspect.signature(func).parameters.keys()),
-                    None) == 'self'
+        return next(
+            iter(inspect.signature(func).parameters.keys()), None
+        ) == 'self'
     except ValueError:
         # builtin function
         return False
 
 
 def cache_memoize(
-    timeout=24 * 60 * 60,
-    prefix=None,
-    args_rewrite=None,
-    hit_callable=None,
-    miss_callable=None,
-    store_result=True,
+        timeout=24 * 60 * 60,
+        prefix=None,
+        args_rewrite=None,
+        hit_callable=None,
+        miss_callable=None,
+        store_result=True,
 ):
     """Decorator for memoizing function calls where we use the
     "local cache" to store the result.

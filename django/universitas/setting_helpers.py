@@ -24,7 +24,8 @@ class Environment:
 
         self._keys = {
             _attrname(key): key
-            for key in os.environ.keys() if key.startswith(prefix)
+            for key in os.environ.keys()
+            if key.startswith(prefix)
         }
         self.prefix = prefix
         self._strict = strict

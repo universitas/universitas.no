@@ -10,13 +10,12 @@ express() {
   [[ -e /var/build/server.js ]] || npm run buildssr;
   export NODE_PATH="$PWD/node_modules/"
   if [[ $1 == 'dev' ]]; then
-    npm run watchssr & 
+    npm run watchssr &
     exec npm run servedev
   else
-    exec npm run serve 
+    exec npm run serve
   fi
 }
-
 
 case $1 in
   jest      ) exec npm run test ;;
@@ -29,5 +28,6 @@ case $1 in
   dev-server) exec npm run dev ;;
   install   ) shift; exec npm install --save $@ ;;
   update    ) exec npm update --save ;;
+  lint      ) shift; npx prettier --write $@ ;;
   *         ) exec $@ ;;
 esac
