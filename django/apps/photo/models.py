@@ -16,6 +16,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from model_utils.models import TimeStampedModel
+from psycopg2 import sql
 from slugify import Slugify
 from sorl.thumbnail import ImageField
 
@@ -84,11 +85,11 @@ class ImageFileQuerySet(models.QuerySet):
 
     def with_bigness(self):
         """Calculate crop box bigness"""
-        sql = (
+        query = (
             "((crop_box->>'bottom')::float-(crop_box->>'top')::float)"
             "*((crop_box->>'right')::float-(crop_box->>'left')::float)"
         )
-        return self.annotate(bigness=RawSQL(sql, []))
+        return self.annotate(bigness=RawSQL(query, []))
 
 
 def _filter_dupes(dupes, master_hashes, limit=3):
@@ -110,26 +111,34 @@ def _filter_dupes(dupes, master_hashes, limit=3):
 
 def _get_dupes_raw(qs, ahash, limit=30):
     """Use raw sql to query. This is the only way to use the GIN index."""
-    table = ImageFile._meta.db_table
-    field = '_imagehash'
-    sql = f"""
-    SELECT * FROM {table} WHERE {field} %% %(query)s
-    ORDER BY similarity({field}, %(query)s ) DESC LIMIT {limit}
-    """
-    params = {'query': str(ahash)}
-    return qs.raw(sql, params)
+    query = sql.SQL(
+        'SELECT * FROM {table} WHERE {field} %% %(ahash)s '
+        'ORDER BY similarity({field}, %(query)s ) DESC LIMIT {limit}'
+    ).format(
+        table=sql.Identifier(ImageFile._meta.db_table),
+        field=sql.Identifier('_imagehash')
+    )
+    return qs.raw(query, {'ahash': str(ahash)})
 
 
 def _create_gin_index(field='_imagehash', delete=False):
     """Create search index for imagehash."""
-    table = ImageFile._meta.db_table
+
     if delete:
-        sql = f'DROP INDEX IF EXISTS {field}_trigram_index;'
+        query = 'DROP INDEX IF EXISTS {index}'
     else:
-        sql = f'''CREATE INDEX IF NOT EXISTS {field}_trigram_index
-                  ON {table} USING GIN ({field} gin_trgm_ops);'''
+        query = (
+            'CREATE INDEX IF NOT EXISTS {index} '
+            'ON {table} USING GIN ({field} gin_trgm_ops)'
+        )
     with connection.cursor() as cursor:
-        cursor.execute(sql)
+        cursor.execute(
+            sql.SQL(query).format(
+                table=sql.Identifier(ImageFile._meta.db_table),
+                field=sql.Identifier(field),
+                index=sql.Identifier(f'{field}_trigram_index'),
+            )
+        )
 
 
 class ImageFileManager(models.Manager):
