@@ -13,7 +13,13 @@ const Field = ({ name, label, value }) => (
 const phoneLink = R.pipe(
   R.defaultTo(''),
   R.replace(/\s/g, ''),
-  R.when(R.pipe(R.length, R.equals(8)), R.concat('+47')),
+  R.when(
+    R.pipe(
+      R.length,
+      R.equals(8),
+    ),
+    R.concat('+47'),
+  ),
   R.concat('sms://'),
 )
 
@@ -48,6 +54,8 @@ export const ContactCard = ({
 
 export const ContactGrid = ({ contacts = [] }) => (
   <div className="ContactGrid">
-    {contacts.map(props => <ContactCard key={props.id} {...props} />)}
+    {contacts.map(props => (
+      <ContactCard key={props.id} {...props} />
+    ))}
   </div>
 )

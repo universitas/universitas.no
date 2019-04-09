@@ -20,7 +20,10 @@ const getReducer = ({ type, payload, error }) => {
     case ISSUES_REQUESTED:
       return R.assoc('fetching', true)
     case ISSUES_FETCHED:
-      return R.compose(R.assoc('fetching', false), R.merge(payload))
+      return R.compose(
+        R.assoc('fetching', false),
+        R.merge(payload),
+      )
     default:
       return R.identity
   }

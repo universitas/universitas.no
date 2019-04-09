@@ -18,6 +18,9 @@ const LanguageWidget = props => (
   </nav>
 )
 
-export default connect(state => ({ language: getLanguage(state) }), {
-  toggleLanguage,
-})(LanguageWidget)
+export default connect(
+  state => ({ language: getLanguage(state) }),
+  {
+    toggleLanguage,
+  },
+)(LanguageWidget)

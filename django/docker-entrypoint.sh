@@ -51,7 +51,7 @@ case $1 in
   lint)
     shift
     isort --thirdparty django -fss -j3 -m3 -tc $@
-    yapf --verbose --in-place $@
+    yapf --parallel --verbose --in-place $@
     ;;
   *)
     echo 'just executing'

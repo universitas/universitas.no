@@ -30,7 +30,12 @@ class Cube extends React.Component {
 
 const CubeGrid = ({ fetching }) => (
   <div className={cx({ fetching, cubeGrid: true })}>
-    {R.map(n => <Cube n={n} key={n} isLoading={fetching} />, R.range(0, 9))}
+    {R.map(
+      n => (
+        <Cube n={n} key={n} isLoading={fetching} />
+      ),
+      R.range(0, 9),
+    )}
   </div>
 )
 

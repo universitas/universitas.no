@@ -27,7 +27,7 @@ PAGE_ONE = 'UNI11VER16010101000.pdf'
 
 @pytest.fixture
 def first_issue(db):
-    return Issue.objects.get_or_create(publication_date=date(1946, 1, 1),)[0]
+    return Issue.objects.get_or_create(publication_date=date(1946, 1, 1), )[0]
 
 
 @pytest.fixture
@@ -150,7 +150,7 @@ def test_require_binary_decorator():
 
 @pytest.mark.django_db
 def test_create_current_issue_web_bundle(
-        first_issue, tmp_fixture_dir, monkeypatch
+    first_issue, tmp_fixture_dir, monkeypatch
 ):
     assert PrintIssue.objects.count() == 0
 

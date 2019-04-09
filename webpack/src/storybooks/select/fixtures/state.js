@@ -1,7 +1,11 @@
 import data from './state.json'
 import thumbs from './thumbs.js'
 
-const extractId = R.pipe(R.defaultTo(''), R.match(/\d+/g), R.last)
+const extractId = R.pipe(
+  R.defaultTo(''),
+  R.match(/\d+/g),
+  R.last,
+)
 
 export default R.pipe(
   R.over(

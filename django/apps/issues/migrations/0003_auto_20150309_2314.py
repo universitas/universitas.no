@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
             name='printissue',
             options={
                 'verbose_name_plural': 'Pdf issues',
-                'verbose_name': 'Pdf issue'
+                'verbose_name': 'Pdf issue',
             },
         ),
         migrations.RemoveField(

@@ -6,12 +6,20 @@ import cx from 'classnames'
 const formatTime = dt => formatDate(dt, 'YYYY-MM-DD')
 const formatCategory = n =>
   ['–', 'foto', 'illustrasjon', 'diagram', 'bylinefoto', 'ekstern'][n] || '?'
-const mapObject = (fn, obj) => R.pipe(R.mapObjIndexed(fn), R.values)(obj)
+const mapObject = (fn, obj) =>
+  R.pipe(
+    R.mapObjIndexed(fn),
+    R.values,
+  )(obj)
 
 const formatFuncs = {
   created: formatTime,
   category: s => s.substring(0, 4),
-  mimetype: R.pipe(R.defaultTo('?/?'), R.split('/'), R.last),
+  mimetype: R.pipe(
+    R.defaultTo('?/?'),
+    R.split('/'),
+    R.last,
+  ),
   filesize: formatFileSize,
 }
 
@@ -57,7 +65,9 @@ const Stat = ({ value, name, title }) => (
 const PhotoStats = (props = { filename, artist }) => (
   <div className="PhotoStats">
     {mapObject(
-      (value, key, obj) => <Stat key={key} {...reformat({ key, value })} />,
+      (value, key, obj) => (
+        <Stat key={key} {...reformat({ key, value })} />
+      ),
       props,
     )}
   </div>

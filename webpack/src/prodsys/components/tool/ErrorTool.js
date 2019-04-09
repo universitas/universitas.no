@@ -8,7 +8,10 @@ const errorToString = R.cond([
   [R.has('detail'), R.prop('detail')],
   [
     R.has('non_field_errors'),
-    R.compose(R.join(', '), R.prop('non_field_errors')),
+    R.compose(
+      R.join(', '),
+      R.prop('non_field_errors'),
+    ),
   ],
   [R.is(Object), JSON.stringify],
   [R.T, R.type],
@@ -43,7 +46,10 @@ const ErrorTool = ({ errors, clearError, clearErrors }, index) =>
     </div>
   ) : null
 
-export default connect(state => ({ errors: getErrors(state) }), {
-  clearErrors,
-  clearError,
-})(ErrorTool)
+export default connect(
+  state => ({ errors: getErrors(state) }),
+  {
+    clearErrors,
+    clearError,
+  },
+)(ErrorTool)

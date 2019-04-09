@@ -29,4 +29,7 @@ const SearchWidget = ({
 
 const mapStateToProps = getFeed
 const mapDispatchToProps = { changeSearch }
-export default connect(mapStateToProps, mapDispatchToProps)(SearchWidget)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SearchWidget)

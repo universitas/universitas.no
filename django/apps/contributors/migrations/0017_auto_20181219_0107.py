@@ -13,7 +13,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='position',
             name='active',
-            field=models.BooleanField(default=True, help_text='active', verbose_name='active'),
+            field=models.BooleanField(
+                default=True, help_text='active', verbose_name='active'
+            ),
         ),
         migrations.AlterField(
             model_name='contributor',

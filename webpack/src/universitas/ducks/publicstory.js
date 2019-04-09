@@ -5,9 +5,19 @@ const sliceLens = R.lensProp(SLICE)
 const storyLens = R.lensProp
 
 // Selectors
-const selectorFromLens = l => R.view(R.compose(sliceLens, l))
+const selectorFromLens = l =>
+  R.view(
+    R.compose(
+      sliceLens,
+      l,
+    ),
+  )
 export const getStory = id => selectorFromLens(storyLens(id))
-export const getStoryIds = R.pipe(R.view(sliceLens), R.keys, R.map(parseFloat))
+export const getStoryIds = R.pipe(
+  R.view(sliceLens),
+  R.keys,
+  R.map(parseFloat),
+)
 
 // Actions
 export const STORIES_REQUESTED = 'publicstory/STORIES_REQUESTED'
@@ -50,19 +60,28 @@ const getReducer = ({ type, payload, error }) => {
     case STORY_FETCHED:
       return R.over(
         storyLens(payload.id),
-        R.pipe(mergeLeft(payload), R.assoc('fetching', false)),
+        R.pipe(
+          mergeLeft(payload),
+          R.assoc('fetching', false),
+        ),
       )
     case STORIES_FETCHING:
       return mergeLeft(
-        R.pipe(R.map(R.flip(R.objOf)({ fetching: true })), R.mergeAll)(
-          payload.ids,
-        ),
+        R.pipe(
+          R.map(R.flip(R.objOf)({ fetching: true })),
+          R.mergeAll,
+        )(payload.ids),
       )
     case STORIES_FETCHED:
       return R.pipe(
         R.prop('results'),
         R.indexBy(R.prop('id')),
-        R.map(R.pipe(R.assoc('HTTPstatus', 200), R.assoc('fetching', false))),
+        R.map(
+          R.pipe(
+            R.assoc('HTTPstatus', 200),
+            R.assoc('fetching', false),
+          ),
+        ),
         mergeLeft,
       )(payload)
 

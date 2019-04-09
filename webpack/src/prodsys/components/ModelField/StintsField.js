@@ -19,7 +19,9 @@ const sortBy = prop => R.sort(R.descend(R.prop(prop)))
 export const DetailField = ({ value = [], ...args }) => (
   <span {...args}>
     {R.map(
-      props => <Stint key={props.id} {...props} />,
+      props => (
+        <Stint key={props.id} {...props} />
+      ),
       sortBy('start_date')(value),
     )}
   </span>

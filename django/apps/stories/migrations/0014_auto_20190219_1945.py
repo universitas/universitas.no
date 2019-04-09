@@ -13,6 +13,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='story',
             name='comment_field',
-            field=models.CharField(choices=[('facebook', 'facebook'), ('disqus', 'disqus'), ('off', 'off')], default='off', help_text='Enable comment field', max_length=16, verbose_name='Comment Field'),
+            field=models.CharField(
+                choices=[('facebook', 'facebook'), ('disqus', 'disqus'),
+                         ('off', 'off')],
+                default='off',
+                help_text='Enable comment field',
+                max_length=16,
+                verbose_name='Comment Field'
+            ),
         ),
     ]

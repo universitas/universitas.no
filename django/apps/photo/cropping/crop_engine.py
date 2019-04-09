@@ -15,12 +15,9 @@ def close_crop(x, y, left, right, top, bottom, aspect_ratio):
     W = 0.5 * min(A, 1, w if a > A else h * A)
     H = W / A
     X, Y = [
-        sorted(c)[1] for c in (((W,
-                                 (l + r) / 2, 1 - W),
-                                (l + W, x, r - W))[int(W * 2 < w)],
-                               ((H,
-                                 (t + b) / 2, 1 - H),
-                                (t + H, y, b - H))[int(H * 2 < h)])
+        sorted(c)[1]
+        for c in (((W, (l + r) / 2, 1 - W), (l + W, x, r - W))[int(W * 2 < w)],
+                  ((H, (t + b) / 2, 1 - H), (t + H, y, b - H))[int(H * 2 < h)])
     ]
     return Box(X - W, Y - H, X + W, Y + H)
 

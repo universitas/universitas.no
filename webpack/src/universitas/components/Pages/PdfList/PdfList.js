@@ -20,7 +20,10 @@ const Issue = ({ publication_date, issue_name, pdfs }) => (
       <div className="date">{formatDate(publication_date, 'dddd D. MMMM')}</div>
     </div>
     <div className="pdf">
-      {R.pipe(R.sortBy(sortPdfs), R.map(Faximile))(pdfs)}
+      {R.pipe(
+        R.sortBy(sortPdfs),
+        R.map(Faximile),
+      )(pdfs)}
     </div>
   </div>
 )

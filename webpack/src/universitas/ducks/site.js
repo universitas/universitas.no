@@ -4,8 +4,18 @@ const uxLens = R.lensProp('ux')
 
 // Selectors
 export const getSite = R.view(sliceLens)
-export const getSections = R.view(R.compose(sliceLens, R.lensProp('sections')))
-export const getUx = R.view(R.compose(sliceLens, uxLens))
+export const getSections = R.view(
+  R.compose(
+    sliceLens,
+    R.lensProp('sections'),
+  ),
+)
+export const getUx = R.view(
+  R.compose(
+    sliceLens,
+    uxLens,
+  ),
+)
 
 // Actions
 export const SITE_REQUESTED = 'site/SITE_REQUESTED'
@@ -34,7 +44,10 @@ const getReducer = ({ type, payload, error }) => {
     case SITE_REQUESTED:
       return R.assoc('fetching', true)
     case SITE_FETCHED:
-      return R.compose(R.assoc('fetching', false), R.merge(payload))
+      return R.compose(
+        R.assoc('fetching', false),
+        R.merge(payload),
+      )
     case TOGGLE_UX:
       return R.over(uxLens, R.merge(R.__, payload))
     default:

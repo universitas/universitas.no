@@ -37,7 +37,10 @@ const selectDebugData = state => {
   const location = getLocation(state)
   switch (location.type) {
     case STORY:
-      return R.pipe(getStory(location.payload.id), buildNodeTree)(state)
+      return R.pipe(
+        getStory(location.payload.id),
+        buildNodeTree,
+      )(state)
     default:
       return state
   }
@@ -99,4 +102,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 export { FrontpageEdit }
 const mapDispatchToProps = { toggleUx }
-export default connect(mapStateToProps, mapDispatchToProps)(FrontpageEdit)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(FrontpageEdit)

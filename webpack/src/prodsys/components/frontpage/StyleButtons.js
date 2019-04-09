@@ -40,7 +40,11 @@ const buttons = {
   },
 }
 
-const mapObj = fn => R.compose(R.values, R.mapObjIndexed(fn))
+const mapObj = fn =>
+  R.compose(
+    R.values,
+    R.mapObjIndexed(fn),
+  )
 
 export const StyleButtons = ({ value = '', onChange }) => {
   const styles = parseStyles(renderStyles(parseStyles(value)))
@@ -77,4 +81,7 @@ const mapStateToProps = (state, { pk, name = 'html_class' }) => ({
 const mapDispatchToProps = (dispatch, { pk, name = 'html_class' }) => ({
   onChange: value => dispatch(actions.fieldChanged(pk, name, value)),
 })
-export default connect(mapStateToProps, mapDispatchToProps)(StyleButtons)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(StyleButtons)

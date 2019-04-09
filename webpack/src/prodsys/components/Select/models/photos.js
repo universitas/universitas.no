@@ -43,14 +43,17 @@ const PhotoField = ({ src, title }) => (
   </div>
 )
 
-const Option = R.pipe(reformat, ({ small, ...props }) => (
-  <div className="PhotoOption">
-    <PhotoField src={small} title={props.filename} />
-    {R.map(name => <Field key={name} name={name} value={props[name]} />)(
-      fields,
-    )}
-  </div>
-))
+const Option = R.pipe(
+  reformat,
+  ({ small, ...props }) => (
+    <div className="PhotoOption">
+      <PhotoField src={small} title={props.filename} />
+      {R.map(name => <Field key={name} name={name} value={props[name]} />)(
+        fields,
+      )}
+    </div>
+  ),
+)
 
 export const reshape = props => ({ label: props.filename, ...props })
 

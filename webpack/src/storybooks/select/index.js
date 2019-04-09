@@ -18,7 +18,12 @@ const reshape = R.pipe(
 
 const models = R.pipe(
   R.pick(['contributors', 'photos', 'storytypes', 'issues', 'stories']),
-  R.map(R.pipe(R.prop('items'), R.values)),
+  R.map(
+    R.pipe(
+      R.prop('items'),
+      R.values,
+    ),
+  ),
 )(initialState)
 
 const menuIsOpen = () => boolean('always open', false) || undefined

@@ -1,6 +1,10 @@
 const prefixMatcher = R.pipe(prefix => [
   prefix,
-  R.pipe(R.defaultTo(''), R.match(RegExp(`${prefix}-(\\w+)`)), R.last),
+  R.pipe(
+    R.defaultTo(''),
+    R.match(RegExp(`${prefix}-(\\w+)`)),
+    R.last,
+  ),
 ])
 
 export const parseStyles = R.pipe(

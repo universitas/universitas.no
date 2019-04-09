@@ -24,11 +24,12 @@ def update_frontpagestories(apps, schema_editor):
     # update order
     FrontpageStory.objects.update(
         order=models.Subquery(
-            Story.objects.filter(frontpagestory=models.OuterRef('id')).
-            annotate(
-                timestamp=models.functions.
-                Extract('publication_date', 'epoch') / 3600
-            ).values('timestamp')[:1]
+            Story.objects.filter(frontpagestory=models.OuterRef('id')
+                                 ).annotate(
+                                     timestamp=models.functions.
+                                     Extract('publication_date', 'epoch') /
+                                     3600
+                                 ).values('timestamp')[:1]
         )
     )
 

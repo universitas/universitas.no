@@ -63,9 +63,7 @@ def test_indesign_create_story(staff_client, scandal_photo):
 
 def test_indesign_update_photos(scandal, scandal_photo, staff_client):
     """Client updates story images from indesign"""
-    data = {'bilete': [
-        {'bildefil': 'scandal.22.jpg', 'bildetekst': 'one'},
-    ]}
+    data = {'bilete': [{'bildefil': 'scandal.22.jpg', 'bildetekst': 'one'}, ]}
     url = f'{api_url}{scandal.pk}/'
     response = staff_client.patch(url, format='json', data=data)
     assert response.status_code == status.HTTP_200_OK

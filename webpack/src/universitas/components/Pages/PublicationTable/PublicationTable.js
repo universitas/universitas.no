@@ -12,9 +12,11 @@ const PublicationTable = ({ year, issues = [] }) => (
       </tr>
     </thead>
     <tbody>
-      {R.pipe(R.filter(R.propEq('year', year)), dataTransform, R.map(IssueRow))(
-        issues,
-      )}
+      {R.pipe(
+        R.filter(R.propEq('year', year)),
+        dataTransform,
+        R.map(IssueRow),
+      )(issues)}
     </tbody>
   </table>
 )

@@ -16,7 +16,11 @@ const wrapBody = R.cond([
   [R.is(global.FormData), R.objOf('body')], // multipart form (content-type auto)
   [
     R.T, // anything else is converted to JSON
-    R.pipe(JSON.stringify, R.objOf('body'), contentType('application/json')),
+    R.pipe(
+      JSON.stringify,
+      R.objOf('body'),
+      contentType('application/json'),
+    ),
   ],
 ])
 

@@ -54,11 +54,11 @@ class PublishedStoryManager(models.Manager):
 
 
 class Story(  # type: ignore
-    FullTextSearchMixin,
-    EditURLMixin,
-    TimeStampedModel,
-    TextContent,
-    RelatedStoriesMixin,
+        FullTextSearchMixin,
+        EditURLMixin,
+        TimeStampedModel,
+        TextContent,
+        RelatedStoriesMixin,
 ):
     """ An article or story in the newspaper. """
 

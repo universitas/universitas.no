@@ -13,6 +13,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='story',
             name='strossle_enabled',
-            field=models.BooleanField(default=True, help_text='Enable Strossle'),
+            field=models.BooleanField(
+                default=True, help_text='Enable Strossle'
+            ),
         ),
     ]

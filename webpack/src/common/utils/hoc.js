@@ -3,7 +3,7 @@
 export const requestData = (
   Wrapped,
   sentinel,
-  Loader = () => null
+  Loader = () => null,
 ) => props => {
   const { fetching, fetchData, ...data } = props
   const isReady = sentinel ? R.has(sentinel) : R.isEmpty

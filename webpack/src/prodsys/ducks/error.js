@@ -1,10 +1,19 @@
 import { LOG_IN_SUCCESS, LOG_OUT } from 'ducks/auth'
 // Lenses
-const lens = R.pipe(R.split('.'), R.lensPath)
+const lens = R.pipe(
+  R.split('.'),
+  R.lensPath,
+)
 const sliceLens = lens('errors')
 
 // Selectors
-const selectorFromLens = l => R.view(R.compose(sliceLens, l))
+const selectorFromLens = l =>
+  R.view(
+    R.compose(
+      sliceLens,
+      l,
+    ),
+  )
 
 export const getErrors = R.view(sliceLens)
 

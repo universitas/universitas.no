@@ -80,4 +80,7 @@ const TopMenu = ({ expanded, toggleUx }) => (
 const mapStateToProps = state => ({ expanded: getUx(state).menuExpanded })
 const mapDispatchToProps = { toggleUx }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TopMenu)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(TopMenu)

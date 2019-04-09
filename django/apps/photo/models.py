@@ -134,11 +134,11 @@ def _create_gin_index(field='_imagehash', delete=False):
 
 class ImageFileManager(models.Manager):
     def search(
-            self,
-            md5=None,
-            fingerprint=None,
-            filename=None,
-            cutoff=0.5,
+        self,
+        md5=None,
+        fingerprint=None,
+        filename=None,
+        cutoff=0.5,
     ):
         """Search for images matching query."""
         qs = self.get_queryset()
