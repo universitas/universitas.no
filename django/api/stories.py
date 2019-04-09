@@ -2,7 +2,7 @@ import logging
 
 from django.core.exceptions import FieldError
 from django.db.models import Count, Prefetch
-from rest_framework import filters, serializers, viewsets, exceptions
+from rest_framework import exceptions, filters, serializers, viewsets
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from apps.stories.models import (

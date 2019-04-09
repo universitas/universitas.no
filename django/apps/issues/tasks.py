@@ -7,15 +7,15 @@ import shutil
 import subprocess
 import tempfile
 
+from celery import shared_task
+from celery.schedules import crontab
+from celery.task import periodic_task
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.utils import timezone
 
 from apps.core.staging import new_staging_pdf_files
 from apps.issues.models import Issue, PrintIssue, current_issue
-from celery import shared_task
-from celery.schedules import crontab
-from celery.task import periodic_task
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +74,7 @@ def require_binary(binary: str):
 
 
 def get_staging_pdf_files(
-    delete_expired=False, expiration_days=None, **kwargs
+        delete_expired=False, expiration_days=None, **kwargs
 ):
     """Find pages for latest issue in pdf staging directory."""
 

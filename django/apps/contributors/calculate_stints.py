@@ -58,12 +58,12 @@ def create_stints_from_bylines(dry_run=False, since=MINIMUM_DATE):
 
 
 def _add_stints_from_bylines(
-    position: Position,
-    credit: str,
-    exclude_sections: List[str] = [],
-    byline_cutoff: int = 0,
-    dry_run: bool = False,
-    since: Time = MINIMUM_DATE,
+        position: Position,
+        credit: str,
+        exclude_sections: List[str] = [],
+        byline_cutoff: int = 0,
+        dry_run: bool = False,
+        since: Time = MINIMUM_DATE,
 ):
     """Add stints based on byline credits"""
 
@@ -84,12 +84,10 @@ def _add_stints_from_bylines(
         last_byline = bylines.last().story.publication_date.date()
 
         if Stint.objects.filter(
-            contributor=person,
-            position=position,
-            start_date__lte=first_byline,
-        ).exclude(
-            end_date__lt=last_byline,
-        ).exists():
+                contributor=person,
+                position=position,
+                start_date__lte=first_byline,
+        ).exclude(end_date__lt=last_byline,).exists():
             continue
 
         stint = Stint(
@@ -108,19 +106,18 @@ def _add_stints_from_bylines(
         # merge with any existing stints for the same person and position
 
 
-def merge_stints(stints: QuerySet,
-                 max_gap=timezone.timedelta(days=180)) -> Stint:
+def merge_stints(
+        stints: QuerySet, max_gap=timezone.timedelta(days=180)
+) -> Stint:
     """Merge one or more Stints"""
     last: Optional[Stint] = None
     for stint in stints:
-        if (
-            last and (last.contributor,
-                      last.position) == (stint.contributor, stint.position)
-            and max_or_none(
-                last.end_date,
-                stint.start_date - max_gap,
-            ) == last.end_date
-        ):
+        if (last and (last.contributor, last.position) == (stint.contributor,
+                                                           stint.position)
+                and max_or_none(
+                    last.end_date,
+                    stint.start_date - max_gap,
+                ) == last.end_date):
             last.start_date = min(stint.start_date, last.start_date)
             last.end_date = max_or_none(stint.end_date, last.end_date)
             last.save()

@@ -15,13 +15,13 @@ from django.db.models.expressions import RawSQL
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from model_utils.models import TimeStampedModel
+from slugify import Slugify
+from sorl.thumbnail import ImageField
 
 # from apps.issues.models import current_issue
 from apps.contributors.models import Contributor
 from apps.photo import file_operations
-from model_utils.models import TimeStampedModel
-from slugify import Slugify
-from sorl.thumbnail import ImageField
 from utils.dbfuncs import TrigramWordSimilarity
 from utils.merge_model_objects import merge_instances
 from utils.model_mixins import EditURLMixin
@@ -134,11 +134,11 @@ def _create_gin_index(field='_imagehash', delete=False):
 
 class ImageFileManager(models.Manager):
     def search(
-        self,
-        md5=None,
-        fingerprint=None,
-        filename=None,
-        cutoff=0.5,
+            self,
+            md5=None,
+            fingerprint=None,
+            filename=None,
+            cutoff=0.5,
     ):
         """Search for images matching query."""
         qs = self.get_queryset()
@@ -225,8 +225,13 @@ class ImageCategoryMixin(models.Model):
 
 
 class ImageFile(  # type: ignore
-    ProcessImage, ThumbImageFile, ImageHashModelMixin, TimeStampedModel,
-    EditURLMixin, AutoCropImage, ImageCategoryMixin,
+        ProcessImage,
+        ThumbImageFile,
+        ImageHashModelMixin,
+        TimeStampedModel,
+        EditURLMixin,
+        AutoCropImage,
+        ImageCategoryMixin,
 ):
     """Photo or Illustration in the publication."""
 

@@ -12,8 +12,8 @@ from django.db import models
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-
 from model_utils.models import TimeStampedModel
+
 from utils.dbfuncs import TrigramWordSimilarity
 from utils.decorators import cache_memoize
 

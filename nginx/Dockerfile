@@ -6,7 +6,7 @@ RUN apk add --no-cache shadow \
   && addgroup -g1000 www \
   && usermod -aG www nginx \
   && rm -f /etc/nginx/conf.d/* \
-  ; 
+  ;
 
-# Copy custom configs for our web app 
+# Copy custom configs for our web app
 COPY ./conf.d/* /etc/nginx/conf.d/

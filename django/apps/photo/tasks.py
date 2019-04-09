@@ -2,9 +2,8 @@
 from datetime import timedelta
 import logging
 from pathlib import Path
-import re
 import subprocess
-from typing import BinaryIO, List
+from typing import List
 
 from PIL import Image
 from celery import shared_task

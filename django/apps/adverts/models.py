@@ -26,7 +26,7 @@ class AdFormat(models.Model):
     name = models.CharField(unique=True, max_length=50)
     width = models.PositiveSmallIntegerField()
     height = models.PositiveSmallIntegerField()
-    price = models.PositiveIntegerField(help_text=_('display price'), )
+    price = models.PositiveIntegerField(help_text=_('display price'),)
     published = models.BooleanField(default=True)
     category = models.PositiveSmallIntegerField(
         default=WEB,
@@ -292,9 +292,8 @@ class Advert(models.Model):
         if self.status in [self.PUBLISHED, self.DEFAULT]:
             if self.ad_channels.count() == 0:
                 raise ValidationError({
-                    'ad_channels': _(
-                        'Choose one or more ad channels before publishing.'
-                    )
+                    'ad_channels':
+                        _('Choose one or more ad channels before publishing.')
                 })
             if self.ad_type == self.DUMMY_AD:
                 raise ValidationError(
@@ -378,5 +377,6 @@ class Advert(models.Model):
         return mark_safe(html_source)
 
     def channels(self):
-        return ','.join(channel.name
-                        for channel in self.ad_channels.all()) or '-'
+        return ','.join(
+            channel.name for channel in self.ad_channels.all()
+        ) or '-'

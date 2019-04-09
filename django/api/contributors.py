@@ -1,12 +1,12 @@
 import logging
 
 from django.db.models import Prefetch
+from rest_framework import serializers, viewsets
+from url_filter.integrations.drf import DjangoFilterBackend
 
 from apps.contributors import tasks
 from apps.contributors.models import Contributor, Position, Stint
 from apps.photo.models import ImageFile
-from rest_framework import serializers, viewsets
-from url_filter.integrations.drf import DjangoFilterBackend
 from utils.serializers import AbsoluteURLField, PhoneNumberField
 
 logger = logging.getLogger(__name__)
