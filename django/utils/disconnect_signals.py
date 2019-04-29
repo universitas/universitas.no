@@ -1,14 +1,13 @@
+from contextlib import contextmanager
 import ctypes
-import inspect
-import logging
 
-from django.db.models import Model, signals
-
-logger = logging.getLogger(__name__)
+from django.db.models import signals
 
 
-def disconnect_signals(verbose=False):
-    """ Disconnects all signals. """
+@contextmanager
+def disconnect_django_signals():
+    """ Temporarily disconnect all signals """
+    signals_list = []
     for signal_name in dir(signals):
         signal = getattr(signals, signal_name)
         if not isinstance(signal, signals.Signal):
@@ -16,14 +15,12 @@ def disconnect_signals(verbose=False):
         for (receiver_id, sender_id), recref in signal.receivers[:]:
             receiver = recref()
             sender = ctypes.cast(sender_id, ctypes.py_object).value
+            signals_list.append([signal, receiver, sender])
+
+    try:
+        for signal, receiver, sender in signals_list:
             signal.disconnect(receiver, sender=sender)
-            if not verbose:
-                continue
-            if inspect.isclass(sender) and issubclass(sender, Model):
-                sender_name = f'{sender.__module__}.{sender.__name__}'
-            else:
-                sender_name = f'{sender}'
-            logger.debug(
-                f'{sender_name:<35}{receiver.__module__}'
-                f'.{receiver.__qualname__}'
-            )
+        yield
+    finally:
+        for signal, receiver, sender in signals_list:
+            signal.connect(receiver, sender=sender)

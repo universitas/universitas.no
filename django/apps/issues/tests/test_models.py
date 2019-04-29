@@ -39,8 +39,9 @@ def fixture_pdf():
 
 @pytest.mark.django_db
 def test_create_issue():
-    new_issue = Issue.objects.create(publication_date=datetime(2020, 1, 1), )
-    new_issue.full_clean()
+    new_issue = Issue(publication_date=datetime(2020, 1, 1))
+    new_issue.save()
+    new_issue.refresh_from_db()
     assert str(new_issue) == '1/2020 01. Jan'
 
 

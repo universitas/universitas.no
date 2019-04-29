@@ -16,11 +16,11 @@ import PyPDF2
 import botocore
 from django.conf import settings
 from django.core.files.base import ContentFile
-from django.db import models
-from django.db.models.signals import pre_delete, pre_save
+from django.db import connection, models
 from django.dispatch.dispatcher import receiver
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from psycopg2 import sql
 from sorl import thumbnail
 from wand.color import Color
 from wand.drawing import Drawing
@@ -183,10 +183,34 @@ class IssueQueryset(models.QuerySet):
         return latest
 
 
+class IssueManager(models.Manager):
+    def renumber(self):
+        """Use postgres window function to calculate issue name "NN/YYYY" """
+        query = sql.SQL(
+            """
+        UPDATE {table}
+        SET issue_name = subquery.number
+          || '/'
+          || EXTRACT('year' from publication_date)
+        FROM (
+          SELECT id,
+          ROW_NUMBER() OVER (
+            PARTITION BY EXTRACT('year' FROM publication_date)
+            ORDER BY publication_date ASC
+          ) AS number
+          FROM {table}
+        ) AS subquery
+        WHERE subquery.id = {table}.id
+        """
+        ).format(table=sql.Identifier(self.model._meta.db_table))
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+
+
 class Issue(models.Model, EditURLMixin):
     """ Past or future print issue """
 
-    objects = IssueQueryset.as_manager()
+    objects = IssueManager.from_queryset(IssueQueryset)()
 
     REGULAR = 1
     MAGAZINE = 2
@@ -198,7 +222,7 @@ class Issue(models.Model, EditURLMixin):
         (SPECIAL, _('Welcome special')),
     ]
 
-    publication_date = models.DateField(default=today, blank=True, null=True)
+    publication_date = models.DateField(default=today)
     issue_name = models.CharField(max_length=100, editable=False, blank=True)
     issue_type = models.PositiveSmallIntegerField(
         choices=ISSUE_TYPES, default=REGULAR
@@ -221,12 +245,6 @@ class Issue(models.Model, EditURLMixin):
 
     def natural_key(self):
         return '{}'.format(self.publication_date)
-
-    def save(self, *args, **kwargs):
-        if not self.publication_date:
-            self.publication_date = today()
-        self.issue_name = f'{self.number}/{self.year}'
-        return super(Issue, self).save(*args, **kwargs)
 
     @property
     def year(self):
@@ -399,7 +417,13 @@ class PrintIssue(models.Model, EditURLMixin):
         path.write_bytes(data)
 
 
-@receiver(pre_delete, sender=PrintIssue)
+@receiver(models.signals.post_delete, sender=Issue)
+@receiver(models.signals.post_save, sender=Issue)
+def renumber_issues(sender, instance, **kwargs):
+    sender.objects.renumber()
+
+
+@receiver(models.signals.pre_delete, sender=PrintIssue)
 def delete_pdf_and_cover_page(sender, instance, **kwargs):
     try:
         thumbnail.delete(instance.cover_page, delete_file=True)
@@ -408,7 +432,7 @@ def delete_pdf_and_cover_page(sender, instance, **kwargs):
     instance.pdf.delete(False)
 
 
-@receiver(pre_save, sender=PrintIssue)
+@receiver(models.signals.pre_save, sender=PrintIssue)
 def remove_thumbnail(sender, instance, **kwargs):
     if instance.pk is None:
         return

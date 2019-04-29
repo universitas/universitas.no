@@ -18,9 +18,13 @@ const PublicationSchedule = ({
   className,
 }) => (
   <article className={cx('PublicationSchedule', className)}>
-    <YearNavigation year={year} issues={issues} toUrl={toPubSchedule} />
+    <YearNavigation
+      year={parseInt(year)}
+      issues={issues}
+      toUrl={toPubSchedule}
+    />
     <h1>{pageTitle}</h1>
-    <PublicationTable year={year} issues={issues} />
+    <PublicationTable year={parseInt(year)} issues={issues} />
     <p>
       <strong>Magasin</strong> er Universitas' featurebilag.
     </p>

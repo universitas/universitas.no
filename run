@@ -47,12 +47,17 @@ while (( $# > 0 )); do
             echo "development settings" ;;
   lint    ) lint_javascript; lint_python ;; # lint all files commited
   test    ) run_tests ;;  # run pytest and jest
-  tags    ) ctags -R ./django ./webpack/src && echo "collected ctags" ;; # collect ctags for python and js
+  tags    ) build_tags ;; # collect ctags for python and js
   precom  ) main__ lint tags test; exit 0 ;; # run before git commit
   *       ) show_help ${@:1}; exit 1 ;;
   esac;
   shift 1;
 done
+}
+
+build_tags() {
+  if_installed ctags -R ./django ./webpack/src 
+  echo "collected tags > $PWD/tags"
 }
 
 webpack_build() {
@@ -125,9 +130,10 @@ lint_javascript() {
     | awk '/^ *[AM].*\.(json|js|jsx|scss)/ {print $2}')
   cd ..
   if [[ -n $files ]]; then
+    echo 'linting changed webpack files'
     docker-compose run --rm webpack lint $files
   else
-    echo 'no changed frontend files'
+    echo 'no changed webpack files'
   fi
 }
 
@@ -136,9 +142,10 @@ lint_python() {
   files=$(git status -s . | awk '/^ *[AM].*\.py/ {print $2}')
   cd ..
   if [[ -n $files ]]; then
+    echo 'linting changed django files'
     docker-compose run --rm django lint $files
   else
-    echo 'no changed python files'
+    echo 'no changed django files'
   fi
 }
 
@@ -184,8 +191,14 @@ dump_postgres() {
   docker-compose exec postgres pg_dump --no-owner -U postgres -d postgres > $DUMP
 }
 
-exists() {
-  command -v "$1" >/dev/null 2>&1
+if_installed() {
+  # execute only if the program is installed
+  if command -v "$1" >/dev/null 2>&1; then
+    eval $@
+  else
+    echo "$1 not found. Skipping" >&2
+    return 127
+  fi
 }
 
 reload_service() {

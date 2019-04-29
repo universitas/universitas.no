@@ -17,9 +17,9 @@ const PDFArchive = ({
   year = currentYear,
 }) => (
   <article className={cx('PDFArchive', className)}>
-    <YearNavigation issues={issues} year={year} toUrl={toPdf} />
+    <YearNavigation issues={issues} year={parseInt(year)} toUrl={toPdf} />
     <h1>{pageTitle}</h1>
-    <PdfList issues={R.filter(R.propEq('year', year), issues)} />
+    <PdfList issues={R.filter(R.propEq('year', parseInt(year)), issues)} />
   </article>
 )
 
