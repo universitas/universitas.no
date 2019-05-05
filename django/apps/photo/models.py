@@ -113,10 +113,11 @@ def _get_dupes_raw(qs, ahash, limit=30):
     """Use raw sql to query. This is the only way to use the GIN index."""
     query = sql.SQL(
         'SELECT * FROM {table} WHERE {field} %% %(ahash)s '
-        'ORDER BY similarity({field}, %(query)s ) DESC LIMIT {limit}'
+        'ORDER BY similarity({field}, %(ahash)s ) DESC LIMIT {limit}'
     ).format(
         table=sql.Identifier(ImageFile._meta.db_table),
-        field=sql.Identifier('_imagehash')
+        field=sql.Identifier('_imagehash'),
+        limit=sql.Literal(limit),
     )
     return qs.raw(query, {'ahash': str(ahash)})
 
