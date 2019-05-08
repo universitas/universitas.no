@@ -46,14 +46,13 @@ def connect_contributor_to_user(cn: Contributor, create: bool = False) -> User:
     if cn.user:
         return cn.user
     user = cn.get_user()
-    groups = default_groups()
     if user:
         logger.info(f'found {user}')
         try:
             cn0 = user.contributor
         except ObjectDoesNotExist:
             cn.user = user
-            cn.save()
+            cn.save(update_fields=['user'])
         else:
             merge_instances(cn, cn0)
     elif create:
@@ -72,9 +71,9 @@ def connect_contributor_to_user(cn: Contributor, create: bool = False) -> User:
             last_name=cn.last_name,
             is_active=True,
         )
-        user.groups.add(groups.staff)
+        user.groups.add(default_groups().staff)
         cn.user = user
-        cn.save()
+        cn.save(update_fields=['user'])
         logger.info(f'created {user}')
     return user
 
@@ -84,7 +83,7 @@ def update_contributor_status(cn: Contributor):
     stints = cn.stint_set
     if stints.active():
         is_active = True
-        cn.user = cn.get_user()
+        cn.user = connect_contributor_to_user(cn)
         if cn.user and not cn.is_management and cn.user.last_login:
             is_active = cn.user.last_login > ACTIVE_CUTOFF
             if not is_active:
