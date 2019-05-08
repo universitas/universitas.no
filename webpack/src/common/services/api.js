@@ -66,7 +66,10 @@ export const apiFetch = (url, head = {}, body = null) => {
         message: error.message,
         url,
         ...init,
-        stack: R.split(/\n+/, error.stack),
+        stack: R.pipe(
+          R.propOr('stack', ''),
+          R.split(/\n+/),
+        )(error),
       },
     })) // fetch error – not status code
 }
