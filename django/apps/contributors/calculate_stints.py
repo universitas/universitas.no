@@ -66,13 +66,17 @@ def _add_stints_from_bylines(
     since: Time = MINIMUM_DATE,
 ):
     """Add stints based on byline credits"""
+    recent_contributors = Contributor.objects.filter(
+        byline__story__publication_date__gte=since,
+        byline__credit__contains=credit,
+    )
 
-    for person in Contributor.objects.all():
+    for person in recent_contributors:
         if person.is_management:
             continue
         bylines = person.byline_set.filter(
             credit__contains=credit,
-            story__publication_date__gt=since,
+            story__publication_date__gte=since,
         ).exclude(  # no opinion pieces
             story__story_type__section__title__in=exclude_sections
         ).order_by(

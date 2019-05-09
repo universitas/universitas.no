@@ -99,5 +99,12 @@ def update_contributor_status(cn: Contributor):
 def update_status():
     """Check if any contributors have become inactive and update active
     contributors"""
-    for cn in Contributor.objects.exclude(status=Contributor.EXTERNAL):
+    cnx = Contributor.objects.exclude(stint=None)
+    unknown = Contributor.objects.filter(status=Contributor.UNKNOWN)
+    recent = (
+        unknown | cnx.active() | cnx.filter(stint__end_date=None)
+        | cnx.filter(stint__end_date__gt=ACTIVE_CUTOFF)
+    ).distinct()
+
+    for cn in recent:
         update_contributor_status(cn)
