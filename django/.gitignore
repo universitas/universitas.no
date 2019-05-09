@@ -1,3 +1,4 @@
 local.env
 production.env
 .pytest_cache
+Pipfile*

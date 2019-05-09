@@ -50,7 +50,7 @@ case $1 in
     ;;
   lint)
     shift
-    isort --verbose --thirdparty django -fss -j3 -m3 -tc $@
+    isort --verbose --jobs=3 $@
     yapf --verbose --in-place $@
     ;;
   *)
