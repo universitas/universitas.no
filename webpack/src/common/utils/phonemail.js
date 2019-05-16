@@ -1,3 +1,5 @@
+import { phoneFormat } from 'utils/text'
+
 const phoneLink = R.pipe(
   R.defaultTo(''),
   R.replace(/\s/g, ''),
