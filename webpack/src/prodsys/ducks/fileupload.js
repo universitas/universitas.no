@@ -190,6 +190,6 @@ const getReducer = ({ type, payload = {}, error }) => {
   }
 }
 
-const initialState = { updateAll: false, items: [] }
+const initialState = { updateAll: false, items: {} }
 export const reducer = (state = initialState, action = {}) =>
   getReducer(action)(state)
