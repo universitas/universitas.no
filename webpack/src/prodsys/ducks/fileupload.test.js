@@ -31,7 +31,7 @@ const fixtures = [
 
 describe('initial state', () => {
   test('initial state', () => {
-    expect(reducer().fileupload).toEqual({ updateAll: false, items: [] })
+    expect(reducer().fileupload).toEqual({ updateAll: false, items: {} })
   })
 })
 

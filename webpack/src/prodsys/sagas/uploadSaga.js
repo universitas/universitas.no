@@ -95,7 +95,6 @@ function* newUploadSaga(action) {
       R.map(R.pick(['id'])),
       R.map(R.assoc('choice', 'keep')),
     )(response)
-    console.log(duplicates)
     yield put(uploadUpdate(md5, { duplicates, check: true }))
     yield put(photosFetched(response))
   } else {
@@ -116,9 +115,10 @@ function* postUploadSaga(action) {
     height,
   } = upload
   const duplicates = R.pipe(
+    R.propOr([], 'duplicates'),
     R.filter(R.propEq('choice', 'replace')),
     R.pluck('id'),
-  )(upload.duplicates)
+  )(upload)
   const filename = slugifyFilename(upload)
   const original = yield call(objectURLtoFile, objectURL, filename)
   const data = {
