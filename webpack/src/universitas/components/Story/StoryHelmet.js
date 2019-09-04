@@ -21,6 +21,7 @@ const StoryHelmet = ({
   id,
   title,
   story_type,
+  story_type_name,
   lede,
   bylines = [],
   language,
@@ -28,7 +29,7 @@ const StoryHelmet = ({
   fb_image,
   publication_status,
 }) => {
-  const pagetitle = `${title} | ${story_type.name} | universitas.no`
+  const pagetitle = `${title} | ${story_type_name} | universitas.no `    // Wrong story type
   const pageurl = reverseAbsolute(toStory({ id, title, story_type }))
   const shorturl = reverseAbsolute(toShortUrl({ id }))
 
