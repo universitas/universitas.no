@@ -41,7 +41,7 @@ django-rest-swagger==2.2.0
 django-storages==1.7.1
 django-url-filter==0.3.12
 django-webpack-loader==0.6.0
-django==2.2.1
+django==2.2.4
 djangorestframework==3.9.3
 docopt==0.6.2             # via ptpython
 docutils==0.14            # via botocore
@@ -125,5 +125,5 @@ w3lib==1.20.0             # via requests-html
 wand==0.5.3
 wcwidth==0.1.7            # via ftfy, prompt-toolkit
 websockets==7.0           # via pyppeteer
-werkzeug==0.15.2
+werkzeug==0.15.3
 yapf==0.27.0
