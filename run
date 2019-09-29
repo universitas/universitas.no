@@ -56,7 +56,7 @@ done
 }
 
 build_tags() {
-  if_installed ctags -R ./django ./webpack/src 
+  if_installed ctags -R ./django ./webpack/src
   echo "collected tags > $PWD/tags"
 }
 
@@ -208,7 +208,8 @@ reload_service() {
   docker-compose run --rm web django-admin migrate
   docker-compose run --rm web django-admin collectstatic --clear --noinput
   docker-compose restart express celery celerybeat
-  echo r > ./fifo/uwsgi
+  # The pipe is owned by user 1000 (django inside uwsgi/web docker container)
+  echo r | sudo -u#1000 tee ./fifo/uwsgi >/dev/null
   echo '--- reload OK ---'
 }
 
