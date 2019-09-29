@@ -69,7 +69,7 @@ module.exports = {
             options: {
               sourceMap: true,
               plugins: () => [
-                require('autoprefixer')({ grid: false, browsers: ['>5%'] }),
+                require('autoprefixer')({ grid: false }),
                 require('postcss-object-fit-images'),
               ],
             },

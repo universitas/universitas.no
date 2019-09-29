@@ -56,7 +56,6 @@ celery
 flower
 
 # ERROR REPORTING
-raven       # legacy sentry integration
 sentry-sdk  # new sentry sdk for python
 
 # WSGI WEB SERVER
