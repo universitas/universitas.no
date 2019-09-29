@@ -1,5 +1,8 @@
 """Production settings and globals."""
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 from .base import *  # noqa
 from .setting_helpers import Environment
 
@@ -16,12 +19,12 @@ EMAIL_HOST_PASSWORD = gmail.password
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-# RAVEN / SENTRY
+# SENTRY ERROR LOGGING
 env = Environment()
-RAVEN_CONFIG = {
-    'dsn': env.raven_dsn,
-    'site': env.site_url,
-    'release': env.git_sha,
-}
-
-# SENTRY_CLIENT = 'raven.contrib.django.raven_compat.DjangoClient'
+if env.sentry_url:
+    sentry_sdk.init(
+        dsn=env.sentry_url,
+        release=env.git_sha,
+        server_name=env.site_url,
+        integrations=[DjangoIntegration()]
+    )

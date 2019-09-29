@@ -1,4 +1,4 @@
-version: '2.1'
+version: "2.1"
 services:
   webpack:
     image: universitas/webpack:${IMAGE_VERSION:-edge}
@@ -7,6 +7,7 @@ services:
       - ./webpack:/app/
       - node_modules:/app/node_modules/
     environment:
+      - SENTRY_URL=https://e613c71ec39d471da53588b6aefe6bc0@dev.universitas.no/3
       - BUILD_DIR=/var/build/
       - PUBLIC_PATH=/static/
 
@@ -33,7 +34,7 @@ services:
     extends: django
     restart: always
     expose:
-      - '8000' # wsgi on tcp socket
+      - "8000" # wsgi on tcp socket
     volumes:
       # master fifo
       - ${PWD}/fifo/:/run/fifo/

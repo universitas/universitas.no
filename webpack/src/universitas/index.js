@@ -1,5 +1,6 @@
 // frontpage of universitas.no react app
 import ReactDOM from 'react-dom'
+import * as Sentry from '@sentry/browser'
 import { Provider } from 'react-redux'
 import configureStore from './configureStore'
 import App from './App'
@@ -20,6 +21,7 @@ const rehydrate = (state, node) => {
   const html = node.innerHtml
   const user = state && state.auth && state.auth.id
   delete window.__RENDER_ERROR__
+  if (process.env.SENTRY_URL) Sentry.init({ dsn: process.env.SENTRY_URL })
   try {
     // throw 'fooo'
     ReactDOM.hydrate(Universitas(state), node)

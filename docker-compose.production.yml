@@ -1,13 +1,17 @@
 # overrides for production
-version: '2.1'
+version: "2.1"
 services:
+  webpack:
+    environment:
+      - SENTRY_URL=https://e613c71ec39d471da53588b6aefe6bc0@dev.universitas.no/3
   express:
     extends: webpack
     command: express
 
   web:
-    command: 'uwsgi'
+    command: "uwsgi"
     environment:
+      - SENTRY_URL=https://aa9a7700e53248c596e37c38ab4676fb@dev.universitas.no/2
       - DEBUG=False
 
   certbot:
@@ -26,8 +30,8 @@ services:
       - certificates:/var/certificates/
       - letsencrypt_challenge:/var/letsencrypt/
     ports:
-      - '${NGINX_PORT:-80}:80'
-      - '443:443'
+      - "${NGINX_PORT:-80}:80"
+      - "443:443"
 
 volumes:
   letsencrypt_challenge: {}
