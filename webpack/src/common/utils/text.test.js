@@ -19,9 +19,9 @@ test('pretty json', () => {
 test('circular json returns error', () => {
   const obj = {}
   obj.a = obj
-  expect(JSON.parse(toJson(obj))).toMatchObject({
-    message: 'Converting circular structure to JSON',
-  })
+  expect(JSON.parse(toJson(obj)).message).toMatch(
+    /^Converting circular structure to JSON/,
+  )
 })
 
 test('cleanText', () => {

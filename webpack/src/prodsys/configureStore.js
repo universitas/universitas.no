@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { logger } from 'redux-logger'
-import Raven from 'raven-js' // error logging with Sentry
+import * as Sentry from '@sentry/browser'
 import { connectRoutes } from 'redux-first-router'
 import { compose } from 'utils/misc'
 import reducers from './reducer.js'
@@ -17,7 +17,7 @@ const configureStore = (initialState = {}, initialEntries = []) => {
   const sagaMiddleware = createSagaMiddleware({
     onError:
       process.env.NODE_ENV == 'production'
-        ? e => Raven.captureException(e)
+        ? e => Sentry.captureException(e)
         : console.error,
   })
   const warez = [sagaMiddleware, router.middleware]

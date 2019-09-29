@@ -48,11 +48,6 @@ LOGGING['handlers'] = {
     'errorlog': logfile_handler('error-django.log'),
     'celerylog': logfile_handler('celery-django.log', debug=True),
     'debuglog': logfile_handler('debug-django.log', debug=True),
-    'sentry': {
-        'level': 'ERROR',
-        'filters': ['debug_off'],
-        'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-    },
     'console': {
         'filters': ['debug_on'],
         'level': 'DEBUG',
@@ -62,7 +57,7 @@ LOGGING['handlers'] = {
 }
 LOGGING['root'] = {
     'level': 'WARNING',
-    'handlers': ['console', 'errorlog', 'debuglog', 'sentry'],
+    'handlers': ['console', 'errorlog', 'debuglog'],
 }
 LOGGING['loggers'] = {
     'werkzeug': {
@@ -78,16 +73,16 @@ LOGGING['loggers'] = {
     'apps': {
         'level': 'DEBUG',
         'propagate': False,
-        'handlers': ['console', 'errorlog', 'debuglog', 'sentry'],
+        'handlers': ['console', 'errorlog', 'debuglog'],
     },
     'universitas': {
         'level': 'DEBUG',
         'propagate': False,
-        'handlers': ['console', 'errorlog', 'debuglog', 'sentry'],
+        'handlers': ['console', 'errorlog', 'debuglog'],
     },
     'celery': {
         'level': 'DEBUG',
         'propagate': False,
-        'handlers': ['console', 'celerylog', 'sentry'],
+        'handlers': ['console', 'celerylog'],
     },
 }

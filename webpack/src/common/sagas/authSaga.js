@@ -1,6 +1,6 @@
 import { takeEvery, select, call, put } from 'redux-saga/effects'
 import { apiLogin, apiLogout, apiUser } from 'services/api'
-import Raven from 'raven-js'
+import * as Sentry from '@sentry/browser'
 import {
   LOG_IN,
   LOG_OUT,
@@ -19,7 +19,7 @@ export default function* rootSaga() {
 
 const setUserContext = ({ pk, email, contributor_name }) => {
   const user = { id: pk, name: contributor_name, email }
-  if (process.env.NODE_ENV == 'production') Raven.setUserContext(user)
+  if (process.env.NODE_ENV == 'production') Sentry.setUser(user)
 }
 
 function* logInSaga(action) {

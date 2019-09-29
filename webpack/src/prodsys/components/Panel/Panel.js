@@ -1,4 +1,4 @@
-import RavenBoundary from 'common/components/RavenBoundary'
+import SentryBoundary from 'common/components/SentryBoundary'
 import cx from 'classnames'
 
 const TopBar = ({ children }) => <nav className="TopBar">{children}</nav>
@@ -13,13 +13,13 @@ const Panel = ({
   ...props
 }) => (
   <section className={cx('Panel', className)} {...props}>
-    <RavenBoundary>
+    <SentryBoundary>
       {header && <TopBar>{header}</TopBar>}
-      <RavenBoundary>
+      <SentryBoundary>
         <section className={cx('content', { scroll })}>{children}</section>
-      </RavenBoundary>
+      </SentryBoundary>
       {footer && <BottomBar>{footer}</BottomBar>}
-    </RavenBoundary>
+    </SentryBoundary>
   </section>
 )
 export default Panel

@@ -1,13 +1,13 @@
-import ProdsysErrorBoundary from './index'
+import SentryBoundary from './index'
 import renderer from 'react-test-renderer'
 
-describe('ProdsysErrorBoundary', () => {
+describe('SentryBoundary', () => {
   test('renders correctly', () => {
     const tree = renderer
       .create(
-        <ProdsysErrorBoundary>
+        <SentryBoundary>
           <div>hello</div>
-        </ProdsysErrorBoundary>,
+        </SentryBoundary>,
       )
       .toJSON()
     expect(tree).toEqual(expect.any(Object))

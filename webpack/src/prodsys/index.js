@@ -1,12 +1,13 @@
 import ReactDOM from 'react-dom'
-import Raven from 'raven-js'
+import * as Sentry from '@sentry/browser'
+
 import { loginFailed } from 'ducks/auth'
 import { Provider } from 'react-redux'
 import configureStore from './configureStore'
 import App from './App'
 
-const SENTRY_URL = 'https://39de0aa2b6b3440da82c9f41ef232d39@sentry.io/51254'
 const ROOT_ID = 'ReactApp'
+// const SENTRY_URL = 'https://39de0aa2b6b3440da82c9f41ef232d39@sentry.io/51254'
 
 const rootStore = configureStore()
 
@@ -28,11 +29,8 @@ const ProdSys = () => (
 
 const render = DOMNode => {
   window.showMessage = showMessage
-  const renderApp = () => ReactDOM.render(<ProdSys />, DOMNode)
-  if (process.env.NODE_ENV == 'production') {
-    Raven.config(SENTRY_URL).install()
-    Raven.context(renderApp)
-  } else renderApp()
+  if (process.env.SENTRY_URL) Sentry.init({ dsn: process.env.SENTRY_URL })
+  ReactDOM.render(<ProdSys />, DOMNode)
 }
 
 const DOMNode = document.getElementById(ROOT_ID)

@@ -118,7 +118,6 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.google',
     'django_extensions',
     'sorl.thumbnail',
-    'raven.contrib.django.raven_compat',
     'storages',
     'webpack_loader',
     'rest_framework',

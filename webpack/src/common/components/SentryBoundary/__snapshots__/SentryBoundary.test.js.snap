@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ProdsysErrorBoundary renders correctly 1`] = `
+exports[`SentryBoundary renders correctly 1`] = `
 <div>
   hello
 </div>
