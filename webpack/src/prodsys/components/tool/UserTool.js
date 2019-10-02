@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import { logOut, logIn, getUser } from 'ducks/auth'
 
 const Avatar = ({ src, title }) => (
-  <img className="Avatar" src={src} title={title} />
+  <img className="Avatar" alt="avatar" src={src} title={title} />
 )
 
 const UserTool = ({ first_name, last_name, username, logOut, avatar }) => {

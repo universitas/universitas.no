@@ -38,6 +38,7 @@ module.exports = {
   },
   plugins: [
     bundler,
+    new webpack.EnvironmentPlugin(['SENTRY_URL']),
     new webpack.ProvidePlugin({
       // implicitly `import`
       React: 'react',
