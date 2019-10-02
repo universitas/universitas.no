@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom'
 import * as Sentry from '@sentry/browser'
+import * as R from 'ramda'
 
 import { loginFailed } from 'ducks/auth'
 import { Provider } from 'react-redux'
@@ -7,8 +8,6 @@ import configureStore from './configureStore'
 import App from './App'
 
 const ROOT_ID = 'ReactApp'
-// const SENTRY_URL = 'https://39de0aa2b6b3440da82c9f41ef232d39@sentry.io/51254'
-
 const rootStore = configureStore()
 
 // for messages insterted by django template engine

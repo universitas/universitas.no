@@ -19,6 +19,7 @@ function hotify(entry) {
 for (let entry in config.entry) {
   config.entry[entry] = hotify(config.entry[entry])
 }
+
 config.plugins.push(
   new webpack.HotModuleReplacementPlugin(),
   // enable HMR globally

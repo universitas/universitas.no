@@ -15,36 +15,46 @@ const translation = {
   successMessage: 'Tilbakemeldingen er sendt. Takk skal du ha!',
 }
 
-const TraceBack = ({ error }) => (
-  <pre
-    style={{ whiteSpace: 'pre-wrap', fontSize: '12px' }}
-    className="TraceBack"
-  >{`${error.stack}`}</pre>
-)
-
+const TraceBack = ({ stack }) => {
+  return (
+    <pre
+      style={{ whiteSpace: 'pre-wrap', fontSize: '12px' }}
+      className="TraceBack"
+    >
+      {stack}
+    </pre>
+  )
+}
 class SentryBoundary extends React.Component {
   state = {
+    eventId: null,
+    stack: null,
     production: process.env.NODE_ENV === 'production',
   }
 
   componentDidCatch(error, errorInfo) {
-    this.setState({ error })
+    const setState = this.setState.bind(this)
     Sentry.withScope(function(scope) {
       scope.setExtras(errorInfo)
       const eventId = Sentry.captureException(error)
-      this.setState({ eventId })
+      setState({ eventId, stack: `${error.stack}` })
     })
   }
+  // static getDerivedStateFromError(error) {
+  //   const stack = `${error.stack}`
+  //   return { stack }
+  // }
 
   render() {
-    const { error, eventId } = this.state
-    if (error) {
-      const reportDialog = () =>
+    const { stack, eventId } = this.state
+    if (stack) {
+      const reportDialog = ev => {
         Sentry.showReportDialog({ eventId, ...translation })
+      }
       return (
         <div className="SentryBoundary">
           <h1>Søren, heller!</h1>
-          {this.production ? <p>Noe gikk galt</p> : <TraceBack error={error} />}
+          {this.production ? <p>Noe gikk galt</p> : <TraceBack stack={stack} />}
           {eventId && (
             <p>
               Feilen har blitt logget, men du kan også klikke "send melding" for
@@ -52,7 +62,7 @@ class SentryBoundary extends React.Component {
               <button onClick={reportDialog}>send melding</button>
             </p>
           )}
-          <button onClick={() => this.setState({ error: null, eventId: null })}>
+          <button onClick={() => this.setState({ stack: null, eventId: null })}>
             prøv igjen
           </button>
         </div>

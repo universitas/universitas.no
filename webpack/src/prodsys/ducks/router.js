@@ -21,13 +21,14 @@ export const routerOptions = {
 // Action constants
 export const LOGIN = 'router/LOGIN'
 export const PRODSYS = 'router/PRODSYS'
+const SHORT_URL = 'router/SHORT_URL'
 export { NOT_FOUND }
 
 // url routes action mappings to configure redux-first-router
 export const routesMap = {
   [LOGIN]: '/login/',
   [PRODSYS]: '/:model/:action/:pk(\\d+)?/',
-  'router/SHORT_URL': {
+  [SHORT_URL]: {
     path: '/short/:id(\\d+)?/', // highjack links in preview stories
     thunk: (dispatch, getState) => {
       const { id: pk } = getRoutePayload(getState())

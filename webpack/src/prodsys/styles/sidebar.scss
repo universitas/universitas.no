@@ -46,10 +46,12 @@
   .Avatar {
     border: 1px solid rgba(black, 0.8);
     border-radius: 50%;
-    width: 1.2em;
-    height: 1.2em;
+    width: 3rem;
+    height: 3rem;
     margin-bottom: 0.2rem;
     object-fit: cover;
+    font: 0.8rem sans-serif;
+    text-align: center;
   }
   .username,
   .button {

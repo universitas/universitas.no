@@ -9,11 +9,11 @@ import 'universitas/styles/universitas.scss'
 import 'styles/prodsys.scss'
 
 // show loginform if the user is not authenticated
-const App = ({ username, pending }) => {
+const ProdsysApp = ({ username, pending }) => {
   if (username) return <ProdSys />
   if (!pending) return <LoginForm />
   return null
 }
 
 // export as hot for react hot reload
-export default hot(module)(connect(getUser)(App))
+export default hot(module)(connect(getUser)(ProdsysApp))

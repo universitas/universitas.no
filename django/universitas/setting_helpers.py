@@ -15,8 +15,7 @@ def joinpath(*paths, resolve=False):
 
 class Environment:
     """Helper class to access environental variables"""
-
-    def __init__(self, prefix='', strict=True):
+    def __init__(self, prefix='', strict=False):
         def _attrname(name):
             result = re.sub(r'[^a-z0-9]', '_', name.lower())
             result = result[len(prefix):].strip('_')
