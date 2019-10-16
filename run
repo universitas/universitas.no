@@ -10,6 +10,7 @@ while (( $# > 0 )); do
             sudo bash -c "$(declare -f install_docker)
             install_docker $(whoami)"
             install_certificates ;;
+  prune   ) node_modules_prune ;; # clear webpack node_modules volume
   enable  ) enable_service ;; # enable systemd service file for web server - starts all docker images
   reload  ) (2>&1 reload_service > reload-service.log) &;; # reload service when code changed
   dc      ) docker-compose $rest; exit ;; # docker-compose [...args]
@@ -292,6 +293,24 @@ renew_certificates() {
     --keep-until-expiring \
     certonly
   docker-compose exec nginx nginx -s reload
+}
+
+node_modules_prune() {
+  # this will clean up the dev_node_modules docker volume
+  # should be done when the webpack image has been changed
+  name='dev_node_modules'
+  volumes=$( docker volume ls --quiet \
+  --filter label=com.docker.compose.volume=$name )
+  # docker-compose pull webpack
+  for volume in $volumes; do
+    local_dir=$( docker volume inspect --format '{{ .Options.device }}' "$volume" )
+    containers=$( docker ps -qa --filter volume="$volume" )
+    printf "deleting volume '$volume'\nand containers\n $containers\n"
+    [[ -n "$containers" ]] && docker rm -f $containers >/dev/null
+    docker volume rm "$volume" >/dev/null
+    rm -rf "$local_dir"
+  done
+  [[ -z $volumes ]] && printf 'docker volume "%s" not found\n' $name >&2
 }
 
 
