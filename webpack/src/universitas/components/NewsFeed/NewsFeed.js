@@ -7,8 +7,7 @@ import Advert from 'components/Advert'
 import FeedItem from './FeedItem.js'
 import PlaceHolder from './PlaceHolder.js'
 import './NewsFeed.scss'
-import HeaderAdvert from 'components/HeaderAdvert'
-import Banner from 'images/Banner.png'
+import Banner from 'images/banner.png'
 // Standard grid sizes for below the fold feed items.
 // This makes dense css grid much less likely to have voids
 const standardizeGridItemSize = ({ size: [columns, rows], ...props }) => ({
@@ -94,7 +93,13 @@ class NewsFeed extends React.Component {
     const { items, next, className, section } = this.props
 
     const ads = [
-      <Advert.AdHoc key="Banner" url={'https://www.topuniversities.com/events/qs-world-grad-school-tour/europe/oslo/register?utm_source=Universitas&utm_medium=web_banner&utm_campaign=World-Grad-School-Tour_F19_Oslo&partnerid=11698'} image={Banner} />,
+      <Advert.AdHoc
+        key="Banner"
+        url={
+          'https://www.topuniversities.com/events/qs-world-grad-school-tour/europe/oslo/register?utm_source=Universitas&utm_medium=web_banner&utm_campaign=World-Grad-School-Tour_F19_Oslo&partnerid=11698'
+        }
+        image={Banner}
+      />,
       <Advert.Qmedia key={`qmedia ${section}`} className="col-6 row-2" />,
       <Advert.Google key={`adwords 1 ${section}`} className="col-6 row-1" />,
       <Advert.Google key={`adwords 2 ${section}`} className="col-6 row-1" />,
@@ -136,10 +141,9 @@ class NewsFeed extends React.Component {
     )
 
     return (
-      <div> <HeaderAdvert/> 
       <section className={cx('NewsFeed', className)}>
         {renderFeed(items)}
-      </section> </div>
+      </section>
     )
   }
 }
@@ -169,7 +173,7 @@ export const addAdverts = (ads = ads) =>
 
 const FeedTerminator = () => (
   <div className="FeedTerminator">Ingen flere saker</div>
-) 
+)
 
 export { NewsFeed }
 
