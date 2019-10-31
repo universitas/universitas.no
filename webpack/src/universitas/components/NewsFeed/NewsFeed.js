@@ -93,6 +93,9 @@ class NewsFeed extends React.Component {
 
     const ads = [
       <Advert.Qmedia key={`qmedia ${section}`} className="col-6 row-2" />,
+      <Advert.Qmedia key={`qmedia 1 ${section}`} className="col-6 row-2" />,
+      <Advert.Qmedia key={`qmedia 2 ${section}`} className="col-6 row-2" />,
+      <Advert.Qmedia key={`qmedia 3 ${section}`} className="col-6 row-2" />,
     ]
 
     const renderFeed = R.pipe(
