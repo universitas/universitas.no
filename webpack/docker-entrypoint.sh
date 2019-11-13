@@ -26,8 +26,6 @@ case $1 in
   build     ) build ;;
   stats     ) exec npm run stats ;;
   dev-server) exec npm run dev ;;
-  install   ) shift; exec npm install --save $@ ;;
-  update    ) exec npm update --save ;;
   lint      ) shift; npx prettier --write $@ ;;
   *         ) exec $@ ;;
 esac

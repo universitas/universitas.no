@@ -24,8 +24,6 @@ while (( $# > 0 )); do
   djbuild ) build_django ;;   # download and build all images, migrate database
   webpack ) docker-compose run --rm webpack ${rest:-bash}; exit;;  # login to webpack container as default user
   build   ) webpack_build ;; # build css+js client bundles and express bundle;
-  npmi    ) docker-compose run --rm webpack install $rest; exit ;; # npm install [packages...]
-  npmup   ) docker-compose run --rm webpack update ;; # npm update js packages
   storyb  ) docker-compose run --rm --name storybook -p 9001:9001 webpack storybook ;;  # start storybook on port 9001
   sbdep   ) cd webpack; npm run deploy-storybook ;; # build and deploy storybook
   pyup    ) cd django; pip-compile --upgrade ;; # pip update python packages
@@ -298,7 +296,7 @@ renew_certificates() {
 node_modules_prune() {
   # this will clean up the dev_node_modules docker volume
   # should be done when the webpack image has been changed
-  name='dev_node_modules'
+  name='node_modules'
   volumes=$( docker volume ls --quiet \
   --filter label=com.docker.compose.volume=$name )
   # docker-compose pull webpack
@@ -309,6 +307,7 @@ node_modules_prune() {
     [[ -n "$containers" ]] && docker rm -f $containers >/dev/null
     docker volume rm "$volume" >/dev/null
     rm -rf "$local_dir"
+    mkdir -p "$local_dir"
   done
   [[ -z $volumes ]] && printf 'docker volume "%s" not found\n' $name >&2
 }
