@@ -93,12 +93,10 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
     </p>
     <p>
       Vil du abonnere og få Universitas hjem til deg eller til din arbeidsplass,
-      ta kontakt med daglig leder Simen Eriksen på tlf. 907 69 866, eller se
-      under for andre måter å komme i kontakt.
+      ta kontakt med daglig leder Simen Eriksen, eller se under for andre måter
+      å komme i kontakt.
     </p>
     <h3>Generell kontaktinfo</h3>
-    <p>Telefon: 907 69 866</p>
-    <p>Faks: 22 85 32 74</p>
     <p>Postadresse: Boks 89 Blindern, 0314 Oslo</p>
     <p>Besøksadresse: Moltke Moes vei 33</p>
     <h3>Utgivelsesplan</h3>
