@@ -135,7 +135,6 @@ class NewsFeed extends React.Component {
 
     return (
       <div>
-        {' '}
         <HeaderAdvert> </HeaderAdvert>
         <section className={cx('NewsFeed', className)}>
           {renderFeed(items)}
