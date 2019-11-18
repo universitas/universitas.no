@@ -4,6 +4,7 @@ import { timeoutDebounce, isVisible, inViewPort } from 'utils/misc'
 import { getItems, getFeed, feedRequested } from 'ducks/newsFeed'
 import { getStory, storiesRequested } from 'ducks/publicstory'
 import Advert from 'components/Advert'
+import HeaderAdvert from 'components/HeaderAdvert'
 import FeedItem from './FeedItem.js'
 import PlaceHolder from './PlaceHolder.js'
 import './NewsFeed.scss'
@@ -133,9 +134,13 @@ class NewsFeed extends React.Component {
     )
 
     return (
-      <section className={cx('NewsFeed', className)}>
-        {renderFeed(items)}
-      </section>
+      <div>
+        {' '}
+        <HeaderAdvert> </HeaderAdvert>
+        <section className={cx('NewsFeed', className)}>
+          {renderFeed(items)}
+        </section>
+      </div>
     )
   }
 }
