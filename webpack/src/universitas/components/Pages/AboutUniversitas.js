@@ -70,7 +70,7 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
   <article className={cx('AboutUniversitas', className)}>
     <h1>{pageTitle}</h1>
     <p>Universitas er Norges største studentavis.</p>
-    <p>Avisen har et opplag på 14 000, og kommer ut 35 ganger i året.</p>
+    <p>Avisen har et opplag på 12 000, og kommer ut 30 ganger i året.</p>
     <p>
       <SiO />
       Universitas mottar støtte fra Student&shy;samskipnaden i Oslo og Akershus

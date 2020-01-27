@@ -9,4 +9,5 @@ export default {
     reset: '/auth/password/reset/',
   },
   logout: '/auth/logout/',
+  signup: '/auth/signup'
 }
