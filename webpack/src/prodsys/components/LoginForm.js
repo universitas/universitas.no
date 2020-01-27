@@ -17,7 +17,7 @@ const LoginForm2 = ({ logIn, error }) => {
     <Container>
       <Title>Logg inn i prodsys</Title>
       <Input
-        value={ussername}
+        value={username}
         onChange={event => setUsername(event.target.value)}
         placeholder="brukernavn"
         type="text"
@@ -28,15 +28,17 @@ const LoginForm2 = ({ logIn, error }) => {
         placeholder="password"
         type="password"
       />
-      <Button onClick={handleLogin}>Logg Inn</Button>
-      <Subtitle> Eller </Subtitle>
+      <Button onClick={handleLogin}>Logg inn</Button>
+
+      <Subtitle> eller </Subtitle>
       <OAuthLogin />
+      <ForgotPassword />
+      <RegisterNewUser />
 
       <ErrorContainer {...error} />
-    </Container>
+      </Container>
   )
 }
-
 
 const ErrorMessage = ({ children }) => (
   <div className="ErrorMessage">
@@ -57,13 +59,32 @@ const OAuthLogin = () => {
     text-decoration: none;
   `
 
-  return <Container href={urls.login.facebook}>Fortsett med Facebook</Container>
+  return <Container href={urls.login.facebook}>Logg inn med Facebook</Container>
 }
 
-const ErrorContainer = ({ password, non_field_errors }) => {
-  
-  const Message = styled.p`
+const ForgotPassword = () => {
+  const Container = styled.a`
+    font-family: 'Roboto', sans-serif;
+    color: #2F2F2F;
+    padding: 1rem;
   `
+  return <Container href={urls.password.reset}>Glemt Passord?</Container>
+}
+
+
+const RegisterNewUser = () => {
+  const Container = styled.a`
+  font-family: 'Roboto', sans-serif;
+  color: #2F2F2F;
+  padding: 0.5rem;
+  `
+  return <Container href={urls.signup}> Registrer ny bruker </Container>
+}
+
+
+
+const ErrorContainer = ({ password, non_field_errors }) => {
+  const Message = styled.p``
   return (
     <>
       {non_field_errors && <ErrorMessage>{non_field_errors}</ErrorMessage>}
@@ -76,8 +97,6 @@ const Wrapper = styled.div`
   display: flex;
   background-color: #f0f0f0;
   min-height: 100vh;
-
-  /*background: linear-gradient(120deg, #FBD786, #F7797D)*/
 `
 
 const Container = styled.div`
@@ -101,16 +120,17 @@ const Container = styled.div`
 const Title = styled.h1`
   text-align: center;
   color: #2a2d33;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Archivo Black', sans-serif;
   font-weight: 400;
   padding: 1rem;
-
   font-size: 2.5rem;
   margin: 0 0 1rem 0;
 `
 
 const Subtitle = styled.p`
   color: gray;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
 `
 
 const Button = styled.button`
@@ -118,9 +138,11 @@ const Button = styled.button`
   width: 25rem;
   min-width: 5rem;
   font-size: 1em;
+  font-family: 'Roboto', sans-serif;
+  color: white;
   padding: 0.5rem;
+  background: #DF4949;
   border-radius: 0.2em;
-  border: 1px solid #999;
 `
 
 const Input = styled.input`
@@ -128,14 +150,15 @@ const Input = styled.input`
   width: 25rem;
   min-width: 5rem;
   font-size: 1em;
+  font-family: 'Roboto', sans-serif;
+  color: black;
+  background: #F7F7F7;
   padding: 0.5rem;
   border-radius: 0.2em;
-  border: 1px solid #999;
+  border: 0.5px white;
 `
 
 export default connect(
   getUser,
   { logIn },
-  ) (LoginForm2)
-
-  
+)(LoginForm2)
