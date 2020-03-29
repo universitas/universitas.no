@@ -43,8 +43,7 @@ beautifulsoup4
 pypdf2
 requests
 requests-html
-fuzzywuzzy
-python-Levenshtein
+rapidfuzz
 diff-match-patch
 awesome-slugify
 faker
