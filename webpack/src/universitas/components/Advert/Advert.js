@@ -2,6 +2,7 @@ import { getAdverts, advertsRequested } from 'ducks/adverts'
 import { connect } from 'react-redux'
 import cx from 'classnames'
 import { hyphenate } from 'utils/text'
+import styled from 'styled-components'
 
 const Advert = ({ children, className = '', ...props }) => (
   <div className={cx('Advert', className)} {...props}>
@@ -65,6 +66,25 @@ class Qmedia extends React.Component {
   }
 }
 
+const Banner = ({ image, destination }) => {
+  return (
+    <div className="col-6 row-1" style={{ width: '100%' }}>
+      <AdText>Annonse</AdText>
+      <a href={destination}>
+        <BannerImage src={image} />
+      </a>
+    </div>
+  )
+}
+
+const BannerImage = styled.img`
+  width: '100%';
+`
+
+const AdText = styled.p`
+  text-align: center;
+`
+
 export default {
   Google,
   Qmedia: connect(
@@ -72,4 +92,5 @@ export default {
     { advertsRequested },
   )(Qmedia),
   AdHoc,
+  Banner,
 }
