@@ -166,7 +166,7 @@ const insertIfLongEnough = R.curry((index, item) =>
 
 export const addAdverts = (ads = ads) =>
   R.pipe(
-    insertIfLongEnough(4, ads[1]),
+    //insertIfLongEnough(4, ads[1]),
     insertIfLongEnough(5, ads[0]),
     insertIfLongEnough(10, ads[2]),
     insertIfLongEnough(30, ads[3]),

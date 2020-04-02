@@ -68,7 +68,7 @@ class Qmedia extends React.Component {
 
 const Banner = ({ image, destination }) => {
   return (
-    <div className="col-6 row-1" style={{ width: '100%' }}>
+    <div className="col-6 row-2" style={{ width: '100%' }}>
       <AdText>Annonse</AdText>
       <a href={destination}>
         <BannerImage src={image} />
