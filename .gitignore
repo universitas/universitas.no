@@ -10,3 +10,4 @@ tags
 Session.vim
 .Rhistory
 node_modules
+*.idea

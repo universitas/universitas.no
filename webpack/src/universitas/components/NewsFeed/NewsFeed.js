@@ -7,6 +7,10 @@ import Advert from 'components/Advert'
 import FeedItem from './FeedItem.js'
 import PlaceHolder from './PlaceHolder.js'
 import './NewsFeed.scss'
+
+import uio_banner from '../../images/uio_banner.jpg'
+import akademika_banner from '../../images/akademika_banner.jpg'
+
 // Standard grid sizes for below the fold feed items.
 // This makes dense css grid much less likely to have voids
 const standardizeGridItemSize = ({ size: [columns, rows], ...props }) => ({
@@ -92,6 +96,10 @@ class NewsFeed extends React.Component {
     const { items, next, className, section } = this.props
 
     const ads = [
+      <Advert.Banner
+        image={uio_banner}
+        destination="https://www.uio.no/studier/program/pedagogikk-master/"
+      />,
       <Advert.Qmedia key={`qmedia ${section}`} className="col-6 row-2" />,
       <Advert.Qmedia key={`qmedia 1 ${section}`} className="col-6 row-2" />,
       <Advert.Qmedia key={`qmedia 2 ${section}`} className="col-6 row-2" />,
@@ -134,6 +142,7 @@ class NewsFeed extends React.Component {
 
     return (
       <section className={cx('NewsFeed', className)}>
+        <img className="col-6" src={akademika_banner} />
         {renderFeed(items)}
       </section>
     )
@@ -157,10 +166,11 @@ const insertIfLongEnough = R.curry((index, item) =>
 
 export const addAdverts = (ads = ads) =>
   R.pipe(
+    //insertIfLongEnough(4, ads[1]),
     insertIfLongEnough(5, ads[0]),
-    insertIfLongEnough(10, ads[1]),
-    insertIfLongEnough(30, ads[2]),
-    insertIfLongEnough(50, ads[3]),
+    insertIfLongEnough(10, ads[2]),
+    insertIfLongEnough(30, ads[3]),
+    insertIfLongEnough(50, ads[4]),
   )
 
 const FeedTerminator = () => (
