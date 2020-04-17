@@ -8,7 +8,6 @@ import FeedItem from './FeedItem.js'
 import PlaceHolder from './PlaceHolder.js'
 import './NewsFeed.scss'
 
-import uio_banner from '../../images/uio_banner.jpg'
 import akademika_banner from '../../images/akademika_banner.jpg'
 
 // Standard grid sizes for below the fold feed items.
@@ -96,10 +95,6 @@ class NewsFeed extends React.Component {
     const { items, next, className, section } = this.props
 
     const ads = [
-      <Advert.Banner
-        image={uio_banner}
-        destination="https://www.uio.no/studier/program/pedagogikk-master/"
-      />,
       <Advert.Qmedia key={`qmedia ${section}`} className="col-6 row-2" />,
       <Advert.Qmedia key={`qmedia 1 ${section}`} className="col-6 row-2" />,
       <Advert.Qmedia key={`qmedia 2 ${section}`} className="col-6 row-2" />,
