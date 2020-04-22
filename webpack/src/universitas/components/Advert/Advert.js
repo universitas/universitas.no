@@ -66,6 +66,7 @@ class Qmedia extends React.Component {
   }
 }
 
+// Midtbanneret
 const Banner = ({ image, destination }) => {
   return (
     <div className="col-6 row-2" style={{ width: '100%' }}>
