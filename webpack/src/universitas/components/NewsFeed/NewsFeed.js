@@ -8,7 +8,7 @@ import FeedItem from './FeedItem.js'
 import PlaceHolder from './PlaceHolder.js'
 import './NewsFeed.scss'
 
-import universitas_valgbanner_2 from '../../images/universitas_valgbanner_2.png'
+//import universitas_valgbanner_2 from '../../images/universitas_valgbanner_2.png'
 
 
 // Standard grid sizes for below the fold feed items.
@@ -137,12 +137,15 @@ class NewsFeed extends React.Component {
     )
 
     return (
+      //Toppbanner
       <section className={cx('NewsFeed', className)}>
+        {/*
         <div className="col-6" style={{ textAlign: 'center' }}>Annonse
         <a href="https://valg2.uio.no">
         <img className="col-6" src={universitas_valgbanner_2} />
         </a>
         </div>
+        */}
         {renderFeed(items)}
       </section>
     )
