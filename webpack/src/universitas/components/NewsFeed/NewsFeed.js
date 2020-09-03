@@ -8,7 +8,7 @@ import FeedItem from './FeedItem.js'
 import PlaceHolder from './PlaceHolder.js'
 import './NewsFeed.scss'
 
-import banner from '../../images/Morgenbladet_960x150_Sulten_01.jpg';
+import banner from '../../images/Morgenbladet_960x150_Pusterom_01.jpg'
 
 // Standard grid sizes for below the fold feed items.
 // This makes dense css grid much less likely to have voids
@@ -106,10 +106,7 @@ class NewsFeed extends React.Component {
       mapFrom(section ? 0 : 21, standardizeGridItemSize),
       // last four stories should be small, and serve as scroll spies
       R.when(
-        R.pipe(
-          R.length,
-          R.lt(8),
-        ),
+        R.pipe(R.length, R.lt(8)),
         mapFrom(-4, R.mergeDeepLeft({ size: [2, 2] })),
       ),
       // render feed items
@@ -140,8 +137,10 @@ class NewsFeed extends React.Component {
       <section className={cx('NewsFeed', className)}>
         {
           <div className="col-6" style={{ textAlign: 'center' }}>
-            <p style={{margin: '0', fontSize: '11px', color: "gray"}}>annonse</p>
-            <a href="https://bestilling.morgenbladet.no/index.php?step=1&ca=student-universitas&utm_source=universitas&utm_medium=toppbanner&utm_campaign=hostkampanje2020&utm_content=sulten">
+            <p style={{ margin: '0', fontSize: '11px', color: 'gray' }}>
+              annonse
+            </p>
+            <a href="https://bestilling.morgenbladet.no/index.php?step=1&ca=student-universitas&utm_source=universitas&utm_medium=toppbanner&utm_campaign=hostkampanje2020&utm_content=pust">
               <img className="col-6" src={banner} />
             </a>
           </div>
@@ -158,13 +157,7 @@ const renderPlaceholders = sizes =>
   ))
 
 const insertIfLongEnough = R.curry((index, item) =>
-  R.when(
-    R.pipe(
-      R.length,
-      R.lte(index),
-    ),
-    R.insert(index, item),
-  ),
+  R.when(R.pipe(R.length, R.lte(index)), R.insert(index, item)),
 )
 
 export const addAdverts = (ads = ads) =>
@@ -182,10 +175,7 @@ const FeedTerminator = () => (
 
 export { NewsFeed }
 
-export default connect(
-  s => ({ items: getItems(s), ...getFeed(s) }),
-  {
-    feedRequested,
-    storiesPrefetch: storiesRequested,
-  },
-)(NewsFeed)
+export default connect(s => ({ items: getItems(s), ...getFeed(s) }), {
+  feedRequested,
+  storiesPrefetch: storiesRequested,
+})(NewsFeed)
