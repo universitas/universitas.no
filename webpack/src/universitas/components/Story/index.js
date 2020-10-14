@@ -86,10 +86,14 @@ class Story extends React.Component {
       return <PageNotFound HTTPstatus="404">Fant ikke saken</PageNotFound>
     const tree = buildNodeTree(props)
     return (
-      <article className={cx('Story', className)}>
+      //Article component
+      //<article className={cx('Story', className)}>
+      <article className="Story">
         <StoryHelmet {...props} />
-        <StoryHead {...tree} />
+        <StoryHead {...tree} /> {/* Here the image lies */}
         <main className="mainContent">
+          {' '}
+          {/* Where the content lies */}
           <StorySidebar {...tree} />
           <StoryBody {...tree} />
         </main>

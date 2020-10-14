@@ -23,15 +23,18 @@
     .imgWrapper {
       // flex: 1;
       // height: 100%;
+      margin: 0.5rem auto;
       min-height: 0;
       img {
         width: 100%;
         height: auto;
         @media (max-height: 1500px) {
           min-height: 20vh;
+          /*
           @include max-size(s) {
             min-height: 40vh;
           }
+          */
         }
         object-fit: cover;
         &.autoCrop {
