@@ -41,9 +41,11 @@ const StoryHead = ({
           </SlideShow>
         </div>
       ) : null}
-      <Kicker>{kicker}</Kicker>
-      <Headline>{hyphenate(title)}</Headline>
-      <Lede>{lede}</Lede>
+      <div className="headerText">
+        <Kicker>{kicker}</Kicker>
+        <Headline>{hyphenate(title)}</Headline>
+        <Lede>{lede}</Lede>
+      </div>
     </header>
   )
 }

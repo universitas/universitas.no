@@ -120,19 +120,24 @@ $externallink: 'data:image/svg+xml,' +
         min-height: 0;
       }
       &.autoCrop {
-        flex: 1 1 675px;
+        //flex: 1 1 675px;
         display: flex;
         img {
           // height: 100%;
         }
       }
     }
+    .headerText {
+      width: 100%;
+      padding: 0.2rem 0.5rem;
+      margin: auto;
+    }
     margin-bottom: 0.8rem;
     border-bottom: 1px solid #ddd;
     padding-bottom: 0.8rem;
     max-height: calc(100vh - 3rem);
     @media (max-height: 450px) and (min-width: 600px) {
-      max-height: calc(450px - 3rem);
+      max-height: 100%;
     }
     @media (max-height: 700px) and (min-width: 900px) {
       max-height: calc(700px - 3rem);
@@ -162,6 +167,8 @@ $externallink: 'data:image/svg+xml,' +
     @extend %bullet-list;
   }
   .mainContent {
+    padding: 15px;
+    margin: auto;
     display: flex;
     flex-direction: row;
     @include max-size(s) {
