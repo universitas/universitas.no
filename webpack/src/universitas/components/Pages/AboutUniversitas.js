@@ -49,11 +49,7 @@ const byImportance = R.converge(R.add, [
   ),
 ])
 
-const byLastName = R.pipe(
-  R.prop('display_name'),
-  R.split(/ /g),
-  R.last,
-)
+const byLastName = R.pipe(R.prop('display_name'), R.split(/ /g), R.last)
 
 const sortStaff = R.sortWith([R.descend(byImportance), R.ascend(byLastName)])
 
@@ -93,8 +89,8 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
     </p>
     <p>
       Vil du abonnere og få Universitas hjem til deg eller til din arbeidsplass,
-      ta kontakt med daglig leder Simen Eriksen, eller se under for andre måter
-      å komme i kontakt.
+      ta kontakt med daglig leder Jone Trovåg, eller se under for andre måter å
+      komme i kontakt.
     </p>
     <h3>Generell kontaktinfo</h3>
     <p>Postadresse: Boks 89 Blindern, 0314 Oslo</p>
