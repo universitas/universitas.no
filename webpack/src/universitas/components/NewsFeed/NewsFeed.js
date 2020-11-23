@@ -8,6 +8,8 @@ import FeedItem from './FeedItem.js'
 import PlaceHolder from './PlaceHolder.js'
 import './NewsFeed.scss'
 
+import banner from '../../images/sio_adm_dir.jpg'
+
 // Standard grid sizes for below the fold feed items.
 // This makes dense css grid much less likely to have voids
 const standardizeGridItemSize = ({ size: [columns, rows], ...props }) => ({
@@ -133,16 +135,18 @@ class NewsFeed extends React.Component {
     return (
       //Toppbanner
       <section className={cx('NewsFeed', className)}>
-        {/*
-          <div className="col-6" style={{ textAlign: 'center' }}>
-            <p style={{ margin: '0', fontSize: '11px', color: 'gray' }}>
-              annonse
-            </p>
-            <a href="https://bestilling.morgenbladet.no/index.php?step=1&ca=student-universitas&utm_source=universitas&utm_medium=toppbanner&utm_campaign=hostkampanje2020&utm_content=pust">
-              <img className="col-6" src={banner} />
-            </a>
-          </div>
-          */}
+        <div className="col-6" style={{ textAlign: 'center' }}>
+          <p style={{ margin: '0', fontSize: '11px', color: 'gray' }}>
+            annonse
+          </p>
+          <a href="https://visindi.no/stilling/admdir-sio">
+            <img
+              className="col-6"
+              src={banner}
+              style={{ border: '1px solid grey' }}
+            />
+          </a>
+        </div>
         {renderFeed(items)}
       </section>
     )
