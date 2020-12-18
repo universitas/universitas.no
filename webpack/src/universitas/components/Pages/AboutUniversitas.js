@@ -74,7 +74,6 @@ const AboutUniversitas = ({ pageTitle, issues, staff, className = '' }) => (
       støtte Universitas økonomisk. Papirutgaven av Universitas distribueres
       rundt på læresteder tilknyttet SiO.
     </p>
-    <h2>Heihei</h2>
     <p>
       Velferdstinget i Oslo og Akershus fordeler semesteravgiften, men står uten
       redaksjonelt ansvar.
