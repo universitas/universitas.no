@@ -26,7 +26,7 @@ const LoginForm2 = ({ logIn, error }) => {
       <Input
         value={password}
         onChange={event => setPassword(event.target.value)}
-        placeholder="password"
+        placeholder="passord"
         type="password"
       />
       <Button onClick={handleLogin}>Logg inn</Button>
