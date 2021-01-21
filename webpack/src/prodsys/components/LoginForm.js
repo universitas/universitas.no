@@ -16,6 +16,7 @@ const LoginForm2 = ({ logIn, error }) => {
   return (
     <Container>
       <Title>Logg inn i prodsys</Title>
+      <h1> Heihei</h1>
       <Input
         value={username}
         onChange={event => setUsername(event.target.value)}
