@@ -8,7 +8,7 @@ import FeedItem from './FeedItem.js'
 import PlaceHolder from './PlaceHolder.js'
 import './NewsFeed.scss'
 
-import banner from '../../images/universitas_mars.jpg'
+//import banner from '../../images/universitas_mars.jpg'
 
 // Standard grid sizes for below the fold feed items.
 // This makes dense css grid much less likely to have voids
