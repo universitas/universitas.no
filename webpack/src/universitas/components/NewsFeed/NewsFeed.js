@@ -157,7 +157,7 @@ class NewsFeed extends React.Component {
       <section className={cx('NewsFeed', className)}>
         <TopBanner
           url="https://www.akademika.no/butikker/akademika-blindern?utm_source=Universitas&utm_medium=banner&utm_campaign=v_21​"
-          src={banner}
+          src={null}
         />
         {renderFeed(items)}
       </section>
