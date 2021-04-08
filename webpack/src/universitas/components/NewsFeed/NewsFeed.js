@@ -133,6 +133,9 @@ class NewsFeed extends React.Component {
     )
 
     function TopBanner(props) {
+      if(props.src === null) {
+        return null;
+      }
       return (
         <div className="col-6" style={{ textAlign: 'center' }}>
           <p style={{ margin: '0', fontSize: '11px', color: 'gray' }}>
@@ -155,6 +158,8 @@ class NewsFeed extends React.Component {
         <TopBanner
           url="https://valg2.uio.no/"
           src={banner}
+          url="https://www.akademika.no/butikker/akademika-blindern?utm_source=Universitas&utm_medium=banner&utm_campaign=v_21​"
+          src={null}
         />
         {renderFeed(items)}
       </section>
