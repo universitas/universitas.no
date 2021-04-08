@@ -15,7 +15,8 @@ const LoginForm2 = ({ logIn, error }) => {
 
   return (
     <Container>
-      <Title>Logg inn i prodsys</Title>
+      <Title>Prodsys</Title>
+      <h1> LOGG INN</h1>
       <Input
         value={username}
         onChange={event => setUsername(event.target.value)}
@@ -25,7 +26,7 @@ const LoginForm2 = ({ logIn, error }) => {
       <Input
         value={password}
         onChange={event => setPassword(event.target.value)}
-        placeholder="password"
+        placeholder="passord"
         type="password"
       />
       <Button onClick={handleLogin}>Logg inn</Button>
