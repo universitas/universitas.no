@@ -6,7 +6,7 @@ import re
 
 from django.conf import settings
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
-from fuzzywuzzy import fuzz
+from rapidfuzz import fuzz
 from slugify import Slugify
 
 logger = logging.getLogger(__name__)
@@ -72,8 +72,8 @@ class FuzzyNameSearchMixin:
             MINIMUM_RATIO = 85
             candidates = []
             for contributor in base_query.all():
-                ratio = fuzz.ratio(contributor.display_name, full_name)
-                if ratio >= MINIMUM_RATIO:
+                ratio = fuzz.ratio(contributor.display_name, full_name, score_cutoff=MINIMUM_RATIO)
+                if ratio:
                     # TODO: two contributors with same name.
                     return contributor
                 if contributor.display_name in full_name:

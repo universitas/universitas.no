@@ -51,7 +51,6 @@ fake-useragent==0.1.11    # via requests-html
 faker==2.0.2
 flower==0.9.3
 ftfy==5.6
-fuzzywuzzy==0.17.0
 hiredis==1.0.0
 idna==2.8                 # via requests
 imagehash==4.0
@@ -96,10 +95,10 @@ pytest-forked==1.0.2      # via pytest-xdist
 pytest-xdist==1.29.0
 pytest==5.2.0
 python-dateutil==2.8.0    # via botocore, faker
-python-levenshtein==0.12.0
 python3-openid==3.1.0     # via django-allauth
 pytz==2019.2              # via babel, celery, django, flower
 pywavelets==1.0.3         # via imagehash
+rapidfuzz==0.3.0
 redis==3.3.8
 regex==2019.8.19          # via awesome-slugify
 requests-html==0.10.0
