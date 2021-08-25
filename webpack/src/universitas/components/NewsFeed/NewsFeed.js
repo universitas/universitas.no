@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import cx from 'classnames'
-import { timeoutDebounce, isVisible, inViewPort } from 'utils/misc'
+import { timeoutDebounce, isVisible , inViewPort } from 'utils/misc'
 import { getItems, getFeed, feedRequested } from 'ducks/newsFeed'
 import { getStory, storiesRequested } from 'ducks/publicstory'
 import Advert from 'components/Advert'
@@ -9,6 +9,8 @@ import PlaceHolder from './PlaceHolder.js'
 import './NewsFeed.scss'
 
 import banner from '../../images/oslo_studenter_banner.jpg'
+import banner2 from '../../images/utdanningspris.jpg'
+import midbanner from '../../images/stipend.jpg'
 
 // Standard grid sizes for below the fold feed items.
 // This makes dense css grid much less likely to have voids
@@ -119,6 +121,7 @@ class NewsFeed extends React.Component {
         />
       )),
       // add adverts
+      R.append(<Banner url="https://www.oslo.kommune.no/koronavaksine" src={midbanner} />),
       addAdverts(ads),
       // append placeholders if fetching
       R.when(
@@ -133,13 +136,13 @@ class NewsFeed extends React.Component {
     )
 
     //@ Prop params: src, url
-    function TopBanner(props) {
+    function Banner(props) {
       if (props.src === null) {
         return null
       }
       return (
         <div className="col-6" style={{ textAlign: 'center' }}>
-          <p style={{ margin: '0', fontSize: '11px', color: 'gray' }}>
+          <p style={{ margin: '5px', fontSize: '11px', color: 'gray' }}>
             annonse
           </p>
           <a href={props.url}>
@@ -156,7 +159,8 @@ class NewsFeed extends React.Component {
     return (
       //Toppbanner
       <section className={cx('NewsFeed', className)}>
-        <TopBanner url="https://www.oslo.kommune.no/koronavaksine" src={banner} />
+        <Banner url="https://www.oslo.kommune.no/koronavaksine" src={banner} />
+        <Banner url="https://www.oslo.kommune.no/koronavaksine" src={banner2} />
         {renderFeed(items)}
       </section>
     )
