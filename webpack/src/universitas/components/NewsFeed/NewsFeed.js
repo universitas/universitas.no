@@ -9,8 +9,7 @@ import PlaceHolder from './PlaceHolder.js'
 import './NewsFeed.scss'
 
 import banner from '../../images/oslo_studenter_banner.jpg'
-import banner2 from '../../images/utdanningspris.jpg'
-import midbanner from '../../images/stipend.jpg'
+import banner2 from '../../images/Sondre.jpg'
 
 // Standard grid sizes for below the fold feed items.
 // This makes dense css grid much less likely to have voids
@@ -121,7 +120,6 @@ class NewsFeed extends React.Component {
         />
       )),
       // add adverts
-      R.append(<Banner url="https://www.oslo.kommune.no/koronavaksine" src={midbanner} />),
       addAdverts(ads),
       // append placeholders if fetching
       R.when(
@@ -160,7 +158,7 @@ class NewsFeed extends React.Component {
       //Toppbanner
       <section className={cx('NewsFeed', className)}>
         <Banner url="https://www.oslo.kommune.no/koronavaksine" src={banner} />
-        <Banner url="https://www.oslo.kommune.no/koronavaksine" src={banner2} />
+        <Banner url="https://www.venstre.no/artikkel/2021/08/02/stem-venstre-for-frihet-og-muligheter/" src={banner2} />
         {renderFeed(items)}
       </section>
     )
